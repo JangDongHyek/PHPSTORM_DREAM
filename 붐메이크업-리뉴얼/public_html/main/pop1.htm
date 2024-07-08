@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+
+<script language="javascript">
+	function goResult(){
+	opener.location.href="../bbs/view.php?&bbs_id=noticee&page=&doc_num=34"
+	self.close(); // 팝업창을 닫습니다.
+	}
+</script>
+
+<SCRIPT language="JavaScript">
+<!--
+<!-- 
+function setCookie( name, value, expiredays ) 
+{ 
+	var todayDate = new Date(); 
+	todayDate.setDate( todayDate.getDate() + expiredays ); 
+	document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+	} 
+
+function closeWin() 
+{ 
+	if ( document.pop.Notice.checked ) 
+	setCookie( "Notice", "done" , 1);//1은 하루동안 새창을 열지 않게 합니다.
+	window.close(); 
+} 
+// -->
+
+function MM_callJS(jsStr) { //v2.0
+  return eval(jsStr)
+}
+//-->
+</SCRIPT>
+
+<style type="text/css">
+<!--
+.style1 {color: #CCCCCC}
+-->
+</style>
+</head>
+
+<body topmargin="0" bottommargin="0" rightmargin="0" leftmargin="0">
+<table width="350" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><img src="http://www.pusanmakeup.com//images/new_pop.gif" width="500" height="218" border="0" usemap="#Map"></td>
+  </tr>
+  <tr>
+    <td bgcolor="#CCCCCC">
+	     <form name=pop> 
+<p align="center"> 
+<input type=checkbox name="Notice" value="">
+오늘하루 공지창 띄우지 않음<span class="style1"> <a href="javascript:history.onclick=closeWin()">[닫기]</a></span>   
+</form>	</td>
+  </tr>
+</table>
+
+<map name="Map"><area shape="rect" coords="230,93,325,117" href="javascript:void(window.open('../main/coupon.htm','popup','resizable=no,width=650,height=284,scrollbars=no'))"><area shape="rect" coords="231,121,325,145" href="javascript:goResult();">
+</map></body>
+</html>

@@ -1,0 +1,46 @@
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+<script language="javascript">
+function setPng24(obj) { 
+var request_os = window.navigator.userAgent; 
+var os_array = request_os.split(";"); 
+
+if(os_array[1] != " MSIE 7.0") { 
+obj.width=obj.height=1; 
+obj.className=obj.className.replace(/png24/i,''); 
+obj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+ obj.src +"',sizingMethod='image');"; 
+obj.src=''; 
+} 
+
+return ''; 
+} 
+</script>
+
+<style type="text/css">
+.png24 {tmp:expression(setPng24(this));}
+</style>
+<?
+if($_SESSION['ss_mb_id']){ //로그인 상태일때
+?>
+<table width="220" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="45"><a href="../main/"><img src="../images/top1.png" width="45" height="23" border="0" class="png24" /></a></td>
+    <td width="41"><a href="../bbs/mb_logout.php?url=../main/"><img src="../images/btn_logout.png" width="50" height="23" border="0" class="png24" /></a></td>
+    <td width="34"><a href="../bbs/mb_edit.php?url=../"><img src="../images/btn_modify.png" width="49" height="23" border="0" class="png24" /></a></td>
+    <td width="69"><a href="mailto:"><img src="../images/top4.png" width="69" height="23" border="0" class="png24" /></a></td>
+    <td><a href="../bbs/mb_logout.php?url=../main/start.htm"><? if($ss_mb_level == 10){ ?></a><a href="../bbs/admin/" target="_blank"><img src="../images/top_admin.png" width="59" height="23" border="0" class="png24" /></a><? }else{ ?><? } ?></td>
+  </tr>
+</table>
+<?
+}
+else{ //로그아웃 상태일때
+?>
+<table width="180" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="45"><a href="../main/"><img src="../images/top1.png" width="45" height="23" border="0" class="png24" /></a></td>
+    <td width="41"><a href="../bbs/mb_login.php"><img src="../images/top2.png" width="41" height="23" border="0" class="png24" /></a></td>
+    <td width="34"><a href="../bbs/mb_join_check.php"><img src="../images/top3.png" width="34" height="23" border="0" class="png24" /></a></td>
+    <td width="69"><a href="mailto:"><img src="../images/top4.png" width="69" height="23" border="0" class="png24" /></a></td>
+  </tr>
+</table>
+<? } ?>
+

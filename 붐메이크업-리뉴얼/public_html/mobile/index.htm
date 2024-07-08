@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<title>모바일 홈페이지</title>
+<link rel="stylesheet" type="text/css" href="b.css"/>
+
+<script>
+var dragapproved=false
+var minrestore=0
+var initialwidth,initialheight
+var ie5=document.all&&document.getElementById
+var ns6=document.getElementById&&!document.all
+
+function iecompattest(){
+	return (!window.opera && document.compatMode && document.compatMode!="BackCompat")? document.documentElement : document.body
+}
+
+function drag_drop(e){
+	if (ie5&&dragapproved&&event.button==1){
+		document.getElementById("dwindow").style.left=0+"px"
+		document.getElementById("dwindow").style.top=tempy+event.clientY-offsety+"px"
+	}
+	else if (ns6&&dragapproved){
+		document.getElementById("dwindow").style.left=0+"px"
+		document.getElementById("dwindow").style.top=tempy+e.clientY-offsety+"px"
+	}
+}
+
+function initializedrag(e){
+	offsetx=ie5? event.clientX : e.clientX
+	offsety=ie5? event.clientY : e.clientY
+	document.getElementById("dwindowcontent").style.display="none" //extra
+	tempx=parseInt(document.getElementById("dwindow").style.left)
+	tempy=parseInt(document.getElementById("dwindow").style.top)
+
+	dragapproved=true
+	document.getElementById("dwindow").onmousemove=drag_drop
+}
+
+function loadwindow(url,width,height){
+	if (!ie5&&!ns6)
+		window.open(url,"","width=width,height=height,scrollbars=1")
+	else{
+		document.getElementById("dwindow").style.display=''
+		//document.getElementById("dwindow").style.width=initialwidth=width+"px"
+		document.getElementById("dwindow").style.height=initialheight=height+"px"
+		document.getElementById("dwindow").style.left="0px"
+		document.getElementById("dwindow").style.top=ns6? window.pageYOffset*1+0+"px" : iecompattest().scrollTop*1+0+"px"
+		document.getElementById("cframe").src=url
+	}
+}
+
+function maximize(){
+	if (minrestore==0){
+		minrestore=1 //maximize window
+		document.getElementById("maxname").setAttribute("src","")
+		//document.getElementById("dwindow").style.width=ns6? window.innerWidth-20+"px" : iecompattest().clientWidth+"px"
+		document.getElementById("dwindow").style.height=ns6? window.innerHeight-0+"px" : iecompattest().clientHeight+"px"
+	}
+	else{
+		minrestore=0 //restore window
+		document.getElementById("maxname").setAttribute("src","")
+		//document.getElementById("dwindow").style.width=initialwidth
+		document.getElementById("dwindow").style.height=initialheight
+	}
+	document.getElementById("dwindow").style.left=ns6? 0+"px" : 0+"px"
+	document.getElementById("dwindow").style.top=ns6? window.pageYOffset+"px" : iecompattest().scrollTop+"px"
+}
+
+function closeit(){
+	document.getElementById("dwindow").style.display="none"
+}
+
+function stopdrag(){
+	dragapproved=false;
+	document.getElementById("dwindow").onmousemove=null;
+	document.getElementById("dwindowcontent").style.display="" //extra
+}
+
+</script>
+</head>
+<body onload="loadwindow()">
+
+
+
+<!--팝업-->
+<body onload="loadwindow()">
+<div style="z-index:999; display:none" ><div id="dwindow" style="position:absolute;cursor:hand;left:0px;top:0px;width:100%;display:none;z-index:999" onMouseup="stopdrag()" onSelectStart="return false">
+	<table width=100% cellpadding=3 cellspacing=0 border=0>
+    <tr>
+    <td align="right"><img src="../mobile/images/close.jpg" onClick="closeit()" ></td>
+    <tr>
+    <tr>
+	<td align=right><? include '../pop_new/dot_slide.htm'; ?></td>
+    </tr>
+	</table>
+</div></div>
+<!--팝업-->
+
+
+
+
+<body>
+<? include 'top.htm'; ?>
+<div id="dt2">
+      <div class="mb">
+            <img src="images/main.jpg" width="300" height="367" border="0"></div>
+</div>
+<? include 'foot.htm'; ?>
+</body>
+</html>

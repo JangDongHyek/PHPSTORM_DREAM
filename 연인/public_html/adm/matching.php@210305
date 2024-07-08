@@ -1,0 +1,215 @@
+<?php
+$sub_menu = "350100";
+include_once('./_common.php');
+
+auth_check($auth[$sub_menu], 'r');
+
+$g5['title'] = '매칭하기';
+include_once(G5_PATH.'/head.sub.php');
+
+$row = sql_fetch(" SELECT mb_name, mb_birth, mb_sex, mb_hp, mb_si, mb_gu FROM g5_member WHERE mb_id = '{$mb_id}' ");
+if (!$row) {
+	echo "<script>alert('회원정보를 불러오는데 실패하였습니다. 다시 시도해 주세요.'); window.close();</script>";
+	exit;
+}
+
+// 매칭회원정보
+$mb_name = $row['mb_name'];
+$mb_birth = $row['mb_birth'];
+$mb_sex = $row['mb_sex'];
+$mb_hp = $row['mb_hp'];
+$mb_si = $row['mb_si'];
+$mb_gu = $row['mb_gu'];
+$mb_age = (date("Y")+1) - substr($mb_birth, 0, 4);
+
+// 헬퍼리스트
+$result = sql_query(" SELECT mb_id, mb_name FROM g5_member WHERE mb_level = '10' AND mb_status = '헬퍼' AND mb_3 != 'out' ORDER BY mb_name ASC; ");
+$result_cnt = sql_num_rows($result);
+$helper_list = array();
+
+for ($i = 0; $i < $result_cnt; $i++) {
+	$helper_list[$i] = sql_fetch_array($result);
+}
+
+if ($member['mb_status'] == "관리자") {
+	$tmp_arr['mb_id'] = $member['mb_id'];
+	$tmp_arr['mb_name'] = $member['mb_name'];
+	$helper_list[] = $tmp_arr;
+}
+
+?>
+
+<script>
+// 매칭등록
+function matchSubmit(f) {
+	var helper_opt = f.helper_id.options[f.helper_id.selectedIndex].value,
+		type_opt = f.match_type.options[f.match_type.selectedIndex].value;
+
+	if (f.target_id.value == "") {
+		alert("매칭상대를 선택하세요.");
+		f.stx.focus();
+		return false;
+	}
+
+	if (helper_opt == "") {
+		alert("헬퍼를 선택하세요.");
+		f.helper_id.focus();
+		return false;
+	}
+
+	if (type_opt == "") {
+		alert("소개종류를 선택하세요.");
+		f.match_type.focus();
+		return false;
+	}
+
+	return true;
+}
+
+// 회원검색
+function getMemberList() {
+	var f = document.fMatch,
+		data_list = {"sfl" : f.sfl.options[f.sfl.selectedIndex].value, "stx" : f.stx.value, "mb_sex" : f.mb_sex.value};
+
+	if (f.stx.value.length < 2) {
+		alert("검색어를 2자 이상 입력하세요.");
+		return false;
+	}
+
+	$.ajax({  
+		type : "post",  
+		url : "./ajax.member_list.php",
+		data : data_list, 
+		dataType : "html", 
+		beforeSend : function() {
+			$("#match_s_result").hide().html("");
+		},
+		success : function(html) {  
+			$("#match_s_result").html(html).slideDown(500);
+		},  
+		error : function(xhr,status,error) {
+			alert("검색결과를 불러오는데 실패하였습니다. 다시 시도해 주세요.");
+			$("#match_s_result").slideUp(500).html("");
+		}  
+	});
+
+}
+
+// 회원검색-선택
+function setMatchTarget(id, name, sex, age, tel, si, gu) {
+	var f = document.fMatch;
+
+	f.target_id.value = id;
+	f.target_name.value = name;
+	f.target_sex.value = sex;
+	f.target_age.value = age;
+	f.target_hp.value = tel;
+	f.target_si.value = si;
+	f.target_gu.value = gu;
+
+	$("#match_s_result").slideUp(500).html("");
+	f.stx.value = "";
+}
+</script>
+
+<div id="popup_wrap" class="match">
+	<p>매칭하기</p>
+	<form name="fMatch" action="./matching_update.php" method="post" onsubmit="return matchSubmit(this);">
+		<input type="hidden" name="mb_id" value="<?=$mb_id?>">
+		<input type="hidden" name="target_id" value="">
+		<input type="hidden" name="mb_sex" value="<?=$mb_sex?>">
+
+		<div class="tbl_head02 tbl_wrap">
+			<!-- 매칭회원정보 -->
+			<? include_once("./member_info_pop.php"); ?>
+			<!-- //매칭회원정보 -->
+			
+			<!-- 회원검색 -->
+			<div class="srch_area">
+				<select name="sfl">
+					<option value="mb_name">이름</option>
+					<option value="mb_birth">나이</option>
+					<option value="mb_hp">연락처</option>
+					<option value="mb_si">지역</option>
+				</select>
+				<input type="text" name="stx" class="frm_input" onKeypress="javascript:if(event.keyCode==13) { event.preventDefault(); getMemberList(); }">
+				<button type="button" class="btn_frmline" onclick="getMemberList();">회원검색</button>
+				1)진행불 회원만 검색되며 2)블랙회원은 검색되지않습니다.
+				<div id="match_s_result" class="tbl_head02 tbl_wrap"><!-- 검색결과 Load --></div>
+			</div>
+			<!-- //회원검색 -->
+			
+			<!-- 매칭상대 회원정보 -->
+			<table class="tbl_match">
+			<caption>매칭상대 회원정보</caption>
+			<thead>
+			<tr>
+				<th colspan="4">매칭상대 회원정보</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th>이름</th>
+				<td><input type="text" name="target_name" class="frm_info" value="" readonly></td>
+				<th>성별</th>
+				<td><input type="text" name="target_sex" class="frm_info" value="" readonly></td>
+			</tr>
+			<tr>
+				<th>나이</th>
+				<td><input type="text" name="target_age" class="frm_info" value="" readonly></td>
+				<th>연락처</th>
+				<td><input type="text" name="target_hp" class="frm_info" value="" readonly></td>
+			</tr>
+			<tr>
+				<th>지역</th>
+				<td><input type="text" name="target_si" class="frm_info" value="" readonly></td>
+				<th>상세지역</th>
+				<td><input type="text" name="target_gu" class="frm_info" value="" readonly></td>
+			</tr>
+			<tr>
+				<th>헬퍼선택</th>
+				<td>
+					<select name="helper_id">
+						<? if ($member['mb_status'] == "헬퍼") { ?>
+						<option value="<?=$member['mb_id']?>"><?=$member['mb_name']?></option>
+						<? } else { ?>
+						<option value="">--선택--</option>
+						<?	foreach ($helper_list as $key=>$val) { ?>
+						<option value="<?=$val['mb_id']?>" <? if ($member['mb_status'] == "헬퍼" && $member['mb_id'] == $val['mb_id']) echo "selected"; ?>><?=$val['mb_name']?></option>
+						<?	} ?>
+						<? } ?>
+					</select>
+				</td>
+				<th>소개종류</th>
+				<td>
+					<select name="match_type">
+						<option value="">--선택--</option>
+						<? foreach ($match_type_arr as $key=>$val) { ?>
+						<option value="<?=$val?>"><?=$val?></option>
+						<? } ?>
+					</select>
+				</td>
+			</tr>
+			</tbody>
+			</table>
+			<!-- //매칭상대 회원정보 -->
+			
+			<br><br>
+			<div class="btn_confirm01 btn_confirm">
+				<input type="submit" value="매칭등록" class="btn_submit">
+				<a href="javascript:void(0);" onclick="getWinClose('refresh');">닫기</a>
+			</div>
+		</div>
+	</form>
+
+	<!-- 관리자 코멘트 -->
+	<? 
+	$cmt_mode = "member";
+	include_once(G5_ADMIN_PATH."/helper_comment.php"); 
+	?>
+
+</div>
+
+<?php
+include_once(G5_PATH.'/tail.sub.php');
+?>

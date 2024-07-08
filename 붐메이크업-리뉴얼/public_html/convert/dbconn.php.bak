@@ -1,0 +1,6 @@
+<? 
+  $zero_dir = "zboard";
+  $rg_dir = "rgboard";
+  mysql_connect("localhost","fpcm080","password");  
+  mysql_select_db("hsnoin");  
+?> 

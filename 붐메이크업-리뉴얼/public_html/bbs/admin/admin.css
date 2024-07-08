@@ -1,0 +1,35 @@
+td.line1 {
+	border: 1px solid #000000;
+}
+a:link {
+	color: #0000FF;
+	text-decoration: none;
+
+}
+a:visited {
+	color: #0000FF;
+	text-decoration: none;
+
+}
+a:active {
+	color: #0000FF;
+	text-decoration: none;
+
+}
+a:hover {
+
+	color: #0000FF;
+	text-decoration: underline;
+}
+td,body,a,input,select {
+	font-size: 9pt;
+}
+
+.semo a:link    { text-decoration: none;color:#404040;}
+.semo a:visited { text-decoration: none;color:#404040;}
+.semo a:hover   { text-decoration: none;color:#0083AF;}
+.semo {color:#404040; font-family:±¼¸²;font-size:9pt;}
+
+.button1 {font-style:normal; font-size:12px; color:white; line-height:16px; background-color:#404040; border-width:1px; border-color:rgb(221,221,221); border-style:solid;}
+
+.input1 {font-size:12px; color:rgb(64,64,64); background-color:rgb(247,247,247); border-width:1px; border-color:rgb(64,64,64); border-style:solid;}

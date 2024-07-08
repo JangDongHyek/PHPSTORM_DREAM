@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+	<title>UI Laboratory</title>
+	<meta charset="utf-8" />
+
+	<link rel="stylesheet" type="text/css" href="../pop_new/common.css" />
+	<script type="text/javascript" src="../pop_new/jquery-1.7.1.min.js"></script>
+
+	<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+<style type="text/css">
+
+	.mainimg-wrap {position:relative; width:330px; height:423px; margin:0 auto; overflow:hidden;}
+	.mainimg-wrap ul.mainimg {position:absolute;}
+	.mainimg-wrap ul.mainimg li {float:left; width:330px;}
+	
+	ul.bt-roll {width:330px; margin:0 auto; margin-top:5px;}
+	ul.bt-roll .a{float:left; margin-right:4px; background-image:url(../pop_new/img/btn01.jpg)}
+    ul.bt-roll .b{float:left; margin-right:5px; background-image:url(../pop_new/img/btn02.jpg)}
+	ul.bt-roll .c{float:left; margin-right:5px; background-image:url(../pop_new/img/btn03.jpg)}
+	ul.bt-roll .d{float:left; margin-right:0px; background-image:url(../pop_new/img/btn04.jpg)}
+</style>
+</head>
+<body>
+<div class="all">
+<div class="mainimg-wrap">
+	<ul class="mainimg clfix">
+		<li><a href="#"><img src="../pop_new/img/pop01.jpg" alt=""></a></li>
+		<li><a href="../bbs/mobile_list.php?bbs_id=after" target="_blank"><img src="../pop_new/img/pop02.jpg" alt="" border="0"></a></li>
+		<li><a href="../main/reserv1.htm" target="_blank"><img src="../pop_new/img/pop03.jpg" alt=""></a></li>
+		<li><a href="../bbs/mobile_list.php?bbs_id=qna" target="_blank"><img src="../pop_new/img/pop04.jpg" alt=""></a></li>
+
+	</ul>
+</div>
+
+<ul class="bt-roll">
+	<li class="a"><a href="#"><img src="../pop_new/img/btn_.png" alt=""></a></li>
+	<li class="b"><a href="#"><img src="../pop_new/img/btn.png" alt=""></a></li>
+	<li class="c"><a href="#"><img src="../pop_new/img/btn.png" alt=""></a></li>
+	<li class="d"><a href="#"><img src="../pop_new/img/btn.png" alt=""></a></li>
+
+</ul>	
+</div>
+
+<script type="text/javascript">
+	var $list = $('ul.mainimg');
+	var size = $list.children().outerWidth();
+	var len =  $list.children().length;
+	var speed = 2000;
+	var timer = null;
+	var auto = true;
+	var cnt = 1;
+
+	$list.css('width',len*size);
+
+	if(auto) timer = setInterval(autoSlide, speed);
+
+	$list.children().bind({
+		'mouseenter': function(){
+			if(!auto) return false;
+			clearInterval(timer);
+			auto = false;
+		},
+		'mouseleave': function(){
+			timer = setInterval(autoSlide, speed);
+			auto = true;
+		}
+	})
+
+	$('.bt-roll').children().bind({
+		'click': function(){
+			var idx = $('.bt-roll').children().index(this);
+			cnt = idx;
+			autoSlide();
+			return false;
+		},
+		'mouseenter': function(){
+			if(!auto) return false;
+			clearInterval(timer);
+			auto = false;
+		},
+		'mouseleave': function(){
+			timer = setInterval(autoSlide, speed);
+			auto = true;
+		}
+	});		
+
+	function autoSlide(){
+		if(cnt>len-1){
+			cnt = 0;
+		}
+
+		$list.animate({'left': -(cnt*size)+'px' },'normal');
+		
+
+		var source2 = $('.bt-roll').children().find('img').attr('src').replace('_.png','.png');
+		$('.bt-roll').children().find('img').attr('src',source2);
+
+		var source = $('.bt-roll').children().find('img').attr('src').replace('.png','_.png');
+		$('.bt-roll').children().eq(cnt).find('img').attr('src',source);
+
+		cnt++;
+	}
+</script>
+</body>
+</html>

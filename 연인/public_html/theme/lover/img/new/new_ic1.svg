@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="61" viewBox="0 0 64 61">
+  <defs>
+    <filter id="사각형_868" x="0" y="14" width="64" height="47" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="7.5" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_869" x="0" y="7" width="64" height="47" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="7.5" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_870" x="0" y="0" width="64" height="47" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="7.5" result="blur-3"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="new_ic1" transform="translate(-17.5 -18.5)">
+    <g transform="matrix(1, 0, 0, 1, 17.5, 18.5)" filter="url(#사각형_868)">
+      <rect id="사각형_868-2" data-name="사각형 868" width="19" height="2" transform="translate(22.5 36.5)" fill="#fff"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 17.5, 18.5)" filter="url(#사각형_869)">
+      <rect id="사각형_869-2" data-name="사각형 869" width="19" height="2" transform="translate(22.5 29.5)" fill="#fff"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 17.5, 18.5)" filter="url(#사각형_870)">
+      <rect id="사각형_870-2" data-name="사각형 870" width="19" height="2" transform="translate(22.5 22.5)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

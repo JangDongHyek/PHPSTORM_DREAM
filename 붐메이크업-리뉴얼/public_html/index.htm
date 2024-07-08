@@ -1,0 +1,29 @@
+<?
+if($_SERVER['SERVER_NAME'] == "m.pusanmakeup.com"){
+		echo "<script>location.href='./bbs/admin/';</script>";
+}
+?>
+
+<html>
+<META name="keywords" contents="">
+<head>
+
+<script type="text/javascript">
+var ua = window.navigator.userAgent.toLowerCase();
+if ( /iphone/.test(ua) || /android/.test(ua) || /opera/.test(ua) || /bada/.test(ua) ) {
+document.location.replace('./bbs/admin/');
+}
+</script>
+
+
+
+<title>붐메이크업</title>
+<META NAME="GOOGLEBOT" CONTENT="NOINDEX, NOFOLLOW">
+
+<FRAMESET ROWS=0%,100% border=0>
+  <FRAME SRC="music.htm">
+  <FRAME SRC="./bbs/admin/">
+</FRAMESET><noframes></noframes>
+</head>
+
+</html>

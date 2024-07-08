@@ -1,0 +1,169 @@
+<?
+/**********************************
+회원관리 - 진행여부 on, off
+
+<진행여부 등록시>
+1. 진행여부 조회 (남자는 동시진행 가능, 여자는 불가)
+2. 진행등록/실패
+
+----- 내용바뀜 -----
+1. 선매칭 여부 확인
+2. 매칭 진행 했으면
+	2.1 : 매칭DB 수정 (상태 = 1)			 -- g5_matching
+	2.2 : 진행여부DB 등록 or 수정 (상태 = 1) -- g5_member_match
+3. 매칭 안했으면
+	: 진행여부 등록불가
+--------------------
+
+<진행여부 해제시>
+1. 본인등록 확인
+2. 본인/관리자면
+	: 진행여부DB 수정 (상태 = 0)
+3. 본인아니면
+	: 진행여부 해제불가
+**********************************/
+include_once('./_common.php');
+if ($member['mb_level'] != "10") exit;
+
+// print_r( $_POST );
+
+$stt = $_POST['stt'];				// 0:진행등록, 1:해제
+$mb_id = $_POST['mb_id'];			// 회원아이디
+$idx = $_POST['idx'];				// 진행DB idx
+
+$helper_id = ($member['mb_status'] == "관리자")? $_POST['helper_id'] : $member['mb_id'];		// 헬퍼 아이디
+if ($helper_id == "") $helper_id = $member['mb_id'];
+
+
+$json_arr = array();
+$json_arr['result'] = "F";
+
+
+// <1> 진행여부 등록시
+if ($stt == "0") {
+	$match_status = 1;
+
+
+	// 1. 선매칭 여부확인
+	$sql = "SELECT COUNT(*) AS cnt FROM g5_matching
+			WHERE mb_id = '{$mb_id}' AND helper_id = '{$helper_id}' AND match_status = '0';";
+	$row = sql_fetch($sql);
+	$match_cnt = $row['cnt'];
+	
+	if ($match_cnt > 0) {
+		// 2. 매칭 했으면
+		// 2.1 매칭DB 수정
+		$sql = "UPDATE g5_matching SET 
+				match_status = '1'
+				WHERE mb_id = '{$mb_id}' AND helper_id = '{$helper_id}' AND match_status = '0';";
+		sql_query($sql);
+
+		// 2.2 진행여부DB 등록or수정
+		$sql = "SELECT COUNT(*) AS cnt FROM g5_member_match WHERE mb_id = '{$mb_id}' AND helper_id = '{$helper_id}'";
+		$mrow = sql_fetch($sql);
+		$regist_chk = $mrow['cnt'];
+
+		if ($regist_chk == 0) {	// 등록
+			$sql = "INSERT INTO g5_member_match SET
+					mb_id = '{$mb_id}',
+					helper_id = '{$helper_id}',
+					match_status = '1',
+					match_regdate = '".G5_TIME_YMDHIS."'
+					";
+			
+		} else {				// 수정
+			$sql = "UPDATE g5_member_match SET 
+					match_status = '1',
+					match_regdate = '".G5_TIME_YMDHIS."'
+					WHERE mb_id = '{$mb_id}' AND helper_id = '{$helper_id}'
+					";
+		}
+		sql_query($sql);
+		$json_arr['result'] = "T";
+
+	} else {
+		// 3. 매칭 안했으면 등록불가
+		$json_arr['msg'] = "진행된 매칭이 없습니다.";
+	}
+
+// <2> 진행여부 해제시
+} else {
+	// 1. 본인등록확인
+	$sql = "SELECT COUNT(*) AS cnt FROM g5_member_match 
+			WHERE idx = '{$idx}' AND helper_id = '{$helper_id}'";
+	$row = sql_fetch($sql);
+	$regist_chk = $row['cnt'];
+	
+	if ($regist_chk > 0) {
+		// 2. 본인/관리자면 진행여부 DB 해제
+		$sql = "UPDATE g5_member_match SET
+				match_status = 0
+				WHERE idx = '{$idx}' AND helper_id = '{$helper_id}'";
+		sql_query($sql);
+		$json_arr['result'] = "T";
+
+	} else {
+		// 3. 본인아니면 해제불가
+		$json_arr['msg'] = "본인의 진행만 해제가 가능합니다.";
+	}
+}
+
+
+echo json_encode($json_arr, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+
+
+
+
+/*
+// 진행여부 DB조회 (idx를 확인하는 이유는 진행불을 여러개 켤수있기 때문에)
+$sql = "SELECT match_status FROM g5_member_match 
+		WHERE mb_id = '{$mb_id}'";
+if ($_POST['idx'] != "")
+	$sql .= " AND idx = '{$idx}'";
+
+$row = sql_fetch($sql);
+
+$json_arr = array();
+$json_arr['result'] = "F";
+
+$helper_id = $member['mb_id'];		// 헬퍼 아이디
+$match_status = 1;					// 0:대기, 1:진행중
+
+if ($row) {
+	$current_stt = $row['match_status'];	
+
+	if ($current_stt == 1) {
+		$match_status = 0;
+	} 
+
+	$sql = "UPDATE g5_member_match SET 
+			helper_id = '{$helper_id}',
+			match_status = '1',
+			match_regdate = '".G5_TIME_YMDHIS."'
+			WHERE mb_id = '{$mb_id}'
+			";
+
+	if ($_POST['idx'] != "")
+		$sql .= " AND idx = '{$idx}'";
+
+} else {
+	$sql = "INSERT INTO g5_member_match SET
+			mb_id = '{$mb_id}',
+			helper_id = '{$helper_id}',
+			match_status = '1',
+			match_regdate = '".G5_TIME_YMDHIS."'
+			";
+}
+
+$result = sql_query($sql);
+
+$json_arr['match_status'] = $match_status;
+
+if ($result) {
+	$json_arr['result'] = "T";
+}
+
+echo json_encode($json_arr, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+*/
+
+?>

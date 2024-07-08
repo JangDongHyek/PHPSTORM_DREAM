@@ -1,0 +1,41 @@
+<? 
+   $site_path = "/home/pusanmakeup/public_html/bbs/"; 
+   $site_url = "../bbs/"; 
+   require_once($site_path."include/lib.inc.php");?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<title>모바일 홈페이지</title>
+<script language="javascript">
+	function resizeHeight(fr){
+		var frbody=fr.contentWindow.document.body;
+		fr.style.height=frbody.scrollHeight+(frbody.offsetHeight-frbody.clientHeight);
+	}
+</script>
+</head>
+<body>
+<? include 'top.htm'; ?>
+<div id="dt4"><div class="mb">
+	<!-- 메뉴-->
+		<? include '../mobile/s_menu02.htm'; ?></div>
+<!-- 메뉴-->
+</div></div>
+<div id="dt2">
+      <div class="mb">
+	  <?
+					$bbs_table="rg_pro_hair_body";
+					$sql="select max(rg_doc_num) as doc_num from $bbs_table";
+					$result=mysql_query($sql);
+					
+					$rs=mysql_fetch_array($result);
+					$doc_num=$rs[doc_num];
+					$bbs_id="pro_hair";
+					include "../bbs/mobile_view.php";
+				?>
+	  </div>
+</div>
+<? include 'foot.htm'; ?>
+</body>
+</html>

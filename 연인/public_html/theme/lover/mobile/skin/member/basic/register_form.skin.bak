@@ -1,0 +1,1212 @@
+<?php
+if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+
+// add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
+add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 100);
+$mb_name=$member[mb_name]?$member[mb_name]:$mb_name;
+$mb_hp=$member[mb_hp]?$member[mb_hp]:$mb_hp;
+$mb_birth=$member[mb_birth]?$member[mb_birth]:$mb_birth;
+$mb_sex=$member[mb_sex]?$member[mb_sex]:$mb_sex;
+
+
+$mb_email=explode("@",$member[mb_email]);
+if($w==""){
+	if(!$certi){
+		//goto_url(G5_BBS_URL."/register_certificate.php");
+		//exit;
+	}else{
+		$register_action_url="./register_form2.php";
+	}
+	
+}
+
+?>
+<script>
+$(function() {
+	$(".btn_confirm_join").remove();
+});
+</script>
+
+    <script src="<?php echo G5_JS_URL ?>/jquery.register_form.js"></script>
+    <?php if($config['cf_cert_use'] && ($config['cf_cert_ipin'] || $config['cf_cert_hp'])) { ?>
+    <script src="<?php echo G5_JS_URL ?>/certify.js"></script>
+    <?php } ?>
+	<script>
+		function auths(auth){
+			$("#reg_mb_cert").val(auth);
+			window.Android.stopReceiver();
+		}
+		function changeEmail(val){
+			if(val!="etc"){
+				$("#reg_mb_email2").val(val);
+				$("#reg_mb_email2").attr("readonly",true);
+			}else{
+				$("#reg_mb_email2").val("");
+				$("#reg_mb_email2").attr("readonly",false);
+				$("#reg_mb_email2").focus();
+			}
+		}
+
+		
+	</script>
+	<style>
+	.none {display:none;}
+	</style>
+
+
+    <!-- step01 -->
+	<div id="step01" style="">
+	    <form name="fregisterform" id="fregisterform" action="<?php echo $register_action_url ?>" onsubmit="return fregisterform_submit(this);" method="<? echo $w==""?'get':'post';?>" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" name="w" value="<?php echo $w ?>">
+    <input type="hidden" name="url" value="<?php echo $urlencode ?>">
+
+	<? if($w =='u') { ?>
+		<input type="hidden" name="agree1"  id="agree1" value="<?php echo $agree ?>">
+		<input type="hidden" name="agree2"  id="agree2" value="<?php echo $agree2 ?>">
+	<?}?>
+    <input type="hidden" name="cert_type" value="<?php echo $member['mb_certify']; ?>">
+    <input type="hidden" name="cert_no" value="">
+    <?php if (isset($member['mb_nick_date']) && $member['mb_nick_date'] > date("Y-m-d", G5_SERVER_TIME - ($config['cf_nick_modify'] * 86400))) { // 닉네임수정일이 지나지 않았다면 ?>
+    <input type="hidden" name="mb_nick_default" value="<?php echo get_text($member['mb_nick']) ?>">
+    <input type="hidden" name="mb_nick" value="<?php echo get_text($member['mb_nick']) ?>">
+    <?php } ?>
+		<? if($w=="u"){?>		
+		<input type="hidden" name="mb_4" id="mb-ext4" value="<?=$member[mb_4]?>">
+		<input type="hidden" name="mb_5" id="mb-ext5" value="<?=$member[mb_5]?>">
+		<input type="hidden" name="mb_6" id="mb-ext6" value="<?=$member[mb_6]?>">
+		<input type="hidden" name="old_mb_photo1" value="<?=$member[mb_photo1]?>">
+		<input type="hidden" name="old_mb_photo2" value="<?=$member[mb_photo2]?>">
+		<input type="hidden" name="old_mb_voice" value="<?=$member[mb_voice]?>">
+		<input type="hidden" name="mb_photo1" id="mb-photos1" value="<?=$member[mb_photo1]?>">
+		<input type="hidden" name="mb_photo2" id="mb-photos2" value="<?=$member[mb_photo2]?>">
+		<input type="hidden" name="mb_voice" id="mb-voice" value="<?=$member[mb_voice]?>">
+		<input type="hidden" name="mb_hp" value="<?=$member[mb_hp]?>">
+		<input type="hidden" name="mb_sex" value="<?=$member[mb_sex]?>">
+		<input type="hidden" name="mb_birth" value="<?=$member[mb_birth]?>" id="mb-birth">
+		<input type="hidden" name="mb_ideal_type" id="mb-ideal-type" value="<?=$member[mb_ideal_type]?>">
+
+		
+		<? }else{?>
+		<input type="hidden" name="mb_name" value="<?=iconv("euc-kr","utf-8",$mb_name)?>">
+		<input type="hidden" name="mb_sex" value="<?=iconv("euc-kr","utf-8",$mb_sex)?>">
+		<input type="hidden" name="mb_birth" value="<?=$mb_birth?>">
+		<? }?>
+	<?
+		if($w && $member['mb_hp']){
+			$status_chk = 'complete';
+		}else{
+			$status_chk = '0';
+		}
+	?>
+	<input type="hidden" name="status_chk" id="status_chk" value="<?=$status_chk?>">
+    
+        <div class="mbskin">
+            
+            <div class="j_tab">
+                <ul> 
+                    <li class="current"><h3>기본정보 입력</h3></li><!--
+                    --><li><h3>프로필 입력</h3></li><!--
+                    --><li><h3>이상형 설정</h3></li>
+                </ul>
+            </div>            
+                        
+			<?php if($w == ""){ ?>
+            <div id="join_agr">
+                <h2>약관동의</h2>
+                <div class="box-body">
+                    <dl class="agree">
+                        <dd class="chk_red" data-for="reg_req1">
+                            <input type="checkbox" name="agree1" id="agree1" value="1">
+                            <label for="agree1">서비스 이용약관 동의(필수)</label>
+                        </dd>
+                        <dd class="btn_agr"><input type="button" value="내용보기" class="btn_red"></dd>
+                        <dd class="agr_textarea"><textarea readonly><?php echo get_text($config['cf_stipulation']) ?></textarea></dd>
+                    </dl>
+                    
+                    <dl class="agree">
+                        <dd class="chk_red" data-for="reg_req2">
+                            <input type="checkbox" name="agree2" id="agree2" value="1">
+                            <label for="agree2">개인정보처리방침 동의(필수)</label>
+                        </dd>
+                        <dd class="btn_agr"><input type="button" value="내용보기" class="btn_red"></dd>
+                        <dd class="agr_textarea"><textarea readonly><?php echo get_text($config['cf_privacy']) ?></textarea></dd>
+                    </dl>
+                    <dl>
+                    	<dd class="chk_red" data-for="reg_req3">
+                            <input type="checkbox" name="agree0" id="agree0" value="1">
+                            <label for="agree0">위 내용에 모두 동의합니다</label>
+                        </dd>
+                    </dl>
+                </div>
+            </div><!--//join_agr-->
+            <?php } ?>
+            
+            <div id="join_info">
+            	<h2>기본정보입력</h2>
+                <div class="box-body">
+                	<dl class="rows">
+                    	<dt><label for="reg_mb_id">아이디<strong class="sound_only">필수</strong></label></dt>
+                        <dd>
+                            <input type="text" name="mb_id" value="<?php echo $member['mb_id'] ?>" id="reg_mb_id" class="frm_input <?php echo $required ?> <?php echo $readonly ?>" minlength="3" maxlength="20" <?php echo $required ?> <?php echo $readonly ?> placeholder="영문자, 숫자, _ 만 입력 가능, 최소 3자이상">
+                            <i></i><span id="msg_mb_id"></span>
+                        </dd>
+                        
+                        <dd class="error_msg"></dd>
+                    </dl>
+					<?
+						if($w=="u"){
+							$sql="select * from g5_social_member where mb_id='$member[mb_id]'";
+							$m_result=sql_query($sql);
+							$m_count=sql_num_rows($m_result);
+						}else{
+							$m_count=0;
+						}
+						if($m_count==0){
+					?>
+                    <dl class="rows">
+                    	<dt><label for="reg_mb_password">비밀번호<strong class="sound_only">필수</strong></label></dt>
+                        <dd>
+                            <input type="password" name="mb_password" id="reg_mb_password" class="frm_input <?php echo $required ?>" minlength="6" maxlength="20" <?php echo $required ?> placeholder="비밀번호"><i></i>
+                        </dd>
+                        <dd class="error_msg"></dd>
+                    </dl>
+                    <dl class="rows long">
+                    	<dt><label for="reg_mb_password_re">비밀번호 확인<strong class="sound_only">필수</strong></label></dt>
+                        <dd><input type="password" name="mb_password_re" id="reg_mb_password_re" class="frm_input <?php echo $required ?>" minlength="3" maxlength="20" <?php echo $required ?>><i></i></dd>
+												<dd class="error_msg"></dd>
+                    </dl>
+					<?
+						}else{?>
+						<input type="hidden" name="mb_password" value="">
+						<input type="hidden" name="mb_password_re" value="">
+					<?}
+						if($w==""){
+					?>
+                    <dl class="rows long hpc">
+                        <dt><label for="reg_mb_hp">휴대폰번호<?php if ($config['cf_req_hp']) { ?><strong class="sound_only">필수</strong><?php } ?></label></dt>
+                        <dd>
+                            <input type="tel" name="mb_hp" value="<?php echo get_text($mb_hp) ?>" id="reg_mb_hp" <?php echo ($config['cf_req_hp'])?"required":""; ?> class="frm_input <?php echo ($config['cf_req_hp'])?"required":""; ?>" maxlength="20" placeholder="인증받을 휴대폰 번호" readonly>
+                           
+                        </dd>
+                       
+                    </dl>
+										<dl class="rows long">
+											<dt><label for="reg_mb_email">이메일주소<strong class="sound_only">필수</strong></label></dt>
+											<dd>
+												<input type="email" name="mb_email" value="" id="reg_mb_email" required class="frm_input email required" style="width:100%">
+												<!--
+												@<input type="text" name="mb_email[1]" value="naver.com" id="reg_mb_email2" required class="frm_input  required" style="width:100px" readonly=true>
+												<select name="mb_email[2]" onchange="changeEmail(this.value)" style="width:100px">
+												 <option value="naver.com">naver.com</option>
+												 <option value="nate.com">nate.com</option>
+												 <option value="empal.com">empal.com</option>
+												 <option value="hotmail.com">hotmail.com</option>
+												 <option value="lycos.co.kr">lycos.co.kr</option>
+												 <option value="msn.com">msn.com</option>
+												 <option value="hanmail.net">hanmail.net</option>
+												 <option value="yahoo.com">yahoo.com</option>
+												 <option value="korea.com">korea.com</option>
+												 <option value="kornet.net">kornet.net</option>
+												 <option value="yahoo.co.kr">yahoo.co.kr</option>
+												 <option value="kebi.com">kebi.com</option>
+												 <option value="orgio.net">orgio.net</option>
+												 <option value="paran.com">paran.com</option>    
+												 <option value="gmail.com">gmail.com</option>
+												 <option value="etc">직접입력</option>
+												</select>-->
+												
+											</dd>
+										</dl>
+					<? }else{?>
+                    <!-- 프로필 수정하기 -->
+                    <dl>
+                    	<dt><label for="reg_mb_name">이름<strong class="sound_only">필수</strong></label></dt>
+                        <dd>
+													<?php if ($config['cf_cert_use']) { ?>
+                            <span class="frm_info">아이핀 본인확인 후에는 이름이 자동 입력되고 휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할수 없게 됩니다.</span>
+                            <?php } ?>
+                            <input type="text" id="reg_mb_name" name="mb_name" value="<?php echo get_text($mb_name) ?>" <?php echo $required ?> class="frm_input <?php echo $required ?>" readonly>
+                            <?php
+                            if($config['cf_cert_use']) {
+                                if($config['cf_cert_ipin'])
+                                    echo '<button type="button" id="win_ipin_cert" class="btn_frmline">아이핀 본인확인</button>'.PHP_EOL;
+                                if($config['cf_cert_hp'] && $config['cf_cert_hp'] != 'lg')
+                                    echo '<button type="button" id="win_hp_cert" class="btn_frmline">휴대폰 본인확인</button>'.PHP_EOL;
+            
+                                echo '<noscript>본인확인을 위해서는 자바스크립트 사용이 가능해야합니다.</noscript>'.PHP_EOL;
+                            }
+                            ?>
+                            <?php
+                            if ($config['cf_cert_use'] && $member['mb_certify']) {
+                                if($member['mb_certify'] == 'ipin')
+                                    $mb_cert = '아이핀';
+                                else
+                                    $mb_cert = '휴대폰';
+                            ?>
+                            <div id="msg_certify">
+                                <strong><?php echo $mb_cert; ?> 본인확인</strong><?php if ($member['mb_adult']) { ?> 및 <strong>성인인증</strong><?php } ?> 완료
+                            </div>
+                            <?php } ?>
+                        </dd>
+                    </dl>
+										<dl class="rows long">
+												<dt style="width:100%"><label for="reg_mb_email">이메일주소<strong class="sound_only">필수</strong></label></dt>
+												<dd>
+													<input type="hidden" name="old_email" value="<?php echo $member['mb_email'] ?>">
+													<input type="text" name="mb_email" value="<?=$member[mb_email]?>" id="reg_mb_email" required class="frm_input  required" style="width:100%">
+													<!--@<input type="text" name="mb_email[1]" value="<?=$mb_email[1]?>" id="reg_mb_email2" required class="frm_input  required" size="25" style="width:49%" readonly=true>
+													<select name="mb_email[2]" onchange="changeEmail(this.value)" style="width:49%">
+													 <option value="naver.com"<?php echo $mb_email[1]=="naver.com"?" selected":"";?>>naver.com</option>
+													 <option value="nate.com"<?php echo $mb_email[1]=="nate.com"?" selected":"";?>>nate.com</option>
+													 <option value="empal.com"<?php echo $mb_email[1]=="empal.com"?" selected":"";?>>empal.com</option>
+													 <option value="hotmail.com"<?php echo $mb_email[1]=="hotmail.com"?" selected":"";?>>hotmail.com</option>
+													 <option value="lycos.co.kr"<?php echo $mb_email[1]=="lycos.co.kr"?" selected":"";?>>lycos.co.kr</option>
+													 <option value="msn.com"<?php echo $mb_email[1]=="msn.com"?" selected":"";?>>msn.com</option>
+													 <option value="hanmail.net"<?php echo $mb_email[1]=="hanmail.net"?" selected":"";?>>hanmail.net</option>
+													 <option value="yahoo.com"<?php echo $mb_email[1]=="yahoo.com"?" selected":"";?>>yahoo.com</option>
+													 <option value="korea.com"<?php echo $mb_email[1]=="korea.com"?" selected":"";?>>korea.com</option>
+													 <option value="kornet.net"<?php echo $mb_email[1]=="kornet.com"?" selected":"";?>>kornet.net</option>
+													 <option value="yahoo.co.kr"<?php echo $mb_email[1]=="yahoo.co.kr"?" selected":"";?>>yahoo.co.kr</option>
+													 <option value="kebi.com"<?php echo $mb_email[1]=="kebi.com"?" selected":"";?>>kebi.com</option>
+													 <option value="orgio.net"<?php echo $mb_email[1]=="orgio.com"?" selected":"";?>>orgio.net</option>
+													 <option value="paran.com"<?php echo $mb_email[1]=="paran.com"?" selected":"";?>>paran.com</option>    
+													 <option value="gmail.com"<?php echo $mb_email[1]=="gmail.com"?" selected":"";?>>gmail.com</option>
+													 <option value="etc">직접입력</option>
+													</select>-->
+												</dd>
+													
+											</dl>
+					<dl class="gen">
+                    	<dt>성별</dt>
+                        <dd>												
+							<?if($member['mb_sex']){?>
+							<?=$member[mb_sex]?>
+							<span class="info_msg">(가입후 변경불가)</span>
+							<?}?>
+                        	<div class="box">
+													
+                                <span class="chk_red">
+                                    <input type="radio" name="mb_sex" id="man" value="남자"<? if($mb_sex=="남자"){echo " checked";}?> <?if($member['mb_sex']){?>disabled<?}?>>
+                                    <label for="man">남성</label>
+                                </span>
+                                <span class="chk_red">
+                                    <input type="radio" name="mb_sex" id="woman" value="여자"<? if($mb_sex=="여자"){echo " checked";}?> <?if($member['mb_sex']){?>disabled<?}?>>
+                                    <label for="woman">여성</label>
+                                </span>
+                            </div>
+                        </dd>
+                    </dl>
+					<?if(!$member['mb_hp']){?>
+					<dl class="rows long hpc">
+                        <dt><label for="reg_mb_hp">휴대폰번호<?php if ($config['cf_req_hp']) { ?><strong class="sound_only">필수</strong><?php } ?></label></dt>
+                        <dd>
+                            <input type="tel" name="mb_hp" value="<?php echo get_text($mb_hp) ?>" id="reg_mb_hp" <?php echo ($config['cf_req_hp'])?"required":""; ?> class="frm_input <?php echo ($config['cf_req_hp'])?"required":""; ?>" maxlength="20" placeholder="인증받을 휴대폰 번호" readonly>
+                            
+                        </dd>
+                        <dd>                        	
+							
+                        </dd>
+						<dd class="error_msg"></dd>
+                    </dl>
+					<?}else{?>
+					<dl class="rows long hpc">
+                        <dt><label for="reg_mb_hp">휴대폰번호<?php if ($config['cf_req_hp']) { ?><strong class="sound_only">필수</strong><?php } ?></label></dt>
+                        <dd>
+                            <input type="tel" name="mb_hp" value="<?php echo get_text($mb_hp) ?>" id="reg_mb_hp"  class="frm_input" readonly>
+                        </dd>
+                        
+						<dd class="error_msg"></dd>
+                    </dl>
+					<?}?>
+					<dl>
+                    	<dt><label for="">생년월일</label></dt>
+                    	<dd>
+											<?
+												$mb_birth=explode("-",$mb_birth);
+												
+											?>
+												<select name="mb_birth2[0]" id="mb-birth1">
+														<? 
+																$firstYear=date("Y")-15;
+																$lastYear=1940;
+																for($i=$firstYear;$i>=$lastYear;$i--){
+															?>
+														<option value="<?=$i?>"<? echo $i==$mb_birth[0]?" selected":"disabled";?>><?=$i?>년</option>
+														<? }?>
+													</select>-
+													<select name="mb_birth2[1]" id="mb-birth2">
+														<? 
+																for($i=1;$i<=12;$i++){
+																	$i<10?$j="0".$i:$j=$i;
+															?>
+														<option value="<?=$j?>"<? echo $j==$mb_birth[1]?" selected":"disabled";?>><?=$j?>월</option>
+														<? }?>
+													</select>-
+													<select name="mb_birth2[2]" id="mb-birth3">
+														<? 
+																for($i=1;$i<=31;$i++){
+																	$i<10?$j="0".$i:$j=$i;
+															?>
+														<option value="<?=$j?>"<? echo $j==$mb_birth[2]?" selected":"disabled";?>><?=$j?>일</option>
+														<? }?>
+													</select>
+											</dd>
+                    </dl>
+					<dl>
+                    	<dt><label for="">키</label></dt>
+                    	<dd><input type="text" name="mb_height" id="mb-height" class="frm_input" value="<?=$member[mb_height]?>" required placeholder="예) 170cm"></dd>
+                    </dl>
+					<dl>
+						<dt><label for="">지역</label></dt>
+                    	<dd>
+							<select name="mb_addr1" style="width:100%" required>
+								<option value="">선택</option>
+								<option value="서울" <?if($member['mb_addr1']=="서울"){echo "selected";}?>>서울특별시</option>
+								<option value="인천" <?if($member['mb_addr1']=="인천"){echo "selected";}?>>인천광역시</option>
+								<option value="대전" <?if($member['mb_addr1']=="대전"){echo "selected";}?>>대전광역시</option>
+								<option value="대구" <?if($member['mb_addr1']=="대구"){echo "selected";}?>>대구광역시</option>
+								<option value="울산" <?if($member['mb_addr1']=="울산"){echo "selected";}?>>울산광역시</option>
+								<option value="광주" <?if($member['mb_addr1']=="광주"){echo "selected";}?>>광주광역시</option>
+								<option value="부산" <?if($member['mb_addr1']=="부산"){echo "selected";}?>>부산광역시</option>
+								<option value="세종" <?if($member['mb_addr1']=="세종"){echo "selected";}?>>세종시</option>
+								<option value="경기" <?if($member['mb_addr1']=="경기"){echo "selected";}?>>경기도</option>
+								<option value="강원" <?if($member['mb_addr1']=="강원"){echo "selected";}?>>강원도</option>
+								<option value="충북" <?if($member['mb_addr1']=="충북"){echo "selected";}?>>충청북도</option>
+								<option value="충남" <?if($member['mb_addr1']=="충남"){echo "selected";}?>>충청남도</option>  
+								<option value="전북" <?if($member['mb_addr1']=="전북"){echo "selected";}?>>전라북도</option>
+								<option value="전남" <?if($member['mb_addr1']=="전남"){echo "selected";}?>>전라남도</option>
+								<option value="경북" <?if($member['mb_addr1']=="경북"){echo "selected";}?>>경상북도</option>
+								<option value="경남" <?if($member['mb_addr1']=="경남"){echo "selected";}?>>경상남도</option>
+								<option value="제주" <?if($member['mb_addr1']=="제주"){echo "selected";}?>>제주도</option>
+							</select>
+						</dd>
+                    </dl>
+					<dl>
+                    	<dt><label for="">상세지역</label></dt>
+                    	<dd>
+							<input type="text" name="mb_addr2" id="mb_addr2" value="<?=$member['mb_addr2']?>" class="frm_input" placeholder="예) 시, 구, 군" required>
+						</dd>
+                    </dl>
+					<dl>
+                    	<dt><label for="">직업</label></dt>
+                    	<dd><input type="text" name="mb_job" id="mb-job" value="<?=$member[mb_job]?>" class="frm_input" required placeholder="예) 회사원"></dd>
+                    </dl>
+					<dl>
+                    	<dt><label for="">체형</label></dt>
+                    	<dd><input type="text" name="mb_bodytype" id="mb-bodytype" value="<?=$member[mb_bodytype]?>" class="frm_input" required placeholder="예) 통통해요"></dd>
+                    </dl>
+										<dl class="gen">
+													<dt>흡연여부</dt>
+													<dd>
+														<div>
+															<label for="mb-smoke1" style="font-size:11px">
+																<input type="radio" name="mb_smoke" id="mb-smoke1" value="흡연"<? echo $member[mb_smoke]=="흡연"?" checked":"";?>>흡연
+															</label>
+															<label for="mb-smoke2" style="font-size:11px">
+																<input type="radio" name="mb_smoke" id="mb-smoke2" value="비흡연"<? echo $member[mb_smoke]=="비흡연"?" checked":"";?>>비흡연
+															</label>
+														</div>
+													</dd>
+												</dl>
+
+					<div id="my_sel">
+                        <dl>
+                            <dt>나의 연애스타일</dt>
+                            <dd class="info_msg">
+														
+															<div id="mb-ext4-str" data-toggle="modal" data-target="#myModal1" style="cursor:pointer">
+																<? echo $member[mb_4]?$member[mb_4]:"나의 연애스타일을 선택하세요";?>
+															</div>
+														</dd>
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">나의 연애스타일</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <ul>
+                                        <li data-for="lst1"><input type="checkbox" name="lst[]" id="lst1" value="자주 연락하는 사람"<? if(-1<strpos($member["mb_4"],"자주 연락하는 사람")){echo " checked";}?>>
+																					<label for="lst1">자주 연락하는 사람</label>
+																				</li>
+                                        <li data-for="lst2"><input type="checkbox" name="lst[]" id="lst2" value="말이 통하는 사람"<? if(-1<strpos($member["mb_4"],"말이 통하는 사람")){echo " checked";}?>><label for="lst2">말이 통하는 사람</label></li>
+                                        <li data-for="lst3"><input type="checkbox" name="lst[]" id="lst3" value="잘 들어주는 사람"<? if(-1<strpos($member["mb_4"],"잘 들어주는 사람")){echo " checked";}?>><label for="lst3">잘 들어주는 사람</label></li>
+                                        <li data-for="lst4"><input type="checkbox" name="lst[]" id="lst4" value="배울점이 많은 사람"<? if(-1<strpos($member["mb_4"],"배울점이 많은 사람")){echo " checked";}?>><label for="lst4">배울점이 많은 사람</label></li>
+                                        <li data-for="lst5"><input type="checkbox" name="lst[]" id="lst5" value="귀여운 사람"<? if(-1<strpos($member["mb_4"],"귀여운 사람")){echo " checked";}?>><label for="lst5">귀여운 사람</label></li>
+                                        <li data-for="lst6"><input type="checkbox" name="lst[]" id="lst6" value="자기 일에 충실한사람"<? if(-1<strpos($member["mb_4"],"자기 일에 충실한사람")){echo " checked";}?>><label for="lst6">자기 일에 충실한사람</label></li>
+                                        <li data-for="lst7"><input type="checkbox" name="lst[]" id="lst7" value="애교 많은 사람"<? if(-1<strpos($member["mb_4"],"애교 많은 사람")){echo " checked";}?>><label for="lst7">애교 많은 사람</label></li>
+                                        <li data-for="lst8"><input type="checkbox" name="lst[]" id="lst8" value="털털한 사람"<? if(-1<strpos($member["mb_4"],"털털한 사람")){echo " checked";}?>><label for="lst8">털털한 사람</label></li>
+                                        <li data-for="lst9"><input type="checkbox" name="lst[]" id="lst9" value="예의바른 사람"<? if(-1<strpos($member["mb_4"],"예의바른 사람")){echo " checked";}?>><label for="lst9">예의바른 사람</label></li>
+                                        <li data-for="lst10"><input type="checkbox" name="lst[]" id="lst10" value="대인관계가 좋은사람"<? if(-1<strpos($member["mb_4"],"대인관계가 좋은사람")){echo " checked";}?>><label for="lst10">대인관계가 좋은사람</label></li>
+                                        <li data-for="lst11"><input type="checkbox" name="lst[]" id="lst11" value="허세 없는 사람"<? if(-1<strpos($member["mb_4"],"허세 없는 사람")){echo " checked";}?>><label for="lst11">허세 없는 사람</label></li>
+                                        <li data-for="lst12"><input type="checkbox" name="lst[]" id="lst12" value="유머러스한 사람"<? if(-1<strpos($member["mb_4"],"유머러스한 사람")){echo " checked";}?>><label for="lst12">유머러스한 사람</label></li>
+                                    </ul>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" onclick="modalCheck('lst[]','1')">확인</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                            
+                            <!-- //Modal -->
+                        </dl>
+												<dl class="gen">
+													<dt>가입경로</dt>
+													<dd>
+													<div>
+														<input type="radio" name="mb_11" id="mb_110" value="<?=$joinPathArray[0]?>"<?php echo $member[mb_11]==$joinPathArray[0]?" checked":"";?>>&nbsp;
+														<label for="mb_110" style="font-size:11px"><?=$joinPathArray[0]?></label>
+														<input type="radio" name="mb_11" id="mb_111" value="<?=$joinPathArray[1]?>"<?php echo $member[mb_11]==$joinPathArray[1]?" checked":"";?>>&nbsp;
+														<label for="mb_111" style="font-size:11px"><?=$joinPathArray[1]?></label>
+													</div>
+													<div>
+														<input type="radio" name="mb_11" id="mb_112" value="<?=$joinPathArray[2]?>"<?php echo $member[mb_11]==$joinPathArray[2]?" checked":"";?>>&nbsp;
+														<label for="mb_112" style="font-size:11px"><?=$joinPathArray[2]?></label>
+														<input type="radio" name="mb_11" id="mb_113" value="<?=$joinPathArray[3]?>"<?php echo $member[mb_11]==$joinPathArray[3]?" checked":"";?>>&nbsp;
+														<label for="mb_113" style="font-size:11px"><?=$joinPathArray[3]?></label>
+													</div>
+													<div>
+														<input type="radio" name="mb_11" id="mb_114" value="<?=$joinPathArray[4]?>"<?php echo $member[mb_11]==$joinPathArray[4]?" checked":"";?>>&nbsp;
+														<label for="mb_114" style="font-size:11px"><?=$joinPathArray[4]?></label>
+														<input type="radio" name="mb_11" id="mb_115" value="<?=$joinPathArray[5]?>"<?php echo $member[mb_11]==$joinPathArray[5]?" checked":"";?>>&nbsp;
+														<label for="mb_115" style="font-size:11px"><?=$joinPathArray[5]?></label>
+													</div>
+													<div>
+														<input type="radio" name="mb_11" id="mb_116" value="<?=$joinPathArray[6]?>"<?php echo $member[mb_11]==$joinPathArray[6]?" checked":"";?>>&nbsp;
+														<label for="mb_116" style="font-size:11px"><?=$joinPathArray[6]?></label>
+													</div>
+													</dd>
+												</dl>
+                        <dl>
+                            <dt>관심사</dt>
+                            <dd class="info_msg">
+															<div id="mb-ext5-str" data-toggle="modal" data-target="#myModal2" style="cursor:pointer">
+															<? echo $member[mb_5]?$member[mb_5]:"나의 관심사를 선택하세요";?>
+															</div>
+														</dd>
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">관심사</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <ul>
+                                        <li data-for="int1"><input type="checkbox" name="int[]" id="int1" value="영화감상"<? if(-1<strpos($member["mb_5"],"영화감상")){echo " checked";}?>><label for="int1">영화감상</label></li>
+                                        <li data-for="int2"><input type="checkbox" name="int[]" id="int2" value="전시회"<? if(-1<strpos($member["mb_5"],"전시회")){echo " checked";}?>><label for="int2">전시회</label></li>
+                                        <li data-for="int3"><input type="checkbox" name="int[]" id="int3" value="맛집탐방"<? if(-1<strpos($member["mb_5"],"맛집탐방")){echo " checked";}?>><label for="int3">맛집탐방</label></li>
+                                        <li data-for="int4"><input type="checkbox" name="int[]" id="int4" value="야구"<? if(-1<strpos($member["mb_5"],"야구")){echo " checked";}?>><label for="int4">야구</label></li>
+                                        <li data-for="int5"><input type="checkbox" name="int[]" id="int5" value="축구"<? if(-1<strpos($member["mb_5"],"축구")){echo " checked";}?>><label for="int5">축구</label></li>
+                                        <li data-for="int6"><input type="checkbox" name="int[]" id="int6" value="독서"<? if(-1<strpos($member["mb_5"],"독서")){echo " checked";}?>><label for="int6">독서</label></li>
+                                        <li data-for="int7"><input type="checkbox" name="int[]" id="int7" value="산책"<? if(-1<strpos($member["mb_5"],"산책")){echo " checked";}?>><label for="int7">산책</label></li>
+                                        <li data-for="int8"><input type="checkbox" name="int[]" id="int8" value="노래"<? if(-1<strpos($member["mb_5"],"노래")){echo " checked";}?>><label for="int8">노래</label></li>
+                                        <li data-for="int9"><input type="checkbox" name="int[]" id="int9" value="춤"<? if(-1<strpos($member["mb_5"],"춤")){echo " checked";}?>><label for="int9">춤</label></li>
+                                        <li data-for="int10"><input type="checkbox" name="int[]" id="int10" value="사진촬영"<? if(-1<strpos($member["mb_5"],"사진촬영")){echo " checked";}?>><label for="int10">사진촬영</label></li>
+                                        <li data-for="int11"><input type="checkbox" name="int[]" id="int11" value="음악감상"<? if(-1<strpos($member["mb_5"],"음악감상")){echo " checked";}?>><label for="int11">음악감상</label></li>
+                                        <li data-for="int12"><input type="checkbox" name="int[]" id="int12" value="레져스포츠"<? if(-1<strpos($member["mb_5"],"레져스포츠")){echo " checked";}?>><label for="int12">레져스포츠</label></li>
+                                        <li data-for="int13"><input type="checkbox" name="int[]" id="int13" value="그림그리기"<? if(-1<strpos($member["mb_5"],"그림그리기")){echo " checked";}?>><label for="int13">그림그리기</label></li>
+                                        <li data-for="int14"><input type="checkbox" name="int[]" id="int14" value="쇼핑"<? if(-1<strpos($member["mb_5"],"쇼핑")){echo " checked";}?>><label for="int14">쇼핑</label></li>
+                                        <li data-for="int15"><input type="checkbox" name="int[]" id="int15" value="까페"<? if(-1<strpos($member["mb_5"],"까페")){echo " checked";}?>><label for="int15">까페</label></li>
+                                        <li data-for="int16"><input type="checkbox" name="int[]" id="int16" value="드라마"<? if(-1<strpos($member["mb_5"],"드라마")){echo " checked";}?>><label for="int16">드라마</label></li>
+                                        <li data-for="int17"><input type="checkbox" name="int[]" id="int17" value="패션"<? if(-1<strpos($member["mb_5"],"패션")){echo " checked";}?>><label for="int17">패션</label></li>
+                                        <li data-for="int18"><input type="checkbox" name="int[]" id="int18" value="요리"<? if(-1<strpos($member["mb_5"],"요리")){echo " checked";}?>><label for="int18">요리</label></li>
+                                        <li data-for="int19"><input type="checkbox" name="int[]" id="int19" value="게임"<? if(-1<strpos($member["mb_5"],"게임")){echo " checked";}?>><label for="int19">게임</label></li>
+                                        <li data-for="int20"><input type="checkbox" name="int[]" id="int20" value="소환사의 협곡"<? if(-1<strpos($member["mb_5"],"소환사의 협곡")){echo " checked";}?>><label for="int20">소환사의 협곡</label></li>
+                                        <li data-for="int21"><input type="checkbox" name="int[]" id="int21" value="배틀그라운드"<? if(-1<strpos($member["mb_5"],"배틀그라운드")){echo " checked";}?>><label for="int21">배틀그라운드</label></li>
+                                        <li data-for="int22"><input type="checkbox" name="int[]" id="int22" value="캠핑"<? if(-1<strpos($member["mb_5"],"캠핑")){echo " checked";}?>><label for="int22">캠핑</label></li>
+                                        <li data-for="int23"><input type="checkbox" name="int[]" id="int23" value="애니"<? if(-1<strpos($member["mb_5"],"애니")){echo " checked";}?>><label for="int23">애니</label></li>
+                                        <li data-for="int24"><input type="checkbox" name="int[]" id="int24" value="피규어<? if(-1<strpos($member["mb_5"],"피규어")){echo " checked";}?>"><label for="int24">피규어</label></li>
+                                        <li data-for="int25"><input type="checkbox" name="int[]" id="int25" value="VR체험"<? if(-1<strpos($member["mb_5"],"VR체험")){echo " checked";}?>><label for="int25">VR체험</label></li>
+                                    </ul>
+                                  </div>
+                                  <div class="modal-footer">
+                                   <button type="button" onclick="modalCheck('int[]','2')">확인</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                            
+                            <!-- //Modal -->
+                        </dl>
+                        <dl>
+                            <dt>나의매력</dt>
+                            <dd class="info_msg">
+															<div id="mb-ext6-str" data-toggle="modal" data-target="#myModal3" style="cursor:pointer">
+																<? echo $member[mb_6]?$member[mb_6]:"나의 매력을 선택하세요";?>
+															</div>
+														</dd>
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">나의매력</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <ul>
+                                        <li data-for="cha1"><input type="checkbox" name="cha[]" id="cha1" value="털털해요"<? if(-1<strpos($member["mb_6"],"털털해요")){echo " checked";}?>><label for="cha1">털털해요</label></li>
+                                        <li data-for="cha2"><input type="checkbox" name="cha[]" id="cha2" value="사랑스러워요"<? if(-1<strpos($member["mb_6"],"사랑스러워요")){echo " checked";}?>><label for="cha2">사랑스러워요</label></li>
+                                        <li data-for="cha3"><input type="checkbox" name="cha[]" id="cha3" value="귀여워요"<? if(-1<strpos($member["mb_6"],"귀여워요")){echo " checked";}?>><label for="cha3">귀여워요</label></li>
+                                        <li data-for="cha4"><input type="checkbox" name="cha[]" id="cha4" value="동안 피부"<? if(-1<strpos($member["mb_6"],"동안 피부")){echo " checked";}?>><label for="cha4">동안 피부</label></li>
+                                        <li data-for="cha5"><input type="checkbox" name="cha[]" id="cha5" value="체력 좋아요"<? if(-1<strpos($member["mb_6"],"체력 좋아요")){echo " checked";}?>><label for="cha5">체력 좋아요</label></li>
+                                        <li data-for="cha6"><input type="checkbox" name="cha[]" id="cha6" value="허세 없어요"<? if(-1<strpos($member["mb_6"],"허세 없어요")){echo " checked";}?>><label for="cha6">허세 없어요</label></li>
+                                        <li data-for="cha7"><input type="checkbox" name="cha[]" id="cha7" value="패션센스"<? if(-1<strpos($member["mb_6"],"패션센스")){echo " checked";}?>><label for="cha7">패션센스</label></li>
+                                        <li data-for="cha8"><input type="checkbox" name="cha[]" id="cha8" value="섹시한 두뇌"<? if(-1<strpos($member["mb_6"],"섹시한 두뇌")){echo " checked";}?>><label for="cha8">섹시한 두뇌</label></li>
+                                        <li data-for="cha9"><input type="checkbox" name="cha[]" id="cha9" value="어깨깡패"<? if(-1<strpos($member["mb_6"],"어깨깡패")){echo " checked";}?>><label for="cha9">어깨깡패</label></li>
+                                        <li data-for="cha10"><input type="checkbox" name="cha[]" id="cha10" value="빨래판 복근"<? if(-1<strpos($member["mb_6"],"빨래판 복근")){echo " checked";}?>><label for="cha10">빨래판 복근</label></li>
+                                        <li data-for="cha11"><input type="checkbox" name="cha[]" id="cha11" value="11자 복근"<? if(-1<strpos($member["mb_6"],"11자 복근")){echo " checked";}?>><label for="cha11">11자 복근</label></li>
+                                        <li data-for="cha12"><input type="checkbox" name="cha[]" id="cha12" value="시사에 밝아요"<? if(-1<strpos($member["mb_6"],"시사에 밝아요")){echo " checked";}?>><label for="cha12">시사에 밝아요</label></li>
+                                        <li data-for="cha13"><input type="checkbox" name="cha[]" id="cha13" value="상남자에요"<? if(-1<strpos($member["mb_6"],"상남자에요")){echo " checked";}?>><label for="cha13">상남자에요</label></li>
+                                        <li data-for="cha14"><input type="checkbox" name="cha[]" id="cha14" value="상여자에요"<? if(-1<strpos($member["mb_6"],"상여자에요")){echo " checked";}?>><label for="cha14">상여자에요</label></li>
+                                        <li data-for="cha15"><input type="checkbox" name="cha[]" id="cha15" value="손재주가 많아요"<? if(-1<strpos($member["mb_6"],"손재주가 많아요")){echo " checked";}?>><label for="cha15">손재주가 많아요</label></li>
+                                        <li data-for="cha16"><input type="checkbox" name="cha[]" id="cha16" value="웃음이많아요"<? if(-1<strpos($member["mb_6"],"웃음이많아요")){echo " checked";}?>><label for="cha16">웃음이많아요</label></li>
+                                        <li data-for="cha17"><input type="checkbox" name="cha[]" id="cha17" value="운동 신경이 좋아요"<? if(-1<strpos($member["mb_6"],"운동 신경이 좋아요")){echo " checked";}?>><label for="cha17">운동 신경이 좋아요</label></li>
+                                        <li data-for="cha18"><input type="checkbox" name="cha[]" id="cha18" value="자취해요"<? if(-1<strpos($member["mb_6"],"자취해요")){echo " checked";}?>><label for="cha18">자취해요</label></li>
+                                        <li data-for="cha19"><input type="checkbox" name="cha[]" id="cha19" value="눈이 이뻐요"<? if(-1<strpos($member["mb_6"],"눈이 이뻐요")){echo " checked";}?>><label for="cha19">눈이 이뻐요</label></li>
+                                        <li data-for="cha20"><input type="checkbox" name="cha[]" id="cha20" value="오똑한 콧날"<? if(-1<strpos($member["mb_6"],"오똑한 콧날")){echo " checked";}?>><label for="cha20">오똑한 콧날</label></li>
+                                        <li data-for="cha21"><input type="checkbox" name="cha[]" id="cha21" value="탄탄한 몸매"<? if(-1<strpos($member["mb_6"],"탄탄한 몸매")){echo " checked";}?>><label for="cha21">탄탄한 몸매</label></li>
+                                        <li data-for="cha22"><input type="checkbox" name="cha[]" id="cha22" value="T존이 이뻐요"<? if(-1<strpos($member["mb_6"],"T존이 이뻐요")){echo " checked";}?>><label for="cha22">T존이 이뻐요</label></li>
+                                        <li data-for="cha23"><input type="checkbox" name="cha[]" id="cha23" value="다정다감해요"<? if(-1<strpos($member["mb_6"],"다정다감해요")){echo " checked";}?>><label for="cha23">다정다감해요</label></li>
+                                        <li data-for="cha24"><input type="checkbox" name="cha[]" id="cha24" value="유머 감각"<? if(-1<strpos($member["mb_6"],"유머 감각")){echo " checked";}?>><label for="cha24">유머 감각</label></li>
+                                    </ul>
+                                  </div>
+                                  <div class="modal-footer">
+                                     <button type="button" onclick="modalCheck('cha[]','3')">확인</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                            
+                            <!-- //Modal -->
+                        </dl>
+												<dl id="ideal-type-man" style="display:">
+                            <dt>나의 이상형</dt>
+                            <dd class="info_msg">
+															<div id="mb-ext8-str" data-toggle="modal" data-target="#myModal5" style="cursor:pointer"><? echo $member[mb_ideal_type]?$member[mb_ideal_type]:"나의 이상형을 선택하세요";?></div>
+														</dd>
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">나의 이상형</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <ul>
+																			
+                                        <?
+																				$sql="select * from g5_ideal_type where INSTR(id_sex,'$member[mb_sex]')";
+																				$result=sql_query($sql);
+																				$no=1;
+																				while($row=sql_fetch_array($result)){
+																			?>
+                                        <li data-for="ide1<?=$no?>"><input type="checkbox" name="ide1[]" id="ide1<?=$no?>" value="<?=$row[ideal_type]?>"><label for="ide1<?=$no?>"><?=$row[ideal_type]?></label></li>
+																			<? $no++;}?>
+                                    </ul>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" onclick="modalCheck('ide1[]','5')">확인</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                            
+                            <!-- //Modal -->
+                        </dl>
+										<!-- 프로필 수정하기 -->
+										<? }?>
+                </div>
+								
+            </div>
+            
+        </div><!-- //mbskin -->  
+		<? if($w!=""){?>
+		<input type="file" name="mb_photo1" value="" id="mb-photoFile1" style="display:none">
+		<input type="file" name="mb_photo2" value="" id="mb-photoFile2" style="display:none">
+        <div id="step03" style="">    
+			<div id="join_pv">
+				<dl class="my_photo">
+					<dt>사진등록</dt>
+					<dd>
+						<div id="img1" class="img">
+							<a href="javascript:;" onclick="file_upload('1')">
+								<div class="img_box">
+									<? if($member[mb_photo1]==""){?>
+									<div class="noimg">1</div>
+									<? }?>
+									<!--등록된이미지-->
+									<div class="view_image">
+											<img src="../data/member/<?=$member[mb_photo1]?>" alt="이미지 #1" width="100%" id="mb-photo1">
+									</div>
+									<!--//등록된이미지-->
+								</div>
+								<div class="btn_file">사진등록</div>
+							</a>
+						</div>						
+						<div id="img2" class="img">
+							<a href="javascript:;" onclick="file_upload('2')">
+								<div class="img_box">
+									<? if($member[mb_photo2]==""){?>
+									<div class="noimg">2</div>
+									<? }?>
+									<!--등록된이미지-->
+									<div class="view_image">
+											<img src="../data/member/<?=$member[mb_photo2]?>" alt="이미지 #2" width="100%" id="mb-photo2">
+									</div>
+									<!--//등록된이미지-->
+								</div>
+									<div class="btn_file">사진등록</div>
+								</div>
+							</a>
+					</dd>
+					<dd class="img_info">
+						<div>
+							<strong>1. 메인사진</strong>
+								<span>정면을 바라보고있는 얼굴사진을 등록해주세요</span>
+						</div>
+						<div>
+							<strong>2. 매력사진</strong>
+								<span>자신의 매력을 마음껏 어필할수 있는 사진을 등록해주세요</span>
+						</div>							
+					</dd>
+				</dl>
+				<dl class="my_photo">
+					<dt>회원탈퇴</dt>
+					<dd>
+						<a href="javascript:;" onclick="return member_leave();" class="btn col-xs-12 col-md-12" style="background-color:#fba638;color:#fff">회원탈퇴</a>
+					</dd>
+					<dd class="img_info">
+									
+					</dd>
+				</dl>
+
+				
+				<? /*
+				<dl class="my_voice">
+					<dt>음성등록&nbsp; <i class="fas fa-volume-up"></i></dt>
+						<dd class="info_msg">Ex) 안녕하세요 서울 사는 25살 홍길동 입니다. 잘 부탁드립니다.</dd>
+						<dd>
+							<div id="my-audio" style="display:">
+								<audio controls  preload='' id="my-voice" style="width:100%;">
+										<? if($member[mb_voice]){?>
+										<source src="../data/voice/<?=$member[mb_voice]?>"  type="audio/mp3"/>
+										<? }else{?>
+										<source src=""  type="audio/mp3"/>
+										<? }?>
+								</audio>
+							</div>
+							<a href="javascript:;" onclick="soundRecord()" class="voice_btn">음성파일등록</a>
+	<!--<input type="file" accept="audio/*" capture="microphone">  -->
+					</dd>
+				</dl>*/?>
+			</div>
+		</div>
+		<? }?>
+		<?php
+        // 소셜로그인
+        //include_once(G5_PLUGIN_PATH.'/oauth/register_form.skin.inc.php');
+        ?>
+        <div class="btn_confirm_join">
+            <input type="submit" value="STEP01 <? if($w==""){?> 기본정보입력<? }?> 완료" id="btn_submit" class="btn_submit" accesskey="s">
+        </div>
+				</form>
+
+    </div>
+    <!-- //step01 -->
+	<script>
+	function member_leave(){
+		var q=confirm("탈퇴를 하시겠습니까? 최고관리자 탈퇴 승인 후에는 이용이 불가능합니다.");
+		if(q){
+			location.href="<?=G5_BBS_URL?>/member_leave.php";
+		}
+	}
+	var certBoolean=false;
+	$(function() {
+        $("#agree0").click(function(){
+			if($(this).is(":checked") == true){
+				$('input:checkbox[id="agree1"]').prop("checked", "checked");
+				$('input:checkbox[id="agree2"]').prop("checked", "checked");
+				$('input:checkbox[id="agree3"]').prop("checked", "checked");
+			}else{
+				$('input:checkbox[id="agree1"]').removeProp("checked");
+				$('input:checkbox[id="agree2"]').removeProp("checked");
+				$('input:checkbox[id="agree3"]').removeProp("checked");
+			}
+        });
+				$("#mb-photoFile1").change(function(){
+						readURL(this,1);
+				});
+				$("#mb-photoFile2").change(function(){
+						readURL(this,2);
+				});
+    });
+
+	// 아이디 체크	
+	$("#reg_mb_id").keyup(function (){
+		var mb_id = $(this).val();
+		var reg_mb_id = $(this);
+
+		// 아이디 정규표현식
+		var regId = /^[a-z0-9]{4,12}$/;
+		
+		if (regId.test(mb_id)){ 
+			$(this).parents(".rows").find("i").css("background", "#1EC545");
+			$(this).parents(".rows").find(".error_msg").removeClass("on").html("");
+		}else{
+			$(this).parents(".rows").find("i").css("background", "#E84438");
+			$(this).parents(".rows").find(".error_msg").addClass("on").html("아이디는 영문(소문자)와 숫자, 4 ~ 12자리까지 가능합니다.");
+			
+			return false;
+		}
+		
+		// 아작스로 중복 아이디가 있는지 체크 1
+		$.post(g5_bbs_url+"/ajax.mb_register.php", {"type":"mb_id", "val":mb_id}, function (result){
+			if(result == "0"){  // ajax.mb_register.php 의 echo $row['cnt']; 값을 가져옴
+				reg_mb_id.parents(".rows").find("i").css("background", "#1EC545"); //될때 초록색 박스 i 는 icon 의 약자
+				reg_mb_id.parents(".rows").find(".error_msg").removeClass("on").html(""); // 마지막 dd 의 css 스타일 사용
+			}else{
+				reg_mb_id.parents(".rows").find("i").css("background", "#E84438");
+				reg_mb_id.parents(".rows").find(".error_msg").addClass("on").html("사용중인 아이디입니다.");
+			}
+		});
+	});
+
+	$("#reg_mb_password").keyup(function (){
+		var mb_password = $(this).val();
+		var reg_mb_password = $(this);
+
+		// 바뀌면 무조건 틀렸다로 표시.
+		if($("#reg_mb_password_re").val()!= mb_password){
+			$("#reg_mb_password_re").parents(".rows").find("i").css("background", "#E84438");
+			$("#reg_mb_password_re").parents(".rows").find(".error_msg").addClass("on").html("비밀번호가 다릅니다.");	
+		}else{
+			$("#reg_mb_password_re").parents(".rows").find("i").css("background", "#1EC545");
+			$("#reg_mb_password_re").parents(".rows").find(".error_msg").removeClass("on").html("");
+		}
+
+		// 비밀번호 정규표현식
+		var regPassword = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+
+		if (regPassword.test(mb_password)){ 
+			$(this).parents(".rows").find("i").css("background", "#1EC545");
+			$(this).parents(".rows").find(".error_msg").removeClass("on").html("");
+		}else{
+			$(this).parents(".rows").find("i").css("background", "#E84438");
+			$(this).parents(".rows").find(".error_msg").addClass("on").html("비밀번호는 8자~15자 영문,숫자,특수문자가 포함 되어야 합니다.");
+		}
+	});
+
+	$("#reg_mb_password_re").keyup(function (){
+		var mb_password_re = $(this).val();
+		var mb_password = $("#reg_mb_password").val();
+
+		// 비밀번호 정규표현식
+		var regPassword = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+
+
+		if(mb_password == mb_password_re){
+			$(this).parents(".rows").find("i").css("background", "#1EC545");
+			$(this).parents(".rows").find(".error_msg").removeClass("on").html("");
+		}else{
+			$(this).parents(".rows").find("i").css("background", "#E84438");
+			$(this).parents(".rows").find(".error_msg").addClass("on").html("비밀번호가 다릅니다.");	
+		}
+	});
+
+
+	$("#reg_mb_name").keyup(function (){
+		var mb_name = $(this).val();
+		var reg_mb_name = $(this);
+
+		// 이름 정규표현식
+		var regName = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
+
+		if (regName.test(mb_name)){ 
+			$(this).parents(".rows").find("i").css("background", "#1EC545");
+			$(this).parents(".rows").find(".error_msg").removeClass("on").html("");
+		}else{
+			$(this).parents(".rows").find("i").css("background", "#E84438");
+			$(this).parents(".rows").find(".error_msg").addClass("on").html("2글자 이상 한글만 입력해주세요.");
+		}
+	});
+
+	$("#reg_mb_hp").keyup(function (){
+		var mb_hp = $(this).val();
+		var reg_mb_hp = $(this);
+
+		// 휴대폰 정규표현식
+		// /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/
+		var regHp = /^\d{10,12}$/;
+
+		if (regHp.test(mb_hp)){
+			$(this).parents(".rows").find("i").css("background", "#1EC545");
+			$(this).parents(".rows").find(".error_msg").removeClass("on").html("");
+		}else{
+			$(this).parents(".rows").find("i").css("background", "#E84438");
+			$(this).parents(".rows").find(".error_msg").addClass("on").html("휴대폰 번호는 10 ~ 12자리 숫자만 입력하세요.");
+		}
+	});
+
+	// 라디오 버튼
+	$("#dd_type p").click(function (){
+		var v = $(this).data("val");
+		$("#mb_type").val(v);
+		$("#dd_type p").find("i").removeClass("fa-check-circle-o").addClass("fa-circle-o");
+		$(this).find("i").removeClass("fa-circle-o").addClass("fa-check-circle-o");
+	});
+
+	// 내용보기 
+	$(".btn_agr .btn_red").click(function (){
+		var dis = $(this).parents(".agree").find(".agr_textarea").css("display");
+		if(dis == "none")
+			$(this).parents(".agree").find(".agr_textarea").slideDown(100);
+		else
+			$(this).parents(".agree").find(".agr_textarea").slideUp(100);
+	});
+	</script>
+
+	<script>
+	var cert = "";
+	var si;
+	//인증요청버튼 누르면
+	$("#cert_btn").click(function (){
+	/*	var varUA = navigator.userAgent.toLowerCase();
+		if (varUA.match('android') != null) { 
+			window.Android.setSms();
+		}*/
+		if(si!=null){
+			clearInterval(si);
+		}
+		var tg = $(this);//인증요청버튼 값을 담는다
+		var wr_1 = $("#wr_1").val();//넘어온 이벤트명을 담는다.		
+		var mb_hp = $("#reg_mb_hp").val();//휴대폰번호1를 담는다.
+		//var mb_hp1 = $("#mb_hp1").val();//휴대폰번호1를 담는다.
+		//var mb_hp2 = $("#mb_hp2").val();//휴대폰번호2를 담는다.
+		//var mb_hp3 = $("#mb_hp3").val();//휴대폰번호3를 담는다.
+		
+		//휴대폰번호 입력확인
+		if(!mb_hp){
+			alert("연락처를 입력해주세요.");
+			return false;
+		}
+
+		//var mb_hp = mb_hp1 + "-" + mb_hp2 + "-" + mb_hp3 ;
+
+		//해당 번호 조회
+		$.post(g5_bbs_url + "/ajax.hp_check.php",{ mb_hp:mb_hp }, function (result){
+			
+			if(result.status == "false"){
+				alert("이미 가입한 회원입니다.");
+				return false;
+			}
+			
+			//문자전송 및 카운트 시작
+			alert("문자를 전송중입니다. 3분 이내로 인증번호를 입력해주세요.");
+			cert = result.cret;
+			var second = 180;
+			
+			//인증번호받기 버튼 비활성화
+			tg.attr("disabled", "disabled");
+			setTimeout(function (){
+				tg.removeAttr("disabled");//시간 끝나면 다시 버튼 활성화
+			}, 30000);
+			
+			//인증번호 입력 및 카운트 보이기
+			$("#cert_dl").removeClass("none");
+			
+			//타이머
+			si = setInterval(function (){
+
+				$("#cert_second").html(second);
+				second--;
+				
+				if(second < 0){
+					clearInterval(si);
+					cert = "over";
+				}
+			}, 1000);
+		}, "json");
+	});
+	
+	//인증확인 버튼 클릭시
+	$("#cert_btn2").click(function (){
+		//인증시간이 지나면
+		if(cert == "over"){
+			$("#mb_cert_txt").html("인증가능한 시간이 지났습니다.");
+			//$("#mb_cert_i").removeClass("green-font").addClass("red-font");
+			return false;
+		}
+		
+		//인증번호값
+		var mb_cert = $("#reg_mb_cert").val();
+		
+		//인증번호 비교
+		if(mb_cert != cert){
+			alert("인증번호가 틀립니다.");
+			//$("#mb_cert_txt").html("인증번호가 틀립니다.");
+			//$("#mb_cert_i").removeClass("green-font").addClass("red-font");
+			return false;
+		}
+		
+		//인증완료 시
+		$("#mb_cert_txt").html("");//설명문구 지우기
+		$("#cert_dd_cnt").html("");//카운트 지우기
+		$("#cert_dd_btn").addClass("none");//인증확인버튼 지우기			
+		//$("#mb_cert_i").removeClass("red-font").addClass("green-font");
+		$("#mb_cert").attr("readonly", "readonly");//인증번호 입력박스 지우기
+		$("#cert_btn").attr("disabled", "disabled");//인증번호받기 버튼 비활성화
+		$("#cert_dd_chk").removeClass("none");//인증되었습니다 문구 띄우기
+		$("#status_chk").val("complete");//인증상태 complete로 변경
+		certBoolean=true;
+		
+	});
+	</script>
+
+
+
+
+
+<!-- //여자편 -->
+
+    </form>
+
+    <script>	
+		//모달창 체크하기
+		function modalCheck(form,no){
+			var num=parseInt(no);
+			var number=parseInt(no)+3;
+			var lst=$("input[name='"+form+"']");
+			var lstStr="";
+			for(var i=0;i<lst.size();i++){
+				if(lst.eq(i).prop("checked")){
+					lstStr+=lst.eq(i).val()+",";
+				}
+			}
+			
+			lstStr=lstStr.substring(0,lstStr.length-1);
+			if(5<=num){
+				$("#mb-ideal-type").val(lstStr);
+			}else{
+				$("#mb-ext"+number).val(lstStr);
+			}
+			if(lstStr.trim()==""){
+				lstStr="선택해주세요";
+			}
+			$("#mb-ext"+number+"-str").html(lstStr);
+			$("#myModal"+no).modal('hide');
+		}
+		//오디오 보여주기
+		function audioShow(my_voice){
+
+			var varUA = navigator.userAgent.toLowerCase();
+			if (varUA.indexOf("iphone")>-1||varUA.indexOf("ipad")>-1||varUA.indexOf("ipod")>-1) { 
+				my_voice = "<?=G5_URL?>/data/tmpfile/" + my_voice;
+			}
+			var strHtml='<audio controls  preload="" id="my-voice" style="width:100%;">';
+					strHtml+='<source src="'+my_voice+'"  type="audio/mp3"/>';
+					strHtml+='</audio>';
+			//$("#my-voice").html(strHtml);
+			$("#my-audio").html(strHtml);
+			
+			var my_voiceArray=my_voice.split("/");
+			var last=my_voiceArray.length-1;
+			$("#mb-voice").val(my_voiceArray[last]);
+		}
+		//사진보여주기
+		function photoShow(url,id){
+			$("#mb-"+id).attr("src",url);
+			var my_photoArray=url.split("/");
+			var last=my_photoArray.length-1;
+			if(id=="photo1"){
+				$(".noimg").eq(0).css("display","none");
+				$("#mb-photos1").val(my_photoArray[last]);
+			}
+			if(id=="photo2"){
+				$(".noimg").eq(1).css("display","none");
+				$("#mb-photos2").val(my_photoArray[last]);
+			}
+		}
+		//음성변경
+		function soundRecord(){
+			var varUA = navigator.userAgent.toLowerCase();
+			if (varUA.match('android') != null) { 
+				//안드로이드 일때 처리
+				window.android.soundRecord();
+			} else if (varUA.indexOf("iphone")>-1||varUA.indexOf("ipad")>-1||varUA.indexOf("ipod")>-1) { 
+				webkit.messageHandlers.getVoice.postMessage("");
+			}
+		}
+		//사진변경
+		function file_upload(no){
+			var varUA = navigator.userAgent.toLowerCase();
+			if (varUA.match('android') != null) { 
+				window.android.getPhoto(no);
+			}else if(varUA.indexOf("iphone")>-1||varUA.indexOf("ipad")>-1||varUA.indexOf("ipod")>-1) { 
+				$("#mb-photoFile"+no).click();
+			}else{
+				$("#mb-photoFile"+no).click();
+			}
+		}
+		function readURL(input,no) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$('#mb-photo'+no).attr('src', e.target.result);
+					$(".noimg").eq(no-1).css("display","none");
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+    // submit 최종 폼체크
+    function fregisterform_submit(f)
+    {
+		if (f.w.value == "") {
+			if (!f.agree1.checked) {
+				alert("회원가입약관의 내용에 동의하셔야 회원가입 하실 수 있습니다.");
+				f.agree1.focus();
+				return false;
+			}
+
+			if (!f.agree2.checked) {
+				alert("개인정보처리방침안내의 내용에 동의하셔야 회원가입 하실 수 있습니다.");
+				f.agree2.focus();
+				return false;
+			}
+		}
+
+	
+
+		if($("#mb-ext4-str").text().match('나의 연애스타일을 선택하세요.')){
+			alert('나의 연애스타일을 선택하세요.');
+			return false;
+		}
+
+		if($("#mb-ext5").val()==""){
+			alert('나의 관심사를 선택하세요.');
+			return false;
+		}
+
+		if($("#mb-ext6").val()==""){
+			alert('나의 매력을 선택하세요.');
+			return false;
+		}
+				
+        // 회원아이디 검사
+        if (f.w.value == "") {
+            var msg = reg_mb_id_check();
+            if (msg) {
+                alert(msg);
+                f.mb_id.select();
+                return false;
+            }
+        }
+
+        if (f.w.value == '') {
+            if (f.mb_password.value.length < 3) {
+                alert('비밀번호를 3글자 이상 입력하십시오.');
+                f.mb_password.focus();
+                return false;
+            }
+        }
+
+        if (f.mb_password.value != f.mb_password_re.value) {
+            alert('비밀번호가 같지 않습니다.');
+            f.mb_password_re.focus();
+            return false;
+        }
+
+        if (f.mb_password.value.length > 0) {
+            if (f.mb_password_re.value.length < 3) {
+                alert('비밀번호를 3글자 이상 입력하십시오.');
+                f.mb_password_re.focus();
+                return false;
+            }
+        }
+
+       <? if($w==""){?>
+		
+		<? }else{?>
+					 // 이름 검사
+        if (f.w.value=='') {
+            if (f.mb_name.value.length < 1) {
+                alert('이름을 입력하십시오.');
+                f.mb_name.focus();
+                return false;
+            }
+        }
+			 f.mb_birth.value=$("#mb-birth1").val()+"-"+$("#mb-birth2").val()+"-"+$("#mb-birth3").val();
+       if(f.mb_birth.value==''){
+				 if(f.mb_birth.value.length<1){
+					alert("생년월일을 입력하십시오.");
+//					f.mb_age.focus();
+					return false;
+				 }
+			 }
+				
+				
+			 if(f.mb_height.value==''){
+				 if(f.mb_height.value.length<1){
+					alert("키를 입력하십시오.");
+					f.mb_height.focus();
+					return false;
+				 }
+			 }
+				
+
+			if(f.mb_job.value==''){
+				 if(f.mb_job.value.length<1){
+					alert("직업을 입력하십시오.");
+					f.mb_job.focus();
+					return false;
+				 }
+			 }
+
+			 if(f.mb_4.value==''){
+				 if(f.mb_4.value.length<1){
+					alert("나의 연애스타일을 선택하십시오.");
+					return false;
+				 }
+			 }
+
+			 if(f.mb_5.value==''){
+				 if(f.mb_5.value.length<1){
+					alert("나의 관심사를 선택하십시오.");
+					return false;
+				 }
+			 }
+
+						
+			 if(f.mb_6.value==''){
+				 if(f.mb_6.value.length<1){
+					alert("나의 매력을 선택하십시오.");
+					return false;
+				 }
+			 }
+			 if($("#mb-photos1").val().trim()==""){
+				alert("사진1을 넣어주세요");
+				return false;
+			 }
+			 if($("#mb-photos2").val().trim()==""){
+				alert("사진2를 넣어주세요");
+				return false;
+			 }
+			 /*if($("#mb-voice").val().trim()==""){
+				alert("음성을 녹음해주세요");
+				return false;
+			 }*/
+		<? }?>
+				
+
+        //document.getElementById("btn_submit").disabled = "disabled";
+
+        return true;
+    }
+	
+	//선택정보
+	$("#my_sel dl").click(function() {
+		$(".popup",this).css("display","block");
+	});
+	$(".popup").click(function() {
+		$(this).css("display","none");
+	});
+    </script>

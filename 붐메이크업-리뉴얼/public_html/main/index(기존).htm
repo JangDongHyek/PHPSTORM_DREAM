@@ -1,0 +1,138 @@
+<? 
+   $site_path = "/home/pusanmakeup/public_html/bbs/"; 
+   $site_url = "../bbs/"; 
+   require_once($site_path."include/lib.inc.php");
+   include "popupcheck.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+
+<!-- 최근게시물 추출 -->
+<script language='JavaScript'> 
+   function RWindow(URL) {
+	location.href= "../bbs/view.php?&bbs_id=noticee&page=&doc_num=<?  require "../swf/link1.php"; echo "$link1"; ?>";
+    //window.open('../bbs/view.php?&bbs_id=noticee&page=&doc_num=<?  require "../swf/link1.php"; echo "$link1"; ?>','win1','width=800,height=600,scrollbars=yes,resizable=yes,status=no,menubar=0'); 
+   } 
+</script>
+<script language='JavaScript'> 
+   function BWindow(URL) { 
+   location.href= "../bbs/view.php?&bbs_id=noticee&page=&doc_num=<?  require "../swf/link2.php"; echo "$link2"; ?>";
+    //window.open('../bbs/view.php?bbs_id=noticee&doc_num=<? require "../swf/link2.php"; echo "$link2"; ?>','win2','width=800,height=600,scrollbars=yes,resizable=yes,status=no,menubar=0'); 
+   } 
+</script>
+<script language='JavaScript'> 
+   function CWindow(URL) { 
+   location.href= "../bbs/view.php?&bbs_id=noticee&page=&doc_num=<?  require "../swf/link3.php"; echo "$link3"; ?>";
+   // window.open('../bbs/view.php?bbs_id=noticee&doc_num=<?  require "../swf/link3.php"; echo "$link3"; ?>','win3','width=800,height=600,scrollbars=yes,resizable=yes,status=no,menubar=0'); 
+   } 
+</script>
+<script language='JavaScript'> 
+   function DWindow(URL) { 
+   location.href= "../bbs/view.php?&bbs_id=noticee&page=&doc_num=<?  require "../swf/link4.php"; echo "$link4"; ?>";
+   // window.open('../bbs/view.php?bbs_id=noticee&doc_num=<?  require "../swf/link4.php"; echo "$link4"; ?>','win4','width=800,height=600,scrollbars=yes,resizable=yes,status=no,menubar=0'); 
+   } 
+</script>
+<script language='JavaScript'> 
+   function EWindow(URL) { 
+    location.href= "../bbs/view.php?&bbs_id=noticee&page=&doc_num=<?  require "../swf/link5.php"; echo "$link5"; ?>";
+	//window.open('../bbs/view.php?bbs_id=noticee&doc_num=<?  require "../swf/link5.php"; echo "$link5"; ?>','win5','width=800,height=600,scrollbars=yes,resizable=yes,status=no,menubar=0'); 
+   } 
+</script>
+<!-- 최근게시물 추출 끝 -->
+
+<!--배경이미지 코드 시작 -->
+<style type="text/css">
+<!--
+body {background:#1A1F2F url(../images/bg.jpg) no-repeat  center top}
+-->
+</style>
+<!--배경이미지 코드 끝 -->
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+
+if ( getCookie( "Notice" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	noticeWindow  =  window.open('../pop/pop_move.htm','notice','left=0, top=0, width=500,height=620');
+	noticeWindow.opener = self;
+} 
+
+
+if ( getCookie( "Notice" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('pop1.htm','notice','left=0, top=0, width=500,height=238');
+	//noticeWindow.opener = self;
+} 
+
+
+if ( getCookie( "Notice" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop_10th.htm','notice','left=0, top=0, width=500,height=725');
+	//noticeWindow.opener = self;
+} 
+// -->
+</SCRIPT>
+
+</head>
+<script languagwe='JavaScript' src='../js/printEmbed.js'></script>
+<script languagwe='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="990" height="141" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="198" height="141" background="../images/logo.jpg"><script type="text/javascript">flashWrite('../swf/logo.swf?pageNum=<?=$num?>','198','141')</script></td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="55" style="padding:10 0 0 0"><div align="right">
+              <? include '../inc/top.htm'; ?>
+            </div></td>
+          </tr>
+          <tr>
+            <td height="86" background="../images/menu_bg.jpg"><? $num = "1"; include "../inc/menu.php"; ?></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td background="../images/m_up_right.jpg" style="background-repeat:no-repeat; ">&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/m_left.jpg" style="background-repeat:no-repeat; background-position:100% 0">&nbsp;</td>
+    <td width="990" height="516" background="../images/main_visual.jpg"><script type="text/javascript">flashWrite('../swf/main.swf?pageNum=<?=$num?>','990','516')</script></td>
+    <td background="../images/m_right.jpg" style="background-repeat:no-repeat;">&nbsp;</td>
+  </tr>
+</table>
+<?
+include "../inc/copy.htm";
+?>
+</body>
+</html>

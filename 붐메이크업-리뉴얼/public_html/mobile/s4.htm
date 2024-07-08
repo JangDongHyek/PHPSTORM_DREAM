@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<title>모바일 홈페이지</title>
+<link rel="stylesheet" type="text/css" href="b.css"/>
+</head>
+<body>
+<? include 'top.htm'; ?>
+<? include 's_menu01.htm'; ?>
+<div id="dt4">
+<div class="mb"><!--<img src="images/s4.jpg" width="300" height="558" /> -->
+  <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td height="40" align="center" style="font-family:'맑은 고딕'; font-weight:bold; color:#FFF;">주소 : 부산광역시 진구 전포동 687-9, 2층</td>
+    </tr>
+    <tr>
+      <td align="center" style="padding:5px; background:#535763;"><!-- * Daum 지도 - 지도퍼가기 -->
+<!-- 1. 지도 노드 -->
+<div id="daumRoughmapContainer1484812148244" class="root_daum_roughmap root_daum_roughmap_landing" style="margin:0 auto"></div>
+
+<!--
+	2. 설치 스크립트
+	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
+-->
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="http://dmaps.daum.net/map_js_init/roughmapLoader.js"></script>
+
+<!-- 3. 실행 스크립트 -->
+<script charset="UTF-8">
+	new daum.roughmap.Lander({
+		"timestamp" : "1484812148244",
+		"key" : "fhr9",
+		"mapWidth" : "330",
+		"mapHeight" : "335"
+	}).render();
+</script></td>
+    </tr>
+  </table>
+</div>
+</div>
+<? include 'foot.htm'; ?>
+</body>
+</html>

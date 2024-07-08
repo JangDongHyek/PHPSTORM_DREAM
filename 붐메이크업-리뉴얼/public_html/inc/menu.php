@@ -1,0 +1,1 @@
+<script type="text/javascript">flashWrite('../swf/menu.swf?pageNum=<?=$num?>','792','86')</script>

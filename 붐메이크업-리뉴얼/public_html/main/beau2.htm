@@ -1,0 +1,270 @@
+<? 
+   $site_path = "/home/pusanmakeup/public_html/bbs/"; 
+   $site_url = "../bbs/"; 
+   require_once($site_path."include/lib.inc.php");?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+
+<!--배경이미지 코드 시작 -->
+<style type="text/css">
+<!--
+body {background:#1A1F2F url(../images/sub_bg.jpg) no-repeat  center top}
+-->
+</style>
+<!--배경이미지 코드 끝 -->
+
+<!--서브플래시 레이어 시작 -->
+<style type="text/css">
+<!--
+#LayerContainer3 {
+	position: absolute;
+	top:141px;
+	text-align: center;
+	width: 100%;
+	z-index: -1;
+}
+#Layer3 {
+margin: 0 auto;
+position: relative;
+width: 990px;
+text-align: center;
+padding-left: 0px;
+z-index: -1
+}
+.style1 {
+	font-size: 12px;
+	font-weight: bold;
+}
+-->
+</style>
+<!--서브플래시 레이어 끝 -->
+<script language="javascript">
+function resizeHeight(fr){
+	var frbody=fr.contentWindow.document.body;
+	fr.style.height=(frbody.offsetHeight-frbody.clientHeight)+60;
+}
+
+
+
+
+
+function resizeFrame(frm){
+	frm.style.height = "auto";
+	contentHeight = frm.contentWindow.document.body.scrollHeight;
+	frm.style.height = contentHeight + 0 + "px";
+}
+</script>
+</head>
+
+<script languagwe='JavaScript' src='../js/printEmbed.js'></script>
+<script languagwe='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<div id="LayerContainer3">
+<div id="Layer3"><script type="text/javascript">flashWrite('../swf/sub5.swf?pageNum=<?=$num?>','990','223')</script></div>
+</div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="990" height="141" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="198" height="141" background="../images/logo.jpg"><script type="text/javascript">flashWrite('../swf/logo.swf?pageNum=<?=$num?>','198','141')</script></td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="55" style="padding:10 0 0 0"><div align="right">
+              <? include '../inc/top.htm'; ?>
+            </div></td>
+          </tr>
+          <tr>
+            <td height="86" background="../images/menu_bg.jpg"><? $num = "5"; include "../inc/menu.php"; ?></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="990" height="171">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="990"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="198" height="100%" valign="top"><table width="197" height="100%" border="0" align="right" cellpadding="0" cellspacing="0">
+          <tr>
+            <td bgcolor="#000000"><div align="center">
+              <table width="197" border="0" align="right" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="top" bgcolor="#000000"><div align="center">
+                      <? $num = "2"; include "../inc/beau_menu.php"; ?>
+                  </div></td>
+                </tr>
+              </table>
+            </div></td>
+          </tr>
+          <tr>
+            <td height="100%" bgcolor="#000000">&nbsp;</td>
+          </tr>
+          <tr>
+            <td bgcolor="#000000">&nbsp;</td>
+          </tr>
+        </table></td>
+        <td width="19" valign="top">&nbsp;</td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="17"></td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="203"><table width="100" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td><img src="../images/beau_t2.gif" width="203" height="21"></td>
+                    </tr>
+                    <tr>
+                      <td><img src="../images/s_t.gif" width="203" height="14"></td>
+                    </tr>
+                </table></td>
+                <td>&nbsp;</td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td><table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <td><?
+					$bbs_table="rg_pro_hair_body";
+					$sql="select max(rg_doc_num) as doc_num from $bbs_table";
+					$result=mysql_query($sql);
+					
+					$rs=mysql_fetch_array($result);
+					$doc_num=$rs[doc_num];
+				?>
+              <iframe width="100%" frameborder="0" id="ifr" name="ifr" src="../bbs/view.php?bbs_id=pro_hair&doc_num=<?=$doc_num?>" onload="resizeFrame(this)" scrolling="no"></iframe></td>
+              </tr>
+              
+              <tr>
+                <td valign="top"><table width="734" border="0" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td height="40" valign="top"><script type="text/javascript">flashWrite('../swf/beau_smenu.swf?pageNum=1','734','60')</script></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td valign="top"><TABLE width="100%" border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
+                  <TR>
+                    <TD width="150" height="30"  valign="middle" bgcolor="#364074" class="text1"> <div align="center" class="style1">컨 텐 츠</div></TD>
+                    <TD  valign="middle" bgcolor="#364074" class="text1"> <div align="center" class="style1">수업내용</div></TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">기본 이론</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> T.O.P, 고객님 이미지와 취향, 얼굴형 등에 따른 스타일과 이미지 이론</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">브로킹 나누기</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 두상 부위의 명칭과 브로킹</TD>
+                  </TR>
+                  <TR>
+                    <TD valign="middle" bgcolor="#232B41" class="text1"> <div align="center">셋팅말기</div></TD>
+                    <TD valign="middle" bgcolor="#1A1F2F" class="td2"> 업 기본형, 다운 기본형, 스템에 따른 3가지 형
+                      앞머리 와인딩법</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">묶기</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 1줄 고무줄, 2줄 연결 고무줄, 핀 고무줄 법
+                      업스타일 전용 고무끈 묶는 방법</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">핀 사용법</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 일자핀, U핀, 오니핀 사용법
+                      소량으로 단단히 고정하는 방법 
+                      감춰 꽂기</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">망, 씽 사용법 </div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 볼륨과 토대 만드는 씽의 역할과 연출법, 
+                      백롤 
+                      망을 이용한 깔끔한 스타일 </TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">백콤넣기</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 업스타일의 가장 중요한 볼륨과 토대 연출하는 방법
+                      두상에 따른 백콤</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">빗질하기</div></TD>
+                    <TD rowspan="2"  valign="middle" bgcolor="#1A1F2F" class="td2"> 백콤 후, 볼륨을 살리는 쉐이핑 
+                      면을 깔끔히 정리하는 쉐이핑 </TD>
+                  </TR>
+                  <TR bgcolor="#232B41">
+                    <TD rowspan="2"  valign="middle" class="text1"> <div align="center">기본형 당고머리 </div></TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 기본 테크닉을 이용한 기본형 내림 당고머리 </TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">사이드 연출법</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 백콤으로 깔끔하게 연출하기 
+                      한쪽 끌어 땋기</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">돔 만들기 </div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 업스타일의 전체적인 형과 볼륨을 좌우하는 돔 만드는 방법 </TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">응용1</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 스켈럽 땋기 응용 내림업 완성 </TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">시뇽 연출법</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 기본 뱅 시뇽, 컬 시뇽
+                      매듭 시뇽, 스크류 시뇽</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">고대기 사용법</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 뿌리 살리기, 웨이브 넣기, 앞머리 연출법</TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">달비사용법</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 아코디언, S달비, 롤, 꽈배기, 댕기, 팜파돌, 미노컬 사용법 </TD>
+                  </TR>
+                  <TR>
+                    <TD  valign="middle" bgcolor="#232B41" class="text1"> <div align="center">업스타일</div></TD>
+                    <TD  valign="middle" bgcolor="#1A1F2F" class="td2"> 달비 연출 업스타일 완성</TD>
+                  </TR>
+                </TABLE></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+		  <tr>
+            <td align="center"></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<?
+include "../inc/copy.htm";
+?>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="강호중-아이칸(세성)" exclude="*.jpg;*.png;*.gif;*.swf;*.zip;*.thumb;*.psd;*.hwp;*.bmp;*.txt;*.db;*.css;*.xml;*.apk;.svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc" remoteFilesAllowedToDisappearOnAutoupload="false" autoUploadExternalChanges="true">
+    <serverData>
+      <paths name="강호중-아이칸(세성)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$/khj" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="붐메이크업-리뉴얼">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$/pusanmakeup" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
