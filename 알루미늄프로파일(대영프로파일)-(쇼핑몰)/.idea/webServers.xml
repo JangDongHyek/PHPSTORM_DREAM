@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="aec6ba5c-c60e-4940-be59-deb53a3f3f10" name="알루미늄프로파일(대영프로파일)-(쇼핑몰)" url="http://dreamforone.kr">
+        <fileTransfer host="dreamforone.kr" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
