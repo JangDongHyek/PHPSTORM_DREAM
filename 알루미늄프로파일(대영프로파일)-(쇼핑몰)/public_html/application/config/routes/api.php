@@ -49,3 +49,13 @@ $route['api/registerComment']['post'] = 'MallBoardController/postRegisterBoardCo
 $route['api/deleteComment']['post'] = 'MallBoardController/postDeleteBoardComment';
 
 
+//카테고리 등록
+$route['api/category/postData']['post'] = 'CategoryController/postData';
+//카테고리 수정
+$route['api/category/putData']['post'] = 'CategoryController/putData';
+//카테고리 리스트
+$route['api/category/getsData']['post'] = 'CategoryController/getsData';
+//카테고리 상세
+$route['api/category/getData']['post'] = 'CategoryController/getData';
+//카테고리 삭제
+$route['api/category/deleteData']['post'] = 'CategoryController/deleteData';
