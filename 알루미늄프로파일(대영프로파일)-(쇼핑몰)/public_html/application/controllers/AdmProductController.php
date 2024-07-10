@@ -26,6 +26,20 @@ class AdmProductController extends CI_Controller
 		$this->load->model("ProductModel");
 		$resultData = $this->ProductModel->getProductList($param);
 
+        $this->load->model('CategoryModel');
+
+		foreach ($resultData['listData'] as $index => $data) {
+
+            $category_parent = $data["category_parent"];
+            $category_child = $data["category_child"];
+            $resultData['listData'][$index]['categoryParent'] = $this->CategoryModel->getsData(array(
+                "idx" => $category_parent
+            ))[0];
+            $resultData['listData'][$index]['categoryChild'] = $this->CategoryModel->getsData(array(
+                "idx" => $category_child
+            ))[0];
+        }
+
 		$this->load->model("ConfigModel");
 		$configData = $this->ConfigModel->getSystemConfig(); // 기본배송비정보
 
@@ -34,10 +48,26 @@ class AdmProductController extends CI_Controller
 			'listData' => $resultData['listData'],
 			'paging' => $resultData['paging'],
 			'configData' => $configData,
+            "resultData" => $resultData
 		];
 
 		render('adm/product', $data, true);
 	}
+
+	public function getData() {
+        $response = array("message" => "");
+
+        $this->load->model('ProductModel');
+
+        $productData = $this->ProductModel->getProductById($_POST['idx']);
+
+
+
+        $response['data'] = $productData;
+        $response['success'] = true;
+
+        echo json_encode($response);
+    }
 
     // 상품 등록/수정 폼
     public function admProductForm($idx = 0)
@@ -47,6 +77,8 @@ class AdmProductController extends CI_Controller
 		$imageFiles = array();
 		$productData = array();
 		$isModify = false;
+
+
 		if(!empty($idx)) { // 수정
 			$isModify = true;
 
@@ -100,6 +132,8 @@ class AdmProductController extends CI_Controller
 		$productData = array(
 			'use_yn' => ($_POST['useYn']=='Y')? 'Y' : 'N',
 			'category' => $_POST['category'],
+            'category_parent' => $_POST['category_parent'],
+            'category_child' => $_POST['category_child'],
 			'first_consonant' => getFirstConsonant(mb_substr($itemName, 0, 1, "UTF-8")),
 			'prod_order' => extractNumbers($_POST['prodOrder']),
 			'prod_name' => $itemName,

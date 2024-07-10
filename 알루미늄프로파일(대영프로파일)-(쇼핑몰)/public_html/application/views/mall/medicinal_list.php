@@ -2,15 +2,16 @@
 <div id="drugs_list">
     <div class="area_top">
         <div class="location">
-            <i class="fa-light fa-house-blank"></i> 홈 <i class="fa-light fa-angle-right"></i> 제품소개 <i class="fa-light fa-angle-right"></i> <strong>20시리즈 프로파일</strong>
+            <i class="fa-light fa-house-blank"></i> 홈 <i class="fa-light fa-angle-right"></i> 제품소개 <i class="fa-light fa-angle-right"></i> <strong><?=$category_parent->name?></strong>
         </div>
-        <h2>20시리즈 프로파일</h2><!--1차메뉴-->
+        <h2><?=$category_parent->name?></h2><!--1차메뉴-->
+
         <div class="lnb"><!--2차메뉴-->
             <ul>
-                <li><a class="active">전체(628)</a></li>
-                <li><a>프로파일(45)</a></li>
-                <li><a>부품(215)</a></li>
-                <li><a>볼트&amp;너트(87)</a></li>
+                <li><a href="<?=PROJECT_URL?>/medicinal?category=<?=$category_parent->idx?>" <?=$category_parent->idx == $_GET['category'] ? 'class="active"' : ""?>>전체(<?=$category_parent->productCount?>)</a></li>
+                <?php foreach ($category_parent->childs as $child) {?>
+                <li><a href="<?=PROJECT_URL?>/medicinal?category=<?=$child->idx?>" <?=$child->idx == $_GET['category'] ? 'class="active"' : ""?>> <?=$child->name;?>(<?=$child->productCount?>)</a></li>
+                <?php }?>
             </ul>
         </div>
     </div>
@@ -20,10 +21,10 @@
             <p class="total">총 <strong class="txt_green"><?=number_format($paging['totalCount'])?></strong>개의 상품이 등록되었습니다.</p>
             <div class="sort">
                 <ul>
-                    <li><a class="date <?=empty($_GET['order']) ? 'active' : ''?>" href="./medicinal?order=date">등록순</a></li>
-                    <li><a class="name" href="./medicinal?order=name">상품명순</a></li>
-                    <li><a class="rowPrice" href="./medicinal?order=rowPrice">낮은가격순</a></li>
-                    <li><a class="exPrice" href="./medicinal?order=exPrice">높은가격순</a></li>
+                    <li><a class="date <?=empty($_GET['order']) ? 'active' : ''?>" href="./medicinal?order=date&category=<?=$_GET['category']?>">등록순</a></li>
+                    <li><a class="name" href="./medicinal?order=name&category=<?=$_GET['category']?>">상품명순</a></li>
+                    <li><a class="rowPrice" href="./medicinal?order=rowPrice&category=<?=$_GET['category']?>">낮은가격순</a></li>
+                    <li><a class="exPrice" href="./medicinal?order=exPrice&category=<?=$_GET['category']?>">높은가격순</a></li>
                 </ul>
             </div>
         </div>

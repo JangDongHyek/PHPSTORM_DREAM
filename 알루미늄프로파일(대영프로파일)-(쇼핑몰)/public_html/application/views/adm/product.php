@@ -128,7 +128,7 @@
 						<?=$paging['listNo']?>
 						<input type="hidden" name="idx[]" value="<?=$idx?>"/>
 					</td>
-                    <td><?=PRODUCT_CATEGORY[$list['category']]?></td>
+                    <td><?=$list["categoryParent"]->name?> <?=$list["categoryChild"] ? " > ".$list["categoryChild"]->name : ""?></td>
                     <td><div class="thumb_img"><img src="<?=$thumbNail?>"></div></td>
                     <td class="text_left">
                         <?/*<!--라벨--><div class="icon"><span class="green">인기상품</span><span class="gray">임시품절</span></div>*/?>

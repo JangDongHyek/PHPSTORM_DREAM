@@ -55,7 +55,8 @@
                 <template v-for="item in datas">
                     <tr>
                         <td>
-                            {{item.name}}
+                            <a @click="select_category = item.idx == select_category ? '' : item.idx" v-if="item.childs.length > 0">{{item.name}}</a>
+                            <span v-if="item.childs.length>0">[{{item.childs.length}}]</span>
                         </td>
                         <td>
                             <select v-model="item.visible"  @change="putData(item)">
@@ -73,7 +74,7 @@
                         </td>
                     </tr>
 
-                    <template v-for="item2 in item.childs">
+                    <template v-for="item2 in item.childs" v-if="select_category == item.idx">
                         <tr>
                             <td>
                                 ({{item.name}}) -> {{item2.name}}
@@ -123,6 +124,7 @@
                 total : 0,
                 checks : [],
                 all_check : false,
+                select_category : ""
             },
             created : function() {
                 this.getsData();

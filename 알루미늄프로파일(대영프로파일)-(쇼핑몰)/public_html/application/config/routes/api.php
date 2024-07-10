@@ -59,3 +59,6 @@ $route['api/category/getsData']['post'] = 'CategoryController/getsData';
 $route['api/category/getData']['post'] = 'CategoryController/getData';
 //카테고리 삭제
 $route['api/category/deleteData']['post'] = 'CategoryController/deleteData';
+
+//상품 api 가져오기
+$route['api/product/getData']['post'] = 'AdmProductController/getData';

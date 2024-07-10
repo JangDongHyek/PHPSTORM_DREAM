@@ -71,6 +71,8 @@ class ProductModel extends CI_Model
 		if ($param['mdRec']) $sqlCommon .= " AND md_rec_yn = '{$param['mdRec']}' ";
         // 초성검색
         if ($param['initial']) $sqlCommon .= "AND first_consonant = '{$param['initial']}' ";
+        // 카테고리검색
+        if ($param['category']) $sqlCommon .= "AND (category_parent = '{$param['category']}' OR category_child = '{$param['category']}') ";
 
 		// 페이징
 		$totalCountSql = "SELECT COUNT(*) AS cnt {$sqlCommon}";
@@ -160,5 +162,20 @@ class ProductModel extends CI_Model
 		}
 	}
 
+	//카테고리 상품 카운트
+    // 상품 상세
+    public function getCategoryCount($idx)
+    {
+        $this->db->or_where(array(
+            "category_parent" => $idx,
+            "category_child" => $idx
+        ));
+        $this->db->where("use_yn","Y");
+        $this->db->where("del_yn","N");
+
+        $count = $this->db->count_all_results('bs_product');
+
+        return $count;
+    }
 
 }

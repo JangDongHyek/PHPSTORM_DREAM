@@ -1,7 +1,7 @@
 <!-- 상품관리 등록/수정 폼 -->
 <? include_once VIEWPATH. 'component/summer_note_resource.php'; // summernote?>
 
-<section class="productupd">
+<section class="productupd" >
     <form name="productFrm" autocomplete="off" method="post">
         <input type="hidden" name="idx" value="<?=(int)$productData['idx']?>">
         <div class="panel">
@@ -23,16 +23,24 @@
             </span>
         </div>
 
-        <div class="box">
+        <div class="box" id="app">
+            <input type="hidden" name="category_parent" v-model="category_parent">
+            <input type="hidden" name="category_child" v-model="category_child">
             <p class="name">기본 분류</p>
-            <p class="line" style="display: none">
+            <p class="line">
                 <label>카테고리</label>
-                <select name="category" required>
-					<?php foreach (PRODUCT_CATEGORY AS $cate=>$name){?>
-                    <option value="<?=$cate?>" <?=$productData['category']==$cate?'selected':''?>><?=$name?></option>
-                    <?php }?>
+                <select v-model="cate1_idx" @change="changeEvent(1)">
+                    <option value="">선택해주세요</option>
+                    <option v-for="item,index in datas" :value="index">{{item.name}}</option>
+                </select>
+
+                <select v-if="cate1 && cate1.childs.length > 0" v-model="cate2_idx" @change="changeEvent()">
+                    <option value="">선택해주세요</option>
+                    <option v-for="item,index in cate1.childs" :value="index">{{item.name}}</option>
                 </select>
             </p>
+
+
             <p class="line">
                 <label>우선순위</label>
                 <input type="text" name="prodOrder" placeholder="0" value="<?=empty($productData['prod_order'])?'':$productData['prod_order']?>">큰 순서로 노출
@@ -115,5 +123,221 @@
 <script>
 	const uploadImageFiles = <?=json_encode($imageFiles)?>;
 </script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>
+
+<script>
+    // Vue 인스턴스 생성
+    document.addEventListener('DOMContentLoaded', function(){
+        new Vue({
+            el: '#app',
+            data: {
+                base_url : "",
+                model : "",
+                primary : "<?=$productData['idx']?>",
+                data : {},
+                datas : [],
+                filter : {
+                    all_search : "false",
+                    page : <?=$_GET["page"] ? $_GET["page"] : 1?>,
+                    limit : 10,
+                    search_key : "<?=$_GET["search_key"] ? $_GET["search_key"] : ""?>",
+                    search_value : "<?=$_GET["search_value"] ? $_GET["search_value"] : ""?>"
+                },
+                total : 0,
+                checks : [],
+                all_check : false,
+                cate1 : "",
+                category_parent : "",
+                category_child : "",
+                cate1_idx : "",
+                cate2_idx : "",
+            },
+            created : function() {
+                this.getsData();
+                if(this.primary) this.getData();
+            },
+            mounted : function() {
+                this.$nextTick(() => {
+
+                });
+            },
+            methods: {
+                changeEvent(bool) {
+                    if(bool) {
+                        this.cate2_idx = "";
+                        this.cate1 = this.datas[this.cate1_idx]
+                        this.category_parent = this.cate1.idx;
+                    }else {
+                        this.category_child = this.cate1.childs[this.cate2_idx].idx
+
+                    }
+
+                },
+                changePage(page) {
+                    var url = `${this.base_url}/example.php?`;
+
+                    Object.keys(this.filter).forEach(function(key) {
+                        if(key == "all_search") return;
+                        if(key == "limit") return;
+                        url += `key=${this.filter[key]}&`;
+                    });
+
+                    window.location.href = url;
+                },
+                postData : function() {
+                    var method = this.data._idx ? "put" : "post";
+                    var obj = JSON.parse(JSON.stringify(this.data));
+
+                    var objs = {
+                        _method : method,
+                        obj : JSON.stringify(obj),
+                    };
+
+                    var res = this.ajax(this.base_url + "/api/" + this.model + ".php",objs);
+
+                    if(res) {
+                        console.log(res)
+                    }
+                },
+                deletesData : function() {
+                    var method = "deletes";
+
+                    if(this.checks.length <= 0) {
+                        alert("하나 이상 선택하셔야합니다.");
+                        return false;
+                    }
+
+                    var objs = {
+                        _method : method,
+                        arrays : JSON.stringify(this.checks)
+                    };
+
+                    var res = this.ajax(this.base_url + "/api/" + this.model + ".php",objs);
+                    if(res) {
+                        alert("삭제되었습니다.");
+                        window.location.reload();
+                    }
+                },
+                getData : function() {
+                    var method = "get";
+
+                    var objs = {
+                        _method : method,
+                        idx : this.primary
+                    };
+
+                    var res = this.ajax(baseUrl+"api/product/getData",objs);
+                    if(res) {
+                        this.data = res.data;
+                        var category_parent_idx = this.data.category_parent
+                        var category_parent = "";
+                        var category_parent_index = "";
+                        this.datas.forEach(function(data,index) {
+                            if(data.idx == category_parent_idx) {
+                                category_parent = data;
+                                category_parent_index = index
+                            }
+                        });
+
+                        this.cate1_idx = category_parent_index;
+                        this.cate1 = category_parent;
+                        this.category_parent = category_parent_index;
+
+                        if(!this.data.category_child) return false;
+
+                        var category_child_idx = this.data.category_child;
+                        var category_child_index = "";
+
+
+                        category_parent.childs.forEach(function(data,index) {
+                            if(data.idx == category_child_idx) {
+                                category_child_index = index
+                            }
+                        });
+
+                        this.cate2_idx = category_child_index;
+                        this.category_child = category_child_idx
+                    }
+                },
+                getsData : function() {
+                    var method = "gets";
+                    // var filter = JSON.parse(JSON.stringify(this.filter));
+                    var objs = {
+                        _method : method
+                    };
+
+                    var res = this.ajax(baseUrl+"api/category/getsData",objs);
+                    if(res) {
+                        console.log(res)
+                        this.datas = res.datas;
+                        // this.total = res.datas.count;
+                    }
+                },
+                ajax : function(url,objs) {
+                    var form = new FormData();
+                    for(var i in objs) {
+                        form.append(i, objs[i]);
+                    }
+
+                    var result = null;
+                    $.ajax({
+                        url : url,
+                        method : "post",
+                        enctype : "multipart/form-data",
+                        processData : false,
+                        contentType : false,
+                        async : false,
+                        cache : false,
+                        data : form,
+                        dataType : "json",
+                        success: function(res){
+                            if(!res.success) alert(res.message);
+                            else {
+                                result = res;
+
+                                if(res.data) {
+                                    var obj = res.data;
+                                    for(field in obj) {
+                                        if(field.indexOf("_id") !== -1) continue;
+                                        try {
+                                            obj[field] = JSON.parse(obj[field]);
+                                        } catch (e) {
+
+                                        }
+                                    }
+                                    res.data = obj;
+                                }
+                            }
+                        }
+                    });
+
+                    return result;
+                }
+            },
+            computed : {
+            },
+            watch : {
+                all_check : function() {
+                    this.checks = [];
+
+                    if(this.all_check) {
+                        this.datas.forEach((item) => {
+                            this.checks.push(item._idx);
+                        });
+                    }
+                }
+            }
+
+        });
+    }, false);
+
+    Number.prototype.format = function(n, x) {
+        var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+        return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+    };
+</script>
+
+
+
 <!-- 상품등록/수정 JS -->
 <script src="<?=ASSETS_URL?>/js/adm/product_form.js?v=<?=JS_VER?>"></script>

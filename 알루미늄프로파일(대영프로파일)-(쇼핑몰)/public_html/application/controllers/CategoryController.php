@@ -102,6 +102,10 @@ class CategoryController extends CI_Controller
                 "idx" => $this->input->post("idx")
             ));
 
+            $data = $this->CategoryModel->deleteData(array(
+                "parent_idx" => $this->input->post("idx")
+            ));
+
             $this->response['data'] = $data;
             $this->response['success'] = true;
 

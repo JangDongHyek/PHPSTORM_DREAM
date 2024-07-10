@@ -24,16 +24,37 @@ class MallMedicinalController extends CI_Controller {
             'order' => $get['order'],
 			'sfl' => $get['sfl'],
 			'stx' => $get['stx'],
+            'category' => $get['category'],
             'use_yn' => 'Y',
         );
 
         $this->load->model("ProductModel");
         $resultData = $this->ProductModel->getProductList($param);
 
+        $this->load->model("CategoryModel");
+        $category = $this->CategoryModel->getsData(array("idx" => $get['category']))[0];
+        $category_parent = "";
+        if($category->parent_idx) {
+            $category_parent = $this->CategoryModel->getsData(array("idx" => $category->parent_idx))[0];
+        }else {
+            $category_parent = $category;
+        }
+
+        $category_parent->productCount = $this->ProductModel->getCategoryCount($category_parent->idx);
+
+        $category_parent->childs = $this->CategoryModel->getsData(array(
+            "parent_idx" => $category_parent->idx
+        ));
+        foreach($category_parent->childs as $child) {
+            $child->productCount = $this->ProductModel->getCategoryCount($child->idx);
+        }
+
         $data = [
             'pid' => 'product_list',
             'listData' => $resultData['listData'],
             'paging' => $resultData['paging'],
+            'category' => $category,
+            'category_parent' => $category_parent,
         ];
 
 		render('mall/medicinal_list', $data);
