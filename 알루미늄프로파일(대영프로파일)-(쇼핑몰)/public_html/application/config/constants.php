@@ -113,6 +113,7 @@ const ASSETS_URL = PROJECT_URL . '/assets';
 const ADM_URL = PROJECT_URL . '/adm';
 const ASSETS_PATH = FCPATH . 'assets/';
 const MODAL_PATH = VIEWPATH . "modal/";
+const COMPONENT_PATH = VIEWPATH . "component/";
 
 // 업로드 폴더명
 const UPLOAD_FOLDERS = [

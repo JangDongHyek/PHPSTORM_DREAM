@@ -1,6 +1,6 @@
 <div id="vueapp1">
     <div class="category_wrap">
-        <h3 id="toggleCategory"><i class="fa-light fa-list"></i> 제품 카테고리</h3>
+        <h3 id="toggleCategory" @click="modal = true"><i class="fa-light fa-list"></i> 제품 카테고리</h3>
         <ul class="cate_depth0">
                 <li v-for="item in datas" class="active">
                     <a :href="baseUrl+'medicinal?category=' + item.idx">{{item.name}}</a>
@@ -12,6 +12,21 @@
                 </li>
             </ul>
     </div>
+
+    <!--modal style 수정시 views/component/modal-component.php 보시면됩니다-->
+    <modal-component v-if="modal" @close="modal = false" v-slot="slot">
+        <h2>전체 카테고리</h2>
+
+        <div>
+            <ul v-for="item in datas">
+                <h2><a :href="baseUrl+'medicinal?category=' + item.idx">{{item.name}}</a></h2>
+                <li v-for="child in item.childs">
+                    <a :href="baseUrl+'medicinal?category=' + child.idx">{{child.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </modal-component>
+
 <!--    <div class="allcategory">-->
 <!--        <div class="inner">-->
 <!--            <div class="cate_hd">-->
@@ -128,7 +143,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>
-
+<?php include_once VIEWPATH."/component/modal-component.php";?>
 <script>
     // Vue 인스턴스 생성
     document.addEventListener('DOMContentLoaded', function(){
@@ -150,21 +165,22 @@
                 total : 0,
                 checks : [],
                 all_check : false,
+                modal : false,
             },
             created : function() {
                 this.getsData();
                 // if(this.primary) this.getData();
             },
             mounted : function() {
-                this.$nextTick(() => {
-                    document.getElementById('toggleCategory').addEventListener('click', function() {
-                        document.querySelector('.allcategory').classList.toggle('active');
-                    });
-
-                    document.querySelector('.btn_close').addEventListener('click', function() {
-                        document.querySelector('.allcategory').classList.remove('active');
-                    });
-                });
+                // this.$nextTick(() => {
+                //     document.getElementById('toggleCategory').addEventListener('click', function() {
+                //         document.querySelector('.allcategory').classList.toggle('active');
+                //     });
+                //
+                //     document.querySelector('.btn_close').addEventListener('click', function() {
+                //         document.querySelector('.allcategory').classList.remove('active');
+                //     });
+                // });
             },
             methods: {
                 changePage(page) {
@@ -309,3 +325,4 @@
 <script>
 
 </script>
+

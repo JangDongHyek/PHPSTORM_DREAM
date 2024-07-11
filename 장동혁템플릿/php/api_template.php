@@ -1,131 +1,115 @@
 <?php
 include_once('../common.php');
-include_once(G5_PATH."/model/model.php");
+include_once(G5_PATH . "/model/model.php");
 
 $file = false;
-if($file) {
-    include_once(G5_PATH."/class/file.php");
+if ($file) {
+    include_once(G5_PATH . "/class/file.php");
     $file = new File("/data/example");
 }
 
-$response = array( "message" => "" );
+$response = array("message" => "");
 $_method = $_POST["_method"];
 
 $model = new Model(array(
     "table" => "example",
-    "primary" => "",
+    "primary" => "idx",
     "autoincrement" => true
 ));
 
-
+$join_table = "";
+$join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 try {
     switch (strtolower($_method)) {
-        case "gets":
+        case "get":
         {
             // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $filter = str_replace('\\','',$_POST['filter']);
-            $filter = json_decode($filter,true);
-            $filter[$filter[search_key]] = $filter[search_value];
+            $filters = str_replace('\\', '', $_POST['filter']);
+            $filters = json_decode($filters, true);
 
-            $gets_config = array(
-                "like" => false,
-                "order_by" => "c_date",
-                "sort" => "desc",
-                "add_query" => "",
-                "all_search" => json_decode($filter["all_search"])
-            );
-            $object = $model->gets($filter,$gets_config);
+            //필터 가공
+            $filter = array();
+            foreach ($filters as $key => $value) {
+                if(strpos($key,"search_key") !== false) $column = $key;
+                if(strpos($key,"search_value") !== false) $filter[$column] = $value;
+            }
 
-            // 연관테이블 필요시 주석해제
-//             $deletes = array();
-//             $joinModel = new Model(array(
-//                 "table" => "join_table",
-//                 "primary" => ""
-//             ));
+            $model->where($filter);
+            $object = $model->get($filters["page"], $filters["limit"]);
+            
+            if ($join_table) {
+                $deletes = array();
+                $joinModel = new Model(array(
+                    "table" => $join_table,
+                    "primary" => "idx"
+                ));
 
-//             foreach($object["datas"] as $index => $data) {
-//                 $join_data = $joinModel->get(array(
-//                     $joinModel->priary => $data["class_idx"]
-//                 ),array(
-//                     "like" => false,
-//                     add_query => ""
-//                 ));
-//                 if($join_data) $object["datas"][$index]["join_table"] = $join_data;
-//                 else array_push($deletes,$index);
-//             }
+                foreach ($object["data"] as $index => $data) {
+                    $joinModel->where($joinModel->priary, $data["example_idx"]);
+                    $join_data = $joinModel->get();
 
-//            foreach($deletes as $index) {
-//                unset($object["datas"][$index]);
-//                $object["count"]--;
-//            }
+                    $object["data"][$index][$join_table] = $join_data;
 
-            $response['datas'] = $object;
+                    if ($join_table_delete) {
+                        if (!$join_data) array_push($deletes, $index);
+                    }
+
+
+                }
+
+                if ($join_table_delete) {
+                    foreach ($deletes as $index) {
+                        unset($object["data"][$index]);
+                        $object["count"]--;
+                    }
+                }
+            }
+
+            $response['data'] = $object;
             $response['filter'] = $filter;
             $response['success'] = true;
             break;
         }
 
-        case "get":
+        case "insert":
         {
-            $filter = array(
-                $model->primary => $_POST["primary"]
-            );
+            // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
+            $obj = str_replace('\\', '', $_POST['obj']);
+            $obj = json_decode($obj, true);
 
-            $gets_config = array(
-                "like" => false,
-                "add_qeury" => "",
-                "order_by" => "c_date",
-                "sort" => "desc"
-            );
+            // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
+            foreach ($obj as $key => $value) {
+                if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
+            }
 
-            $data = $model->get($filter,$gets_config);
 
-            $response['data'] = $data;
+            if ($_FILES["upfile"]) {
+                $upfile = $file->bind($_FILES["upfile"]);
+                $obj["column"] = $upfile;
+            }
+
+            $model->insert($obj);
             $response['success'] = true;
             break;
         }
-
-        case "post":
+        case "update":
         {
             // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $obj = str_replace('\\','',$_POST['obj']);
-            $obj = json_decode($obj,true);
+            $obj = str_replace('\\', '', $_POST['obj']);
+            $obj = json_decode($obj, true);
 
             // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
-            foreach($obj as $key => $value) {
-                if(is_array($obj[$key])) $obj[$key] = json_encode($obj[$key],JSON_UNESCAPED_UNICODE);
+            foreach ($obj as $key => $value) {
+                if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
             }
 
 
-
-            if($_FILES["upfile"]) {
+            if ($_FILES["upfile"]) {
                 $upfile = $file->bind($_FILES["upfile"]);
-                $obj["file"] = $upfile;
+                $obj["column"] = $upfile;
             }
 
-            $model->post($obj);
-            $response['success'] = true;
-            break;
-        }
-        case "put":
-        {
-            // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $obj = str_replace('\\','',$_POST['obj']);
-            $obj = json_decode($obj,true);
-
-            // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
-            foreach($obj as $key => $value) {
-                if(is_array($obj[$key])) $obj[$key] = json_encode($obj[$key],JSON_UNESCAPED_UNICODE);
-            }
-
-
-
-            if($_FILES["upfile"]) {
-                $upfile = $file->bind($_FILES["upfile"]);
-                $obj["file"] = $upfile;
-            }
-
-            $model->put($obj);
+            $model->update($obj);
             $response['success'] = true;
             break;
         }
@@ -141,10 +125,10 @@ try {
         case "deletes":
         {
             // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $arrays = str_replace('\\','',$_POST['arrays']);
-            $arrays = json_decode($arrays,true);
+            $arrays = str_replace('\\', '', $_POST['arrays']);
+            $arrays = json_decode($arrays, true);
 
-            foreach($arrays as $primary) {
+            foreach ($arrays as $primary) {
                 $model->delete(array(
                     $model->primary => $primary
                 ));

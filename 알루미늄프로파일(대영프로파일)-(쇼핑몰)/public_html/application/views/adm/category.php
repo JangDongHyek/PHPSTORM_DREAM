@@ -306,7 +306,6 @@
         return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
     };
 </script>
-
 <?php include_once MODAL_PATH. "product_modal.php" // 배송비 모달 ?>
 
 <!--상품관리 JS-->
