@@ -1,0 +1,103 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<? if($Mall_Admin_ID&&$MemberLevel==1){ ?>
+<body topmargin="0" leftmargin="0">
+<?}else{?>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false" topmargin="0" leftmargin="0"> 
+<?}?>
+<? include("../include/top2.htm"); ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="166" height="100%" valign="top"><? include("../include/sub_menu2.htm"); ?></td>
+            <td width="9" valign="top">&nbsp;</td>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="530"><img src="../images2/main_flash_bg.jpg" width="530" height="304"></td>
+                <td width="16">&nbsp;</td>
+                <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><img src="../images2/main_17.gif" width="279" height="183"></td>
+                  </tr>
+                  <tr>
+                    <td><img src="../images2/main_21.gif" width="279" height="121"></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table> </td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td height="22">&nbsp;</td>
+      </tr>
+      <tr>
+        <td><img src="../images2/main_contents1.jpg" width="1000" height="319"></td>
+      </tr>
+      <tr>
+        <td height="22"></td>
+      </tr>
+      <tr>
+        <td><img src="../images2/main_contents2.jpg" width="1000" height="268"></td>
+      </tr>
+      <tr>
+        <td height="22"></td>
+      </tr>
+      <tr>
+        <td><img src="../images2/main_contents3.gif" width="1000" height="316"></td>
+      </tr>
+      <tr>
+        <td height="22">&nbsp;</td>
+      </tr>
+      <tr>
+        <td><img src="../images2/main_contents4.jpg" width="1000" height="568"></td>
+      </tr>
+      <tr>
+       <td height="22">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="20" valign="top"><img src="../images2/m_mid_bar.gif" width="1000" height="13"></td>
+      </tr>
+      <tr>
+        <td><img src="../images2/main_44.gif" width="1000" height="30"></td>
+      </tr>
+      
+      <tr>
+        <td height="150"><iframe src="../include/new_item_list.html" frameborder="0" width="100%" scrolling="no" onload="this.style.height=this.contentWindow.document.body.scrollHeight"></iframe></td>
+      </tr>
+      <tr>
+        <td height="20" valign="bottom"><img src="../images2/m_mid_bar.gif" width="1000" height="13"></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+<? include("../include/bottom.htm"); ?>
+</body>
+</html>

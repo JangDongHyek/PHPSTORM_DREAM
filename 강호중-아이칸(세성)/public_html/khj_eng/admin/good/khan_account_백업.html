@@ -1,0 +1,38 @@
+<?
+include "../../connect_login.php";
+
+
+$query = "select * from $ItemTable where item_id ='$_SESSION[Mall_Admin_ID]'";
+$result = mysql_query( $query, $dbconn );
+$row = mysql_fetch_array( $result );
+
+?>
+	
+	
+	<table border="1" cellpadding="0" cellspacing="0" width="60%" bordercolordark="white"  align="center">
+		<tr>
+			<td width="90%" bgcolor="#999999">
+				<table border="0" width="100%" cellspacing="1" cellpadding="3">
+				<tr>
+					<td width="20%" bgcolor="#C8DFEC" align="center">
+						칸충전 송금계좌
+					</td>
+					<td width="30%" bgcolor="#FFFFFF" align="left" colspan=3>
+						91312390073 농협	예금주:강호중<br>
+						120211029251 국민은행	예금주:강호중<br>
+						1002352857868 우리은행	예금주:강호중
+					</td>
+
+				</tr>
+
+				</table>
+			</td>
+		</tr>
+	</table>
+	<br>
+<div align=center>
+				<b>
+				※주의사항<br>
+				회원충전금 송금계좌로 입금시 보내는이(받는사람통장에 표시될이름)를 회원 고유번호로 입력하셔야 합니다.<br>
+				나의 고유번호 : <?=$row[sea_num]?><?=$row[sung_num]?><?=$row[khan_num]?><?=$row[sudong_num]?></b>
+</div>

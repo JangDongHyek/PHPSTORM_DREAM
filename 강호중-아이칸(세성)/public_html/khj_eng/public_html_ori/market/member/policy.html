@@ -1,0 +1,34 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+
+<?
+/*$filename = "$Co_img_UP$mart_id/privacy";
+if(file_exists($filename)){
+	$fp = fopen($filename,"r");
+	$privacy = fread($fp, filesize ($filename));
+	$privacy = ereg_replace("<b>","",$privacy);
+	$privacy = ereg_replace("</b>","",$privacy);
+	fclose($fp);
+}*/
+$info_sql = "select privacy from $MartMngInfoTable where mart_id='$mart_id'";
+$info_res = mysql_query($info_sql, $dbconn);
+$info_row = mysql_fetch_array($info_res);
+$privacy = $info_row[privacy];
+$privacy = eregi_replace( "\n", "<br>", $privacy );
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="10">
+	<tr>
+		<td><?=$privacy?></td>
+	</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../connect_login.php";
+?>
+<?
+//================== 도메인 설정을불러옴 =================================================
+$url = str_replace("www.", "", $HTTP_HOST);
+
+$sql0 = "select * from $Domain_forwardTable where domain like '%$url%' and if_confirm = '1'";
+$res0 = mysql_query($sql0, $dbconn);
+if($res0 == false) echo "쿼리 실행 실패!";
+$tot0 = mysql_num_rows($res0);
+if( $tot0 > 0 ){
+	$mart_id = mysql_result($res0, 0, "mart_id");
+}
+if( $res0 ){
+	mysql_free_result( $res0 );
+}
+//================== 상점 로고 파일을 불러옴 =============================================
+$sql = "select * from $MartMngInfoTable where mart_id ='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$total = mysql_num_rows($res);
+if( $total > 0 ){
+	$row = mysql_fetch_array($res);
+	$shop_logo = $row[logo];
+	$target = "../up/".$mart_id."/".$shop_logo;
+}
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<title><?=$admin_title?></title>
+<script language="javascript" src="js/common.js"></script>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<script>
+<!--
+function checkform(f){
+	if(f.username.value==""){
+		alert("아이디를 입력하세요.");
+		f.username.focus();
+		return false;
+	}
+	if(f.password.value==""){
+		alert("비밀번호를 입력하세요.");
+		f.password.focus();
+		return false;
+	}
+	return true;
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+<style type="text/css">
+<!--
+body {
+	background-color: #f2f2f2;
+}
+-->
+</style></head>
+
+<body leftmargin='0' topmargin="0" onload='document.f.username.focus();'>
+<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" height="162" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="162" background="images/new/top.gif" style="padding:0px 50px 10px 0px"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="60%"><a href="login.html"><img src="images/m_logo.gif" width="361" height="100" border="0"></a></td>
+            <td align="right"><table width="327" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="109"><a href="page1.htm" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image7','','images/new_eng/menu_over_1.gif',0)"><img src="images/new_eng/menu_1.gif" alt="가맹점" name="Image7" width="109" height="100" border="0"></a></td>
+                <td width="109"><a href="page2.htm" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image8','','images/new_eng/menu_over_2.gif',0)"><img src="images/new_eng/menu_2.gif" alt="정보검색" name="Image8" width="109" height="100" border="0"></a></td>
+                <td width="109"><a href="page3.htm" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image9','','images/new_eng/menu_over_3.gif',0)"><img src="images/new_eng/menu_3.gif" alt="정보등록" name="Image9" width="109" height="100" border="0"></a></td>
+              </tr>
+            </table></td>
+          </tr>
+
+        </table></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" height="400"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center"><!--회원가입 --><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="60" valign="top" style="padding:0px 0px 0px 45px"><img src="images/new/login_t.gif" width="287" height="43"></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table width="80%" border="0" align="center" cellpadding="0" cellspacing="0">
+					  <form name='f' method=post action='login_process.php' onsubmit='return checkform(this)'>
+                        <tr>
+                          <td align="center"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td width="70" height="29"><img src="images/new/id.gif" width="32" height="12"></td>
+							  <td align="center">
+		<input class="input_box2" name="username" size='35' autocomplete='off' style="width:150px">							  </td>
+                            </tr>
+                            <tr>
+                              <td height="29"><img src="images/new/pw.gif" width="43" height="12"></td>
+							  <td align="center">
+		<input type="password" name="password" class="input_box2" size="35" style="width:150px">
+							  </td>
+							</tr>
+							 <tr>
+                              <td height="29"><img src="images/new/pw2.gif" width="48" height="12"></td>
+							  <td align="center">
+		<input type="password" name="password_gr" class="input_box2" size="35" style="width:150px">
+							  </td>
+							</tr>
+                          </table></td>
+                          <td width="111"><input name="image" type='image' onfocus='blur();' src="images/new/btn_login.gif" align="absmiddle" border="0"></td>
+                        </tr></form></table></td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                  </tr>
+                </table><!--//회원가입 --></td>
+        <td width="535"><a href="./inmem/join.html"><img src="images/new/btn_join.gif" alt="회원가입" width="535" height="210" border=0></a></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" height="60"><img src="images/new/copy.gif" width="1000" height="40"></td>
+    <td>&nbsp;</td>
+  </tr>
+</table></td>
+  </tr>
+</table>
+</body>
+
+</html>
+<?
+mysql_close($dbconn);
+?>

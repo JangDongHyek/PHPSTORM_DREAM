@@ -1,0 +1,209 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect_login.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script>
+function checkform(f){
+	if(f.username.value==""){
+		alert("아이디를 입력하세요.");
+		f.username.focus();
+		return false;
+	}
+	if(f.password.value==""){
+		alert("비밀번호를 입력하세요.");
+		f.password.focus();
+		return false;
+	}
+	return true;
+}
+
+function ordercheck(f){
+	if(f.ordernum.value==""){
+		alert("주문번호를 입력하세요.");
+		f.ordernum.focus();
+		return false;
+	}
+	return true;
+}
+function checkform1(f){
+	if(f.order_name.value==""){
+		alert("주문자 성명을 입력하세요.");
+		f.order_name.focus();
+		return false;
+	}
+	if(f.passport1.value==""){
+		alert("주민번호 앞자리를 입력하세요.");
+		f.passport1.focus();
+		return false;
+	}
+	if(f.passport2.value==""){
+		alert("주민번호 뒷자리를 입력하세요.");
+		f.passport2.focus();
+		return false;
+	}
+	return true;
+}
+
+function check(){
+    var str = document.f1.passport1.value.length;
+	if(str == 6) {
+       document.f1.passport2.focus();
+    }
+
+} 
+	
+function check1(){
+    var str = document.f1.passport2.value.length;
+    if(str == 7) {
+       document.f1.order_name.focus();
+       
+	}   	
+} 
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+<?
+include "../include/top2.htm";
+?>
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="1000" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" background="../images/proudct/product_list_box_bg.gif">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="166" height="100%" valign="top">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td><td width="9"></td>
+                    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td valign="top"><? $num = "1"; include "../inc/mem_menu.php"; ?></td>
+                              </tr>
+                              <tr>
+                                <td height="50"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td><img src="../images2/login/mem_t1.gif" width="108" height="15"></td>
+                                    <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <span class="text_14_s2"><a href="../main/index.html">홈</a> &gt; 멤버페이지 &gt; 로그인</span> </div></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td valign="top">&nbsp;</td>
+                              </tr>
+                              
+                              <tr>
+                                <td><div align="center"><img src="../images2/login/company_t.gif" width="459" height="85"></div></td>
+                              </tr>
+                              <tr>
+                                <td height="25">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td><div align="center"><img src="../images2/login/login_t1.gif" width="687" height="67" border="0" usemap="#login_page"></div></td>
+                              </tr>
+                              <tr>
+                                <td align="center"><table width="436" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td height="50"><div align="center"><img src="../images2/login/login_text.gif" width="231" height="19"></div></td>
+                                  </tr>
+                                  <tr>
+                                    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+									 <form action='login_process.php?url=<?=$url?>&amp;mart_id=<?=$mart_id?>' method='post' name='f' id="f" onsubmit='return checkform(this)'>
+                                          <input type="hidden" name="member_type" value="1" />
+                                      <tr>
+                                        <td><table width="95%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td width="75"><img src="../images2/login/id.gif" width="65" height="12"></td>
+                                                <td><input name="username" type="text" id="username" size="15" class="input_02"  style="width:100%"/></td>
+                                              </tr>
+                                            </table></td>
+                                          </tr>
+                                          <tr>
+                                            <td height="5"></td>
+                                          </tr>
+                                          <tr>
+                                            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td width="75"><img src="../images2/login/pw.gif" width="65" height="12"></td>
+                                                <td><input name="password" type="password" class="input_02" id="password" size="15"  style="width:100%"/></td>
+                                              </tr>
+                                            </table></td>
+                                          </tr>
+                                        </table></td>
+                                        <td width="116"><div align="right">
+                                          <input name="image" type='image' src="../images2/login/btn_login.gif" align="middle" />
+                                        </div></td>
+                                      </tr></form>
+                                    </table></td>
+                                  </tr>
+                                  
+                                  <tr>
+                                    <td>&nbsp;</td>
+                                  </tr>
+                                  <tr>
+                                    <td><img src="../images2/login/login_menu.gif" width="436" height="72" border="0" usemap="#login_btn"></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="9"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->
+<map name="login_page"><area shape="rect" coords="527,25,689,53" href="../member/login2.html?url=<?=$url?>">
+</map>
+<map name="login_btn">
+<area shape="rect" coords="35,13,400,34" href="../member/index.html">
+<area shape="rect" coords="35,35,401,55" href="../member/idfind.html">
+</map></body>
+</html>

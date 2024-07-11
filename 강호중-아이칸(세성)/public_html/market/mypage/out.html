@@ -1,0 +1,190 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script language="javascript">
+function checkform(f){
+	if(f.username.value == ""){
+		alert("아이디를 입력하세요")
+		f.username.focus()
+		return false;
+	}
+
+	if(f.name.value == ""){
+		alert("이름을 입력하세요")
+		f.name.focus()
+		return false;
+	}
+
+	if(f.password.value == ""){
+		alert("비밀번호를 입력하세요")
+		f.password.focus()
+		return false;
+	}
+
+	if(f.passport1.value == ""){
+		alert("주민등록번호를 입력하세요")
+		f.passport1.focus()
+		return false;
+	}
+
+	if(f.passport2.value == ""){
+		alert("주민등록번호를 입력하세요")
+		f.passport2.focus()
+		return false;
+	}
+}
+
+function check(){
+	var str = document.f.passport1.value.length;
+	if(str == 6) {
+	   document.f.passport2.focus();
+	}
+} 
+
+function check1(){
+	var str = document.f.passport2.value.length;
+	if(str == 7) {
+	   document.f.etc.focus();
+	   
+	}   	
+}
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="1000" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" background="../images/proudct/product_list_box_bg.gif">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="166" height="100%" valign="top">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td><td width="9"></td>
+                    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td valign="top"><? $num = "6"; include "../inc/mypage_menu.php"; ?></td>
+                              </tr>
+                              <tr>
+                                <td height="50"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td height="15"><img src="../images2/mypage/out_t1.gif" width="108" height="15"></td>
+                                    <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <span class="text_14_s2"><a href="../main/index.html">홈</a> &gt; 마이페이지 &gt; 회원탈퇴 </span> </div></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5"></td>
+                              </tr>
+                              <tr>
+                                <td align="center">
+<table width="97%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><!---------------------- 회원탈퇴폼 시작 ------------------------------------------------>
+                            <form name='f' method='post' onSubmit="return checkform(this)" action='modify.html?flag=leave'>
+                              <table width="680" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                                <tr>
+                                  <td width="80"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">아이디</td>
+                                  <td><input name="username" type="text" class="input_03" size="20" style='ime-mode:inactive'></td>
+                                  <td width="80" bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">이름</td>
+                                  <td><input name="name" type="text" class="input_03" size="20" style='ime-mode:active'></td>
+                                </tr>
+                                <tr>
+                                  <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">비밀번호</td>
+                                  <td class="price"><input name="password" type="password" class="input_03" size="20" style='ime-mode:inactive'></td>
+                                  <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주민등록번호</td>
+                                  <td class="price"><input type="text" name="passport1" onkeyup='check();' class="input_03" size="10" maxlength='6'>
+            -
+              <input type='password' name="passport2" class="input_03" size="10" maxlength='7' onkeyup='check1();'></td>
+                                </tr>
+                                <tr>
+                                  <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">탈퇴사유</td>
+                                  <td colspan="3"><textarea name="etc" cols="80" rows="5" class="input_03" style='ime-mode:active'></textarea></td>
+                                </tr>
+                              </table>
+                              <!---------------------- 회원탈퇴폼 끝 -------------------------------------------------->
+                              <!---------------------- 버튼 시작 ------------------------------------------------------>
+                              <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td height="70" align="center"><div align="center">
+                                    <input type='image' src="../image/bu_out.gif"  border="0" onfocus='blur();'>
+                                    <img src="../image/bu_cancel.gif" border="0" style='cursor:hand' onclick='document.f.reset();'></div></td>
+                                </tr>
+                              </table>
+                            </form>
+                            <!---------------------- 버튼 끝 -------------------------------------------------------->                        </td>
+                      </tr>
+                  </table>								</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="9"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

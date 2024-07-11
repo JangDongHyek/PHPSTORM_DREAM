@@ -1,0 +1,171 @@
+<link href="../../css/common.css?version=<?php echo date('YmdHis')?>" rel="stylesheet" type="text/css">
+
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+include "../admin_head.php";
+
+$query = "select * from $ItemTable where item_id ='$_SESSION[Mall_Admin_ID]'";
+$result = mysql_query( $query, $dbconn );
+$row = mysql_fetch_array( $result );
+
+?>
+<script language='javascript'>
+function frm_val(f){
+
+
+	return true;
+}
+
+function del(username,num){
+	if(confirm("삭제하시겠습니까?")){
+		window.location.href='bonus.html?flag=del&mode=<?=$mode?>&provider_id=<?=$provider_id?>&username='+username+'&num='+num;
+	}
+	else return;
+}
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0">
+<div class="wrap">
+<form action='member_admin.html' method='post' onsubmit="return frm_val(this)">
+<input type='hidden' name='flag' value='add'>
+<input type='hidden' name='username' value='<?=$username?>'>
+<input type='hidden' name='provider_id' value='<?=$Mall_Admin_ID?>'>
+<input type='hidden' name='mode' value='<?=$mode?>'>
+<input type='hidden' name='goyou_num' value='<?=$row[sea_num]?><?=$row[sung_num]?><?=$row[khan_num]?><?=$row[sudong_num]?>	'>
+<table border="0" cellpadding="0" cellspacing="0" width="98%" bordercolorlight="#E1E1E1"  align="center">
+  <tr>
+	 <td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+	 <table cellSpacing="0" cellPadding="0" width="100%" border="0">
+		<tr>
+		  <td vAlign="top" width="100%" bgColor="#ffffff" height="3">
+		  <table width="100%" border="0">
+			 <tr>
+				<td width="100%" height="20" class="stitle2"><p align="center">[메뉴별 관리자 신청하기]</td>
+			 </tr>
+		  </table>
+		  </td>
+		</tr>
+		<tr>
+		  <td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+		  <table width="100%" border="0">
+			 <tr>
+				<td width="100%">
+					<div class="form">
+				<table cellSpacing="0" cellPadding="0" width="100%" border="0" class="box2">
+				
+
+
+				<tr>
+					<td align="left" width="12%" bgColor="#c8dfec" class="title">신청등급</td>
+					<td align="left" width="88%" bgColor="#ffffff" colSpan="5">
+					<input type=radio name="super_level" value='y' checked>총관리자등급 신청
+
+					<br>
+					<input type=radio name="super_level" value='n'>그룹장등급 신청
+					<input class="aa" type="text" name="sea_num" value='<?=$sea_num?>' size="5" maxlength=3>
+					-
+					<input class="aa" type="text" name="sung_num" value='<?=$sung_num?>' size="3" maxlength=2>
+					-
+					<input class="aa" type="text" name="khan_num" value='<?=$khan_num?>' size="3" maxlength=2>
+ ※그룹장번호를 입력하세요.
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="12%" bgColor="#c8dfec" class="title">회원</td>
+					<td align="left" width="88%" bgColor="#ffffff" colSpan="5">		<input type=radio name="admin_type" value="mem" checked>회원관리</td>
+				</tr>
+
+				<tr>
+					<td align="left" width="12%" bgColor="#c8dfec" class="title">가맹점</td>
+					<td align="left" width="88%" bgColor="#ffffff" colSpan="5">		<input type=radio name="admin_type" value="gamaeng">가맹점회원관리,가맹점검색,가맹점관리</td>
+				</tr>
+
+
+				<tr>
+					<td align="left" width="12%" bgColor="#c8dfec" class="title">정보</td>
+					<td align="left" width="88%" bgColor="#ffffff" colSpan="5">		<input type=radio name="admin_type" value="jsell">판매구입정보관리 <input type=radio name="admin_type" value="jtravel">여행관리	<input type=radio name="admin_type" value="jwork">월별근무현황일지관리 <input type=radio name="admin_type" value="jreal">부동산관리 <input type=radio name="admin_type" value="jmeet">만남관리 <input type=radio name="admin_type" value="jjob">구인구직관리</td>
+				</tr>
+
+
+
+			
+				
+
+
+
+				</table>
+					</div>
+				</td>
+			 </tr>
+		  </table>
+		  </td>
+		</tr>
+
+		<tr>
+		  <td vAlign="top" width="100%" bgColor="#ffffff"><p align="center">
+							<input style="BORDER-RIGHT: #5a5a5a 1px solid; BORDER-TOP: #5a5a5a 1px solid; BORDER-LEFT: #5a5a5a 1px solid; COLOR: black; BORDER-BOTTOM: #5a5a5a 1px solid; HEIGHT: 18px; BACKGROUND-COLOR: white" type="submit" value=" 신청하기 ">
+</td>
+		</tr>
+		<tr align="middle">
+		  <td vAlign="top" width="100%" bgColor="#ffffff"></td>
+		</tr>
+	 </table>
+	 </td>
+  <td height="2"></tr>
+</table>
+</form>
+</div>
+</body>
+</html>
+
+<?
+if($flag == "add"){
+			$SQL = "select * from admin where goyou_num = '$goyou_num'";
+			$dbresult = mysql_query($SQL, $dbconn);
+			$cnt = mysql_num_rows($dbresult);
+			
+			if($cnt > 0){
+				echo("
+					<script>
+					alert('이미 신청하셨습니다.');
+					</script>
+					<meta http-equiv='refresh' content='0; URL=member_admin.html'>
+				");
+				exit;
+			}else{
+				
+				$regdate = date("Y-m-d H:i:s");
+				
+
+
+				if($super_level == 'y'){
+					$admin_level = 10;
+				}else{
+					$group_num = $sea_num.$sung_num.$khan_num;
+
+					if($sea_num && $sung_num && $khan_num){
+						$admin_level = 3;
+					}else if($sea_num && $sung_num && !$khan_num){
+						$admin_level = 2;
+					}else if($sea_num && !$sung_num && !$khan_num){
+						$admin_level = 1;
+					}
+				}
+				$SQL = "insert into admin (seq_num, goyou_num, group_num, item_id, admin_type, admin_level, state, regdate) values ('', '$goyou_num', '$group_num', '$_SESSION[Mall_Admin_ID]', '$admin_type', '$admin_level', '1', '$regdate')";
+				$dbresult = mysql_query($SQL, $dbconn);
+				echo("
+					<script>
+					alert('[신청 완료] 관리자의 승인이후 관리가 가능합니다.');
+					</script>
+					<meta http-equiv='refresh' content='0; URL=member_admin.html'>
+				");
+				exit;
+			}
+
+}
+
+mysql_close($dbconn);
+?>

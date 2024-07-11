@@ -1,0 +1,86 @@
+<script type="text/javascript"> 
+function large(){ 
+ document.all['flashArea'].style.height = 200; 
+} 
+function small(){ 
+
+ document.all['flashArea'].style.height = 48; 
+} 
+</SCRIPT>
+
+
+
+
+<!--메인메뉴 레이어 시작 -->
+<style type="text/css">
+<!--
+#LayerContainer2 {
+	position: absolute;
+	top:87px;
+	text-align: center;
+	width: 100%;
+	z-index: 4;
+}
+#flashArea {
+margin: 0 auto;
+position: relative;
+width: 1000px;
+height: 68px
+text-align: center;
+padding-left: 0px;
+z-index: 4
+}
+-->
+</style>
+<!--메인메뉴 레이어 끝 -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images2/up_bg.gif"><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="311"><a href="../main/"><img src="../images2/main_2.gif" width="311" height="87" border="0" /></a></td>
+                    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td height="42" valign="bottom" background="../images2/main_3.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td height="26"><div align="right">
+                                <?	if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/top2.htm';
+													}
+													else
+														include '../inc/top1.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/top2.htm';
+												}
+												?>
+                              </div></td>
+                              <td width="324"><? include "../inc/search_form.htm"; ?></td>
+                            </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="45"><img src="../images2/main_5.gif" width="689" height="45" /></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="68" valign="top"> <div style="z-index:2; position:absolute; visibility: visible;"><DIV id="flashArea" style="Z-INDEX: 10; LEFT: 0px; WIDTH: 1000px; POSITION: absolute; TOP: 0px; HEIGHT:68px"> <textarea name="textarea" cols="0" rows="0" id="txtResource id #100" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="1000" height="100%">
+		<param name="movie" value="../swf/menu.swf?pageNum=6">
+		<param name="quality" value="high"><param name="wmode" value="transparent"><param name="menu" value="false">
+		<embed src="../swf/menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="1000" height="100%"></embed></object></textarea><script>printEmbed("txtResource id #100")</script></div></div></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>

@@ -1,0 +1,82 @@
+<?
+include "../../connect_login.php";
+
+
+$query = "select * from $ItemTable where item_id ='$_SESSION[Mall_Admin_ID]'";
+$result = mysql_query( $query, $dbconn );
+$row = mysql_fetch_array( $result );
+
+?>
+	
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<div class="wrap">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" >
+		<tr>
+			<td width="90%">
+				<table border="0" width="100%" cellspacing="0" cellpadding="0" class="box2">
+				<tr>
+					<td width="20%"  align="center" class="title">
+						칸충전금 송금계좌
+					</td>
+				  <td width="30%" bgcolor="#FFFFFF" align="left" colspan=3>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0" class="box4">
+  <tr>
+	  <!-- 24.02.06 계좌안내만 바꿔봄 wc
+    <td>3010182132221</td>
+    <td>농협</td>
+    <td>예금주 : 아이칸 주</td>
+    -->
+	  <td>08282827535</td>
+	  <td>신한은행</td>
+	  <td>예금주 : 아이칸주식회사</td>
+  </tr>  
+</table>
+</td>
+
+				</tr>
+
+				</table>
+			</td>
+		</tr>
+	</table>
+	<br>
+<div align=center>
+				<b>
+				※주의사항<br>
+				회원충전금 송금계좌로 입금시 보내는이(받는사람통장에 표시될이름)를 회원 고유번호로 입력하셔야 합니다.<br>
+					나의 고유아이디 : <?=$row[provider_id]?>
+					<!--
+				나의 고유번호 : <?=$row[sea_num]?><?=$row[sung_num]?><?=$row[khan_num]?><?=$row[sudong_num]?></b>
+				-->
+	<button type="button" onclick="sendMoneyCheck()">입금확인하기</button>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+	function sendMoneyCheck(){
+
+		$.ajax({
+			url: "http://wickhan.com/admin/good/send_point_wc.php",
+			type: "POST",
+			data: "",
+			dataType: "text",
+			async: false,
+			cache: false,
+			success: function(data) {
+				console.log(data);
+				if(data == 'nodata'){
+					alert('입금된 정보가 없습니다.');
+					history.go(0);
+				}else if(data){
+					alert('입금정보를 불러왔습니다.');
+					history.go(0);
+				}else{
+					alert('15분뒤 다시시도해주세요.');
+				}
+			},
+			error: function(data) {
+				console.log(data);
+			}
+		});
+	}
+</script>

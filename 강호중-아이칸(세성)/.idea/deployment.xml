@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="강호중-아이칸(세성)" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="On explicit save action" serverName="강호중-아이칸(세성)" exclude="*.jpg;*.png;*.gif;*.swf;*.zip;*.thumb;*.psd;*.hwp; *.bmp;*.txt;*.db;*.css;*.xml;*.apk;*.jpeg;*.webp; *.heic;*.dng;*.mov;*.mp4;*.heif;*.json;*.woff2; *.ttf;*.eot;*.svg;*.md;*.crt;*.exe;*.dll;*.conf;*.mp3;*.dat; *.csv;*.pdf;*.iml;*.xlsx;*.woff; nodejs;session;sessions;" remoteFilesAllowedToDisappearOnAutoupload="false" autoUploadExternalChanges="true">
     <serverData>
       <paths name="강호중-아이칸(세성)">
         <serverdata>
@@ -10,5 +10,6 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myAutoUpload" value="ON_EXPLICIT_SAVE" />
   </component>
 </project>

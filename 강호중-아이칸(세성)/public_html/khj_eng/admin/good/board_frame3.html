@@ -1,0 +1,22 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+ini_set("session.cache_expire", 86400);  // 세션 유휴시간 24시간
+ini_set("session.gc_maxlifetime", 86400);  // 역시 24시간
+session_set_cookie_params(0, "/");
+ini_set("session.cookie_domain", ".wickhan.com");
+
+session_start();
+if($direct_write=='y'){
+	$board_url="../../market/board_mem/board_write.php?mart_id=$mart_id&bbs_no=4";
+}else{
+	$board_url="../../market/board_mem/board_list.php?bbs_no=4";
+}
+
+if($my_list=='y'){
+	$board_url="../../market/board_mem/board_list.php?bbs_no=4&my_list=y";
+}
+?>
+	<FRAMESET ROWS=160,* border=0>
+	  <frame scrolling="no" noresize src="./board_top_menu3.html?direct_write=<?=$direct_write?>">
+	  <frame name="item_frame" src="<?=$board_url?>"></div>
+	</FRAMESET><noframes></noframes>

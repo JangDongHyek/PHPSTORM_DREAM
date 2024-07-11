@@ -1,0 +1,25 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+
+$upload = "../../up/$mart_id/"; //업로드 디렉토리
+?>
+<html>
+<head>
+<title>원본사진보기</title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<script language="javascript" src="../include/common.js"></script>
+<link href="../include/style.css" rel="stylesheet" type="text/css">
+</head>
+</head>
+<body topmargin='0' leftmargin='0'>
+<table border="0" cellspacing="0" cellpadding="0">
+	<tr> 
+		<td><img onclick='self.close();' style='cursor:hand' src='<?=$upload?><?=$file?>' border='0'></td>
+	</tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

@@ -1,0 +1,33 @@
+					<td align="center" valign="top">
+						<table width="<?=$list_product_img_width?>" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td align=center><table width="100%" border="0" cellspacing="3" cellpadding="3" onMouseover="this.style.backgroundColor='#9B4116'" onMouseout="this.style.backgroundColor='#E8E8E8'"   bgcolor="#E9E9E9">
+                                  <tr>
+                                    <td><?	if($jaego_use == 1 && $jaego == 0){?>
+                                      <a href="javascript:alert('현재 품절인 상품입니다!');"> <img src='../..<?=$Co_img_DOWN?><?=$mart_id?>/<?=$rows1[img_sml]?>' border='0' /></a>
+                                      <?}else{?>
+                                      <a href='product_info.html?mart_id=<?=$mart_id?>&amp;category_num=<?=$rows1[category_num]?>&amp;item_no=<?=$rows1[item_no]?>'> <img src='../..<?=$Co_img_DOWN?><?=$mart_id?>/<?=$rows1[img_sml]?>' border='0' /></a><?}?></td></tr></table></td>
+							</tr>
+							<tr>
+								<td valign="top">
+									<table width="<?=$list_product_img_width?>" border="0" align="center" cellpadding="0" cellspacing="1">
+									<tr>
+											<td height="5"></td>
+									  </tr>
+										<tr>
+											<td align=center><span class="text_main_s2"><?=$rows1[item_name]?></span></td>
+										</tr>
+										<tr>
+								<td align=center><span class="text_18_s"><?=han_cut($rows1[short_explain],66)?></span></td>
+							</tr>
+										<tr>
+											<td align=center><span class="text_main1_s"><?=number_format($rows1[z_price])?>원</span></td>
+										</tr>
+										<tr>
+								<td align=center><img src="../image/icon_point.gif" width="13" height="10"><span class="point"><?=$bonus?> 원</span></td>
+								</tr>
+								  </table>					
+								</td>
+							</tr>
+						</table>	
+					</td>

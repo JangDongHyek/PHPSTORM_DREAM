@@ -1,0 +1,43 @@
+2012-01-25 11:51:29 [INFO ] [] XPayClient initialize [/home/sinpung/public_html/market/cart/lgdacom] [service]
+2012-01-25 11:51:29 [DEBUG] [] Config [server_id] = [01]
+2012-01-25 11:51:29 [DEBUG] [] Config [timeout] = [60]
+2012-01-25 11:51:29 [DEBUG] [] Config [log_level] = [4]
+2012-01-25 11:51:29 [DEBUG] [] Config [verify_cert] = [1]
+2012-01-25 11:51:29 [DEBUG] [] Config [verify_host] = [1]
+2012-01-25 11:51:29 [DEBUG] [] Config [report_error] = [1]
+2012-01-25 11:51:29 [DEBUG] [] Config [output_UTF8] = [0]
+2012-01-25 11:51:29 [DEBUG] [] Config [auto_rollback] = [1]
+2012-01-25 11:51:29 [DEBUG] [] Config [log_dir] = [/home/shop_mobile/public_html/market/cart/lgdacom/log]
+2012-01-25 11:51:29 [DEBUG] [] Config [tlets08064] = [0a88691273d4d2ff7def30b8a0e8526e]
+2012-01-25 11:51:29 [DEBUG] [] Config [lets08064] = [0a88691273d4d2ff7def30b8a0e8526e]
+2012-01-25 11:51:29 [DEBUG] [] Config [url] = [https://xpayclient.lgdacom.net/xpay/Gateway.do]
+2012-01-25 11:51:29 [DEBUG] [] Config [test_url] = [https://xpayclient.lgdacom.net:7443/xpay/Gateway.do]
+2012-01-25 11:51:29 [DEBUG] [] Config [aux_url] = [http://xpayclient.lgdacom.net:7080/xpay/Gateway.do]
+2012-01-25 11:51:29 [FATAL] [] Key for MID [lets] does not exist in mall.conf
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_TXNAME] = [CashReceipt]
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_METHOD] = [AUTH]
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_PAYTYPE] = [SC0100]
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_OID] = [20120125114938-77]
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_AMOUNT] = [12500]
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_CASHCARDNUM] = []
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_CUSTOM_MERTNAME] = [½ÅÇ³»ê¾÷]
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_CUSTOM_BUSINESSNUM] = []
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_CUSTOM_MERTPHONE] = []
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_CASHRECEIPTUSE] = [1]
+2012-01-25 11:51:29 [DEBUG] [] Post [LGD_PRODUCTINFO] = [Å×½ºÆ®]
+2012-01-25 11:51:29 [DEBUG] [] post_string = LGD_TXNAME=CashReceipt&LGD_METHOD=AUTH&LGD_PAYTYPE=SC0100&LGD_OID=20120125114938-77&LGD_AMOUNT=12500&LGD_CASHCARDNUM=&LGD_CUSTOM_MERTNAME=%BD%C5%C7%B3%BB%EA%BE%F7&LGD_CUSTOM_BUSINESSNUM=&LGD_CUSTOM_MERTPHONE=&LGD_CASHRECEIPTUSE=1&LGD_PRODUCTINFO=%C5%D7%BD%BA%C6%AE
+2012-01-25 11:51:29 [DEBUG] [] Result = [
+
+
+
+
+
+{"LGD_RESPCODE":"XC01","LGD_RESPMSG":"LGD_MID í•„ë“œê°€ ëˆ„ë½ë˜ì—ˆìŠµë‹ˆë‹¤. Init_TX(LGD_MID)ë¥¼ í•´ì£¼ì‹œê¸° ë°”ëë‹ˆë‹¤. ë˜ëŠ” mall.conf ì— ìƒì í‚¤ê°€ ì…‹íŒ…ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.","LGD_RESPONSE":[{"LGD_RESPCODE":"XC01","LGD_RESPMSG":"LGD_MID í•„ë“œê°€ ëˆ„ë½ë˜ì—ˆìŠµë‹ˆë‹¤. Init_TX(LGD_MID)ë¥¼ í•´ì£¼ì‹œê¸° ë°”ëë‹ˆë‹¤. ë˜ëŠ” mall.conf ì— ìƒì í‚¤ê°€ ì…‹íŒ…ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤."}]}
+
+
+	
+
+]
+2012-01-25 11:51:29 [INFO ] [] Response Code=[XC01], Msg=[LGD_MID ÇÊµå°¡ ´©¶ôµÇ¾ú½À´Ï´Ù. Init_TX(LGD_MID)¸¦ ÇØÁÖ½Ã±â ¹Ù¶ø´Ï´Ù. ¶Ç´Â mall.conf ¿¡ »óÁ¡Å°°¡ ¼ÂÆÃµÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.], Count=1
+2012-01-25 11:51:29 [DEBUG] [] Response (LGD_RESPCODE, 0) = XC01
+2012-01-25 11:51:29 [DEBUG] [] Response (LGD_RESPMSG, 0) = LGD_MID ÇÊµå°¡ ´©¶ôµÇ¾ú½À´Ï´Ù. Init_TX(LGD_MID)¸¦ ÇØÁÖ½Ã±â ¹Ù¶ø´Ï´Ù. ¶Ç´Â mall.conf ¿¡ »óÁ¡Å°°¡ ¼ÂÆÃµÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.

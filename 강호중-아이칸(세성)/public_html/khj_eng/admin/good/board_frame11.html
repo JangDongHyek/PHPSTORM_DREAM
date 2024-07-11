@@ -1,0 +1,17 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+
+if($direct_write=='y'){
+	$board_url="../../market/board_yo/board_write.php?mart_id=$mart_id&bbs_no=14";
+}else{
+	$board_url="../../market/board_yo/board_list.php?bbs_no=14";
+}
+
+if($my_list=='y'){
+	$board_url="../../market/board_yo/board_list.php?bbs_no=14&my_list=y";
+}
+?>
+	<FRAMESET ROWS=160,* border=0>
+	  <frame scrolling="no" noresize src="./board_top_menu11.html?direct_write=<?=$direct_write?>">
+	  <frame name="item_frame" src="<?=$board_url?>"></div>
+	</FRAMESET><noframes></noframes>

@@ -1,0 +1,27 @@
+<?
+
+
+if(0<strpos($direct_write,"?")){
+	$direct_write="y";
+}
+if($direct_write=='y'){
+	$board_url="../../market/board_meet/board_write.php?mart_id=$mart_id&bbs_no=17";
+}else{
+	$board_url="../../market/board_meet/board_list.php?bbs_no=17";
+}
+
+if($my_list=='y'){
+	$board_url="../../market/board_meet/board_list.php?bbs_no=17&my_list=y";
+}
+include "./board_top_menu14.html";
+
+?>
+<iframe name="item_frame" src="<?=$board_url?>" width="100%" style="height:100%; border: 0;"/>
+
+<?php
+include "../lib/Mall_Admin_Session.php";
+?>
+
+
+<meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=5.0,user-scalable=yes,target-densitydpi=medium-dpi">

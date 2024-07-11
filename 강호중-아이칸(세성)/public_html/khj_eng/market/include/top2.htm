@@ -1,0 +1,227 @@
+<!-- 플래시메뉴 적용 자바스크립트 시작 -->
+<script type="text/javascript"> 
+function large(){ 
+ document.all['flashArea'].style.height = 210; 
+} 
+function small(){ 
+
+ document.all['flashArea'].style.height = 44; 
+} 
+function subView(){
+	document.getElementById("categoryMenu").style.display="inline";
+	document.getElementById("sub1").style.display="none";
+	document.getElementById("sub2").style.display="block";
+}
+function subHidden(){
+	document.getElementById("categoryMenu").style.display="none";
+	document.getElementById("sub1").style.display="block";
+	document.getElementById("sub2").style.display="none";
+}
+</SCRIPT>
+<!-- 플래시메뉴 적용 자바스크립트 끝 -->
+
+<!--메인메뉴 레이어 시작 -->
+<style type="text/css">
+<!--
+#flashArea {
+	position: absolute;
+	top:81px;
+	text-align: center;
+	width: 100%;
+	z-index: 4;
+}
+#Layer {
+margin: 0 auto;
+position: relative;
+width: 1000px;
+height: 100%;
+text-align: center;
+padding-left: 0px;
+}
+-->
+</style>
+<div id="flashArea">
+<div id="Layer">
+  <textarea name="textarea" cols="0" rows="0" id="txtResource id #100" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="1000" height="100%">
+		<param name="movie" value="../swf/menu.swf?pageNum=2" />
+		<param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="menu" value="false" />
+		<embed src="../swf/menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="1000" height="100%"></embed></object>
+</textarea>
+  <script>printEmbed("txtResource id #100")</script></div></div>
+ <div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images2/up_bg.gif" style="background-repeat:repeat-x"><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="327"><img src="../images2/main_04.gif" width="327" height="81" border="0" /></td>
+                    <td width="358" valign="top"><a href="../main/"><img src="../images2/main_05.gif" width="358" height="81" border="0" /></a></td>
+                    <td valign="top" style="padding:35 0 0 0"><div align="right"><span style="padding-top:5px;">
+                      <?	if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName && $NonMemberPass)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/top2.htm';
+													}
+													else
+														include '../inc/top1.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/top2.htm';
+												}
+												?>
+                    </span></div></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="56" valign="top" background="../images2/menu_bg.gif"></td>
+            </tr>
+            <tr>
+              <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="166">
+					<span id="sub1" onclick="subView()" style="cursor:hand">
+					<img src="../images2/main_08.gif" width="166" height="38" />
+					</span>
+					<span id="sub2" onclick="subHidden()" style="cursor:hand;display:none">
+					<img src="../images2/main_08_off.gif" width="166" height="38" />
+					</span>
+				  </td>
+                  <td width="9">&nbsp;</td>
+                  <td width="377"><? include "../inc/search_form.htm"; ?></td>
+                  <td><img src="../images2/main_11.gif" width="448" height="38" /></td>
+                </tr>
+              </table></td>
+            </tr>
+			<tr><td height="8"></td></tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</div>
+ <div id='categoryMenu' style="display:none;background-color:white;position:absolute;width:100%;z-index:1">
+<?
+//================== 1차 카테고리 갯수를 불러옴 ==========================================
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide='0' and category_num > 28 order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+?>
+
+<table width="1000" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#d92d09" style="height:250px;border:2px #206AB5 solid;">
+	<?
+	//================== 1차 카테고리 정보를 불러옴 ===================
+	$upload = "../../up/$mart_id/";
+	$i=0;
+	$_tdCount_1 = 6;
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+		$category_num1 = $row_cate[category_num];
+		$category_name1 = $row_cate[category_name];
+		$category_img = $row_cate[category_img];
+
+		$target = "$upload"."$category_img";
+		if( $category_img ){
+			$cate_target_img = "<img src='$target' border='0' align='absmiddle'>";
+		}else{
+			$cate_target_img = "$category_name1";
+		}
+		if($i%$_tdCount_1==0)
+		echo "<tr>\n";
+	?>
+					
+		<td bgcolor="#ffffff" valign="top" align="center">
+		<table bgcolor="#EDEDED" width="166" height="28" border="0" align="center" cellpadding="0" cellspacing="0" >
+				<tr>
+		<td align=center><img src="../images/main_menu_icon.gif" align="absmiddle">&nbsp;&nbsp;<a href="../main/product_list.html?category_num=<?=$category_num1?>"><b><?=$cate_target_img?></b></font></a>
+		</td>
+		</tr>
+		</table>
+
+			<table align="center" cellpadding="0" cellspacing="0" width="166">
+			<?
+			//================== 2차 카테고리 정보를 불러옴 ===================
+			$sql_cate2 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree='1' and prevno='$category_num1' and if_hide='0' and category_num > 28 order by cat_order desc";
+			$res_cate2 = mysql_query($sql_cate2, $dbconn);
+			$total_cate2 = mysql_num_rows($res_cate2);
+
+			$j=0;
+			$_tdCount = 1;
+			while( $row_cate2 = mysql_fetch_array( $res_cate2 ) )
+			{
+				$category_num2 = $row_cate2[category_num];
+				$category_name2 = $row_cate2[category_name];
+				$category_img2 = $row_cate2[category_img];
+
+				$target2 = "$upload"."$category_img2";
+				if( $category_img2 ){
+					$cate_target_img2 = "<img src='$target2' border='0' align='absmiddle'>";
+				}else{
+					$cate_target_img2 = "$category_name2";
+				}
+
+				if($j%$_tdCount==0)
+				echo "<tr>\n";
+			?>
+							<td width="50%" height="22" valign="top" align="center"><strong>ㆍ</strong><a href="../main/product_list.html?category_num=<?=$category_num2?>"><?=$cate_target_img2?></a>								
+								<?
+								//================== 3차 카테고리 정보를 불러옴 
+								$sql_cate3 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '2' and prevno='$category_num2' and if_hide='0' order by cat_order desc";
+								$res_cate3 = mysql_query($sql_cate3, $dbconn);
+								$total_cate3 = mysql_num_rows($res_cate3);
+								while( $row_cate3 = mysql_fetch_array( $res_cate3 ) ){			
+								?>							
+										<br>
+										<a href="../main/product_list.html?category_num=<?=$row_cate3[category_num]?>"><?=$row_cate3[category_name]?></a>
+								<?
+								}
+								?>
+							</td>
+			<?
+				if($j%$_tdCount==$_tdCount-1)
+					echo "</tr>\n";
+				$j++;
+				
+			}
+			?>
+					</table>
+				</td>
+	<?	 
+		if($i%$_tdCount_1==$_tdCount_1-1)
+			echo "</tr>\n";
+		$i++;
+	}
+
+
+
+
+
+	// td를 다 채우지 못했을 경우
+	if($i%$_tdCount_1)
+	{
+		for($j=$i%$_tdCount_1; $j<$_tdCount_1; $j++)
+		{	
+			?>
+			<td bgcolor="#EDEDED">&nbsp;</td>			
+			<?											
+		}
+		
+	}
+
+
+
+
+
+	?>	
+			</tr>
+		</table>
+		
+<?
+	if( $res_cate ){
+		mysql_free_result( $res_cate );
+	}
+?>
+</div>

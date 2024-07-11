@@ -1,0 +1,65 @@
+<?
+include "../admin_head1.php";
+?>
+<?  include '../inc/menu3.html'; ?>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top"><table width="100%" height="81" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+    <td width="1050" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="310"></td>
+        <td valign="top" ><div align="right">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="10"  colspan=2></td>
+              </tr>
+              <tr>
+			    <td>
+				<?
+				if($direct_write=='y'){
+				?>
+				<a href="../good/board_frame3.html?direct_write=y" target="_top"><font size=4><b>[판매구입정보]</b></font></a>
+				<a href="../good/board_frame11.html?direct_write=y" target="_top"><font size=4><b>[여행]</b></font></a>
+
+				<?
+	$sql0 = "select * from item where item_id='$_SESSION[Mall_Admin_ID]'";
+$dbresult0 = mysql_query($sql0, $dbconn);
+$rows0 = mysql_fetch_array($dbresult0);
+
+$job_gubun0 = $rows0[job_gubun];
+
+				if($job_gubun0 == 1){
+				?>
+				<a href="../good/board_frame12.html?direct_write=y" target="_top"><font size=4><b>[월별근무현황일지]</b></font></a>
+					<?}?>
+
+				<a href="../good/board_frame13.html?direct_write=y" target="_top"><font size=4><b>[부동산]</b></font></a>
+				<a href="../good/board_frame14.html?direct_write=y" target="_top"><font size=4><b>[만남]</b></font></a>
+				<a href="../good/board_frame15.html?direct_write=y" target="_top"><font size=4><b>[구인구직]</b></font></a>
+				<?}else{?>
+				<a href="../good/board_frame3.html" target="_top"><font size=4><b>[판매구입정보]</b></font></a>
+				<a href="../good/board_frame11.html" target="_top"><font size=4><b>[여행]</b></font></a>
+				<a href="../good/board_frame12.html" target="_top"><font size=4><b>[월별근무현황일지]</b></font></a>
+				<a href="../good/board_frame13.html" target="_top"><font size=4><b>[부동산]</b></font></a>
+				<a href="../good/board_frame14.html" target="_top"><font size=4><b>[만남]</b></font></a>
+				<a href="../good/board_frame15.html" target="_top"><font size=4><b>[구인구직]</b></font></a>
+				<?}?>				</td>
+                <td><div align="right"><img src="../img/top_icon.gif" width="13" height="15" align="absmiddle"> <span class="text_gray2_t">현재페이지</span><span class="text_gray2"> : <a href="../good/board_frame8.html">HOME</a> &gt; </span><span class="text_gray2_c">정보검색 </span> </div></td>
+              </tr>
+            </table>
+        </div></td>
+      </tr>
+    </table></td>
+    <td valign="top"><table width="100%" height="81" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+

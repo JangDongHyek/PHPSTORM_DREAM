@@ -1,0 +1,56 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?	
+
+include( '../include/getmartinfo.php' );
+	include('../include/head_alltemplate.php');
+?>
+
+<?
+if( $top_body ){
+	//include "$top_body";
+}
+if( $headhtml ){
+	echo "<br>$headhtml";
+}
+
+
+
+
+
+
+$now_date = date("Y-m-d");
+
+
+$sql = "select * from item where item_id='$_SESSION[Mall_Admin_ID]'";
+$dbresult = mysql_query($sql, $dbconn);
+$rows = mysql_fetch_array($dbresult);
+
+if($rows[job_gubun] > 0){
+	if($rows[job_end_date] > $now_date){
+
+		echo"<script>location.href='../board_job2/board_write.php?bbs_no=15&gubun=$rows[job_gubun]';</script>";
+		exit;
+	}
+}
+
+?>
+
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0">
+<table border="0" cellpadding="0" cellspacing="0" width="40%" bordercolorlight="#E1E1E1"  align="center">
+  <tr>
+	 <td vAlign="top" width="646" bgColor="#ffffff" align="center">
+		<a href="./settle.php?gubun=1"><font size=4>[시공업체]</font></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./settle.php?gubun=2"><font size=4>[용역업체]</font></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="./settle.php?gubun=3"><font size=4>[근로자]</font></a>
+				
+	 </td> 
+  </tr>
+</table>
+
+</body>
+</html>

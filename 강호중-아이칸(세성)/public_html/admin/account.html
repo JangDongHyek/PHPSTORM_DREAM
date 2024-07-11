@@ -1,0 +1,85 @@
+<?
+include "../connect_login.php";
+
+
+
+$item_id1 = substr($item_id,0,3);
+$item_id2 = substr($item_id,3,2);
+$item_id3 = substr($item_id,5,2);
+$item_id4 = substr($item_id,7,1);
+$item_id5 = substr($item_id,8,4);
+
+
+
+
+$query = "select * from $ItemTable where sea_num='$item_id1' and sung_num ='$item_id2' and khan_num='$item_id3' and last_num='$item_id4' and sudong_num='$item_id5'";
+$result = mysql_query( $query, $dbconn );
+$row = mysql_fetch_array( $result );
+$img_big = $row[img_big];
+
+?>
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<link href="./css/style.css" rel="stylesheet" type="text/css">
+<title>Untitled Document</title>
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="441" height="261" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="top" background="images/card.jpg"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="32" colspan="3">&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="22">&nbsp;</td>
+        <td width="111" height="146" align="center"><? if($img_big != '' && file_exists("$Co_img_UP$mart_id/$img_big")){ if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){echo "
+		<img src='../..$Co_img_DOWN$mart_id/$img_big' width='111' height=141>";
+		}if (strstr(strtolower(substr($img_big,-4)),'.swf')){echo "<embed src='../..$Co_img_DOWN$mart_id/$img_big' width='111' height=141></embed>";}	
+	}
+	?></td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="35">&nbsp;</td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+               <tr>
+                <td width="25" height="21">&nbsp;</td>
+                <td width="120"><font color="#FFFFFF"><strong>은행명 :<?=$row[my_bank_name]?></strong></font></td>
+                <td><strong><font color="#ffffff">
+                </font></strong></td>
+              </tr>
+             <tr>
+                <td width="25" height="21">&nbsp;</td>
+                <td width="120"><font color="#FFFFFF"><strong>계좌번호 :</strong></font></td>
+                <td><strong><font color="#ffffff"><?=$row[my_bank_account]?>
+                </font></strong></td>
+              </tr>
+              <tr>
+                <td width="25" height="21">&nbsp;</td>
+                <td width="120"><font color="#FFFFFF"><strong>예금주 :</strong></font></td>
+                <td><strong><font color="#ffffff">
+                  <?=$row[my_bank_master]?>
+                </font></strong></td>
+              </tr>
+  
+           </table></td>
+          </tr>
+          
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<?
+	header('Content-Type: text/html; charset=euc-kr');
+?>
+
+<html>
+<head>
+	<meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=5.0,user-scalable=yes,target-densitydpi=medium-dpi">
+<title>KCB 본인확인서비스 샘플</title>
+<style type="text/css">
+.table_style ul {
+ clear: left;
+ margin: 0; 
+ padding: 0; 
+ list-style-type: none; 
+}
+.table_style ul li {
+ float: left;
+ margin: 0;
+ padding: 2px 1px;
+}
+.table_style ul .column1 {
+ width: 140px; 
+}
+</style>
+<script>
+<!--
+	function jsSubmit(){	
+		var form1 = document.form1;
+		var inTpBit = "";
+
+		inTpBit = form1.in_tp_bit.value;
+
+		if (inTpBit & 1) {
+			if (form1.name.value == "") {
+				alert("성명을 입력해주세요");
+				return;
+			}
+		}
+		if (inTpBit & 2) {
+			if (form1.birthday.value == "") {
+				alert("생년월일을 입력해주세요");
+				return;
+			}
+			if (form1.tel_no1.value == "") {
+				alert("휴대폰번호를 입력해주세요");
+				return;
+			}
+			if (form1.tel_no2.value == "") {
+				alert("휴대폰번호를 입력해주세요");
+				return;
+			}
+			if (form1.tel_no3.value == "") {
+				alert("휴대폰번호를 입력해주세요");
+				return;
+			}
+		}
+		/*
+		if (inTpBit & 8) {
+			if (form1.tel_com_cd.value == "") {
+				alert("통신사를 선택해주세요");
+				return;
+			}
+			if (form1.tel_no1.value == "") {
+				alert("휴대폰번호를 입력해주세요");
+				return;
+			}
+			if (form1.tel_no2.value == "") {
+				alert("휴대폰번호를 입력해주세요");
+				return;
+			}
+			if (form1.tel_no3.value == "") {
+				alert("휴대폰번호를 입력해주세요");
+				return;
+			}
+		}
+		*/
+		window.open("", "auth_popup", "width=430,height=590,scrollbar=yes");
+
+		var form1 = document.form1;
+		form1.target = "auth_popup";
+		form1.submit();
+	}
+
+	function input_display() {
+		if (document.form1.in_tp_bit.value == '0') {
+			document.getElementById('divInput').style.display = 'none';
+		}
+		else {
+			document.getElementById('divInput').style.display = 'block';
+		}
+	}
+//-->
+</script>
+<link href="../admin/css/style.css" rel="stylesheet" type="text/css">
+	<link href="../../css/common.css?version=<?php echo date('YmdHis')?>" rel="stylesheet" type="text/css">
+
+	<style type="text/css">
+<!--
+body {
+	background-color: #f2f2f2;
+}
+-->
+</style></head>
+
+<body leftmargin='0' topmargin="0" onload='document.f.username.focus();'>
+<div id="join" class="wrap tableCell">
+	<div class="inr">
+
+		<div class="areaTop flex js">
+			<div class="logo"><a href="../admin/login.html"><img src="../admin/images/m_logo.gif" width="361" height="100" border="0"></a></div>
+		</div>
+
+
+		<div class="joinBox">
+			<form name="form1" action="hs_cnfrm_popup2.php" method="post">
+			<input type=hidden name="rqst_caus_cd" value="00">
+			<input type=hidden name="in_tp_bit" value="7">
+
+
+
+				<div class="table_style">
+
+
+					</ul>
+					<div id="divInput">
+						<ul>
+							<li class="column1">성명</li>
+							<li>
+								<input type="text" name="name" maxlength="20" size="20" value="">
+							</li>
+						</ul>
+						<ul>
+							<li class="column1">생년월일</li>
+							<li>
+								<input type="text" name="birthday" maxlength="8" size="10" value=""> 예)19810612
+							</li>
+						</ul>
+						<ul>
+							<li class="column1">성별</li>
+							<li>
+								<input type="radio" name="sex" value="1" checked>남
+								<input type="radio" name="sex" value="0">여
+						</ul>
+						<ul>
+							<li class="column1">내외국인구분</li>
+							<li>
+								<input type="radio" name="nation" value="1" checked>내국인
+								<input type="radio" name="nation" value="2">외국인
+						</ul>
+						<ul>
+							<li class="column1">휴대폰</li>
+							<li>
+								<select name="tel_com_cd">
+									<option value="">통신사선택</option>
+									<option value="01">SKT</option>
+									<option value="02">KT</option>
+									<option value="03">LGU+</option>
+									<option value="04">알뜰폰SKT</option>
+									<option value="05">알뜰폰KT</option>
+									<option value="06">알뜰폰LGU+</option>
+								</select>
+								<input type="text" name="tel_no1" maxlength="4" size="4" value="">
+								<input type="text" name="tel_no2" maxlength="4" size="5" value="">
+								<input type="text" name="tel_no3" maxlength="4" size="5" value="">
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<input type="button" value="본인확인" onClick="jsSubmit();">
+				</div>
+			</form>
+								 ※간편본인확인(앱)이 없으신분은 휴대폰본인확인(문자)를 선택해주세요.
+
+			<!-- 본인확인 처리결과 정보 -->
+			<form name="kcbResultForm" method="post" >
+				<input type="hidden" name="CP_CD" />
+				<input type="hidden" name="TX_SEQ_NO" />
+				<input type="hidden" name="RSLT_CD" />
+				<input type="hidden" name="RSLT_MSG" />
+				
+				<input type="hidden" name="RSLT_NAME" />
+				<input type="hidden" name="RSLT_BIRTHDAY" />
+				<input type="hidden" name="RSLT_SEX_CD" />
+				<input type="hidden" name="RSLT_NTV_FRNR_CD" />
+				
+				<input type="hidden" name="DI" />
+				<input type="hidden" name="CI" />
+				<input type="hidden" name="CI2" />
+				<input type="hidden" name="CI_UPDATE" />
+				<input type="hidden" name="TEL_COM_CD" />
+				<input type="hidden" name="TEL_NO" />
+				
+				<input type="hidden" name="RETURN_MSG" />
+			</form>
+		</div>
+
+		<div class="copy">
+			<p>COPYRIGHT(C)2013 W.I.C KHAN. ALL RIGHTS RESERVED.</p>
+			<!--<img src="images/new/copy.gif" width="1000" height="40">-->
+		</div>
+	</div>
+</div>
+</body>
+</html>

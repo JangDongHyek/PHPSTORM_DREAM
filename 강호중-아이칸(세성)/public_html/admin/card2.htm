@@ -1,0 +1,94 @@
+<?
+include "../connect_login.php";
+
+
+$query = "select * from $ItemTable where item_id ='$item_id'";
+$result = mysql_query( $query, $dbconn );
+$row = mysql_fetch_array( $result );
+$img_big = $row[img_big];
+
+?>
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=5.0,user-scalable=yes,target-densitydpi=medium-dpi">
+<link href="./css/style.css" rel="stylesheet" type="text/css">
+<title>Untitled Document</title>
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="100%" align="center" valign="middle">
+
+        <table width="441" height="262" border="0" cellspacing="0" cellpadding="0" background="images/card.jpg" style="background-repeat: no-repeat;">
+      <tr>
+        <td height="32" colspan="3">&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="22">&nbsp;</td>
+        <td width="111" height="146" align="center"><? if($img_big != '' && file_exists("$Co_img_UP$mart_id/$img_big")){ if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){echo "
+		<img src='../..$Co_img_DOWN$mart_id/$img_big' width='111' height=141>";
+		}if (strstr(strtolower(substr($img_big,-4)),'.swf')){echo "<embed src='../..$Co_img_DOWN$mart_id/$img_big' width='111' height=141></embed>";}	
+	}
+	?></td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="35">&nbsp;</td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+               <tr>
+                <td width="25" height="21">&nbsp;</td>
+                <td width="80"><font color="#FFFFFF"><strong>국가번호 :</strong></font></td>
+                <td><strong><font color="#ffffff">
+                  <?=$row[country_num]?>
+                </font></strong></td>
+              </tr>
+             <tr>
+                <td width="25" height="21">&nbsp;</td>
+                <td width="80"><font color="#FFFFFF"><strong>회원번호 :</strong></font></td>
+                <td><strong><font color="#ffffff">
+                  <?=$row[sea_num]?><?=$row[sung_num]?><?=$row[khan_num]?><?=$row[last_num]?><?=$row[sudong_num]?>
+                </font></strong></td>
+              </tr>
+              <tr>
+                <td width="25" height="21">&nbsp;</td>
+                <td width="80"><font color="#FFFFFF"><strong>이름 :</strong></font></td>
+                <td><strong><font color="#ffffff">
+                  <?=$row[item_name]?>
+                </font></strong></td>
+              </tr>
+              <tr>
+                <td height="21">&nbsp;</td>
+                <td height="21"><font color="#FFFFFF"><strong>주소 :</strong></font></td>
+                <td height="21"><strong><font color="#ffffff">
+                  <?=$row[address]?>
+                </font></strong></td>
+              </tr>
+              <tr>
+                <td height="21">&nbsp;</td>
+                <td height="21"><font color="#FFFFFF"><strong>연락처 :</strong></font></td>
+                <td height="21"><strong><font color="#ffffff">
+                  <?=$row[tel]?>
+                </font></strong></td>
+              </tr>   
+           </table></td>
+          </tr>
+          
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

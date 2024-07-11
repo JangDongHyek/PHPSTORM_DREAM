@@ -1,0 +1,69 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script language="JavaScript" src='./address.js'></script>
+<body topmargin="0" leftmargin="0">
+
+
+<form name="fwrite" method="post" onsubmit="return fwrite_submit(this);" enctype="multipart/form-data" style="margin:0px;">
+<input type=hidden name=null>
+<input type=hidden name=bo_table value="academy">
+<input type=hidden name=wr_id    value="">
+<input type=hidden name=sca      value="">
+<input type=hidden name=sfl      value="">
+<input type=hidden name=stx      value="">
+<input type=hidden name=spt      value="">
+<input type=hidden name=sst      value="">
+<input type=hidden name=sod      value="">
+<input type=hidden name=page     value="">
+<input type=hidden name=notice     value="0">
+<input type=hidden name=html     value="html1">
+<input type=hidden name=w     value="">
+<input type=hidden name=wr_name     value="아카데미">
+<input type=hidden name=wr_subject     value="학원매매">
+
+<input type=hidden name=wr_direct     value="out">
+
+
+<select name=sido onchange="sidochange()" value="">
+<option value="" >시/도(전체)</option>
+<option value="서울" >서울</option>
+<option value="경기" >경기</option>
+<option value="인천" >인천</option>
+<option value="부산" >부산</option>
+<option value="대구" >대구</option>
+<option value="대전" >대전</option>
+<option value="울산" >울산</option>
+<option value="광주" >광주</option>
+<option value="충남" >충남</option>
+<option value="충북" >충북</option>
+<option value="경남" >경남</option>
+<option value="경북" >경북</option>
+<option value="전남" >전남</option>
+<option value="전북" >전북</option>
+<option value="강원" >강원</option>
+<option value="제주" >제주</option>
+
+</select>
+
+<select name=gugun onchange="gugunchange()" value="">
+<option value="" >구/군(전체)</option>
+<option value="" ></option>
+</select>
+
+
+<script language="JavaScript">
+<!--
+//    sidoview();
+   gugunview("");
+//-->
+</script>
+
+
+</form>
+
+</body>

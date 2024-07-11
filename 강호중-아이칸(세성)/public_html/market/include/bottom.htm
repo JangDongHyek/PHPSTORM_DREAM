@@ -1,0 +1,135 @@
+
+<!--
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="897"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="9">&nbsp;</td>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main_38.gif" width="888" height="21"></td>
+              </tr>
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="503"><img src="../images/main_39.jpg" width="503" height="24"></td>
+                    <td width="93"><a href="../site/company.html"><img src="../images/main_40.jpg" width="93" height="24"></a></td>
+                    <td width="57"><a href="../board/board_list.php?bbs_no=2"><img src="../images/main_41.jpg" width="57" height="24"></a></td>
+                    <td width="55"><a href="../member/mem_rule.html"><img src="../images/main_42.jpg" width="55" height="24"></a></td>
+                    <td width="72"><a href="../member/mem_person.html"><img src="../images/main_43.jpg" width="72" height="24"></a></td>
+                    <td width="56"><a href="../board/board_list.php?bbs_no=4"><img src="../images/main_44.jpg" width="56" height="24"></a></td>
+                    <td><a href="../site/sitemap.html"><img src="../images/main_45.jpg" width="52" height="24"></a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td><img src="../images/main_46.jpg" width="888" height="80"></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td width="233" valign="top"><img src="../images2/main_46.gif" width="233" height="205" /></td>
+              <td width="226"><img src="../images2/main_47.gif" width="284" height="205" /></td>
+              <td width="241" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td><a href="../board/board_list.php?bbs_no=1"><img src="../images2/notice_t.gif" width="268" height="34" border="0" /></a></td>
+                    </tr>
+                    <tr>
+                      <td height="88" valign="top" background="../images2/notice_bg.gif"><table width="215" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td valign="top" background=""><table width="100%"  border="0" align="left" cellpadding="0" cellspacing="0">
+                                    <?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 3";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+                                    <?
+		if( $board_tot == "0" ){
+		?>
+                                    <tr valign='top'>
+                                      <td height='30' align='center' valign="middle">등록된 공지사항이  없습니다.</td>
+                                    </tr>
+                                    <?
+		}
+		?>
+                                    <?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,35);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+                                    <tr height="25" valign='top'>
+                                      <!--td width='80' align=center valign="middle">[<?=$board_date?>]</td-->
+                                      <td valign="middle" class="text_14_s2"><img src="../images/notice_icon.gif" align="absmiddle" />&nbsp;<a href='../board/board_read.php?index_no=<?=$board_no?>&amp;bbs_no=1&amp;mart_id=<?=$mart_id?>'>
+                                        <?=$board_title?>
+                                      </a></td>
+                                    </tr>
+                                    <?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td style="height:5px"></td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                      </table></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images2/main_50.gif" width="268" height="83" /></td>
+                </tr>
+              </table></td>
+              <td valign="top"><a href="../board/epilogue.html"><img src="../images2/main_49.gif" width="215" height="205" border="0" /></a></td>
+            </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td height="25">&nbsp;</td>
+      </tr>
+      <tr>
+        <td><img src="../images2/main_52.gif" width="1000" height="157" border="0" usemap="#copy" />
+          <map name="copy" id="copy">
+            <area shape="rect" coords="16,19,67,43" href="../site/company.html" />
+            <area shape="rect" coords="85,19,134,43" href="../member/mem_rule.html" />
+            <area shape="rect" coords="159,19,248,43" href="../member/mem_person.html" />
+            <area shape="rect" coords="261,19,312,43" href="../board/board_list.php?bbs_no=4" />
+          <area shape="rect" coords="333,19,380,43" href="../site/sitemap.html" />
+          <area shape="rect" coords="952,18,990,42" href="#" /><area shape="rect" coords="252,84,369,105" href="mailto:dsmall@hanmail.net" />
+          <area shape="rect" coords="573,72,685,92" href="http://itforu.co.kr/market/board_mod/board_list.php?bbs_no=8" target="_blank" />
+          </map></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<? include "../skin/latest.item.skin.php"; ?>

@@ -1,0 +1,200 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+$category_html = $row[category_html];
+$category_html = str_replace("<br />","",$category_html);
+$category_html = str_replace("<BODY>","<BODY><br>",$category_html);
+$category_html = str_replace("</BODY>","<br></BODY>",$category_html);
+$category_html = str_replace("&nbsp;", "", $category_html);
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<script language='JavaScript'>
+<!--
+function checkform(f){
+	if(f.passport1.value=="") {
+	    alert("\n주민등록번호 앞자리를 입력하세요.");
+	    f.passport1.focus();
+	    return false;
+	}
+	if(f.passport2.value=="") {
+	    alert("\n주민등록번호 뒷자리를 입력하세요.");
+	    f.passport2.focus();
+	    return false;
+	}
+	if(f.name.value==""){
+	    alert("\n성명을 입력하세요.");
+	    f.name.focus();
+	    return false;
+	}
+	return true;
+}
+function check(){
+    var str = document.f.passport1.value.length;
+    if(str == 6) {
+       document.f.passport2.focus();
+    }
+
+} 
+
+function check1(){
+    var str = document.f.passport2.value.length;
+    if(str == 7) {
+       document.f.name.focus();
+	}   	
+}
+//-->
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="1000" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="166" height="100%" valign="top">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td><td width="9"></td>
+                    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td valign="top"><? $num = "3"; include "../inc/mem_menu.php"; ?></td>
+                              </tr>
+                              <tr>
+                                <td height="50"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td height="15"><img src="../images2/login/mem_t3.gif" width="188" height="15"></td>
+                                    <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <span class="text_14_s2"><a href="../main/index.html">홈</a> &gt; 멤버페이지 &gt; 아이디/패스워드 찾기 </span> </div></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="660" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><img src="../images2/join/find_text.gif" width="647" height="33"></td>
+                                    </tr>
+                                    <tr>
+                                      <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                      <td><table width="436" border="0" align="center" cellpadding="0" cellspacing="0">
+									  <form name='f' onsubmit='return checkform(this)' action='idfind_ok.html'>
+                                    <input type='hidden' name='flag' value='check'>
+                                        <tr>
+                                          <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                              <td><table width="95%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                      <td width="95" height="20"><img src="../images2/join/find_t1.gif" width="88" height="12"></td>
+                                                      <td><input name="passport1" type="text" class="input_02" id="passport1" size="12" maxlength="6" onKeyUp="check();">
+-
+  <input name="passport2" type="password" class="input_02" id="passport2" size="12" maxlength="7" onKeyUp="check1();"></td>
+                                                    </tr>
+                                                  </table></td>
+                                                </tr>
+                                                <tr>
+                                                  <td height="5"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                      <td width="95" height="20"><img src="../images2/join/find_t2.gif" width="88" height="12"></td>
+                                                      <td><input name="name" type="text" id="name" size="27" class="input_02"></td>
+                                                    </tr>
+                                                  </table></td>
+                                                </tr>
+                                                <tr>
+                                                  <td height="5"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                      <td width="95" height="20"><img src="../images2/join/find_t3.gif" width="88" height="12"></td>
+                                                      <td><input name="email" type="text" id="email" size="27" class="input_02"></td>
+                                                    </tr>
+                                                  </table></td>
+                                                </tr>
+                                              </table></td>
+                                              <td width="116"><input name="image" type='image' src="../images2/join/find_btn.gif" align="middle" /></td>
+                                            </tr>
+                                          </table></td>
+                                        </tr>
+                                        </form>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="30">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                      <td><div align="center"><img src="../images2/join/find_text2.gif" width="436" height="72"></div></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>

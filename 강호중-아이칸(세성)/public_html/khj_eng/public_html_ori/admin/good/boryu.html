@@ -1,0 +1,114 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+	
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+	
+<script type="text/javascript">
+	<!--
+function checkform(){
+	var f=document.pw;
+
+	
+
+	
+	if(f.gigan.value == ""){
+		alert("보류기간을 입력하세요.")
+		f.gigan.focus();
+		return false;
+	}	
+	if(f.iyong_gigan.value == ""){
+		alert("이용기간을 입력하세요.")
+		f.iyong_gigan.focus();
+		return false;
+	}
+	if(f.chungjun_money.value == ""){
+		alert("충전금액을 입력하세요.")
+		f.chungjun_money.focus();
+		return false;
+	}	
+	
+
+	return true;
+}
+
+//-->
+	</script>	
+	
+	
+	
+	<table border="1" cellpadding="0" cellspacing="0" width="100%" bordercolordark="white"  align="center">
+	    <form name="pw" action="./boryu.html" method="post" onsubmit="return checkform();">
+		<input type=hidden name="pw_update" value="y">
+		<tr>
+			<td width="90%" bgcolor="#999999">
+				<table border="0" width="100%" cellspacing="1" cellpadding="3">
+<?
+$query = "select * from boryu where seq_num='1'";
+$result = mysql_query( $query, $dbconn );
+$gigan_value = mysql_fetch_array($result);
+
+?>
+				<tr>
+					<td width="50%" bgcolor="#C8DFEC" align="center">
+						보류기간설정 :
+					</td>
+					<td width="50%" bgcolor="#FFFFFF" align="left" colspan=3>
+						<input class="aa" type=text name="gigan" value='<?=$gigan_value[gigan]?>' size="5">일
+					</td>
+
+				</tr>
+				<tr>
+					<td width="50%" bgcolor="#C8DFEC" align="center">
+						이용기간설정 :
+					</td>
+					<td width="50%" bgcolor="#FFFFFF" align="left" colspan=3>
+						<input type=radio name="iyong_gigan" value='15' <?if($gigan_value[iyong_gigan]==15){echo"checked";}?>>15일
+						<input type=radio name="iyong_gigan" value='30' <?if($gigan_value[iyong_gigan]==30){echo"checked";}?>>30일
+						<input type=radio name="iyong_gigan" value='60' <?if($gigan_value[iyong_gigan]==60){echo"checked";}?>>60일
+					</td>
+
+				</tr>
+				<tr>
+					<td width="50%" bgcolor="#C8DFEC" align="center">
+						충전금액(회원연장) :
+					</td>
+					<td width="50%" bgcolor="#FFFFFF" align="left" colspan=3>
+						<input class="aa" type=text name="chungjun_money" value='<?=$gigan_value[chungjun_money]?>' size="7">원
+					</td>
+
+				</tr>				
+				<tr>
+					<td width="100%" bgcolor="#C8DFEC" align="center" colspan=4>
+						<input type=submit value="변 경">
+					</td>
+
+				</tr>
+				</table>
+			</td>
+		</tr>
+		</form>
+	</table>
+
+
+
+	<?
+	
+	if($pw_update == "y"){
+	
+		if($_SESSION["MemberLevel"] == 10){ //관리자
+			$query = "update boryu set gigan='$gigan',iyong_gigan='$iyong_gigan',chungjun_money='$chungjun_money' where seq_num='1'";//관리자
+			$result = mysql_query( $query, $dbconn );
+		}
+
+		echo("
+			<script>
+			alert('변경되었습니다.');window.close();
+			</script>
+			
+		");
+		exit;		
+
+	
+	}
+	?>

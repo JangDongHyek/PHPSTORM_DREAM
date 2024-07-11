@@ -1,0 +1,56 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+$SQL = "select category_num from $CategoryTable where g_id='$_SESSION[Mall_Admin_ID]'";
+$dbresult = mysql_query($SQL, $dbconn);
+$rows = mysql_fetch_array($dbresult);
+$category_num = $rows[category_num];
+
+	if($_SESSION["MemberLevel"] == 10){
+
+	$SQL = "select * from category where prevno='0' order by cat_order desc limit 1";
+	$dbresult = mysql_query($SQL, $dbconn);
+	$first_view = mysql_fetch_array($dbresult);
+	$category_num = $first_view[category_num];
+
+
+	$pu = 1;
+
+	if($category_num_search && $pu_search){
+		$category_num=$category_num_search;
+		$pu = $pu_search;
+		$search_value = "?category_num=$category_num";
+
+
+		$url_add = "?pu=$pu&category_num=$category_num";
+	}
+	
+	if($category_num_parent > 0){
+		$search_value = "?category_num=$category_num_parent";
+	}
+
+?>
+	<FRAMESET ROWS=370,* border=0>
+	  <frame scrolling="yes" noresize src="./item_top_menu.html<?=$search_value?>">
+	  <frame name="item_frame" src="./item_list.php<?=$url_add?>"></div>
+	</FRAMESET><noframes></noframes>
+<?
+	}else{
+		$pu = $_SESSION["MemberLevel"]; //1,2
+		if($pu == 3){
+
+?>
+			<FRAMESET ROWS=150,* border=0>
+			  <frame scrolling="yes" noresize src="./item_top_menu.html">
+			  <frame name="item_frame" src="./item_list.php?pu=<?=$pu?>&category_num=<?=$category_num?>"></div>
+			</FRAMESET><noframes></noframes>
+<?
+		}else{
+?>
+			<FRAMESET ROWS=370,* border=0>
+			  <frame scrolling="yes" noresize src="./item_top_menu.html">
+			  <frame name="item_frame" src="./item_list.php?pu=<?=$pu?>&category_num=<?=$category_num?>"></div>
+			</FRAMESET><noframes></noframes>
+<?
+		}
+	}
+?>

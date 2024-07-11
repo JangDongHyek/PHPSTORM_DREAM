@@ -1,0 +1,34 @@
+<?
+if($my_list=='y'){
+    include "./board_top_menu3.html";
+}else {
+    include "./board_top_menu12.html";
+}
+
+
+$sql0 = "select * from item where item_id='$_SESSION[Mall_Admin_ID]'";
+$dbresult0 = mysql_query($sql0, $dbconn);
+$rows0 = mysql_fetch_array($dbresult0);
+
+$job_gubun0 = $rows0[job_gubun];
+
+if($direct_write=='y'){
+	$board_url="../../market/board_job2/intro.html";
+}else{
+	$board_url="../../market/board_job2/board_list.php?bbs_no=15";
+}
+
+if($my_list=='y'){
+	$board_url="../../market/board_job2/board_list.php?bbs_no=15&my_list=y";
+}
+
+
+
+if($job_gubun0 == 3){
+		echo"<script>location.href='./job_month_list_geunroja.php';</script>";
+
+}
+?>
+<iframe name="item_frame" src="<?=$board_url?>" width="100%" style="height:100%; border: 0;"/>
+<?
+include "../lib/Mall_Admin_Session.php";?>

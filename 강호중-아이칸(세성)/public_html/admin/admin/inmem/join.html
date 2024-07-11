@@ -1,0 +1,1131 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+if(!isset($flag)||$flag==""){
+	$reg_date = date(Y)."-".date(m)."-".date(d);
+?>
+<html>
+<head>
+<title><?=$admin_title?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<script language="javascript" src="../js/common.js"></script>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script language="javascript" src="../js/jquery-1.4.4.min.js"></script>
+
+<script language="JavaScript">
+
+
+function checkform(frm){
+	
+	if(frm.sea_area.value==""){
+		alert("\n지역을 선택해주세요!");
+		frm.sea_area.focus();
+		return false;
+	}	
+	if(frm.sung_area.value==""){
+		alert("\n지역을 선택해주세요!");
+		frm.sung_area.focus();
+		return false;
+	}	
+	if(frm.khan_area.value==""){
+		alert("\n지역을 선택해주세요!");
+		frm.khan_area.focus();
+		return false;
+	}	
+
+
+
+	if(frm.item_name.value==""){
+		alert("\n회원이름을 입력하세요!");
+		frm.item_name.focus();
+		return false;
+	}	
+	
+
+	if(frm.item_id.value==""){
+		alert("\n회원아이디를 입력하세요!");
+		frm.item_id.focus();
+		return false;
+	}	
+
+
+	if (frm.item_pw.value==""){
+		alert("회원 비밀번호를 입력하세요");
+		frm.item_pw.focus();
+		return false;
+	}
+
+/*
+	if (frm.tel1.value==""){
+		alert("전화번호를 입력하세요");
+		frm.tel1.focus();
+		return false;
+	}
+	if (frm.tel2.value==""){
+		alert("전화번호를 입력하세요");
+		frm.tel2.focus();
+		return false;
+	}
+	if (frm.tel3.value==""){
+		alert("전화번호를 입력하세요");
+		frm.tel4.focus();
+		return false;
+	}
+
+*/
+	if (frm.mobile.value==""){
+		alert("핸드폰번호를 입력하세요");
+		frm.mobile.focus();
+		return false;
+	}
+
+
+
+	if (frm.img_big.value==""){
+		alert("사진을 업로드하세요");
+		frm.img_big.focus();
+		return false;
+	}
+
+
+	if (frm.my_bank_name.value==""){
+		alert("은행을 선택하세요");
+		frm.my_bank_name.focus();
+		return false;
+	}
+	if (frm.my_bank_account.value==""){
+		alert("계좌번호를 입력하세요");
+		frm.my_bank_account.focus();
+		return false;
+	}
+	if (frm.my_bank_master.value==""){
+		alert("예금주를 입력하세요");
+		frm.my_bank_master.focus();
+		return false;
+	}
+
+		
+
+	if(frm.agree.checked == false){
+		alert("\n이용약관에 동의해주세요.");
+		frm.agree.focus();
+		return false;
+	}
+
+	return true;
+}
+function Tcheck(target, cmt, astr, lmin, lmax){
+	var i
+	var t = target.value
+	var id_chk=document.getElementById("id_chk");
+	if (t.length < lmin || t.length > lmax) {
+		if (lmin == lmax) alert(cmt + '는 ' + lmin + ' 자 이어야 합니다.');
+			 else alert(cmt + '는 ' + lmin + ' ~ ' + lmax + ' 자 이내의 영문 및 숫자로 입력하세요.');
+		id_chk.innerHTML="(아이디는 영문자, 숫자 포함해서 6자이상)";
+		target.focus()
+
+		return true
+	}
+	if (astr.length > 1) {
+			for (i=0; i<t.length; i++)
+					if(astr.indexOf(t.substring(i,i+1))<0) {
+				alert(cmt + '에 허용할 수 없는 문자가 입력되었습니다');
+				id_chk.innerHTML="(아이디는 영문자, 숫자 포함해서 6자이상)";
+				target.focus()
+				return true
+			}
+	}
+	
+	
+		return false
+	
+}
+/*
+function idcheck(){
+	var iid = document.writeform.item_id.value;
+	var urlPage = "xml_id_check.php";
+	var param="user_id="+iid+"&mart_id=<?=$mart_id?>";
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	var Digit = '1234567890'
+	
+	if (Tcheck(writeform.item_id, '희망 ID', Alpha + Digit, 4, 10)) return false;
+	else{
+		$.ajax({
+				type:"POST",
+				url:urlPage+"?"+param,
+				dataType:"html",
+				//data:param,
+				success:function(msg){
+					if(msg==0){
+						$("#id_chk").html("<font color=blue>사용가능한 아이디입니다.</font>");
+						document.f.item_id.focus();
+					}else{
+						$("#id_chk").html("<font color=red>사용중인 아이디입니다.</font>");
+					}
+				}
+			});
+	}
+}
+*/
+
+
+/***************************************************************************************/
+/*                                        ajax를 이용한 아이디 중복 체크 시작                                              */
+/***************************************************************************************/
+function idcheck(){
+        var iid = document.writeform.item_id.value;
+        var urlPage = "xml_id_check.php";
+        var param="user_id="+iid;
+        var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        var Digit = '1234567890'
+        
+        if (Tcheck(writeform.item_id, '희망 ID', Alpha + Digit, 6, 10)) return false;
+        else{
+                $.ajax({
+                                type:"POST",
+                                url:urlPage+"?"+param,
+                                dataType:"html",
+                                //data:param,
+                                success:function(msg){
+                                        if(msg==0){
+                                                $("#id_chk").html("<font color=blue>사용가능한 아이디입니다.</font>");
+                                                document.writeform.item_id.focus();
+                                        }else{
+                                                $("#id_chk").html("<font color=red>사용중인 아이디입니다.</font>");
+                                        }
+                                }
+                        });
+        }
+}
+
+/***************************************************************************************/
+/*                                        ajax를 이용한 아이디 중복 체크 끝                                                */
+/***************************************************************************************/
+
+function idcheck123(){
+	var item_id = document.writeform.item_id.value;
+	var url = "../category/xml_id_check.php";
+	
+
+
+        var uid = document.getElementById("item_id");
+
+
+        if(!/^[a-zA-Z0-9]{4,16}$/.test(uid.value))
+
+        { 
+            alert('아이디는 숫자와 영문자 조합으로 4~16자리를 사용해야 합니다.');
+            uid.value = "";
+            uid.focus();
+            return false;
+        }
+
+        var chk_num1 = uid.value.search(/[0-9]/g); 
+        var chk_eng1 = uid.value.search(/[a-z]/ig); 
+
+}
+
+function Member_check(){
+	var id_chk=document.getElementById("id_chk");
+	if(xmlHttpRequest.readyState==4){
+			if(xmlHttpRequest.status==200){
+				var xml=xmlHttpRequest.responseTEXT;
+				var item_id = document.writeform.item_id.value;
+				//중복된 아이디가 없으면 아이디 사용가능
+				if(xml==0){
+					id_chk.innerHTML=document.writeform.item_id.value+"는 사용 가능한 아이디입니다.";
+					document.writeform.item_pw.focus();
+				//그렇지 않을 경우 아이디 사용불가
+				}else{
+					id_chk.innerHTML=document.writeform.item_id.value+"는 사용중인 아이디입니다.";
+					document.writeform.item_id.value="";
+					document.writeform.item_id.focus();
+				}
+			}
+		}else{
+			id_chk.innerHTML="(아이디는 영문자, 숫자 포함해서 6자이상)";
+		}
+}
+</script>
+
+
+<script language="javascript">
+<!--
+function opensub2(x)
+{	
+	var child;
+	window.open(x,'x' ,'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=yes,width=800,height=200,left=0,top=0');
+}
+// -->
+</script>
+<script language="javascript">
+
+//*************************** 파일 업로드 창 ******************************
+
+function fileup(formname,imagename, title){
+// formname : form 의 name
+// mart_id : 상점 mart_id
+// imagename : 업로드되는 이미지 파일이 입력되는 field name, 이 값이 DB에 저장
+	
+	var url = "../file_upload_2img.php?formname="+formname+"&imagename="+imagename+"&title="+title
+	var uploadwin = window.open(url,"uploadwin","width=350,height=100,scrollbars=no,toolbar=no,navationbar=no,resizable=no");
+}
+
+//*************************** 파일 업로드 창 *********************************
+</script>
+<script>
+/*
+var blnBodyLoaded = false;
+var blnEditorLoaded = false;
+
+function HandleLoad() {
+	blnBodyLoaded = true;
+	if (blnEditorLoaded == true) {
+		init();
+	}
+}
+
+function setEditMode(sMode){
+	var f = document.writeform;
+	f.editBox.editmode = sMode;
+}
+
+function init() {
+	var f = document.writeform;
+	f.editmode[0].click();
+	f.editBox.editmode = "html";
+	f.editBox.html = f.item_explain.value;
+	f.editBox.focus();
+	f.editBox.setFocus();
+}
+
+function checkform1(){
+	var f = document.writeform;
+	f.editBox.editmode = "html";
+	f.item_explain.value = f.editBox.html;
+	return true;
+}*/
+</script>
+<SCRIPT event="onscriptletevent(name, eventData)" for=editBox>
+if (name == "onafterload") {
+	blnEditorLoaded = true;
+	if (blnBodyLoaded == true) {
+		init();
+	}
+}
+</SCRIPT>
+<script language="javascript">
+//콤마 넣기(정수만 해당) 
+function comma(val){ 
+	val = get_number(val); 
+	if(val.length <= 3) return val; 
+
+	var loop = Math.ceil(val.length / 3); 
+	var offset = val.length % 3; 
+	if(offset==0) offset = 3; 
+	var ret = val.substring(0, offset); 
+	for(i=1;i<loop;i++) { 
+	ret += "," + val.substring(offset, offset+3); 
+	offset += 3; } return ret; 
+} 
+
+//문자열에서 숫자만 가져가기 
+function get_number(str){ 
+	var val = str; 
+	var temp = ""; 
+	var num = ""; 
+
+	for(i=0; i<val.length; i++){ 
+		temp = val.charAt(i); 
+		if(temp >= "0" && temp <= "9") num += temp; 
+	} 
+	return num; 
+}
+//숫자만 입력하기 
+function checkNumber(){
+	var objEv = event.srcElement;
+	var num ="0123456789,";
+	event.returnValue = true;
+	 
+	for (var i=0;i<objEv.value.length;i++){
+		if(-1 == num.indexOf(objEv.value.charAt(i)))
+		event.returnValue = false;
+	}
+	 
+	if (!event.returnValue)
+	objEv.value="";
+}
+//포인트 자동계산
+function checkPrice(){
+	var form = document.writeform;
+	var z_p = form.address2.value;
+	form.bonus.value = Math.floor((z_p * <?=$bonus_auto_percent?>) / 100);
+}
+//포인트 자동계산
+function checkPrice_opt(){
+	var form = document.writeform;
+	var z_p2 = form.pro_price1.value;
+	form.pro_bonus1.value = Math.floor((z_p2 * <?=$bonus_auto_percent?>) / 100);
+}
+
+//마진 계산하기
+function cal(){
+	var here = document.writeform;
+	var pr = eval(here.zip.value);
+	var gr = eval(here.g_margin.value);
+	var tot = Math.ceil( ( pr * (100+ gr) ) / 100 );
+	here.address2.value=tot;
+	here.bonus.focus();
+}
+</script>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function toggle1(iobject){
+		document.all.auto.style.display = ""
+		document.all.passive.style.display = "none"
+}	
+function toggle2(iobject){
+		document.all.auto.style.display = "none"
+		document.all.passive.style.display = ""
+}
+//-->
+</SCRIPT>
+<SCRIPT LANGUAGE=JAVASCRIPT SRC="popcal.js"></SCRIPT>
+</head>
+<body bgcolor="#FFFFFF" topmargin="0" leftmargin="0">
+<table width="900" height="100%"  border="0" cellpadding="0" cellspacing="0" align=center>
+          		<form action='join.html' method="post" name='writeform' onSubmit="return checkform(this)" enctype="multipart/form-data">
+				<input type="hidden" name="flag" value="add">
+				<input type="hidden" name="pu" value="<?=$pu?>">
+				<input type="hidden" name="first_no" value="<?=$first_no?>">
+				<input type="hidden" name="second_no" value="<?=$second_no?>">
+				<input type="hidden" name="thirdno" value="<?=$thirdno?>">
+				<input type="hidden" name="category_num" value="<?=$category_num?>">
+				<input type="hidden" name="img_sml_updateflag" value='ok'>
+				<input type="hidden" name="img_updateflag" value='ok'>
+				<input type="hidden" name="img_big_updateflag" value='ok'>
+				<input type="hidden" name="img_big2_updateflag" value='ok'>
+				<input type="hidden" name="img_big3_updateflag" value='ok'>
+				<input type="hidden" name="img_big4_updateflag" value='ok'>
+				<input type="hidden" name="img_big5_updateflag" value='ok'>
+				<input type="hidden" name="img_high_updateflag" value='ok'>
+				<!--<input type="hidden" name="op1" value="">
+				<input type="hidden" name="op2" value="">
+				<input type="hidden" name="op3" value="">-->
+				<input type="hidden" name="doctype" value="0">
+				<!--<input type="hidden" name="opt">-->
+				<input type="hidden" name="reg_date" value='<?=$reg_date?>'>
+				<input type="hidden" name="provider_id" value="<?=$Mall_Admin_ID?>">
+
+<input type="hidden" name="rand_number" id="rand_number" value="">
+<input type="hidden" name="phone_number" id="phone_number" value="">
+
+
+	<tr valign="top">
+		<td>
+
+
+
+	  <table border="0" width="90%" cellspacing="0" cellpadding="0" align='center'>
+         <tr>
+          <td align="center">&nbsp;</td>
+        </tr>
+		<tr>
+          <td align="center" class="stitle2">칸 이용약관</td>
+        </tr>
+      </table>
+	 <table border="0" width="90%" cellspacing="0" cellpadding="0" align='center'>
+        <tr>
+         <td height="150" align="center" bgcolor="ffffff"><?include("../../yakwan/join.php");?></td>
+        </tr>
+      </table>
+	 <table border="0" width="90%" cellspacing="0" cellpadding="0" align='center'>
+        <tr>
+          <td align="center" style="font-size:13px;"><input type="checkbox" name="agree"> 위 약관에 동의함</td>
+        </tr>
+      </table>
+
+
+			<!--내용 START~~-->  	
+			<table border="0" width="90%" cellspacing="0" cellpadding="0" align='center'>
+			<tr>
+				<td width="90%" bgcolor="#FFFFFF" valign="top" class="stitle"><br>
+					<p style="padding-left: 20px">[회원 가입]<br><br>
+				</td>
+			</tr>
+
+      	<tr>
+        	<td width="100%" bgcolor="#FFFFFF" height="3" valign="top">
+        		<table border="0" width="100%" cellspacing="0" cellpadding="0">
+          		<tr>
+            		<td width="100%" bgcolor="#FFFFFF"></td>
+          		</tr>
+        		</table>
+        	</td>
+      	</tr>
+      	<tr>
+        	<td width="100%" bgcolor="#FFFFFF" valign="top" align="center">
+        		<table border="0" width="95%">
+          		<tr>
+            		<td width="90%" >
+            			<table border="0" width="100%" cellspacing="0" cellpadding="0" class="box2">
+
+
+<!--
+              			<tr>
+			                <td align='center' bgColor="#c8dfec" colSpan="2">
+								고유번호 
+							</td>
+			                <td bgColor="#ffffff" colspan=4>
+						<input class="aa" type="text" name="sea_num" value='<?=$sea_num?>' size="4" maxlength=3 readonly>
+						<input type="hidden" name="sea_area" value='<?=$sea_area?>' >
+						<input class="aa" type="text" name="sung_num" value='<?=$sung_num?>' size="3" maxlength=2 readonly>
+						<input type="hidden" name="sung_area" value='<?=$sung_area?>' >
+						<input class="aa" type="text" name="khan_num" value='<?=$khan_num?>' size="3" maxlength=2 readonly>
+						<input type="hidden" name="khan_area" value='<?=$khan_area?>' >
+						<input class="aa" type="text" name="sudong_num" value='<?=$sudong_num?>' size="5" maxlength=4>
+							</td>
+			              </tr>
+-->
+              			<tr>
+			                <td align='center' colSpan="2" width=15% class="title">
+								지역설정 
+							</td>
+			                <td bgColor="#ffffff" colspan=4 width=35%>
+
+							<select name="sea_area" onChange="javascript:location.href='join.html?RSLT_NAME=<?=$RSLT_NAME?>&TEL_NO=<?=$TEL_NO?>&RSLT_SEX_CD=<?=$RSLT_SEX_CD?>&RSLT_BIRTHDAY=<?=$RSLT_BIRTHDAY?>&sea_area='+this.value">
+								<option value=''>=선택=</option>
+								<?
+								$sql = "select distinct(sea_area) from category where category_degree='0' order by category_num ";
+								$res = mysql_query($sql,$dbconn);
+								for($i=0;$row=mysql_fetch_array($res);$i++){
+									if($row[sea_area] == $sea_area){
+										$sea_selected="selected";
+									}
+								?>
+									<option value="<?=$row[sea_area]?>" <?=$sea_selected?>><?=$row[sea_area]?></option>
+								<?
+									$sea_selected="";
+								}
+								?>
+								</option>
+							</select>
+
+							<select name="sung_area" onChange="javascript:location.href='join.html?RSLT_NAME=<?=$RSLT_NAME?>&TEL_NO=<?=$TEL_NO?>&RSLT_SEX_CD=<?=$RSLT_SEX_CD?>&RSLT_BIRTHDAY=<?=$RSLT_BIRTHDAY?>&sea_area=<?=$sea_area?>&sung_area='+this.value">
+								<option value=''>=선택=</option>
+								<?
+								$sql = "select distinct(sung_area) from category where category_degree='1' and sea_area='$sea_area' order by category_num ";
+								$res = mysql_query($sql,$dbconn);
+								for($i=0;$row=mysql_fetch_array($res);$i++){
+									if($row[sung_area] == $sung_area){
+										$sung_selected="selected";
+									}
+								?>
+									<option value="<?=$row[sung_area]?>" <?=$sung_selected?>><?=$row[sung_area]?></option>
+								<?
+									$sung_selected="";
+								}
+								?>
+								</option>
+							</select>
+
+							<select name="khan_area" onChange="javascript:location.href='join.html?RSLT_NAME=<?=$RSLT_NAME?>&TEL_NO=<?=$TEL_NO?>&RSLT_SEX_CD=<?=$RSLT_SEX_CD?>&RSLT_BIRTHDAY=<?=$RSLT_BIRTHDAY?>&sea_area=<?=$sea_area?>&sung_area=<?=$sung_area?>&khan_area='+this.value">
+								<option value=''>=선택=</option>
+								<?
+								$sql = "select distinct(khan_area),khan_area from category where category_degree='2' and sea_area='$sea_area' and sung_area='$sung_area' order by category_num ";
+								$res = mysql_query($sql,$dbconn);
+								for($i=0;$row=mysql_fetch_array($res);$i++){
+									if($row[khan_area] == $khan_area){
+										$khan_selected="selected";
+									}
+								?>
+									<option value="<?=$row[khan_area]?>" <?=$khan_selected?>><?=$row[khan_area]?></option>
+								<?
+									$khan_selected="";
+								}
+								?>
+								</option>
+							</select>
+
+
+
+							</td>
+			              </tr>						
+						
+						<tr>
+                			<td width="50%" align="center" colspan="2" class="title">
+                				성명
+							</td>						
+                			<td width="35%" bgcolor="#FFFFFF">
+                				<input class='input' name="item_name" id = "item_name" size="14" value="<?=$RSLT_NAME?>" readonly>
+							</td>
+
+
+
+
+                			<td width="15%" align="center" colspan="2" class="title">
+                				사진
+							</td>
+                			<td width="35%" bgcolor="#FFFFFF">
+                				<input type="file" name="img_big" class='input' size="30">
+							</td>
+
+              			</tr>
+
+
+
+              			<tr>
+			                <td width="15%" align='center' colSpan="2" class="title">
+								아이디 
+							</td>
+			                <td width="35%" bgColor="#ffffff">
+								<input class="aa" name="item_id" id="item_id" value='<?=$item_id?>' size="14" style='ime-mode:inactive'>
+								<input type="button" value="중복확인" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #5a5a5a 1px solid; BORDER-LEFT: #5a5a5a 1px solid; BORDER-RIGHT: #5a5a5a 1px solid; BORDER-TOP: #5a5a5a 1px solid; COLOR: black; HEIGHT: 18px" style='cursor:hand' onClick="idcheck();"><br>
+								<span id="id_chk" class="text_14_s2">(아이디는 영문자, 숫자 포함해서 4~16 자) </span>
+							</td>
+			                <td width="15%" align="center" colspan="2" class="title">
+								비밀번호
+							</td>
+			                <td width="35%" bgColor="#ffffff">
+								<input class='input' name="item_pw" size="10">
+							</td>
+			              </tr>
+
+
+
+      
+
+
+
+
+
+              			<tr>
+			                <td align='center' colSpan="2" class="title">
+								휴대폰 
+							</td>
+			                <td bgColor="#ffffff" colspan=4>
+										<input type=text class=input_03 name='mobile' id="mobile" size=20 readonly value='<?=$TEL_NO?>'>
+							</td>
+			              </tr>
+			              <tr>
+			                <td align='center' class="title" colSpan="2">
+							성별
+							</td>
+			                <td bgColor="#ffffff">
+								<?
+								if($RSLT_SEX_CD=="M"){
+									echo"남";
+									echo"<input type=hidden name=sex value='남'>";
+								}else{
+									echo"여";
+									echo"<input type=hidden name=sex value='여'>";
+								}
+								?>
+							</td>
+				            <td colspan="2" align="center" class="title">
+								생년월일
+							</td>
+			                <td bgColor="#ffffff">
+								<input name="birth" class='input' size="34" value="<?=$RSLT_BIRTHDAY?>" readonly>
+
+
+
+							</td>
+		                
+			              </tr>
+	
+				  
+
+			              <tr>
+			                <td align='center' colSpan="2" class="title">
+								개인계좌
+							</td>
+			                <td bgColor="#ffffff" colspan=4>
+								<?
+								echo ("				
+								<select name='my_bank_name' tabIndex='5' selectedindex='0' size='1'>
+								<option value=''
+								");
+								if($bank_name == '') echo " selected";
+								echo ("
+								>========</option>
+								<option value='부산은행'
+								");
+								if($bank_name == '부산은행') echo " selected";
+								echo ("
+								>부산은행</option>
+								<option value='경남은행'
+								");
+								if($bank_name == '경남은행') echo " selected";
+								echo ("
+								>경남은행</option>
+								<option value='광주은행'
+								");
+								if($bank_name == '광주은행') echo " selected";
+								echo ("
+								>광주은행</option>
+								<option value='국민은행'
+								");
+								if($bank_name == '국민은행') echo " selected";
+								echo ("
+								>국민은행</option>
+								<option value='기업은행'
+								");
+								if($bank_name == '기업은행') echo " selected";
+								echo ("
+								>기업은행</option>
+								<option value='농 협'
+								");
+								if($bank_name == '농 협') echo " selected";
+								echo ("
+								>농 협</option>
+								<option value='대구은행'
+								");
+								if($bank_name == '대구은행') echo " selected";
+								echo ("
+								>대구은행</option>
+								<option value='도 이 치'
+								");
+								if($bank_name == '도 이 치') echo " selected";
+								echo ("
+								>도 이 치</option>
+								<option value='산업은행'
+								");
+								if($bank_name == '산업은행') echo " selected";
+								echo ("
+								>산업은행</option>
+								<option value='새마을금고'
+								");
+								if($bank_name == '새마을금고') echo " selected";
+								echo ("
+								>새마을금고</option>
+								<option value='상와은행'
+								");
+								if($bank_name == '상와은행') echo " selected";
+								echo ("
+								>상와은행</option>
+								<option value='서울은행'
+								");
+								if($bank_name == '서울은행') echo " selected";
+								echo ("
+								>서울은행</option>
+								<option value='수 협'
+								");
+								if($bank_name == '수 협') echo " selected";
+								echo ("
+								>수 협</option>
+								<option value='시티은행'
+								");
+								if($bank_name == '시티은행') echo " selected";
+								echo ("
+								>시티은행</option>
+								<option value='신한은행'
+								");
+								if($bank_name == '신한은행') echo " selected";
+								echo ("
+								>신한은행</option>
+								<option value='암로은행'
+								");
+								if($bank_name == '암로은행') echo " selected";
+								echo ("
+								>암로은행</option>
+								<option value='외환은행'
+								");
+								if($bank_name == '외환은행') echo " selected";
+								echo ("
+								>외환은행</option>
+								<option value='우리은행'
+								");
+								if($bank_name == '우리은행') echo " selected";
+								echo ("
+								>우리은행</option>
+								<option value='우 체 국'
+								");
+								if($bank_name == '우 체 국') echo " selected";
+								echo ("
+								>우 체 국</option>
+								<option value='전북은행'
+								");
+								if($bank_name == '전북은행') echo " selected";
+								echo ("
+								>전북은행</option>
+								<option value='제일은행'
+								");
+								if($bank_name == '제일은행') echo " selected";
+								echo ("
+								>제일은행</option>
+								<option value='제주은행'
+								");
+								if($bank_name == '제주은행') echo " selected";
+								echo ("
+								>제주은행</option>
+								<option value='조흥은행'
+								");
+								if($bank_name == '조흥은행') echo " selected";
+								echo ("
+								>조흥은행</option>
+								<option value='하나은행'
+								");
+								if($bank_name == '하나은행') echo " selected";
+								echo ("
+								>하나은행</option>
+								<option value='한미은행'
+								");
+								if($bank_name == '한미은행') echo " selected";
+								echo ("
+								>한미은행</option>
+								<option value='홍콩은행'
+								");
+								if($bank_name == '홍콩은행') echo " selected";
+								echo ("
+								>홍콩은행</option>
+								</select>
+								");
+
+								?>
+								계좌번호&nbsp;:&nbsp;<input name="my_bank_account" class='input' size="44">&nbsp;&nbsp;&nbsp;&nbsp;	
+								예금주&nbsp;:&nbsp;<input name="my_bank_master" id="my_bank_master" class='input' size="10" value="<?=$RSLT_NAME?>" readonly>
+							</td>
+			              </tr>
+<!--
+						  <tr>
+			                <td align='center' bgColor="#c8dfec" colSpan="2">
+								회원기간
+							</td>
+			                <td bgColor="#ffffff" colspan=4>
+								<input name="start_date" class='input' size="15" maxlength=10 onClick="popUpCalendar(this, start_date, 'yyyy-mm-dd');" readonly> ~ <input name="end_date" class='input' size="15" maxlength=10 onClick="popUpCalendar(this, end_date, 'yyyy-mm-dd');" readonly>
+							</td>
+			              </tr>
+-->
+</table>
+
+
+            		</td>
+          		</tr>
+        		</table>
+        	</td>
+      	</tr>
+      	<tr>
+        	<td width="100%" bgcolor="#FFFFFF" valign="top" align="center"><br>
+<?
+$SQL = "select service_name from $MartInfoTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if($numRows>0) {
+	$service_name = mysql_result($dbresult,0,0);
+}		
+$SQL = "select * from $ItemTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = @mysql_num_rows($dbresult);
+if($service_name == 'base'&& $numRows > 2000){
+	echo "
+	 <script>
+	 function check_ver(){
+		alert(\"회원갯수가 2000개를 넘어 더 이상의 회원을 등록할 수 없습니다.\");
+		return false;
+	}
+	</script>
+	";
+}
+else if($service_name == 'indi_base'&& $numRows > 2000){
+	echo "
+	 <script>
+	 function check_ver(category_num,prevno){
+		alert(\"회원갯수가 2000개를 넘어 더이상의 회원을 등록할 수 없습니다.\");
+		return false;
+	}
+	</script>	
+	";
+}
+else if($service_name == 'free_base'&& $numRows > 150){
+	echo "
+	<script>
+	 function check_ver(){
+		alert(\"회원갯수가 150개를 넘어 더 이상의 회원을 등록할 수 없습니다.\");
+		return false;
+	}
+	</script>	
+	"	;
+}
+else{
+	echo "
+	<script>
+	 function check_ver(){
+		return true;
+	}
+	</script>
+	";
+}
+?>
+				<input onclick='return check_ver()'  type='image' src='../images/finish.gif' border='0' align='absmiddle' value="완 료"  style='cursor:hand'>
+				<input onClick="javascript:location.href='../login.html';"  type='image' src='../images/back.gif' border='0' align='absmiddle' style='cursor:hand' value="뒤로가기">
+        	
+        	</td>
+      	</tr>
+  
+		
+      	<tr align="center">
+        	<td width="100%" bgcolor="#FFFFFF" valign="top"></td>
+      	</tr>
+    	</table>
+
+<br>
+			<!--내용 END~~-->
+		</td>
+	</tr>
+	</form>
+</table>
+</body>
+</html>
+<?
+}
+?>
+<?
+//================== 회원을 등록함 =======================================================
+if($flag == "add"){
+
+
+
+
+$SQL = "select * from $CategoryTable where mart_id='$mart_id' and g_id='$item_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$tot1 = mysql_num_rows($dbresult);
+
+$SQL2 = "select * from $ItemTable where mart_id='$mart_id' and item_id='$item_id'";
+$dbresult2 = mysql_query($SQL2, $dbconn);
+$tot2 = mysql_num_rows($dbresult2);
+
+$SQL3 = "select * from $MemberTable where mart_id='$mart_id' and username='$item_id'";
+$dbresult3 = mysql_query($SQL3, $dbconn);
+$tot3 = mysql_num_rows($dbresult3);
+
+
+$tot = $tot1 + $tot2 + $tot3;
+
+	if($tot>0){
+		echo ("
+			<script language=javascript>
+				alert(\"이미 존재하는 ID입니다.\\n\\n 다른 ID를 입력해주세요.\");
+			</script>
+			<form name='form' action='join.html' method='post'>
+				<input type='hidden' name='mart_id' value='$mart_id'>
+				<input type='hidden' name='name' value='$name'>
+				<input type='hidden' name='passport1' value='$passport1'>
+				<input type='hidden' name='passport2' value='$passport2'>
+				<input type='hidden' name='email' value='$email'>
+				<input type='hidden' name='tel' value='$tel'>
+				<input type='hidden' name='tel1' value='$tel1'>
+				<input type='hidden' name='zip' value='$zip'>
+				<input type='hidden' name='address' value='$address'>
+				<input type='hidden' name='address_d' value='$address_d'>
+				<input type='hidden' name='partner' value='$partner'>
+				<input type='hidden' name='msg' value='$msg'>
+				<input type='hidden' name='job' value='$job'>
+				<input type='hidden' name='com_name' value='$com_name'>
+				<input type='hidden' name='homepage' value='$homepage'>
+				<input type='hidden' name='hobby' value='$hobby'>
+				<input type='hidden' name='religion' value='$religion'>
+				<input type='hidden' name='ext1_content' value='$ext1_content'>
+				<input type='hidden' name='ext2_content' value='$ext2_content'>
+				<input type='hidden' name='ext3_content' value='$ext3_content'>
+				<input type='hidden' name='ext4_content' value='$ext4_content'>
+				<input type='hidden' name='sel_content' value='$sel_content'>
+				<input type='hidden' name='if_maillist' value='$if_maillist'>
+			</form>
+			<script>
+			document.form.submit();
+			</script>
+		");
+		exit;
+	}
+
+
+
+
+
+
+
+	//================== 업로드 파일을 불러옴 ================================================
+	include "../../upload.php";
+	$upload = "$Co_img_UP"."$mart_id/";
+	//================== 첨부 파일을 업로드함 ================================================
+
+
+##################################img_big###############################################
+	
+	if (isset($img_big_name)&&($img_big_name != "")){
+		if(!file_exists("$Co_img_UP$mart_id")){
+			mkdir ("$Co_img_UP$mart_id", 0755 );
+		}
+
+
+		
+		if( $img_big_name ){
+
+
+			$file = FileUploadName( "", "$upload", $img_big, $img_big_name );//파일을 업로드 함
+
+			if( !$file ){
+				echo("
+					<script>
+					window.alert('파일 업로드에 실패했습니다.');
+					history.go(-1)
+					</script>
+				");
+				exit;
+			}
+		}
+	}
+
+###########################################################################################
+
+	$SQL = "select max(item_no), count(*) from $ItemTable";
+	$dbresult = mysql_query($SQL, $dbconn);
+	if ($dbresult == false) echo "쿼리 실행 실패!";
+	if (mysql_result($dbresult,0,1) > 0)
+		$maxItem_no = mysql_result($dbresult, 0, 0);
+	else
+		$maxItem_no = 0;
+	$maxItem_no_1 = $maxItem_no+1;
+
+
+	if($img_big_updateflag=="ok" && $img_big_name != ""){
+		$img_big_new = "item_big_".$maxItem_no_1."_".$img_big_name;
+	}
+	if($img_big_updateflag=="ok" && $img_big_name != ""){
+		if(file_exists("$Co_img_UP$mart_id/$img_big_name"))
+		copy ("$Co_img_UP$mart_id/$img_big_name","$Co_img_UP$mart_id/$img_big_new" );	//업로드 파일 저장
+	}
+
+	if($img_big_updateflag=="ok" && $img_big_name != ""){
+		if(file_exists("$Co_img_UP$mart_id/$img_big_name"))
+			unlink("$Co_img_UP$mart_id/$img_big_name");
+	}
+
+
+
+	$rg_file1_path = "$Co_img_UP$mart_id/$img_big_new";
+
+	/*
+	$FileName : 파일명
+	$ori_path : 원본파일경로
+	$maxItem_no_1 : 가장최근글번호 + 1한값
+	$mart_id : 계정 아이디
+	맨마지막숫자 : 유일성을 두기위해
+
+	썸네일 경로중 home2를 최신서버로 옮길시 home로 변경
+	*/
+	function MakeThum1($FileName,$ori_path,$maxItem_no_1,$mart_id,$unique) 
+	{
+			$ThumFileName120 = $maxItem_no_1."_".$unique."_".$FileName."120.jpg";
+			
+			$FileName = $ori_path;
+			$ThumFileName120 = "/home/".$mart_id."/public_html/co_img/".$mart_id."/" . $ThumFileName120;
+			
+			exec ("convert -geometry 120x $FileName $ThumFileName120");
+
+
+
+
+			if(file_exists("$ori_path")){ 
+				unlink ("$ori_path");	
+			}
+
+
+
+	}
+	if($img_big_new){
+		MakeThum1($img_big_name,$rg_file1_path,$maxItem_no_1,$mart_id,1); 
+		$img_big_new_th =  $maxItem_no_1."_1_".$img_big_name."120.jpg";
+	}
+
+
+
+
+
+	$item_order = "1";//회원 출력 순서
+
+
+
+	$sql = "select * from category where category_degree='2' and sea_area='$sea_area' and sung_area='$sung_area' and khan_area='$khan_area' ";
+	$res = mysql_query($sql,$dbconn);
+	$row = mysql_fetch_array($res);
+
+
+	$sql2 = "select * from category where g_id='$row[g_id]' ";
+	$res2 = mysql_query($sql2,$dbconn);
+	$row2 = mysql_fetch_array($res2);
+
+	$sea_num = $row2[sea_num];
+	$sung_num = $row2[sung_num];
+	$khan_num = $row2[khan_num];
+
+
+	$tel = $tel1."-".$tel2."-".$tel3;
+
+	$address = $address." ".$address3;
+
+/////////////////////////////////////////////////////////// 대기없이 바로 승인 ////////////////////////////////////////////
+
+
+	$sql1 = "select sudong_num from item where sudong_num != '' and sea_num='$sea_num' and sung_num='$sung_num' and khan_num='$khan_num' order by sudong_num desc limit 1";
+
+
+	$res1 = mysql_query($sql1,$dbconn);
+	$row1 = mysql_fetch_array($res1);
+	if(!$row1[sudong_num]){
+		$row1[sudong_num]="0001";
+	}else{
+		$row1[sudong_num] = $row1[sudong_num] + 1;
+	}
+
+		$row1[sudong_num] = str_pad( $row1[sudong_num], 4, "0", STR_PAD_LEFT );
+
+	$sudong_num = $row1[sudong_num];
+
+
+
+	$sql2 = "select item_code from item where sea_num='$sea_num' and sung_num='$sung_num' and khan_num='$khan_num' and sudong_num='sudong_num' order by item_code desc limit 1";
+
+
+	$res2 = mysql_query($sql2,$dbconn);
+	$row2 = mysql_fetch_array($res2);
+	if(!$row2[item_code]){
+		$row2[item_code]="0001";
+	}else{
+		$row2[item_code] = $row2[sudong_num] + 1;
+	}
+
+		$row2[item_code] = str_pad( $row2[item_code], 4, "0", STR_PAD_LEFT );
+
+	$item_code = $row2[item_code];
+
+
+
+
+
+	$SQL = "insert into $ItemTable (mart_id, firstno, prevno, thirdno,category_num, sea_num, sung_num, khan_num,  sea_area, sung_area, khan_area, sudong_num, item_name, start_date, end_date, jumin1, jumin2, sex, co_name, co_num, tel, address2, g_margin, zip, bonus, use_bonus, address, job, hobby, img, img_big, img_big2, img_big3, img_big4, img_big5, doctype, item_explain, short_explain, reg_date, item_code, item_id, item_pw, read_num, mobile, email,com_bank_name, com_bank_account,com_bank_master, my_bank_name, my_bank_account ,my_bank_master, item_order,  provider_id,  img_sml, if_hide, img_high,birth) values ('$mart_id', '$first_no', '$second_no', '$thirdno', '$category_num', '$sea_num', '$sung_num', '$khan_num', '$sea_area', '$sung_area', '$khan_area', '$sudong_num', '$item_name', '$start_date','$end_date', '$jumin1', '$jumin2', '$sex', '$co_name', '$co_num', '$tel', '$address2', '$g_margin', '$zip', '$bonus', '$use_bonus','$address','$job','$hobby','$img_new','$img_big_new_th','$img_big2_new_th','$img_big3_new_th','$img_big4_new_th','$img_big5_new_th','$doctype','$item_explain', '$short_explain', '$reg_date','$item_code', '$item_id', '$item_pw',0, '$mobile', '$email','$com_bank_name', '$com_bank_account', '$com_bank_master', '$my_bank_name', '$my_bank_account', '$my_bank_master','$item_order', '$item_id', '$img_sml_new','0', '$img_high_new','$birth')";
+
+//echo $SQL;
+//exit;
+
+	$dbresult = mysql_query($SQL, $dbconn);
+	//echo "<script>alert('충전을 하셔야 이용가능합니다.');</script>";
+	?>
+	<script>
+		//location.href = 'intent://main_web#Intent;scheme=android;package=kr.itforyou.khj;end';
+	</script>
+	<?
+	
+	echo "<meta http-equiv='refresh' content='0; URL=../../'>";
+	?>
+	
+	<?
+}
+//========================================================================================
+?>
+<?
+mysql_close($dbconn);
+?>

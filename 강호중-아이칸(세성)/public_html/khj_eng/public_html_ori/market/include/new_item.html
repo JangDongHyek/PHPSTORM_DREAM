@@ -1,0 +1,178 @@
+<?
+//============================== 신상품  =================================
+
+$new_sql = "select * from $New_ItemTable where mart_id='$mart_id' order by new_item_order asc limit 30";	
+//echo $new_sql;
+$new_res = mysql_query($new_sql, $dbconn);
+$new_tot = mysql_num_rows($new_res);
+?>
+<script language="JavaScript">
+// 사용할 이벤트 설정
+var img_gallery1_mouseEvent = 1;
+var img_gallery2_mouseEvent = 1;
+
+var good_speed = 1;
+
+// banner_roll("div태그 id", 배너1개넓이, 딜레이, 1칸이동속도, 0);
+function banner_roll(div_id, banner_width, banner_delay, banner_speed, this_width)
+{
+	if(eval(div_id + "_mouseEvent")){
+		var div_tag = document.getElementById(div_id);
+		var a_tag, i;
+
+		this_width+=good_speed;
+		if(this_width < banner_width){
+			div_tag.style.left = -this_width;
+			setTimeout("banner_roll('" + div_id + "', " + banner_width + ", " + banner_delay + ", " + banner_speed + ", " + this_width + ");", banner_speed);
+		}
+		else{
+			a_tag = div_tag.getElementsByTagName("TABLE");
+			div_tag.appendChild(a_tag[0]);
+			good_speed = 1;
+			div_tag.style.left = 0;
+			setTimeout("banner_roll('" + div_id + "', " + banner_width + ", " + banner_delay + ", " + banner_speed + ", 0);", banner_delay);
+		}
+	}
+	else{
+		setTimeout("banner_roll('" + div_id + "', " + banner_width + ", " + banner_delay + ", " + banner_speed + ", " + this_width + ");", banner_speed);
+	}
+	return true;
+}
+function banner_roll_left()
+{
+	good_speed = 4;
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="position:absolute; width:100%; height:100%; overflow:hidden; border:0px solid #000000; visibility: visible;" onMouseover="img_gallery1_mouseEvent=0" onMouseout="img_gallery1_mouseEvent=1"> 
+<nobr style="position:relative; visibility: visible;" id="img_gallery1"> 
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+<?
+for( $k = 0; $new_row = mysql_fetch_array($new_res); $k++ ){
+	$new_item_no[$k] = $new_row[new_item_no];
+	$item_no[$k] = $new_row[item_no];
+
+	$new_sql1 = "select * from $ItemTable T1, $CategoryTable T2 where T1.item_no='$item_no[$k]' and T1.if_hide='0' and T1.category_num=T2.category_num and T2.if_hide='0'";
+	//$new_sql1 = "select * from $ItemTable T1, $CategoryTable T2 where T1.item_no='$item_no[$k]' and T1.category_num=T2.category_num";
+
+	$new_res1 = mysql_query($new_sql1, $dbconn);
+	$new_tot1 = mysql_num_rows($new_res1);
+	$new_row1 = mysql_fetch_array($new_res1);
+	
+	$item_no1 = $new_row1[item_no];
+	$item_code = $new_row1[item_code];
+	$category_num = $new_row1[firstno];
+	$prevno = $new_row1[prevno];
+	$cate_num = $new_row1[category_num];
+	$item_name = $new_row1[item_name];
+	$icon_no = $new_row1[icon_no];
+	$img_high = $new_row1[img_sml];
+	$short_explain = $new_row1[short_explain];
+	$z_price = number_format($new_row1[z_price]);
+	$bonus = number_format($new_row1[bonus]);
+
+	$item_name = han_cut2($item_name,22);
+	if($jaego_use == 1 && $jaego == 0){
+		$icon_str = "<img src='../image/soldout_icon_s.gif' width='25' height='12' align='absmiddle'>";
+	}else{
+		if($icon_no == 0) $icon_str = "";
+		if($icon_no == 1) $icon_str = "<img src='../../admin/images/hot.gif' align='absmiddle'>";
+		if($icon_no == 2) $icon_str = "<img src='../../admin/images/new.gif' align='absmiddle'>";
+		if($icon_no == 3) $icon_str = "<img src='../../admin/images/sale.gif' align='absmiddle'>";
+		if($icon_no == 4) $icon_str = "<img src='../../admin/images/reserv.gif' align='absmiddle'>";
+		//$icon_str = make_incon_tag($icon_no, "../image/");
+	}
+	//============================ 상품 이미지 =======================================
+	if($img_high != "" && file_exists("$Co_img_UP$mart_id/$img_high")){
+		if (strstr(strtolower(substr($img_high,-4)),'.jpg') || strstr(strtolower(substr($img_high,-4)),'.gif')){
+			$img_str = "<a href='../main/product_info.html?mart_id=$mart_id&category_num=$category_num&category_num1=$prevno&category_num2=$category_num2&cate_num=$cate_num&item_no=$item_no1' target='_parent'><img src='../..$Co_img_DOWN$mart_id/$img_high'></a>";
+		}
+	}else{
+		$img_str = "<a href='../main/product_info.html?mart_id=$mart_id&category_num=$category_num&category_num1=$prevno&category_num2=$category_num2&cate_num=$cate_num&item_no=$item_no1' target='_parent'><img src='../image/noimage_s.gif' width='$list_product_img_width' height='$list_product_img_height' border='0'></a>";
+	}
+?>
+		<td width="<?=($list_product_img_width+40)?>" align="center">
+			<table width="<?=$list_product_img_width+40?>" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td align=center><?=$img_str?></td>
+				</tr>
+				<tr>
+					<td>
+						<table width="<?=$list_product_img_width+40?>" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td align=center><span class="text_main_s"><?=$item_name?></span></td>
+							</tr>
+							<tr>
+								<td align=center><span class="text_main_s"><?=$item_code?> </span></td>
+							</tr>
+							<tr>
+								<td align=center><span class="text_18_s"><?=$short_explain?></span></td>
+							</tr>
+							<tr>
+								<td align=center>
+									<?
+									if($z_price == 0){
+									?>
+										<span class="text_main1_s">전화문의</span>
+									<?
+									}else{
+									?>
+									  <span class="text_main1_s">
+									  \<?=$z_price?>
+									  </span>
+									<?
+									}
+									?>                        
+								</td>
+							</tr>
+							<!--
+							<tr>
+								<td align=center><img src="../image/icon_point.gif" width="13" height="10"><span class="point"><?=$bonus?> 원<BR><?=$icon_str?></span>
+									</td>
+								</tr>-->
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+<?
+}
+?>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+
+</nobr> </div>
+<SCRIPT LANGUAGE="JavaScript">banner_roll("img_gallery1", 2500000, 1, 20, 0);</SCRIPT>
+
+
+
+
+
+
+
+
+<?
+if( $new_res ){
+	mysql_free_result( $new_res );
+}
+if( $new_res1 ){
+	mysql_free_result( $new_res1 );
+}
+?>

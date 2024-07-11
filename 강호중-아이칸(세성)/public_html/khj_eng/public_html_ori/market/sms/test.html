@@ -1,0 +1,38 @@
+<?
+/*
+tran_pr, tran_phone, tran_status, tran_date, tran_msg 
+
+tran_pr: 자동 증가하는 것으로 em_tran의 primary key가 된다.
+tran_phone: 수신자 전화번호
+tran_status: 메시지 상태 (1:전송요구/ 2:SMSG에 전송됨,결과 대기중/ 3:SMSG에서 결과받음)
+tran_date: 메시지 접수시간
+tran_msg: 전송 메시지
+*/
+
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect_sms.php";
+
+$tr_senddate = date("YmdHis");
+$tran_phone = "018-589-2806";
+$tran_callback = "018-589-2806";
+$tran_msg = "그럼 언제 미팅가능할까요?부경 사장님한테도 이야기해야 되거든요.";
+
+$sms_sql = "insert into em_tran (tran_pr, tran_phone, tran_callback, tran_status, tran_date, tran_msg ) values (null, '$tran_phone', '$tran_callback', '1', sysdate(), '$tran_msg' )";
+//$sms_sql = "INSERT INTO SC_TRAN (tr_senddate, tr_sendstat, tr_phone, tr_callback ,tr_msg) VALUES ('$tr_senddate', '0', '$tran_phone', '$tran_callback', '$tran_msg')";
+$sms_res = mysql_query( $sms_sql, $connect );
+
+if( !$sms_res ){
+	echo "
+		문자 전송 실패
+	";
+	exit;
+
+}else{
+	echo "
+		문자 전송 성공
+	";
+	exit;
+}
+
+mysql_close($connect);
+?>

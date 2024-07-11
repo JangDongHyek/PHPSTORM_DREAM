@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<SCRIPT language="JavaScript">
+<!--
+<!-- 
+function setCookie( name, value, expiredays ) 
+{ 
+	var todayDate = new Date(); 
+	todayDate.setDate( todayDate.getDate() + expiredays ); 
+	document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+	} 
+
+function closeWin() 
+{ 
+	if ( document.pop.Notice1.checked ) 
+	setCookie( "Notice1", "done" , 1);//1은 하루동안 새창을 열지 않게 합니다.
+	window.close(); 
+} 
+// -->
+
+function MM_callJS(jsStr) { //v2.0
+  return eval(jsStr)
+}
+//-->
+</SCRIPT>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body topmargin="0" bottommargin="0" rightmargin="0" leftmargin="0">
+<table width="350" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><img src="../images/pop5.jpg" width="350" height="250"></td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#000000">
+	     <form name=pop> 
+<p align="center"> 
+<input type=checkbox name="Notice1" value="">
+<span class="style1"><img src="../images/popup_font.gif" width="149" height="20" align="absbottom"><a href="javascript:history.onclick=closeWin()"><img src="../images/close_btn.gif" width="41" height="20" align="absbottom" border="0"></a></span>   
+</form> 
+	</td>
+  </tr>
+</table>
+</body>
+</html>

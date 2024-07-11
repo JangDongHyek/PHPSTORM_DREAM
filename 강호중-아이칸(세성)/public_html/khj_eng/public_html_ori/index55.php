@@ -1,0 +1,15 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>홈페이지 오픈 준비중입니다.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+</head>
+
+<body leftmargin="0" topmargin="0">
+<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="F7F7F7">
+  <tr>
+    <td><div align="center"><img src="images/index.gif" width="445" height="250"></div></td>
+  </tr>
+</table>
+</body>
+</html>

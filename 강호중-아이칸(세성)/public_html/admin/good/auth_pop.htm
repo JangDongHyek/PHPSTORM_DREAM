@@ -1,0 +1,145 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+
+<html>
+<head>
+<title>승인하기</title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<script language="javascript" src="../js/common.js"></script>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript">
+function checkform(frm){
+	if(frm.wr_startdate.value==""){
+		alert("\n시작일을 입력하세요.");
+		frm.wr_startdate.focus();
+		return false;
+	}	
+	if(frm.wr_enddate.value==""){
+		alert("\n종료일을 입력하세요.");
+		frm.wr_enddate.focus();
+		return false;
+	}	
+	return true;
+}
+
+</script>
+
+<script src="http://starfun.co.kr/js/jquery-1.9.1.min.js"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css">
+
+<!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-sliderAccess.js"></script> 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.js"></script>
+
+
+</head>
+<body bgcolor="#FFFFFF" topmargin="0" leftmargin="0">
+<br><br><br>
+<table width="300" height="100%"  border="0" cellpadding="0" cellspacing="0" align=center>
+	<tr valign="top">
+		<td>
+
+
+			<!--내용 START~~-->  	
+			<table border="0" width="90%" cellspacing="0" cellpadding="0" align='center'>
+
+      	<tr>
+        	<td width="100%" bgcolor="#FFFFFF" valign="top" align="center">
+        		<table border="0" width="95%">
+          		<form action='auth_pop.htm' method="post" name='writeform' onsubmit="return checkform(this)" enctype="multipart/form-data">
+				<input type="hidden" name="flag" value="add">
+    			<input type="hidden" name="item_id" value="<?=$item_id?>">
+				<input type="hidden" name="admin_type" value="<?=$admin_type?>">
+				<input type="hidden" name="admin_level" value="<?=$admin_level?>">
+		
+	
+			<tr>
+            		<td width="90%" bgcolor="#999999">
+					<table border="0" width="100%" cellpadding=1 cellspacing=1>
+
+              			<tr>
+                			<td width="100%" bgcolor="#C8DFEC" align="center" colspan="6">
+                				메뉴별 관리자 기간설정							</td>
+              			</tr>
+              			<tr>
+                			<td width="100%" bgcolor="#FFFFFF" colspan="6">
+                    <input type="text" name="wr_startdate" value="" id="wr_startdate" required class="frm_input required" size="12" maxlength="12" placeholder="시작일"> ~ <input type="text" name="wr_enddate" value="" id="wr_enddate" required class="frm_input required" size="12" maxlength="12" placeholder="종료일">
+                			</td>
+              			</tr>
+            			</table>
+
+					
+
+						
+				 </td>
+          		</tr>
+        		</table>
+        	</td>
+      	</tr>
+      	<tr>
+        	<td width="100%" bgcolor="#FFFFFF" valign="top" align="center"><br>
+				<input type=submit type="submit" value="승인하기 " style='cursor:hand'>&nbsp;&nbsp;
+        		<input  onclick="javascript:window.close();" class='butt_none' type="button" style='cursor:hand' value="창닫기">
+        	</td>
+      	</tr>
+  
+		</form>
+      	<tr align="center">
+        	<td width="100%" bgcolor="#FFFFFF" valign="top"></td>
+      	</tr>
+    	</table>
+
+<br>
+			<!--내용 END~~-->
+		</td>
+	</tr>
+</table>
+	<SCRIPT>
+<!--
+	$('#wr_startdate,#wr_enddate').datepicker({
+		dateFormat: "yy-mm-dd",	// Form에 입력될 Date Type
+		prevText: '이전 달',	// ◀ 에 마우스 오버하면 나타나는 타이틀
+		nextText: '다음 달',	// ▶ 에 마우스 오버하면 나타나는 타이틀
+		changeMonth: true,	// 월 SelectBox 형식으로 선택변경 유무
+		changeYear: true,	// 년 SelectBox 형식으로 선택변경 유무
+		showMonthAfterYear: true,	// 년도 다음에 월이 나타나게 할지 여부 ( true : 년 월 , false : 월 년 )
+		showButtonPanel: true,	// UI 하단에 버튼 사용 유무
+		monthNames :  [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+		monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+		dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],	// 요일에 마우스 오버하면 나타나는 타이틀
+		dayNamesMin: ['일','월','화','수','목','금','토'],
+		controlType: 'select',
+		oneLine: true,
+		timeFormat: 'HH:mm'
+	});
+
+//-->
+</SCRIPT>
+
+</body>
+</html>
+
+<?
+if($flag=="add"){
+
+	$SQL = "update item set admin_type = '$admin_type', admin_level='$admin_level', admin_startdate='$wr_startdate', admin_enddate='$wr_enddate' where item_id='$item_id'";
+
+	$dbresult = mysql_query($SQL, $dbconn);
+	
+	$SQL = "update admin set state = '2' where item_id='$item_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+
+
+	echo "
+		<script>
+			alert('승인하였습니다.');opener.location.reload();	window.close();
+		</script>
+	";
+	exit;
+}
+?>

@@ -1,0 +1,59 @@
+<?
+include "../admin_head1.php";
+$SQL = "select category_num from $CategoryTable where g_id='$_SESSION[Mall_Admin_ID]'";
+$dbresult = mysql_query($SQL, $dbconn);
+$rows = mysql_fetch_array($dbresult);
+$category_num = $rows[category_num];
+
+	if($_SESSION["MemberLevel"] == 10){
+
+		$SQL = "select * from category where prevno='0' order by cat_order desc limit 1";
+		$dbresult = mysql_query($SQL, $dbconn);
+		$first_view = mysql_fetch_array($dbresult);
+
+		
+		//$category_num = $first_view[category_num];
+
+
+		$pu = 1;
+
+		if($category_num_search && $pu_search){
+			$category_num=$category_num_search;
+			$pu = $pu_search;
+			$search_value = "?bbs_no=13&category_num=$category_num";
+
+
+			$url_add = "&bbs_no=13&pu=$pu&category_num=$category_num";
+		}
+		
+		if($category_num_parent > 0){
+			$search_value = "?bbs_no=13&category_num=$category_num_parent";
+		}
+		include "./item_top_menu2.html";
+
+?>
+
+<iframe name="item_frame" src="../../market/board_fran/board_list.php?bbs_no=13&pu=<?=$pu?>&category_num=<?=$category_num?>" width="100%" style="height:100%; border: 0;"/>
+
+			
+<?
+	}else{
+		include "./item_top_menu2.html";
+		$pu = $_SESSION["MemberLevel"]; //1,2
+		if($pu == 3){
+
+?>
+			<iframe name="item_frame" src="../../market/board_fran/board_list.php?bbs_no=13&pu=<?=$pu?>&category_num=<?=$category_num?>" width="100%" style="height:100%; border: 0;"/>
+
+<?
+		}else{
+?>
+			<iframe name="item_frame" src="../../market/board_fran/board_list.php?bbs_no=13&pu=<?=$pu?>&category_num=<?=$category_num?>" width="100%" style="height:100%; border: 0;"/>
+
+<?
+		}
+	}
+?>
+
+
+

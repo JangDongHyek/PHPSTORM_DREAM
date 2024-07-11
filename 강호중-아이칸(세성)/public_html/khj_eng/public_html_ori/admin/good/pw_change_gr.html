@@ -1,0 +1,101 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+	
+	
+<script type="text/javascript">
+	<!--
+function checkform(){
+	var f=document.pw;
+
+	
+	
+	if(!/^[a-zA-Z0-9]{4,16}$/.test(f.passwd1.value))
+
+	{ 
+		alert('비밀번호는 4~16자리를 사용해야 합니다.');
+		f.passwd1.value = "";
+		f.passwd1.focus();
+		return false;
+	}	
+	
+	
+	
+	
+	if(f.passwd1.value == ""){
+		alert("비밀번호를 입력하세요.")
+		f.passwd1.focus();
+		return false;
+	}	
+	if(f.passwd2.value == ""){
+		alert("비밀번호 재확인을 입력하세요.")
+		f.passwd2.focus();
+		return false;
+	}	
+	if(f.passwd1.value != f.passwd2.value){
+		alert("비밀번호 재확인을 다시입력하세요.")
+		f.passwd2.value='';
+		f.passwd2.focus();
+		return false;
+	}	
+	return true;
+}
+
+//-->
+	</script>	
+	
+	
+	
+	<table border="1" cellpadding="0" cellspacing="0" width="60%" bordercolordark="white"  align="center">
+	    <form name="pw" action="./pw_change_gr.html" method="post" onsubmit="return checkform();">
+		<input type=hidden name="pw_update" value="y">
+		<tr>
+			<td width="90%" bgcolor="#999999">
+				<table border="0" width="100%" cellspacing="1" cellpadding="3">
+				<tr>
+					<td width="20%" bgcolor="#C8DFEC" align="center">
+						2중 비밀번호변경:
+					</td>
+					<td width="30%" bgcolor="#FFFFFF" align="left" colspan=3>
+						<input class="aa" type=password name="passwd1" value='' size="16"> 재입력:<input class="aa" type=password name="passwd2" value='' size="16">							
+					</td>
+
+				</tr>
+				<tr>
+					<td width="20%" bgcolor="#C8DFEC" align="center" colspan=4>
+						<input type=submit value="확 인">
+					</td>
+
+				</tr>
+				</table>
+			</td>
+		</tr>
+		</form>
+	</table>
+
+
+
+	<?
+	
+	if($pw_update == "y"){
+	
+		if($_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){ //2,3단계 그룹장만
+
+			$query = "update $CategoryTable set g_pw2='$passwd1' where g_id ='$_SESSION[Mall_Admin_ID]'";//그룹장
+			$result = mysql_query( $query, $dbconn );
+
+		
+		}
+
+
+		echo("
+			<script>
+			alert('비빌번호가 변경되었습니다.');
+			</script>
+			<meta http-equiv='Refresh' content='0; URL=pw_change.html'>
+		");
+		exit;		
+
+	
+	}
+	?>

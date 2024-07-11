@@ -1,0 +1,294 @@
+<link href="../../css/common.css?version=<?php echo date('YmdHis')?>" rel="stylesheet" type="text/css">
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+if($flag == ""){
+	include "../admin_head.php";
+
+
+$SQL = "select * from $CategoryTable where g_id='$_SESSION[Mall_Admin_ID]'";
+$dbresult = mysql_query($SQL, $dbconn);
+$rows = mysql_fetch_array($dbresult);
+$goyou_num_id = $rows[sea_num].$rows[sung_num].$rows[khan_num];
+
+
+?>
+<script type="text/javascript">
+<!--
+	function auth_ok(item_id,admin_type,admin_level){
+		//var answer = confirm("승인하시겠습니까?");
+		//if(answer == true){
+		//	location.href='member_admin_list.html?flag=add&item_id='+item_id+'&admin_type='+admin_type+'&admin_level='+admin_level;
+		//}
+
+		window.open('auth_pop.htm?item_id='+item_id+'&admin_type='+admin_type+'&admin_level='+admin_level,'auth_pop','width=300,height=300,top=100,left=300,scrollbars=no');
+	}
+	function auth_out(item_id,admin_type){
+		var answer = confirm("승인해제 하시겠습니까?");
+		if(answer == true){
+			location.href='member_admin_list.html?flag=out&item_id='+item_id+'&admin_type='+admin_type;
+		}
+	}
+	function del_ok(item_id){
+		var answer = confirm("삭제하시겠습니까?");
+		if(answer == true){
+			location.href='member_admin_list.html?flag=del&item_id='+item_id;
+		}
+	}
+//-->
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0">
+<?include '../inc/menu3.html'; ?>
+<div class="wrap">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" bordercolorlight="#E1E1E1"  align="center">
+  <tr>
+	 <td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+
+
+
+
+	 <table cellSpacing="0" cellPadding="0" width="100%" border="0">
+		<tr>
+		  <td vAlign="top" width="100%" bgColor="#ffffff" height="3">
+		  <table width="100%" border="0">
+			 <tr>
+				<td width="100%" height="20" class="stitle2"><p align="center">[메뉴별 관리자 신청리스트]</td>
+			 </tr>
+		  </table>
+		  </td>
+		</tr>
+		<tr>
+		  <td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+		  <table width="97%" border="0">
+			 <tr>
+				<td width="100%">
+				<table cellSpacing="0" cellPadding="0" width="100%" border="0" class="box2">
+				
+
+					
+
+				<tr>
+					<td align="middle" class="title">No.</td>
+					<td align="middle" class="title">신청일자&nbsp;</td>
+					<td align="middle" class="title">회원번호</td>
+					<td align="middle" class="title">구분</td>
+					<td align="middle" class="title">상태</td>
+					<!--
+					<td align="middle" bgColor="#c8dfec">삭제</td>
+					-->
+<?
+
+$SQL = "select * from admin where group_num = '$goyou_num_id'  order by seq_num desc";
+
+
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if ($cnfPagecount == "") $cnfPagecount = 10;
+if ($page == "") $page = 1;
+$skipNum = ($page - 1) * $cnfPagecount;
+
+$prev_page = $page - 1;
+$next_page = $page + 1;
+
+$total_page = ($numRows - 1) / $cnfPagecount;
+$total_page = intval($total_page)+1;
+
+if($page % 10 == 0)
+$start_page = $page - 9;
+else
+$start_page = $page - ($page % 10) + 1;
+
+$end_page = $start_page + 9;
+if($end_page >= $total_page)
+	$end_page = $total_page;
+$prev_start_page = $start_page - 10;
+$next_start_page = $start_page + 10;
+
+$sum = 0;
+for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++) {
+	if ($i >= $numRows) break;
+	mysql_data_seek($dbresult, $i);
+	$ary=mysql_fetch_array($dbresult);
+	$num = $ary[num];
+	$write_date =$ary[regdate];
+	$goyou_num =$ary[goyou_num];
+	$admin_type =$ary[admin_type];
+	$admin_level =$ary[admin_level];
+	$item_id =$ary[item_id];
+
+	$j = $numRows - $i;
+
+?>
+				<tr>
+					<td align='middle' width='5%' bgColor='#ffffff'><?=$j?></td>
+					<td align='middle' width='19%' bgColor='#ffffff'><?=$write_date?></td>
+					<td align='middle' width='13%' bgColor='#ffffff'><a href="#" onclick="javascript:window.open('../../admin/card.htm?item_id=<?=$item_id?>','','width=444,height=264,left=300,top=200');"><?=$goyou_num?></a></td>
+					<td width='38%' bgColor='#ffffff' align='center'>
+
+				<?
+				if($admin_type == "mem"){
+					echo"회원관리";
+				}elseif($admin_type == "gamaeng"){
+					echo"가맹점관리";
+				}elseif($admin_type == "jsell"){
+					echo"정보검색관리[판매구입정보]";
+				}elseif($admin_type == "jtravel"){
+					echo"정보검색관리[여행]";
+				}elseif($admin_type == "jwork"){
+									echo"정보검색관리[월별근무현황일지]";
+				}elseif($admin_type == "jreal"){
+									echo"정보검색관리[부동산]";
+				}elseif($admin_type == "jmeet"){
+									echo"정보검색관리[만남]";
+				}elseif($admin_type == "jjob"){
+									echo"정보검색관리[구인구직]";
+				}
+
+
+				?>
+					</td>
+					<td align=center>
+					<?
+					if($ary[state] == 1){
+					?>						
+						<a href="#" onclick="auth_ok('<?=$item_id?>','<?=$admin_type?>','<?=$admin_level?>');">[승인]</a>&nbsp;&nbsp;  <a href="#" onclick="del_ok('<?=$item_id?>');">[삭제] </a>
+ 					<?}else{?>
+						<font color='blue'>[승인함]</font> &nbsp; <a href="#" onclick="auth_out('<?=$item_id?>','<?=$admin_type?>');"><font color='black'>[승인해제]</font></a>
+						
+						
+						
+						<?
+						$SQL2 = "select admin_startdate,admin_enddate from item where item_id = '$item_id'";
+						$dbresult2 = mysql_query($SQL2, $dbconn);
+						$ary2=mysql_fetch_array($dbresult2);
+						?>
+						<br><?=$ary2[admin_startdate]?> ~ <?=$ary2[admin_enddate]?>
+
+					<?}?>
+					</td>
+				</tr>
+<?
+}
+?>
+
+				</table>
+				</td>
+			 </tr>
+		  </table>
+		  </td>
+		</tr>
+		<tr>
+		  <td vAlign="top" width="100%" bgColor="#ffffff"><p align="right">
+		  <?
+				if($page == 1){
+					echo ("
+					처음
+					");
+				}
+				else{
+					echo ("
+					<a href='bonus.html?username=$rows[item_code]&page=1&searchword=$searchword&searchword2=$searchword2'>처음</a> 
+					");
+				}
+			
+				if($start_page > 1){
+					echo ("
+					<a href='bonus.html?username=$rows[item_code]&page=$prev_start_page&searchword=$searchword&searchword2=$searchword2'>
+					◁&nbsp; 
+					</a>
+					");
+				}
+				else{
+					echo ("
+					◁&nbsp; 
+					");
+				}
+				for($i=$start_page;$i<=$end_page;$i++){
+					if($i == $page){
+						echo ("	
+						[<b>$i</b>]
+						");
+					}
+					else{
+						echo ("
+					<a href='bonus.html?username=$rows[item_code]&page=$i&searchword=$searchword&searchword2=$searchword2'>$i</a> 
+						");
+					}
+				}
+				if($end_page < $total_page){
+					echo ("
+					<a href='bonus.html?username=$rows[item_code]&page=$next_start_page&searchword=$searchword&searchword2=$searchword2'>
+					&nbsp;▷
+					</a>
+					");
+				}
+				else{
+					echo ("
+					&nbsp;▷
+					");
+				}
+				if($page == $total_page){
+					echo ("
+					끝
+					");
+				}
+				else{
+					echo ("
+					<a href='bonus.html?username=$rows[item_code]&page=$total_page&searchword=$searchword&searchword2=$searchword2'>끝</a> 
+					");
+				}
+				?>
+				</td>
+		</tr>
+		<tr>
+		  <td vAlign="top" width="100%" bgColor="#ffffff"><p align="center">
+		 <img src='../images/bu_close.gif' onclick='opener.window.location.reload();window.close()' style='cursor:hand;'></td>
+		</tr>
+		<tr align="middle">
+		  <td vAlign="top" width="100%" bgColor="#ffffff"></td>
+		</tr>
+	 </table>
+	 </td>
+  <td height="2"></tr>
+</table>
+</div>
+</body>
+</html>
+<?
+}else if($flag=="out"){
+
+	$SQL = "update item set admin_type = '',admin_level='',admin_startdate='',admin_enddate='' where item_id='$item_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+	
+	$SQL = "update admin set state = '1' where item_id='$item_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+
+		echo("
+			<script>
+			alert('승인해제 하였습니다.');
+			</script>
+			<meta http-equiv='refresh' content='0; URL=member_admin_list.html'>
+		");
+		exit;
+
+	
+}else if($flag=="del"){
+	
+	$SQL = "delete from admin where item_id = '$item_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+	
+		echo("
+			<script>
+			alert('삭제하였습니다.');
+			</script>
+			<meta http-equiv='refresh' content='0; URL=member_admin_list.html'>
+		");
+		exit;
+}
+?>
+<?
+mysql_close($dbconn);
+?>

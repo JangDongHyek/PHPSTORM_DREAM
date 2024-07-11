@@ -1,0 +1,291 @@
+<?
+include_once "../admin_head1.php";
+?>
+<?  include_once '../inc/menu3.html';
+$td_size = 3;
+?>
+<script type="text/javascript">
+	function double_link1(cn){
+		location.href='item_top_menu.html?category_num='+cn;
+		parent.item_frame.location.href='item_list.php?gamaeng=<?=$gamaeng?>&pu=1&category_num='+cn;
+	}
+	function double_link2(cn){
+		location.href='item_top_menu.html?category_num='+cn;
+		parent.item_frame.location.href='item_list.php?gamaeng=<?=$gamaeng?>&pu=2&category_num='+cn;
+	}
+
+	function me_double_link2(cn){
+		location.href='item_top_menu.html?me_category_num='+cn;
+		parent.item_frame.location.href='item_list.php?gamaeng=<?=$gamaeng?>&pu=2&category_num='+cn;
+	}
+
+
+
+ 	function back_double_link1(cn,cn2){
+		location.href='item_top_menu.html?category_num='+cn;
+		parent.item_frame.location.href='item_list.php?gamaeng=<?=$gamaeng?>&pu=1&category_num='+cn2;
+	}
+
+ 	function back_double_link2(cn){
+		location.href='item_top_menu.html?category_num='+cn;
+		parent.item_frame.location.href='item_list.php?gamaeng=<?=$gamaeng?>&pu=1&category_num='+cn;
+	}
+</script>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top"><table width="100%" height="81" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+    <td width="990" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="0"></td>
+        <td valign="top" ><div align="right">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="10"></td>
+              </tr>
+              <tr>
+                <td><div align="right"><img src="../img/top_icon.gif" width="13" height="15" align="absmiddle"> <span class="text_gray2_t">현재페이지</span><span class="text_gray2"> : <a href="../index.html">HOME</a> &gt; </span><span class="text_gray2_c">회원관리 </span> </div></td>
+              </tr>
+              <tr>
+                <td>
+<?
+if($_SESSION["MemberLevel"] == 10 || $_SESSION["Admin_level"] == 10){
+?>
+
+	<?if(!$category_num){?>
+	<table border="0" cellspacing="0" cellpadding="0" align="center" width=220 height=42>
+	  <tr>
+		<td align="center" background="../images/member_bg.gif" width=220 height=42>
+			<font color=#ffffff><b>세성</b>
+		</td>
+	  </tr>
+	</table>
+	<table  border="0" cellspacing="0" cellpadding="0" align="center">
+	 <?
+	$SQL = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide = '0' and category_num > 0 order by cat_order desc";
+	$dbresult = mysql_query($SQL, $dbconn);
+	for($z=0;$rows = mysql_fetch_array($dbresult);$z++){
+
+	if($z%$td_size == 0){
+?>
+                            <tr>
+                              <?
+	}
+?>
+		<td align="center" background="../images/member_bg_2.gif" class="mem_bg" width=220 height=42>
+			<font color=#ffffff onclick="double_link1('<?=$rows[category_num]?>');" style="cursor:hand;"><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></font>
+
+
+			<font color=#ffffff  style="cursor:hand;" onclick="javascript:window.open('item_list.php?gamaeng=<?=$gamaeng?>&pu=1&category_num=<?=$rows[category_num]?>','','width=1000,heifht=700,top=10,left=100,scrollbars=yes');">[보기]</font>
+
+		</td>
+<?
+	if($z%$td_size==$td_size-1)
+		echo "			  </tr>\n";
+}
+
+?>
+	</table>
+	<?}else{?>
+
+		<table border="0" cellspacing="0" cellpadding="0" align="center" width=220 height=42>
+		  <tr>
+			<td align="center" background="../images/member_bg.gif" width=220 height=42>
+			<?
+			$SQL = "select * from $CategoryTable where mart_id='$mart_id' and category_num='$category_num'";
+			$dbresult = mysql_query($SQL, $dbconn);
+			for($z=0;$rows = mysql_fetch_array($dbresult);$z++){
+				$prev_category_num = $rows[category_num];
+
+				if($rows[category_degree] == 0){//1단계 그룹
+				$SQL1 = "select * from category where prevno='0' order by cat_order desc limit 1";
+				$dbresult1 = mysql_query($SQL1, $dbconn);
+				$first_view = mysql_fetch_array($dbresult1);
+				$category_num1 = $first_view[category_num];
+			?>
+				<font color=#ffffff onclick="back_double_link1('<?=$rows[prevno]?>','<?=$category_num1?>');" style="cursor:hand;"><font color=#ffffff><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></font>
+
+
+
+			<?
+				}elseif($rows[category_degree] == 1){//2단계 그룹
+			?>
+				<font color=#ffffff onclick="back_double_link2('<?=$rows[prevno]?>');" style="cursor:hand;"><font color=#ffffff><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></font>
+			<?
+				}
+			?>
+			<?
+			}
+			?>
+
+			</td>
+		  </tr>
+		</table>
+		<table border="0" cellspacing="0" cellpadding="0" align="center">
+		  <tr>
+			<?
+			$SQL = "select * from $CategoryTable where mart_id='$mart_id' and prevno='$prev_category_num' order by cat_order desc";
+			$dbresult = mysql_query($SQL, $dbconn);
+			for($z=0;$rows = mysql_fetch_array($dbresult);$z++){
+				if($rows[category_degree] == 2){
+
+					if($z%$td_size == 0){
+					?>
+					<tr>
+					<?
+					}
+					?>
+						<td align="center" background="../images/member_bg_2.gif" class="mem_bg" width=220 height=42>
+
+							<a href="item_list.php?gamaeng=<?=$gamaeng?>&pu=3&category_num=<?=$rows[category_num]?>" target="item_frame"><font color=#ffffff><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></font></a>
+
+							<font color=#ffffff  style="cursor:hand;" onclick="javascript:window.open('item_list.php?gamaeng=<?=$gamaeng?>&pu=3&category_num=<?=$rows[category_num]?>','','width=1000,heifht=700,top=10,left=100,scrollbars=yes');">[보기]</font>
+
+						</td>
+
+				<?
+				}else{
+				?>
+					<td align="center" background="../images/member_bg_2.gif" class="mem_bg" width=220 height=42>
+						<font color=#ffffff onclick="double_link2('<?=$rows[category_num]?>');" style="cursor:hand;"><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></font>
+
+						<font color=#ffffff  style="cursor:hand;" onclick="javascript:window.open('item_list.php?gamaeng=<?=$gamaeng?>&pu=2&category_num=<?=$rows[category_num]?>','','width=1000,heifht=700,top=10,left=100,scrollbars=yes');">[보기]</font>
+
+					</td>
+				<?
+				}
+
+	if($z%$td_size==$td_size-1)
+		echo "			  </tr>\n";
+}
+
+?>
+		</table>
+
+	<?}?>
+
+
+<?}else{?>
+	<?
+	if(($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2)  || (($_SESSION["Admin_type"] == "mem" || $_SESSION["Admin_type"]=="gamaeng")  && ($_SESSION["Admin_level"] == 1 || $_SESSION["Admin_level"] == 2) )){
+	?>
+
+	<table border="0" cellspacing="0" cellpadding="0" align="center" width=220 height=42>
+	  <tr>
+		<td align="center" background="../images/member_bg.gif" width=220 height=42>
+		<?
+		if(!$me_category_num){
+
+		   if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2){//wic, ic 실제 그룹장
+				$SQL = "select * from $CategoryTable where mart_id='$mart_id' and g_id='$_SESSION[Mall_Admin_ID]'";
+				$dbresult = mysql_query($SQL, $dbconn);
+				$rows = mysql_fetch_array($dbresult);
+				$me_category_num = $rows[category_num];
+			}else{//메뉴별관리자
+				$SQL2 = "select * from admin where item_id='$_SESSION[Mall_Admin_ID]'";
+				$dbresult2 = mysql_query($SQL2, $dbconn);
+				$rows2 = mysql_fetch_array($dbresult2);
+
+				if($rows2[admin_level] == 1){//wic
+					$SQL3 = "select * from $CategoryTable where category_degree='0' and sea_num='$rows2[group_num]'";
+					$dbresult3 = mysql_query($SQL3, $dbconn);
+					$rows3= mysql_fetch_array($dbresult3);
+					$me_category_num = $rows3[category_num];
+				}
+				elseif($rows2[admin_level]  == 2){//ic
+					$group_num1 = substr($rows2[group_num],0,3);
+					$group_num2 = substr($rows2[group_num],3,2);
+					$SQL3 = "select * from $CategoryTable where category_degree='1' and sea_num='$group_num1'  and sung_num='$group_num2'";
+					$dbresult3 = mysql_query($SQL3, $dbconn);
+					$rows3= mysql_fetch_array($dbresult3);
+					$me_category_num = $rows3[category_num];
+				}
+			}
+		}
+		?>
+
+		<?
+		$SQL = "select * from $CategoryTable where mart_id='$mart_id' and category_num='$me_category_num' order by cat_order desc";
+		$dbresult = mysql_query($SQL, $dbconn);
+		for($z=0;$rows = mysql_fetch_array($dbresult);$z++){
+			$prev_category_num = $rows[category_num];
+
+
+
+			if($rows[category_degree] == 1 && $_SESSION["MemberLevel"] == 1){//1단계 그룹장 일때만 뒤로가기 적용
+			?>
+				<font color=#ffffff onclick="back_double_link2('<?=$rows[prevno]?>');" style="cursor:hand;"><font color=#ffffff><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></a>
+			<?
+			}else{
+			?>
+				<a href="item_top_menu.html?category_num=<?=$rows[prevno]?>"><font color=#ffffff><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></a>
+			<?
+			}
+			?>
+
+		<?
+		}
+		?>
+
+		</td>
+	  </tr>
+	</table>
+	<table  border="0" cellspacing="0" cellpadding="0" align="center">
+	  <tr>
+		<?
+		$SQL = "select * from $CategoryTable where mart_id='$mart_id' and prevno='$prev_category_num' order by cat_order desc";
+		$dbresult = mysql_query($SQL, $dbconn);
+		for($z=0;$rows = mysql_fetch_array($dbresult);$z++){
+			if($rows[category_degree] == 2){
+	if($z%$td_size == 0){
+?>
+                            <tr>
+                              <?
+	}
+?>
+		<td align="center" background="../images/member_bg_2.gif" class="mem_bg" width=220 height=42>
+				<a href="item_list.php?gamaeng=<?=$gamaeng?>&pu=3&category_num=<?=$rows[category_num]?>" target="item_frame"><font color=#ffffff><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></a>
+
+				<font color=#ffffff  style="cursor:hand;" onclick="javascript:window.open('item_list.php?gamaeng=<?=$gamaeng?>&pu=3&category_num=<?=$rows[category_num]?>','','width=1000,heifht=700,top=10,left=100,scrollbars=yes');">[보기]</font>
+
+		</td>
+		<?
+			}else{
+		?>
+		<td align="center" background="../images/member_bg_2.gif" class="mem_bg" width=220 height=42>
+				<font color=#ffffff onclick="me_double_link2('<?=$rows[category_num]?>');" style="cursor:hand;"><b><?=$rows[sea_num]?><?=$rows[sung_num]?><?=$rows[khan_num]?></b></font>
+
+				<font color=#ffffff  style="cursor:hand;" onclick="javascript:window.open('item_list.php?gamaeng=<?=$gamaeng?>&pu=3&category_num=<?=$rows[category_num]?>','','width=1000,heifht=700,top=10,left=100,scrollbars=yes');">[보기]</font>
+
+		</td>
+		<?
+			}
+if($z%$td_size==$td_size-1)
+		echo "			  </tr>\n";
+}		?>
+
+	</table>
+	<?
+	}
+	?>
+<?
+}
+?>
+				</td>
+              </tr>
+            </table>
+        </div></td>
+      </tr>
+    </table></td>
+    <td valign="top"><table width="100%" height="81" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+

@@ -1,0 +1,435 @@
+<?
+$SQL = "select * from $MartInfoTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if($numRows > 0){
+	$ary = mysql_fetch_array($dbresult);
+	$shopname = $ary["shopname"];
+	$name = $ary["name"];
+	$passport = $ary["passport"];
+	$tel1 = $ary["tel1"];
+	$tel2 = $ary["tel2"];
+	$email = $ary["email"];
+	$place = $ary["place"];
+}
+
+$SQL = "select * from $MartMngInfoTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if($numRows>0){
+	$ary = mysql_fetch_array($dbresult);
+	$shop_logo = $ary[logo];
+	$shopuser = $ary[shopuser];
+	$bonus_ok = $ary[bonus_ok];
+	$init_bonus = $ary[init_bonus];
+	$bookmark_bonus_ok = $ary[bookmark_bonus_ok];
+	$init_bookmark_bonus = $ary[init_bookmark_bonus];
+	$by_cash_bonus_ok = $ary[by_cash_bonus_ok];
+	$init_by_cash_bonus = $ary[init_by_cash_bonus];
+	$welcome = $ary[welcome];
+	$copyright = htmlspecialchars($ary[copyright], ENT_QUOTES);
+	$card_yes = $ary[card_yes];
+	$card_url = $ary[card_url];
+	$freight_date = $ary[freight_date];
+	$freight_limit = $ary[freight_limit];
+	$freight_cost = $ary[freight_cost];
+	$union_freight_limit = $ary[union_freight_limit];
+	$union_freight_cost = $ary[union_freight_cost];
+	$pur_limit = $ary[pur_limit];
+	$card_limit = $ary[card_limit];
+	$event_width = $ary[event_width];
+	$event_height = $ary[event_height];
+	$width = $ary[width];
+	$titlecolor = $ary[titlecolor];
+	$titletxtcolor = $ary[titletxtcolor];
+	$listcolor = $ary[listcolor];
+	$listtxtcolor = $ary[listtxtcolor];
+	$color = $ary[color];
+	$user_words = $ary[user_words];
+	$user_words_perm = $ary[user_words_perm];
+	$if_union = $ary[if_union];
+	$intro = $ary[intro];
+	$if_notice = $ary[if_notice];
+	$if_chuchon = $ary[if_chuchon];
+	$if_event = $ary[if_event];
+	$if_coupon = $ary[if_coupon];
+	$if_receipt = $ary[if_receipt];
+	$if_community = $ary[if_community];
+	$page_title = $ary[page_title];
+	$member_confirm = $ary[member_confirm];
+	$if_poll = $ary[if_poll];
+	$if_quiz = $ary[if_quiz];
+	$account_yes = $ary[account_yes];
+	$bonus_limit = $ary[bonus_limit];
+	//$if_gnt_item = $ary[if_gnt_item];
+	$if_mem_use_pass = $ary[if_mem_use_pass];
+	$if_nomem_use_pass = $ary[if_nomem_use_pass];
+	$if_use_bottom_img = $ary[if_use_bottom_img];
+	$if_member_price = $ary[if_member_price];
+	$member_price_percent = $ary[member_price_percent];
+	$if_customer_price = $ary[if_customer_price];
+
+	if( $shop_logo ){
+		$upload = "../../up/$mart_id/";
+		$target = "$upload"."$shop_logo";
+		//==================== 이미지 사이즈를 구함 ==========================================
+		$img_size = @GetImageSize("$target"); 
+		$img_width = $img_size[0]; //이미지의 넓이를 알 수 있음 
+		$img_height = $img_size[1]; //이미지의 높이를 알 수 있음
+	}
+}
+?>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<header>
+	<div class="pcHeader">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top" background="../img/up_bg.gif">&nbsp;</td>
+        <td width="990"><table width="990" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td>
+              <table width="100%" border="0" align="right" cellpadding="0" cellspacing="0">
+                
+               <tr>
+                  <td height="28" align="center">
+				  
+<?if($_SESSION["MemberCountry"] == 100){//한국?>
+
+		<?
+		if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 10){	//삭제
+			
+			
+			echo "<a href='../good/request_delete_list.php' target='_top'><img src='../images/del_butten_big.gif' border='0'></a>";
+
+
+			echo "&nbsp;<a href='../good/request_delete_list_fran.php' target='_top'><img src='../images/del_butten_big_board.gif' border='0'></a>";
+			echo "&nbsp;<a href='../good/request_delete_list_board.php' target='_top'><img src='../images/del_butten_big_board2.gif' border='0' title='정보검색 삭제요청 내역보기'></a>";
+		}
+		if($_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 10){	//수정
+			echo "&nbsp;<a href='../good/request_update_list.php' target='_top'><img src='../images/modify_butten_big.gif' border='0'></a>";
+			echo "&nbsp;<a href='../good/request_update_list_fran.php' target='_top'><img src='../images/modify_butten_big_board.gif' border='0'></a>";
+			echo "&nbsp;<a href='../good/request_update_list_board.php' target='_top'><img src='../images/modify_butten_big_board2.gif' border='0' title='정보검색 수정요청 내역보기'></a>";
+		}
+
+		if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3 || $_SESSION["MemberLevel"] == 10){	//수정
+			echo "&nbsp;<a href='../good/member_admin_list.html' target='_top'>[메뉴별관리자]</a>";
+		}
+
+		if($_SESSION["MemberLevel"] == 10){//통장입금내역 관리자만보기
+			echo"<br>";
+			echo "&nbsp;<a href='../good/groupjang_list.php' target='_top'>[그룹장정보]</a>";
+			echo "&nbsp;<a href='../good/bank_total.php' target='_top'>[통장입금내역]</a>";
+			echo "&nbsp;<a href='../good/bonus_total.php' target='_top'>[회원충전금내역]</a>";
+			echo "&nbsp;<a href='../jungbo_cate/cate_regis.html' target='_top'>[정보분류관리]</a>";
+			echo "&nbsp;<a href='../gamaeng_cate/category_list.php' target='_top'>[가맹점분류관리]</a>";
+			echo "&nbsp;<a href='../gamaeng_cate/category_list_job.php' target='_top'>[직업관리]</a>";
+			echo "&nbsp;<a href='../gamaeng_cate/category_list_jongmok.php' target='_top'>[직업종목관리]</a>";
+		}
+		?>
+
+
+		<!--<a href="../good/pw_frame.html" target="_top"><img src="../images/pass_butten.gif" border=0></a>-->
+
+		<?
+		if($_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){ //2,3단계 그룹장만 2중 비밀번호사용
+		?>
+		<a href="../good/pw_frame_gr.html" target="_top">[2중 비밀번호 설정]</a>
+		<?
+		}
+		?>
+
+		<?if($_SESSION["MemberLevel"] == 4){?>
+		<?
+		if($_SESSION["Admin_startdate"] <= $todate && $_SESSION["Admin_enddate"] >= $todate){
+
+				if($_SESSION["Admin_type"] == "mem"){
+					echo"<font color=blue><b>[현재 회원관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "gamaeng"){
+					echo"<font color=blue><b>[현재 가맹점관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "jsell"){
+					echo"<font color=blue><b>[현재 정보검색 판매구입정보 관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "jtravel"){
+					echo"<font color=blue><b>[현재 정보검색 여행 관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "jwork"){
+						echo"<font color=blue><b>[현재 정보검색 월별근무현황일지 관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "jreal"){
+						echo"<font color=blue><b>[현재 정보검색 부동산 관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "jmeet"){
+						echo"<font color=blue><b>[현재 정보검색 만남 관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "jjob"){
+						echo"<font color=blue><b>[현재 정보검색 구인구직 관리자 입니다";
+				}
+
+
+		?>
+			&nbsp;<?=$_SESSION["Admin_startdate"]?>~<?=$_SESSION["Admin_enddate"]?>]</b></font>
+		<?
+			}
+		?>
+		<a href="../good/board_frame16.html" target="_top">메뉴별 관리자 신청하기</a>
+
+		<a href="../good/board_frame16.html" target="_top">메뉴별 관리자 신청하기</a>
+		<a href="../good/bonus_frame.html" target="_top">충전금내역보기</a>
+		<!--<a href="../jungbo_cate_mem/category_list.php" target="_top">[정보분류관리]</a>-->
+		<a href="../good/board_frame7.html" target="_top">정보신청내역보기</a>
+		<?}?>
+		<?if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){?>
+		<a href="../good/bonus_frame.html" target="_top">충전금내역보기</a>
+		<?}?>
+		<?if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 10){?>
+		<a href="../good/item_frame3.html" target="_top">하위그룹 충전금내역보기</a>
+		<?}?>
+
+<?}?>
+<a href="../logout.php" target="_top"><img src="../img/top_menu3.gif" border="0" /></a>
+											  <a href="http://eng.wickhan.com/admin/good/board_frame3.html" target="_top"><b>[미국버젼보기]</b></a>
+				  </td>
+
+&nbsp;&nbsp;
+
+                </tr>
+              </table></td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><div align="center"><img src="<?=$target?>" border="0" /></div></td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                  <tr>
+                    <td height="13"></td>
+                  </tr>
+                </table></td>
+                <td width="784" background="../img/menu.gif">
+				&nbsp;&nbsp;
+<?if($_SESSION["MemberCountry"] == 100){//한국?>
+
+		<?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2){?><a href="../category/category_list.php" target="_top"><img src="../images/menu.gif" border="0"></a><?}?><?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){?><a href="../good/item_frame.html" target="_top"><img src="../images/menu_2.gif" border="0"></a><a href="../good/item_frame.html" target="_top"><img src="../images/menu_2.gif" border="0"></a><?}?>
+		<a href="../good/board_frame.html" target="_top"><img src="../images/menu_3.gif" border="0"></a>
+		<!--가맹점 start-->
+		
+		<?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 3){?>
+			<a href="../good/board_frame6.html?direct_write=y" target="_top"><img src="../images/menu_21.gif" border="0" title="가맹점등록"></a>
+		<?}?>
+		<!--가맹점 end-->
+<?}?>
+<a href="../good/board_frame3.html" target="_top"><img src="../images/menu_5.gif" border="0"></a>
+<a href="../good/board_frame6.html" target="_top"><img src="../images/menu_20.gif" border="0" title="가맹점검색"></a>
+<?if($_SESSION["MemberCountry"] == 100){//한국?>
+
+		<?if($_SESSION["MemberLevel"] == 4){?><a href="../good/board_frame3.html?direct_write=y" target="_top"><img src="../images/info_butten.gif" border="0"></a>
+		<a href="../good/board_frame3.html?my_list=y" target="_top"><img src="../images/my_info_butten.gif" border="0"></a>
+		<a href="#" onclick="javascript:window.open('../../admin/card.htm','','width=444,height=264,left=300,top=200');"><img src="../images/cancard_butten.gif" border="0"></a>
+
+
+		<a href="../good/board_frame10.html" target="_top"><img src="../images/khan_account.gif" border="0" alt="칸충전송금계좌"></a>
+
+
+		<?}?>
+
+		<a href="../good/board_frame2.html" target="_top"><img src="../images/menu_4.gif" border="0"></a>
+		 
+		<?
+		if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){ //그룹장들 내정보보기
+		?>
+		<a href="../good/board_frame9.html" target="_top"><img src="../images/group_myinfo.gif" border="0" alt="내정보보기"></a>
+		<?
+		}
+		?>
+		<?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){?>
+		<a href="../good/item_frame2.html" target="_top"><img src="../images/gamaenglist.gif" border="0" alt="가맹점관리"></a>
+		<?
+		}
+		?>
+
+
+<?}?>
+				</td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td style="background: url('../img/up_bg.gif') repeat-x 0 0">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+	</div>
+	<div class="mobileHeader">
+
+		<div class="logo"><img src="<?=$target?>" border="0" /></div>
+		<div class="menubar">
+			<a href="#" class="ham4_btn">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</a>
+		</div>
+		<div class="overlay">
+
+			<div class="Mtnb">
+
+
+
+				<?if($_SESSION["MemberCountry"] == 100){//한국?>
+
+				<?
+		if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 10){	//삭제
+
+
+			echo "<a href='../good/request_delete_list.php' target='_top'>회원삭제요청 내역</a>";
+
+
+				echo "<a href='../good/request_delete_list_fran.php' target='_top'>가맹점게시판 삭제요청 내역</a>";
+				echo "<a href='../good/request_delete_list_board.php' target='_top'>회원수정요청 내역</a>";
+				}
+				if($_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 10){	//수정
+				echo "<a href='../good/request_update_list.php' target='_top'>회원수정요청 내역</a>";
+				echo "<a href='../good/request_update_list_fran.php' target='_top'>가맹점게시판 수정요청 내역</a>";
+				echo "<a href='../good/request_update_list_board.php' target='_top'>정보검색 수정요청 내역보기</a>";
+				}
+
+				if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3 || $_SESSION["MemberLevel"] == 10){	//수정
+				echo "<a href='../good/member_admin_list.html' target='_top'>메뉴별관리자</a>";
+				}
+
+				if($_SESSION["MemberLevel"] == 10){//통장입금내역 관리자만보기
+				echo"<p class='line'></p>";
+				echo "<a href='../good/groupjang_list.php' target='_top'>그룹장정보</a>";
+				echo "<a href='../good/bank_total.php' target='_top'>통장입금내역</a>";
+				echo "<a href='../good/bonus_total.php' target='_top'>회원충전금내역</a>";
+				echo "<a href='../jungbo_cate/cate_regis.html' target='_top'>정보분류관리</a>";
+				echo "<a href='../gamaeng_cate/category_list.php' target='_top'>가맹점분류관리</a>";
+				echo "<a href='../gamaeng_cate/category_list_job.php' target='_top'>직업관리</a>";
+				echo "<a href='../gamaeng_cate/category_list_jongmok.php' target='_top'>직업종목관리</a>";
+				}
+				?>
+
+
+				<!--<a href="../good/pw_frame.html" target="_top"><img src="../images/pass_butten.gif" border=0></a>-->
+
+				<?
+		if($_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){ //2,3단계 그룹장만 2중 비밀번호사용
+		?>
+				<a href="../good/pw_frame_gr.html" target="_top">2중 비밀번호 설정</a>
+				<?
+		}
+		?>
+
+				<?if($_SESSION["MemberLevel"] == 4){?>
+				<?
+		if($_SESSION["Admin_startdate"] <= $todate && $_SESSION["Admin_enddate"] >= $todate){
+
+				if($_SESSION["Admin_type"] == "mem"){
+				echo"<font color=blue><b>[현재 회원관리자 입니다";
+				}elseif($_SESSION["Admin_type"] == "gamaeng"){
+				echo"<font color=blue><b>[현재 가맹점관리자 입니다";
+					}elseif($_SESSION["Admin_type"] == "jsell"){
+					echo"<font color=blue><b>[현재 정보검색 판매구입정보 관리자 입니다";
+						}elseif($_SESSION["Admin_type"] == "jtravel"){
+						echo"<font color=blue><b>[현재 정보검색 여행 관리자 입니다";
+							}elseif($_SESSION["Admin_type"] == "jwork"){
+							echo"<font color=blue><b>[현재 정보검색 월별근무현황일지 관리자 입니다";
+								}elseif($_SESSION["Admin_type"] == "jreal"){
+								echo"<font color=blue><b>[현재 정보검색 부동산 관리자 입니다";
+									}elseif($_SESSION["Admin_type"] == "jmeet"){
+									echo"<font color=blue><b>[현재 정보검색 만남 관리자 입니다";
+										}elseif($_SESSION["Admin_type"] == "jjob"){
+										echo"<font color=blue><b>[현재 정보검색 구인구직 관리자 입니다";
+											}
+
+
+											?>
+											<?=$_SESSION["Admin_startdate"]?>~<?=$_SESSION["Admin_enddate"]?>]</b></font>
+										<?
+			}
+		?>
+										<a href="../good/board_frame16.html" target="_top">메뉴별 관리자 신청하기</a>
+
+										<a href="../good/board_frame16.html" target="_top">메뉴별 관리자 신청하기</a>
+										<a href="../good/bonus_frame.html" target="_top">충전금내역보기</a>
+										<!--<a href="../jungbo_cate_mem/category_list.php" target="_top">[정보분류관리]</a>-->
+										<a href="../good/board_frame7.html" target="_top">정보신청내역보기</a>
+										<?}?>
+										<?if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){?>
+										<a href="../good/bonus_frame.html" target="_top">충전금내역보기</a>
+										<?}?>
+										<?if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 10){?>
+										<a href="../good/item_frame3.html" target="_top">하위그룹 충전금내역보기</a>
+										<?}?>
+
+										<?}?>
+										<a href="../logout.php" target="_top">로그아웃</a>
+
+
+										<a href="http://eng.wickhan.com/admin/good/board_frame3.html" target="_top"><b>미국버젼보기</b></a>
+
+			</div>
+			<div class="Mmenu">
+
+
+				<?if($_SESSION["MemberCountry"] == 100){//한국?>
+
+				<?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2){?><a href="../category/category_list.php" target="_top">그룹관리</a><?}?><?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){?><a href="../good/item_frame.html" target="_top">회원관리</a><a href="../good/item_frame.html" target="_top">회원관리</a><?}?>
+				<a href="../good/board_frame.html" target="_top">공지사항</a>
+				<!--가맹점 start-->
+
+				<?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 3){?>
+				<a href="../good/board_frame6.html?direct_write=y" target="_top">가맹점등록</a>
+				<?}?>
+				<!--가맹점 end-->
+				<?}?>
+				<a href="../good/board_frame3.html" target="_top">정보검색</a>
+				<a href="../good/board_frame6.html" target="_top">가맹점검색</a>
+				<?if($_SESSION["MemberCountry"] == 100){//한국?>
+
+				<?if($_SESSION["MemberLevel"] == 4){?><a href="../good/board_frame3.html?direct_write=y" target="_top">정보등록</a>
+				<a href="../good/board_frame3.html?my_list=y" target="_top">정보등록 내역보기</a>
+				<a href="#" onclick="javascript:window.open('../../admin/card.htm','','width=444,height=264,left=300,top=200');">칸카드보기</a>
+
+
+				<a href="../good/board_frame10.html" target="_top">칸충전송금계좌</a>
+
+
+				<?}?>
+
+				<a href="../good/board_frame2.html" target="_top">약관</a>
+
+				<?
+		if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){ //그룹장들 내정보보기
+		?>
+				<a href="../good/board_frame9.html" target="_top">내정보보기</a>
+				<?
+		}
+		?>
+				<?if($_SESSION["MemberLevel"] == 10 || $_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3){?>
+				<a href="../good/item_frame2.html" target="_top">가맹점관리</a>
+				<?
+		}
+		?>
+
+
+				<?}?>
+			</div>
+		</div>
+
+	</div>
+
+</header>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$(".ham4_btn").click(function(){
+			$(this).toggleClass("active");
+			$(".overlay").toggleClass("visible");
+		});
+	})   /*ready end */
+</script>

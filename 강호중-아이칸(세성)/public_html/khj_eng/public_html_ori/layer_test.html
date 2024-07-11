@@ -1,0 +1,85 @@
+
+<script language="JavaScript">
+<!--
+var fixedX = -1; ////////// 레이어 X축 위치 (-1 : 버튼에 바로 아래에 표시)
+var fixedY = -1; ////////////// 레이어 Y축 위치 (-1 : 버튼에 바로 아래에 표시)
+
+function openPopup2(obj)
+{
+	var leftpos = 0;
+	var toppos = 140;
+	var cleft;
+	var ctop;
+
+	// 현재 오브젝트의 좌표값
+	aTag = obj;
+	do {
+		aTag = aTag.offsetParent;
+		leftpos	+= aTag.offsetLeft;
+		toppos += aTag.offsetTop;
+	} while(aTag.tagName!="BODY");
+
+	cleft =	fixedX==-1 ? obj.offsetLeft	+ leftpos :	fixedX;
+	ctop = fixedY==-1 ?	obj.offsetTop +	obj.offsetHeight + toppos :	fixedY;
+
+	// 팝업메뉴설정
+	oSubmenu = document.getElementById("item"+obj.id);
+	oSubmenu.style.left = cleft+95;
+	oSubmenu.style.top = ctop-20-143;
+	oSubmenu.style.zIndex = "9";
+	oSubmenu.style.width = "100";
+	oSubmenu.style.height = "100";
+	// 메뉴가 현재 에서 오버 된다면
+	if((parseInt(document.body.clientHeight)+document.body.scrollTop) < (parseInt(oSubmenu.style.top)+parseInt(oSubmenu.style.height)))
+		oSubmenu.style.top = parseInt(document.body.clientHeight) + document.body.scrollTop - parseInt(oSubmenu.style.height);
+	oSubmenu.style.display = "inline";
+}
+
+function closePopup2(obj)
+{
+	oSubmenu = document.getElementById("item"+obj.id);
+	oSubmenu.style.display = "none";
+}
+
+function swapImgRestore2() { //v3.0 
+	var i,x,a=document.sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc; 
+} 
+//-->
+</script>
+
+
+
+<?
+for($i=0;$i < 10;$i++){
+?>
+
+
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td><a href="#" onmouseover="openPopup2(this);" onmouseout="closePopup2(this);" id="menu<?=$i?>">aaaa</a></td>
+				</tr>
+			</table>
+
+
+
+
+
+
+					<div id='itemmenu<?=$i?>' style="display:none;position:absolute;FILTER:alpha(opacity=85);opacity:0.85;z-index:99;" onmouseover="openPopup2(document.getElementById('menu<?=$i?>'));" onmouseout="swapImgRestore2();closePopup2(document.getElementById('menu<?=$i?>'));">
+					<table width="100%" cellpadding="3" cellspacing="1" border="0" bgcolor="#EABE71">
+						<tr>
+							<td bgcolor="#ffffff" valign="top">
+							<table width="100%" cellpadding="0" cellspacing="0" border="0">
+									<tr>
+										<td height="20" style="font-size:12px;">
+										<a href="#">bbbb</a></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					</div>
+
+<?
+}
+?>
