@@ -273,13 +273,13 @@ function checkNumber(){
 function checkPrice(){
 	var form = document.writeform;
 	var z_p = form.address2.value;
-	form.bonus.value = Math.floor((z_p * <?=$bonus_auto_percent?>) / 100);
+	form.bonus.value = Math.floor((z_p * <?=$bonus_auto_percent ? $bonus_auto_percent : 1?>) / 100);
 }
 //포인트 자동계산
 function checkPrice_opt(){
 	var form = document.writeform;
 	var z_p2 = form.pro_price1.value;
-	form.pro_bonus1.value = Math.floor((z_p2 * <?=$bonus_auto_percent?>) / 100);
+	form.pro_bonus1.value = Math.floor((z_p2 * <?=$bonus_auto_percent ? $bonus_auto_percent : 1?>) / 100);
 }
 
 //마진 계산하기

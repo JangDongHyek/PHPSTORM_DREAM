@@ -59,6 +59,7 @@ include "../../main.class";
 					<td align="middle" class="title">금액</td>
 					<td align="middle" class="title">판매자</td>
 					<td align="middle" class="title">나의요청내역</td>
+					<td align="middle" class="title">충전금보내기</td>
 <?
 
 if($searchword){
@@ -127,6 +128,9 @@ for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++) {
 					</td>					
 					<td  bgColor='#ffffff' align='center'><span style="cursor:hand;" onclick="javascript:window.open('../board_mem/board_read_pre.php?index_no=<?=$ary[index_no]?>&bbs_no=4','','top=20,left=100,width=800,height=700,scrollbars=yes');"><?=$pre_writer?></span></td>
 					<td  bgColor='#ffffff' align='center'><?=$content?></td>
+					<td bgColor='#ffffff' align='center'>
+						<button onclick="postData()">보내기</button>
+					</td>
 				</tr>
 <?
 }
@@ -139,7 +143,11 @@ for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++) {
 		</tr>
 		<tr>
 		<td>
-
+<script>
+	function postData() {
+		alert("1");
+	}
+</script>
 
 <!---------------------- 검색 시작 ------------------------------------------------------>
 						<form action="<?=$PHP_SELF?>" method=get>

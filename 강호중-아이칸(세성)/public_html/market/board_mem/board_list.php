@@ -2,9 +2,9 @@
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <?
 //================== DB 설정 파일을 불러옴 ===============================================
-include "../../connect.php";
+include_once "../../connect.php";
 //================== 함수 파일을 불러옴 ==================================================
-include "../../main.class";
+include_once "../../main.class";
 ?>
 <?
 //========================== URL 처리 ==========================================
@@ -91,8 +91,8 @@ if($board_class == 1){
 
 
 
-include( '../include/getmartinfo.php' );
-include('../include/head_alltemplate.php');
+include_once( '../include/getmartinfo.php' );
+include_once('../include/head_alltemplate.php');
 ?>
 <script language="javascript">
 <!--
@@ -668,16 +668,16 @@ if($_SESSION["MemberLevel"] == 3){//칸은 승인대기상태 검색기능 넣기
 	if($list_type == "NL")
 		if($bbs_no == 8){
 			//include "board_list_skin_event.php";
-			include "board_list_skin.php";
+			include_once "board_list_skin.php";
 		}else{
-			include "board_list_skin.php";
+			include_once "board_list_skin.php";
 		}
 	
 
 	elseif($list_type == "GT")
-		include "gallery_thumbnail_skin.php";
+		include_once "gallery_thumbnail_skin.php";
 	elseif($list_type == "GL")
-		include "gallery_thumbnail_skin.php";
+		include_once "gallery_thumbnail_skin.php";
 ?>
 						<br>
 <?

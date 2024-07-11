@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/public_html/admin/good/board_frame3.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/admin/good/bonus.html" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/admin/good/item_add.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/connect.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/board_mem/board_list.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/board_mem/offer_pre.html" charset="x-windows-949" />
+  </component>
+</project>

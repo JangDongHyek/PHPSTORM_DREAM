@@ -8,6 +8,7 @@ if($flag == ""){
 	include "../admin_head.php";
 ?>
 <?
+/*
 if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["MemberLevel"] == 3 || $_SESSION["MemberLevel"] == 4){
 
 	$query = "select * from $CategoryTable where g_id ='$_SESSION[Mall_Admin_ID]'";
@@ -15,7 +16,7 @@ if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["
 	$row = mysql_fetch_array( $result );
 	$category_degree = $row[category_degree];
 
-	if( $category_degree == 0 ){ //1차 그룹 리스트 일때	
+	if( $category_degree == 0 ){ //1차 그룹 리스트 일때
 		$id_sum = $row[sea_num];
 	}else if( $category_degree == 1 ){ //2차 그룹 리스트 일때
 		$id_sum = $row[sea_num].$row[sung_num];
@@ -31,6 +32,8 @@ if($_SESSION["MemberLevel"] == 1 || $_SESSION["MemberLevel"] == 2 || $_SESSION["
 		$bonus_total_str = "0";
 	}
 }
+*/
+$bonus_total_str = getTotalBonus();
 ?>
 
 <script language='javascript'>

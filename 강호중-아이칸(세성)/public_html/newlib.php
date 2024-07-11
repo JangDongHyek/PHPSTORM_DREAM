@@ -11,28 +11,41 @@
         echo "</script>";
     }
 
+    function getID($id = "") {
+        global $dbconn;
+
+        $id = $id ? $id : $_SESSION[Mall_Admin_ID];
+        if($_SESSION["MemberLevel"] == 10) {
+            return "admin";
+        }else if($_SESSION["MemberLevel"] == 4){
+            $SQL = "select * from item where mart_id ='khj' and item_id='$id'";
+            $dbresult = mysql_query($SQL, $dbconn);
+            $rows = mysql_fetch_array($dbresult);
+
+            $mem_num = $rows[sea_num].$rows[sung_num].$rows[khan_num].$rows[sudong_num];
+        }else {
+            $SQL = "select * from category where g_id='$id'";
+
+            $dbresult = mysql_query($SQL, $dbconn);
+            $rows = mysql_fetch_array($dbresult);
+
+            $mem_num = $rows[sea_num].$rows[sung_num].$rows[khan_num];
+        }
+
+        return $mem_num;
+    }
+
     function getTotalBonus() {
         global $dbconn;
-        
-        if($_SESSION["MemberLevel"] == 4){//일반회원
-            $SQL = "select * from item where mart_id ='khj' and item_id='$_SESSION[Mall_Admin_ID]'";
-            $dbresult = mysql_query($SQL, $dbconn);
-            $rows = mysql_fetch_array($dbresult);
-        
-            $mem_num = $rows[sea_num].$rows[sung_num].$rows[khan_num].$rows[sudong_num];
-        
-            $sum_sql = "select sum(bonus) as bonus_total from bonus where mart_id ='khj' and id='$mem_num'";
-        }else{//그룹장
-            $SQL = "select * from category where g_id='$_SESSION[Mall_Admin_ID]'";
-        
-            $dbresult = mysql_query($SQL, $dbconn);
-            $rows = mysql_fetch_array($dbresult);
-        
-            $mem_num = $rows[sea_num].$rows[sung_num].$rows[khan_num];
-        
-            $sum_sql = "select sum(bonus) as bonus_total from bonus where mart_id ='khj' and id='$mem_num'";
+
+        if($_SESSION["MemberLevel"] == 10) {
+            return 10000;
         }
-        
+
+        $mem_num = getID();
+
+        $sum_sql = "select sum(bonus) as bonus_total from bonus where mart_id ='khj' and id='$mem_num'";
+
         $sum_rs = mysql_query($sum_sql, $dbconn);
         $sum_rows = mysql_fetch_array($sum_rs);
         return (int)$sum_rows[bonus_total];

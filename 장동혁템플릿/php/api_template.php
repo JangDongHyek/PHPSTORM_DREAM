@@ -11,7 +11,10 @@ if ($file) {
 $response = array("message" => "");
 $_method = $_POST["_method"];
 
+global $g5;
 $model = new Model(array(
+    "db" => G5_MYSQL_DB,
+    "connect" => $g5['connect_db'],
     "table" => "example",
     "primary" => "idx",
     "autoincrement" => true
