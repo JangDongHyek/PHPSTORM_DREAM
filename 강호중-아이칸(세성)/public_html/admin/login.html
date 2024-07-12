@@ -55,6 +55,7 @@ unset($_SESSION);
 <script>
 <!--
 function checkform(f){
+
 	if(f.username.value==""){
 		alert("아이디를 입력하세요.");
 		f.username.focus();
@@ -65,7 +66,10 @@ function checkform(f){
 		f.password.focus();
 		return false;
 	}
-	return true;
+    if(f.language.value == "english") f.action = "http://eng.wickhan.com/admin/login_process.php"
+
+
+    return true;
 }
 
 function MM_swapImgRestore() { //v3.0
@@ -124,6 +128,10 @@ body {
                     <div class="title"><img src="images/new/login_t.gif"></div>
                     <div class="form">
                       <form name='f' method=post action='login_process.php' onsubmit='return checkform(this)'>
+                          <div class="language">
+                              <input type="radio" id="korean" name="language" value="korean" checked><label for="korean">한국버전</label>
+                              <input type="radio" id="english" name="language" value="english"><label for="english">미국버전</label>
+                          </div>
                           <div class="loginForm">
                               <div>
                                   <dl>

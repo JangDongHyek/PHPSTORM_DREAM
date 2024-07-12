@@ -10,57 +10,57 @@ include "../../main.class";
 <link href="../../css/common.css?version=<?php echo date('YmdHis')?>" rel="stylesheet" type="text/css">
 
 <div class="wrap">
-<table border="0" cellpadding="0" cellspacing="0" width="98%" bordercolorlight="#E1E1E1"  align="center">
-  <tr>
-	 <td vAlign="top" width="100%" bgColor="#ffffff" align="center">
-	 <table cellSpacing="0" cellPadding="0" width="100%" border="0">
+	<table border="0" cellpadding="0" cellspacing="0" width="98%" bordercolorlight="#E1E1E1"  align="center">
 		<tr>
-		  <td vAlign="top" width="100%" bgColor="#ffffff" height="3">
-		  <table width="100%" border="0">
-			 <tr>
-				<td width="100%" height="20" class="stitle2"><p align="center">[구매신청내역]</td>
-			 </tr>
-		  </table>
-		  </td>
-		</tr>
-		<tr>
-		  <td vAlign="top" width="100%" bgColor="#ffffff" align="center">
-		  <table width="97%" border="0">
-			 <tr>
-				<td width="100%">
-				<table cellSpacing="0" cellPadding="0" width="100%" border="0" class="box2">
-				<!--
-				<form action='bunus.html' method='post' onsubmit="return frm_val(this)">
-				<input type='hidden' name='flag' value='add'>
-				<input type='hidden' name='username' value='<?=$username?>'>
-				<input type='hidden' name='provider_id' value='<?=$Mall_Admin_ID?>'>
-				<input type='hidden' name='mode' value='<?=$mode?>'>
-				<tr>
-					<td align="left" width="12%" bgColor="#c8dfec">내용</td>
-					<td align="left" width="88%" bgColor="#ffffff" colSpan="5"><input name="content" class="input_03" size="55"> </td>
-				</tr>
-				<tr>
-					<td align="left" width="12%" bgColor="#c8dfec">금액</td>
-					<td align="left" width="88%" bgColor="#ffffff" colSpan="5">
-						<select size="1" name="p_m">
-						<option value="+" selected>+</option>
-						<option value="-">-</option>
-						</select> 
-						<input name="bonus" class="input_03" size="15"> 
-						<input style="BORDER-RIGHT: #5a5a5a 1px solid; BORDER-TOP: #5a5a5a 1px solid; BORDER-LEFT: #5a5a5a 1px solid; COLOR: black; BORDER-BOTTOM: #5a5a5a 1px solid; HEIGHT: 18px; BACKGROUND-COLOR: white" type="submit" value="포인트 지급">
-					</td>
-				</tr>
-				</form>
-				-->
-				<tr>
-					<td align="middle" width=40 class="title">No.</td>
-					<td align="middle" class="title">국가</td>
-					<td align="middle" class="title">일자</td>
-					<td align="middle" class="title">금액</td>
-					<td align="middle" class="title">판매자</td>
-					<td align="middle" class="title">나의요청내역</td>
-					<td align="middle" class="title">충전금보내기</td>
-<?
+			<td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+				<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+					<tr>
+						<td vAlign="top" width="100%" bgColor="#ffffff" height="3">
+							<table width="100%" border="0">
+								<tr>
+									<td width="100%" height="20" class="stitle2"><p align="center">[구매신청내역]</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+							<table width="97%" border="0">
+								<tr>
+									<td width="100%">
+										<table cellSpacing="0" cellPadding="0" width="100%" border="0" class="box2">
+											<!--
+                                            <form action='bunus.html' method='post' onsubmit="return frm_val(this)">
+                                            <input type='hidden' name='flag' value='add'>
+                                            <input type='hidden' name='username' value='<?=$username?>'>
+                                            <input type='hidden' name='provider_id' value='<?=$Mall_Admin_ID?>'>
+                                            <input type='hidden' name='mode' value='<?=$mode?>'>
+                                            <tr>
+                                                <td align="left" width="12%" bgColor="#c8dfec">내용</td>
+                                                <td align="left" width="88%" bgColor="#ffffff" colSpan="5"><input name="content" class="input_03" size="55"> </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" width="12%" bgColor="#c8dfec">금액</td>
+                                                <td align="left" width="88%" bgColor="#ffffff" colSpan="5">
+                                                    <select size="1" name="p_m">
+                                                    <option value="+" selected>+</option>
+                                                    <option value="-">-</option>
+                                                    </select>
+                                                    <input name="bonus" class="input_03" size="15">
+                                                    <input style="BORDER-RIGHT: #5a5a5a 1px solid; BORDER-TOP: #5a5a5a 1px solid; BORDER-LEFT: #5a5a5a 1px solid; COLOR: black; BORDER-BOTTOM: #5a5a5a 1px solid; HEIGHT: 18px; BACKGROUND-COLOR: white" type="submit" value="포인트 지급">
+                                                </td>
+                                            </tr>
+                                            </form>
+                                            -->
+											<tr>
+												<td align="middle" width=40 class="title">No.</td>
+												<td align="middle" class="title">국가</td>
+												<td align="middle" class="title">일자</td>
+												<td align="middle" class="title">금액</td>
+												<td align="middle" class="title">판매자</td>
+												<td align="middle" class="title">나의요청내역</td>
+												<td align="middle" class="title">충전금보내기</td>
+												<?
 
 if($searchword){
 	$add_query = " and (binary pre_writer like '%$searchword%' or binary pre_subject like '%$searchword%' or binary content like '%$searchword%') ";
@@ -86,132 +86,152 @@ $start_page = $page - ($page % 10) + 1;
 
 $end_page = $start_page + 9;
 if($end_page >= $total_page)
-	$end_page = $total_page;
-$prev_start_page = $start_page - 10;
-$next_start_page = $start_page + 10;
+												$end_page = $total_page;
+												$prev_start_page = $start_page - 10;
+												$next_start_page = $start_page + 10;
 
-$sum = 0;
-for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++) {
-	if ($i >= $numRows) break;
-	mysql_data_seek($dbresult, $i);
-	$ary=mysql_fetch_array($dbresult);
-	$num = $ary[num];
+												$sum = 0;
+												for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++) {
+												if ($i >= $numRows) break;
+												mysql_data_seek($dbresult, $i);
+												$ary=mysql_fetch_array($dbresult);
+												$num = $ary[num];
 
-	$country_num =$ary[country_num];
-	$write_date =$ary[regdate];
-	$write_date = substr($write_date,0,10);
-	$content = nl2br($ary[content]);
+												$country_num =$ary[country_num];
+												$write_date =$ary[regdate];
+												$write_date = substr($write_date,0,10);
+												$content = nl2br($ary[content]);
 
- 	$pre_subject = $ary[pre_subject];
-	$pre_price = $ary[pre_price];
-	$pre_writer = $ary[pre_writer];
-	$content  = $ary[content];
-	
-	$j = $numRows - $i;
+												$pre_subject = $ary[pre_subject];
+												$pre_price = $ary[pre_price];
+												$pre_writer = $ary[pre_writer];
+												$content  = $ary[content];
 
-?>
-				<tr>
-					<td align='middle' width=40 bgColor='#ffffff'><?=$j?></td>
-					<td align='middle'  bgColor='#ffffff'>
-					<?
+												$j = $numRows - $i;
+
+												?>
+											<tr>
+												<td align='middle' width=40 bgColor='#ffffff'><?=$j?></td>
+												<td align='middle'  bgColor='#ffffff'>
+													<?
 					if($country_num==100){
 						echo"한국";
 					}elseif($country_num==101){
 						echo"미국";
 					}
 					?>
-					</td>
-					<td align='middle'  bgColor='#ffffff'><?=$write_date?></td>
+												</td>
+												<td align='middle'  bgColor='#ffffff'><?=$write_date?></td>
 
-					<td  bgColor='#ffffff' align='center'>
-					<?=number_format($pre_price)?>
-					</td>					
-					<td  bgColor='#ffffff' align='center'><span style="cursor:hand;" onclick="javascript:window.open('../board_mem/board_read_pre.php?index_no=<?=$ary[index_no]?>&bbs_no=4','','top=20,left=100,width=800,height=700,scrollbars=yes');"><?=$pre_writer?></span></td>
-					<td  bgColor='#ffffff' align='center'><?=$content?></td>
-					<td bgColor='#ffffff' align='center'>
-						<button onclick="postData()">보내기</button>
-					</td>
-				</tr>
-<?
+												<td  bgColor='#ffffff' align='center'>
+													<?=number_format($pre_price)?>
+												</td>
+												<td  bgColor='#ffffff' align='center'><span style="cursor:hand;" onclick="javascript:window.open('../board_mem/board_read_pre.php?index_no=<?=$ary[index_no]?>&bbs_no=4','','top=20,left=100,width=800,height=700,scrollbars=yes');"><?=$pre_writer?></span></td>
+												<td  bgColor='#ffffff' align='center'><?=$content?></td>
+												<td bgColor='#ffffff' align='center'>
+													<button onclick="postData(<?=$ary[index_no]?>)">보내기</button>
+												</td>
+											</tr>
+											<?
 }
 ?>
-				</table>
-				</td>
-			 </tr>
-		  </table>
-		  </td>
-		</tr>
-		<tr>
-		<td>
-<script>
-	function postData() {
-		alert("1");
-	}
-</script>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
 
-<!---------------------- 검색 시작 ------------------------------------------------------>
-						<form action="<?=$PHP_SELF?>" method=get>
-						
-						<table width='100%' align="center"  border='0' cellspacing='0' cellpadding='0'>
-							<tr>
-							<input type="hidden" name="page" value="1">
-							<input type="hidden" name="bbs_no" value="<?=$bbs_no?>">
-								<td width='10'><img src='../image/helpdesk/table2_left.gif' width='10' height='40'></td>
-								<td align='center' background='../image/helpdesk/table2_bg.gif'>
-									<input type=hidden name="keyset" value="all">	
-									
-
-
-<!--
-								분류:
-								<select name='bunryu_search'>
-								<option value="">=분류검색=</option>
-								<?
-								$today = date("Y-m-d");
-								$sql = "select * from jungbo_cate where 1 order by binary(category_name)";
-								$res = mysql_query($sql,$dbconn);
-								for($z=0;$row = mysql_fetch_array($res);$z++){
-									if($row[category_num] == $bunryu_search){
-										$bunryu_selected = "selected";
-									}
-								?>	
-									<option value="<?=$row[category_num]?>" <?=$bunryu_selected?>><?=$row[category_name]?></option>
-								<?
-									$bunryu_selected="";
+							<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+							<script>
+								function postData(idx) {
+									$.ajax({
+										url : "/api/bonus.php",
+										method : "post",
+										enctype : "multipart/form-data",
+										async : false,
+										cache : false,
+										data : {
+											"_method" : "post",
+											"idx" : idx,
+										},
+										dataType : "text",
+										success: function(res){
+											console.log(res);
+											if(res != "true") alert(res);
+											else {
+												alert("충전금을 보넀습니다.");
+											}
+										}
+									});
 								}
-								?>
-								</select>							
-&nbsp;
+							</script>
 
+							<!---------------------- 검색 시작 ------------------------------------------------------>
+							<form action="<?=$PHP_SELF?>" method=get>
 
-									시/군/구:<input type='text' name='searchword_area1' value='<?=$searchword_area1?>' class='input_03' size='10'>
-									&nbsp;
-									읍/면/동:<input type='text' name='searchword_area2' value='<?=$searchword_area2?>' class='input_03' size='10'>
-	
-&nbsp;
--->
-									제목/내용/판매자&nbsp;:&nbsp;<input type='text' name='searchword' value='<?=$searchword?>' class='input_03' size='15'>
-									<input type='image' src='../image/bu_search3.gif'  border='0' align='absmiddle' onfocus='blur();'> <a href='<?=$PHP_SELF?>?&bbs_no=<?=$bbs_no?>&page=<?=$page?>'><img src='../image/bu_cancel2.gif' border='0' align='absmiddle' onfocus='blur();'></a>
-									<? /*if($_SESSION["Mall_Admin_ID"]){?>
-									<input type="button" value="전체선택" name="sel" onclick="ListSel()">
-									<input type="button" value="삭제" name="del" onclick="ListDel()">
-									<? }*/?>
-								</td>
-								<td width='10'><img src='../image/helpdesk/table2_right.gif' width='10' height='40'></td>
-							
-							</tr>
-						</table>
-						</form>
-<!---------------------- 검색 끝 -------------------------------------------------------->
+								<table width='100%' align="center"  border='0' cellspacing='0' cellpadding='0'>
+									<tr>
+										<input type="hidden" name="page" value="1">
+										<input type="hidden" name="bbs_no" value="<?=$bbs_no?>">
+										<td width='10'><img src='../image/helpdesk/table2_left.gif' width='10' height='40'></td>
+										<td align='center' background='../image/helpdesk/table2_bg.gif'>
+											<input type=hidden name="keyset" value="all">
 
 
 
+											<!--
+                                                                            분류:
+                                                                            <select name='bunryu_search'>
+                                                                            <option value="">=분류검색=</option>
+                                                                            <?
+                                                                            $today = date("Y-m-d");
+                                                                            $sql = "select * from jungbo_cate where 1 order by binary(category_name)";
+                                                                            $res = mysql_query($sql,$dbconn);
+                                                                            for($z=0;$row = mysql_fetch_array($res);$z++){
+                                                                                if($row[category_num] == $bunryu_search){
+                                                                                    $bunryu_selected = "selected";
+                                                                                }
+                                                                            ?>
+                                                                                <option value="<?=$row[category_num]?>" <?=$bunryu_selected?>><?=$row[category_name]?></option>
+                                                                            <?
+                                                                                $bunryu_selected="";
+                                                                            }
+                                                                            ?>
+                                                                            </select>
+                                            &nbsp;
 
-		</td>
-		</tr>
-		<tr>
-		  <td vAlign="top" width="100%" bgColor="#ffffff"><p align="right">
-		  <?
+
+                                                                                시/군/구:<input type='text' name='searchword_area1' value='<?=$searchword_area1?>' class='input_03' size='10'>
+                                                                                &nbsp;
+                                                                                읍/면/동:<input type='text' name='searchword_area2' value='<?=$searchword_area2?>' class='input_03' size='10'>
+
+                                            &nbsp;
+                                            -->
+											제목/내용/판매자&nbsp;:&nbsp;<input type='text' name='searchword' value='<?=$searchword?>' class='input_03' size='15'>
+											<input type='image' src='../image/bu_search3.gif'  border='0' align='absmiddle' onfocus='blur();'> <a href='<?=$PHP_SELF?>?&bbs_no=<?=$bbs_no?>&page=<?=$page?>'><img src='../image/bu_cancel2.gif' border='0' align='absmiddle' onfocus='blur();'></a>
+											<? /*if($_SESSION["Mall_Admin_ID"]){?>
+											<input type="button" value="전체선택" name="sel" onclick="ListSel()">
+											<input type="button" value="삭제" name="del" onclick="ListDel()">
+											<? }*/?>
+										</td>
+										<td width='10'><img src='../image/helpdesk/table2_right.gif' width='10' height='40'></td>
+
+									</tr>
+								</table>
+							</form>
+							<!---------------------- 검색 끝 -------------------------------------------------------->
+
+
+
+
+						</td>
+					</tr>
+					<tr>
+						<td vAlign="top" width="100%" bgColor="#ffffff"><p align="right">
+							<?
 				if($page == 1){
 					echo ("
 					처음
@@ -219,66 +239,66 @@ for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++) {
 				}
 				else{
 					echo ("
-					<a href='bunus.html?username=$rows[item_code]&page=1&searchword=$searchword'>처음</a> 
-					");
-				}
-			
-				if($start_page > 1){
-					echo ("
-					<a href='bunus.html?username=$rows[item_code]&page=$prev_start_page&searchword=$searchword'>
-					◁&nbsp; 
-					</a>
-					");
-				}
-				else{
-					echo ("
-					◁&nbsp; 
-					");
-				}
-				for($i=$start_page;$i<=$end_page;$i++){
-					if($i == $page){
-						echo ("	
-						[<b>$i</b>]
-						");
-					}
-					else{
-						echo ("
-					<a href='bunus.html?username=$rows[item_code]&page=$i&searchword=$searchword'>$i</a> 
-						");
-					}
-				}
-				if($end_page < $total_page){
-					echo ("
-					<a href='bunus.html?username=$rows[item_code]&page=$next_start_page&searchword=$searchword'>
-					&nbsp;▷
-					</a>
-					");
-				}
-				else{
-					echo ("
-					&nbsp;▷
-					");
-				}
-				if($page == $total_page){
-					echo ("
-					끝
-					");
-				}
-				else{
-					echo ("
-					<a href='bunus.html?username=$rows[item_code]&page=$total_page&searchword=$searchword'>끝</a> 
-					");
-				}
-				?>
-				</td>
+					<a href='bunus.html?username=$rows[item_code]&page=1&searchword=$searchword'>처음</a>
+							");
+							}
+
+							if($start_page > 1){
+							echo ("
+							<a href='bunus.html?username=$rows[item_code]&page=$prev_start_page&searchword=$searchword'>
+								◁&nbsp;
+							</a>
+							");
+							}
+							else{
+							echo ("
+							◁&nbsp;
+							");
+							}
+							for($i=$start_page;$i<=$end_page;$i++){
+							if($i == $page){
+							echo ("
+							[<b>$i</b>]
+							");
+							}
+							else{
+							echo ("
+							<a href='bunus.html?username=$rows[item_code]&page=$i&searchword=$searchword'>$i</a>
+							");
+							}
+							}
+							if($end_page < $total_page){
+							echo ("
+							<a href='bunus.html?username=$rows[item_code]&page=$next_start_page&searchword=$searchword'>
+								&nbsp;▷
+							</a>
+							");
+							}
+							else{
+							echo ("
+							&nbsp;▷
+							");
+							}
+							if($page == $total_page){
+							echo ("
+							끝
+							");
+							}
+							else{
+							echo ("
+							<a href='bunus.html?username=$rows[item_code]&page=$total_page&searchword=$searchword'>끝</a>
+							");
+							}
+							?>
+						</td>
+					</tr>
+					<tr align="middle">
+						<td vAlign="top" width="100%" bgColor="#ffffff"></td>
+					</tr>
+				</table>
+			</td>
 		</tr>
-		<tr align="middle">
-		  <td vAlign="top" width="100%" bgColor="#ffffff"></td>
-		</tr>
-	 </table>
-	 </td>
-  </tr>
-</table>
+	</table>
 
 
 

@@ -327,7 +327,7 @@ class Model {
 
     function __construct($object = array()) {
         // mysql 버전 확인
-        if(function_exists("mysqli_connect")) $this->mysqli = true;
+        if(function_exists("mysqli_query")) $this->mysqli = true;
 
         //connect전 필수 정보확인
         if(!$object["hostname"]) throw new Exception("hostname를 입력해주세요.");

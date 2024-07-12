@@ -1,27 +1,28 @@
 <?php
-include_once('../common.php');
-include_once(G5_PATH . "/model/model.php");
-
-$file = false;
-if ($file) {
-    include_once(G5_PATH . "/class/file.php");
-    $file = new File("/data/example");
-}
+include_once("../model/model.php");
+//include_once("../class/file.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
 
-global $g5;
-$model = new Model(array(
-    "db" => G5_MYSQL_DB,
-    "connect" => $g5['connect_db'],
+$db_config = array(
+    "hostname" => "localhost",
+    "username" => "example",
+    "password" => "",
+    "database" => "example"
+);
+
+$model_config = array_merge($db_config,array(
     "table" => "example",
     "primary" => "idx",
-    "autoincrement" => true
 ));
+$model = new Model($model_config);
 
 $join_table = "";
 $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
+
+//$file = new File("/data/example");
+
 try {
     switch (strtolower($_method)) {
         case "get":
