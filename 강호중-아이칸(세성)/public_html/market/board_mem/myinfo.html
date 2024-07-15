@@ -969,7 +969,7 @@ if( $back == "ok" ){
 
 
       	<tr align="center">
-        	<td width="100%" bgcolor="#FFFFFF" valign="top"><input class='butt_none' style='width:100' type="submit" value="정보수정" style='cursor:hand'>
+        	<td width="100%" bgcolor="#FFFFFF" valign="top"><input class='butt_none' style='width:100' type="button" onclick="postData()" value="정보수정" style='cursor:hand'>
 </td>
       	</tr>
     	</table>
@@ -981,6 +981,41 @@ if( $back == "ok" ){
 	</tr>
 </table>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script>
+	function postData() {
+		var item_pw = $('input[name="item_pw"]').val();
+		var co_num = $('input[name="co_num"]').val();
+		var tel = $('input[name="tel"]').val();
+		var email = $('input[name="email"]').val();
+		var address = $('input[name="address"]').val();
+		var zip = $('input[name="zip"]').val();
+		var my_bank_account = $('input[name="my_bank_account"]').val();
+		var my_bank_master = $('input[name="my_bank_master"]').val();
+
+
+		return false;
+		$.ajax({
+			url : "/api/bonus.php",
+			method : "post",
+			enctype : "multipart/form-data",
+			async : false,
+			cache : false,
+			data : {
+				"_method" : "post",
+				"idx" : idx,
+			},
+			dataType : "text",
+			success: function(res){
+				console.log(res);
+				if(res != "true") alert(res);
+				else {
+
+				}
+			}
+		});
+	}
+</script>
 </body>
 </html>	
 <?
