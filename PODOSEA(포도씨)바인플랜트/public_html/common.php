@@ -824,7 +824,7 @@ $report = array(
 
 // 카카오 로그인 JavaScript 키 (내 애플리케이션 > 앱 설정 > 앱 키)
 $kakao_javascript_key = '8249829aab1c20472d703a8b9f393c8f';
-$kakao_javascript_key_new = 'ee5f6fd3cdad262c177f10057e5ca6ac'; // 카카오디벨로퍼 계정 찾지 못하여 새로 등록
+$kakao_javascript_key_new = '74a469d96146fad0c7d923d621b76157'; // 카카오디벨로퍼 계정 찾지 못하여 새로 등록
 
 // 페이스북 로그인 앱 ID
 $face_app_id = "1033759944015972";

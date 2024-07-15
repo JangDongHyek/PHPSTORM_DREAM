@@ -1,4 +1,25 @@
 <?php
+function arrayToInsert($table,$array,$time = false) {
+    $columns = "";
+    $values = "";
+    foreach($array as $key => $value){
+        if(!empty($columns)) $columns .= ", ";
+        $columns .= "`{$key}`";
+
+        if(!empty($values)) $values .= ", ";
+        $values .= "'{$value}'";
+    }
+
+    if($time) {
+        $columns .= ", `insert_date`";
+        $values .= ", now()";
+    }
+
+    $sql = "INSERT INTO {$table} ($columns) VALUES ($values)";
+
+    return $sql;
+}
+
 function alert($msg, $href = "")
 {
     echo "<script>";

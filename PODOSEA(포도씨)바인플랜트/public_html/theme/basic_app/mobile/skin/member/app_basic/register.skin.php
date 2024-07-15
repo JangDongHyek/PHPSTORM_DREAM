@@ -8,8 +8,8 @@ add_stylesheet('<link rel="stylesheet" href="' . $member_skin_url . '/style.css"
  * 네이버로그인 API
  */
 // 네이버 로그인 접근 토큰 요청
-$client_id = "YIwCexowJCYPErjJiSOC";
-$redirectURI = urlencode(G5_BBS_URL."/naver_callback.php");
+$client_id = "OYo_HAmkzC766_xvReqe";
+$redirectURI = urlencode("https://www.podosea.kr/bbs/naver_callback.php");
 $state = "RAMDOM_STATE";
 $apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=".$client_id."&redirect_uri=".$redirectURI."&state=".$state; // 재인증 필요 시 뒤에 &auth_type=reauthenticate 붙임
 
@@ -161,6 +161,7 @@ function snsLogin() {
 /** 카카오 **/
 // 발급받은 앱 키 - JavaScript 키 (내 애플리케이션 > 앱 설정 > 앱 키)
 Kakao.init('<?=$kakao_javascript_key_new?>');
+console.log("<?=$kakao_javascript_key_new?>");
 console.log(Kakao.isInitialized()); // sdk 초기화여부판단
 
 //카카오로그인

@@ -6,8 +6,8 @@ include_once('./_common.php');
  */
 
 // 네이버 로그인 API (콜백)
-$client_id = "YIwCexowJCYPErjJiSOC";
-$client_secret = "NriYK7hepY";
+$client_id = "OYo_HAmkzC766_xvReqe";
+$client_secret = "Jn2FOVOByo";
 $code = $_GET["code"];
 $state = $_GET["state"];
 $redirectURI = urlencode(G5_BBS_URL."/naver_callback.php");
