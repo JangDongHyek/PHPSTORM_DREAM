@@ -16,6 +16,8 @@ class Model {
 
     private $sql = "";
     private $sql_order_by = "";
+    private $group_bool = false;
+    private $group_index = 0;
 
     function insert($_param){
 
@@ -209,7 +211,37 @@ class Model {
         }
     }
 
+    function group_start($type = "AND") {
+        if($this->group_bool) return false;
 
+        $this->group_bool = true;
+        $this->sql .= " {$type} ( ";
+    }
+
+    function group_end() {
+        if(!$this->group_bool) return false;
+
+        $this->group_bool = false;
+        $this->group_index = 0;
+        $this->sql .= " ) ";
+    }
+
+    function between($column,$start,$end,$type = "AND") {
+        if($column == "") throw new Exception("컬럼명을 대입 해주새요.");
+        if($start == "") throw new Exception("시작시간을 대입 해주새요.");
+        if($end == "") throw new Exception("종료시간을 대입 해주새요.");
+
+        if(in_array($column, $this->schema['columns'])){
+            if($this->group_bool) {
+                if(!$this->group_index) $this->group_index = 1;
+                else $this->sql .= " {$type} ";
+            }else {
+                $this->sql .= " {$type} ";
+            }
+
+            $this->sql .= "{$column} BETWEEN `{$start}` AND `{$end}` ";
+        }
+    }
 
     function where($first,$second = "") {
         if(is_array($first)) {
@@ -219,7 +251,14 @@ class Model {
                 if(in_array($key, $this->schema['columns'])){
                     if($this->empty && $value == "") continue;
 
-                    $this->sql .= " AND `{$key}` = '{$value}'";
+                    if($this->group_bool) {
+                        if(!$this->group_index) $this->group_index = 1;
+                        else $this->sql .= " AND ";
+                    }else {
+                        $this->sql .= " AND ";
+                    }
+
+                    $this->sql .= "`{$key}` = '{$value}'";
                 }
             }
         }
@@ -229,7 +268,14 @@ class Model {
             if($second == "") throw new Exception("필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])){
-                $this->sql .= " AND `{$first}` = '{$second}'";
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " AND ";
+                }else {
+                    $this->sql .= " AND ";
+                }
+
+                $this->sql .= "`{$first}` = '{$second}'";
             }
         }
     }
@@ -242,7 +288,14 @@ class Model {
                 if(in_array($key, $this->schema['columns'])){
                     if($this->empty && $value == "") continue;
 
-                    $this->sql .= " OR `{$key}` = '{$value}'";
+                    if($this->group_bool) {
+                        if(!$this->group_index) $this->group_index = 1;
+                        else $this->sql .= " OR ";
+                    }else {
+                        $this->sql .= " OR ";
+                    }
+
+                    $this->sql .= "`{$key}` = '{$value}'";
                 }
             }
         }
@@ -251,28 +304,15 @@ class Model {
             if($first == "") throw new Exception("컬럼명을 입력해주새요.");
             if($second == "") throw new Exception("필터를 입력해주새요.");
             if(in_array($first, $this->schema['columns'])){
-                $this->sql .= " OR `{$first}` = '{$second}'";
-            }
-        }
-    }
-
-    function and_or_where($array) {
-        if(is_array($array) && count($array) >= 2) {
-            $param = $this->escape($array);
-            $this->sql .= " AND (";
-            $bool = false;
-            foreach($param as $key => $value){
-                if(in_array($key, $this->schema['columns'])){
-                    if($this->empty && $value == "") continue;
-                    if($bool) $this->sql .= " OR ";
-                    $this->sql .= " `{$key}` = '{$value}'";
-                    $bool = true;
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " OR ";
+                }else {
+                    $this->sql .= " OR ";
                 }
-            }
 
-            $this->sql .= ")";
-        }else {
-            throw new Exception("and_or_where은 2개이상의 길이의 연관 배열만 가능합니다.");
+                $this->sql .= "`{$first}` = '{$second}'";
+            }
         }
     }
 
@@ -283,8 +323,14 @@ class Model {
             foreach($param as $key => $value){
                 if(in_array($key, $this->schema['columns'])){
                     if($this->empty && $value == "") continue;
+                    if($this->group_bool) {
+                        if(!$this->group_index) $this->group_index = 1;
+                        else $this->sql .= " AND ";
+                    }else {
+                        $this->sql .= " AND ";
+                    }
 
-                    $this->sql .= " AND `{$key}` LIKE '%{$value}%'";
+                    $this->sql .= "`{$key}` LIKE '%{$value}%'";
                 }
             }
         }
@@ -294,7 +340,14 @@ class Model {
             if($second == "") throw new Exception("필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])){
-                $this->sql .= " AND `{$first}` LIKE '%{$second}%'";
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " OR ";
+                }else {
+                    $this->sql .= " OR ";
+                }
+
+                $this->sql .= "`{$first}` LIKE '%{$second}%'";
             }
         }
     }
@@ -306,8 +359,14 @@ class Model {
             foreach($param as $key => $value){
                 if(in_array($key, $this->schema['columns'])){
                     if($this->empty && $value == "") continue;
+                    if($this->group_bool) {
+                        if(!$this->group_index) $this->group_index = 1;
+                        else $this->sql .= " OR ";
+                    }else {
+                        $this->sql .= " OR ";
+                    }
 
-                    $this->sql .= " OR `{$key}` LIKE '%{$value}%'";
+                    $this->sql .= "`{$key}` LIKE '%{$value}%'";
                 }
             }
         }
@@ -317,7 +376,14 @@ class Model {
             if($second == "") throw new Exception("필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])) {
-                $this->sql .= " OR `{$first}` LIKE '%{$second}%'";
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " OR ";
+                }else {
+                    $this->sql .= " OR ";
+                }
+
+                $this->sql .= "`{$first}` LIKE '%{$second}%'";
             }
         }
     }

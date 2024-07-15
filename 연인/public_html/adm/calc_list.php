@@ -152,7 +152,7 @@ $helpers_re = arrReSort($helpers, 'total', 'desc');
             } // end for
             $type_total_count['total'] += $helpers_re[$i]['total'];
             ?>
-			<td><strong><?=number_format($helpers_re[$i]['total'])?></strong></td>
+			<td><strong><?=$helpers_re[$i]['total']?></strong></td>
 		</tr>
 		<?php } ?>
         
@@ -162,9 +162,9 @@ $helpers_re = arrReSort($helpers, 'total', 'desc');
         <tr class="total_rows">
             <td colspan="2">소개별 합계</td>
             <? for ($j = 0; $j < count($match_type_arr); $j++) { ?>
-            <td><?=number_format($type_total_count[$j])?></td>
+            <td><?=$type_total_count[$j]?></td>
             <? } ?>
-            <td><?=number_format($type_total_count['total'])?></td>
+            <td><?=$type_total_count['total']?></td>
         </tr>
 
         <?php
