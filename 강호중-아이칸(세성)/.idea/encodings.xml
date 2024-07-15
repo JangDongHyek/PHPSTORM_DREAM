@@ -4,8 +4,11 @@
     <file url="file://$PROJECT_DIR$/public_html/admin/good/board_frame3.html" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/admin/good/bonus.html" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/admin/good/item_add.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/api/bonus.php" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/connect.php" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/market/board_mem/board_list.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/board_mem/item_modify.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/market/board_mem/myinfo.html" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/market/board_mem/offer_pre.html" charset="x-windows-949" />
   </component>
 </project>
