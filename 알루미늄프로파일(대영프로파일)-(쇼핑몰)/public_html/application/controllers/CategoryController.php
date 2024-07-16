@@ -57,6 +57,7 @@ class CategoryController extends CI_Controller
             $filter = json_decode($filter,true);
 
             $filter["parent_idx"] = "";
+            if($_POST["visible"]) $filter["visible"] = $_POST["visible"];
 
             $datas = $this->CategoryModel->getsData(array("parent_idx" => ""),$filter);
 

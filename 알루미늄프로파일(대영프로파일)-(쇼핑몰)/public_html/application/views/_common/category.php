@@ -247,6 +247,7 @@
                     // var filter = JSON.parse(JSON.stringify(this.filter));
                     var objs = {
                         _method : method,
+                        visible : "true"
                         // filter : JSON.stringify(filter)
                     };
 

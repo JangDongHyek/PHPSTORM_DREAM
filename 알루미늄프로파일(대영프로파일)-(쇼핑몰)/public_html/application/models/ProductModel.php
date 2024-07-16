@@ -38,6 +38,22 @@ class ProductModel extends CI_Model
 		return $query->row_array() ?? array();
 	}
 
+	public function getData($filter) {
+        try {
+            $this->db->where($filter);
+            $this->db->order_by("prod_order","DESC");
+            $query = $this->db->get("bs_product");
+            $result = $query->result();
+
+
+            return $result;
+
+        } catch (Exception $e) {
+            log_message('error', $e->getMessage());
+            return false;
+        }
+    }
+
 	// 상품 목록
 	public function getProductList($param = array()): array
 	{

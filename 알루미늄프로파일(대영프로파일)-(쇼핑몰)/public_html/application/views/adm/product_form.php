@@ -241,7 +241,7 @@
 
                         this.cate1_idx = category_parent_index;
                         this.cate1 = category_parent;
-                        this.category_parent = category_parent_index;
+                        this.category_parent = category_parent_idx;
 
                         if(!this.data.category_child) return false;
 

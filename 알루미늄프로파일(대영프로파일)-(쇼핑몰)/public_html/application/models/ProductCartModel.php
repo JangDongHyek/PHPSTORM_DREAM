@@ -38,9 +38,11 @@ class ProductCartModel extends CI_Model
                         mb_id = ?, 
                         product_idx = ?,
                         product_cnt = ?, 
+                        cut_length = ?,
+                        processing_idx = ?,
                         reg_date = now()
                     ";
-                    $this->db->query($sql, [$cartData['add_cart_yn'], $cartData['memberId'], $idx, $productCnt[$key]]);
+                    $this->db->query($sql, [$cartData['add_cart_yn'], $cartData['memberId'], $idx, $productCnt[$key],$cartData['cut_length'],$cartData['processing_idx']]);
                     $idx = $this->db->insert_id();
                     $cartIdx[] = $idx;
                 }
@@ -77,7 +79,7 @@ class ProductCartModel extends CI_Model
 
         if(!empty($memberId)) $sqlCommon .= " AND A.mb_id = ? ";
 
-		$sql = "SELECT A.idx AS cart_idx, A.reg_date AS cart_date, A.product_cnt,
+		$sql = "SELECT A.idx AS cart_idx, A.reg_date AS cart_date, A.product_cnt, A.cut_length AS cut_length, A.processing_idx,
 			B.idx AS product_idx, B.prod_name, B.shipping_free_yn, B.file_name_list, B.pay_method_list, B.category, B.prod_price, B.soldout_yn 
 			FROM bs_product_cart A
 			INNER JOIN bs_product B ON A.product_idx = B.idx

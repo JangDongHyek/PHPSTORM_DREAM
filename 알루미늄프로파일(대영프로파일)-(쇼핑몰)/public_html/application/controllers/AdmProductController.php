@@ -69,6 +69,31 @@ class AdmProductController extends CI_Controller
         echo json_encode($response);
     }
 
+    public function getData2() {
+        $response = array("message" => "");
+
+        // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
+        $filter = str_replace('\\','',$_POST['filter']);
+        $filter = json_decode($filter,true);
+
+        $this->load->model('ProductModel');
+        $this->load->model('CategoryModel');
+
+        $productData = $this->ProductModel->getData($filter);
+
+        foreach ($productData as $data) {
+            $data->categoryChild = $this->CategoryModel->getsData(array("idx" => $data->category_child))[0];
+            $data->categoryParent = $this->CategoryModel->getsData(array("idx" => $data->category_parent))[0];
+        }
+
+
+
+        $response['data'] = $productData;
+        $response['success'] = true;
+
+        echo json_encode($response);
+    }
+
     // 상품 등록/수정 폼
     public function admProductForm($idx = 0)
     {

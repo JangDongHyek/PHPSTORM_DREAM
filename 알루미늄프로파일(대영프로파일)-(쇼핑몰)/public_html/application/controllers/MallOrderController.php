@@ -136,6 +136,8 @@ class MallOrderController extends CI_Controller {
 				'item_name' => $post['productName'][$pIdx],
 				'item_price' => (int)$post['productPrice'][$pIdx],
 				'item_cnt' => (int)$post['productCnt'][$pIdx],
+                'cut_length' => (int)$post['cut_length'][$pIdx],
+                'processing_idx' => (int)$post['processing_idx'][$pIdx],
 				'mb_id' => $memberId,
 			];
 			$itemName[] = $post['productName'][$pIdx];
@@ -159,6 +161,12 @@ class MallOrderController extends CI_Controller {
 		// 추가배송비 관련부분 wc
         $this->load->model("OrderModel");
         $delivery_fee2 = $this->OrderModel->getOrderSendCost2($post['recZcode']);
+
+        //sms
+        if($payMethod == "CASH") {
+            $memberId = $this->session->userdata('member')['mb_id'];
+            goSms($this->session->userdata('member')['mb_hp'],"01062536060","{$post['ordName']} 고객님 주문접수 되었습니다.");
+        }
 
 		$orderData = [
 			'tmp_save_yn' => $tmpSaveYn,

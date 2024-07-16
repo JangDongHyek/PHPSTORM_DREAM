@@ -91,6 +91,11 @@ class CommonPaymentController extends CI_Controller
 			redirect(PROJECT_URL . '/paymentFailed?msg=' . urlencode($redirectErrorMessage));
 		} else {
 			// 결제성공 페이지로 이동
+            //sms
+            // 주문정보
+            $this->load->model('OrderModel');
+            $order = $this->OrderModel->getOrderInfoByOrdNo($orderNo);
+            goSms($order['ord_tel'],"01062536060","{$order['ord_name']} 고객님 주문접수 되었습니다.");
 			redirect(PROJECT_URL . '/paymentSuccess?no=' . $orderNo);
 		}
 
@@ -120,6 +125,8 @@ class CommonPaymentController extends CI_Controller
 			'order' => $order,
 			'payment' => $this->PaymentModel->getPaymentInfoByOrdNo($orderNo),
 		];
+
+
 
 		render('mall/payment_success', $data);
 	}

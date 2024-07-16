@@ -55,7 +55,7 @@
                 <template v-for="item in datas">
                     <tr>
                         <td>
-                            <a @click="select_category = item.idx == select_category ? '' : item.idx" v-if="item.childs.length > 0">{{item.name}}</a>
+                            <a @click="select_category = item.idx == select_category ? '' : item.idx">{{item.name}}</a>
                             <span v-if="item.childs.length>0">[{{item.childs.length}}]</span>
                         </td>
                         <td>
@@ -75,7 +75,7 @@
                     </tr>
 
                     <template v-for="item2 in item.childs" v-if="select_category == item.idx">
-                        <tr>
+                        <tr style="background-color : lightblue">
                             <td>
                                 ({{item.name}}) -> {{item2.name}}
                             </td>

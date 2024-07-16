@@ -1,7 +1,7 @@
 <div id="order_sheet">
     <? include_once VIEWPATH . '_common/navigator.php'; // 상단메뉴 ?>
 
-	<form name="order">
+	<form name="order" id="app">
 	<div class="vertical_wrap">
 		<div class="list_wrap">
 			<?/*
@@ -51,7 +51,10 @@
 								foreach ($listData as $list) {
 									$price = (int)$list['prod_price']; // 상품가격
 									$count = (int)$list['product_cnt']; // 장바구니수량
-									$itemAmt = $price * $count;
+                                    $cut_length = (int)$list['cut_length'];
+                                    $processing_idx = (int)$list['processing_idx'];
+
+									$itemAmt = ($price * ($cut_length / 1000)) * $count + 330;
 
 									$subtotalPrice += $itemAmt;
 
@@ -88,6 +91,8 @@
 									<input type="hidden" name="productName[<?=$uid?>]" value="<?=$list['prod_name']?>"/>
 									<input type="hidden" name="productPrice[<?=$uid?>]" value="<?=$price?>"/>
 									<input type="hidden" name="productCnt[<?=$uid?>]" value="<?=$count?>"/>
+                                    <input type="hidden" name="cut_length[<?=$uid?>]" value="<?=$cut_length?>"/>
+                                    <input type="hidden" name="processing_idx[<?=$uid?>]" value="<?=$processing_idx?>"/>
 									<? // 장바구니 인덱스 ?>
 									<input type="hidden" name="cartIdx[]" value="<?=$list['cart_idx']?>"/>
                                 </li>
@@ -247,7 +252,7 @@
 				$discountPrice = 0;
 
 				// 결제금액
-				$totalPrice = $orderPrice - $discountPrice;
+				$totalPrice = (int)$orderPrice - (int)$discountPrice;
 
 				?>
 				<input type="hidden" name="subtotalPrice" value="<?=$subtotalPrice?>"/><!--상품금액-->

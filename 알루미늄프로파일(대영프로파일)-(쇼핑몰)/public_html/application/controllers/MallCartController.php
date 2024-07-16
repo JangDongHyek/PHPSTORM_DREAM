@@ -35,6 +35,8 @@ class MallCartController extends CI_Controller
             'memberId' => $this->session->userdata('member')['mb_id'],
             'product_idx' => $post['productIdx'],
             'product_cnt' => $post['productCnt'],
+            'cut_length' => $post['cut_length2'],
+            'processing_idx' => $post['processing_idx'],
         ];
 
         // 장바구니 등록
