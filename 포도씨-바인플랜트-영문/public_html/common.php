@@ -1,0 +1,1042 @@
+<?php
+/*******************************************************************************
+** 공통 변수, 상수, 코드
+*******************************************************************************/
+error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING );
+
+// 보안설정이나 프레임이 달라도 쿠키가 통하도록 설정
+header('P3P: CP="ALL CURa ADMa DEVa TAIa OUR BUS IND PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA POL HEA PRE LOC OTC"');
+
+if (!defined('G5_SET_TIME_LIMIT')) define('G5_SET_TIME_LIMIT', 0);
+@set_time_limit(G5_SET_TIME_LIMIT);
+
+
+//==========================================================================================================================
+// extract($_GET); 명령으로 인해 page.php?_POST[var1]=data1&_POST[var2]=data2 와 같은 코드가 _POST 변수로 사용되는 것을 막음
+// 081029 : letsgolee 님께서 도움 주셨습니다.
+//--------------------------------------------------------------------------------------------------------------------------
+$ext_arr = array ('PHP_SELF', '_ENV', '_GET', '_POST', '_FILES', '_SERVER', '_COOKIE', '_SESSION', '_REQUEST',
+                  'HTTP_ENV_VARS', 'HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_POST_FILES', 'HTTP_SERVER_VARS',
+                  'HTTP_COOKIE_VARS', 'HTTP_SESSION_VARS', 'GLOBALS');
+$ext_cnt = count($ext_arr);
+for ($i=0; $i<$ext_cnt; $i++) {
+    // POST, GET 으로 선언된 전역변수가 있다면 unset() 시킴
+    if (isset($_GET[$ext_arr[$i]]))  unset($_GET[$ext_arr[$i]]);
+    if (isset($_POST[$ext_arr[$i]])) unset($_POST[$ext_arr[$i]]);
+}
+//==========================================================================================================================
+
+
+function g5_path()
+{
+    $result['path'] = str_replace('\\', '/', dirname(__FILE__));
+    $tilde_remove = preg_replace('/^\/\~[^\/]+(.*)$/', '$1', $_SERVER['SCRIPT_NAME']);
+    $document_root = str_replace($tilde_remove, '', $_SERVER['SCRIPT_FILENAME']);
+    $root = str_replace($document_root, '', $result['path']);
+    $port = $_SERVER['SERVER_PORT'] != 80 ? ':'.$_SERVER['SERVER_PORT'] : '';
+    $http = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? 's' : '') . '://';
+    $user = str_replace(str_replace($document_root, '', $_SERVER['SCRIPT_FILENAME']), '', $_SERVER['SCRIPT_NAME']);
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+    if(isset($_SERVER['HTTP_HOST']) && preg_match('/:[0-9]+$/', $host))
+        $host = preg_replace('/:[0-9]+$/', '', $host);
+    $result['url'] = $http.$host.$port.$user.$root;
+    return $result;
+}
+
+$g5_path = g5_path();
+
+include_once($g5_path['path'].'/config.php');   // 설정 파일
+
+unset($g5_path);
+
+
+// multi-dimensional array에 사용자지정 함수적용
+function array_map_deep($fn, $array)
+{
+    if(is_array($array)) {
+        foreach($array as $key => $value) {
+            if(is_array($value)) {
+                $array[$key] = array_map_deep($fn, $value);
+            } else {
+                $array[$key] = call_user_func($fn, $value);
+            }
+        }
+    } else {
+        $array = call_user_func($fn, $array);
+    }
+
+    return $array;
+}
+
+
+// SQL Injection 대응 문자열 필터링
+function sql_escape_string($str)
+{
+    if(defined('G5_ESCAPE_PATTERN') && defined('G5_ESCAPE_REPLACE')) {
+        $pattern = G5_ESCAPE_PATTERN;
+        $replace = G5_ESCAPE_REPLACE;
+
+        if($pattern)
+            $str = preg_replace($pattern, $replace, $str);
+    }
+
+    $str = call_user_func('addslashes', $str);
+
+    return $str;
+}
+
+
+//==============================================================================
+// SQL Injection 등으로 부터 보호를 위해 sql_escape_string() 적용
+//------------------------------------------------------------------------------
+// magic_quotes_gpc 에 의한 backslashes 제거
+if (get_magic_quotes_gpc()) {
+    $_POST    = array_map_deep('stripslashes',  $_POST);
+    $_GET     = array_map_deep('stripslashes',  $_GET);
+    $_COOKIE  = array_map_deep('stripslashes',  $_COOKIE);
+    $_REQUEST = array_map_deep('stripslashes',  $_REQUEST);
+}
+
+// sql_escape_string 적용
+$_POST    = array_map_deep(G5_ESCAPE_FUNCTION,  $_POST);
+$_GET     = array_map_deep(G5_ESCAPE_FUNCTION,  $_GET);
+$_COOKIE  = array_map_deep(G5_ESCAPE_FUNCTION,  $_COOKIE);
+$_REQUEST = array_map_deep(G5_ESCAPE_FUNCTION,  $_REQUEST);
+//==============================================================================
+
+
+// PHP 4.1.0 부터 지원됨
+// php.ini 의 register_globals=off 일 경우
+@extract($_GET);
+@extract($_POST);
+@extract($_SERVER);
+
+
+// 완두콩님이 알려주신 보안관련 오류 수정
+// $member 에 값을 직접 넘길 수 있음
+$config = array();
+$member = array();
+$board  = array();
+$group  = array();
+$g5     = array();
+
+
+//==============================================================================
+// 공통
+//------------------------------------------------------------------------------
+$dbconfig_file = G5_DATA_PATH.'/'.G5_DBCONFIG_FILE;
+if (file_exists($dbconfig_file)) {
+    include_once($dbconfig_file);
+    include_once(G5_LIB_PATH.'/common.lib.php');    // 공통 라이브러리
+
+    $connect_db = sql_connect(G5_MYSQL_HOST, G5_MYSQL_USER, G5_MYSQL_PASSWORD) or die('MySQL Connect Error!!!');
+    $select_db  = sql_select_db(G5_MYSQL_DB, $connect_db) or die('MySQL DB Error!!!');
+
+    // mysql connect resource $g5 배열에 저장 - 명랑폐인님 제안
+    $g5['connect_db'] = $connect_db;
+
+    sql_set_charset('utf8mb4', $connect_db); // utf8 ==> utf8mb4로 변경 (이모지 사용 때문)
+    if(defined('G5_MYSQL_SET_MODE') && G5_MYSQL_SET_MODE) sql_query("SET SESSION sql_mode = ''");
+    if (defined(G5_TIMEZONE)) sql_query(" set time_zone = '".G5_TIMEZONE."'");
+} else {
+?>
+
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>오류! <?php echo G5_VERSION ?> 설치하기</title>
+<link rel="stylesheet" href="install/install.css">
+</head>
+<body>
+
+<div id="ins_bar">
+    <span id="bar_img">GNUBOARD5</span>
+    <span id="bar_txt">Message</span>
+</div>
+<h1>그누보드5를 먼저 설치해주십시오.</h1>
+<div class="ins_inner">
+    <p>다음 파일을 찾을 수 없습니다.</p>
+    <ul>
+        <li><strong><?php echo G5_DATA_DIR.'/'.G5_DBCONFIG_FILE ?></strong></li>
+    </ul>
+    <p>그누보드 설치 후 다시 실행하시기 바랍니다.</p>
+    <div class="inner_btn">
+        <a href="<?php echo G5_URL; ?>/install/"><?php echo G5_VERSION ?> 설치하기</a>
+    </div>
+</div>
+<div id="ins_ft">
+    <strong>GNUBOARD5</strong>
+    <p>GPL! OPEN SOURCE GNUBOARD</p>
+</div>
+
+</body>
+</html>
+
+<?php
+    exit;
+}
+//==============================================================================
+
+
+//==============================================================================
+// SESSION 설정
+//------------------------------------------------------------------------------
+@ini_set("session.use_trans_sid", 0);    // PHPSESSID를 자동으로 넘기지 않음
+@ini_set("url_rewriter.tags",""); // 링크에 PHPSESSID가 따라다니는것을 무력화함 (해뜰녘님께서 알려주셨습니다.)
+
+session_save_path(G5_SESSION_PATH);
+
+if (isset($SESSION_CACHE_LIMITER))
+    @session_cache_limiter($SESSION_CACHE_LIMITER);
+else
+    @session_cache_limiter("no-cache, must-revalidate");
+
+ini_set("session.cache_expire", 180); // 세션 캐쉬 보관시간 (분)
+ini_set("session.gc_maxlifetime", 10800); // session data의 garbage collection 존재 기간을 지정 (초)
+ini_set("session.gc_probability", 1); // session.gc_probability는 session.gc_divisor와 연계하여 gc(쓰레기 수거) 루틴의 시작 확률을 관리합니다. 기본값은 1입니다. 자세한 내용은 session.gc_divisor를 참고하십시오.
+ini_set("session.gc_divisor", 100); // session.gc_divisor는 session.gc_probability와 결합하여 각 세션 초기화 시에 gc(쓰레기 수거) 프로세스를 시작할 확률을 정의합니다. 확률은 gc_probability/gc_divisor를 사용하여 계산합니다. 즉, 1/100은 각 요청시에 GC 프로세스를 시작할 확률이 1%입니다. session.gc_divisor의 기본값은 100입니다.
+
+session_set_cookie_params(0, '/');
+ini_set("session.cookie_domain", G5_COOKIE_DOMAIN);
+
+@session_start();
+//==============================================================================
+
+
+//==============================================================================
+// 공용 변수
+//------------------------------------------------------------------------------
+// 기본환경설정
+// 기본적으로 사용하는 필드만 얻은 후 상황에 따라 필드를 추가로 얻음
+$config = sql_fetch(" select * from {$g5['config_table']} ");
+
+define('G5_HTTP_BBS_URL',  https_url(G5_BBS_DIR, false));
+define('G5_HTTPS_BBS_URL', https_url(G5_BBS_DIR, true));
+if ($config['cf_editor'])
+    define('G5_EDITOR_LIB', G5_EDITOR_PATH."/{$config['cf_editor']}/editor.lib.php");
+else
+    define('G5_EDITOR_LIB', G5_LIB_PATH."/editor.lib.php");
+
+// 4.00.03 : [보안관련] PHPSESSID 가 틀리면 로그아웃한다.
+if (isset($_REQUEST['PHPSESSID']) && $_REQUEST['PHPSESSID'] != session_id())
+    goto_url(G5_BBS_URL.'/logout.php');
+
+// QUERY_STRING
+$qstr = '';
+
+if (isset($_REQUEST['sca']))  {
+    $sca = clean_xss_tags(trim($_REQUEST['sca']));
+    if ($sca) {
+        $sca = preg_replace("/[\<\>\'\"\\\'\\\"\%\=\(\)]/", "", $sca);
+        $qstr .= '&amp;sca=' . urlencode($sca);
+    }
+} else {
+    $sca = '';
+}
+
+if (isset($_REQUEST['sfl']))  {
+    $sfl = trim($_REQUEST['sfl']);
+    $sfl = preg_replace("/[\<\>\'\"\\\'\\\"\%\=\(\)\s]/", "", $sfl);
+    if ($sfl)
+        $qstr .= '&amp;sfl=' . urlencode($sfl); // search field (검색 필드)
+} else {
+    $sfl = '';
+}
+
+
+if (isset($_REQUEST['stx']))  { // search text (검색어)
+    $stx = get_search_string(trim($_REQUEST['stx']));
+    if ($stx)
+        $qstr .= '&amp;stx=' . urlencode(cut_str($stx, 20, ''));
+} else {
+    $stx = '';
+}
+
+if (isset($_REQUEST['sst']))  {
+    $sst = trim($_REQUEST['sst']);
+    $sst = preg_replace("/[\<\>\'\"\\\'\\\"\%\=\(\)\s]/", "", $sst);
+    if ($sst)
+        $qstr .= '&amp;sst=' . urlencode($sst); // search sort (검색 정렬 필드)
+} else {
+    $sst = '';
+}
+
+if (isset($_REQUEST['sod']))  { // search order (검색 오름, 내림차순)
+    $sod = preg_match("/^(asc|desc)$/i", $sod) ? $sod : '';
+    if ($sod)
+        $qstr .= '&amp;sod=' . urlencode($sod);
+} else {
+    $sod = '';
+}
+
+if (isset($_REQUEST['sop']))  { // search operator (검색 or, and 오퍼레이터)
+    $sop = preg_match("/^(or|and)$/i", $sop) ? $sop : '';
+    if ($sop)
+        $qstr .= '&amp;sop=' . urlencode($sop);
+} else {
+    $sop = '';
+}
+
+if (isset($_REQUEST['spt']))  { // search part (검색 파트[구간])
+    $spt = (int)$spt;
+    if ($spt)
+        $qstr .= '&amp;spt=' . urlencode($spt);
+} else {
+    $spt = '';
+}
+
+if (isset($_REQUEST['page'])) { // 리스트 페이지
+    $page = (int)$_REQUEST['page'];
+    if ($page)
+        $qstr .= '&amp;page=' . urlencode($page);
+} else {
+    $page = '';
+}
+
+if (isset($_REQUEST['w'])) {
+    $w = substr($w, 0, 2);
+} else {
+    $w = '';
+}
+
+if (isset($_REQUEST['wr_id'])) {
+    $wr_id = (int)$_REQUEST['wr_id'];
+} else {
+    $wr_id = 0;
+}
+
+if (isset($_REQUEST['bo_table'])) {
+    $bo_table = preg_replace('/[^a-z0-9_]/i', '', trim($_REQUEST['bo_table']));
+    $bo_table = substr($bo_table, 0, 20);
+} else {
+    $bo_table = '';
+}
+
+// URL ENCODING
+if (isset($_REQUEST['url'])) {
+    $url = strip_tags(trim($_REQUEST['url']));
+    $urlencode = urlencode($url);
+} else {
+    $url = '';
+    $urlencode = urlencode($_SERVER['REQUEST_URI']);
+    if (G5_DOMAIN) {
+        $p = @parse_url(G5_DOMAIN);
+        $urlencode = G5_DOMAIN.urldecode(preg_replace("/^".urlencode($p['path'])."/", "", $urlencode));
+    }
+}
+
+if (isset($_REQUEST['gr_id'])) {
+    if (!is_array($_REQUEST['gr_id'])) {
+        $gr_id = preg_replace('/[^a-z0-9_]/i', '', trim($_REQUEST['gr_id']));
+    }
+} else {
+    $gr_id = '';
+}
+//===================================
+
+// 자동로그인
+if ($app_mb_id != "") {
+    $mb = get_member($app_mb_id, 'mb_id, mb_datetime');
+    if ($mb) {
+        // 회원아이디 세션 생성
+        set_session('ss_mb_id', $mb['mb_id']);
+        // FLASH XSS 공격에 대응하기 위하여 회원의 고유키를 생성해 놓는다. 관리자에서 검사함 - 110106
+        set_session('ss_mb_key', md5($mb['mb_datetime'] . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']));
+    }
+}
+
+// 자동로그인 부분에서 첫로그인에 포인트 부여하던것을 로그인중일때로 변경하면서 코드도 대폭 수정하였습니다.
+if ($_SESSION['ss_mb_id']) { // 로그인중이라면
+    $member = get_member($_SESSION['ss_mb_id']);
+
+    // 차단된 회원이면 ss_mb_id 초기화
+    if($member['mb_intercept_date'] && $member['mb_intercept_date'] <= date("Ymd", G5_SERVER_TIME)) {
+        set_session('ss_mb_id', '');
+        $member = array();
+    } else {
+        // 오늘 처음 로그인 이라면
+        if (substr($member['mb_today_login'], 0, 10) != G5_TIME_YMD) {
+            // ==마지막 접속일로부터 90일 지나면 보너스 포인트 삭제
+            if($member['mb_bunker_bonus'] != 0) {
+                $timestamp = strtotime(substr($member['mb_today_login'], 0, 10) . " +90 days");
+                $expire_date = date('Y-m-d', $timestamp);
+
+                if($expire_date < G5_TIME_YMD) { // 90일 초과
+                    sql_query(" update g5_member set mb_bunker_bonus = 0 where mb_id = '{$member['mb_id']}' ");
+                    sql_query(" insert into g5_bunker_history set mb_id = '{$member['mb_id']}', mode = '차감', bunker = '{$member['mb_bunker_bonus']}', bonus_remain = 0, contents = '보너스 벙커 유효기간 만료', wr_datetime = '".G5_TIME_YMDHIS."', etc = 'bonus' ");
+                }
+            }
+            // ==//마지막 접속일로부터 90일 지나면 보너스 포인트 삭제
+
+            // 첫 로그인 포인트 지급
+            insert_point($member['mb_id'], $config['cf_login_point'], G5_TIME_YMD.' 첫로그인', '@login', $member['mb_id'], G5_TIME_YMD);
+
+            // 오늘의 로그인이 될 수도 있으며 마지막 로그인일 수도 있음
+            // 해당 회원의 접근일시와 IP 를 저장
+            $sql = " update {$g5['member_table']} set mb_today_login = '".G5_TIME_YMDHIS."', mb_login_ip = '{$_SERVER['REMOTE_ADDR']}' where mb_id = '{$member['mb_id']}' ";
+            sql_query($sql);
+        }
+    }
+} else {
+    // 자동로그인 ---------------------------------------
+    // 회원아이디가 쿠키에 저장되어 있다면 (3.27)
+    if ($tmp_mb_id = get_cookie('ck_mb_id')) {
+
+        //$tmp_mb_id = substr(preg_replace("/[^a-zA-Z0-9_]*/", "", $tmp_mb_id), 0, 20);
+        // 최고관리자는 자동로그인 금지
+        if (strtolower($tmp_mb_id) != strtolower($config['cf_admin'])) {
+            $sql = " select mb_password, mb_intercept_date, mb_leave_date, mb_email_certify from {$g5['member_table']} where mb_id = '{$tmp_mb_id}' ";
+            $row = sql_fetch($sql);
+
+            //$key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $row['mb_password']);
+			$key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $row['mb_password']);
+
+            // 쿠키에 저장된 키와 같다면
+            $tmp_key = get_cookie('ck_auto');
+            if ($tmp_key == $key && $tmp_key) {
+                // 차단, 탈퇴가 아니고 메일인증이 사용이면서 인증을 받았다면
+                if ($row['mb_intercept_date'] == '' &&
+                    $row['mb_leave_date'] == '' &&
+                    (!$config['cf_use_email_certify'] || preg_match('/[1-9]/', $row['mb_email_certify'])) ) {
+                    // 세션에 회원아이디를 저장하여 로그인으로 간주
+                    set_session('ss_mb_id', $tmp_mb_id);
+
+                    // ==마지막 접속일로부터 90일 지나면 보너스 포인트 삭제
+                    $member = get_member($_SESSION['ss_mb_id']);
+                    if (substr($member['mb_today_login'], 0, 10) != G5_TIME_YMD && $member['mb_bunker_bonus'] != 0) {
+                        $timestamp = strtotime(substr($member['mb_today_login'], 0, 10) . " +90 days");
+                        $expire_date = date('Y-m-d', $timestamp);
+
+                        if($expire_date < G5_TIME_YMD) { // 90일 초과
+                            sql_query(" update g5_member set mb_bunker_bonus = 0 where mb_id = '{$member['mb_id']}' ");
+                            sql_query(" insert into g5_bunker_history set mb_id = '{$member['mb_id']}', mode = '차감', bunker = '{$member['mb_bunker_bonus']}', bonus_remain = 0, contents = '보너스 벙커 유효기간 만료', wr_datetime = '".G5_TIME_YMDHIS."', etc = 'bonus' ");
+                        }
+                        // ==//마지막 접속일로부터 90일 지나면 보너스 포인트 삭제
+                    }
+
+                    // 페이지를 재실행
+                    echo "<script type='text/javascript'> window.location.reload(); </script>";
+                    exit;
+                }
+            }
+            // $row 배열변수 해제
+            unset($row);
+        }
+    }
+    // 자동로그인 end ---------------------------------------
+}
+
+
+$write = array();
+$write_table = "";
+if ($bo_table) {
+    $board = sql_fetch(" select * from {$g5['board_table']} where bo_table = '$bo_table' ");
+    if ($board['bo_table']) {
+        set_cookie("ck_bo_table", $board['bo_table'], 86400 * 1);
+        $gr_id = $board['gr_id'];
+        $write_table = $g5['write_prefix'] . $bo_table; // 게시판 테이블 전체이름
+        //$comment_table = $g5['write_prefix'] . $bo_table . $g5['comment_suffix']; // 코멘트 테이블 전체이름
+        if (isset($wr_id) && $wr_id)
+            $write = sql_fetch(" select * from $write_table where wr_id = '$wr_id' ");
+    }
+}
+
+if ($gr_id) {
+    $group = sql_fetch(" select * from {$g5['group_table']} where gr_id = '$gr_id' ");
+}
+
+
+// 회원, 비회원 구분
+$is_member = $is_guest = false;
+$is_admin = '';
+if ($member['mb_id']) {
+    $is_member = true;
+    $is_admin = is_admin($member['mb_id']);
+    $member['mb_dir'] = substr($member['mb_id'],0,2);
+} else {
+    $is_guest = true;
+    $member['mb_id'] = '';
+    $member['mb_level'] = 1; // 비회원의 경우 회원레벨을 가장 낮게 설정
+}
+
+
+if ($is_admin != 'super') {
+    // 접근가능 IP
+    $cf_possible_ip = trim($config['cf_possible_ip']);
+    if ($cf_possible_ip) {
+        $is_possible_ip = false;
+        $pattern = explode("\n", $cf_possible_ip);
+        for ($i=0; $i<count($pattern); $i++) {
+            $pattern[$i] = trim($pattern[$i]);
+            if (empty($pattern[$i]))
+                continue;
+
+            $pattern[$i] = str_replace(".", "\.", $pattern[$i]);
+            $pattern[$i] = str_replace("+", "[0-9\.]+", $pattern[$i]);
+            $pat = "/^{$pattern[$i]}$/";
+            $is_possible_ip = preg_match($pat, $_SERVER['REMOTE_ADDR']);
+            if ($is_possible_ip)
+                break;
+        }
+        if (!$is_possible_ip)
+            die ("접근이 가능하지 않습니다.");
+    }
+
+    // 접근차단 IP
+    $is_intercept_ip = false;
+    $pattern = explode("\n", trim($config['cf_intercept_ip']));
+    for ($i=0; $i<count($pattern); $i++) {
+        $pattern[$i] = trim($pattern[$i]);
+        if (empty($pattern[$i]))
+            continue;
+
+        $pattern[$i] = str_replace(".", "\.", $pattern[$i]);
+        $pattern[$i] = str_replace("+", "[0-9\.]+", $pattern[$i]);
+        $pat = "/^{$pattern[$i]}$/";
+        $is_intercept_ip = preg_match($pat, $_SERVER['REMOTE_ADDR']);
+        if ($is_intercept_ip)
+            die ("접근 불가합니다.");
+    }
+}
+
+
+// 테마경로
+if(defined('_THEME_PREVIEW_') && _THEME_PREVIEW_ === true)
+    $config['cf_theme'] = trim($_GET['theme']);
+
+if(isset($config['cf_theme']) && trim($config['cf_theme'])) {
+    $theme_path = G5_PATH.'/'.G5_THEME_DIR.'/'.$config['cf_theme'];
+    if(is_dir($theme_path)) {
+        define('G5_THEME_PATH',        $theme_path);
+        define('G5_THEME_URL',         G5_URL.'/'.G5_THEME_DIR.'/'.$config['cf_theme']);
+        define('G5_THEME_MOBILE_PATH', $theme_path.'/'.G5_MOBILE_DIR);
+        define('G5_THEME_LIB_PATH',    $theme_path.'/'.G5_LIB_DIR);
+        define('G5_THEME_CSS_URL',     G5_THEME_URL.'/'.G5_CSS_DIR);
+        define('G5_THEME_IMG_URL',     G5_THEME_URL.'/'.G5_IMG_DIR);
+        define('G5_THEME_JS_URL',      G5_THEME_URL.'/'.G5_JS_DIR);
+    }
+    unset($theme_path);
+}
+
+
+// 테마 설정 로드
+if(is_file(G5_THEME_PATH.'/theme.config.php'))
+    include_once(G5_THEME_PATH.'/theme.config.php');
+
+//=====================================================================================
+// 사용기기 설정
+// 테마의 G5_THEME_DEVICE 설정에 따라 사용자 화면 제한됨
+// 테마에 별도 설정이 없는 경우 config.php G5_SET_DEVICE 설정에 따라 사용자 화면 제한됨
+// pc 설정 시 모바일 기기에서도 PC화면 보여짐
+// mobile 설정 시 PC에서도 모바일화면 보여짐
+// both 설정 시 접속 기기에 따른 화면 보여짐
+//-------------------------------------------------------------------------------------
+$is_mobile = false;
+$set_device = true;
+
+if(defined('G5_THEME_DEVICE') && G5_THEME_DEVICE != '') {
+    switch(G5_THEME_DEVICE) {
+        case 'pc':
+            $is_mobile  = false;
+            $set_device = false;
+            break;
+        case 'mobile':
+            $is_mobile  = true;
+            $set_device = false;
+            break;
+        default:
+            break;
+    }
+}
+
+if(defined('G5_SET_DEVICE') && $set_device) {
+    switch(G5_SET_DEVICE) {
+        case 'pc':
+            $is_mobile  = false;
+            $set_device = false;
+            break;
+        case 'mobile':
+            $is_mobile  = true;
+            $set_device = false;
+            break;
+        default:
+            break;
+    }
+}
+//==============================================================================
+
+//==============================================================================
+// Mobile 모바일 설정
+// 쿠키에 저장된 값이 모바일이라면 브라우저 상관없이 모바일로 실행
+// 그렇지 않다면 브라우저의 HTTP_USER_AGENT 에 따라 모바일 결정
+// G5_MOBILE_AGENT : config.php 에서 선언
+//------------------------------------------------------------------------------
+if (G5_USE_MOBILE && $set_device) {
+    if ($_REQUEST['device']=='pc')
+        $is_mobile = false;
+    else if ($_REQUEST['device']=='mobile')
+        $is_mobile = true;
+    else if (isset($_SESSION['ss_is_mobile']))
+        $is_mobile = $_SESSION['ss_is_mobile'];
+    else if (is_mobile())
+        $is_mobile = true;
+} else {
+    $set_device = false;
+}
+
+$_SESSION['ss_is_mobile'] = $is_mobile;
+define('G5_IS_MOBILE', $is_mobile);
+define('G5_DEVICE_BUTTON_DISPLAY', $set_device);
+if (G5_IS_MOBILE) {
+    $g5['mobile_path'] = G5_PATH.'/'.$g5['mobile_dir'];
+}
+//==============================================================================
+
+
+//==============================================================================
+// 스킨경로
+//------------------------------------------------------------------------------
+if (G5_IS_MOBILE) {
+    $board_skin_path    = get_skin_path('board', $board['bo_mobile_skin']);
+    $board_skin_url     = get_skin_url('board', $board['bo_mobile_skin']);
+    $member_skin_path   = get_skin_path('member', $config['cf_mobile_member_skin']);
+    $member_skin_url    = get_skin_url('member', $config['cf_mobile_member_skin']);
+    $new_skin_path      = get_skin_path('new', $config['cf_mobile_new_skin']);
+    $new_skin_url       = get_skin_url('new', $config['cf_mobile_new_skin']);
+    $search_skin_path   = get_skin_path('search', $config['cf_mobile_search_skin']);
+    $search_skin_url    = get_skin_url('search', $config['cf_mobile_search_skin']);
+    $connect_skin_path  = get_skin_path('connect', $config['cf_mobile_connect_skin']);
+    $connect_skin_url   = get_skin_url('connect', $config['cf_mobile_connect_skin']);
+    $faq_skin_path      = get_skin_path('faq', $config['cf_mobile_faq_skin']);
+    $faq_skin_url       = get_skin_url('faq', $config['cf_mobile_faq_skin']);
+} else {
+    $board_skin_path    = get_skin_path('board', $board['bo_skin']);
+    $board_skin_url     = get_skin_url('board', $board['bo_skin']);
+    $member_skin_path   = get_skin_path('member', $config['cf_member_skin']);
+    $member_skin_url    = get_skin_url('member', $config['cf_member_skin']);
+    $new_skin_path      = get_skin_path('new', $config['cf_new_skin']);
+    $new_skin_url       = get_skin_url('new', $config['cf_new_skin']);
+    $search_skin_path   = get_skin_path('search', $config['cf_search_skin']);
+    $search_skin_url    = get_skin_url('search', $config['cf_search_skin']);
+    $connect_skin_path  = get_skin_path('connect', $config['cf_connect_skin']);
+    $connect_skin_url   = get_skin_url('connect', $config['cf_connect_skin']);
+    $faq_skin_path      = get_skin_path('faq', $config['cf_faq_skin']);
+    $faq_skin_url       = get_skin_url('faq', $config['cf_faq_skin']);
+}
+//==============================================================================
+
+//==============================================================================
+// 포도씨
+//------------------------------------------------------------------------------
+define('G5_CSS_VER', 0.11);
+define('G5_JS_VER', 0.4);
+
+// 방문자수의 접속을 남김
+//include_once(G5_BBS_PATH.'/visit_insert.inc.php');
+
+
+// 일정 기간이 지난 DB 데이터 삭제 및 최적화
+include_once(G5_BBS_PATH.'/db_table.optimize.php');
+
+
+// common.php 파일을 수정할 필요가 없도록 확장합니다.
+$extend_file = array();
+$tmp = dir(G5_EXTEND_PATH);
+while ($entry = $tmp->read()) {
+    // php 파일만 include 함
+    if (preg_match("/(\.php)$/i", $entry))
+        $extend_file[] = $entry;
+}
+
+if(!empty($extend_file) && is_array($extend_file)) {
+    natsort($extend_file);
+
+    foreach($extend_file as $file) {
+        include_once(G5_EXTEND_PATH.'/'.$file);
+    }
+}
+unset($extend_file);
+
+ob_start();
+
+// 자바스크립트에서 go(-1) 함수를 쓰면 폼값이 사라질때 해당 폼의 상단에 사용하면
+// 캐쉬의 내용을 가져옴. 완전한지는 검증되지 않음
+header('Content-Type: text/html; charset=utf-8');
+$gmnow = gmdate('D, d M Y H:i:s') . ' GMT';
+header('Expires: 0'); // rfc2616 - Section 14.21
+header('Last-Modified: ' . $gmnow);
+header('Cache-Control: no-store, no-cache, must-revalidate'); // HTTP/1.1
+header('Cache-Control: pre-check=0, post-check=0, max-age=0'); // HTTP/1.1
+header('Pragma: no-cache'); // HTTP/1.0
+
+$html_process = new html_process();
+
+//ip 본인의 아이피
+$ip       = $_SERVER['REMOTE_ADDR'];
+
+// 일반회원 비즈니스 활동 분야
+$business_active_list = array(
+	1 => 'University student, job seeker', //대학생, 취업준비생
+	2 => 'Shipyard', //조선소
+	3 => 'Plant, offshore', //플랜트, 오프쇼어
+	4 => 'Shipping, harbors, logistics', //해운, 항만, 물류
+	5 => 'Shipowner, shipper', //선주, 선사
+	6 => 'Ship classification, related organization and/or group', //선급, 유관기관 및 단체
+	7 => 'Marine officer (navigator, engineer)', //해기사 (항해, 기관)
+	8 => 'Marine equipment', //조선 해양 기자재
+	9 => 'Ship management, Ship repair', //선박관리, 선박수리
+	10 => 'Fishery', //수산 (Fishery)
+	11 => 'Yacht, maritime leisure', //요트, 해양 레저
+	12 => 'Ship supplies', //선용품
+	13 => 'Other related business' //기타 관련 업체
+);
+
+// 기업회원 상세업종
+$company_sectors = array(
+    1 => 'Shipyard', //조선소
+    2 => 'Plant & Offshore', //플랜트, 오프쇼어
+    3 => 'Shipping, Habors and Logistics', //해운, 항만, 물류
+    4 => 'Shipowner & Shipper', //선주, 선사
+    5 => 'Ship Classification, Related Organization and/or Group', //선급, 유관기관 및 단체
+    6 => 'Marine Equipment', //조선 해양 기자재
+    7 => 'Ship Management & Ship Repair', //선박관리, 선박수리
+    8 => 'Fishery', //수산 (Fishery)
+    9 => 'Yacht & Maritime Leisure', //요트, 해양 레저
+    10 => 'Ship Supplies', // 선용품
+    11 => 'Other Business' //기타 관련 업체
+);
+
+// 일반회원등급, 기업회원은 (Baisc, Premium)
+$member_grade = array(
+    1 => 'Cadet', //실습항해사
+    2 => '3rd mate', //3등항해사
+    3 => '2rd mate', //2등항해사
+    4 => '1rd mate', //1등항해사
+    5 => 'Captain', //선장
+    6 => 'Basic',
+    7 => 'Premium',
+);
+
+// 헬프미 카테고리
+$helpme_category = array(
+    1 => 'All', //전체
+    2 => 'Sailing, navigation', //선박 운항, 항해
+    3 => 'Marine engineering', //선박 기관, 정비
+    4 => 'Shipbuilding & Repair', //조선
+    5 => 'Offshore, plant', //플랜트
+    6 => 'Fishery', //수산
+    7 => 'Shipping, Transport', //해운
+    8 => 'Harbors, logistics', //항만,물류
+    9 => 'Other', //기타
+    10 => 'Q&A' //고민 Q&A
+);
+
+// 기업의뢰 BUDGET
+$company_budget = array(
+1 => 'less than $3,000',
+2 => '$3,000 ~ $10,000',
+3 => '$10,000 ~ $50,000',
+4 => '$50,000 ~ $100,000',
+5 => '$100,000 ~ $500,000',
+6 => '$500,000 ~ $1million',
+7 => 'more than $1million'
+);
+
+// 은행 정보
+$bank_list = array('001'=>'한국은행', '002'=>'산업은행', '003'=>'기업은행', '004'=>'국민은행', '005'=>'외환은행', '007'=>'수협중앙회', '008'=>'수출입은행', '011'=>'농협은행', '012'=>'지역농∙축협',
+                   '020'=>'우리은행', '023'=>'SC은행', '027'=>'한국씨티은행', '031'=>'대구은행', '032'=>'부산은행', '034'=>'광주은행', '035'=>'제주은행', '037'=>'전북은행', '039'=>'경남은행',
+                   '045'=>'새마을금고중앙회', '048'=>'신협중앙회', '050'=>'상호저축은행', '052'=>'모건스탠리은행', '054'=>'HSBC은행', '055'=>'도이치은행', '056'=>'알비에스피엘씨은행',
+                   '057'=>'제이피모간체이스은행', '058'=>'미즈호은행', '059'=>'미쓰비시도쿄UFJ은행', '060'=>'BOA은행', '061'=>'비엔피파리바은행', '062'=>'중국공상은행', '063'=>'중국은행',
+                   '064'=>'산림조합중앙회', '065'=>'대화은행', '071'=>'우체국', '076'=>'신용보증기금', '077'=>'기술보증기금', '081'=>'하나은행', '088'=>'신한은행', '089'=>'케이뱅크',
+                   '090'=>'카카오뱅크', '093'=>'한국주택금융공사', '094'=>'서울보증보험', '095'=>'경찰청', '096'=>'한국전자금융㈜', '099'=>'금융결제원', '209'=>'유안타증권', '218'=>'현대증권',
+                   '230'=>'미래에셋증권', '238'=>'대우증권', '240'=>'삼성증권', '243'=>'한국투자증권', '247'=>'우리투자증권', '261'=>'교보증권', '262'=>'하이투자증권', '263'=>'HMC투자증권',
+                   '264'=>'키움증권', '265'=>'이베스트투자증권', '266'=>'SK증권', '267'=>'대신증권', '268'=>'아이엠투자증권', '269'=>'한화투자증권', '270'=>'하나대투증권', '278'=>'신한금융투자',
+                   '279'=>'동부증권', '280'=>'유진투자증권', '287'=>'메리츠종합금융증권', '290'=>'부국증권', '291'=>'신영증권', '292'=>'LIG투자증권');
+
+// 국가 코드 및 전화번호 코드
+$arr_country_code = array(
+    'DZ' => array('213', 'Algeria'),
+    'AD' => array('376', 'Andorra'),
+    'AO' => array('244', 'Angola'),
+    'AI' => array('1264', 'Anguilla'),
+    'AG' => array('1268', 'Antigua & Barbuda'),
+    'AR' => array('54', 'Argentina'),
+    'AM' => array('374', 'Armenia'),
+    'AW' => array('297', 'Aruba'),
+    'AU' => array('61', 'Australia '),
+    'AT' => array('43', 'Austria'),
+    'AZ' => array('994', 'Azerbaijan'),
+    'BS' => array('1242', 'Bahamas'),
+    'BH' => array('973', 'Bahrain'),
+    'BD' => array('880', 'Bangladesh'),
+    'BB' => array('1246', 'Barbados'),
+    'BY' => array('375', 'Belarus'),
+    'BE' => array('32', 'Belgium'),
+    'BZ' => array('501', 'Belize'),
+    'BJ' => array('229', 'Benin'),
+    'BM' => array('1441', 'Bermuda'),
+    'BT' => array('975', 'Bhutan'),
+    'BO' => array('591', 'Bolivia'),
+    'BA' => array('387', 'Bosnia Herzegovina'),
+    'BW' => array('267', 'Botswana'),
+    'BR' => array('55', 'Brazil'),
+    'BN' => array('673', 'Brunei'),
+    'BG' => array('359', 'Bulgaria'),
+    'BF' => array('226', 'Burkina Faso'),
+    'BI' => array('257', 'Burundi'),
+    'KH' => array('855', 'Cambodia'),
+    'CM' => array('237', 'Cameroon'),
+    'CA' => array('1', 'Canada'),
+    'CV' => array('238', 'Cape Verde Islands'),
+    'KY' => array('1345', 'Cayman Islands'),
+    'CF' => array('236', 'Central African Republic'),
+    'CL' => array('56', 'Chile'),
+    'CN' => array('86', 'China'),
+    'CO' => array('57', 'Colombia'),
+    'KM' => array('269', 'Comoros'),
+    'CG' => array('242', 'Congo'),
+    'CK' => array('682', 'Cook Islands'),
+    'CR' => array('506', 'Costa Rica'),
+    'HR' => array('385', 'Croatia'),
+    'CU' => array('53', 'Cuba'),
+    'CY' => array('90392', 'Cyprus North'),
+    'CY' => array('357', 'Cyprus South'),
+    'CZ' => array('42', 'Czech Republic'),
+    'DK' => array('45', 'Denmark'),
+    'DJ' => array('253', 'Djibouti'),
+    'DM' => array('1809', 'Dominica'),
+    'DO' => array('1809', 'Dominican Republic'),
+    'EC' => array('593', 'Ecuador'),
+    'EG' => array('20', 'Egypt'),
+    'SV' => array('503', 'El Salvador'),
+    'GQ' => array('240', 'Equatorial Guinea'),
+    'ER' => array('291', 'Eritrea'),
+    'EE' => array('372', 'Estonia'),
+    'ET' => array('251', 'Ethiopia'),
+    'FK' => array('500', 'Falkland Islands'),
+    'FO' => array('298', 'Faroe Islands'),
+    'FJ' => array('679', 'Fiji'),
+    'FI' => array('358', 'Finland'),
+    'FR' => array('33', 'France'),
+    'GF' => array('594', 'French Guiana'),
+    'PF' => array('689', 'French Polynesia'),
+    'GA' => array('241', 'Gabon'),
+    'GM' => array('220', 'Gambia'),
+    'GE' => array('7880', 'Georgia'),
+    'DE' => array('49', 'Germany'),
+    'GH' => array('233', 'Ghana'),
+    'GI' => array('350', 'Gibraltar'),
+    'GR' => array('30', 'Greece'),
+    'GL' => array('299', 'Greenland'),
+    'GD' => array('1473', 'Grenada'),
+    'GP' => array('590', 'Guadeloupe'),
+    'GU' => array('671', 'Guam'),
+    'GT' => array('502', 'Guatemala'),
+    'GN' => array('224', 'Guinea'),
+    'GW' => array('245', 'Guinea - Bissau'),
+    'GY' => array('592', 'Guyana'),
+    'HT' => array('509', 'Haiti'),
+    'HN' => array('504', 'Honduras'),
+    'HK' => array('852', 'Hong Kong'),
+    'HU' => array('36', 'Hungary'),
+    'IS' => array('354', 'Iceland'),
+    'IN' => array('91', 'India'),
+    'ID' => array('62', 'Indonesia'),
+    'IR' => array('98', 'Iran'),
+    'IQ' => array('964', 'Iraq'),
+    'IE' => array('353', 'Ireland'),
+    'IL' => array('972', 'Israel'),
+    'IT' => array('39', 'Italy'),
+    'JM' => array('1876', 'Jamaica'),
+    'JP' => array('81', 'Japan'),
+    'JO' => array('962', 'Jordan'),
+    'KZ' => array('7', 'Kazakhstan'),
+    'KE' => array('254', 'Kenya'),
+    'KI' => array('686', 'Kiribati'),
+    'KW' => array('965', 'Kuwait'),
+    'KG' => array('996', 'Kyrgyzstan'),
+    'LA' => array('856', 'Laos'),
+    'LV' => array('371', 'Latvia'),
+    'LB' => array('961', 'Lebanon'),
+    'LS' => array('266', 'Lesotho'),
+    'LR' => array('231', 'Liberia'),
+    'LY' => array('218', 'Libya'),
+    'LI' => array('417', 'Liechtenstein'),
+    'LT' => array('370', 'Lithuania'),
+    'LU' => array('352', 'Luxembourg'),
+    'MO' => array('853', 'Macao'),
+    'MK' => array('389', 'Macedonia'),
+    'MG' => array('261', 'Madagascar'),
+    'MW' => array('265', 'Malawi'),
+    'MY' => array('60', 'Malaysia'),
+    'MV' => array('960', 'Maldives'),
+    'ML' => array('223', 'Mali'),
+    'MT' => array('356', 'Malta'),
+    'MH' => array('692', 'Marshall Islands'),
+    'MQ' => array('596', 'Martinique'),
+    'MR' => array('222', 'Mauritania'),
+    'YT' => array('269', 'Mayotte'),
+    'MX' => array('52', 'Mexico'),
+    'FM' => array('691', 'Micronesia'),
+    'MD' => array('373', 'Moldova'),
+    'MC' => array('377', 'Monaco'),
+    'MN' => array('976', 'Mongolia'),
+    'MS' => array('1664', 'Montserrat'),
+    'MA' => array('212', 'Morocco'),
+    'MZ' => array('258', 'Mozambique'),
+    'MN' => array('95', 'Myanmar'),
+    'NA' => array('264', 'Namibia'),
+    'NR' => array('674', 'Nauru'),
+    'NP' => array('977', 'Nepal'),
+    'NL' => array('31', 'Netherlands'),
+    'NC' => array('687', 'New Caledonia'),
+    'NZ' => array('64', 'New Zealand'),
+    'NI' => array('505', 'Nicaragua'),
+    'NE' => array('227', 'Niger'),
+    'NG' => array('234', 'Nigeria'),
+    'NU' => array('683', 'Niue'),
+    'NF' => array('672', 'Norfolk Islands'),
+    'KP' => array('850', 'North Korea'),
+    'NP' => array('670', 'Northern Marianas'),
+    'NO' => array('47', 'Norway'),
+    'OM' => array('968', 'Oman'),
+    'PW' => array('680', 'Palau'),
+    'PA' => array('507', 'Panama'),
+    'PG' => array('675', 'Papua New Guinea'),
+    'PY' => array('595', 'Paraguay'),
+    'PE' => array('51', 'Peru'),
+    'PH' => array('63', 'Philippines'),
+    'PL' => array('48', 'Poland'),
+    'PT' => array('351', 'Portugal'),
+    'PR' => array('1787', 'Puerto Rico'),
+    'QA' => array('974', 'Qatar'),
+    'RE' => array('262', 'Reunion'),
+    'RO' => array('40', 'Romania'),
+    'RU' => array('7', 'Russia'),
+    'RW' => array('250', 'Rwanda'),
+    'SM' => array('378', 'San Marino'),
+    'ST' => array('239', 'Sao Tome & Principe'),
+    'SA' => array('966', 'Saudi Arabia'),
+    'SN' => array('221', 'Senegal'),
+    'CS' => array('381', 'Serbia'),
+    'SC' => array('248', 'Seychelles'),
+    'SL' => array('232', 'Sierra Leone'),
+    'SG' => array('65', 'Singapore'),
+    'SK' => array('421', 'Slovak Republic'),
+    'SI' => array('386', 'Slovenia'),
+    'SB' => array('677', 'Solomon Islands'),
+    'SO' => array('252', 'Somalia'),
+    'ZA' => array('27', 'South Africa'),
+    'KR' => array('82', 'South Korea'),
+    'ES' => array('34', 'Spain'),
+    'LK' => array('94', 'Sri Lanka'),
+    'SH' => array('290', 'St. Helena'),
+    'KN' => array('1869', 'St. Kitts'),
+    'SC' => array('1758', 'St. Lucia'),
+    'SD' => array('249', 'Sudan'),
+    'SR' => array('597', 'Suriname'),
+    'SZ' => array('268', 'Swaziland'),
+    'SE' => array('46', 'Sweden'),
+    'CH' => array('41', 'Switzerland'),
+    'SI' => array('963', 'Syria'),
+    'TW' => array('886', 'Taiwan'),
+    'TJ' => array('7', 'Tajikstan'),
+    'TH' => array('66', 'Thailand'),
+    'TG' => array('228', 'Togo'),
+    'TO' => array('676', 'Tonga'),
+    'TT' => array('1868', 'Trinidad & Tobago'),
+    'TN' => array('216', 'Tunisia'),
+    'TR' => array('90', 'Turkey'),
+    'TM' => array('7', 'Turkmenistan'),
+    'TM' => array('993', 'Turkmenistan'),
+    'TC' => array('1649', 'Turks & Caicos Islands'),
+    'TV' => array('688', 'Tuvalu'),
+    'UG' => array('256', 'Uganda'),
+    'GB' => array('44', 'United Kingdom'),
+    'UA' => array('380', 'Ukraine'),
+    'AE' => array('971', 'United Arab Emirates'),
+    'US' => array('1', 'United States of America'),
+    'UY' => array('598', 'Uruguay'),
+    'UZ' => array('7', 'Uzbekistan'),
+    'VU' => array('678', 'Vanuatu'),
+    'VA' => array('379', 'Vatican City'),
+    'VE' => array('58', 'Venezuela'),
+    'VN' => array('84', 'Vietnam'),
+    'VG' => array('84', 'Virgin Islands - British'),
+    'VI' => array('84', 'Virgin Islands - US'),
+    'WF' => array('681', 'Wallis & Futuna'),
+    'YE' => array('969', 'Yemen'),
+    'YE' => array('967', 'Yemen (South)'),
+    'ZM' => array('260', 'Zambia'),
+    'ZW' => array('263', 'Zimbabwe'),
+);
+
+// 업체에 오픈하지 않고 내부적으로 작업 시
+$private = false;
+if($ip == '183.103.22.103' || $ip == '124.54.11.180' || $ip == '121.140.204.65') { $private = true; }
+
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$aos_app_user_agent = "APodosea"; // AOD USER AGENT
+$android = false;
+$mobile = false;
+if(strpos($user_agent, $aos_app_user_agent) !== false) { // 안드로이드 접속 시
+    $android = true;
+    $mobile = true;
+}
+else if(strpos(strtolower($user_agent), 'mobile') !== false) { // 모바일 접속 시 (앱/모바일 웹)
+    $mobile = true;
+}
+
+// 인앱체크 및 자동로그인
+$is_inapp = false;
+$inapp_vercode = 0;
+if(strpos($user_agent, $aos_app_user_agent) !== false) {
+    $is_inapp = true;
+    // 앱버전확인
+    $_tmp = explode("/APP_VER=", $_SERVER['HTTP_USER_AGENT']);
+    $inapp_vercode = (int)$_tmp[1];
+}
+
+// 카카오 디벨로퍼 JavaScript 키 (내 애플리케이션 > 앱 설정 > 앱 키)
+$kakao_javascript_key = '246e5093aa68a462c3c87b5d8fe0afa4';
+
+// 기업 리뷰 항목
+$company_review = array(
+1 => 'The contents of the order were followed exactly.',
+2 => 'Business response is quick.',
+3 => 'They have professionalism.',
+4 => 'The quality of the product or service is excellent.',
+5 => 'Other',
+);
+
+// 신고 사유
+$report = array(
+1 => 'Unmanned User',
+2 => 'Accepting Answers or Disputing Transactions',
+3 => 'Advertisement, paperwork',
+4 => 'Posting false profiles or company information',
+5 => 'Other (Direct Input)',
+);
+
+// 프로필 업데이트 경로
+if($member['mb_level'] == 2) {
+    $profile_url = G5_BBS_URL.'/profile_update01.php';
+} else if($member['mb_level'] == 3) {
+    $profile_url = G5_BBS_URL.'/profile_company_update01.php';
+}
+
+// 접근 가능 계정 (테스트용)
+$reference_test = false;
+if($private || $member['mb_id'] == 'admin' || $member['mb_id'] == 'test01' || $member['mb_id'] == 'com01' || $member['mb_id'] == 'drongo147' || $member['mb_id'] == 'vineplant' || $member['mb_id'] == 'testcompany' || $member['mb_id'] == 'podosea1' || $member['mb_id'] == 'podosea2' || $member['mb_id'] == 'podosea3' || $member['mb_id'] == 'podosea4' || $member['mb_id'] == 'podosea5') {
+    // $reference_test = true;
+}
+
+// 구글지도 API KEY
+const GOOGLE_MAP_API_KEY = 'AIzaSyCuByLom1juud_G9XM0NSFgpjuiEx1-D44';
+
+//SSL 리다이렉트
+  if(!isset($_SERVER["HTTPS"])) {header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER['REQUEST_URI'],true,301);}
+//SSL 리다이렉트 끝
+
+?>
