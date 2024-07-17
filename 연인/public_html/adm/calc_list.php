@@ -66,8 +66,19 @@ for ($i = 0; $i < $helper_cnt; $i++) {
 	$helpers[$i]['total'] = $rs['case1'] + $rs['case2'] + $_coupon + $_heart;
 }
 
+// 비교 함수 정의
+function compareByTotal($a, $b) {
+    if ($a['total'] == $b['total']) {
+        return 0;
+    }
+    return ($a['total'] > $b['total']) ? -1 : 1;
+}
+
+usort($helpers, 'compareByTotal');
+$helpers_re = $helpers;
+
 // total순으로 재정렬
-$helpers_re = arrReSort($helpers, 'total', 'desc');
+//$helpers_re = arrReSort($helpers, 'total', 'desc');
 
 ?>
 
