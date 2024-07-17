@@ -1,0 +1,120 @@
+<?
+include_once('./_common.php');
+
+$g5['title'] = '리스트';
+include_once('./_head.php');
+
+$ctg = ($_REQUEST['ctg'] == '') ? "1" : $_REQUEST['ctg'];
+
+$sql_common = " from new_item ";
+
+// 테이블의 전체 레코드수만 얻음
+$sql = " select count(*) as cnt " . $sql_common. " where i_ctg = '{$ctg}' ";
+$row = sql_fetch($sql);
+$total_count = $row['cnt'];
+
+$rows = $config['cf_1'];
+
+$total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
+if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이지)
+$from_record = ($page - 1) * $rows; // 시작 열을 구함
+
+$sql = "select * {$sql_common} where i_ctg = '{$ctg}' order by i_idx desc limit {$from_record}, {$rows} ";
+$result = sql_query($sql);
+
+//카테고리
+$ctg = $_REQUEST["ctg"];
+$big_ctg_idx = ctg_info($ctg)["c_p_idx"];
+$big_ctg_name = ctg_info($big_ctg_idx)["c_name"];
+$small_ctg_name = "";
+
+if ($big_ctg_idx == '0'){
+    $big_ctg = ctg_info($ctg);
+
+    $big_ctg_idx = $big_ctg["c_idx"];
+    $big_ctg_name = $big_ctg["c_name"];
+}else{
+    $small_ctg_name = ctg_info($ctg)["c_name"];
+
+}
+
+$category_list = ctg_list($big_ctg_idx);
+
+?>
+<!-- 순서 모달팝업 -->
+<div id="basic_modal">
+    <!-- Modal -->
+    <div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+					<ul id="sort_list" class="sort_list_mobile">
+						<li class="active">최신순</li>
+						<li>추천순</li>
+						<li>별점순</li>
+					</ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!--basic_modal-->
+<!-- 순서 모달팝업 -->
+
+
+	<div id="area_product">
+        <div id="sub_cate2">
+
+            <dl>
+                <dt><i class="fa-brands fa-elementor"></i> <?=$big_ctg_name?></dt>
+                <?php
+                for ($a = 0; $a< count($category_list); $a++){ ?>
+                    <dd>
+                        <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$category_list[$a]["c_idx"]?>">
+                                <?=$category_list[$a]["c_name"]?>
+                        </a>
+                    </dd>
+
+                <?php } ?>
+            </dl>
+        </div>
+
+            <!--//2차카테고리220414-->
+            <div class="inr">
+                <ul id="area_history">
+                    <li><a href="">홈</a></li>
+                    <li><a href=""><?=$big_ctg_name?></a></li>
+                    <li><a href="" class="current"><?=$small_ctg_name?></a></li>
+                </ul>
+                <div id="list_top">
+                    <div class="total">총 <?=$total_count?>건</div>
+                    <div class="sort_list">
+                        <span data-toggle="modal" data-target="#listModal">최신순</span>
+                    </div>
+                </div>
+                <ul id="product_list">
+                    <?php if (sql_num_rows($result) == 0){?>
+                        <li class="nodata">
+                            <div class="nodata_wrap">
+                                <div class="area_img"><img src="<?php echo G5_THEME_IMG_URL ?>/app/img_nodata.svg"></div>
+                                <p>등록된 재능이 없습니다.</p>
+                            </div>
+                        </li>
+                    <?php  }else {
+                        for ($i = 0; $row = sql_fetch_array($result); $i++) {
+                            include("./li_content.php");
+                        }
+                    } ?>
+                </ul>
+
+                <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, "?$qstr&amp;ctg=".$ctg."&amp;page="); ?>
+
+
+            </div>
+
+
+	</div>
+
+
+<?php
+include_once('./_tail.php');
+?>
