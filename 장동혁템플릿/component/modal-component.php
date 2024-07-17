@@ -3,7 +3,7 @@
         <div class="modal-wrapper">
             <div class="modal-container">
                 <slot></slot>
-                <button class="modal-default-button" @click="modalClose">닫기</button>
+                <!--<button class="modal-default-button" @click="modalClose">닫기</button>-->
             </div>
         </div>
     </div>
@@ -73,9 +73,6 @@
     }
 
     .modal-container {
-        width: 300px;
-        padding: 20px;
-        background: #fff;
         border-radius: 2px;
         text-align: center;
     }

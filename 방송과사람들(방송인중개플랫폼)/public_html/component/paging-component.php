@@ -1,22 +1,18 @@
-<script type="text/x-template" id="page-component-template">
-    <nav class="pg_wrap" v-if="parseInt(total)">
-        <span class="pg">
-            <a class="pg_page pg_start" @click="setPage(1)">처음</a>
-            <!-- <a class="pg_page pg_prev">이전</a> -->
+<script type="text/x-template" id="paging-component-template">
+    <div class="container" v-if="parseInt(total)">
+        <div class="pagination">
+            <a @click="setPage(1)">&laquo;</a>
             <template v-for="index in getPages()">
-                <strong v-if="current == index" class="pg_current">{{index}}</strong>
-                <a v-else @click="setPage(index)" class="pg_page">{{index}}</a>
-
+                <a @click="setPage(index)" :class="{'active' : index == page}">{{index}}</a>
             </template>
-            <!-- <a class="pg_page pg_next">다음</a> -->
-                <a class="pg_page pg_end" @click="setPage(last)">맨끝</a>
-        </span>
-    </nav>
+            <a @click="setPage(last)">&raquo;</a>
+        </div>
+    </div>
 </script>
 
 <script>
-    Vue.component('page-component', {
-        template: "#page-component-template",
+    Vue.component('paging-component', {
+        template: "#paging-component-template",
         props: {
             total: { type: Number, default: 0 },
             limit: { type: Number, default: 20 },
@@ -68,3 +64,33 @@
         }
     });
 </script>
+
+<style>
+    .container {
+        text-align: center; /* 텍스트 가운데 정렬 */
+    }
+
+    .pagination {
+        display: inline-block;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+        margin: 0 4px;
+    }
+
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+</style>

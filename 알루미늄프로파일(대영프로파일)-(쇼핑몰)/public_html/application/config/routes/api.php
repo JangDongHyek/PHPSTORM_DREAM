@@ -63,3 +63,9 @@ $route['api/category/deleteData']['post'] = 'CategoryController/deleteData';
 //상품 api 가져오기
 $route['api/product/getData']['post'] = 'AdmProductController/getData';
 $route['api/product/getData2']['post'] = 'AdmProductController/getData2';
+
+//상품 추가옵션
+$route['api/addOption/getData']['post'] = 'AddOptionController/getData';
+$route['api/addOption/postData']['post'] = 'AddOptionController/postData';
+$route['api/addOption/putData']['post'] = 'AddOptionController/putData';
+$route['api/addOption/deleteData']['post'] = 'AddOptionController/deleteData';

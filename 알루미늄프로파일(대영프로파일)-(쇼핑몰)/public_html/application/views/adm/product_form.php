@@ -1,7 +1,7 @@
 <!-- 상품관리 등록/수정 폼 -->
 <? include_once VIEWPATH. 'component/summer_note_resource.php'; // summernote?>
 
-<section class="productupd" >
+<section class="productupd" id="app">
     <form name="productFrm" autocomplete="off" method="post">
         <input type="hidden" name="idx" value="<?=(int)$productData['idx']?>">
         <div class="panel">
@@ -23,7 +23,7 @@
             </span>
         </div>
 
-        <div class="box" id="app">
+        <div class="box" >
             <input type="hidden" name="category_parent" v-model="category_parent">
             <input type="hidden" name="category_child" v-model="category_child">
             <p class="name">기본 분류</p>
@@ -58,6 +58,8 @@
 					<input type="text" name="prodPrice" placeholder="기본 할인가를 입력하세요" value="<?=empty($productData['prod_price'])?'':number_format($productData['prod_price'])?>" required>원
 				</p>
 			</div>
+
+            <add-option-list :product_idx="primary"></add-option-list>
 
             <p class="name" style="display: none">상품 정보</p>
             <p class="line" style="display: none"><label>원산지</label><input type="text" name="prodOrigin" placeholder="원산지를 입력하세요" value="<?=$productData['prod_origin']?>"></p>
@@ -335,8 +337,54 @@
         var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
         return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
     };
+
+    function ajax(url,objs) {
+
+        var form = new FormData();
+        //if(url.indexOf(".php") == -1) url = url + ".php";
+        for (var i in objs) {
+            form.append(i, objs[i]);
+        }
+
+        var result = null;
+        $.ajax({
+            url: baseUrl + url,
+            method: "post",
+            enctype: "multipart/form-data",
+            processData: false,
+            contentType: false,
+            async: false,
+            cache: false,
+            data: form,
+            dataType: "json",
+            success: function (res) {
+                if (!res.success) alert(res.message);
+                else {
+                    result = res;
+
+                    if (res.data) {
+                        var obj = res.data;
+                        for (field in obj) {
+                            if (field.indexOf("_id") !== -1) continue;
+                            try {
+                                obj[field] = JSON.parse(obj[field]);
+                            } catch (e) {
+
+                            }
+                        }
+                        res.data = obj;
+                    }
+                }
+            }
+        });
+
+        return result;
+    }
 </script>
 
+<? include_once VIEWPATH. 'component/add-option-list.php'; // summernote?>
+<? include_once VIEWPATH. 'component/add-option-input.php'; // summernote?>
+<? include_once VIEWPATH. 'component/modal-component.php'; // summernote?>
 
 
 <!-- 상품등록/수정 JS -->

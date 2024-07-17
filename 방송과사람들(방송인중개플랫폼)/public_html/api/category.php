@@ -1,5 +1,5 @@
 <?php
-include_once("../model/model.php");
+include_once("../model/NewModel.php");
 //include_once("../class/file.php");
 
 $response = array("message" => "");
@@ -7,13 +7,13 @@ $_method = $_POST["_method"];
 
 $db_config = array(
     "hostname" => "localhost",
-    "username" => "example",
-    "password" => "",
-    "database" => "example"
+    "username" => "broadcast",
+    "password" => "c3gq%qyc",
+    "database" => "broadcast"
 );
 
 $model_config = array_merge($db_config,array(
-    "table" => "example",
+    "table" => "category",
     "primary" => "idx",
 ));
 $model = new Model($model_config);
@@ -39,8 +39,18 @@ try {
             }
 
             $model->where($filter);
+            $model->order_by("priority","DESC");
             $object = $model->get($filter["page"], $filter["limit"]);
-            
+
+            foreach ($object["data"] as $index => $data) {
+                $model->reset();
+                $model->where("parent_idx" , $data['idx']);
+                $model->order_by("priority","DESC");
+                $childs = $model->get();
+
+                $object["data"][$index]["childs"] = $childs['data'];
+            }
+
             if ($join_table) {
                 $deletes = array();
                 $joinModel = new Model(array(

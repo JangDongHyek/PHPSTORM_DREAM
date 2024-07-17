@@ -103,7 +103,7 @@
                         <dt>할인가격</dt>
                         <dd><strong class="txt_orange prodPriceDisplay"><?=number_format($productData['prod_price'])?>원</strong></dd>
                     </dl>
-                    <dl>
+                    <dl v-if="data.categoryChild && data.categoryChild.name == '프로파일'">
                         <dt>절단길이</dt>
                         <dd class="cutting">
                             <p><input type="text" id="cut_length" name="cut_length" v-model="cut_length" placeholder="25" value="25">mm</p>
@@ -111,7 +111,7 @@
                                 ※절단 공차는 0.3mm이내로 관리하고 있습니다.</p>
                         </dd>
                     </dl>
-                    <dl>
+                    <dl v-if="data.categoryChild && data.categoryChild.name == '프로파일'">
                         <dt>절단비</dt>
                         <dd class="cutting">
                             <strong class="prodPriceDisplay" class="comment">330원</strong>
@@ -463,9 +463,13 @@
             },
             computed : {
                 totalPrice : function () {
-                    var price = this.product.amount * (this.product.price *(this.cut_length / 1000)) + 330;
-                    if(this.processing) price += parseInt(this.processing.prod_price2)
-                    return price
+                    if(this.data.categoryChild && this.data.categoryChild.name == '프로파일') {
+                        var price = this.product.amount * (this.product.price *(this.cut_length / 1000)) + 330;
+                        if(this.processing) price += parseInt(this.processing.prod_price2)
+                        return price
+                    }else {
+                        return this.product.price * this.product.amount
+                    }
                 }
             },
             watch : {
