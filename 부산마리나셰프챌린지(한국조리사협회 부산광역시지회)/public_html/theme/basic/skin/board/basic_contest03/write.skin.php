@@ -69,8 +69,12 @@ add_javascript('<script type="text/javascript" src="' . $board_skin_url . '/js/u
         </div>
 
         <div class="btn_bg">
-            <a href="<?php echo G5_THEME_URL ?>/dawnload/2024 1인, 라이브, 전시- 참가 신청서 (1).hwp"><div class="btn btn-info">참가신청서 다운로드</div></a>&nbsp; &nbsp;
-            <a href="<?php echo G5_THEME_URL ?>/dawnload/2024 2인 라이브, 전시- 참가 신청서.hwp"><div class="btn btn-info">참가신청서 다운로드</div></a>
+            <a href="<?php echo G5_THEME_URL ?>/dawnload/2024 1인, 라이브, 전시- 참가 신청서 (1).hwp">
+                <div class="btn btn-info">참가신청서 다운로드</div>
+            </a>&nbsp; &nbsp;
+            <a href="<?php echo G5_THEME_URL ?>/dawnload/2024 2인 라이브, 전시- 참가 신청서.hwp">
+                <div class="btn btn-info">참가신청서 다운로드</div>
+            </a>
             <table width="100%" border="0" cellpadding="0" cellspacing="0" class="contest_table">
                 <tbody>
                 <tr>
@@ -105,15 +109,15 @@ add_javascript('<script type="text/javascript" src="' . $board_skin_url . '/js/u
                     </td>
                     <td><input type="text" class="form-control" name="wr_4" value="<?= $write['wr_4'] ?>"></td>
                 </tr>
-                <!-- <tr>
-		  <th>셰프2 (Chef2)</th>
-		  <td><input type="text" class="form-control" name="wr_5" value="<?= $write['wr_5'] ?>" required></td>
-		  <td><input type="text" class="form-control" name="wr_6" value="<?= $write['wr_6'] ?>"></td>
-		  <td><input type="text" class="form-control" name="wr_7" value="<?= $write['wr_7'] ?>"></td>
-		  <td><input type="text" class="form-control" name="wr_8" value="<?= $write['wr_8'] ?>"></td>
-		  <td><input type="text" class="form-control email" name="wr_9" value="<?= $write['wr_9'] ?>"></td>
-		  <td><input type="text" class="form-control" name="wr_10" value="<?= $write['wr_10'] ?>"></td>
-		</tr> -->
+                <tr>
+                    <th>셰프2 (Chef2)</th>
+                    <td><input type="text" class="form-control" name="wr_5" value="<?= $write['wr_5'] ?>" required></td>
+                    <td><input type="text" class="form-control" name="wr_6" value="<?= $write['wr_6'] ?>"></td>
+                    <td><input type="text" class="form-control" name="wr_7" value="<?= $write['wr_7'] ?>"></td>
+                    <td><input type="text" class="form-control" name="wr_8" value="<?= $write['wr_8'] ?>"></td>
+                    <td><input type="text" class="form-control email" name="wr_9" value="<?= $write['wr_9'] ?>"></td>
+                    <td><input type="text" class="form-control" name="wr_10" value="<?= $write['wr_10'] ?>"></td>
+                </tr>
                 <!--
 		<tr>
 		  <th>셰프3 (Chef3)</th>
@@ -390,8 +394,9 @@ add_javascript('<script type="text/javascript" src="' . $board_skin_url . '/js/u
                 </div>
             </div>
             <div class="border">
-                <p>* <strong>경연일정: 2024년 10월 4일(금) ~ 6일(일)</strong>  (Contest schedule: 2023. SEP. 1. (Fri.) - SEP. 3. (Sun.))</p>
-	            <p>* <strong>등 록 비 : 50,000원(1인)</strong>(Registration fee : 50,000won)</p>
+                <p>* <strong>경연일정: 2024년 10월 4일(금) ~ 6일(일)</strong> (Contest schedule: 2023. SEP. 1. (Fri.) - SEP. 3.
+                    (Sun.))</p>
+                <p>* <strong>등 록 비 : 50,000원(1인)</strong>(Registration fee : 50,000won)</p>
                 <p>* <strong>참가신청서와 함께 참가등록비가 입금해야만 등록이 인정됨</strong>
                     (Registration must be made and payment must be made before registration)</p>
                 <p>* <strong>참가규정을 읽었으며 이에 전적으로 동의함</strong>(I have read and agree to the rules of participation)

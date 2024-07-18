@@ -188,7 +188,7 @@ add_stylesheet('<link rel="stylesheet" href="' . $board_skin_url . '/style.css">
                         <td><?= $write['wr_email'] ?></td>
                         <td><?= $write['wr_4'] ?></td>
                     </tr>
-                    <!--
+
 				<tr>
 				  <th>셰프2 (Chef2)</th>
 				  <td><?= $write['wr_5'] ?></td>
@@ -198,7 +198,7 @@ add_stylesheet('<link rel="stylesheet" href="' . $board_skin_url . '/style.css">
 				  <td><?= $write['wr_9'] ?></td>
 				  <td><?= $write['wr_10'] ?></td>
 				</tr>
-               				
+                    <!--
 				<tr>
 				  <th>셰프3 (Chef3)</th>
 				  <td><?= $write['wr_11'] ?></td>
