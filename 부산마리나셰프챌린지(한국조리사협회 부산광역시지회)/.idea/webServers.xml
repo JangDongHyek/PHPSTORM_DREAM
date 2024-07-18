@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="4684dd17-b4b1-4008-b9dc-ef0170af36e6" name="부산마리나셰프챌린지(한국조리사협회 부산광역시지회)" url="http://dreamforone.com">
+        <fileTransfer host="dreamforone.com" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
