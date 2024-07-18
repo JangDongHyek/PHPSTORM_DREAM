@@ -38,9 +38,10 @@ class ProductModel extends CI_Model
 		return $query->row_array() ?? array();
 	}
 
-	public function getData($filter) {
+	public function getData($filter,$like = array()) {
         try {
             $this->db->where($filter);
+            $this->db->like($like);
             $this->db->order_by("prod_order","DESC");
             $query = $this->db->get("bs_product");
             $result = $query->result();

@@ -37,6 +37,10 @@ class MallCartController extends CI_Controller
             'product_cnt' => $post['productCnt'],
             'cut_length' => $post['cut_length2'],
             'processing_idx' => $post['processing_idx'],
+            'add_option_idx' => $post['add_option_idx'],
+            'add_option' => $post['add_option'],
+            'essential_option_idx' => $post['essential_option_idx'],
+            'essential_option' => $post['essential_option'],
         ];
 
         // 장바구니 등록

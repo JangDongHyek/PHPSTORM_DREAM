@@ -1,25 +1,27 @@
-<script type="text/x-template" id="add-option-list-template">
+<script type="text/x-template" id="related-product-list-template">
     <div>
-        <p class="name">추가옵션</p>
+        <p class="name">관련상품</p>
         <div class="price">
             <p class="line" v-for="item in data">
-                <label>{{item.name}}</label>
-                <label>{{parseInt(item.price).format()}}원</label>
-                <button type="button" @click="primary = item.idx; modal = true">수정</button>
+                <label v-if="item.product.file_name_list">
+                    <img :src="baseUrl + '/assets/uploads/product/' + item.product.file_name_list.split(',')[0]" style="width: 100px; height: 100px;">
+                </label>
+                <label>{{item.product.prod_name}}</label>
+                <label>{{parseInt(item.product.prod_price).format()}}원</label>
                 <button type="button" @click="deleteData(item.idx)">삭제</button>
             </p>
-            <button type="button" @click="primary = ''; modal= true">옵션 추가</button>
+            <button type="button" @click="primary = ''; modal= true">상품 추가</button>
         </div>
 
         <modal-component v-if="modal" @close="modal = false" @update="getData" v-slot="slot">
-            <add-option-input @close="modal = false" @update="getData" :primary="primary" :product_idx="product_idx"></add-option-input>
+            <related-product-input @close="modal = false" @update="getData" :primary="primary" :product_idx="product_idx"></related-product-input>
         </modal-component>
     </div>
 </script>
 
 <script>
-    Vue.component('add-option-list', {
-        template: "#add-option-list-template",
+    Vue.component('related-product-list', {
+        template: "#related-product-list-template",
         props: {
             product_idx : {type : String, default : ""}
         },
@@ -57,7 +59,7 @@
                     filter: JSON.stringify(filter)
                 };
 
-                var res = ajax("api/addOption/getData", objs);
+                var res = ajax("api/relatedProduct/getData", objs);
                 if (res) {
                     console.log(res)
                     this.data = res.data;
@@ -72,7 +74,7 @@
                         idx: idx
                     };
 
-                    var res = ajax("/api/addOption/deleteData", objs);
+                    var res = ajax("/api/relatedProduct/deleteData", objs);
                     if (res) {
                         alert("삭제되었습니다.");
                         this.getData();

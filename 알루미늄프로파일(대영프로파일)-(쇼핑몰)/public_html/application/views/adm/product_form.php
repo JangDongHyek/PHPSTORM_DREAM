@@ -59,7 +59,9 @@
 				</p>
 			</div>
 
-            <add-option-list :product_idx="primary"></add-option-list>
+            <add-option-list v-if="primary" :product_idx="primary"></add-option-list>
+            <essential-option-list v-if="primary" :product_idx="primary"></essential-option-list>
+            <related-product-list v-if="primary" :product_idx="primary"></related-product-list>
 
             <p class="name" style="display: none">상품 정보</p>
             <p class="line" style="display: none"><label>원산지</label><input type="text" name="prodOrigin" placeholder="원산지를 입력하세요" value="<?=$productData['prod_origin']?>"></p>
@@ -384,7 +386,12 @@
 
 <? include_once VIEWPATH. 'component/add-option-list.php'; // summernote?>
 <? include_once VIEWPATH. 'component/add-option-input.php'; // summernote?>
+<? include_once VIEWPATH. 'component/essential-option-list.php'; // summernote?>
+<? include_once VIEWPATH. 'component/essential-option-input.php'; // summernote?>
+<? include_once VIEWPATH. 'component/related-product-list.php'; // summernote?>
+<? include_once VIEWPATH. 'component/related-product-input.php'; // summernote?>
 <? include_once VIEWPATH. 'component/modal-component.php'; // summernote?>
+
 
 
 <!-- 상품등록/수정 JS -->

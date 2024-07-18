@@ -53,10 +53,17 @@
 									$count = (int)$list['product_cnt']; // 장바구니수량
                                     $cut_length = (int)$list['cut_length'];
                                     $processing_idx = (int)$list['processing_idx'];
+                                    $add_option_idx = (int)$list['add_option_idx'];
+                                    $add_option = json_decode($list['add_option'],true);
+                                    $essential_option_idx = (int)$list['essential_option_idx'];
+                                    $essential_option = json_decode($list['essential_option'],true);
 
 									$itemAmt = ($price * ($cut_length / 1000)) * $count + 330;
 
-									$subtotalPrice += $itemAmt;
+                                    if($add_option) $itemAmt += (int)$add_option['price'];
+									if($essential_option) $itemAmt += (int)$essential_option['price'];
+
+									$subtotalPrice += (int)$itemAmt;
 
 									$tmpPayList = explode(",", $list['pay_method_list']); // 결제수단 추가
 									$availPayCodeList = array_merge($availPayCodeList, $tmpPayList);
@@ -93,6 +100,10 @@
 									<input type="hidden" name="productCnt[<?=$uid?>]" value="<?=$count?>"/>
                                     <input type="hidden" name="cut_length[<?=$uid?>]" value="<?=$cut_length?>"/>
                                     <input type="hidden" name="processing_idx[<?=$uid?>]" value="<?=$processing_idx?>"/>
+                                    <input type="hidden" name="add_option_idx[<?=$uid?>]" value="<?=$add_option_idx?>"/>
+                                    <input type="hidden" name="add_option[<?=$uid?>]" value='<?=json_encode($add_option,JSON_UNESCAPED_UNICODE)?>'/>
+                                    <input type="hidden" name="essential_option_idx[<?=$uid?>]" value="<?=$essential_option_idx?>"/>
+                                    <input type="hidden" name="essential_option[<?=$uid?>]" value='<?=json_encode($essential_option,JSON_UNESCAPED_UNICODE)?>'/>
 									<? // 장바구니 인덱스 ?>
 									<input type="hidden" name="cartIdx[]" value="<?=$list['cart_idx']?>"/>
                                 </li>

@@ -12,7 +12,8 @@
         },
         data: function(){
             return {
-
+                filter : {},
+                data : {},
             };
         },
         created: function(){
@@ -22,7 +23,21 @@
 
         },
         methods: {
+            getData: function () {
+                var method = "get";
+                var filter = JSON.parse(JSON.stringify(this.filter));
 
+                var objs = {
+                    _method: method,
+                    filter: JSON.stringify(filter)
+                };
+
+                var res = ajax("/api/example.php", objs);
+                if (res) {
+                    console.log(res)
+                    this.data = res.response.data[0]
+                }
+            }
         },
         computed: {
 

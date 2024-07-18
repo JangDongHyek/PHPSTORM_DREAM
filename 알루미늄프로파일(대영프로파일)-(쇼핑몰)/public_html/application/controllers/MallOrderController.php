@@ -138,6 +138,10 @@ class MallOrderController extends CI_Controller {
 				'item_cnt' => (int)$post['productCnt'][$pIdx],
                 'cut_length' => (int)$post['cut_length'][$pIdx],
                 'processing_idx' => (int)$post['processing_idx'][$pIdx],
+                'add_option_idx' => (int)$post['add_option_idx'][$pIdx],
+                'add_option' => $post['add_option'][$pIdx],
+                'essential_option_idx' => (int)$post['essential_option_idx'][$pIdx],
+                'essential_option' => $post['essential_option'][$pIdx],
 				'mb_id' => $memberId,
 			];
 			$itemName[] = $post['productName'][$pIdx];

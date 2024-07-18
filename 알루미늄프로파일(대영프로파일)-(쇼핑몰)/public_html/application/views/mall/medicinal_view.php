@@ -129,7 +129,11 @@
                             </select>
                         </dd>
                     </dl>
-                    
+
+                    <add-option ref="addOption" @change="changeOption" :product_idx="primary"></add-option>
+                    <essential-option ref="essentialOption" @change="changeOption" :product_idx="primary"></essential-option>
+                    <related-product ref="relatedProduct" :product_idx="primary"></related-product>
+
                     <dl>
                         <dt>구매수량</dt>
                         <dd>
@@ -163,6 +167,12 @@
             <input type="hidden" id="processing_idx" name="processing_idx" v-model="processing_idx" /> <!--구매수량-->
             <input type="hidden" name="totalPrice" value="<?=$productData['prod_price']?>" /> <!--총상품금액-->
             <input type="hidden" name="cartIdx[]" /> <!--장바구니 인덱스-->
+            <input type="hidden" name="add_option_idx" :value="add_option.idx"/>
+            <input type="hidden" name="essential_option_idx" :value="essential_option.idx"/>
+            <!-- 옵션이 바꼇을경우 그때 옵션의 값을 기억 못하기때문에 나중에 계산서 볼때 이상할수있음 그거 방지 해당 옵션 데이터 cart 및 order-item에 저장 -->
+            <input type="hidden" name="add_option" :value="JSON.stringify(add_option)"/>
+            <input type="hidden" name="essential_option" :value="JSON.stringify(essential_option)"/>
+
         </form>
 
         <div class="area_view">
@@ -304,6 +314,9 @@
                 total : 0,
                 checks : [],
                 all_check : false,
+
+                add_option : "",
+                essential_option : "",
             },
             created : function() {
                 // this.getsData();
@@ -316,6 +329,10 @@
                 });
             },
             methods: {
+                changeOption : function(mode,value) {
+                    if(mode == "add-option") this.add_option = value
+                    if(mode == "essential-option") this.essential_option = value
+                },
                 changeEvent : function () {
                     if(!isNaN(parseInt(this.processing_index))) {
                         this.processing = this.datas[this.processing_index]
@@ -463,14 +480,26 @@
             },
             computed : {
                 totalPrice : function () {
+                    var price = 0;
                     if(this.data.categoryChild && this.data.categoryChild.name == '프로파일') {
-                        var price = this.product.amount * (this.product.price *(this.cut_length / 1000)) + 330;
+                        price = this.product.amount * (this.product.price *(this.cut_length / 1000)) + 330;
                         if(this.processing) price += parseInt(this.processing.prod_price2)
-                        return price
                     }else {
-                        return this.product.price * this.product.amount
+                        price = this.product.price * this.product.amount
                     }
-                }
+
+                    if(this.add_option) price += parseInt(this.add_option.price);
+                    if(this.essential_option) price += parseInt(this.essential_option.price);
+                    return price
+                },
+                addOption : function() {
+                    try {
+                        return this.$refs.addOption.select
+                    }catch (e) {
+                        return {idx : '1'};
+                    }
+
+                },
             },
             watch : {
                 all_check : function() {
@@ -491,6 +520,49 @@
         var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
         return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
     };
+
+    function ajax(url,objs) {
+
+        var form = new FormData();
+        //if(url.indexOf(".php") == -1) url = url + ".php";
+        for (var i in objs) {
+            form.append(i, objs[i]);
+        }
+
+        var result = null;
+        $.ajax({
+            url: baseUrl + url,
+            method: "post",
+            enctype: "multipart/form-data",
+            processData: false,
+            contentType: false,
+            async: false,
+            cache: false,
+            data: form,
+            dataType: "json",
+            success: function (res) {
+                if (!res.success) alert(res.message);
+                else {
+                    result = res;
+
+                    if (res.data) {
+                        var obj = res.data;
+                        for (field in obj) {
+                            if (field.indexOf("_id") !== -1) continue;
+                            try {
+                                obj[field] = JSON.parse(obj[field]);
+                            } catch (e) {
+
+                            }
+                        }
+                        res.data = obj;
+                    }
+                }
+            }
+        });
+
+        return result;
+    }
 </script>
 
 <script>
@@ -527,6 +599,8 @@
 
         const form = document.order;
 
+
+
         var cut_length = parseInt(form.cut_length2.value);
 
         if (isNaN(cut_length) || cut_length < 25 || cut_length > 6000) {
@@ -536,6 +610,12 @@
 
         const formData = new FormData(form);
         formData.append("isBuy", !isBuy ? 'Y' : 'N');
+
+        //폼데이타 확인
+        // for (let [key, value] of formData.entries()) {
+        //     console.log(`${key}: ${value}`);
+        // }
+        // return false;
 
 
         const response = await fetchData(`/api/addCart`, formData);
@@ -769,6 +849,10 @@
         }
     }
 </script>
+
+<? include_once VIEWPATH. 'component/mall/add-option.php'; // summernote?>
+<? include_once VIEWPATH. 'component/mall/essential-option.php'; // summernote?>
+<? include_once VIEWPATH. 'component/mall/related-product.php'; // summernote?>
 
 <!-- 게시판등록/수정 JS -->
 <script src="<?=ASSETS_URL?>/js/mall/board_form.js?v=<?=JS_VER?>"></script>

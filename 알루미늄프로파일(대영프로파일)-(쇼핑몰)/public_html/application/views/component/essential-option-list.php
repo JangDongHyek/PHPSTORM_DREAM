@@ -1,6 +1,6 @@
-<script type="text/x-template" id="add-option-list-template">
+<script type="text/x-template" id="essential-option-list-template">
     <div>
-        <p class="name">추가옵션</p>
+        <p class="name">필수옵션</p>
         <div class="price">
             <p class="line" v-for="item in data">
                 <label>{{item.name}}</label>
@@ -12,14 +12,14 @@
         </div>
 
         <modal-component v-if="modal" @close="modal = false" @update="getData" v-slot="slot">
-            <add-option-input @close="modal = false" @update="getData" :primary="primary" :product_idx="product_idx"></add-option-input>
+            <essential-option-input @close="modal = false" @update="getData" :primary="primary" :product_idx="product_idx"></essential-option-input>
         </modal-component>
     </div>
 </script>
 
 <script>
-    Vue.component('add-option-list', {
-        template: "#add-option-list-template",
+    Vue.component('essential-option-list', {
+        template: "#essential-option-list-template",
         props: {
             product_idx : {type : String, default : ""}
         },
@@ -33,7 +33,7 @@
                 primary: "",
 
                 filter: {
-                    product_idx : "",
+                    product_idx : ""
                 }
             };
         },
@@ -57,7 +57,7 @@
                     filter: JSON.stringify(filter)
                 };
 
-                var res = ajax("api/addOption/getData", objs);
+                var res = ajax("api/essentialOption/getData", objs);
                 if (res) {
                     console.log(res)
                     this.data = res.data;
@@ -72,7 +72,7 @@
                         idx: idx
                     };
 
-                    var res = ajax("/api/addOption/deleteData", objs);
+                    var res = ajax("/api/essentialOption/deleteData", objs);
                     if (res) {
                         alert("삭제되었습니다.");
                         this.getData();

@@ -69,3 +69,14 @@ $route['api/addOption/getData']['post'] = 'AddOptionController/getData';
 $route['api/addOption/postData']['post'] = 'AddOptionController/postData';
 $route['api/addOption/putData']['post'] = 'AddOptionController/putData';
 $route['api/addOption/deleteData']['post'] = 'AddOptionController/deleteData';
+//상품 필수옵션
+$route['api/essentialOption/getData']['post'] = 'EssentialOptionController/getData';
+$route['api/essentialOption/postData']['post'] = 'EssentialOptionController/postData';
+$route['api/essentialOption/putData']['post'] = 'EssentialOptionController/putData';
+$route['api/essentialOption/deleteData']['post'] = 'EssentialOptionController/deleteData';
+//상품 관련상품
+$route['api/relatedProduct/getData']['post'] = 'RelatedProductController/getData';
+$route['api/relatedProduct/getProduct']['post'] = 'RelatedProductController/getProduct';
+$route['api/relatedProduct/postData']['post'] = 'RelatedProductController/postData';
+$route['api/relatedProduct/putData']['post'] = 'RelatedProductController/putData';
+$route['api/relatedProduct/deleteData']['post'] = 'RelatedProductController/deleteData';
