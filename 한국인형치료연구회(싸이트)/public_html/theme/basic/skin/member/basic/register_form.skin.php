@@ -343,6 +343,11 @@ function search_post(){
             }
         }
 
+        if(f.mb_hp.value == "") {
+            alert("휴대폰 번호를 입력해주세요.");
+            return false;
+        }
+
         <?php if($w == '' && $config['cf_cert_use'] && $config['cf_cert_req']) { ?>
         // 본인확인 체크
         if(f.cert_no.value=="") {

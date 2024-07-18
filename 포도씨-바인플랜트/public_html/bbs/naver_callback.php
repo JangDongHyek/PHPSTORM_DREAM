@@ -10,7 +10,7 @@ $client_id = "OYo_HAmkzC766_xvReqe";
 $client_secret = "Jn2FOVOByo";
 $code = $_GET["code"];
 $state = $_GET["state"];
-$redirectURI = urlencode(G5_BBS_URL."/naver_callback.php");
+$redirectURI = urlencode("https://www.podosea.kr/bbs/naver_callback.php");
 $url = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=".$client_id."&client_secret=".$client_secret."&redirect_uri=".$redirectURI."&code=".$code."&state=".$state;
 $is_post = false;
 
