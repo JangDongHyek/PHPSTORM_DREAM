@@ -1,26 +1,33 @@
-<script type="text/x-template" id="vue-component-template">
+<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<script type="text/x-template" id="<?=$componentName?>-template">
     <div>
 
     </div>
 </script>
 
 <script>
-    Vue.component('vue-component', {
-        template: "#vue-component-template",
+    Vue.component('<?=$componentName?>', {
+        template: "#<?=$componentName?>-template",
         props: {
 
         },
         data: function(){
             return {
-                filter : {},
-                data : {},
+                filter : {
+
+                },
+                data : {
+
+                },
             };
         },
         created: function(){
-
+            console.log("Vue Component : <?=$componentName?> Load")
         },
         mounted: function(){
+            this.$nextTick(() => {
 
+            });
         },
         methods: {
             getData: function () {
@@ -35,7 +42,7 @@
                 var res = ajax("/api/example.php", objs);
                 if (res) {
                     console.log(res)
-                    this.data = res.response.data[0]
+                    this.data = res.response.data
                 }
             }
         },
@@ -47,3 +54,7 @@
         }
     });
 </script>
+
+<style>
+
+</style>

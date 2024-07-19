@@ -287,9 +287,10 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>
 
 <script>
+    let vueApp;
     // Vue 인스턴스 생성
     document.addEventListener('DOMContentLoaded', function(){
-        new Vue({
+        vueApp = new Vue({
             el: '#app',
             data: {
                 cut_length : 25,
@@ -331,7 +332,9 @@
             methods: {
                 changeOption : function(mode,value) {
                     if(mode == "add-option") this.add_option = value
-                    if(mode == "essential-option") this.essential_option = value
+                    if(mode == "essential-option") {
+                        this.essential_option = value
+                    }
                 },
                 changeEvent : function () {
                     if(!isNaN(parseInt(this.processing_index))) {
@@ -595,6 +598,14 @@
         if (isBuy && document.querySelector('span.soldout')) {
             showAlert('임시품절 된 상품입니다.');
             return false;
+        }
+
+        //필수옵션 체크
+        if(vueApp.$refs.essentialOption.data.length > 0) {
+            if(!vueApp.$refs.essentialOption.select) {
+                alert("필수옵션을 선택 해주세요.");
+                return false;
+            }
         }
 
         const form = document.order;

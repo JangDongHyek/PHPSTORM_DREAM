@@ -1,21 +1,21 @@
 // Vue 인스턴스 생성
-Vue.data    = {};
+Vue.data    = {test : JL_app_name};
 Vue.methods = {};
 Vue.watch   = {};
 Vue.components = {};
 Vue.computed = {};
 Vue.created = [];
 Vue.mounted = [];
-//var baseUrl = g5_url; // 그누보드일때
 document.addEventListener('DOMContentLoaded', function(){
-    Vue.app = new Vue({
-        el: "#app",
+    Vue[JL_app_name] = new Vue({
+        el: "#" + JL_app_name,
         data: Vue.data,
         methods: Vue.methods,
         watch: Vue.watch,
         components: Vue.components,
         computed: Vue.computed,
         created: function(){
+            console.log("Vue : " + JL_app_name + " Load")
             for(var i=0; i<Vue.created.length; i++){
                 Vue.created[i](this);
             }
@@ -43,7 +43,7 @@ function ajax(url,objs) {
 
     var result = null;
     $.ajax({
-        url: baseUrl + url,
+        url: JL_base_url + url,
         method: "post",
         enctype: "multipart/form-data",
         processData: false,

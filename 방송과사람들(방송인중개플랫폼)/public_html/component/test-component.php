@@ -16,27 +16,8 @@
 
 //echo $ss;
 //echo $aa;
-
-//echo __FILE__;
-
-
-
-//echo $string;
-include_once ("./class/Lib.php");
-//
-try {
-    $jl = new JL();
-    $jl->vueLoad();
-}catch (Exception $e) {
-    echo $e;
-}
-
-//echo $jl->ROOT;
-//
-//$result = $jl->getDir("/component");
-//
-////echo $jl->ROOT;
-//var_dump($result);
-
+$tilde_remove = preg_replace('/^\/\~[^\/]+(.*)$/', '$1', $_SERVER['SCRIPT_NAME']);
+$document_root = str_replace($tilde_remove, '', $_SERVER['SCRIPT_FILENAME']);
+echo $_SERVER['SCRIPT_FILENAME'];
 //include_once ("./test2.php");
 ?>

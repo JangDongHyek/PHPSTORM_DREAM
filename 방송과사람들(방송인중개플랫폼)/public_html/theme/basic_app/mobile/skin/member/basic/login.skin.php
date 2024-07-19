@@ -26,7 +26,7 @@ html, body{ width:100%;height:100%;min-height:500px; background:#f5f5f5;}
 <!-- 로그인 시작 { -->
 <div id="mb_login" class="mbskin">
 	<div id="mb_login_wrap">
-    
+
 
     <form name="flogin" action="<?php echo $login_action_url ?>" onsubmit="return flogin_submit(this);" method="post">
     <input type="hidden" name="url" value="<?php echo $login_url ?>">

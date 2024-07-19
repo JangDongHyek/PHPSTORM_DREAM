@@ -223,7 +223,9 @@ if ($w == '' || $w == 'r') {
 			$wr_name=$_POST['wr_name'];
 		}
         $wr_password = $member['mb_password'];
-        $wr_email = addslashes($member['mb_email']);
+        if($bo_table != "live03"){
+            $wr_email = addslashes($member['mb_email']);
+        }
         $wr_homepage = addslashes(clean_xss_tags($member['mb_homepage']));
     } else {
         $mb_id = '';
