@@ -2,6 +2,7 @@
 class JL {
     private $root_dir = "public_html";
     private $JS = "/js/jang.js";
+    protected $DB;
     public  $URL;
     public  $ROOT;
 
@@ -15,6 +16,8 @@ class JL {
         echo "const JL_base_url = '{$this->URL}';";
         echo "</script>";
         echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+        echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
+        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
         echo "<script src='{$this->URL}{$this->JS}?name={$app_name}'></script>";
     }
 
@@ -57,6 +60,15 @@ class JL {
         }else {
             throw new Exception("ROOT 위치를 찾을 수 없습니다.");
         }
+
+        //DB 정보
+        $this->DB = array(
+            "hostname" => "localhost",
+            "username" => "broadcast",
+            "password" => "c3gq%qyc",
+            "database" => "broadcast"
+        );
+
 
         //URL 구하기
         $http = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? 's' : '') . '://';

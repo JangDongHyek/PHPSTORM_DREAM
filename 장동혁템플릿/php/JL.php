@@ -2,11 +2,25 @@
 class JL {
     private $root_dir = "public_html";
     private $JS = "/js/jang.js";
+    public  $DB;
     public  $URL;
     public  $ROOT;
 
     function __construct() {
         $this->INIT();
+    }
+
+    function jsonDecode($json) {
+        // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
+        $obj = str_replace('\\', '', $json);
+        $obj = json_decode($obj, true);
+
+        // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
+        foreach ($obj as $key => $value) {
+            if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
+        }
+
+        return $obj;
     }
 
     function vueLoad($app_name = "app") {
@@ -15,6 +29,8 @@ class JL {
         echo "const JL_base_url = '{$this->URL}';";
         echo "</script>";
         echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+        echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
+        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
         echo "<script src='{$this->URL}{$this->JS}'></script>";
     }
 
@@ -68,6 +84,14 @@ class JL {
 
         //js파일 찾기
         if(!file_exists($this->ROOT.$this->JS)) throw new Exception("JS 위치를 찾을 수 없습니다.");
+
+        //DB 설정
+        $this->DB = array(
+            "hostname" => "localhost",
+            "username" => "example",
+            "password" => "",
+            "database" => "example"
+        );
     }
 }
 

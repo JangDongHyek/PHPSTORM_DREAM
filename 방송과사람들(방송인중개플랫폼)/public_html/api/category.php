@@ -39,13 +39,13 @@ try {
             }
 
             $model->where($filter);
-            $model->order_by("priority","DESC");
+            $model->order_by("priority","ASC");
             $object = $model->get($filter["page"], $filter["limit"]);
 
             foreach ($object["data"] as $index => $data) {
                 $model->reset();
                 $model->where("parent_idx" , $data['idx']);
-                $model->order_by("priority","DESC");
+                $model->order_by("priority","ASC");
                 $childs = $model->get();
 
                 $object["data"][$index]["childs"] = $childs['data'];
@@ -132,6 +132,10 @@ try {
             $data = $model->delete(array(
                 $model->primary => $_POST["primary"]
             ));
+
+            $model->where("parent_idx",$_POST["primary"]);
+            $data = $model->sqlDelete();
+
             $response['success'] = true;
             break;
         }

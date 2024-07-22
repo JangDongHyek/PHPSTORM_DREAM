@@ -34,7 +34,9 @@
         },
         data: function(){
             return {
-                filter : {},
+                filter : {
+                    parent_idx : ""
+                },
                 data : {},
             };
         },

@@ -1,21 +1,15 @@
 <?php
-include_once("../model/model.php");
-//include_once("../class/file.php");
+include_once("../model/Model.php");
+//include_once("../class/File.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
 
-$db_config = array(
-    "hostname" => "localhost",
-    "username" => "example",
-    "password" => "",
-    "database" => "example"
-);
-
-$model_config = array_merge($db_config,array(
+$model_config = array(
     "table" => "example",
     "primary" => "idx",
-));
+);
+
 $model = new Model($model_config);
 
 $join_table = "";
@@ -27,9 +21,7 @@ try {
     switch (strtolower($_method)) {
         case "get":
         {
-            // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $filter = str_replace('\\', '', $_POST['filter']);
-            $filter = json_decode($filter, true);
+            $filter = $model->jsonDecode($_POST['filter']);
 
             //필터 가공
             foreach ($filter as $key => $value) {
@@ -77,15 +69,7 @@ try {
 
         case "insert":
         {
-            // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $obj = str_replace('\\', '', $_POST['obj']);
-            $obj = json_decode($obj, true);
-
-            // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
-            foreach ($obj as $key => $value) {
-                if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
-            }
-
+            $obj = $model->jsonDecode($_POST['obj']);
 
             if ($_FILES["upfile"]) {
                 $upfile = $file->bind($_FILES["upfile"]);
@@ -98,15 +82,7 @@ try {
         }
         case "update":
         {
-            // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $obj = str_replace('\\', '', $_POST['obj']);
-            $obj = json_decode($obj, true);
-
-            // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
-            foreach ($obj as $key => $value) {
-                if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
-            }
-
+            $obj = $model->jsonDecode($_POST['obj']);
 
             if ($_FILES["upfile"]) {
                 $upfile = $file->bind($_FILES["upfile"]);
@@ -128,9 +104,7 @@ try {
 
         case "deletes":
         {
-            // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $arrays = str_replace('\\', '', $_POST['arrays']);
-            $arrays = json_decode($arrays, true);
+            $arrays = $model->jsonDecode($_POST['arrays']);
 
             foreach ($arrays as $primary) {
                 $model->delete(array(

@@ -1,5 +1,5 @@
 <?php
-include_once("JL.php");
+include_once("Lib.php");
 class Model extends JL{
     //Database 설정
     private $hostname;
@@ -13,7 +13,7 @@ class Model extends JL{
     private $mysqli = false;
     public  $primary;
     private $autoincrement;
-    private $empty;
+    private $empty;                 // 이 값이 true 이면 공백일때 조건추가를 안함
 
     private $sql = "";
     private $sql_order_by = "";
@@ -258,26 +258,7 @@ class Model extends JL{
         return $param[$this->primary];
     }
 
-    function sqlDelete($_param){
-
-        $param = $this->escape($_param);
-
-        if($this->sql == "") throw new Exception("조건 삭제에 조건이 없습니다.");
-
-        $sql = "DELETE FROM {$this->table} WHERE 1 $this->sql ";
-
-        if($this->mysqli) {
-            $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) throw new Exception(mysql_error());
-        }
-
-        return $param[$this->primary];
-    }
-
-    function getSql() {
+    function get_sql() {
         $sql = "SELECT * FROM {$this->table} WHERE 1 ".$this->sql;
         $sql .= $this->sql_order_by ? " ORDER BY ".$this->sql_order_by : "";
         return $sql;

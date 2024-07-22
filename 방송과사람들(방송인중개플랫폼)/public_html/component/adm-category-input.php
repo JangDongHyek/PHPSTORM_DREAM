@@ -46,7 +46,7 @@
                     obj: JSON.stringify(obj),
                 };
 
-                var res = ajax(g5_url + "/api/category.php", objs);
+                var res = ajax("/api/category.php", objs);
 
                 if (res) {
                     console.log(res)
@@ -65,7 +65,7 @@
                     filter: JSON.stringify(filter)
                 };
 
-                var res = ajax(g5_url + "/api/category.php", objs);
+                var res = ajax("/api/category.php", objs);
                 if (res) {
                     console.log(res)
                     this.data = res.response.data[0]

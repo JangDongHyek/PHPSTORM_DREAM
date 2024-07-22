@@ -182,6 +182,25 @@ class Model {
         return $param[$this->primary];
     }
 
+    function sqlDelete($_param){
+
+        $param = $this->escape($_param);
+
+        if($this->sql == "") throw new Exception("조건 삭제에 조건이 없습니다.");
+
+        $sql = "DELETE FROM {$this->table} WHERE 1 $this->sql ";
+
+        if($this->mysqli) {
+            $result = mysqli_query($this->connect, $sql);
+            if(!$result) throw new Exception(mysqli_error($this->connect));
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) throw new Exception(mysql_error());
+        }
+
+        return $param[$this->primary];
+    }
+
     function get_sql() {
         $sql = "SELECT * FROM {$this->table} WHERE 1 ".$this->sql;
         $sql .= $this->sql_order_by ? " ORDER BY ".$this->sql_order_by : "";

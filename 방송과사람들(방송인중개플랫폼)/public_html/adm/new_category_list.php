@@ -1,7 +1,9 @@
 <?php
 $sub_menu = "230100";
 include_once('./_common.php');
+include_once('../class/Lib.php');
 
+$jl = new JL();
 auth_check($auth[$sub_menu], 'r');
 
 
@@ -16,12 +18,11 @@ include_once('./admin.head.php');
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>
-<script src="<?=G5_JS_URL?>/jang.js"></script>
 
-<script>
-    Vue.data.test = 1;
-</script>
+
+<?php $jl->vueLoad();?>
+
+
 
 
 
