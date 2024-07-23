@@ -5,13 +5,13 @@
             <h2>메인메뉴</h2>
             <ul id="gnb_1dul">
                 <li class="gnb_1dli all_menu">
-                    <a href="#Link" class="gnb_1da"><i class="fa-light fa-bars"></i> 전체메뉴</a>
+                    <a href="#" class="gnb_1da"><i class="fa-light fa-bars"></i> 전체메뉴</a>
                     <ul class="gnb_2dul">
                         <li class="gnb_2dli" v-for="item in data">
-                            <a href="" class="gnb_2da">{{item.name}}</a>
+                            <a :href="JL_base_url+'/bbs/item_list.php?ctg=' + item.idx" class="gnb_2da">{{item.name}}</a>
                             <div class="gnb_2dli_list" style="display:none">
                                 <ul class="gnb_2dul ver02" style="display:none">
-                                    <li class="gnb_2dli" v-for="child in item.childs"><a href="" class="gnb_2da">{{child.name}}</a></li>
+                                    <li class="gnb_2dli" v-for="child in item.childs"><a :href="JL_base_url+'/bbs/item_list.php?ctg=' + child.idx" class="gnb_2da">{{child.name}}</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -19,7 +19,7 @@
                 </li>
 
                 <li class="gnb_1dli" v-for="item in data">
-                    <a href="" class="gnb_1da">{{item.name}}<span></span></a>
+                    <a :href="JL_base_url+'/bbs/item_list.php?ctg=' + item.idx" class="gnb_1da">{{item.name}}<span></span></a>
                 </li>
             </ul>
         </nav>
@@ -34,6 +34,7 @@
         },
         data: function(){
             return {
+                jl : null,
                 filter : {
                     parent_idx : ""
                 },
@@ -41,7 +42,7 @@
             };
         },
         created: function(){
-            console.log("Vue Component : <?=$componentName?> Load")
+            this.jl = new JL('<?=$componentName?>');
 
             this.getData();
         },
@@ -88,7 +89,7 @@
 
                 var res = ajax("/api/category.php", objs);
                 if (res) {
-                    console.log(res)
+                    this.jl.log(res,arguments.callee.name)
                     this.data = res.response.data
                 }
             }

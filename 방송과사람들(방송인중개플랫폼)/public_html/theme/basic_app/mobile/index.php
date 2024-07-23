@@ -24,32 +24,106 @@ $big_ctg = ctg_list(0);
 
 	<div id="content">
 		<div class="inr cate">
-                <ul id="cate_list" class="v2">
-                    <?php for ($i = 0; $i< count($big_ctg); $i++){
+                    <ul id="cate_list" class="v2">
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=20">
+                                <div class="area_icon"></div>
+                                <h3>영상·사진·음향 제작</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=21">
+                                <div class="area_icon"></div>
+                                <h3>방송 디자인·편집</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=22">
+                                <div class="area_icon"></div>
+                                <h3>방송마케팅</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=23">
+                                <div class="area_icon"></div>
+                                <h3>방송·배우·연기</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=24">
+                                <div class="area_icon"></div>
+                                <h3>모델</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=25">
+                                <div class="area_icon"></div>
+                                <h3>방송 스태프</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=26">
+                                <div class="area_icon"></div>
+                                <h3>방송·시나리오·작가</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=27">
+                                <div class="area_icon"></div>
+                                <h3>뷰티·패션</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=28">
+                                <div class="area_icon"></div>
+                                <h3>MC·행사·이벤트</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=29">
+                                <div class="area_icon"></div>
+                                <h3>레슨</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=30">
+                                <div class="area_icon"></div>
+                                <h3>심리상담</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=31">
+                                <div class="area_icon"></div>
+                                <h3>기타</h3>
+                            </a>
+                        </li>
+                    </ul>
+                <!--<ul id="cate_list" class="v2">
+                    <?php /*for ($i = 0; $i< count($big_ctg); $i++){
                         if ($big_ctg[$i]['c_idx'] == 1){
                             $tag = '<i class="fa-duotone fa-tv-retro"></i><i class="fa-light fa-tv-retro"></i>';
                         }else if ($big_ctg[$i]['c_idx'] == 2){
                             $tag = '<i class="fa-duotone fa-chalkboard-user"></i><i class="fa-light fa-chalkboard-user"></i>';
                         }else if ($big_ctg[$i]['c_idx'] == 3){
                             $tag = '<i class="fa-duotone fa-money-check-dollar-pen"></i><i class="fa-light fa-money-check-dollar-pen"></i>';
-                        }?>
+                        }*/?>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$big_ctg[$i]["c_idx"]?>">
+                            <a href="<?php /*echo G5_BBS_URL; */?>/item_list.php?ctg=<?/*=$big_ctg[$i]["c_idx"]*/?>">
                                 <div class="area_icon"></div>
-                                <h3><?=$big_ctg[$i]["c_name"]?></h3>
+                                <h3><?/*=$big_ctg[$i]["c_name"]*/?></h3>
                             </a>
                             <div class="small_cate">
                                 <?php
-                                $small_ctg = ctg_list($big_ctg[$i]["c_idx"]);
-                                for ($a = 0; $a< count($small_ctg); $a++){ ?>
-                                    <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$small_ctg[$a]["c_idx"]?>">
-                                        <?=$small_ctg[$a]["c_name"]?>
+/*                                $small_ctg = ctg_list($big_ctg[$i]["c_idx"]);
+                                for ($a = 0; $a< count($small_ctg); $a++){ */?>
+                                    <a href="<?php /*echo G5_BBS_URL; */?>/item_list.php?ctg=<?/*=$small_ctg[$a]["c_idx"]*/?>">
+                                        <?/*=$small_ctg[$a]["c_name"]*/?>
                                     </a>
-                                <?php } ?>
+                                <?php /*} */?>
                             </div>
                         </li>
-                    <?php } ?>
-                </ul>
+                    <?php /*} */?>
+                </ul>-->
         </div>
 		<div class="inr">
 			<section>

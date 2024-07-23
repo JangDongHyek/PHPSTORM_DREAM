@@ -33,9 +33,9 @@ document.addEventListener('keyup', (e) => {
 });
 
 // 상품 등록/수정
-productFrm.addEventListener('submit', async (e) => {
+document.addEventListener('submit', async (e) => {
 	e.preventDefault();
-
+	var productFrm = document.productFrm;
 	const gubun = productFrm.idx.value == 0? "등록" : "수정";
 	const confirmResult = await showConfirm(`상품을 ${gubun}하시겠습니까?`);
 	if (confirmResult.isConfirmed !== true) return false;
@@ -44,7 +44,8 @@ productFrm.addEventListener('submit', async (e) => {
 	formData.append('content', $('#editor').summernote('code')); // summernote bind
 
 	const response = await fetchData('/apiAdmin/registerProduct', formData);
-	// console.log(response);
+
+
 	if (response.result) {
 		// showAlert(`${gubun}이 완료되었습니다.`, () => {
 			location.href = baseUrl + 'adm/product';

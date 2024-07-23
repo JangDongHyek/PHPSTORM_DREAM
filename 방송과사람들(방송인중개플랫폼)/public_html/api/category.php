@@ -42,6 +42,17 @@ try {
             $model->order_by("priority","ASC");
             $object = $model->get($filter["page"], $filter["limit"]);
 
+            if($object['data'][0]['parent_idx']) {
+                $model->reset();
+                $model->where("idx" , $object['data'][0]['parent_idx']);
+                $object["data"][0]["parent"] = $model->get()['data'][0];
+
+                $model->reset();
+                $model->where("parent_idx" , $object['data'][0]['parent_idx']);
+                $model->order_by("priority","ASC");
+                $object["data"][0]["parent"]['childs'] = $model->get()['data'];
+            }
+
             foreach ($object["data"] as $index => $data) {
                 $model->reset();
                 $model->where("parent_idx" , $data['idx']);

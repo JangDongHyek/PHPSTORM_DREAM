@@ -1,21 +1,23 @@
 // Vue 인스턴스 생성
-Vue.data    = {test : JL_app_name};
+Vue.data    = {test : JL_base_url};
 Vue.methods = {};
 Vue.watch   = {};
 Vue.components = {};
 Vue.computed = {};
 Vue.created = [];
 Vue.mounted = [];
-document.addEventListener('DOMContentLoaded', function(){
-    Vue[JL_app_name] = new Vue({
-        el: "#" + JL_app_name,
+
+function vueLoad(app_name) {
+    Vue[app_name] = new Vue({
+        el: "#" + app_name,
         data: Vue.data,
         methods: Vue.methods,
         watch: Vue.watch,
         components: Vue.components,
         computed: Vue.computed,
         created: function(){
-            console.log("Vue : " + JL_app_name + " Load")
+            if(!JL_dev) return false;
+            this.jl = new JL(app_name,"#42B883");
             for(var i=0; i<Vue.created.length; i++){
                 Vue.created[i](this);
             }
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
     });
-}, false);
+}
 
 Number.prototype.format = function (n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
@@ -74,4 +76,45 @@ function ajax(url,objs) {
     });
 
     return result;
+}
+
+class JL {
+    constructor(name,background = "#35495e") {
+        this.name = name;
+        if(!JL_dev) return false;
+        console.log(
+            '%c' + name,
+            `background: ${background}; color: white; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
+        );
+    }
+
+    log(obj,background = "#35495e",color = "white") {
+        if(!JL_dev) return false;
+        const parsedStack = this.parseStackTrace(new Error().stack);
+        var function_name = parsedStack[1].function.replace('a.','');
+        console.group('%c' + function_name,
+            `background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
+        );
+        console.log(obj);
+        console.groupEnd();
+    }
+
+    // 에러를 일으켜 에러 추적하여 함수명 알아내는 함수
+    parseStackTrace(stack) {
+        const lines = stack.split('\n');
+        const frames = lines.map(line => {
+            const match = line.match(/at\s+(.+?)\s+\((.+):(\d+):(\d+)\)/);
+            if (match) {
+                return {
+                    function: match[1],
+                    file: match[2],
+                    line: parseInt(match[3], 10),
+                    column: parseInt(match[4], 10)
+                };
+            }
+            return null;
+        }).filter(frame => frame !== null);
+
+        return frames;
+    }
 }

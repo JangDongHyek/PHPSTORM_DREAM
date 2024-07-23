@@ -31,7 +31,6 @@ if(!empty($cnt_apply)){
 }
 
 
-
 $sql ="select * from g5_write_edu where wr_id = {$eduid} ";
 $info_wr = sql_fetch($sql);
 

@@ -1,9 +1,9 @@
 <script type="text/x-template" id="adm-category-list-template">
     <div class="outer-container">
         <div class="container">
-            <draggable v-model="data" group="categories" class="category-list" @end="onEnd">
+            <draggable v-model="data" group="categories" class="category-list" @change="onChange">
                 <template v-for="item,index in data">
-                    <li :key="item.idx" @click="(select_item && select_item.idx == item.idx) ? select_item = '' : select_item = item;">
+                    <li :key="index" @click="(select_item && select_item.idx == item.idx) ? select_item = '' : select_item = item;">
                         <div class="category-header">
                             <div class="category-title">{{ item.name }}</div>
                             <div class="category-actions">
@@ -12,9 +12,9 @@
                                 <button @click="event.stopPropagation(); deleteData(item.idx)">삭제</button>
                             </div>
                         </div>
-                        <draggable v-model="item.childs" :group="'subcategories' + index" class="subcategory-list" @end="onEnd">
-                            <template v-for="child in item.childs" v-if="select_item.idx == item.idx">
-                                <li :key="child.idx">
+                        <draggable v-model="item.childs" :group="'subcategories' + index" class="subcategory-list" @change="onChange2(item.childs)">
+                            <template v-for="child,index2 in item.childs">
+                                <li :key="index2" v-show="select_item.idx == item.idx">
                                     <div class="subcategory-header">
                                         <div class="subcategory-title">{{ child.name }}</div>
                                         <div class="subcategory-actions">
@@ -65,8 +65,37 @@
 
         },
         methods: {
-            onEnd : function() {
+            onChange2 : function(childs) {
+                childs.forEach(function(data,index) {
+                    obj = {
+                        idx : data.idx,
+                        name : data.name,
+                        priority : index
+                    }
+                    var objs = {
+                        _method: "update",
+                        obj: JSON.stringify(obj),
+                    };
 
+                    var res = ajax("/api/category.php", objs);
+
+                })
+            },
+            onChange : function(e) {
+                this.data.forEach(function(data,index) {
+                    obj = {
+                        idx : data.idx,
+                        name : data.name,
+                        priority : index
+                    }
+
+                    var objs = {
+                        _method: "update",
+                        obj: JSON.stringify(obj),
+                    };
+
+                    var res = ajax("/api/category.php", objs);
+                })
             },
             changePage : function(page) {
                 this.filter.page = page;

@@ -5,20 +5,31 @@ class JL {
     protected $DB;
     public  $URL;
     public  $ROOT;
+    public $vue_load = false;
 
     function __construct() {
         $this->INIT();
     }
 
     function vueLoad($app_name = "app") {
+        if(!$this->vue_load) {
+            echo "<script>";
+            echo "const JL_app_name = '{$app_name}';";
+            echo "const JL_base_url = '{$this->URL}';";
+            echo "const JL_dev = true;";
+            echo "</script>";
+            echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+            echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
+            echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
+            echo "<script src='{$this->URL}{$this->JS}?name={$app_name}'></script>";
+
+            $this->vue_load = true;
+        }
         echo "<script>";
-        echo "const JL_app_name = '{$app_name}';";
-        echo "const JL_base_url = '{$this->URL}';";
+        echo "document.addEventListener('DOMContentLoaded', function(){";
+        echo "vueLoad('$app_name')";
+        echo "}, false);";
         echo "</script>";
-        echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
-        echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
-        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
-        echo "<script src='{$this->URL}{$this->JS}?name={$app_name}'></script>";
     }
 
     function includeDir($dir_name) {

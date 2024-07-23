@@ -1,7 +1,11 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-
+        <draggabble v-model="data" group="group" @start="onStart" @end="onEnd" @change="onChange" :move="onMove">
+            <div>
+                <li v-for="item,index in data" :key="index">1</li>
+            </div>
+        </draggabble>
     </div>
 </script>
 
@@ -13,7 +17,6 @@
         },
         data: function(){
             return {
-                jl : null,
                 filter : {
 
                 },
@@ -23,7 +26,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            console.log("Vue Component : <?=$componentName?> Load")
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -31,21 +34,18 @@
             });
         },
         methods: {
-            getData: function () {
-                var method = "get";
-                var filter = JSON.parse(JSON.stringify(this.filter));
+            onMove : function(e) {
+                console.log(e)
+            },
+            onChange : function(e) {
+                console.log(e);
+            },
+            onStart : function() {
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
+            },
+            onEnd : function() {
 
-                var res = ajax("/api/example.php", objs);
-                if (res) {
-                    this.jl.log(res)
-                    this.data = res.response.data
-                }
-            }
+            },
         },
         computed: {
 

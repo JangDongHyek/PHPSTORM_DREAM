@@ -136,7 +136,7 @@
 							<?if ($list['md_rec_yn']=='Y') {?><span class="green">BEST</span><?}?>
 							<?if ($list['soldout_yn']=='Y') {?><span class="gray">임시품절</span><?}?>
 						</div>
-                        <a href="<?=PROJECT_URL?>/product/<?=$idx?>" target="_blank"><?=$list['prod_name']?></a>
+                        <a href="<?=PROJECT_URL?>/medicinal/<?=$idx?>" target="_blank"><?=$list['prod_name']?></a>
                     </td>
                     <td style="display: none">
 						<select name="shipFreeYn[<?=$idx?>]">
