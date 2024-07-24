@@ -48,7 +48,9 @@ class JL {
     function includeDir($dir_name) {
         $files = $this->getDir($dir_name);
 
-        foreach ($files as $file) include_once($file);
+        foreach ($files as $file) {
+            include_once($file);
+        }
     }
 
     function getDir($dir_name, $dirs = false, $root_path = true)

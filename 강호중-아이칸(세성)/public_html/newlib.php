@@ -23,7 +23,7 @@ function arrayToInsert($table,$array,$time = false) {
 function alert($msg, $href = "")
 {
     echo "<script>";
-    echo "alert('{$msg}');";
+    echo "alert('{$_SESSION["MemberLevel"]}{$msg}');";
     if ($href) {
         echo "window.location.href='$href';";
     } else {
@@ -89,6 +89,12 @@ function getTotalBonus()
         return 10000;
     }
     if ($_SESSION["MemberLevel"] == 1) { // 1차관리자
+        return 10000;
+    }
+    if ($_SESSION["MemberLevel"] == 2) { // 2차관리자
+        return 10000;
+    }
+    if ($_SESSION["MemberLevel"] == 3) { // 3차관리자
         return 10000;
     }
 

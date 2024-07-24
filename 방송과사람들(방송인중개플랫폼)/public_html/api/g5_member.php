@@ -6,8 +6,8 @@ $response = array("message" => "");
 $_method = $_POST["_method"];
 
 $model_config = array(
-    "table" => "example",
-    "primary" => "idx",
+    "table" => "g5_member",
+    "primary" => "mb_no",
 );
 
 $model = new Model($model_config);
@@ -32,7 +32,7 @@ try {
 
             $model->where($filter);
             $object = $model->get($filter["page"], $filter["limit"]);
-            
+
             if ($join_table) {
                 $deletes = array();
                 $joinModel = new Model(array(

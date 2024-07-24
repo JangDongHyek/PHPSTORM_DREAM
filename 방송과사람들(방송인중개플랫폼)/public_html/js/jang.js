@@ -67,18 +67,24 @@ function ajax(url,objs) {
             if (!res.success) alert(res.message);
             else {
                 result = res;
+                try {
+                    if (res.response.data.length > 0) {
+                        for (let i = 0; i < res.response.data.length; i++) {
+                            var obj = res.response.data[i];
+                            for (field in obj) {
+                                if (field.indexOf("_id") !== -1) continue;
+                                try {
+                                    obj[field] = JSON.parse(obj[field]);
+                                } catch (e) {
 
-                if (res.data) {
-                    var obj = res.data;
-                    for (field in obj) {
-                        if (field.indexOf("_id") !== -1) continue;
-                        try {
-                            obj[field] = JSON.parse(obj[field]);
-                        } catch (e) {
-
+                                }
+                            }
+                            res.response.data[i] = obj;
                         }
+
                     }
-                    res.data = obj;
+                }catch(ee) {
+
                 }
             }
         }
@@ -90,6 +96,7 @@ function ajax(url,objs) {
 class JL {
     constructor(name,background = "#35495e") {
         this.name = name;
+        this.background = background;
 
         if(!JL_dev) return false;
         console.log(
@@ -98,11 +105,57 @@ class JL {
         );
     }
 
+    formatPhone(value,hyphen = true) {
+        var length = hyphen ? 13 : 11
+
+        // 최대 길이를 13자로 제한
+        if (value.length > length) {
+            value = value.slice(0, length);
+        }
+
+        // 숫자만 남기기
+        value = value.replace(/\D/g, '');
+
+        // 포맷팅: XXX-XXXX-XXXX
+        if (hyphen && value.length > 3 && value.length <= 7) {
+            value = value.replace(/(\d{3})(\d+)/, '$1-$2');
+        } else if (hyphen && value.length > 7) {
+            value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+        }
+
+        // 입력값 업데이트
+        return value;
+    }
+
+    mergeObject(full,partial) {
+        const result = {};
+
+        for (const key in partial) {
+            if (partial[key] === '' || partial[key] === null || partial[key] === undefined) {
+                result[key] = full[key];
+            } else {
+                result[key] = partial[key];
+            }
+        }
+
+        return result;
+
+        // 예제 객체
+        //const A = { 1: 1, 2: 2, 3: 3, 4: 4 };
+        //const B = { 2: '', 3: '' };
+
+        // 병합된 객체
+        //const C = mergePartialWithFull(A, B);
+        //{2:2,3:3}
+    }
+
     log(obj) {
         if(!JL_dev) return false;
         const parsedStack = this.parseStackTrace(new Error().stack);
         var function_name = parsedStack[1].function.replace('a.','');
-        console.group('%c' + function_name,
+        console.group(
+            '%c' + this.name + '%c' + function_name,
+            `background: ${this.background}; color: white; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`,
             `background: #627BF9; color: white; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
         );
         console.log(obj);

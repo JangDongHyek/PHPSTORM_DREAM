@@ -1,9 +1,9 @@
 <?
-include "../lib/Mall_Admin_Session.php";
+include_once "../lib/Mall_Admin_Session.php";
 ?>
 <?
 if($flag == ""){
-	include "../admin_head.php";
+    include_once "../admin_head.php";
 ?>
 <script language='javascript'>
 function frm_val(f){

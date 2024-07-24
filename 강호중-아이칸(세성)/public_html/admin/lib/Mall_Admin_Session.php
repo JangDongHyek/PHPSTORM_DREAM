@@ -1,6 +1,6 @@
 <?
 //================== DB 설정 파일을 불러옴 ===============================================
-include "../../connect.php";
+include_once "../../connect.php";
 
 /*if( !$MemberLevel || ($MemberLevel > 2) ){
 	echo("

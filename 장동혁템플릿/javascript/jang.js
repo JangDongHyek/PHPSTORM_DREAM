@@ -58,18 +58,26 @@ function ajax(url,objs) {
             if (!res.success) alert(res.message);
             else {
                 result = res;
+                try {
 
-                if (res.data) {
-                    var obj = res.data;
-                    for (field in obj) {
-                        if (field.indexOf("_id") !== -1) continue;
-                        try {
-                            obj[field] = JSON.parse(obj[field]);
-                        } catch (e) {
+                    // 가져온 데이터 JSON.parse 가능하면 가공 안하면 업데이트나 할때 오류남
+                    if (res.response.data.length > 0) {
+                        for (let i = 0; i < res.response.data.length; i++) {
+                            var obj = res.response.data[i];
+                            for (field in obj) {
+                                if (field.indexOf("_id") !== -1) continue;
+                                try {
+                                    obj[field] = JSON.parse(obj[field]);
+                                } catch (e) {
 
+                                }
+                            }
+                            res.response.data[i] = obj;
                         }
+
                     }
-                    res.data = obj;
+                }catch(ee) {
+
                 }
             }
         }
@@ -86,6 +94,28 @@ class JL {
             '%c' + name,
             `background: ${background}; color: white; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
         );
+    }
+
+    formatPhone(value,hyphen = true) {
+        var length = hyphen ? 13 : 11
+
+        // 최대 길이를 13자로 제한
+        if (value.length > length) {
+            value = value.slice(0, length);
+        }
+
+        // 숫자만 남기기
+        value = value.replace(/\D/g, '');
+
+        // 포맷팅: XXX-XXXX-XXXX
+        if (hyphen && value.length > 3 && value.length <= 7) {
+            value = value.replace(/(\d{3})(\d+)/, '$1-$2');
+        } else if (hyphen && value.length > 7) {
+            value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+        }
+
+        // 입력값 업데이트
+        return value;
     }
 
     log(obj,background = "#35495e",color = "white") {

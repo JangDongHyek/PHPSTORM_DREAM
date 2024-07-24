@@ -28,6 +28,8 @@
                     </li>
                 </template>
             </draggable>
+
+            <button class="button-add1ASD" @click="primary = ''; parent_idx=''; modal = true;">추가</button>
         </div>
 
         <modal-component v-if="modal" @close="modal = false" @update="getData" v-slot="slot">
@@ -140,6 +142,36 @@
 
 
 <style>
+    /* 버튼의 기본 스타일 */
+    .button-add1ASD {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* 버튼의 호버 스타일 */
+    .button-add1ASD:hover {
+        background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* 버튼의 활성화 상태 스타일 */
+    .button-add1ASD:active {
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        transform: translateY(0);
+    }
+
     .outer-container {
         display: flex;
         justify-content: center;

@@ -1,0 +1,866 @@
+<?
+include_once('./_common.php');
+$name = "cmypage";
+$pid = "mypage_form";
+$g5['title'] = '전문가 프로필관리';
+include_once('./_head.php');
+
+$mb = get_member($member[mb_id]);
+
+if($mb == null) alert("로그인 해주세요", G5_URL);
+
+?>
+
+<? if($name=="cmypage") { ?>
+	<body<?php echo isset($g5['body_script']) ? $g5['body_script'] : ''; ?> class="cmypage">
+<?}?>
+
+<link rel="stylesheet" href="<?=G5_URL?>/css/style.css?v=<?= G5_CSS_VER ?>">
+
+<style>
+    @media screen and (max-width:1024px) {
+        #area_my{display: none;}
+    }
+</style>
+
+    <div id="area_mypage" class="profile">
+		<div class="inr">
+			<div id="mypage_wrap">
+				<?php include_once('./mypage_info.php'); ?>
+
+				<div class="mypage_cont">
+					<div class="box">
+						<h3>프로필관리</h3>
+
+						<div id="profile_form">
+
+                            <div class="myinfo_wrap" >
+                                <form id = 'imgfrm'>
+                                    <input type="file" name="mb_icon" id="mb_icon" onchange="getImgPrev(this);" accept="image/*" style="display: none">
+
+                                    <div class="area_photo">
+                                        <div class="photo basic" id="img_area" onclick="file_click();">
+                                        <?php
+                                        $icon_file = G5_DATA_PATH.'/file/member/'.$member['mb_no'].'.jpg';
+                                        if (file_exists($icon_file)) {
+                                            $icon_url = G5_DATA_URL.'/file/member/'.$member['mb_no'].'.jpg';
+                                            echo '<img src="'.$icon_url.'" alt="">';
+                                        }else{
+                                            echo '<img src="'.G5_IMG_URL .'/img_smile.jpg">';
+                                        }
+                                        ?>
+                                        </div>
+                                        <span class="upload"><i class="fa-solid fa-camera-retro"></i></span>
+                                    </div>
+                                </form>
+                            </div>
+                            <nav class="lnb">
+                                <div class="inr">
+                                    <ul>
+                                        <li><a class="active" href="#profile01">기본정보</a></li>
+                                        <li><a href="#profile02">전문/상세분야</a></li>
+                                        <li><a href="#profile03">보유기술</a></li>
+                                        <li><a href="#profile04">학력 전공/자격증</a></li>
+                                        <li><a href="#profile05">경력기간/사항</a></li>
+                                        <li><a href="#profile06">희망 시급</a></li>
+                                        <li><a href="#profile07">상주 여부</a></li>
+                                        <li><a href="#profile08">프로젝트 이력</a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                            <div class="tab_cont">
+                                <section id="profile01">
+                                    <div>
+                                        <h4>기본정보</h4>
+                                        <dl>
+                                            <dt>닉네임</dt>
+                                            <dd><input type="text" id="mb_nick" placeholder="활동명 or 회사명" value="<?=$member['mb_nick']?>"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>연락 가능한 번호</dt>
+                                            <dd><input type="text" id="" placeholder="000-0000-0000" value=""></dd>
+                                        </dl>
+
+                                        <dl>
+                                            <dt>연락 가능 시간 설정</dt>
+                                            <dd>
+                                                <div class="flex">
+                                                    <select name="call_hour_1" class="select text-center" id="call_hour_1" title="시간">
+                                                        <option value="">시간</option>
+                                                        <?php
+                                                        for ($i = 1; $i <= 24; $i++) {
+                                                            $selected = ($member['start_time_h'] == $i) ? 'selected' : '';
+                                                            echo '<option value="' . sprintf("%02d", $i) . '" ' . $selected . '>' . sprintf("%02d", $i) . '시</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                    <span>-</span>
+                                                    <select name="call_hour_2" class="select text-center" id="call_hour_2" title="시간">
+                                                        <option value="">시간</option>
+                                                        <?php
+                                                        for ($i = 1; $i <= 24; $i++) {
+                                                            $selected = ($member['end_time_h'] == $i) ? 'selected' : '';
+                                                            echo '<option value="' . sprintf("%02d", $i) . '" ' . $selected . '>' . sprintf("%02d", $i) . '시</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>안심번호</dt>
+                                            <dd><input type="text" placeholder="서비스를 등록하시면 자동으로 부여됩니다." disabled></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>안심번호 공개여부</dt>
+                                            <dd class="select">
+                                                <input type="radio" id="only_clients" name="security_number" disabled>
+                                                <label for="only_clients">내 서비스를 결제한 의뢰인에게만 공개</label>
+                                                <input type="radio" id="all_members" name="security_number" disabled>
+                                                <label for="all_members">미결제 회원에게도 공개</label>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div>
+                                        <h4>인증정보</h4>
+                                        <dl>
+                                            <dt>실명</dt>
+                                            <dd><input type="text" id="" placeholder="실명 입력" value=""></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>주민등록번호</dt>
+                                            <dd><input type="text" id="" maxlength="13" placeholder="주민등록번호 입력"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>주민등록번호</dt>
+                                            <dd>
+                                                <select>
+                                                    <option>토스뱅크</option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>수입금 출금 계좌</dt>
+                                            <dd><input type="text" id="" maxlength="13" placeholder="수입금 출금 계좌 입력"></dd>
+                                        </dl>
+                                    </div>
+                                </section>
+                                <section id="profile02">
+                                    <div>
+                                        <h4>전문분야 및 상세 분야를 선택해 주세요</h4>
+                                        <dl>
+                                            <dd>
+                                                <button class="select openModalBtn" data-modal="modal1">전문분야</button>
+
+                                                <div id="modal1" class="modal">
+                                                    <div class="modal-content">
+                                                        <div class="modal-title">
+                                                            <h5>전문 분야를 선택해 주세요</h5>
+                                                            <span class="close"><i class="fa-light fa-xmark"></i></span>
+                                                        </div>
+                                                        <div class="modal-scroll">
+                                                            <div class="select">
+                                                                <input type="radio" id="" name="" checked><label for="">디자인</label>
+                                                                <input type="radio" id="" name=""><label for="">마케팅</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-btn">
+                                                            <button>선택하기</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </dd>
+                                            <dd>
+                                                <button class="select openModalBtn" data-modal="modal2">상세분야</button>
+                                                <div id="modal2" class="modal">
+                                                    <div class="modal-content">
+                                                        <div class="modal-title">
+                                                            <h5>상세분야를 선택해 주세요<span class="txt_blue">최대5개</span></h5>
+                                                            <span class="close"><i class="fa-light fa-xmark"></i></span>
+                                                        </div>
+                                                        <div class="modal-scroll">
+                                                            <div class="select">
+                                                                <input type="checkbox" id="" name="" checked><label for="">로고디자인</label>
+                                                                <input type="checkbox" id="" name=""><label for="">브랜드 디자인·가이드</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-btn">
+                                                            <button>선택하기</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </dd>
+                                            <dd>(*최대 3개를 선택해 주세요)</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt class="flex"><strong>디자인</strong><a class="del">전체삭제</a></dt>
+                                            <dd class="tag">
+                                                <span>웹·모바일 디자인 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                                <span>마케팅 디자인 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                                <span>캐릭터 ·일러스트 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt class="flex"><strong>문서·글쓰기</strong><a class="del">전체삭제</a></dt>
+                                            <dd class="tag">
+                                                <span>스토리텔링 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                                <span>산업별 전문 글작성 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </section>
+                                <section id="profile03">
+                                    <div>
+                                        <h4>보유기술을 선택해 주세요</h4>
+                                        <dl>
+                                            <dd>
+                                                <button class="select openModalBtn" data-modal="modal3">보유기술</button>
+
+                                                <div id="modal3" class="modal">
+                                                    <div class="modal-content">
+                                                        <div class="modal-title">
+                                                            <h5>보유기술을 선택해 주세요</h5>
+                                                            <span class="close"><i class="fa-light fa-xmark"></i></span>
+                                                        </div>
+                                                        <div class="modal-search">
+                                                            <i class="fa-light fa-magnifying-glass"></i><input type="search" placeholder="기술 검색">
+                                                        </div>
+                                                        <div class="modal-scroll">
+                                                            <div class="tabs-container">
+                                                            <div class="tabs">
+                                                                <div class="tab" data-tab="tab1">디자인</div>
+                                                                <div class="tab" data-tab="tab2">마케팅</div>
+                                                                <div class="tab" data-tab="tab3">번역·통역</div>
+                                                                <div class="tab" data-tab="tab4">문서·글쓰기</div>
+                                                                <div class="tab" data-tab="tab5">IT·프로그래밍</div>
+                                                                <div class="tab" data-tab="tab6">세무·법무·노무</div>
+                                                                <div class="tab" data-tab="tab7">창업·사업</div>
+                                                                <div class="tab" data-tab="tab8">운세</div>
+                                                                <div class="tab" data-tab="tab9">직무역량 레슨</div>
+                                                                <div class="tab" data-tab="tab10">취업·입시</div>
+                                                                <div class="tab" data-tab="tab11">투잡·노하우</div>
+                                                                <div class="tab" data-tab="tab12">취미 레슨</div>
+                                                                <div class="tab" data-tab="tab13">생활서비스</div>
+                                                                <div class="tab" data-tab="tab14">영상·사진·음향</div>
+                                                                <div class="tab" data-tab="tab15">심리상담</div>
+                                                                <div class="tab" data-tab="tab16">주문제작</div>
+                                                            </div>
+                                                            <div class="tab-content">
+                                                                <div id="tab1" class="content">
+                                                                    <div class="select">
+                                                                        <input type="checkbox" id="checkbox1" name="checkbox1"><label for="checkbox1">Adobe Photoshop</label>
+                                                                        <input type="checkbox" id="checkbox2" name="checkbox2"><label for="checkbox2">Adobe Illustrator</label>
+                                                                        <input type="checkbox" id="checkbox3" name="checkbox3"><label for="checkbox3">Adobe Creative Suite</label>
+                                                                        <input type="checkbox" id="checkbox4" name="checkbox4"><label for="checkbox4">Adobe Dreamweaver</label>
+                                                                        <input type="checkbox" id="checkbox5" name="checkbox5"><label for="checkbox5">Adobe Flash</label>
+                                                                        <input type="checkbox" id="checkbox6" name="checkbox6"><label for="checkbox6">Adobe XD</label>
+                                                                        <input type="checkbox" id="checkbox7" name="checkbox7"><label for="checkbox7">Indesign</label>
+                                                                        <input type="checkbox" id="checkbox8" name="checkbox8"><label for="checkbox8">MicroSoft PowerPoint</label>
+                                                                        <input type="checkbox" id="checkbox9" name="checkbox9"><label for="checkbox9">Paint tool sai</label>
+                                                                        <input type="checkbox" id="checkbox10" name="checkbox10"><label for="checkbox10">sketch up</label>
+                                                                        <input type="checkbox" id="checkbox11" name="checkbox11"><label for="checkbox11">Corel Painter</label>
+                                                                        <input type="checkbox" id="checkbox12" name="checkbox12"><label for="checkbox12">Sketch3</label>
+                                                                        <input type="checkbox" id="checkbox13" name="checkbox13"><label for="checkbox13">Sketchapp</label>
+                                                                        <input type="checkbox" id="checkbox14" name="checkbox14"><label for="checkbox14">Zeplin</label>
+                                                                        <input type="checkbox" id="checkbox15" name="checkbox15"><label for="checkbox15">HTML &amp; CSS</label>
+                                                                        <input type="checkbox" id="checkbox16" name="checkbox16"><label for="checkbox16">Keyshot</label>
+                                                                        <input type="checkbox" id="checkbox17" name="checkbox17"><label for="checkbox17">3D MAX</label>
+                                                                        <input type="checkbox" id="checkbox18" name="checkbox18"><label for="checkbox18">Rhino3D</label>
+                                                                        <input type="checkbox" id="checkbox19" name="checkbox19"><label for="checkbox19">CATIA</label>
+                                                                        <input type="checkbox" id="checkbox20" name="checkbox20"><label for="checkbox20">3D CAD</label>
+                                                                        <input type="checkbox" id="checkbox21" name="checkbox21"><label for="checkbox21">PRO-E</label>
+                                                                        <input type="checkbox" id="checkbox22" name="checkbox22"><label for="checkbox22">Fusion360</label>
+                                                                        <input type="checkbox" id="checkbox23" name="checkbox23"><label for="checkbox23">MAYA</label>
+                                                                        <input type="checkbox" id="checkbox24" name="checkbox24"><label for="checkbox24">Zbrush</label>
+                                                                        <input type="checkbox" id="checkbox25" name="checkbox25"><label for="checkbox25">Cinema4d</label>
+                                                                        <input type="checkbox" id="checkbox26" name="checkbox26"><label for="checkbox26">Redshift</label>
+                                                                        <input type="checkbox" id="checkbox27" name="checkbox27"><label for="checkbox27">Arnold</label>
+                                                                        <input type="checkbox" id="checkbox28" name="checkbox28"><label for="checkbox28">Substance Painter</label>
+                                                                        <input type="checkbox" id="checkbox29" name="checkbox29"><label for="checkbox29">CAD</label>
+                                                                        <input type="checkbox" id="checkbox30" name="checkbox30"><label for="checkbox30">v-ray</label>
+                                                                        <input type="checkbox" id="checkbox31" name="checkbox31"><label for="checkbox31">Figma</label>
+                                                                        <input type="checkbox" id="checkbox32" name="checkbox32"><label for="checkbox32">after effect</label>
+                                                                        <input type="checkbox" id="checkbox33" name="checkbox33"><label for="checkbox33">auto cad</label>
+                                                                        <input type="checkbox" id="checkbox34" name="checkbox34"><label for="checkbox34">blender</label>
+                                                                        <input type="checkbox" id="checkbox35" name="checkbox35"><label for="checkbox35">lumion</label>
+                                                                        <input type="checkbox" id="checkbox36" name="checkbox36"><label for="checkbox36">Live2D Cubism</label>
+                                                                        <input type="checkbox" id="checkbox37" name="checkbox37"><label for="checkbox37">Vtube Studio</label>
+                                                                        <input type="checkbox" id="checkbox38" name="checkbox38"><label for="checkbox38">Procreate</label>
+                                                                        <input type="checkbox" id="checkbox39" name="checkbox39"><label for="checkbox39">Unity</label>
+                                                                        <input type="checkbox" id="checkbox40" name="checkbox40"><label for="checkbox40">Unreal Engine</label>
+                                                                        <input type="checkbox" id="checkbox41" name="checkbox41"><label for="checkbox41">Substance painter</label>
+                                                                        <input type="checkbox" id="checkbox42" name="checkbox42"><label for="checkbox42">Inventor</label>
+                                                                        <input type="checkbox" id="checkbox43" name="checkbox43"><label for="checkbox43">Spark AR</label>
+                                                                        <input type="checkbox" id="checkbox44" name="checkbox44"><label for="checkbox44">QUARKXPRESS</label>
+                                                                        <input type="checkbox" id="checkbox45" name="checkbox45"><label for="checkbox45">인테리어 시공</label>
+                                                                        <input type="checkbox" id="checkbox46" name="checkbox46"><label for="checkbox46">간판 시공</label>
+                                                                        <input type="checkbox" id="checkbox47" name="checkbox47"><label for="checkbox47">ProtoPie</label>
+                                                                        <input type="checkbox" id="checkbox48" name="checkbox48"><label for="checkbox48">SolidWorks</label>
+                                                                        <input type="checkbox" id="checkbox49" name="checkbox49"><label for="checkbox49">Enscape</label>
+                                                                        <input type="checkbox" id="checkbox50" name="checkbox50"><label for="checkbox50">Adobe Substance 3D</label>
+                                                                        <input type="checkbox" id="checkbox51" name="checkbox51"><label for="checkbox51">Adobe Lightroom</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div id="tab2" class="content">탭 2 내용</div>
+                                                                <div id="tab3" class="content">탭 3 내용</div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-btn">
+                                                            <button>선택하기</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </dd>
+                                            <dd>(*최대 20개를 선택해 주세요)</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt class="flex"><strong>보유기술</strong><a class="del">전체삭제</a></dt>
+                                            <dd class="tag">
+                                                <span>키워드·검색 광고 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                                <span>인스타그램 관리 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                                <span>유튜브 관리 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </section>
+                                <section id="profile04">
+                                    <div>
+                                        <h4>학력전공</h4>
+                                        <dl>
+                                            <dt>학교명</dt>
+                                            <dd><input type="text" id="" placeholder="학교명 입력" value=""></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>전공</dt>
+                                            <dd><input type="text" id="" placeholder="전공 입력" value=""></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>상태</dt>
+                                            <dd><select>
+                                                    <option>이수</option>
+                                                    <option>졸업</option>
+                                                    <option>재학</option>
+                                                    <option>휴학</option>
+                                                </select></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>증빙자료 첨부(선택)</dt>
+                                            <dd>
+                                                <div id="addFile">
+                                                    <a class="btn">파일 첨부</a>
+                                                    <span>증빙자료 파일 첨부</span>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                        <div class="box_blue" id="tip">
+                                            <p>TIP</p>
+                                            <ul>
+                                                <li>증빙 자료 첨부하시면 담당자 검토후 확인 마크<i class="fa-sharp fa-solid fa-badge-check"></i>를 달아드립니다.</li>
+                                                <li><strong>첨부가능자료 : 재학증명서, 졸업증명서,성적증명서</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4>보유 자격증</h4>
+                                        <dl>
+                                            <dt>자격증명</dt>
+                                            <dd><input type="text" id="" placeholder="자격증명 입력" value=""></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>발급기관</dt>
+                                            <dd><input type="text" id="" placeholder="발급기관 입력" value=""></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>발급일</dt>
+                                            <dd><input type="date" id="" value=""></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>증빙자료 첨부(선택)</dt>
+                                            <dd>
+                                                <div id="addFile">
+                                                    <a class="btn">파일 첨부</a>
+                                                    <span>증빙자료 파일 첨부</span>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                        <div class="box_blue" id="tip">
+                                            <p>TIP</p>
+                                            <ul>
+                                                <li>증빙 자료 첨부하시면 담당자 검토후 확인 마크<i class="fa-sharp fa-solid fa-badge-check"></i>를 달아드립니다.</li>
+                                                <li><strong>첨부가능자료 : 자격증사본</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section id="profile05">
+                                    <div>
+                                        <h4>경력기간</h4>
+                                        <dl>
+                                            <dt>총 경력기간을 선택해 주세요</dt>
+                                            <dd>
+                                                <select>
+                                                    <option>신입</option>
+                                                    <option>1년</option>
+                                                    <option>2년</option>
+                                                    <option>3년</option>
+                                                    <option>4년</option>
+                                                    <option>5년</option>
+                                                    <option>6년</option>
+                                                    <option>7년</option>
+                                                    <option>8년</option>
+                                                    <option>9년</option>
+                                                    <option>10년</option>
+                                                    <option>11년</option>
+                                                    <option>12년</option>
+                                                    <option>13년</option>
+                                                    <option>14년</option>
+                                                    <option>15년</option>
+                                                    <option>16년 이상</option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                        <div class="box_blue" id="tip">
+                                            <p>TIP</p>
+                                            <ul>
+                                                <li>전문 분야와 직접적으로 연관된 총 경력 기간을 선택해 주세요.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4>경력 사항</h4>
+                                        <p class="red_point">
+                                            <input type="checkbox" id="freelancer-checkbox" name="freelancer">
+                                            <label for="freelancer-checkbox">프리렌서인 경우, 체크해주세요</label>
+                                        </p>
+                                        <dl>
+                                            <dt>회사명</dt>
+                                            <dd>
+                                                <input type="text" placeholder="회사명 입력">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>근무부서</dt>
+                                            <dd>
+                                                <input type="text" placeholder="근무부서 입력">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>직위</dt>
+                                            <dd>
+                                                <input type="text" placeholder="직워 입력">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>근무지</dt>
+                                            <dd>
+                                                <select>
+                                                    <option>시/도 선택</option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>근무기간</dt>
+                                            <dd>
+                                                <div class="flex">
+                                                <select>
+                                                    <option>년</option>
+                                                </select>
+                                                    &nbsp;
+                                                <select>
+                                                    <option>개월</option>
+                                                </select>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>증빙자료 첨부(선택)</dt>
+                                            <dd>
+                                                <div id="addFile">
+                                                    <a class="btn">파일 첨부</a>
+                                                    <span>증빙자료 파일 첨부</span>
+                                                </div>
+                                            </dd>
+                                        </dl>
+
+                                    </div>
+                                </section>
+                                <section id="profile06">
+                                    <div>
+                                        <h4>희망시급</h4>
+                                        <dl>
+                                            <dt>희망시급을 작성해 주세요</dt>
+                                            <dd class="flex">
+                                                <input type="text" class="text-right" placeholder="">&nbsp;원
+                                            </dd>
+                                            <dd class="setting">
+                                                <input type="checkbox" id="btnToggle1">
+                                                <label class="control">협의가능</label>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </section>
+                                <section id="profile07">
+                                    <div>
+                                        <h4>상주 가능 여부를 선택해 주세요</h4>
+                                        <dl>
+                                            <dd>
+                                                <select>
+                                                    <option>상주 가능</option>
+                                                    <option>상주 불가능</option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                        <!--상주 가능 선택시-->
+                                        <dl>
+                                            <dt>희망 근무 형태</dt>
+                                            <dd class="flex select">
+                                                <input type="checkbox"><label>파트타임</label>&nbsp;
+                                                <input type="checkbox"><label>풀타임</label>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>희망 근무지</dt>
+                                            <dd>
+                                                <select>
+                                                    <option>서대문/마포/은평</option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>현재 상태</dt>
+                                            <dd>
+                                                <select>
+                                                    <option>프로젝트 찾는 중</option>
+                                                    <option>프로젝트 투입 중</option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>근무 시작 가능일</dt>
+                                            <dd>
+                                                <input type="date">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>희망 월급</dt>
+                                            <dd class="flex">
+                                                <input type="text" placeholder="최소(천원단위)">&nbsp;원<span>~</span><input type="text" placeholder="최대(천원단위)">&nbsp;원
+                                            </dd>
+                                        </dl>
+                                        <!--상주 가능 선택시-->
+                                    </div>
+                                </section>
+                                <section id="profile08">
+                                    <div class="history_form">
+                                        <h4>프로젝트 진행 이력</h4>
+                                        <dl>
+                                            <dt class="flex">
+                                                <input id="inputField" type="text" placeholder="이력을 입력해주세요">
+                                                <button id="addButton"><i class="fa-light fa-plus"></i></button>
+                                            </dt>
+                                            <dd class="tag">
+                                                <p>드림포원 2021-05 ~ 2024-05 <a class="del"><i class="fa-light fa-xmark"></i></a></p>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>주제</dt>
+                                            <dd>
+                                                <input type="text" placeholder="주제 입력">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>수행분야</dt>
+                                            <dd>
+                                                <select>
+                                                    <option>선택해 주세요</option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>진행기간</dt>
+                                            <dd class="flex">
+                                                <input type="date"><span>~</span><input type="date">
+                                            </dd>
+                                            <dd class="setting">
+                                                <input type="checkbox" id="btnToggle2">
+                                                <label class="control">진행중</label>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </section>
+                            </div>
+
+
+                            <br>
+                            <div class="btn_confirm">
+                                <input type="submit" class="btn_submit ft_btn" id="pay_submit" value="프로필 등록 및 수정" accesskey="s" onclick="save_profile()">
+                            </div>
+
+						</div>
+
+					</div>
+
+                </div>
+				<!-- 마이페이지에만 나오는 메뉴 -->
+				<?php include_once('./mypage_menu.php'); ?>
+			</div>
+		</div>
+
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+            // 첫 번째 탭과 콘텐츠를 활성화 상태로 설정
+            $('.tab:first').addClass('active');
+            $('.content:first').addClass('active');
+
+            // 탭 클릭 이벤트
+            $('.tab').click(function() {
+                var tab_id = $(this).data('tab');
+
+                // 모든 탭과 콘텐츠의 활성화 상태 제거
+                $('.tab').removeClass('active');
+                $('.content').removeClass('active');
+
+                // 클릭된 탭과 해당 콘텐츠를 활성화 상태로 설정
+                $(this).addClass('active');
+                $('#' + tab_id).addClass('active');
+            });
+        });
+
+        $(document).ready(function() {
+            // 모달 열기
+            $('.openModalBtn').on('click', function() {
+                var modalId = $(this).data('modal');
+                $('#' + modalId).show();
+            });
+
+            // 모달 닫기
+            $('.modal .close').on('click', function() {
+                $(this).closest('.modal').hide();
+            });
+
+            // 선택하기 버튼 클릭 시 모달 닫기
+            $('.modal-btn button').on('click', function() {
+                $(this).closest('.modal').hide();
+            });
+
+            // 모달 외부 클릭 시 모달 닫기
+            $(window).on('click', function(e) {
+                if ($(e.target).hasClass('modal')) {
+                    $(e.target).hide();
+                }
+            });
+        });
+
+        //파일첨부
+        // 요소들을 선택합니다
+        const addFileDiv = document.getElementById('addFile');
+        const fileInput = document.createElement('input');  // 파일 입력 엘리먼트를 생성합니다
+        fileInput.type = 'file';  // 파일 입력으로 설정합니다
+        fileInput.style.display = 'none';  // 숨깁니다 (버튼처럼 스타일링하기 위해)
+
+        // 생성한 파일 입력을 addFileDiv에 추가합니다
+        addFileDiv.appendChild(fileInput);
+
+        // span과 버튼을 선택합니다
+        const span = addFileDiv.querySelector('span');
+        const btn = addFileDiv.querySelector('.btn');
+
+        // 버튼에 클릭 이벤트 리스너를 추가합니다
+        btn.addEventListener('click', function() {
+            fileInput.click();  // 파일 입력을 클릭하여 파일 선택 대화상자를 엽니다
+        });
+
+        // 파일 입력의 변경 이벤트를 처리합니다
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];  // 선택된 파일을 가져옵니다
+            if (file) {
+                span.textContent = file.name;  // span의 텍스트를 선택된 파일의 이름으로 업데이트합니다
+            } else {
+                span.textContent = '증빙자료 파일 첨부';  // 파일이 선택되지 않았을 때는 기본 텍스트로 설정합니다
+            }
+        });
+
+
+
+
+    </script>
+    <script>
+        function save_profile() {
+
+            let formData = new FormData();
+
+            for(let i=1; i<7; i++){
+                let fileInput = document.getElementById("file"+i);
+                let file = fileInput.files[0];
+                if(file){
+                    formData.append("file"+i, file);
+                }
+
+                let checkbox = document.getElementById("file_d"+i);
+                if (checkbox != null && checkbox.checked) {
+                    formData.append("file_d"+i,"t");
+                } else {
+                    formData.append("file_d"+i,"f");
+                }
+            }
+            // let re_time = $("#mb_1").val();
+            // let start_time_h = $("#call_hour_1").val();
+            // let end_time_h = $("#call_hour_2").val();
+            // let start_time_m = $("#call_min_1").val();
+            // let end_time_m = $("#call_min_2").val();
+            // let mb_about = $("#pf_produce").val();
+
+            let mb_nick = $("#mb_nick").val();
+            var org_mb_nick = "<?=$member[mb_nick]?>";
+            if(mb_nick.trim() == "") {
+                alert("닉네임은 필수입니다.");
+                return false;
+            }
+            if(mb_nick.trim().length < 2) {
+                alert("닉네임은 2글자 이상이어야 합니다.");
+                return false;
+            }
+            let mb_sex = $("input:radio[name='mb_sex']:checked").val() ? $("input:radio[name='mb_sex']:checked").val() : "";
+            let mb_birth = $("#mb_birth").val();
+            let mb_job = $("input:radio[name='mb_job']:checked").val();
+            let mb_interest = [];
+            $("input[name='mb_interest']:checked").each(function(e){
+                mb_interest.push($(this).val());
+            })
+            var nick_check = false;
+            var error = false;
+            // 닉네임중복검사
+            $.ajax({
+                url : "ajax_nick_check.php",
+                method : "post",
+                enctype : "multipart/form-data",
+                async : false,
+                cache : false,
+                data : {
+                    "_method" : "get",
+                    "mb_nick" : mb_nick
+                },
+                dataType : "json",
+                success: function(res){
+                    console.log(res);
+                    if(!res.success) {
+                        alert(res.message);
+                        error = true;
+                    }
+                    else {
+                        if(res.data.length > 0) nick_check = true;
+                    }
+                }
+            });
+
+            if(error) return false;
+
+            if(nick_check && org_mb_nick != mb_nick) {
+                alert("이미 존재하는 닉네임입니다.");
+                return false;
+            }
+
+            formData.append("mode","save_profile");
+            // formData.append("re_time",re_time);
+            // formData.append("start_time_h",start_time_h);
+            // formData.append("end_time_h",end_time_h);
+            // formData.append("start_time_m",start_time_m);
+            // formData.append("end_time_m",end_time_m);
+            // formData.append("mb_about",mb_about);
+            formData.append("mb_nick",mb_nick);
+            formData.append("mb_sex",mb_sex);
+            formData.append("mb_birth",mb_birth);
+            formData.append("mb_job",mb_job);
+            formData.append("mb_interest",JSON.stringify(mb_interest));
+            formData.append("mb_profile","true");
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "<?=G5_URL?>/bbs/ajax.controller.php", true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // 파일 업로드 성공 시 동작할 코드 작성
+                    swal('등록 되었습니다.');
+                    console.log("파일 업로드 성공");
+
+                    var response = xhr.responseText;
+                    console.log(response);
+                } else {
+                    // 파일 업로드 실패 시 동작할 코드 작성
+                    console.log("파일 업로드 실패");
+                }
+            };
+            xhr.send(formData);
+        }
+
+
+
+        //이미지 미리보기
+        function getImgPrev(input) {
+            var regex = /(.*?)\.(jpg|jpeg|png|bmp|jfif|JPG)$/;
+            var filesTempArr = [];
+
+            if (!regex.test(input.files[0].name)) {
+                swal("이미지만 등록이 가능합니다. (jpg, jpeg, png, bmp, jfif, JPG)");
+                input.value = "";
+                return false;
+            }
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = document.createElement('img'),
+                        div_img = document.getElementById("img_area");
+                    // btn = document.createElement('button');
+
+                    var el = $(input);
+                    // img.setAttribute("class", "p_img");
+                    img.setAttribute("src", e.target.result);
+                    // img.setAttribute("style", "width:110px;height:110px;");
+                    $("#img_area").html(img);
+
+                }
+                reader.readAsDataURL(input.files[0]);
+
+                var files = input.files;
+                var files_arr = Array.prototype.slice.call(files);
+                filesTempArr.push(files_arr);
+
+                var form = $('#imgfrm')[0];
+                var formData = new FormData(form);
+                // formData.append("mb_icon", filesTempArr);
+                formData.append("mode", "mb_icon_update");
+
+                // 이미지 등록
+                $.ajax({
+                    url : g5_bbs_url + "/ajax.controller.php",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    type: 'POST',
+                    success : function(data) {
+                        if(data =='success'){
+                            swal('사진 등록이 완료되었습니다.');
+                            // $('#del_file').val(data);
+                        }else{
+                            alert(data);
+                        }
+                    },
+                    err : function(err) {
+                        alert(err.status);
+                    }
+                });
+            }
+        }
+
+    </script>
+
+
+
+<?
+include_once('./_tail.php');
+?>
+

@@ -1,8 +1,11 @@
 <?
 include_once('./_common.php');
+include_once("../class/Lib.php");
+$jl = new JL();
+
 $name = "cmypage";
 $pid = "mypage_form";
-$g5['title'] = '프로필관리';
+$g5['title'] = '전문가 프로필관리';
 include_once('./_head.php');
 
 $mb = get_member($member[mb_id]);
@@ -24,177 +27,95 @@ if($mb == null) alert("로그인 해주세요", G5_URL);
 </style>
 
     <div id="area_mypage" class="profile">
-		<div class="inr">		
+		<div class="inr" id="app">
 			<div id="mypage_wrap">
-				<?php include_once('./mypage_info.php'); ?> 
-				
-				<div class="mypage_cont">
-					<div class="box">
-						<h3>프로필관리</h3>
-						
-						<div id="profile_form">
+				<?php include_once('./mypage_info.php'); ?>
 
-                            <div class="myinfo_wrap" >
-                                <form id = 'imgfrm'>
-                                    <input type="file" name="mb_icon" id="mb_icon" onchange="getImgPrev(this);" accept="image/*" style="display: none">
+                <profile-main mb_no="<?=$member['mb_no']?>"></profile-main>
 
-                                    <div class="area_photo">
-                                        <div class="photo basic" id="img_area" onclick="file_click();">
-                                        <?php
-                                        $icon_file = G5_DATA_PATH.'/file/member/'.$member['mb_no'].'.jpg';
-                                        if (file_exists($icon_file)) {
-                                            $icon_url = G5_DATA_URL.'/file/member/'.$member['mb_no'].'.jpg';
-                                            echo '<img src="'.$icon_url.'" alt="">';
-                                        }else{
-                                            echo '<img src="'.G5_IMG_URL .'/img_smile.jpg">';
-                                        }
-                                        ?>
-                                        </div>
-                                        <span class="upload"><i class="fa-solid fa-camera-retro"></i></span>
-                                    </div>
-                                </form>
-                            </div>
-                                <dl>
-                                    <dt>닉네임</dt>
-                                    <dd><input type="text" id="mb_nick" placeholder="활동명 or 회사명" value="<?=$member['mb_nick']?>"></dd>
-                                </dl>
-
-                                <dl>
-                                    <dt>성별</dt>
-                                    <dd>
-                                        <input type="radio" name="mb_sex" value="M" <?php if($member["mb_sex"] == "M") echo "checked"?>> 남성
-                                        <input type="radio" name="mb_sex" value="W" <?php if($member["mb_sex"] == "W") echo "checked"?>> 여성
-                                    </dd>
-                                </dl>
-
-                            <dl>
-                                <dt>생년월일</dt>
-                                <dd><input type="text" id="mb_birth" placeholder="생년월일" value="<?=$member['mb_birth']?>"></dd>
-                            </dl>
-
-                            <?php $jobs = ["직장인","프리랜서","자영업자","대학생","배우","뮤지션","성우","모델","디자이너",
-                                "아트디렉터","방송스탭","PD","작가","강사","쇼호스트","트레이너","크리에이터","뷰티업종","IT","요식업","무직","기타"];?>
-                            <dl>
-                                <dt>현재직업</dt>
-                                <dd>
-                                    <?php foreach($jobs as $i) { ?>
-                                    <input type="radio" name="mb_job" value="<?=$i?>" <?php if($member["mb_job"] == $i) echo "checked";?>> <?=$i?>
-                                    <?}?>
-                                </dd>
-                            </dl>
-
-                            <?php
-                                $interests = ["배우·연기" ,"모델" ,"영상·사진·음향" ,"영상디자인·편집" ,"방송마케팅" ,"행사·MC·이벤트"
-                                ,"방송 스태프" ,"시나리오· 작가" ,"뷰티·패션" ,"레슨" ,"심리상담" ,"기타" ,"선택안함" ];
-                                $mb_interests = json_decode($member["mb_interest"],true);
-                            ?>
-                            <dl>
-                                <dt>관심분야</dt>
-                                <dd>
-                                    <?php foreach($interests as $i) { ?>
-                                        <input type="checkbox" name="mb_interest" value="<?=$i?>" <?php if(in_array($i,$mb_interests)) echo "checked"; ?>> <?=$i?>
-                                    <?}?>
-                                </dd>
-                            </dl>
-
-<!--                            <dl>-->
-<!--                                <dt>응답시간</dt>-->
-<!--                                <dd>-->
-<!--                                        <select name="pf_time" class="select" id="mb_1" title="응답시간">-->
-<!--                                            <option value="1" --><?//if($member['re_time'] == 1) { ?><!--selected--><?//}?><!-- >30분 이내</option>-->
-<!--                                            <option value="2" --><?//if($member['re_time'] == 2) { ?><!--selected--><?//}?><!-- >1시간 이내</option>-->
-<!--                                            <option value="3" --><?//if($member['re_time'] == 3) { ?><!--selected--><?//}?><!-- >1시간 이상</option>-->
-<!--                                        </select>-->
-<!--                                </dd>-->
-<!--                                <dd class="error col-xs-12"></dd>-->
-<!--                            </dl>-->
-<!--                            <dl>-->
-<!--                                <dt>연락가능시간</dt>-->
-<!--                                <dd>-->
-<!--                                    <div class="flex">-->
-<!--                                        <select name="call_hour_1" class="select" id="call_hour_1" title="시간">-->
-<!--                                            <option value="">시간</option>-->
-<!--                                            --><?php
-//                                            for ($i = 1; $i <= 24; $i++) {
-//                                                $selected = ($member['start_time_h'] == $i) ? 'selected' : '';
-//                                                echo '<option value="' . sprintf("%02d", $i) . '" ' . $selected . '>' . sprintf("%02d", $i) . '</option>';
-//                                            }
-//                                            ?>
-<!--                                        </select>-->
-<!--                                        &nbsp;-->
-<!--                                        <select name="call_min_1" class="select" id="call_min_1" title="분">-->
-<!--                                            <option value="">분</option>-->
-<!--                                            --><?php
-//                                            $minutes = ['00', '10', '20', '30', '40', '50'];
-//                                            foreach ($minutes as $minute) {
-//                                                $selected = ($member['start_time_m'] == $minute) ? 'selected' : '';
-//                                                echo '<option value="' . $minute . '" ' . $selected . '>' . $minute . '</option>';
-//                                            }
-//                                            ?>
-<!--                                        </select>-->
-<!--                                        &nbsp;&nbsp;-->
-<!--                                        <select name="call_hour_2" class="select" id="call_hour_2" title="시간">-->
-<!--                                            <option value="">시간</option>-->
-<!--                                            --><?php
-//                                            for ($i = 1; $i <= 24; $i++) {
-//                                                $selected = ($member['end_time_h'] == $i) ? 'selected' : '';
-//                                                echo '<option value="' . sprintf("%02d", $i) . '" ' . $selected . '>' . sprintf("%02d", $i) . '</option>';
-//                                            }
-//                                            ?>
-<!--                                        </select>-->
-<!--                                        &nbsp;-->
-<!--                                        <select name="call_min_2" class="select" id="call_min_2" title="분">-->
-<!--                                            <option value="">분</option>-->
-<!--                                            --><?php
-//                                            foreach ($minutes as $minute) {
-//                                                $selected = ($member['end_time_m'] == $minute) ? 'selected' : '';
-//                                                echo '<option value="' . $minute . '" ' . $selected . '>' . $minute . '</option>';
-//                                            }
-//                                            ?>
-<!--                                        </select>-->
-<!---->
-<!--                                </dd>-->
-<!--                                <dd class="error col-xs-12"></dd>-->
-<!--                            </dl>-->
-<!--                            <dl>-->
-<!--                                <dt>자기소개 글</dt>-->
-<!--                                <dd>-->
-<!--                                    <textarea placeholder="소개글을 입력해주세요." maxlength="255" rows="6" spellcheck="false" name="pf_produce" id="pf_produce" style="min-height: 204px;">--><?//=$member['mb_about']?><!--</textarea>-->
-<!--                                </dd>-->
-<!--                                <dd class="error col-xs-12"></dd>-->
-<!--                            </dl>-->
-
-
-                                <dl>
-                                    <dt>포트폴리오</dt>
-
-                                    <? for($i=1; $i<7; $i++ ) { ?>
-                                        <dd>
-                                            <input type="file" name="file<?=$i?>" id="file<?=$i?>">
-                                            <? if($member['file'.$i] != "") { ?>
-                                                <label for="file_d<?=$i?>"><input type="checkbox" id="file_d<?=$i?>"> <?=$member['file_name'.$i]?>  삭제하기</label>
-                                            <?}?>
-                                        </dd>
-                                    <?}?>
-                                </dl>
-
-                            <div class="btn_confirm">
-                                <input type="submit" class="btn_submit ft_btn" id="pay_submit" value="프로필 등록 및 수정" accesskey="s" onclick="save_profile()">
-                            </div>
-
-						</div>
-						
-					</div>
-
-                </div>
 				<!-- 마이페이지에만 나오는 메뉴 -->
-				<?php include_once('./mypage_menu.php'); ?> 	
-			</div>				
+				<?php include_once('./mypage_menu.php'); ?>
+			</div>
 		</div>
 
     </div>
 
+<?
+$jl->vueLoad();
+//foreach ($jl->getDir("/component/profile") as $data) {
+//    echo $data."<br>";
+//}
 
+//$jl->includeDir("/component/profile");
+include_once($jl->ROOT."/component/profile/profile-main.php");
+include_once($jl->ROOT."/component/profile/profile-section1.php");
+include_once($jl->ROOT."/component/profile/profile-section2.php");
+include_once($jl->ROOT."/component/profile/profile-section3.php");
+include_once($jl->ROOT."/component/profile/profile-section4.php");
+include_once($jl->ROOT."/component/profile/profile-section5.php");
+include_once($jl->ROOT."/component/profile/profile-section6.php");
+include_once($jl->ROOT."/component/profile/profile-section7.php");
+include_once($jl->ROOT."/component/profile/profile-section8.php");
+?>
+    <script>
+        $(document).ready(function() {
+            // 모달 열기
+            $('.openModalBtn').on('click', function() {
+                var modalId = $(this).data('modal');
+                $('#' + modalId).show();
+            });
+
+            // 모달 닫기
+            $('.modal .close').on('click', function() {
+                $(this).closest('.modal').hide();
+            });
+
+            // 선택하기 버튼 클릭 시 모달 닫기
+            $('.modal-btn button').on('click', function() {
+                $(this).closest('.modal').hide();
+            });
+
+            // 모달 외부 클릭 시 모달 닫기
+            $(window).on('click', function(e) {
+                if ($(e.target).hasClass('modal')) {
+                    $(e.target).hide();
+                }
+            });
+        });
+
+        //파일첨부
+        // 요소들을 선택합니다
+        const addFileDiv = document.getElementById('addFile');
+        const fileInput = document.createElement('input');  // 파일 입력 엘리먼트를 생성합니다
+        fileInput.type = 'file';  // 파일 입력으로 설정합니다
+        fileInput.style.display = 'none';  // 숨깁니다 (버튼처럼 스타일링하기 위해)
+
+        // 생성한 파일 입력을 addFileDiv에 추가합니다
+        addFileDiv.appendChild(fileInput);
+
+        // span과 버튼을 선택합니다
+        const span = addFileDiv.querySelector('span');
+        const btn = addFileDiv.querySelector('.btn');
+
+        // 버튼에 클릭 이벤트 리스너를 추가합니다
+        btn.addEventListener('click', function() {
+            fileInput.click();  // 파일 입력을 클릭하여 파일 선택 대화상자를 엽니다
+        });
+
+        // 파일 입력의 변경 이벤트를 처리합니다
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];  // 선택된 파일을 가져옵니다
+            if (file) {
+                span.textContent = file.name;  // span의 텍스트를 선택된 파일의 이름으로 업데이트합니다
+            } else {
+                span.textContent = '증빙자료 파일 첨부';  // 파일이 선택되지 않았을 때는 기본 텍스트로 설정합니다
+            }
+        });
+
+
+
+
+    </script>
     <script>
         function save_profile() {
 
