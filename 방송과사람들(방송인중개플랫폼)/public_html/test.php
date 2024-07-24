@@ -86,57 +86,8 @@ $jl = new JL();
         </draggable>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        new Vue({
-            el: '#app',
-            components: {
-                draggable: vuedraggable
-            },
-            data: {
-                categories: [
-                    {
-                        id: 'cat1',
-                        title: '1차 카테고리 1',
-                        subcategories: [
-                            { id: 'subcat1-1', title: '2차 카테고리 1-1' },
-                            { id: 'subcat1-2', title: '2차 카테고리 1-2' }
-                        ]
-                    },
-                    {
-                        id: 'cat2',
-                        title: '1차 카테고리 2',
-                        subcategories: [
-                            { id: 'subcat2-1', title: '2차 카테고리 2-1' },
-                            { id: 'subcat2-2', title: '2차 카테고리 2-2' }
-                        ]
-                    },
-                    {
-                        id: 'cat3',
-                        title: '1차 카테고리 3',
-                        subcategories: [
-                            { id: 'subcat3-1', title: '2차 카테고리 3-1' },
-                            { id: 'subcat3-2', title: '2차 카테고리 3-2' }
-                        ]
-                    }
-                ]
-            },
-            methods: {
-                onEnd(event) {
-                    console.log('Drag ended', event);
-                    this.$nextTick(() => {
-                        console.log('DOM updated after drag');
-                        // 여기에 필요한 추가 작업을 수행합니다.
-                    });
-                }
-            }
-        });
-    });
-</script>
+<?
+$jl->vueLoad();
+?>
 </body>
 </html>

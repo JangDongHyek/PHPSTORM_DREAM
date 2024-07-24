@@ -1,5 +1,5 @@
 // Vue 인스턴스 생성
-Vue.data    = {test : JL_app_name};
+Vue.data    = {};
 Vue.methods = {};
 Vue.watch   = {};
 Vue.components = {};

@@ -2,6 +2,7 @@
 include_once('./_common.php');
 include_once("../class/Lib.php");
 
+$jl = new JL();
 
 $g5['title'] = '리스트';
 include_once('./_head.php');

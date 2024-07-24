@@ -6,7 +6,7 @@ class JL {
     public  $DB;
     public  $URL;
     public  $ROOT;
-    public  $vue_load = false;
+    public static $vue_load = false;    // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
         $this->INIT();
@@ -26,7 +26,7 @@ class JL {
     }
 
     function vueLoad($app_name = "app") {
-        if(!$this->vue_load) {
+        if(!self::$vue_load) {
             echo "<script>";
             echo "const JL_base_url = '{$this->URL}';";
             echo "const JL_dev = {$this->DEV};";
@@ -36,7 +36,7 @@ class JL {
             echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             echo "<script src='{$this->URL}{$this->JS}?name={$app_name}'></script>";
 
-            $this->vue_load = true;
+            self::$vue_load = true;
         }
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";

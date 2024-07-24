@@ -2,28 +2,41 @@
 class JL {
     private $root_dir = "public_html";
     private $JS = "/js/jang.js";
-    protected $DB;
+    private $DEV = true;                //해당값이 false 이면 로그가 안찍힙니다.
+    public  $DB;
     public  $URL;
     public  $ROOT;
-    public $vue_load = false;
+    public static $vue_load = false;    // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
         $this->INIT();
     }
 
+    function jsonDecode($json) {
+        // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
+        $obj = str_replace('\\', '', $json);
+        $obj = json_decode($obj, true);
+
+        // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
+        foreach ($obj as $key => $value) {
+            if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
+        }
+
+        return $obj;
+    }
+
     function vueLoad($app_name = "app") {
-        if(!$this->vue_load) {
+        if(!self::$vue_load) {
             echo "<script>";
-            echo "const JL_app_name = '{$app_name}';";
             echo "const JL_base_url = '{$this->URL}';";
-            echo "const JL_dev = true;";
+            echo "const JL_dev = {$this->DEV};";
             echo "</script>";
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
             echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             echo "<script src='{$this->URL}{$this->JS}?name={$app_name}'></script>";
 
-            $this->vue_load = true;
+            self::$vue_load = true;
         }
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
@@ -72,15 +85,6 @@ class JL {
             throw new Exception("ROOT 위치를 찾을 수 없습니다.");
         }
 
-        //DB 정보
-        $this->DB = array(
-            "hostname" => "localhost",
-            "username" => "broadcast",
-            "password" => "c3gq%qyc",
-            "database" => "broadcast"
-        );
-
-
         //URL 구하기
         $http = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? 's' : '') . '://';
         $user = str_replace(str_replace($this->ROOT, '', $_SERVER['SCRIPT_FILENAME']), '', $_SERVER['SCRIPT_NAME']);
@@ -91,6 +95,14 @@ class JL {
 
         //js파일 찾기
         if(!file_exists($this->ROOT.$this->JS)) throw new Exception("JS 위치를 찾을 수 없습니다.");
+
+        //DB 설정
+        $this->DB = array(
+            "hostname" => "localhost",
+            "username" => "broadcast",
+            "password" => "c3gq%qyc",
+            "database" => "broadcast"
+        );
     }
 }
 

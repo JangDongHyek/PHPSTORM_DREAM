@@ -15,15 +15,21 @@ $is_write = "F";
 $is_order = "F";
 $readonly = "";
 
+//if($_GET['aa'] == 'aa') {
+    //var_dump($cnt_apply);
+    //echo
+    //die();
+//}
+
 if(!empty($cnt_apply)){
     $is_write = "T";
     $submit_title = "결제하기";
     $readonly = "disabled";
 
-    $sql = "select * from `g5_order_list` where `bo_table` = 'edu' and `wr_id` = '$eduid' and `write_id` = '$cnt_apply[wr_id]'";
-    $oder_row = sql_fetch($sql);
+    //$sql = "select * from `g5_order_list` where `bo_table` = 'edu' and `wr_id` = '$eduid' and `write_id` = '$cnt_apply[wr_id]'";
+    //$oder_row = sql_fetch($sql);
 
-    if(!empty($oder_row)){
+    if($cnt_apply['wr_7']){
         $is_order = "T";
         $submit_title = "접수완료";
     }

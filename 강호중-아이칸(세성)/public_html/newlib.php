@@ -85,7 +85,10 @@ function getTotalBonus()
 {
     global $dbconn;
 
-    if ($_SESSION["MemberLevel"] == 10) {
+    if ($_SESSION["MemberLevel"] == 10) { // 총관리자
+        return 10000;
+    }
+    if ($_SESSION["MemberLevel"] == 1) { // 1차관리자
         return 10000;
     }
 
