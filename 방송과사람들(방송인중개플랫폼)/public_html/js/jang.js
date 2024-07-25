@@ -105,6 +105,33 @@ class JL {
         );
     }
 
+    copyObject(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
+    initObject(obj) {
+        var result = JSON.parse(JSON.stringify(obj));
+        for (let key in result) {
+            if (typeof result[key] === "number") {
+                result[key] = 0;
+            } else if(typeof result[key] === "object"){
+                if(Array.isArray(result[key])) result[key] = []
+                else result[key] = {}
+            } else {
+                result[key] = "";
+            }
+        }
+        return result;
+    }
+
+    formatNumber(value,comma = false) {
+        value = value.replace(/[^0-9]/g, '');
+
+        if(comma) return isNaN(parseInt(value)) ? value : parseInt(value).format();
+
+        return value;
+    }
+
     formatPhone(value,hyphen = true) {
         var length = hyphen ? 13 : 11
 

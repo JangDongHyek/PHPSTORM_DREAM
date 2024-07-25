@@ -47,7 +47,7 @@
                     <profile-section4 v-if="section == 4" :user="data"></profile-section4>
                     <profile-section5 v-if="section == 5" :user="data"></profile-section5>
                     <profile-section6 v-if="section == 6" :user="data"></profile-section6>
-                    <profile-section7 v-if="section == 7" :user="data"></profile-section7>
+                    <profile-section7 v-show="section == 7" :user="data" ref="section7"></profile-section7>
                     <profile-section8 v-if="section == 8" :user="data"></profile-section8>
                 </div>
 
@@ -77,7 +77,7 @@
                     mb_no: this.mb_no
                 },
                 data : {},
-                section : 1,
+                section : 8,
                 origin_nick : "",
             };
         },
@@ -117,6 +117,21 @@
             },
             updateData : function() {
                 if(!this.checkNick()) {
+                    return false;
+                }
+
+                if(this.data.job_categories.length > 3) {
+                    alert("전문분야는 최대 3개까지 가능합니다");
+                    return false;
+                }
+
+                if(this.$refs.section7.checkMonth(this.data.job_work_smonth)) {
+                    alert("희망월급의 최소부분을 확인해주세요.");
+                    return false;
+                }
+
+                if(this.$refs.section7.checkMonth(this.data.job_work_emonth)) {
+                    alert("희망월급의 최대부분을 확인해주세요.");
                     return false;
                 }
 

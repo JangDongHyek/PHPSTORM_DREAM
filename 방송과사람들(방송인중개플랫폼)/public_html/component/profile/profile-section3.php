@@ -5,9 +5,9 @@
             <h4>보유기술을 선택해 주세요</h4>
             <dl>
                 <dd>
-                    <button class="select openModalBtn" data-modal="modal3">보유기술</button>
+                    <button class="select openModalBtn" data-modal="modal3" @click="modal = true">보유기술</button>
 
-                    <div id="modal3" class="modal">
+                    <div id="modal3" class="modal" :style="{display : modal ? 'block' : 'none'}">
                         <div class="modal-content">
                             <div class="modal-title">
                                 <h5>보유기술을 선택해 주세요</h5>
@@ -121,7 +121,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-
+            user: {type: Object, default: {}}
         },
         data: function(){
             return {
@@ -132,6 +132,7 @@
                 data : {
 
                 },
+                modal : false
             };
         },
         created: function(){

@@ -31,6 +31,7 @@ if($mb == null) alert("로그인 해주세요", G5_URL);
 			<div id="mypage_wrap">
 				<?php include_once('./mypage_info.php'); ?>
 
+                <!--의뢰인 프로필 작업하실때 밑에 컴포넌트 주석처리하시고 여기다 작업해놓으시면 제가 Vue화 시켜놓겠습니다-->
                 <profile-main mb_no="<?=$member['mb_no']?>"></profile-main>
 
 				<!-- 마이페이지에만 나오는 메뉴 -->

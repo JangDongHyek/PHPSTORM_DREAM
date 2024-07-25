@@ -1,71 +1,78 @@
-<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
-<script type="text/x-template" id="<?=$componentName?>-template">
+<?php $componentName = str_replace(".php", "", basename(__FILE__)); ?>
+<script type="text/x-template" id="<?= $componentName ?>-template">
     <section id="profile02">
         <div>
             <h4>전문분야 및 상세 분야를 선택해 주세요</h4>
             <dl>
                 <dd>
-                    <button class="select openModalBtn" data-modal="modal1">{{category1 ? category1.name : '전문분야'}}</button>
+                    <button class="select openModalBtn" data-modal="modal1" @click="modal1 = true;">{{category1 ?
+                        category1.name : '전문분야'}}
+                    </button>
 
-                    <div id="modal1" class="modal">
+                    <div id="modal1" class="modal" :style="{display : modal1 ? 'block' : 'none'}">
                         <div class="modal-content">
                             <div class="modal-title">
                                 <h5>전문 분야를 선택해 주세요</h5>
-                                <span class="close"><i class="fa-light fa-xmark"></i></span>
+                                <span class="close" @click="modal1 = false"><i class="fa-light fa-xmark"></i></span>
                             </div>
                             <div class="modal-scroll">
                                 <div class="select">
-                                    <template v-for="item,index in data">
-                                        <input type="radio" v-model="user.cate1_idx" :value="item.idx" :id="'radio' + index" name="cate1_radio"><label :for="'radio' + index">{{item.name}}</label>
+                                    <template v-for="item,index in categories">
+                                        <input type="radio" v-model="cate1_idx" :value="item.idx" :id="'radio' + index"
+                                               name="cate1_radio"><label :for="'radio' + index">{{item.name}}</label>
                                     </template>
                                 </div>
                             </div>
                             <div class="modal-btn">
-                                <button>선택하기</button>
+                                <button @click="modal1 = false; modal2 = true;">선택하기</button>
                             </div>
                         </div>
                     </div>
                 </dd>
                 <dd>
-                    <button v-show="category1" class="select openModalBtn" data-modal="modal2">상세분야</button>
+                    <button v-show="category1" class="select openModalBtn" data-modal="modal2" @click="modal2 = true;">
+                        상세분야
+                    </button>
                     <template v-if="!category1">
                         <button class="select" @click="alert('전문 분야를 선택해주세요')">상세분야</button>
                     </template>
-                    <div id="modal2" class="modal">
+                    <div id="modal2" class="modal" :style="{display : modal2 ? 'block' : 'none'}">
                         <div class="modal-content">
                             <div class="modal-title">
                                 <h5>상세분야를 선택해 주세요<span class="txt_blue">최대5개</span></h5>
-                                <span class="close"><i class="fa-light fa-xmark"></i></span>
+                                <span class="close" @click="modal2 = false"><i class="fa-light fa-xmark"></i></span>
                             </div>
                             <div class="modal-scroll">
-                                <div class="select">
-                                    <input type="checkbox" id="" name="" checked><label for="">로고디자인</label>
-                                    <input type="checkbox" id="" name=""><label for="">브랜드 디자인·가이드</label>
+                                <div class="select" v-if="category1">
+                                    <template v-for="item,index in category1.childs">
+                                        <input type="radio" :value="item.idx" :id="'radio2' + index"
+                                               :checked="cate2_idx.includes(item.idx)" @click="handleCategory(item.idx)">
+                                        <label :for="'radio2' + index">{{item.name}}</label>
+                                    </template>
                                 </div>
                             </div>
                             <div class="modal-btn">
-                                <button>선택하기</button>
+                                <button @click="pushCategory">선택하기</button>
                             </div>
                         </div>
                     </div>
                 </dd>
                 <dd>(*최대 3개를 선택해 주세요)</dd>
             </dl>
-            <dl>
-                <dt class="flex"><strong>디자인</strong><a class="del">전체삭제</a></dt>
+            <dl v-for="item,index in user.job_categories">
+                <dt class="flex"><strong>{{findCategory(item.idx).name}}</strong>
+                    <a class="del" href="" @click="event.preventDefault(); user.job_categories.splice(index,1)">전체삭제</a>
+                </dt>
                 <dd class="tag">
-                    <span>웹·모바일 디자인 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
-                    <span>마케팅 디자인 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
-                    <span>캐릭터 ·일러스트 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                    <span v-for="child,index2 in item.childs">{{findCategory(item.idx,child).name}}
+                        <a class="del" @click="item.childs.splice(index2,1)"><i class="fa-light fa-xmark"></i></a>
+                    </span>
                 </dd>
             </dl>
-            <dl>
-                <dt class="flex"><strong>문서·글쓰기</strong><a class="del">전체삭제</a></dt>
-                <dd class="tag">
-                    <span>스토리텔링 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
-                    <span>산업별 전문 글작성 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
-                </dd>
-            </dl>
+
+            <div class="warning-message1AA2" v-if="user.job_categories.length > 3">
+                전문분야는 최대 3개까지입니다.
+            </div>
         </div>
     </section>
 </script>
@@ -74,48 +81,67 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            user : {type : Object, default : {}}
+            user: {type: Object, default: {}}
         },
-        data: function(){
+        data: function () {
             return {
-                jl : null,
-                filter : {
-                    parent_idx : "",
+                jl: null,
+                filter: {
+                    parent_idx: "",
                 },
-                data : [],
+                categories: [],
+                modal1: false,
+                modal2: false,
+                cate1_idx: "",
+                cate2_idx: [],
+
+                data: {
+                    job_categories: [],
+                }
             };
         },
-        created: function(){
+        created: function () {
             this.jl = new JL('<?=$componentName?>');
             this.getCategory()
         },
-        mounted: function(){
+        mounted: function () {
             this.$nextTick(() => {
-                // 모달 열기
-                $('.openModalBtn').on('click', function() {
-                    var modalId = $(this).data('modal');
-                    $('#' + modalId).show();
-                });
 
-                // 모달 닫기
-                $('.modal .close').on('click', function() {
-                    $(this).closest('.modal').hide();
-                });
-
-                // 선택하기 버튼 클릭 시 모달 닫기
-                $('.modal-btn button').on('click', function() {
-                    $(this).closest('.modal').hide();
-                });
-
-                // 모달 외부 클릭 시 모달 닫기
-                $(window).on('click', function(e) {
-                    if ($(e.target).hasClass('modal')) {
-                        $(e.target).hide();
-                    }
-                });
             });
         },
         methods: {
+            findCategory : function(parent,child = "") {
+                var first = this.categories.find(item => item['idx'] === parent);
+                if(child) {
+                    var second = first.childs.find(item => item['idx'] === child);
+                    return second
+                }
+                return first;
+            },
+            handleCategory: function (idx) {
+                var index = this.cate2_idx.indexOf(idx);
+
+                if (index > -1) {
+                    this.cate2_idx.splice(index, 1);
+                } else if (this.cate2_idx.length > 4) {
+                    event.preventDefault();
+                } else {
+                    this.cate2_idx.push(idx);
+
+                }
+
+            },
+            pushCategory: function () {
+                const index = this.user.job_categories.findIndex(item => item.idx === this.cate1_idx);
+                if(index > -1) {
+                    this.user.job_categories[index].childs = this.cate2_idx;
+                }else {
+                    var object = {idx : this.cate1_idx,childs : this.cate2_idx};
+                    this.user.job_categories.push(object);
+                }
+
+                this.modal2 = false;
+            },
             getCategory: function () {
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));
@@ -128,27 +154,44 @@
                 var res = ajax("/api/category.php", objs);
                 if (res) {
                     this.jl.log(res)
-                    this.data = res.response.data
+                    this.categories = res.response.data
                 }
             }
         },
         computed: {
-            category1 : function() {
-                if(this.user.cate1_idx) {
-                    for (let i = 0; i < this.data.length; i++) {
-                        if(this.data[i].idx == this.user.cate1_idx) return this.data[i];
+            category1: function () {
+                if (this.cate1_idx) {
+                    for (let i = 0; i < this.categories.length; i++) {
+                        if (this.categories[i].idx == this.cate1_idx) return this.categories[i];
                     }
                 }
 
                 return null
             }
         },
-        watch : {
-
+        watch: {
+            cate1_idx: function () {
+                const index = this.user.job_categories.findIndex(item => item.idx === this.cate1_idx);
+                console.log(index);
+                if(index > -1) {
+                    this.cate2_idx = this.user.job_categories[index].childs
+                }else {
+                    this.cate2_idx = [];
+                }
+            }
         }
     });
 </script>
 
 <style>
-
+    .warning-message1AA2 {
+        color: red;
+        font-size: 12px;
+        font-weight: bold;
+        border: 1px solid red;
+        padding: 5px;
+        margin: 10px 0;
+        background-color: #ffe6e6;
+        width: fit-content;
+    }
 </style>

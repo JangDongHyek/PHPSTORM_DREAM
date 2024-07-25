@@ -98,7 +98,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-
+            user: {type: Object, default: {}}
         },
         data: function(){
             return {
