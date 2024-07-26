@@ -96,17 +96,58 @@ class JL {
         );
     }
 
+    processObject(objs,obj) {
+        objs = this.copyObject(objs);
+        obj = this.copyObject(obj);
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const value = obj[key];
+                if (value instanceof File) {
+                    objs[key] = value;
+                    delete obj[key];
+                }
+            }
+        }
+
+        objs.obj = JSON.stringify(obj);
+        return objs;
+    }
+
     copyObject(obj) {
-        return JSON.parse(JSON.stringify(obj));
+        // 파일 객체는 복사하지 않고 그대로 반환
+        if (obj instanceof File) {
+            return obj;
+        }
+
+        // 배열일 경우
+        if (Array.isArray(obj)) {
+            return obj.map(item => this.copyObject(item));
+        }
+
+        // 객체일 경우
+        if (obj !== null && typeof obj === 'object') {
+            const copy = {};
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    copy[key] = this.copyObject(obj[key]);
+                }
+            }
+            return copy;
+        }
+
+        // 원시 타입일 경우 (숫자, 문자열, 불리언 등)
+        return obj;
     }
 
     initObject(obj) {
-        var result = JSON.parse(JSON.stringify(obj));
+        var result = this.copyObject(obj)
         for (let key in result) {
             if (typeof result[key] === "number") {
                 result[key] = 0;
             } else if(typeof result[key] === "object"){
-                if(Array.isArray(result[key])) result[key] = []
+                if(result[key] instanceof File) result[key] = "";
+                else if(Array.isArray(result[key])) result[key] = [];
                 else result[key] = {}
             } else {
                 result[key] = "";

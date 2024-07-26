@@ -83,7 +83,7 @@
             <dl>
                 <dt>증빙자료 첨부(선택)</dt>
                 <dd>
-                    <div id="addFile">
+                    <div id="addFile" class="addFile">
                         <a class="btn">파일 첨부</a>
                         <span>증빙자료 파일 첨부</span>
                     </div>

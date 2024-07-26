@@ -3395,6 +3395,20 @@ function ctg_list($p_idx){
 
 }
 
+function ctg_list2($parent_idx = ''){
+
+    $sql = "select * from category where parent_idx = '$parent_idx'";
+    $result = sql_query($sql);
+
+    $arr = [];
+    for ($i = 0; $row = sql_fetch_array($result);$i++){
+        $arr[$i] = $row;
+    }
+
+    return $arr;
+
+}
+
 function ctg_info($c_idx){
 
     $sql = "select * from new_category where c_idx = '{$c_idx}' ";

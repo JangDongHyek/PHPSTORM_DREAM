@@ -7,7 +7,7 @@
                         <div class="category-header">
                             <div class="category-title">{{ item.name }}</div>
                             <div class="category-actions">
-                                <button @click="event.stopPropagation(); parent_idx = item.idx; modal = true">추가</button>
+                                <button @click="event.stopPropagation(); primary = '';parent_idx = item.idx; modal = true">추가</button>
                                 <button @click="event.stopPropagation(); parent_idx = ''; primary = item.idx; modal = true">수정</button>
                                 <button @click="event.stopPropagation(); deleteData(item.idx)">삭제</button>
                             </div>

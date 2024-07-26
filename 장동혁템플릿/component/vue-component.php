@@ -1,7 +1,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-
+        <input type="file" @change="updateFile">
     </div>
 </script>
 
@@ -31,14 +31,33 @@
             });
         },
         methods: {
+            postData : function() {
+                var method = this.primary ? "update" : "insert";
+                var obj = this.jl.copyObject();
+
+                var objs = {_method: method};
+                objs = this.jl.processObject(objs,obj);
+
+                var res = ajax("/api/example.php", objs);
+
+                if (res) {
+                    console.log(res)
+                }
+            },
+            updateFile : function() {
+                const file = event.target.files[0];
+                if (file) {
+                    this.data.file = file;
+                } else {
+                    this.data.file = '';
+                }
+            },
             getData: function () {
                 var method = "get";
-                var filter = JSON.parse(JSON.stringify(this.filter));
+                var filter = this.jl.copyObject(this.filter);
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
+                var objs = {_method: method};
+                objs = this.jl.processObject(objs,obj);
 
                 var res = ajax("/api/example.php", objs);
                 if (res) {

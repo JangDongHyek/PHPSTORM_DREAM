@@ -77,7 +77,7 @@
                     mb_no: this.mb_no
                 },
                 data : {},
-                section : 8,
+                section : 4,
                 origin_nick : "",
             };
         },

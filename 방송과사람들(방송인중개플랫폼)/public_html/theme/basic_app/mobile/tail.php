@@ -80,6 +80,7 @@ $(document).ready(function(){
 
 <div id="ft">
 	<?
+    $teaa = "aaa";
 	$ft_menu = array();
 	$ft_menu['home'] = array('name'=>'카테고리', 'url'=>G5_URL.'/index.php', 'on'=>'/app/ft_icon01_on.svg', 'off'=>'/app/ft_icon01.svg');
 	$ft_menu['sale'] = array('name'=>'찜목록', 'url'=>G5_BBS_URL.'/help_list.php', 'on'=>'/app/ft_icon02_on.svg', 'off'=>'/app/ft_icon02.svg');

@@ -1,5 +1,5 @@
 <?php
-$big_ctg = ctg_list(0);
+$big_ctg = ctg_list2();
 ?>
 <link rel="stylesheet" href="<?php echo G5_PLUGIN_URL;?>/hash/style.css">
 
@@ -7,7 +7,7 @@ $big_ctg = ctg_list(0);
 <nav id="navtoggle">
     <div class="hd_title">
         <a href="javascript:history.back();" class="btn_close"><i class="fa-regular fa-arrow-left"></i><span class="sound_only">닫기</span></a>
-        <p class="title">카테고리</p> 
+        <p class="title">카테고리</p>
     </div>
     <div class="scroll">
             <ul id="hd_tnb" class="cf">
@@ -30,25 +30,18 @@ $big_ctg = ctg_list(0);
           <!--메뉴-->
             <div id="gnb2" class="hd_div">
                     <ul id="mgnb_1dul">
-                        <?php for ($i = 0; $i< count($big_ctg); $i++){
-                            if ($big_ctg[$i]['c_idx'] == 1){
-                                $tag = '<i class="fa-duotone fa-tv-retro"></i><i class="fa-light fa-tv-retro"></i>';
-                            }else if ($big_ctg[$i]['c_idx'] == 2){
-                                $tag = '<i class="fa-duotone fa-chalkboard-user"></i><i class="fa-light fa-chalkboard-user"></i>';
-                            }else if ($big_ctg[$i]['c_idx'] == 3){
-                                $tag = '<i class="fa-duotone fa-money-check-dollar-pen"></i><i class="fa-light fa-money-check-dollar-pen"></i>';
-                            }?>
+                        <?php for ($i = 0; $i< count($big_ctg); $i++){?>
                             <li class="mgnb_1dli">
-                                <a class="mgnb_1da" href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$big_ctg[$i]["c_idx"]?>">
+                                <a class="mgnb_1da" href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$big_ctg[$i]["idx"]?>">
                                     <div class="area_icon"></div>
-                                    <h3><?=$big_ctg[$i]["c_name"]?></h3>
+                                    <h3><?=$big_ctg[$i]["name"]?></h3>
                                 </a>
                                 <ul class="mgnb_2dul">
                                     <?php
-                                    $small_ctg = ctg_list($big_ctg[$i]["c_idx"]);
+                                    $small_ctg = ctg_list2($big_ctg[$i]["idx"]);
                                     for ($a = 0; $a< count($small_ctg); $a++){ ?>
-                                        <li class="mgnb_2dli"><a class="mgnb_2da" href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$small_ctg[$a]["c_idx"]?>">
-                                            <?=$small_ctg[$a]["c_name"]?>
+                                        <li class="mgnb_2dli"><a class="mgnb_2da" href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$small_ctg[$a]["idx"]?>">
+                                            <?=$small_ctg[$a]["name"]?>
                                         </a></li>
                                     <?php } ?>
                                 </ul>

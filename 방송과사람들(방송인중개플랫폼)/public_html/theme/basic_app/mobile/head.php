@@ -48,7 +48,7 @@ $big_ctg = ctg_list(0);
             <div class="hd_icon_right">
                 <?php if ($is_member) { ?>
                     <?php if ($member['mb_level'] > 2) { ?>
-                        <a href="<?php echo G5_BBS_URL ?>/item_write01.php" class="btn btn-xs">재능등록</a>
+                        <a href="<?php echo G5_BBS_URL ?>/item_write01.php" class="btn btn-xs">서비스등록</a>
                     <?php } ?>
                 <?php } ?>
                 <?php if ($_SERVER['REMOTE_ADDR'] == "183.103.22.103") { ?>
@@ -107,7 +107,7 @@ $big_ctg = ctg_list(0);
                 <?php } ?>
                 <?php if ($is_member) { ?>
                     <?php if ($member['mb_level'] > 2) { ?>
-                        <li><a href="<?php echo G5_BBS_URL ?>/item_write01.php">재능등록</a></li>
+                        <li><a href="<?php echo G5_BBS_URL ?>/item_write01.php">서비스등록</a></li>
                     <?php } ?>
                     <li><a href="<?php echo G5_BBS_URL ?>/mypage_jjim.php">마이페이지</a></li>
                     <li><a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a></li>

@@ -31,10 +31,15 @@ if($mb == null) alert("로그인 해주세요", G5_URL);
 			<div id="mypage_wrap">
 				<?php include_once('./mypage_info.php'); ?>
 
-                <!--의뢰인 프로필 작업하실때 밑에 컴포넌트 주석처리하시고 여기다 작업해놓으시면 제가 Vue화 시켜놓겠습니다-->
+                <?if ($member['mb_level'] == 2) {?>
+                    <profile-client mb_no="<?=$member['mb_no']?>"></profile-client>
+                <?} else if ($member['mb_level'] == 3) {?>
                 <profile-main mb_no="<?=$member['mb_no']?>"></profile-main>
+                <?}?>
 
-				<!-- 마이페이지에만 나오는 메뉴 -->
+
+
+                <!-- 마이페이지에만 나오는 메뉴 -->
 				<?php include_once('./mypage_menu.php'); ?>
 			</div>
 		</div>
@@ -48,6 +53,7 @@ $jl->vueLoad();
 //}
 
 //$jl->includeDir("/component/profile");
+include_once($jl->ROOT."/component/profile/profile-client.php");
 include_once($jl->ROOT."/component/profile/profile-main.php");
 include_once($jl->ROOT."/component/profile/profile-section1.php");
 include_once($jl->ROOT."/component/profile/profile-section2.php");
