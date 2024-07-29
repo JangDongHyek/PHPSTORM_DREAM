@@ -31,7 +31,7 @@ try {
                 "like" => false,
                 "order_by" => "idx",
                 "sort" => "desc",
-                "add_query" => "AND use_date != '0000-00-00 00:00:00'",
+                "add_query" => "AND use_date = '0000-00-00 00:00:00'",
                 "all_search" => json_decode($filter["all_search"])
             );
             $object = $model->count($filter,$gets_config);

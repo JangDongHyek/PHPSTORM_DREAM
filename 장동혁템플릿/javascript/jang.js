@@ -96,6 +96,22 @@ class JL {
         );
     }
 
+    ajax(method,obj,url) {
+        var object = this.copyObject(obj);
+
+        var objects = {_method : method};
+        objects = this.processObject(objects,object);
+
+        var res = ajax(url, objects);
+
+        const parsedStack = this.parseStackTrace(new Error().stack);
+        var function_name = parsedStack[1].function.replace('a.','');
+
+        this.log(res,function_name);
+
+        return res
+    }
+
     processObject(objs,obj) {
         objs = this.copyObject(objs);
         obj = this.copyObject(obj);
@@ -112,6 +128,16 @@ class JL {
 
         objs.obj = JSON.stringify(obj);
         return objs;
+    }
+
+    changeFile(event,obj,key) {
+        const file = event.target.files[0];
+        console.log(file)
+        if (file) {
+            obj[key] = file;
+        } else {
+            obj[key]  = '';
+        }
     }
 
     copyObject(obj) {
@@ -182,14 +208,21 @@ class JL {
             value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
         }
 
+
         // 입력값 업데이트
         return value;
     }
 
-    log(obj,background = "#35495e",color = "white") {
+    log(obj,name="",background = "#35495e",color = "white") {
         if(!JL_dev) return false;
-        const parsedStack = this.parseStackTrace(new Error().stack);
-        var function_name = parsedStack[1].function.replace('a.','');
+
+        if(!name) {
+            const parsedStack = this.parseStackTrace(new Error().stack);
+            var function_name = parsedStack[1].function.replace('a.','');
+        }else {
+            function_name = name
+        }
+
         console.group('%c' + function_name,
             `background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
         );

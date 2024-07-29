@@ -54,6 +54,10 @@
                     </template>
                 </dd>
             </dl>
+
+            <div class="warning-message1AA2" v-if="user.job_skills.length > 20">
+                보유기술은 최대 20개까지입니다.
+            </div>
         </div>
     </section>
 </script>
@@ -147,5 +151,14 @@
 </script>
 
 <style>
-
+    .warning-message1AA2 {
+        color: red;
+        font-size: 12px;
+        font-weight: bold;
+        border: 1px solid red;
+        padding: 5px;
+        margin: 10px 0;
+        background-color: #ffe6e6;
+        width: fit-content;
+    }
 </style>

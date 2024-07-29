@@ -153,6 +153,7 @@
 
                 var method = "update";
                 var obj = JSON.parse(JSON.stringify(this.data));
+                obj.mb_profile = true;
 
                 var objs = {
                     _method: method,

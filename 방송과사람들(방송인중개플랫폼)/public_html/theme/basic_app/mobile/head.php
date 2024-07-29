@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 if ($_SESSION['ss_mb_id']) {
-    if ($member["mb_profile"] != "true" && (int)$member["mb_level"] < 4) {
+    if (!$member["mb_profile"] && (int)$member["mb_level"] < 4) {
         $profileUrl = "/bbs/mypage_profile.php";
         if (strpos($_SERVER['SCRIPT_FILENAME'], $profileUrl) == false) {
             if ($_SERVER['HTTP_HOST'] == "itforone.com") {
@@ -22,6 +22,8 @@ include_once(G5_LIB_PATH . '/popular.lib.php');
 include_once(G5_LIB_PATH . '/submenu.lib.php');
 
 $big_ctg = ctg_list(0);
+
+if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
 ?>
 
 <header id="hd">
@@ -126,7 +128,7 @@ $big_ctg = ctg_list(0);
 <?php if (!defined('_INDEX_')) { ?>
 
     <div id="vue_head">
-        <head-category></head-category>
+        <head-category category_idx="<?=$category_idx?>"></head-category>
         <!-- 해당코드 component화  -->
         <!--<div id="nav_area">-->
         <!--    <nav id="gnb">-->

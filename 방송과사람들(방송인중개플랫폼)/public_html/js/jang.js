@@ -105,6 +105,34 @@ class JL {
         );
     }
 
+    ajax(method,obj,url) {
+
+
+        var object = this.copyObject(obj);
+
+        var objects = {_method : method};
+        objects = this.processObject(objects,object);
+
+        var res = ajax(url, objects);
+
+        const parsedStack = this.parseStackTrace(new Error().stack);
+        var function_name = parsedStack[1].function.replace('a.','');
+
+        this.log(res,function_name);
+
+        return res
+    }
+
+    changeFile(event,obj,key) {
+        const file = event.target.files[0];
+        console.log(file)
+        if (file) {
+            obj[key] = file;
+        } else {
+            obj[key]  = '';
+        }
+    }
+
     processObject(objs,obj) {
         objs = this.copyObject(objs);
         obj = this.copyObject(obj);
@@ -217,10 +245,16 @@ class JL {
         //{2:2,3:3}
     }
 
-    log(obj) {
+    log(obj,name = "") {
         if(!JL_dev) return false;
-        const parsedStack = this.parseStackTrace(new Error().stack);
-        var function_name = parsedStack[1].function.replace('a.','');
+
+        if(!name) {
+            const parsedStack = this.parseStackTrace(new Error().stack);
+            var function_name = parsedStack[1].function.replace('a.','');
+        }else {
+            function_name = name
+        }
+
         console.group(
             '%c' + this.name + '%c' + function_name,
             `background: ${this.background}; color: white; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`,

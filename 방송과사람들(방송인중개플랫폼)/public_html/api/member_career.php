@@ -1,16 +1,15 @@
 <?php
 include_once("../class/Model.php");
-//include_once("../class/File.php");
+include_once("../class/File.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
 
 $model_config = array(
-    "table" => "example",
+    "table" => "member_career",
     "primary" => "idx",
-    "autoincrement" => true,
-    "empty" => false
 );
+
 
 
 try {
@@ -19,7 +18,7 @@ try {
     $join_table = "";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    //$file = new File("/data/example");
+    $file = new File("/data/member_career");
 
     switch (strtolower($_method)) {
         case "get":
@@ -35,7 +34,7 @@ try {
 
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
-            
+
             if ($join_table) {
                 $deletes = array();
                 $joinModel = new Model(array(

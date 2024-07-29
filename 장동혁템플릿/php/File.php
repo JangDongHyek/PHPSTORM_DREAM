@@ -1,12 +1,15 @@
 <?php
-class File{
+include_once("JL.php");
+class File extends JL{
 
     private $path;
 
     function __construct($path = ""){
-        // $path = /adm/data/???
+        //부모 생성자
+        parent::__construct();
+
         if(!empty($path)){
-            $this->path = $path;
+            $this->path = $this->ROOT.$path;
 
             if(!is_dir($path)){
                 mkdir($path, 0777);

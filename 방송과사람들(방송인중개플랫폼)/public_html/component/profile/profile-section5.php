@@ -1,96 +1,136 @@
-<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
-<script type="text/x-template" id="<?=$componentName?>-template">
+<?php $componentName = str_replace(".php", "", basename(__FILE__)); ?>
+<script type="text/x-template" id="<?= $componentName ?>-template">
     <section id="profile05">
         <div>
             <h4>경력기간</h4>
-            <dl>
-                <dt>총 경력기간을 선택해 주세요</dt>
-                <dd>
-                    <select>
-                        <option>신입</option>
-                        <option>1년</option>
-                        <option>2년</option>
-                        <option>3년</option>
-                        <option>4년</option>
-                        <option>5년</option>
-                        <option>6년</option>
-                        <option>7년</option>
-                        <option>8년</option>
-                        <option>9년</option>
-                        <option>10년</option>
-                        <option>11년</option>
-                        <option>12년</option>
-                        <option>13년</option>
-                        <option>14년</option>
-                        <option>15년</option>
-                        <option>16년 이상</option>
-                    </select>
-                </dd>
-            </dl>
-            <div class="box_blue" id="tip">
-                <p>TIP</p>
-                <ul>
-                    <li>전문 분야와 직접적으로 연관된 총 경력 기간을 선택해 주세요.</li>
-                </ul>
+            <div>
+                <dl>
+                    <dt>총 경력기간을 선택해 주세요</dt>
+                    <dd>
+                        <select v-model="user.job_career">
+                            <option disabled value="">총 경력기간을 선택해 주세요</option>
+                            <option value="신입">신입</option>
+                            <option value="1년">1년</option>
+                            <option value="2년">2년</option>
+                            <option value="3년">3년</option>
+                            <option value="4년">4년</option>
+                            <option value="5년">5년</option>
+                            <option value="6년">6년</option>
+                            <option value="7년">7년</option>
+                            <option value="8년">8년</option>
+                            <option value="9년">9년</option>
+                            <option value="10년">10년</option>
+                            <option value="11년">11년</option>
+                            <option value="12년">12년</option>
+                            <option value="13년">13년</option>
+                            <option value="14년">14년</option>
+                            <option value="15년">15년</option>
+                            <option value="16년 이상">16년 이상</option>
+                        </select>
+                    </dd>
+                </dl>
+                <div class="box_blue" id="tip">
+                    <p>TIP</p>
+                    <ul>
+                        <li>전문 분야와 직접적으로 연관된 총 경력 기간을 선택해 주세요.</li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div>
-            <h4>경력 사항</h4>
-            <p class="red_point">
-                <input type="checkbox" id="freelancer-checkbox" name="freelancer">
-                <label for="freelancer-checkbox">프리렌서인 경우, 체크해주세요</label>
-            </p>
-            <dl>
-                <dt>회사명</dt>
-                <dd>
-                    <input type="text" placeholder="회사명 입력">
-                </dd>
-            </dl>
-            <dl>
-                <dt>근무부서</dt>
-                <dd>
-                    <input type="text" placeholder="근무부서 입력">
-                </dd>
-            </dl>
-            <dl>
-                <dt>직위</dt>
-                <dd>
-                    <input type="text" placeholder="직워 입력">
-                </dd>
-            </dl>
-            <dl>
-                <dt>근무지</dt>
-                <dd>
-                    <select>
-                        <option>시/도 선택</option>
-                    </select>
-                </dd>
-            </dl>
-            <dl>
-                <dt>근무기간</dt>
-                <dd>
-                    <div class="flex">
-                        <select>
-                            <option>년</option>
-                        </select>
-                        &nbsp;
-                        <select>
-                            <option>개월</option>
-                        </select>
-                    </div>
-                </dd>
-            </dl>
-            <dl>
-                <dt>증빙자료 첨부(선택)</dt>
-                <dd>
-                    <div id="addFile" class="addFile">
-                        <a class="btn">파일 첨부</a>
-                        <span>증빙자료 파일 첨부</span>
-                    </div>
-                </dd>
-            </dl>
 
-        </div>
+            <br><br>
+
+
+            <label for="">경력사항을 작성해주세요</label>
+            <input type="text" name="" id="" placeholder="추가해주세요" @click="modal = true;"/>
+
+            <div class="modal fade" :class="{'in' : modal}" id="educationModal" tabindex="-1"
+                 :style="{display : modal ? 'block' : 'none'}" @click.self="modal = false;">
+                <div class="modal-dialog" role="document" style="width: 1000px">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click="modal = false"><i class="fa-light fa-close"></i></button>
+                            <h5 class="modal-title" id="educationModalLabel">경력사항을 작성해주세요</h5>
+                        </div>
+                        <div class="modal-body" >
+                            <div>
+                                <p class="red_point">
+                                    <input type="checkbox" id="freelancer-checkbox" name="freelancer" v-model="career.free">
+                                    <label for="freelancer-checkbox">프리렌서인 경우, 체크해주세요</label>
+                                </p>
+                                <dl>
+                                    <dt>회사명</dt>
+                                    <dd>
+                                        <input type="text" placeholder="회사명 입력" v-model="career.name">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>근무부서</dt>
+                                    <dd>
+                                        <input type="text" placeholder="근무부서 입력" v-model="career.dept">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>직위</dt>
+                                    <dd>
+                                        <input type="text" placeholder="직위 입력" v-model="career.position">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>근무지</dt>
+                                    <dd>
+                                        <select v-model="career.address">
+                                            <option disabled value="">시/도 선택</option>
+                                            <option v-for="item in areas" :value="item">{{item}}</option>
+                                        </select>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>근무기간</dt>
+                                    <dd>
+                                        <div class="flex">
+                                            <select v-model="career.year">
+                                                <option disabled value="">년</option>
+                                                <option v-for="item in 99" :value="item">{{item}}년</option>
+                                            </select>
+                                            &nbsp;
+                                            <select v-model="career.month">
+                                                <option disabled value="">개월</option>
+                                                <option v-for="item in 12" :value="item">{{item}}개월</option>
+                                            </select>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>증빙자료 첨부(선택)</dt>
+                                    <dd>
+                                        <div id="addFile" class="addFile">
+                                            <label class="btn" for="school_file">파일 첨부</label>
+                                            <span>{{career.upfile ? career.upfile.name : '증빙자료 파일 첨부'}}</span>
+                                            <input type="file" id="school_file" style="display: none;" @change="jl.changeFile($event,career,'upfile')">
+                                        </div>
+                                    </dd>
+                                </dl>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
+                            <button type="button" class="btn btn-primary" @click="postCareer()">적용</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tag">
+                <template v-for="item in careers">
+                    <span>{{item.name}}·{{item.dept}}·{{item.position}}·{{item.address}}·{{item.year}} {{item.month}}
+                        <i class="fa-light fa-paperclip" v-if="item.upfile"></i>
+                        <a class="del" href="" @click="event.preventDefault(); deleteCareer(item);"><i class="fa-light fa-xmark"></i></a>
+                    </span>
+                </template>
+            </div>
+
     </section>
 </script>
 
@@ -100,48 +140,94 @@
         props: {
             user: {type: Object, default: {}}
         },
-        data: function(){
+        data: function () {
             return {
-                jl : null,
-                filter : {
-
+                jl: null,
+                filter: {
+                    member_idx : this.user.mb_no
                 },
-                data : {
-
+                data: {},
+                modal: false,
+                career : {
+                    member_idx : this.user.mb_no,
+                    free : "",
+                    name : "",
+                    dept : "",
+                    position : "",
+                    address : "",
+                    year : "",
+                    month : "",
+                    upfile : ""
                 },
+                careers : [],
+
+                areas : [
+                    "서울특별시",
+                    "부산광역시",
+                    "대구광역시",
+                    "인천광역시",
+                    "광주광역시",
+                    "대전광역시",
+                    "울산광역시",
+                    "세종특별자치시",
+                    "경기도",
+                    "강원도",
+                    "충청북도",
+                    "충청남도",
+                    "전라북도",
+                    "전라남도",
+                    "경상북도",
+                    "경상남도",
+                    "제주특별자치도",
+                    "해외"
+                ],
             };
         },
-        created: function(){
+        created: function () {
             this.jl = new JL('<?=$componentName?>');
+            this.getCareer();
         },
-        mounted: function(){
+        mounted: function () {
             this.$nextTick(() => {
 
             });
         },
         methods: {
-            getData: function () {
-                var method = "get";
-                var filter = JSON.parse(JSON.stringify(this.filter));
+            deleteCareer : function(career) {
+                var res = this.jl.ajax("delete",career,"/api/member_career.php");
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
+                if(res) {
+                    this.getCareer();
+                }
+            },
+            postCareer : function() {
+                var method = this.primary ? "update" : "insert";
+                var obj = this.jl.copyObject(this.career);
 
-                var res = ajax("/api/example.php", objs);
+                var objs = {_method: method};
+                objs = this.jl.processObject(objs,obj);
+
+                var res = ajax("/api/member_career.php", objs);
+
                 if (res) {
-                    this.jl.log(res)
-                    this.data = res.response.data
+                    console.log(res)
+
+                    this.career = this.jl.initObject(this.career);
+                    this.career.member_idx = this.user.mb_no;
+                    this.getCareer()
+                    this.modal = false;
+                }
+            },
+            getCareer: function () {
+                var res = this.jl.ajax("get",this.filter,"/api/member_career.php");
+
+                if (res) {
+                    this.careers = res.response.data
                 }
             }
         },
-        computed: {
-
-        },
-        watch : {
-
-        }
+        computed: {},
+        watch: {}
     });
 </script>
 

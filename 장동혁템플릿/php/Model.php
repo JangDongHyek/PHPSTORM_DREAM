@@ -13,7 +13,7 @@ class Model extends JL{
     private $mysqli = false;
     public  $primary;
     private $autoincrement;
-    private $empty;
+    private $empty;                         //true 일시 빈값은 그냥 건너뛴다
 
     private $sql = "";
     private $sql_order_by = "";

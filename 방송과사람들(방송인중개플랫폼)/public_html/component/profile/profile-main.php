@@ -77,7 +77,7 @@
                     mb_no: this.mb_no
                 },
                 data : {},
-                section : 4,
+                section : 1,
                 origin_nick : "",
             };
         },
@@ -125,6 +125,11 @@
                     return false;
                 }
 
+                if(this.data.job_skills.length > 20) {
+                    alert("보유기술은 최대 20개까지 가능합니다");
+                    return false;
+                }
+
                 if(this.$refs.section7.checkMonth(this.data.job_work_smonth)) {
                     alert("희망월급의 최소부분을 확인해주세요.");
                     return false;
@@ -134,6 +139,8 @@
                     alert("희망월급의 최대부분을 확인해주세요.");
                     return false;
                 }
+
+                this.data.mb_profile = true;
 
                 var method = "update";
                 var obj = JSON.parse(JSON.stringify(this.data));
