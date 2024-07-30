@@ -1,6 +1,6 @@
 <?
 include_once('./_common.php');
-$g5['title'] = '재능등록';
+$g5['title'] = '서비스등록';
 include_once('./_head.php');
 $name = "item_write";
 $idx = $_REQUEST['idx'];
@@ -128,6 +128,44 @@ if($idx != "") {
 						</div>
 					</div>					
 				</div>
+                <div class="box_content">
+                    <div class="box_write02">
+                        <h4 class="b_tit">동영상 등록 <em><i class="point" name ="subpoint"><?=$subfilecount?></i>/8</em>
+                            <!--<p><input type="checkbox"><label>링크 등록</label></p>--></h4>
+                        <div class="cont">
+                            <div class="area_box">
+                                <div class="video_active box_dashed">
+                                    <ul>
+                                        <li>
+                                            <p>동영상 제목.mp4</p>
+                                            <a class="del"><i class="fa-sharp fa-light fa-xmark"></i></a>
+                                        </li>
+                                        <li>
+                                            <p>동영상 제목.mp4</p>
+                                            <a class="del"><i class="fa-sharp fa-light fa-xmark"></i></a>
+                                        </li>
+                                    </ul>
+                                    <button class="btn_add"><i class="fa-light fa-folder-arrow-up"></i> 동영상 업로드</button>
+                                </div>
+                                <div class="link_active box_dashed">
+                                    <dl>
+                                        <dt>LINK</dt>
+                                        <dd><input type="text" placeholder="등록하고자하는 동영상 링크를 입력해주세요"></dd>
+                                        <a class="del"><i class="fa-sharp fa-light fa-xmark"></i></a>
+                                    </dl>
+                                    <dl>
+                                        <dt>LINK</dt>
+                                        <dd><input type="text" placeholder="등록하고자하는 동영상 링크를 입력해주세요"></dd>
+                                        <a class="del"><i class="fa-sharp fa-light fa-xmark"></i></a>
+                                    </dl>
+                                    <button class="btn_add"><i class="fa-light fa-plus"></i> 링크 추가</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div></div>
 			</div>
 			<div id="area_btn" class="col02">
                 <a class="btn_prev" href="javascript:tab_click(2)">이전</a>
@@ -450,7 +488,7 @@ if($idx != "") {
             type: 'POST',
             success : function(data) {
 
-                swal("재능등록이 완료되었습니다.").then((value) => {
+                swal("서비스등록이 완료되었습니다.").then((value) => {
                         location.href = data;
                 });
 

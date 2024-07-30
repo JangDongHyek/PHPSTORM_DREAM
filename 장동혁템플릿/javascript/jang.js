@@ -89,6 +89,7 @@ function ajax(url,objs) {
 class JL {
     constructor(name,background = "#35495e") {
         this.name = name;
+        this.root = JL_base_url
         if(!JL_dev) return false;
         console.log(
             '%c' + name,

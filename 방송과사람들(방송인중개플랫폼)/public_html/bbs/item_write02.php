@@ -1,10 +1,10 @@
 <?
 include_once('./_common.php');
-$g5['title'] = '재능등록';
+$g5['title'] = '서비스등록';
 include_once('./_head.php');
 $name = "item_write";
 
-//재능정보
+//서비스정보
 $idx = $_REQUEST['idx'];
 $sql = "select * from new_item where i_idx = '{$idx}' ";
 $view = sql_fetch($sql);
@@ -50,7 +50,7 @@ $popup_result = sql_fetch($sql);
 
 	<div id="item_write">
             <div class="inr v2">
-			<h3>재능등록</h3>
+			<h3>서비스등록</h3>
 			<div class="snb">
 				<ul class="list_step">
                     <li id="">
@@ -82,13 +82,12 @@ $popup_result = sql_fetch($sql);
 							<textarea name = "i_content" placeholder="전문인 소개(경력 및 이력), 작업 가능 분야, 작업 제공 절차, 서비스 특징에 대해서 의뢰인이 이해하기 쉽도록 정확하게 작성해 주세요. &#13;&#10;외부연락처(전화번호 및 카톡ID, 이메일, 외부링크)는 노출하실 수 없습니다."><?=$view['i_content']?></textarea>
 						</div>
 					</div>
-					<div class="box_write02">
+					<!--<div class="box_write02">
 						<h4>수정·재진행</h4>
 						<div class="cont">
-							<!-- 에디터 넣어주세요~! -->
-							<textarea name = "i_update_content"><?=$view['i_update_content']?></textarea>
+							<textarea name = "i_update_content"><?/*=$view['i_update_content']*/?></textarea>
 						</div>
-					</div>
+					</div>-->
 					<div class="box_write02">
 						<h4>취소 및 환불 규정</h4>
 						<div class="cont">
@@ -98,7 +97,42 @@ $popup_result = sql_fetch($sql);
 							</div>
 						</div>
 					</div>
-				</div>
+                    <div class="box_write02">
+                        <h4>자주 묻는 질문</h4>
+                        <div class="cont faq">
+                            <div class="faq_active">
+                                <dl class="box_gray">
+                                    <a class="del"><i class="fa-regular fa-trash"></i></a>
+                                    <dt><strong>Q.</strong><input type="text" placeholder="자주 묻는 질문을 입력해주세요"></dt>
+                                    <dd><strong>A.</strong><textarea type="text" placeholder="답변을 입력해주세요"></textarea></dd>
+                                </dl>
+                            </div>
+                            <button class="btn_add"><i class="fa-light fa-plus"></i> 질문 추가</button>
+                        </div>
+                    </div>
+                    <div class="box_write02">
+                        <h4>상품 정보 제공 고지</h4>
+                        <div class="cont">
+                            <div class="box_gray">
+                                <dl class="grid2">
+                                    <dt>서비스 제공자</dt>
+                                    <dd><input type="text" placeholder="서비스 제공자"></dd>
+                                    <dt>취소·환불 조건</dt>
+                                    <dd><input type="text" placeholder="최소 및 환불 규정 참조"></dd>
+                                    <dt>인증·허가사항</dt>
+                                    <dd><input type="text" placeholder="상품 상세 참조"></dd>
+                                    <dt>취소·환불방법</dt>
+                                    <dd><input type="text" placeholder="취소 및 환불 규정 참조"></dd>
+                                    <dt>이용조건</dt>
+                                    <dd><input type="text" placeholder="상품 상세 참조"></dd>
+                                    <dt>소비자 상담전화</dt>
+                                    <dd><input type="text" placeholder="예) (고객센터)1234-1234"></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 			</div>
 			<div id="area_btn">
 			

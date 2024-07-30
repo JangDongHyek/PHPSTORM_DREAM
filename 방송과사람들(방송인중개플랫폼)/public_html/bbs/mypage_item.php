@@ -1,7 +1,7 @@
 <?
 include_once('./_common.php');
 $name = "cmypage";
-$g5['title'] = '재능관리';
+$g5['title'] = '서비스관리';
 include_once('./_head.php');
 
 
@@ -40,14 +40,15 @@ $result = sql_query($sql);
 
             <div class="mypage_cont">
                 <div class="box">
-                    <h3>나의 재능관리</h3>
+                    <h3>나의 서비스관리</h3>
 
                     <ul id="product_list">
                         <?php if (sql_num_rows($result) == 0){?>
                             <li class="nodata">
                                 <div class="nodata_wrap">
                                     <div class="area_img"><img src="<?php echo G5_THEME_IMG_URL ?>/app/img_nodata.svg"></div>
-                                    <p>등록한 재능이 없습니다.</p>
+                                    <p>등록한 서비스이 없습니다.</p>
+                                    <button onclick="location.href='<? echo G5_BBS_URL ?>/item_write01.php'" class="btn">서비스 등록하기</button>
                                 </div>
                             </li>
                         <?php  }else {

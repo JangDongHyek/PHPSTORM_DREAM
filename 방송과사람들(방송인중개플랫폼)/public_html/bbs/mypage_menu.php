@@ -9,7 +9,8 @@
 		<!-- 의뢰인만 보이는 메뉴-->
 		<li><a href="<?php echo G5_BBS_URL ?>/mypage_sale.php">판매관리</a></li>
 		<li><a href="<?php echo G5_BBS_URL ?>/mypage_cash.php">캐시관리</a></li>
-		<li><a href="<?php echo G5_BBS_URL ?>/mypage_item.php">재능관리</a></li>
+        <li><a href="<?php echo G5_BBS_URL ?>/mypage_portfolio.php">포토폴리오관리</a></li>
+		<li><a href="<?php echo G5_BBS_URL ?>/mypage_item.php">서비스관리</a></li>
         <?php } ?>
 		<!--<li><a href="javascript:swal('준비중입니다.');">결제내역</a></li>-->
 		<li><a href="<?php echo G5_BBS_URL ?>/mypage_jjim.php">찜한내역</a></li>

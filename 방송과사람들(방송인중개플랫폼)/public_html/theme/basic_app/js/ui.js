@@ -21,7 +21,7 @@ function lnbFix(){
 
 	if ($(".lnb").length > 0) {
 	// cache the element
-		var $navBar = $('.lnb');
+		var $navBar = $('.lnb .inr');
 
 		// find original navigation bar position
 		var navPos = $navBar.offset().top;		
