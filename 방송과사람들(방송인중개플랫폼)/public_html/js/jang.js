@@ -124,14 +124,63 @@ class JL {
         return res
     }
 
-    changeFile(event,obj,key) {
-        const file = event.target.files[0];
-        console.log(file)
-        if (file) {
-            obj[key] = file;
-        } else {
-            obj[key]  = '';
+    commonFile(files,obj,key,permission) {
+        if(Array.isArray(obj[key])) {
+            files = Array.from(files)
+            files.forEach(function(file) {
+                if(!file.type) {
+                    alert("파일 타입을 읽을수 없습니다.");
+                    return false;
+                }
+
+                if(permission.length > 0 && !permission.includes(file.type)) {
+                    alert("혀용되는 파일 형식이 아닙니다.");
+                    return false;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    file.preview = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                obj[key].push(file)
+            });
+
+        }else {
+            if (file) {
+                if(!file.type) {
+                    alert("파일 타입을 읽을수 없습니다.");
+                    return false;
+                }
+
+                if(permission.length > 0 && !permission.includes(file.type)) {
+                    alert("혀용되는 파일 형식이 아닙니다.");
+                    return false;
+                }
+
+                obj[key] = file;
+            } else {
+                obj[key]  = '';
+            }
         }
+    }
+
+    readerFile(file) {
+        this.reader.onload = (e) => {
+            file.preview = e.target.result
+        };
+        this.reader.readAsDataURL(file);
+    }
+
+    dropFile(event,obj,key,permission = []) {
+        this.commonFile(event.dataTransfer.files,obj,key,permission);
+        this.log(obj[key])
+    }
+
+    changeFile(event,obj,key,permission = []) {
+        this.commonFile(event.target.files,obj,key,permission)
+        this.log(obj[key])
     }
 
     processObject(objs,obj) {

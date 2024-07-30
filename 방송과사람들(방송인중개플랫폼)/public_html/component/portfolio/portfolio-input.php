@@ -46,17 +46,19 @@
 
 								<!-- 처음화면에서는 안보였다가 이미지 등록하면 나타나게 해주세요 ~~ -->
 								<ul class="photo_list" id="file_list">
-                                    <li class="file_1">
+                                    <li class="file_1" v-for="item in data.main_image_array">
                                         <div class="area_img">
-                                            <img src="">
+                                            <img :src="item.preview">
                                             <div class="area_delete" onclick=''><span class="sound_only">삭제</span></div>
                                         </div>
                                     </li>
 								</ul>
                                 <!-- //이미지 미리보기 -->
 
-                                <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;">
-								<div id="fileDrag" class="img_wrap" onclick="file_add('')">
+                                <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
+                                       ref="main_image_array" @change="jl.changeFile($event,data,'main_image_array')">
+								<div id="fileDrag" class="img_wrap" @click="$refs.main_image_array.click();"
+                                     @drop.prevent="jl.dropFile($event,data,'main_image_array')" @dragover.prevent @dragleave.prevent>
 									<div class="area_txt">
 										<div class="area_img"><img
                                                     src="<?php echo G5_THEME_IMG_URL ?>/app/icon_upload.svg"></div>
@@ -185,7 +187,9 @@
             return {
                 jl: null,
                 filter: {},
-                data: {},
+                data: {
+                    main_image_array : [],
+                },
             };
         },
         created: function () {
@@ -197,6 +201,12 @@
             });
         },
         methods: {
+            dropFile : function() {
+                console.log("drop");
+                // const file = event.dataTransfer.files;
+                console.log(event.target.files);
+                // console.log(file)
+            },
             postData: function () {
                 var method = this.primary ? "update" : "insert";
                 var res = this.jl.ajax(method, this.data, "/api/example.php");
