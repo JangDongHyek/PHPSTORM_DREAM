@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="vue" type="javaScript">
+    <CLASSES />
+    <DOCUMENTATION>
+      <root url="https://cdn.jsdelivr.net/npm/vue@2" />
+    </DOCUMENTATION>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
