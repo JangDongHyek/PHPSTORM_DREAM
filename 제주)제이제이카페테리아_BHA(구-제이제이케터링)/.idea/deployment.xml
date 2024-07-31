@@ -5,7 +5,7 @@
       <paths name="제주)제이제이카페테리아_BHA(구-제이제이케터링)">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

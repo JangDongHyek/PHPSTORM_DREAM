@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #F0F0F0;
+	font-family: 'Noto Sans KR'; 
+	letter-spacing:-1px;
+}
+.style3 {
+	font-size: 26px;
+	color: #FF0000;
+
+}
+.style4 {
+	color: #666666;
+	font-size: 17px;
+}
+
+
+
+/* 노토산스 */
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 100; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 300; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype'); 
+	}
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 400; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 500; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 700; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 900; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
+	}
+
+
+-->
+</style></head>
+
+<body>
+
+<p align="center"><strong><br />
+<br />
+  <br />
+  <br />
+  <br />
+  <span class="style2"><br />
+  <span class="style4"><br />
+  재연장을 원하시면<br />
+  itforyou@hanmail.net로<br />
+  문의주시기 바랍니다.</span></span><br />
+  <br />
+  <br />
+  <span class="style3">TEL 051.891.0088</span></strong></p>
+</body>
+
+
+
+
+</html>
