@@ -67,6 +67,13 @@ class File extends JL{
         return $dst;
     }
 
+    function bindGate($file,$permission = "",$path = "") {
+        if(is_array($file['name'])) $result = $this->multiple_bind($file,$permission,$path);
+        else $result = $this->bind($file,$permission,$path);
+
+        return $result;
+    }
+
     function bind($file,$permission = "",$path = "") {
         if($file == "null" || $file == "undefined" || $file == null || $file == "" || $file["size"] == 0) {
             return "";
@@ -94,7 +101,7 @@ class File extends JL{
         }
     }
 
-    function multiple_bind($files) {
+    function multiple_bind($files,$permission = "",$path = "") {
         $datas = array();
         for ($i=0; $i < count($files['name']); $i++) {
             $file = array(
@@ -104,7 +111,7 @@ class File extends JL{
                 "size" => $files['size'][$i]
             );
 
-            $data = $this->bind($file);
+            $data = $this->bind($file,$permission,$path);
 
             array_push($datas,json_decode($data));
         }

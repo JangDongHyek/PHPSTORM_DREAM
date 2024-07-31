@@ -49,7 +49,20 @@ function ajax(url,objs) {
     var form = new FormData();
     //if(url.indexOf(".php") == -1) url = url + ".php";
     for (var i in objs) {
-        form.append(i, objs[i]);
+        var obj = objs[i];
+        if(Array.isArray(obj)) {
+            obj.forEach(file => {
+                form.append(i+"[]", file);
+
+            })
+        }else {
+            form.append(i, objs[i]);
+
+        }
+    }
+
+    for (var pair of form.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
     }
 
     var result = null;
@@ -126,8 +139,8 @@ class JL {
 
     commonFile(files,obj,key,permission) {
         if(Array.isArray(obj[key])) {
-            files = Array.from(files)
-            files.forEach(function(file) {
+            for (let i = 0; i < files.length; i++) {
+                var file = files[i];
                 if(!file.type) {
                     alert("파일 타입을 읽을수 없습니다.");
                     return false;
@@ -138,16 +151,22 @@ class JL {
                     return false;
                 }
 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    file.preview = e.target.result;
-                };
-                reader.readAsDataURL(file);
+                if(file.type.startsWith('image/')) {
+                    //이미지 미리보기 파일 데이터에 추가
+                    const reader = new FileReader();
+                    reader.onload = (function(f) {
+                        return function(e) {
+                            f.src = e.target.result;
+                            obj[key].push(f); // 비동기로 파일을 읽는 중이라 onload 안에 넣어줘야 파일을 다 읽고 데이터가 완벽하게 들어간다
+                        };
+                    })(file); // 클로저 사용
+                    reader.readAsDataURL(file);
+                }
+            }
 
-                obj[key].push(file)
-            });
 
         }else {
+            file = files[0]
             if (file) {
                 if(!file.type) {
                     alert("파일 타입을 읽을수 없습니다.");
@@ -159,18 +178,21 @@ class JL {
                     return false;
                 }
 
-                obj[key] = file;
+                if(file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (function(f) {
+                        return function(e) {
+                            f.src = e.target.result;
+                            obj[key] = (f); // 비동기로 파일을 읽는 중이라 onload 안에 넣어줘야 파일을 다 읽고 데이터가 완벽하게 들어간다
+                        };
+                    })(file); // 클로저 사용
+                    reader.readAsDataURL(file);
+                }
+
             } else {
                 obj[key]  = '';
             }
         }
-    }
-
-    readerFile(file) {
-        this.reader.onload = (e) => {
-            file.preview = e.target.result
-        };
-        this.reader.readAsDataURL(file);
     }
 
     dropFile(event,obj,key,permission = []) {
@@ -193,9 +215,16 @@ class JL {
                 if (value instanceof File) {
                     objs[key] = value;
                     delete obj[key];
+                }else if(Array.isArray(value)) {
+                    if(value[0] instanceof File) {
+                        objs[key] = obj[key]
+                        delete obj[key];
+                    }
                 }
             }
         }
+
+        console.log(objs);
 
         objs.obj = JSON.stringify(obj);
         return objs;
