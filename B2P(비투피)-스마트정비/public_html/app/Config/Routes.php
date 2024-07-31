@@ -285,6 +285,7 @@ $routes->group('user', ['namespace' => '\App\Controllers'], static function ($ro
 // 관리자
 $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($routes) {
     $routes->get('GetOrder/(:segment)/(:segment)', 'OrderController::GetOrder/$1/$2');
+    $routes->get('GetOrderCancel/(:segment)', 'OrderController::GetOrderCancel/$1');
     $routes->get('test', 'OrderController::Test');
     $routes->get('OrderCheck/(:segment)', 'OrderController::OrderCheck/$1');
     $routes->post('OrderCheck', 'OrderController::OrderCheck');

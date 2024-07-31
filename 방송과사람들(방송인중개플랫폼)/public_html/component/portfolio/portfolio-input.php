@@ -10,8 +10,7 @@
                     <div class="box_write">
                         <h4>제목</h4>
                         <div class="cont">
-                            <input name="i_title" id="i_title" type="text"
-                                   placeholder="제목을 입력해 주세요.">
+                            <input name="i_title" id="i_title" type="text" placeholder="제목을 입력해 주세요." v-model="data.name">
                         </div>
                     </div>
                     <div class="box_write">
@@ -123,7 +122,7 @@
                                 <div class="link_active box_dashed">
                                     <dl v-for="item,index in data.movie_link">
                                         <dt>동영상 링크 {{ (index+1).toString().padStart(2,'0') }}.</dt>
-                                        <dd><input type="text" placeholder="등록하고자하는 동영상 링크를 입력해주세요"></dd>
+                                        <dd><input type="text" placeholder="등록하고자하는 동영상 링크를 입력해주세요" v-model="data.movie_link[index]"></dd>
                                         <a class="del" href="" @click="event.preventDefault(); data.movie_link.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>
                                     </dl>
                                     <button class="btn_add" @click="data.movie_link.push('')"><i class="fa-light fa-plus"></i> 링크 추가</button>
@@ -136,7 +135,7 @@
 						<h4>포트폴리오 설명</h4>
 						<div class="cont">
 							<!-- 에디터 넣어주세요~! -->
-							<textarea name="i_content" v-model="data.desc"
+							<textarea name="i_content" v-model="data.description"
                                       placeholder="프로젝트 목적, 주요기능과 메뉴 등을 상세히 입력해주세요">
                             </textarea>
 						</div>
@@ -145,8 +144,6 @@
 						<h4>약관 동의</h4>
 						<div class="cont">
 							<div class="box_gray">
-                                <input type="file" @change="jl.changeFile($event,data,'test')">
-
 								<p><input type="checkbox" id="agree" name="agree"><label
                                             for="agree">아래 내용에 모두 동의 합니다.</label></p>
 							</div>
@@ -187,7 +184,6 @@
                     movie_file_array : [],
                     movie_link : [],
                     description : "",
-                    test : ""
                 },
             };
         },
@@ -205,7 +201,8 @@
                 var res = this.jl.ajax(method, this.data, "/api/member_portfolio.php");
 
                 if (res) {
-
+                    alert("완료 되었습니다.");
+                    window.location.href = `${this.jl.root}/bbs/mypage_portfolio.php`;
                 }
             },
             getData: function () {
