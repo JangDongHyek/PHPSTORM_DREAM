@@ -41,7 +41,7 @@ $result = sql_query($sql);
             <?php include_once('./mypage_info.php'); ?>
 
             <div id="vueapp">
-                <portfolio-list></portfolio-list>
+                <portfolio-list mb_no="<?=$member['mb_no']?>"></portfolio-list>
             </div>
             <!-- 마이페이지에만 나오는 메뉴 -->
             <?php include_once('./mypage_menu.php'); ?>

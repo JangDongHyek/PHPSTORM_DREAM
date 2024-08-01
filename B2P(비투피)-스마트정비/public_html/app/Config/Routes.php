@@ -190,6 +190,8 @@ $routes->group('order', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     $routes->get('confirm', 'OrderController::confirmlist');
     // 발송처리현황
     $routes->get('state', 'AdminController::state_list');
+
+    $routes->get('cancel', 'OrderController::Cancellist');
     // 발주서출력
     //$routes->get('order_print', 'AdminController::order_print');
     
@@ -221,7 +223,11 @@ $routes->group('calculate', ['namespace' => '\App\Controllers' , 'filter' => 'au
     $routes->get('gmarket', 'AdminController::gmarket_list');
     // 정산관리
     $routes->get('/', 'AdminController::calculate_view');
+    // 정산관리 뷰페이지 관련 API
+    $routes->post('/api/getData', 'CalculateAPIController::getData');
 });
+
+$routes->post('/api/calculate/getData', 'CalculateAPIController::getData');
 
 
 // 제조사

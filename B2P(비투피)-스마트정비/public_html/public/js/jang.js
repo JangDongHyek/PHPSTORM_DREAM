@@ -1,18 +1,11 @@
 // Vue 인스턴스 생성
-Vue.data    = {};
+Vue.data    = {test : JL_base_url};
 Vue.methods = {};
 Vue.watch   = {};
 Vue.components = {};
 Vue.computed = {};
 Vue.created = [];
 Vue.mounted = [];
-
-function consoleLog(obj) {
-    console.group('User Information');
-    console.log(obj);
-    console.trace();
-    console.groupEnd();
-}
 
 function vueLoad(app_name) {
     Vue[app_name] = new Vue({
@@ -25,7 +18,6 @@ function vueLoad(app_name) {
         created: function(){
             if(!JL_dev) return false;
             this.jl = new JL(app_name,"#42B883");
-
             for(var i=0; i<Vue.created.length; i++){
                 Vue.created[i](this);
             }
@@ -38,7 +30,6 @@ function vueLoad(app_name) {
     });
 }
 
-
 Number.prototype.format = function (n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
@@ -47,7 +38,7 @@ Number.prototype.format = function (n, x) {
 function ajax(url,objs) {
 
     var form = new FormData();
-    //if(url.indexOf(".php") == -1) url = url + ".php";
+
     for (var i in objs) {
         var obj = objs[i];
         if(Array.isArray(obj)) {
@@ -61,6 +52,7 @@ function ajax(url,objs) {
         }
     }
 
+    // 폼데이터 로그
     // for (var pair of form.entries()) {
     //     console.log(pair[0] + ': ' + pair[1]);
     // }
@@ -81,6 +73,8 @@ function ajax(url,objs) {
             else {
                 result = res;
                 try {
+
+                    // 가져온 데이터 JSON.parse 가능하면 가공 안하면 업데이트나 할때 오류남
                     if (res.response.data.length > 0) {
                         for (let i = 0; i < res.response.data.length; i++) {
                             var obj = res.response.data[i];
@@ -110,8 +104,6 @@ class JL {
     constructor(name,background = "#35495e") {
         this.name = name;
         this.root = JL_base_url
-        this.background = background;
-
         if(!JL_dev) return false;
         console.log(
             '%c' + name,
@@ -120,8 +112,6 @@ class JL {
     }
 
     ajax(method,obj,url) {
-
-
         var object = this.copyObject(obj);
 
         var objects = {_method : method};
@@ -224,10 +214,18 @@ class JL {
             }
         }
 
-        console.log(objs);
-
         objs.obj = JSON.stringify(obj);
         return objs;
+    }
+
+    changeFile(event,obj,key) {
+        const file = event.target.files[0];
+        console.log(file)
+        if (file) {
+            obj[key] = file;
+        } else {
+            obj[key]  = '';
+        }
     }
 
     copyObject(obj) {
@@ -298,33 +296,12 @@ class JL {
             value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
         }
 
+
         // 입력값 업데이트
         return value;
     }
 
-    mergeObject(full,partial) {
-        const result = {};
-
-        for (const key in partial) {
-            if (partial[key] === '' || partial[key] === null || partial[key] === undefined) {
-                result[key] = full[key];
-            } else {
-                result[key] = partial[key];
-            }
-        }
-
-        return result;
-
-        // 예제 객체
-        //const A = { 1: 1, 2: 2, 3: 3, 4: 4 };
-        //const B = { 2: '', 3: '' };
-
-        // 병합된 객체
-        //const C = mergePartialWithFull(A, B);
-        //{2:2,3:3}
-    }
-
-    log(obj,name = "") {
+    log(obj,name="",background = "#35495e",color = "white") {
         if(!JL_dev) return false;
 
         if(!name) {
@@ -334,10 +311,8 @@ class JL {
             function_name = name
         }
 
-        console.group(
-            '%c' + this.name + '%c' + function_name,
-            `background: ${this.background}; color: white; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`,
-            `background: #627BF9; color: white; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
+        console.group('%c' + function_name,
+            `background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
         );
         console.log(obj);
         console.groupEnd();

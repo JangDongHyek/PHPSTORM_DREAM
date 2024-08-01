@@ -1,4 +1,6 @@
 <?php
+namespace App\Libraries;
+
 include_once("JL.php");
 
 class Model extends JL{

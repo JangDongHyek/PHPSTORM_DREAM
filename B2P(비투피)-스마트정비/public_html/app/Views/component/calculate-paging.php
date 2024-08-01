@@ -1,13 +1,9 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div class="container" v-if="parseInt(count)">
-        <div class="pagination">
-            <a @click="setPage(1)">&laquo;</a>
-            <template v-for="index in getPages()">
-            <a @click="setPage(index)" :class="{'active' : index == page}">{{index}}</a>
-            </template>
-            <a @click="setPage(last)">&raquo;</a>
-        </div>
+    <div class="pagination_wrap" v-if="parseInt(total)">
+        <a href="" class="page-prev" @click="event.preventDefault(); setPage(page-1)"><i class="fa-regular fa-angle-left"></i></a>
+        <div class="page-now">{{page}} / {{last}}</div>
+        <a href="" class="page-next" @click="event.preventDefault(); setPage(page+1)"><i class="fa-regular fa-angle-right"></i></a>
     </div>
 </script>
 
@@ -15,17 +11,17 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            count: { type: Number, default: 0 },
+            total: { type: Number, default: 0 },
             limit: { type: Number, default: 20 },
             page:  { type: Number, default: 1 },
         },
         data: function(){
             return {
-                jl : null,
+
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            console.log(this.total);
         },
         mounted: function(){
 
@@ -48,8 +44,8 @@
                 return pages;
             },
             setPage: function(page){
-                if(page < 1) page = 1;
-                else if(page > this.last) page = this.last;
+                if(page < 1) return false;
+                else if(page > this.last) return false;
 
                 this.page = page;
                 this.$emit("change", page);
@@ -60,7 +56,7 @@
                 return parseInt(this.page);
             },
             last: function(){
-                return Math.ceil(this.count/this.limit);
+                return Math.ceil(this.total/this.limit);
             }
         }
     });

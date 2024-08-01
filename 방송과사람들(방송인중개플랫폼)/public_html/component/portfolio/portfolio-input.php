@@ -16,24 +16,18 @@
                     <div class="box_write">
                         <h4>1차 카테고리</h4>
                         <div class="cont">
-                            <div class="select_box v1">
-                                <div class="box">
-
-                                    <div class="select">
-                                        카테고리를 선택해주세요
-                                    </div>
-                                    <ul class="list date" id="ctg_ul">
-                                        <li class="">방송·배우·연기</li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <select v-model="parent_category_idx">
+                                <option value="">선택해주세요</option>
+                                <option v-for="item in categories" :value="item.idx">{{item.name}}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="box_write">
                         <h4>2차 카테고리</h4>
                        <div class="cont" id="ctg_ul2">
-                           <select>
-                               <option>aaa</option>
+                           <select v-if="parent_category" v-model="data.category_idx">
+                                <option value="">선택해주세요</option>
+                                <option v-for="item in parent_category.childs" :value="item.idx">{{item.name}}</option>
                            </select>
                        </div>
                     </div>
@@ -144,7 +138,7 @@
 						<h4>약관 동의</h4>
 						<div class="cont">
 							<div class="box_gray">
-								<p><input type="checkbox" id="agree" name="agree"><label
+								<p><input type="checkbox" id="agree" name="agree" v-model="agree"><label
                                             for="agree">아래 내용에 모두 동의 합니다.</label></p>
 							</div>
 
@@ -170,13 +164,14 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            primary: {type: String, default: ""}
+            mb_no: {type: String, default: ""}
         },
         data: function () {
             return {
                 jl: null,
                 filter: {},
                 data: {
+                    member_idx : this.mb_no,
                     name : "",
                     category_idx : "",
                     main_image_array : [],
@@ -185,10 +180,15 @@
                     movie_link : [],
                     description : "",
                 },
+                agree : false,
+                categories : [],
+
+                parent_category_idx : "",
             };
         },
         created: function () {
             this.jl = new JL('<?=$componentName?>');
+            this.getCategory();
         },
         mounted: function () {
             this.$nextTick(() => {
@@ -197,6 +197,32 @@
         },
         methods: {
             postData: function () {
+                console.log(this.data);
+                if(!this.data.name) {
+                    alert("제목을 입력해주세요.");
+                    return false;
+                }
+                if(!this.data.category_idx) {
+                    alert("카테고리를 2차까지 선택해주세요.");
+                    return false;
+                }
+                if(this.data.main_image_array.length > 4) {
+                    alert("메인 이미지는 4장까지 가능합니다");
+                    return false;
+                }
+                if(this.data.content_image_array.length > 8) {
+                    alert("상세 이미지는 8장까지 가능합니다");
+                    return false;
+                }
+                if(this.data.movie_file_array.length > 8) {
+                    alert("동영상 등록은 8개까지 가능합니다");
+                    return false;
+                }
+                if(!this.agree) {
+                    alert("약관에 동의해주세요.");
+                    return false;
+                }
+
                 var method = this.primary ? "update" : "insert";
                 var res = this.jl.ajax(method, this.data, "/api/member_portfolio.php");
 
@@ -212,10 +238,34 @@
                     this.data = res.response.data
 
                 }
+            },
+            getCategory: function () {
+                var method = "get";
+                var filter = { parent_idx : "" };
+                var objs = {
+                    _method: method,
+                    filter: JSON.stringify(filter)
+                };
+
+                var res = ajax("/api/category.php", objs);
+                if (res) {
+                    console.log(res)
+                    this.categories = res.response.data;
+                }
             }
         },
-        computed: {},
-        watch: {}
+        computed: {
+            parent_category : function() {
+                if(!this.parent_category_idx) return null;
+
+                return this.categories.find(obj => obj['idx'] === this.parent_category_idx);
+            }
+        },
+        watch: {
+            parent_category_idx : function() {
+                this.data.category_idx = '';
+            }
+        }
     });
 </script>
 

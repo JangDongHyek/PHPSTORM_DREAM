@@ -4,12 +4,13 @@
         <div class="box">
             <h3>나의 포트폴리오관리</h3>
 
+
             <ul id="product_list">
-                <li>
+                <li v-for="item in data">
                     <i class="heart on"></i>
                     <a href="">
-                        <div class="area_img">
-                            <img src="">
+                        <div class="area_img" v-if="item.main_image_array.length > 0">
+                            <img :src="jl.root+item.main_image_array[0].src">
                         </div>
                         <div class="area_txt">
 
@@ -26,16 +27,14 @@
                     <div class="nodata_wrap">
                         <div class="area_img"><img :src="`${jl.root}/theme/basic_app/img/app/img_nodata.svg`"></div>
                         <p>등록한 포트폴리오가 없습니다.</p>
-                        <button @click="location.href=`${jl.root}/bbs/portfolio_write.php`" class="btn">
-                            포트폴리오 등록하기
-                        </button>
                     </div>
                 </li>
-
             </ul>
-
         </div>
 
+        <button @click="location.href=`${jl.root}/bbs/portfolio_write.php`" class="btn">
+            포트폴리오 등록하기
+        </button>
     </div>
 </script>
 
@@ -43,7 +42,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            primary: {type: String, default: ""}
+            mb_no: {type: String, default: ""}
         },
         data: function () {
             return {
@@ -54,6 +53,7 @@
         },
         created: function () {
             this.jl = new JL('<?=$componentName?>');
+            this.getData();
         },
         mounted: function () {
             this.$nextTick(() => {
@@ -70,11 +70,11 @@
                 }
             },
             getData: function () {
-                var res = this.jl.ajax("get", this.data, "/api/example.php");
+                var filter = {member_idx : this.mb_no}
+                var res = this.jl.ajax("get", filter, "/api/member_portfolio.php");
 
                 if (res) {
                     this.data = res.response.data
-
                 }
             }
         },

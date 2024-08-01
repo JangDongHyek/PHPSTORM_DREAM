@@ -1,4 +1,5 @@
 <?php
+namespace App\Libraries;
 class JL {
     private $root_dir = "public_html";
     private $JS = "/js/jang.js";
@@ -82,7 +83,7 @@ class JL {
         if ($position !== false) {
             $this->ROOT = substr($root, 0, $position).$this->root_dir;
         }else {
-            throw new \Exception("ROOT 위치를 찾을 수 없습니다.");
+            throw new Exception("ROOT 위치를 찾을 수 없습니다.");
         }
 
         //URL 구하기
@@ -91,17 +92,17 @@ class JL {
         $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
         if(isset($_SERVER['HTTP_HOST']) && preg_match('/:[0-9]+$/', $host))
             $host = preg_replace('/:[0-9]+$/', '', $host);
-        $this->URL = $http.$host.$user;
+        $this->URL = $http.$host;
 
         //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS)) throw new \Exception("JS 위치를 찾을 수 없습니다.");
+        //if(!file_exists($this->ROOT.$this->JS)) throw new Exception("JS 위치를 찾을 수 없습니다.");
 
         //DB 설정
         $this->DB = array(
             "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => "example"
+            "username" => "b2p",
+            "password" => "d^l3#gvc",
+            "database" => "b2p"
         );
     }
 }

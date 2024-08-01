@@ -87,9 +87,9 @@ abstract class BaseController extends Controller
                     }
                 }
             }
-        }*/
+        }
         $this->data = array_merge($this->data, $vars);
-
+        */
 
         if(isset($this->data['pass'])){
             $session->set("is_pass", $this->data['pass']);

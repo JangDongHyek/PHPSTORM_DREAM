@@ -1,5 +1,7 @@
 <?php namespace App\Controllers;
 
+use App\Libraries\JL;
+
 class AdminController extends BaseController {
     public function manager01_01_list() {
         return view('admin/manager01_01_list',$this->data);
@@ -180,7 +182,10 @@ class AdminController extends BaseController {
     public function calculate_view()
     {
         $this->data['pid'] = 'calculate_view';
-        return view('calculate/calculate_view',$this->data);
+        $jl = new JL();
+        $this->data['aa'] = $jl->ROOT;
+        $this->data['jl'] = $jl;
+        return view('calculate/calculate_view',$this->data,['jl' => $jl]);
     }
 
 
