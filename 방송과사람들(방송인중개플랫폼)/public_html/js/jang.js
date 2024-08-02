@@ -61,9 +61,9 @@ function ajax(url,objs) {
         }
     }
 
-    // for (var pair of form.entries()) {
-    //     console.log(pair[0] + ': ' + pair[1]);
-    // }
+    for (var pair of form.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
 
     var result = null;
     $.ajax({
@@ -126,7 +126,6 @@ class JL {
 
         var objects = {_method : method};
         objects = this.processObject(objects,object);
-
         var res = ajax(url, objects);
 
         const parsedStack = this.parseStackTrace(new Error().stack);
@@ -156,7 +155,7 @@ class JL {
                     const reader = new FileReader();
                     reader.onload = (function(f) {
                         return function(e) {
-                            f.src = e.target.result;
+                            f.preview = e.target.result;
                             obj[key].push(f); // 비동기로 파일을 읽는 중이라 onload 안에 넣어줘야 파일을 다 읽고 데이터가 완벽하게 들어간다
                         };
                     })(file); // 클로저 사용
@@ -182,7 +181,7 @@ class JL {
                     const reader = new FileReader();
                     reader.onload = (function(f) {
                         return function(e) {
-                            f.src = e.target.result;
+                            f.preview = e.target.result;
                             obj[key] = (f); // 비동기로 파일을 읽는 중이라 onload 안에 넣어줘야 파일을 다 읽고 데이터가 완벽하게 들어간다
                         };
                     })(file); // 클로저 사용
@@ -216,15 +215,15 @@ class JL {
                     objs[key] = value;
                     delete obj[key];
                 }else if(Array.isArray(value)) {
-                    if(value[0] instanceof File) {
-                        objs[key] = obj[key]
-                        delete obj[key];
-                    }
+                    value.forEach(function(item) {
+                        if(item instanceof File) {
+                            objs[key] = obj[key]
+                            delete obj[key];
+                        }
+                    });
                 }
             }
         }
-
-        console.log(objs);
 
         objs.obj = JSON.stringify(obj);
         return objs;

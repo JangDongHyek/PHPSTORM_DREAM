@@ -32,7 +32,7 @@ $c_name2 = $view["c_name"];
 </style>
 
 <div id="vueapp">
-    <portfolio-input mb_no="<?=$member['mb_no']?>"></portfolio-input>
+    <portfolio-input mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>"></portfolio-input>
 </div>
 
 <?php

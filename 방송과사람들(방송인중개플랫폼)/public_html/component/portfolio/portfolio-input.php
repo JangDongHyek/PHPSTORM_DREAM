@@ -41,7 +41,7 @@
 								<ul class="photo_list" id="file_list">
                                     <li class="file_1" v-for="item,index in data.main_image_array">
                                         <div class="area_img">
-                                            <img :src="item.src">
+                                            <img :src="item.preview ? item.preview : jl.root+item.src">
                                             <div class="area_delete" @click="data.main_image_array.splice(index,1)"><span class="sound_only">삭제</span></div>
                                         </div>
                                     </li>
@@ -74,7 +74,7 @@
 								<ul class="photo_list" id="file_list">
                                     <li class="file_1" v-for="item,index in data.content_image_array">
                                         <div class="area_img">
-                                            <img :src="item.src">
+                                            <img :src="item.preview ? item.preview : jl.root+item.src">
                                             <div class="area_delete" @click="data.content_image_array.splice(index,1)"><span class="sound_only">삭제</span></div>
                                         </div>
                                     </li>
@@ -151,12 +151,6 @@
             </div>
         </div>
     </span>
-        <span id="tab2" style="display: none">
-        <?php include_once('./item_write02.php'); ?>
-    </span>
-        <span id="tab3" style="display: none">
-    <?php include_once('./item_write03.php'); ?>
-    </span>
     </div>
 </script>
 
@@ -164,7 +158,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            mb_no: {type: String, default: ""}
+            mb_no: {type: String, default: ""},
+            primary: {type: String, default: ""}
         },
         data: function () {
             return {
@@ -183,12 +178,17 @@
                 agree : false,
                 categories : [],
 
+                bool : true,
+
                 parent_category_idx : "",
             };
         },
         created: function () {
             this.jl = new JL('<?=$componentName?>');
             this.getCategory();
+            console.log(this.primary)
+            console.log(this.mb_no)
+            if(this.primary) this.getData();
         },
         mounted: function () {
             this.$nextTick(() => {
@@ -197,13 +197,21 @@
         },
         methods: {
             postData: function () {
-                console.log(this.data);
+                var object = this.jl.copyObject(this.data);
+
+                var objects = {_method : "11"};
+                objects = this.jl.processObject(objects,object);
+
                 if(!this.data.name) {
                     alert("제목을 입력해주세요.");
                     return false;
                 }
                 if(!this.data.category_idx) {
                     alert("카테고리를 2차까지 선택해주세요.");
+                    return false;
+                }
+                if(!this.data.main_image_array.length) {
+                    alert("메인 이미지 1장은 필수입니다.");
                     return false;
                 }
                 if(this.data.main_image_array.length > 4) {
@@ -232,11 +240,13 @@
                 }
             },
             getData: function () {
-                var res = this.jl.ajax("get", this.data, "/api/example.php");
+                var filter = {primary : this.primary}
+                var res = this.jl.ajax("get", filter, "/api/member_portfolio.php");
 
                 if (res) {
-                    this.data = res.response.data
-
+                    this.bool = false;
+                    this.data = res.response.data[0]
+                    this.parent_category_idx = this.data.CATEGORY.data[0].parent_idx;
                 }
             },
             getCategory: function () {
@@ -257,13 +267,17 @@
         computed: {
             parent_category : function() {
                 if(!this.parent_category_idx) return null;
-
-                return this.categories.find(obj => obj['idx'] === this.parent_category_idx);
+                return this.categories.find(obj => obj['idx'] == this.parent_category_idx);
             }
         },
         watch: {
             parent_category_idx : function() {
-                this.data.category_idx = '';
+                if(this.bool) {
+                    this.data.category_idx = '';
+                }else {
+                    this.bool = true;
+                }
+
             }
         }
     });

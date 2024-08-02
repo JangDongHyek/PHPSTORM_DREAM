@@ -20,6 +20,7 @@ class Model extends JL{
     private $sql_order_by = "";
     private $group_bool = false;
     private $group_index = 0;
+    public  $not = false;
 
     function __construct($object = array()) {
         //부모 생성자
@@ -345,6 +346,8 @@ class Model extends JL{
     }
 
     function where($first,$second = "") {
+        $equals = $this->not ? "!=" : "=";
+
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -359,7 +362,7 @@ class Model extends JL{
                         $this->sql .= " AND ";
                     }
 
-                    $this->sql .= "`{$key}` = '{$value}'";
+                    $this->sql .= "`{$key}` $equals '{$value}'";
                 }
             }
         }
@@ -376,12 +379,14 @@ class Model extends JL{
                     $this->sql .= " AND ";
                 }
 
-                $this->sql .= "`{$first}` = '{$second}'";
+                $this->sql .= "`{$first}` $equals '{$second}'";
             }
         }
     }
 
     function or_where($first,$second = "") {
+        $equals = $this->not ? "!=" : "=";
+
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -396,7 +401,7 @@ class Model extends JL{
                         $this->sql .= " OR ";
                     }
 
-                    $this->sql .= "`{$key}` = '{$value}'";
+                    $this->sql .= "`{$key}` $equals '{$value}'";
                 }
             }
         }
@@ -412,7 +417,7 @@ class Model extends JL{
                     $this->sql .= " OR ";
                 }
 
-                $this->sql .= "`{$first}` = '{$second}'";
+                $this->sql .= "`{$first}` $equals '{$second}'";
             }
         }
     }

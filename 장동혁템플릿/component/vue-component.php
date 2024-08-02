@@ -47,7 +47,8 @@
                 }
             },
             getData: function () {
-                var res = this.jl.ajax("get",this.data,"/api/example.php");
+                var filter = {primary: this.primary}
+                var res = this.jl.ajax("get",filter,"/api/example.php");
 
                 if(res) {
                     this.data = res.response.data

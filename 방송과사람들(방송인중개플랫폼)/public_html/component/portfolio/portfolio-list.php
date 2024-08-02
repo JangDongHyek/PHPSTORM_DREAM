@@ -7,19 +7,20 @@
 
             <ul id="product_list">
                 <li v-for="item in data">
-                    <i class="heart on"></i>
-                    <a href="">
+                    <i class="heart" :class="{'on' : checkLike(item.idx)}" @click="checkLike(item.idx) ? deleteLike(item.idx) : postLike(item.idx)"></i>
+                    <a :href="`${jl.root}/bbs/portfolio_view.php?idx=${item.idx}`">
                         <div class="area_img" v-if="item.main_image_array.length > 0">
                             <img :src="jl.root+item.main_image_array[0].src">
                         </div>
                         <div class="area_txt">
 
                             <span>업체명</span><!-- 업체명 -->
-                            <h3>제목</h3> <!-- 제목 -->
+                            <h3>{{ item.name }}</h3> <!-- 제목 -->
                         </div>
 
                     </a>
-                    <a class="list_btn" href="<?= G5_BBS_URL . "/portfolio_write.php?idx=" . $row['i_idx'] ?>">수정</a>
+                    <a class="list_btn" :href="`${jl.root}/bbs/portfolio_write.php?idx=${item.idx}`">수정</a>
+                    <a class="list_btn" href="" @click="event.preventDefault(); deleteData(item)">삭제</a>
                     <!-- 제목 -->
                 </li>
 
@@ -49,11 +50,13 @@
                 jl: null,
                 filter: {},
                 data: [],
+                likes : [],
             };
         },
         created: function () {
             this.jl = new JL('<?=$componentName?>');
             this.getData();
+            this.getLike();
         },
         mounted: function () {
             this.$nextTick(() => {
@@ -61,6 +64,41 @@
             });
         },
         methods: {
+            deleteLike : function(portfolio_idx) {
+                var method = "sql_delete";
+                var data = {
+                    member_idx : this.mb_no,
+                    portfolio_idx : portfolio_idx
+                }
+                var res = this.jl.ajax(method, data, "/api/member_portfolio_like.php");
+
+                if (res) {
+                    this.getLike();
+                }
+            },
+            checkLike : function(portfolio_idx) {
+                return this.likes.some(obj => obj.portfolio_idx == portfolio_idx)
+            },
+            getLike : function() {
+                var filter = {member_idx : this.mb_no}
+                var res = this.jl.ajax("get", filter, "/api/member_portfolio_like.php");
+
+                if (res) {
+                    this.likes = res.response.data
+                }
+            },
+            postLike : function(portfolio_idx) {
+                var method = "insert";
+                var data = {
+                    member_idx : this.mb_no,
+                    portfolio_idx : portfolio_idx
+                }
+                var res = this.jl.ajax(method, data, "/api/member_portfolio_like.php");
+
+                if (res) {
+                    this.getLike();
+                }
+            },
             postData: function () {
                 var method = this.primary ? "update" : "insert";
                 var res = this.jl.ajax(method, this.data, "/api/example.php");
@@ -75,6 +113,16 @@
 
                 if (res) {
                     this.data = res.response.data
+                }
+            },
+            deleteData: function (item) {
+                if(confirm('삭제하시겠습니까?')) {
+                    var res = this.jl.ajax("delete", item, "/api/member_portfolio.php");
+
+                    if (res) {
+                        alert("완료되었습니다")
+                        this.getData();
+                    }
                 }
             }
         },

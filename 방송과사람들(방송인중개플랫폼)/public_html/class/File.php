@@ -1,19 +1,22 @@
 <?php
-include_once("Lib.php");
+include_once("JL.php");
 class File extends JL{
 
     private $path;
+    private $resizing;
 
-    function __construct($path = ""){
+    function __construct($path = "",$resizing = false){
         //부모 생성자
         parent::__construct();
+
+        $this->resizing = $resizing;
 
         if(!empty($path)){
             $this->path = $this->ROOT.$path;
 
             if(!is_dir($path)){
-                mkdir($path, 0777);
-                chmod($path, 0777);
+                mkdir($this->path, 0777);
+                chmod($this->path, 0777);
             }
         }
     }
@@ -67,6 +70,18 @@ class File extends JL{
         return $dst;
     }
 
+    function deleteDirGate($file) {
+        if(is_object($file)) {
+            $this->deleteDir($file['dir']);
+        }
+        if(is_array($file)) {
+            foreach ($file as $item) {
+                $this->deleteDir($item['dir']);
+            }
+        }
+        if(is_string($file)) $this->deleteDir($file);
+    }
+
     function bindGate($file,$permission = "",$path = "") {
         if(is_array($file['name'])) $result = $this->multiple_bind($file,$permission,$path);
         else $result = $this->bind($file,$permission,$path);
@@ -78,11 +93,15 @@ class File extends JL{
         if($file == "null" || $file == "undefined" || $file == null || $file == "" || $file["size"] == 0) {
             return "";
         }else {
+            if (array_key_exists('preview',$file)) {
+                unset($file->preview);
+            }
             $_idx = uniqid().str_pad(rand(0, 99), 2, "0", STR_PAD_LEFT);
             $path = $path ? $path : $this->path."/$_idx";
             if(empty($path)) throw new Exception("파일 경로가 설정되지 않았습니다");
             $permission = $permission ? $permission : $this->getPermission();
             $ext = $this->ext($file,true);
+            $ext = strtolower($ext);
             if(!in_array($ext,$permission)) throw new Exception("허용된 파일이 아닙니다.");
 
             $src = $this->save($file,$path);
@@ -94,9 +113,13 @@ class File extends JL{
 
             $image_path = str_replace($this->ROOT,"",$path);
             $file[status] = "read";
+            $file[dir] = $image_path;
             $file[src] = $image_path."/".$src;
-            $file[resize_src] = $image_path."/resize_".$src;
-            $this->resize_image($file[src],$file[resize_src],200,100);
+
+            if($this->resizing) {
+                $file[resize_src] = $image_path."/resize_".$src;
+                $this->resize_image($file[src],$file[resize_src],200,100);
+            }
 
             return json_encode($file,JSON_UNESCAPED_UNICODE);
         }

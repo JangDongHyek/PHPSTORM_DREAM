@@ -1,5 +1,6 @@
 <?php
 include_once("Lib.php");
+
 class Model extends JL{
     //Database 설정
     private $hostname;
@@ -13,12 +14,13 @@ class Model extends JL{
     private $mysqli = false;
     public  $primary;
     private $autoincrement;
-    private $empty;                 // 이 값이 true 이면 공백일때 조건추가를 안함
+    private $empty;                         //true 일시 빈값은 그냥 건너뛴다
 
     private $sql = "";
     private $sql_order_by = "";
     private $group_bool = false;
     private $group_index = 0;
+    public  $not = false;
 
     function __construct($object = array()) {
         //부모 생성자
@@ -28,22 +30,22 @@ class Model extends JL{
         if(function_exists("mysqli_connect")) $this->mysqli = true;
 
         //connect전 필수 정보확인
-        if(!$this->DB["hostname"]) throw new Exception("hostname를 입력해주세요.");
+        if(!$this->DB["hostname"]) throw new \Exception("hostname를 입력해주세요.");
         $this->hostname = $this->DB["hostname"];
-        if(!$this->DB["username"]) throw new Exception("username를 입력해주세요.");
+        if(!$this->DB["username"]) throw new \Exception("username를 입력해주세요.");
         $this->username = $this->DB["username"];
-        if(!$this->DB["password"]) throw new Exception("password를 입력해주세요.");
+        if(!$this->DB["password"]) throw new \Exception("password를 입력해주세요.");
         $this->password = $this->DB["password"];
-        if(!$this->DB["database"]) throw new Exception("database를 입력해주세요.");
+        if(!$this->DB["database"]) throw new \Exception("database를 입력해주세요.");
         $this->database = $this->DB["database"];
 
         //DB Connection
         if($this->mysqli) {
-            $connect = new mysqli($this->hostname, $this->username, $this->password, $this->database);
-            if ($connect->connect_errno) throw new Exception($connect->connect_error);
+            $connect = new \mysqli($this->hostname, $this->username, $this->password, $this->database);
+            if ($connect->connect_errno) throw new \Exception('1');
         }else {
             $connect = mysql_connect($this->hostname, $this->username, $this->password);
-            if(!$connect) throw new Exception(mysql_error());
+            if(!$connect) throw new \Exception(2);
             mysql_select_db($this->database, $connect);
         }
         $this->connect = $connect;
@@ -52,7 +54,7 @@ class Model extends JL{
             "columns" => array()
         );
 
-        if(!$object["table"]) throw new Exception("테이블명이 없습니다.");
+        if(!$object["table"]) throw new \Exception("테이블명이 없습니다.");
         $this->table =$object["table"];
         $this->primary = $object["primary"] ? $object["primary"] : "idx";
         $this->autoincrement = $object["autoincrement"] ? $object["autoincrement"] : true;
@@ -62,28 +64,28 @@ class Model extends JL{
         $sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{$this->database}' AND TABLE_NAME='{$this->table}'";
         if($this->mysqli) {
             $result = @mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
 
             $result = mysqli_num_rows($result);
         }else {
             $result = mysql_num_rows($result);
         }
 
-        if(!$result) throw new Exception("테이블을 찾을수 없습니다.");
+        if(!$result) throw new \Exception("테이블을 찾을수 없습니다.");
 
         // 테이블 스키마 정보 조회
         $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$this->table}' AND TABLE_SCHEMA='{$this->database}' ";
 
         if($this->mysqli) {
             $result = @mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
 
             while($row = mysqli_fetch_array($result)){
                 array_push($this->schema['columns'], $row['COLUMN_NAME']);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
-            if(!$result) throw new Exception(mysql_error());
+            if(!$result) throw new \Exception(mysql_error());
 
             while($row = mysql_fetch_array($result)){
                 array_push($this->schema['columns'], $row['COLUMN_NAME']);
@@ -131,10 +133,10 @@ class Model extends JL{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
         }else {
             $result = @mysql_query($sql, $this->connect);
-            if(!$result) throw new Exception(mysql_error());
+            if(!$result) throw new \Exception(mysql_error());
         }
 
         //return $_id;
@@ -150,13 +152,13 @@ class Model extends JL{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
 
             $total_count = mysqli_num_rows($result);
 
         }else {
             $result = @mysql_query($sql, $this->connect);
-            if(!$result) throw new Exception(mysql_error());
+            if(!$result) throw new \Exception(mysql_error());
 
             $total_count = mysql_num_rows($result);
 
@@ -182,7 +184,7 @@ class Model extends JL{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
 
             while($row = mysqli_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
@@ -191,7 +193,7 @@ class Model extends JL{
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
-            if(!$result) throw new Exception(mysql_error());
+            if(!$result) throw new \Exception(mysql_error());
 
             while($row = mysql_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
@@ -208,7 +210,7 @@ class Model extends JL{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) throw new Exception("고유 키 값이 존재하지 않습니다.");
+        if(!$param[$this->primary]) throw new \Exception("고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
@@ -227,10 +229,10 @@ class Model extends JL{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
         }else {
             $result = @mysql_query($sql, $this->connect);
-            if(!$result) throw new Exception(mysql_error());
+            if(!$result) throw new \Exception(mysql_error());
         }
 
 
@@ -241,7 +243,7 @@ class Model extends JL{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) throw new Exception("고유 키 값이 존재하지 않습니다.");
+        if(!$param[$this->primary]) throw new \Exception("고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
@@ -249,16 +251,33 @@ class Model extends JL{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
         }else {
             $result = @mysql_query($sql, $this->connect);
-            if(!$result) throw new Exception(mysql_error());
+            if(!$result) throw new \Exception(mysql_error());
         }
 
         return $param[$this->primary];
     }
 
-    function get_sql() {
+    function sqlDelete(){
+
+        if($this->sql == "") throw new \Exception("조건 삭제에 조건이 없습니다.");
+
+        $sql = "DELETE FROM {$this->table} WHERE 1 $this->sql ";
+
+        if($this->mysqli) {
+            $result = mysqli_query($this->connect, $sql);
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) throw new \Exception(mysql_error());
+        }
+
+        return $result;
+    }
+
+    function getSql() {
         $sql = "SELECT * FROM {$this->table} WHERE 1 ".$this->sql;
         $sql .= $this->sql_order_by ? " ORDER BY ".$this->sql_order_by : "";
         return $sql;
@@ -282,9 +301,9 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new Exception("필터를 입력해주새요.");
-            if(!in_array($second,array("DESC","ASC"))) throw new Exception("DESC , ASC 둘중 하나만 선택가능합니다.");
+            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("필터를 입력해주새요.");
+            if(!in_array($second,array("DESC","ASC"))) throw new \Exception("DESC , ASC 둘중 하나만 선택가능합니다.");
             if(in_array($first, $this->schema['columns'])){
                 if($this->sql_order_by) ",";
                 $this->sql_order_by .= " {$first} {$second}";
@@ -308,9 +327,9 @@ class Model extends JL{
     }
 
     function between($column,$start,$end,$type = "AND") {
-        if($column == "") throw new Exception("컬럼명을 대입 해주새요.");
-        if($start == "") throw new Exception("시작시간을 대입 해주새요.");
-        if($end == "") throw new Exception("종료시간을 대입 해주새요.");
+        if($column == "") throw new \Exception("컬럼명을 대입 해주새요.");
+        if($start == "") throw new \Exception("시작시간을 대입 해주새요.");
+        if($end == "") throw new \Exception("종료시간을 대입 해주새요.");
 
         if(in_array($column, $this->schema['columns'])){
             if($this->group_bool) {
@@ -320,11 +339,13 @@ class Model extends JL{
                 $this->sql .= " {$type} ";
             }
 
-            $this->sql .= "{$column} BETWEEN `{$start}` AND `{$end}` ";
+            $this->sql .= "{$column} BETWEEN '{$start}' AND '{$end}' ";
         }
     }
 
     function where($first,$second = "") {
+        $equals = $this->not ? "!=" : "=";
+
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -339,14 +360,14 @@ class Model extends JL{
                         $this->sql .= " AND ";
                     }
 
-                    $this->sql .= "`{$key}` = '{$value}'";
+                    $this->sql .= "`{$key}` $equals '{$value}'";
                 }
             }
         }
 
         if(is_string($first)) {
-            if($first == "") throw new Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
@@ -356,12 +377,14 @@ class Model extends JL{
                     $this->sql .= " AND ";
                 }
 
-                $this->sql .= "`{$first}` = '{$second}'";
+                $this->sql .= "`{$first}` $equals '{$second}'";
             }
         }
     }
 
     function or_where($first,$second = "") {
+        $equals = $this->not ? "!=" : "=";
+
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -376,14 +399,14 @@ class Model extends JL{
                         $this->sql .= " OR ";
                     }
 
-                    $this->sql .= "`{$key}` = '{$value}'";
+                    $this->sql .= "`{$key}` $equals '{$value}'";
                 }
             }
         }
 
         if(is_string($first)) {
-            if($first == "") throw new Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("필터를 입력해주새요.");
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
@@ -392,7 +415,7 @@ class Model extends JL{
                     $this->sql .= " OR ";
                 }
 
-                $this->sql .= "`{$first}` = '{$second}'";
+                $this->sql .= "`{$first}` $equals '{$second}'";
             }
         }
     }
@@ -417,15 +440,15 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " OR ";
+                    else $this->sql .= " AND ";
                 }else {
-                    $this->sql .= " OR ";
+                    $this->sql .= " AND ";
                 }
 
                 $this->sql .= "`{$first}` LIKE '%{$second}%'";
@@ -453,8 +476,8 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])) {
                 if($this->group_bool) {

@@ -44,10 +44,10 @@ try {
                 ));
 
                 foreach ($object["data"] as $index => $data) {
-                    $joinModel->where($joinModel->priary, $data["example_idx"]);
+                    $joinModel->where($joinModel->primary, $data["example_idx"]);
                     $join_data = $joinModel->get();
 
-                    $object["data"][$index][$join_table] = $join_data;
+                    $object["data"][$index][strtoupper($join_table)] = $join_data;
 
                     if ($join_table_delete) {
                         if (!$join_data) array_push($deletes, $index);
@@ -87,9 +87,21 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
+            //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
+            $model->where($model->primary,$obj[$model->primary]);
+            $getData = $model->get()['data'][0];
+
             foreach ($_FILES as $key => $file_data) {
                 $file_result = $file->bindGate($file_data);
-                $obj[$key] = $file_result;
+
+                //바인드의 리턴값은 encode되서 오기때문에 decode
+                $file_result = json_decode($file_result, true);
+                //데이터의 값은 encode되어있기떄문에 decode
+                $org_data = $model->jsonDecode($getData[$key],false);
+                $result = array_merge($org_data,$file_result);
+
+                //문자열로 저장되어야하기떄문에 encode
+                $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
             }
 
             $model->update($obj);
@@ -98,7 +110,9 @@ try {
         }
         case "delete":
         {
-            $obj = $model->jsonDecode($_POST['obj']);
+            $obj = $model->jsonDecode($_POST['obj'],false);
+
+            //$file->deleteDirGate($obj['data_column']);
             $data = $model->delete($obj);
 
             $response['success'] = true;
