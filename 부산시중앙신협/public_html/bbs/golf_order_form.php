@@ -19,6 +19,11 @@ if ($member["mb_level"] <= 2){
 //영업시간에만 열림
 
 $now_date = time();
+if ($_SERVER['REMOTE_ADDR'] == "121.140.204.65") {
+    $now_date = strtotime('+11 day', $now_date); // 1주일 후 타임스탬프
+    //$now_date = strtotime('-2 hours', $now_date);
+
+}
 $today = date("Y-m-d", $now_date);
 
 //alert($now_date."   //   ".strtotime($today." 09:00:00")."   //   ".strtotime($today." 18:00:00") . "   //  " . strtotime($today . " 10:00:00"));
@@ -492,7 +497,7 @@ while($row = sql_fetch_array($re)){
 
 						if(is_ho1) {
 							if(mb_level == 4){
-								ten_num = 7;
+								ten_num = 2;
 							}
 						}
 

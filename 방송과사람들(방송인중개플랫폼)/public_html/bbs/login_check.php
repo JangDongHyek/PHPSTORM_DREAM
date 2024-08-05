@@ -40,6 +40,7 @@ if ($config['cf_use_email_certify'] && !preg_match("/[1-9]/", $mb['mb_email_cert
 
 // 회원아이디 세션 생성
 set_session('ss_mb_id', $mb['mb_id']);
+set_session('ss_mb_no', $mb['mb_no']);
 // FLASH XSS 공격에 대응하기 위하여 회원의 고유키를 생성해 놓는다. 관리자에서 검사함 - 110106
 set_session('ss_mb_key', md5($mb['mb_datetime'] . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']));
 

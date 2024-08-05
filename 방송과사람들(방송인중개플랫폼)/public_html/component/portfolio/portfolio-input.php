@@ -176,10 +176,9 @@
                     description : "",
                 },
                 agree : false,
+
                 categories : [],
-
                 bool : true,
-
                 parent_category_idx : "",
             };
         },

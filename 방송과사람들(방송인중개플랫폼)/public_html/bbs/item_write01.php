@@ -33,20 +33,17 @@ $c_name2 = $view["c_name"];
 </style>
 
 <div id="vueapp">
-    <product-input></product-input>
-    <span id="tab2" <!--style="display: none"-->>
-    <?php include_once('./item_write02.php'); ?>
-    </span>
-    <span id="tab3" <!--style="display: none;"-->>
-    <?php include_once('./item_write03.php');?>
-    </span>
+    <product-input-main mb_no="<?=$member['mb_no']?>"></product-input-main>
 </div>
 
 <?php
 $jl->vueLoad("vueapp");
-include_once ($jl->ROOT."/component/modal/modal-portfolio.php");
-include_once ($jl->ROOT."/component/product/product-input.php");
+include_once ($jl->ROOT."/component/product/product-input-main.php");
+include_once ($jl->ROOT."/component/product/product-input-tab1.php");
+include_once ($jl->ROOT."/component/product/product-input-tab2.php");
+include_once ($jl->ROOT."/component/product/product-input-tab3.php");
 include_once ($jl->ROOT."/component/slot/slot-modal.php");
+include_once ($jl->ROOT."/component/naver-editor.php");
 ?>
 
 <script>

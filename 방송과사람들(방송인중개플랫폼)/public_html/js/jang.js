@@ -60,10 +60,10 @@ function ajax(url,objs) {
 
         }
     }
-
-    for (var pair of form.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-    }
+    //
+    // for (var pair of form.entries()) {
+    //     console.log(pair[0] + ': ' + pair[1]);
+    // }
 
     var result = null;
     $.ajax({

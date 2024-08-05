@@ -22,14 +22,16 @@ include_once(G5_PATH."/plugin/editor/smarteditor2/editor.lib.php");
             };
         },
         created: function(){
-
+            // default_content = []
+            // content = ""
+            // 에디터 내용을 저장하고싶을땐 부모컴포넌트의 data.content = this.default_content.getById["content"].getIR().replaceAll('"',"'")
         },
         mounted: function(){
             this.init();
 
         },
         methods: {
-            connect : function(object,key) {
+            connectData : function(object,key) {
                 object[key] = this.default_content.getById[this.name].getIR().replaceAll('"',"'")
             },
             init : function() {
