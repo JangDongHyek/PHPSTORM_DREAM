@@ -43,6 +43,10 @@
                                     <template v-for="item in data.main_image_array">
                                         <img :src="`${jl.root}${item.src}`">
                                     </template>
+
+                                    <template v-for="item in data.content_image_array">
+                                        <img :src="`${jl.root}${item.src}`">
+                                    </template>
                                 </div>
                                 <br>
                                 <h3>포트폴리오 설명</h3>
