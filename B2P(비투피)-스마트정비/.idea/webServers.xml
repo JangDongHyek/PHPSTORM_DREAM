@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="08934a2b-dd27-4c54-90da-1bd5c1cd0076" name="B2P(비투피)-스마트정비">
-        <fileTransfer rootFolder="/home/b2p" accessType="SFTP" host="211.43.202.152" port="22" sshConfigId="cf725064-2f92-4720-b1e4-8f5c816e91fd" sshConfig="b2p@211.43.202.152:22:2121 agent" authAgent="true">
+        <fileTransfer rootFolder="/home/b2p" accessType="SFTP" host="211.43.202.152" port="22" sshConfigId="cf725064-2f92-4720-b1e4-8f5c816e91fd" sshConfig="b2p@211.43.202.152:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

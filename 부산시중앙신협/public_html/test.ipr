@@ -1,0 +1,7 @@
+<?
+$link = "naver.com";
+ $file_name = md5($link).".png";
+ $filePath = G5_DATA_PATH."/qrcode/".$file_name;
+QRcode::png($link, $filePath);
+
+?>

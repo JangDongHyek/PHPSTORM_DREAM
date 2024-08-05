@@ -1,0 +1,89 @@
+<?php
+define('_INDEX_', true);
+if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+
+if (G5_IS_MOBILE) {
+    include_once(G5_THEME_MOBILE_PATH.'/index.php');
+    return;
+}
+
+include_once(G5_THEME_PATH.'/head.php');
+
+?>
+
+<link href="<?php echo G5_THEME_CSS_URL; ?>/ani/fullpage.css" rel="stylesheet" type="text/css"><!--메인컨텐츠-->
+
+	<!-- mobile Ver -->
+	<div id="mobile_main" class="mobVer">
+		<p class="top_title">부산시중앙신협멤버스</p>
+		<div class="box">
+			<h1 class="text-focus-in"> <img src="<?php echo G5_THEME_IMG_URL ?>/m/m_main_logo.svg" alt="부산시중앙신협멤버스"></h1>
+			<ul class="mobile_main_list">
+				<li>
+					<a href="<?php echo G5_BBS_URL ?>/content.php?co_id=priv_center"><span>PRIVATE </span>CENTER</a>
+				</li>
+				<li class="animate__delay-_3s" >
+					<a href="<?php echo G5_BBS_URL ?>/content.php?co_id=golf_center"><span>Golf </span>CENTER</a>
+				</li>
+				<li class="animate__delay-_6s">
+					<a href="<?php echo G5_BBS_URL ?>/content.php?co_id=cu_center"><span>cu</span>culture</a>
+				</li>
+				<li class="animate__delay-_9s">
+					<a href="<?php echo G5_BBS_URL ?>/content.php?co_id=trv_service"><span>travel </span>service</a>
+				</li>
+			</ul>
+		</div>
+		<div id="btm_nav">
+			<ul class="btm_gnb">
+				<li><a href="#"><i class="fa"></i>문화센터<span></span></a></li>
+				<li><a href="#">골프센터<span></span></a></li>
+				<li><a href="#">여행센터<span></span></a></li>
+				<li><a href="#">마이페이지</a></li>
+			</ul>
+		</div>
+	</div>
+
+
+
+	<!-- pc ver -->
+	<div id="fullpage" class="mainfull pcVer"> 
+		<section class="section " id="section1" >
+			<p class="main_title elice"><span class="text-focus-in delay3">Experience</span> <span class="text-focus-in delay1">the</span> <span class="text-focus-in delay2">lifestyle</span></p>
+			<div class="bg kenburns-top">
+				
+			</div>
+		</section>
+		<!-- /main slide -->
+
+		<section class="section " id="section2" >
+			<p class="main_title"><img src="<?php echo G5_THEME_IMG_URL ?>/m/m_main_logo.svg" alt="부산시중앙신협멤버스"></p>
+			<div class="bg"></div>
+		</section>
+		<!-- / main button -->
+
+		<section class="section" id="section3">
+			<div class="main_cont">
+				<p class="logo_t"><img src="<?php echo G5_THEME_IMG_URL ?>/m/m_main_logo.svg" alt="부산시중앙신협멤버스"></p>
+				<div class="main_title elice"><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=info">ABOUT US</a></div>
+				<div class="main_btn_box">
+					<ul>
+						<li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=priv_center"><span>PRIVATE CENTER</span>금융프라이빗센터</a></li>
+						<li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=golf_center"><span>THE GOLF</span>더골프 프로그램</a></li>
+						<li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=cu_center"><span>CU CULTURE</span>CU문화센터</a></li>
+						<li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=event"><span>EVENT</span>이벤트</a></li>
+					</ul>
+				</div>
+				<a href="javascript:alert('준비중입니다')" class="main_more">MEMBERSHIP MALL</a>
+
+			</div>
+			<div class="bg"></div>
+
+		</section>
+		<!-- / main video -->
+
+	</div>
+	<!-- /mainFull -->
+
+<?php
+include_once(G5_PATH.'/tail_sub.php');
+?>
