@@ -6,7 +6,7 @@ $response = array("message" => "");
 $_method = $_POST["_method"];
 
 $model_config = array(
-    "table" => "example",
+    "table" => "member_product_like",
     "primary" => "idx",
     "autoincrement" => true,
     "empty" => false
@@ -35,7 +35,7 @@ try {
 
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
-            
+
             if ($join_table) {
                 $deletes = array();
                 $joinModel = new Model(array(
@@ -119,11 +119,17 @@ try {
             break;
         }
 
-        case "where_delete" :
+        case "sql_delete":
+        {
             $obj = $model->jsonDecode($_POST['obj'],false);
 
+            //$file->deleteDirGate($obj['data_column']);
             $model->where($obj);
-            $data = $model->whereDelete();
+            $data = $model->sqlDelete();
+
+            $response['success'] = true;
+            break;
+        }
 
         case "deletes":
         {

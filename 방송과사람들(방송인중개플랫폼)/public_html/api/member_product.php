@@ -1,12 +1,12 @@
 <?php
 include_once("../class/Model.php");
-//include_once("../class/File.php");
+include_once("../class/File.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
 
 $model_config = array(
-    "table" => "example",
+    "table" => "member_product",
     "primary" => "idx",
     "autoincrement" => true,
     "empty" => false
@@ -16,10 +16,10 @@ $model_config = array(
 try {
     $model = new Model($model_config);
 
-    $join_table = "";
+    $join_table = "category";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    //$file = new File("/data/example");
+    $file = new File("/data/member_product");
 
     switch (strtolower($_method)) {
         case "get":
@@ -35,7 +35,7 @@ try {
 
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
-            
+
             if ($join_table) {
                 $deletes = array();
                 $joinModel = new Model(array(
@@ -44,7 +44,7 @@ try {
                 ));
 
                 foreach ($object["data"] as $index => $data) {
-                    $joinModel->where($joinModel->primary, $data["example_idx"]);
+                    $joinModel->where($joinModel->primary, $data["category_idx"]);
                     $join_data = $joinModel->get();
 
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
@@ -118,12 +118,6 @@ try {
             $response['success'] = true;
             break;
         }
-
-        case "where_delete" :
-            $obj = $model->jsonDecode($_POST['obj'],false);
-
-            $model->where($obj);
-            $data = $model->whereDelete();
 
         case "deletes":
         {

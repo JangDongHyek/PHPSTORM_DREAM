@@ -33,11 +33,7 @@ if(!function_exists('ft_nonce_is_valid')){
     include_once('../../../editor.lib.php');
 }
 
-$is_editor_upload = false;
-
-if( isset($_GET['_nonce']) && ft_nonce_is_valid( $_GET['_nonce'] , 'smarteditor' ) ){
-    $is_editor_upload = true;
-}
+$is_editor_upload = true;
 
 if( $is_editor_upload ) {
 

@@ -104,6 +104,8 @@ class JL {
     constructor(name,background = "#35495e") {
         this.name = name;
         this.root = JL_base_url
+        this.editor = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
+
         if(!JL_dev) return false;
         console.log(
             '%c' + name,

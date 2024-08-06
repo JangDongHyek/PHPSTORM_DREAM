@@ -33,7 +33,7 @@ $c_name2 = $view["c_name"];
 </style>
 
 <div id="vueapp">
-    <product-input-main mb_no="<?=$member['mb_no']?>"></product-input-main>
+    <product-input-main mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>"></product-input-main>
 </div>
 
 <?php

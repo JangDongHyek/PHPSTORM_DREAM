@@ -125,7 +125,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                  ?>
             </td>
             <td class="td_name sv_use"><?php echo $list[$i]['name'] ?></td>
-            <td class="td_date hidden-xs"><?php echo $list[$i]['datetime2'] ?></td>
+            <td class="td_date hidden-xs"><?php echo date('y-m-d',strtotime($list[$i]['wr_datetime'])) ?></td>
             <td class="td_num hidden-xs"><?php echo $list[$i]['wr_hit'] ?></td>
             <?php if ($is_good) { ?><td class="td_num"><?php echo $list[$i]['wr_good'] ?></td><?php } ?>
             <?php if ($is_nogood) { ?><td class="td_num"><?php echo $list[$i]['wr_nogood'] ?></td><?php } ?>

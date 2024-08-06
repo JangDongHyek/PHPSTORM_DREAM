@@ -1,5 +1,8 @@
 <?
 include_once('./_common.php');
+include_once("../class/Lib.php");
+
+$jl = new JL();
 $name = "cmypage";
 $g5['title'] = '서비스관리';
 include_once('./_head.php');
@@ -38,32 +41,10 @@ $result = sql_query($sql);
         <div id="mypage_wrap">
             <?php include_once('./mypage_info.php'); ?>
 
-            <div class="mypage_cont">
-                <div class="box">
-                    <h3>나의 서비스관리</h3>
-
-                    <ul id="product_list">
-                        <?php if (sql_num_rows($result) == 0){?>
-                            <li class="nodata">
-                                <div class="nodata_wrap">
-                                    <div class="area_img"><img src="<?php echo G5_THEME_IMG_URL ?>/app/img_nodata.svg"></div>
-                                    <p>등록한 서비스이 없습니다.</p>
-                                    <button onclick="location.href='<? echo G5_BBS_URL ?>/item_write01.php'" class="btn">서비스 등록하기</button>
-                                </div>
-                            </li>
-                        <?php  }else {
-                            for ($i = 0; $row = sql_fetch_array($result); $i++) {
-                                $row['page_type'] = 'update';
-                                include("./li_content.php");
-                            }
-                        } ?>
-
-                    </ul>
-
-                </div>
-                <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, "?$qstr&amp;page="); ?>
-
+            <div id="app">
+                <product-mypage-list mb_no="<?=$member['mb_no']?>"></product-mypage-list>
             </div>
+
             <!-- 마이페이지에만 나오는 메뉴 -->
             <?php include_once('./mypage_menu.php'); ?>
         </div>
@@ -71,6 +52,10 @@ $result = sql_query($sql);
 
 </div>
 
+<?php
+$jl->vueLoad("app");
+include_once($jl->ROOT."/component/product/product-mypage-list.php");
+?>
 
 <?
 include_once('./_tail.php');

@@ -127,7 +127,7 @@
                 </div>
                 <div id="area_btn" class="col02">
                     <a class="btn_prev" href="" @click="event.preventDefault(); $emit('changeTab',3)">이전</a>
-                    <a class="btn_next" href="" @click="event.preventDefault();">등록완료</a>
+                    <a class="btn_next" href="" @click="event.preventDefault(); $emit('postData')">등록완료</a>
                 </div>
             </div>
         </div>

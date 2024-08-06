@@ -30,7 +30,7 @@
                     <div class="box_write02">
                         <h4>서비스설명</h4>
                         <div class="cont">
-                            <naver-editor :content="product.service" ref="naverEditor"></naver-editor>
+                            <naver-editor :content="product.service" ref="naverEditor" v-if="visible"></naver-editor>
                         </div>
                     </div>
                     <!--<div class="box_write02">
@@ -58,13 +58,19 @@
                         <h4>자주 묻는 질문</h4>
                         <div class="cont faq">
                             <div class="faq_active">
-                                <dl class="box_gray">
-                                    <a class="del"><i class="fa-regular fa-trash"></i></a>
-                                    <dt><strong>Q.</strong><input type="text" placeholder="자주 묻는 질문을 입력해주세요"></dt>
-                                    <dd><strong>A.</strong><textarea type="text" placeholder="답변을 입력해주세요"></textarea></dd>
+                                <dl class="box_gray" v-for="item,index in product.questions">
+                                    <a class="del" href="" @click="event.preventDefault(); product.questions.splice(index,1)"><i class="fa-regular fa-trash"></i></a>
+                                    <dt>
+                                        <strong>Q.</strong>
+                                        <input type="text" placeholder="자주 묻는 질문을 입력해주세요" v-model="item.question">
+                                    </dt>
+                                    <dd>
+                                        <strong>A.</strong>
+                                        <textarea type="text" placeholder="답변을 입력해주세요" v-model="item.answer"></textarea>
+                                    </dd>
                                 </dl>
                             </div>
-                            <button class="btn_add"><i class="fa-light fa-plus"></i> 질문 추가</button>
+                            <button class="btn_add" @click="product.questions.push({})"><i class="fa-light fa-plus"></i> 질문 추가</button>
                         </div>
                     </div>
                     <div class="box_write02">
@@ -73,17 +79,17 @@
                             <div class="box_gray">
                                 <dl class="grid2">
                                     <dt>서비스 제공자</dt>
-                                    <dd><input type="text" placeholder="서비스 제공자"></dd>
+                                    <dd><input type="text" v-model="product.product_info1" placeholder="서비스 제공자"></dd>
                                     <dt>취소·환불 조건</dt>
-                                    <dd><input type="text" placeholder="최소 및 환불 규정 참조"></dd>
+                                    <dd><input type="text" v-model="product.product_info2" placeholder="최소 및 환불 규정 참조"></dd>
                                     <dt>인증·허가사항</dt>
-                                    <dd><input type="text" placeholder="상품 상세 참조"></dd>
+                                    <dd><input type="text" v-model="product.product_info3" placeholder="상품 상세 참조"></dd>
                                     <dt>취소·환불방법</dt>
-                                    <dd><input type="text" placeholder="취소 및 환불 규정 참조"></dd>
+                                    <dd><input type="text" v-model="product.product_info4" placeholder="취소 및 환불 규정 참조"></dd>
                                     <dt>이용조건</dt>
-                                    <dd><input type="text" placeholder="상품 상세 참조"></dd>
+                                    <dd><input type="text" v-model="product.product_info5" placeholder="상품 상세 참조"></dd>
                                     <dt>소비자 상담전화</dt>
-                                    <dd><input type="text" placeholder="예) (고객센터)1234-1234"></dd>
+                                    <dd><input type="text" v-model="product.product_info6" placeholder="예) (고객센터)1234-1234"></dd>
                                 </dl>
                             </div>
                         </div>
@@ -107,6 +113,7 @@
             product : {type : Object, default : null},
             content : {type : String, default : ""},
             name : {type : String, default : ""},
+            tab : {type : Number, default : 0},
             primary : {type : String, default : ""},
         },
         data: function(){
@@ -120,14 +127,16 @@
                 },
 
                 modal : false,
+
+                visible : false
             };
         },
         created: function(){
             this.jl = new JL('<?=$componentName?>');
+
         },
         mounted: function(){
             this.$nextTick(() => {
-
             });
         },
         methods: {
@@ -153,7 +162,9 @@
 
         },
         watch : {
-
+            tab : function(){
+                if(this.tab == 2) this.visible = true;
+            }
         }
     });
 </script>

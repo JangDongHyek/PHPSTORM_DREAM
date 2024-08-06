@@ -94,13 +94,20 @@
                         <th>주문금액</th>
                         <th>할인금액</th>
                         <th>최종결제금액</th>
-                        <th>누계</th>
+                        <th>카테고리 수수료</th>
+                        <!--th>카드 수수료</th // 대기-->
+                        <th>정산누계</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr class="sum">
-                        <td colspan="2">기간합계</td>
-                        <td colspan="99"><b>0원</b></td>
+                        <td colspan="2">기간 내 합계</td>
+                        <td colspan="1"><b>주문금액</b></td>
+                        <td colspan="3"><b>0원</b></td>
+                        <td colspan="1"><b>수수료</b></td>
+                        <td colspan="3"><b>0원</b></td>
+                        <td colspan="1"><b>정산금액</b></td>
+                        <td colspan="3"><b>0원</b></td>
                     </tr>
                     <tr v-for="item in orders">
                         <td>{{ item.data_page_no }}</td>
@@ -130,7 +137,9 @@
                             </details>
                         </td>
                         <td>{{ parseInt(item.AcntMoney).format() }}원</td>
-                        <td>{{ parseInt(item.OrderAmount).format() }}원</td>
+                        <td>{{ (parseInt(item.OrderAmount) * 0.03).format() }}원</td>
+                        <!--td>{카드 수수료}원</td // 대기-->
+                        <td>{{ calcPrice(item).format() }}원</td>
                     </tr>
                     </tbody>
                 </table>
@@ -184,6 +193,21 @@
             });
         },
         methods: {
+            calcPrice : function(item) {
+                /*
+                CostPrice - 공급원가
+                SettlementPrice - 정산예정금액
+                ServiceFee - 서비스이용료 금액
+                BasicServiceFee - 	[기본수수료] (옥션 주문만) 기본수수료 : 판매자 즉시할인 적용되지 않은 카테고리수수료 또는 판매자 수수료 또는 아이템 수수료
+                */
+                let OrderAmount = parseInt(item.OrderAmount);
+                let AcntMoney = parseInt(item.AcntMoney);
+                let SettlementPrice = parseInt(item.SettlementPrice);
+                let btp_commission = OrderAmount * 0.03 // 판매금액의 3퍼 수수료
+
+
+                return SettlementPrice - btp_commission;
+            },
             getYear : function() {
                 const date = new Date();
                 const fullYear = date.getFullYear(); // getFullYear() returns the full year (e.g., 2024)

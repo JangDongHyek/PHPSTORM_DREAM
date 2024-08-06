@@ -1,17 +1,11 @@
-<?php
-include_once(G5_PATH."/plugin/editor/smarteditor2/editor.lib.php");
-?>
-
-<script type="text/x-template" id="naver-editor-template">
+<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<script type="text/x-template" id="<?=$componentName?>>-template">
     <textarea :name="name" v-bind:id="name" rows="10" cols="100" style="width:100%; height:300px; display:none;"></textarea>
 </script>
 
-<script type="text/javascript" src="<?=G5_URL?>/plugin/editor/smarteditor2/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script>
-    var oEditors = [];
-    var ed_nonce = "<?=ft_nonce_create('smarteditor')?>";
-    Vue.component('naver-editor', {
-        template: "#naver-editor-template",
+    Vue.component('<?=$componentName?>>', {
+        template: "#<?=$componentName?>>-template",
         props: {
             content : {type : String,default: ""},
             name : {type : String,default: "content"},
@@ -22,7 +16,10 @@ include_once(G5_PATH."/plugin/editor/smarteditor2/editor.lib.php");
             };
         },
         created: function(){
-
+            /*
+            JL.php 및 jang.js에 editor 경로 입력해줘야합니다.
+            그누보드일경우 photo_uploader/popup/php/index.php 파일의 해쉬검증부분 삭제후 사용해야합니다
+             */
         },
         mounted: function(){
             this.init();
@@ -40,7 +37,7 @@ include_once(G5_PATH."/plugin/editor/smarteditor2/editor.lib.php");
                     nhn.husky.EZCreator.createInIFrame({
                         oAppRef: default_content,
                         elPlaceHolder: component.name,
-                        sSkinURI: "<?=G5_URL?>/plugin/editor/smarteditor2/SmartEditor2Skin.html",
+                        sSkinURI: component.jl.root + component.jl.editor,
                         htParams : {
                             bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
                             bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)

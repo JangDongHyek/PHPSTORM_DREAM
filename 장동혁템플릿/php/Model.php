@@ -260,10 +260,7 @@ class Model extends JL{
         return $param[$this->primary];
     }
 
-    function sqlDelete($_param){
-
-        $param = $this->escape($_param);
-
+    function whereDelete(){
         if($this->sql == "") throw new \Exception("조건 삭제에 조건이 없습니다.");
 
         $sql = "DELETE FROM {$this->table} WHERE 1 $this->sql ";

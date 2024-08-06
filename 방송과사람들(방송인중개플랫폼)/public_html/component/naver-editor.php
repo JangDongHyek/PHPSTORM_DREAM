@@ -1,15 +1,12 @@
 <?php
-include_once(G5_PATH."/plugin/editor/smarteditor2/editor.lib.php");
 ?>
 
 <script type="text/x-template" id="naver-editor-template">
-    <textarea :name="name" v-bind:id="name" rows="10" cols="100" style="width:100%; height:300px; display:none;"></textarea>
+    <textarea :name="name" v-bind:id="name" rows="10" cols="100" style="width:100%; height:30px; display:none;"></textarea>
 </script>
 
 <script type="text/javascript" src="<?=G5_URL?>/plugin/editor/smarteditor2/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script>
-    var oEditors = [];
-    var ed_nonce = "<?=ft_nonce_create('smarteditor')?>";
     Vue.component('naver-editor', {
         template: "#naver-editor-template",
         props: {
@@ -25,9 +22,10 @@ include_once(G5_PATH."/plugin/editor/smarteditor2/editor.lib.php");
             // default_content = []
             // content = ""
             // 에디터 내용을 저장하고싶을땐 부모컴포넌트의 data.content = this.default_content.getById["content"].getIR().replaceAll('"',"'")
+            this.init();
+
         },
         mounted: function(){
-            this.init();
 
         },
         methods: {

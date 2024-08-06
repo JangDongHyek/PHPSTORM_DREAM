@@ -89,59 +89,59 @@
                                 <div class="box_write">
                                     <h4>성별</h4>
                                     <div class="cont box">
-                                        <input type="radio" name="gender" id="male" value="남자"><label for="male">남자</label>
-                                        <input type="radio" name="gender" id="female" value="여자"><label for="female">여자</label>
-                                        <input type="radio" name="gender" id="not-selected" value="미선택"><label for="not-selected">미선택</label>
+                                        <input type="radio" v-model="product.gender" name="gender" id="male" value="남자"><label for="male">남자</label>
+                                        <input type="radio" v-model="product.gender" name="gender" id="female" value="여자"><label for="female">여자</label>
+                                        <input type="radio" v-model="product.gender" name="gender" id="not-selected" value="미선택"><label for="not-selected">미선택</label>
                                     </div>
                                 </div>
                                 <div class="box_write">
                                     <h4>연령</h4>
                                     <div class="cont box">
-                                        <input type="radio" id="kids" name="age-group"><label for="kids">키즈</label>
-                                        <input type="radio" id="teen" name="age-group"><label for="teen">청소년</label>
-                                        <input type="radio" id="twenties-thirties" name="age-group"><label for="twenties-thirties">20~30대</label>
-                                        <input type="radio" id="middle-aged" name="age-group"><label for="middle-aged">중장년</label>
+                                        <input type="radio" v-model="product.age" value="키즈" id="kids" name="age-group"><label for="kids">키즈</label>
+                                        <input type="radio" v-model="product.age" value="청소년" id="teen" name="age-group"><label for="teen">청소년</label>
+                                        <input type="radio" v-model="product.age" value="20~30대" id="twenties-thirties" name="age-group"><label for="twenties-thirties">20~30대</label>
+                                        <input type="radio" v-model="product.age" value="중장년" id="middle-aged" name="age-group"><label for="middle-aged">중장년</label>
                                     </div>
                                 </div>
                                 <div class="box_write">
                                     <h4>지역</h4>
                                     <div class="cont box">
-                                        <input type="checkbox" id="domestic" name="location"><label for="domestic">국내</label>
-                                        <input type="checkbox" id="overseas" name="location"><label for="overseas">해외</label>
-                                        <input type="checkbox" id="negotiable" name="location"><label for="negotiable">협의 또는 선택안함</label>
+                                        <input type="checkbox" v-model="product.area" value="국내" id="domestic" name="location"><label for="domestic">국내</label>
+                                        <input type="checkbox" v-model="product.area" value="해외" id="overseas" name="location"><label for="overseas">해외</label>
+                                        <input type="checkbox" v-model="product.area" value="협의 또는 선택안함" id="negotiable1" name="location"><label for="negotiable1">협의 또는 선택안함</label>
                                     </div>
                                 </div>
                                 <div class="box_write">
                                     <h4>주말 작업 가능여부</h4>
                                     <div class="cont box">
-                                        <input type="checkbox" id="negotiable" name="availability"><label for="negotiable">협의가능</label>
-                                        <input type="checkbox" id="possible" name="availability"><label for="possible">가능</label>
-                                        <input type="checkbox" id="not-possible" name="availability"><label for="not-possible">불가능</label>
+                                        <input type="checkbox" v-model="product.weekend" value="협의가능" id="negotiable2" name="availability"><label for="negotiable2">협의가능</label>
+                                        <input type="checkbox" v-model="product.weekend" value="가능" id="possible" name="availability"><label for="possible">가능</label>
+                                        <input type="checkbox" v-model="product.weekend" value="불가능" id="not-possible" name="availability"><label for="not-possible">불가능</label>
                                     </div>
                                 </div>
                                 <div class="box_write">
                                     <h4>작업유형</h4>
                                     <div class="cont box">
-                                        <input type="checkbox" id="photo" name="media"><label for="photo">사진</label>
-                                        <input type="checkbox" id="video" name="media"><label for="video">영상</label>
-                                        <input type="checkbox" id="audio" name="media"><label for="audio">음향</label>
-                                        <input type="checkbox" id="none-media" name="media"><label for="none-media">선택안함</label>
+                                        <input type="checkbox" v-model="product.types" value="사진" id="photo" name="media"><label for="photo">사진</label>
+                                        <input type="checkbox" v-model="product.types" value="영상" id="video" name="media"><label for="video">영상</label>
+                                        <input type="checkbox" v-model="product.types" value="음향" id="audio" name="media"><label for="audio">음향</label>
+                                        <input type="checkbox" v-model="product.types" value="선택안함" id="none-media" name="media"><label for="none-media">선택안함</label>
                                     </div>
                                 </div>
                                 <div class="box_write">
                                     <h4>스타일</h4>
                                     <div class="cont box">
-                                        <input type="checkbox" id="person" name="category"><label for="person">인물</label>
-                                        <input type="checkbox" id="object" name="category"><label for="object">사물</label>
-                                        <input type="checkbox" id="product" name="category"><label for="product">제품</label>
-                                        <input type="checkbox" id="clothing" name="category"><label for="clothing">의상</label>
-                                        <input type="checkbox" id="car" name="category"><label for="car">자동차</label>
-                                        <input type="checkbox" id="interior" name="category"><label for="interior">인테리어</label>
-                                        <input type="checkbox" id="2d" name="category"><label for="2d">2D</label>
-                                        <input type="checkbox" id="3d" name="category"><label for="3d">3D</label>
-                                        <input type="checkbox" id="effects" name="category"><label for="effects">이펙트</label>
-                                        <input type="checkbox" id="animation" name="category"><label for="animation">애니메이션</label>
-                                        <input type="checkbox" id="none-cate" name="category"><label for="none-cate">선택안함</label>
+                                        <input type="checkbox" v-model="product.styles" value="인물" id="person" name="category"><label for="person">인물</label>
+                                        <input type="checkbox" v-model="product.styles" value="사물" id="object" name="category"><label for="object">사물</label>
+                                        <input type="checkbox" v-model="product.styles" value="제품" id="product" name="category"><label for="product">제품</label>
+                                        <input type="checkbox" v-model="product.styles" value="의상" id="clothing" name="category"><label for="clothing">의상</label>
+                                        <input type="checkbox" v-model="product.styles" value="자동차" id="car" name="category"><label for="car">자동차</label>
+                                        <input type="checkbox" v-model="product.styles" value="인테리어" id="interior" name="category"><label for="interior">인테리어</label>
+                                        <input type="checkbox" v-model="product.styles" value="2D" id="2d" name="category"><label for="2d">2D</label>
+                                        <input type="checkbox" v-model="product.styles" value="3D" id="3d" name="category"><label for="3d">3D</label>
+                                        <input type="checkbox" v-model="product.styles" value="이펙트" id="effects" name="category"><label for="effects">이펙트</label>
+                                        <input type="checkbox" v-model="product.styles" value="애니메이션" id="animation" name="category"><label for="animation">애니메이션</label>
+                                        <input type="checkbox" v-model="product.styles" value="선택안함" id="none-cate" name="category"><label for="none-cate">선택안함</label>
                                     </div>
                                 </div>
                             </div>
@@ -153,11 +153,14 @@
                                     <div class="keyword">
                                         <div class="keyword_add">
                                             <p>검색 키워드</p>
-                                            <input type="text" placeholder="키워드 입력"> <span>5/5</span> <button>추가</button>
+                                            <input type="text" placeholder="키워드 입력" v-model="temp"> <span>{{product.keywords.length}}/5</span>
+                                            <button @click="product.keywords.push(temp); temp = '';">추가</button>
                                         </div>
                                         <div class="keyword_list">
                                             <div class="tag">
-                                                <span>배우 <a class="del"><i class="fa-light fa-xmark"></i></a></span>
+                                                <template v-for="item,index in product.keywords">
+                                                    <span>{{ item }} <a class="del" href="" @click="event.preventDefault(); product.keywords.splice(index,1);"><i class="fa-light fa-xmark"></i></a></span>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>
@@ -419,7 +422,7 @@
                 data : {
 
                 },
-
+                temp : "",
                 modal : false,
 
                 portfolios : [],
