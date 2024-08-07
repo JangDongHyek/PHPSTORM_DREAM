@@ -206,14 +206,14 @@ else
         <td class="td_mbid"><a href="?sfl=mb_id&amp;stx=<?php echo $row['mb_id'] ?>"><?php echo $row['mb_id'] ?></a></td>
         <td class="td_mbname"><?php echo get_text($row2['mb_name']); ?></td>
         <td class="td_pt_log"><?php echo $link1 ?><?php echo $row['po_content'] ?><?php echo $link2 ?></td>
-        <td class="td_pt" style="width:150px;"><?php echo number_format($row['po_point']) ?></td>
+        <td class="td_pt" style="width:150px;"><?php echo number_format($row['po_point'],2) ?></td>
         <td class="td_datetime" style="width:150px;"><?php echo $row['po_datetime'] ?></td>
         <td class="td_date<?php echo $expr; ?>" style="width:120px;">
             <?php if ($row['po_expired'] == 1) { ?>
             만료<?php echo substr(str_replace('-', '', $row['po_expire_date']), 2); ?>
             <?php } else echo $row['po_expire_date'] == '9999-12-31' ? '&nbsp;' : $row['po_expire_date']; ?>
         </td>
-        <td class="td_pt" style="width:150px;"><?php echo number_format($row['po_mb_point']) ?></td>
+        <td class="td_pt" style="width:150px;"><?php echo number_format($row['po_mb_point'],2) ?></td>
     </tr>
 
     <?php
