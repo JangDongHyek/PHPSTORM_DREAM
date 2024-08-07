@@ -10,7 +10,6 @@
                         <div class="nodata_wrap">
                             <div class="area_img"><img :src="`${jl.root}/theme/basic_app/img/app/img_nodata.svg`"></div>
                             <p>등록한 서비스이 없습니다.</p>
-                            <button @click="location.href=jl.root+'/bbs/item_write01.php'" class="btn">서비스 등록하기</button>
                         </div>
                     </li>
 
@@ -33,6 +32,8 @@
                 </ul>
 
             </div>
+
+            <button @click="location.href=jl.root+'/bbs/item_write01.php'" class="btn">서비스 등록하기</button>
 
         </div>
     </div>

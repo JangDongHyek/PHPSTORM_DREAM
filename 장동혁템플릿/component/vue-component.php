@@ -31,6 +31,8 @@
         },
         created: function(){
             this.jl = new JL('<?=$componentName?>');
+
+            if(this.primary) this.getData();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -51,8 +53,7 @@
                 var res = this.jl.ajax("get",filter,"/api/example.php");
 
                 if(res) {
-                    this.data = res.response.data
-
+                    this.data = res.response.data[0]
                 }
             }
         },

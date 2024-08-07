@@ -45,7 +45,7 @@ try {
 
                 foreach ($object["data"] as $index => $data) {
                     $joinModel->where($joinModel->primary, $data["example_idx"]);
-                    $join_data = $joinModel->get();
+                    $join_data = $joinModel->get()['data'][0];
 
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
 

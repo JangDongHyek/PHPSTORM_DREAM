@@ -1,0 +1,183 @@
+<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<script type="text/x-template" id="<?=$componentName?>-template">
+    <div class="item_right">
+        <div class="item_info">
+            <template v-for="item in data.keywords">
+                <i class="cate">{{item}}</i> &nbsp;
+            </template>
+            <h3 class="subject">{{data.name}}</h3>
+            <div class="company_info">
+                <div class="profile_box">
+                    <div class="profile">
+                        <img v-if="checkFile('/data/file/member/${product.member_idx}.jpg')" :src="`${jl.root}/data/file/member/${product.member_idx}.jpg`">
+                        <img v-else :src="`${jl.root}/img/img_smile.jpg`">
+                    </div>
+                    <div class="profile_info" @click="location.href=jl.root+'/bbs/profile.php?mb_no='+product.member_idx">
+                        <h3>{{ product.MEMBER.mb_nick }}</h3>
+
+                        <div class="area_star">
+                            <div class="img_star v35">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <em>5.0</em>
+                            <span class="review">(0개 리뷰)</span>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list_info">
+                    <li>
+                        <span>거래건수</span>
+                        <h3>10건</h3>
+                    </li>
+                    <li>
+                        <span>만족도</span>
+                        <h3>98%</h3>
+                    </li>
+                    <li>
+                        <span>회원구분</span>
+                        <h3>
+                            개인
+                        </h3>
+                    </li>
+                    <!--<li>
+                                <span>평균응답시간</span>
+                                <h3>
+                                    <? /* if($mb['re_time'] == "1") echo "30분 이내";
+                                    else if($mb['re_time'] == "2") echo "1시간 이내";
+                                    else echo "1시간 이상";
+                                    */ ?>
+                                </h3>
+                            </li>-->
+                </ul>
+                <!--자기소개글-->
+                <p class="pf_produce">자기소개글</p>
+                <a href="" class="btn_cs">전문가에게 문의하기</a>
+            </div>
+            <br>
+            <div class="price_info">
+                <div role="tabpanel">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <template v-if="!product.package">
+                            <li role="presentation" :class="{'active' : tab == 'basic'}">
+                                <a href="">BASIC</a>
+                            </li>
+                        </template>
+
+                        <template v-else>
+                            <li role="presentation" :class="{'active' : tab == 'standard'}">
+                                <a href="" @click="event.preventDefault(); tab = 'standard'">STANDARD</a>
+                            </li>
+                            <li role="presentation" :class="{'active' : tab == 'deluxe'}">
+                                <a href="" @click="event.preventDefault(); tab = 'deluxe'">DELUXE</a>
+                            </li>
+                            <li role="presentation" :class="{'active' : tab == 'premium'}">
+                                <a href="" @click="event.preventDefault(); tab = 'premium'">PREMIUM</a>
+                            </li>
+                        </template>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="price1">
+                            <div class="price">{{parseInt(product[tab].price).format()}} 원</div>
+                            <div class="price_detail">
+                                <strong class="title">{{ product[tab].name }}</strong><br>
+                                <div class="conts">
+                                    {{ product[tab].description }}
+                                </div>
+                                <div class="box_gray">
+                                    <dt>작업기간</dt>
+                                    <dd>{{ product[tab].work }}일</dd>
+                                    <dt>수정횟수</dt>
+                                    <dd>{{ product[tab].modify }}회</dd>
+                                    <dt>추가옵션</dt>
+                                    <dd>서울/경기 외 타지 촬영 집결 가능</dd>
+                                    <span class="line"></span>
+                                    <dt>세금계산서 발행</dt>
+                                    <dd>가능</dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="area_btn">
+            <!-- 찜하기 눌렀을 때 class="on"추가 -->
+            <div class="icon_jjim on"></div>
+            <a href="" class="btn_cs">문의하기</a>
+            <div class="box_btn"><a href="">구매하기</a></div>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('<?=$componentName?>', {
+        template: "#<?=$componentName?>-template",
+        props: {
+            product : {type : Object, default : null}
+        },
+        data: function(){
+            return {
+                jl : null,
+                filter : {
+
+                },
+                data : {
+
+                },
+                tab : 'basic'
+            };
+        },
+        created: function(){
+            this.jl = new JL('<?=$componentName?>');
+            if(this.product.package) this.tab = 'standard'
+        },
+        mounted: function(){
+            this.$nextTick(() => {
+
+            });
+        },
+        methods: {
+            checkFile : function(file) {
+                var filter = {file : file};
+                var res = this.jl.ajax("check_file",filter,"/api/common.php");
+
+                if(res) {
+                    return res.result;
+                }
+            },
+            postData : function() {
+                var method = this.primary ? "update" : "insert";
+                var res = this.jl.ajax(method,this.data,"/api/example.php");
+
+                if(res) {
+
+                }
+            },
+            getData: function () {
+                var filter = {primary: this.primary}
+                var res = this.jl.ajax("get",filter,"/api/example.php");
+
+                if(res) {
+                    this.data = res.response.data[0]
+                }
+            }
+        },
+        computed: {
+
+        },
+        watch : {
+
+        }
+    });
+</script>
+
+<style>
+
+</style>

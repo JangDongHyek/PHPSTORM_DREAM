@@ -43,11 +43,20 @@ try {
                     "primary" => "idx"
                 ));
 
+                $joinModel2 = new Model(array(
+                    "table" => "g5_member",
+                    "primary" => "mb_no"
+                ));
+
                 foreach ($object["data"] as $index => $data) {
                     $joinModel->where($joinModel->primary, $data["category_idx"]);
                     $join_data = $joinModel->get();
 
+                    $joinModel2->where($joinModel2->primary, $data["member_idx"]);
+                    $join_data2 = $joinModel2->get()['data'][0];
+
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
+                    $object["data"][$index]['MEMBER'] = $join_data2;
 
                     if ($join_table_delete) {
                         if (!$join_data) array_push($deletes, $index);

@@ -297,17 +297,17 @@
                                                 <tr>
                                                     <th>수정 횟수<span class="required">*</span></th>
                                                     <td>
-                                                        <select required v-model="product.standard.work">
+                                                        <select required v-model="product.standard.modify">
                                                             <option>선택해주세요</option>
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <select required v-model="product.deluxe.work">
+                                                        <select required v-model="product.deluxe.modify">
                                                             <option>선택해주세요</option>
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <select required v-model="product.premium.work">
+                                                        <select required v-model="product.premium.modify">
                                                             <option>선택해주세요</option>
                                                         </select>
                                                     </td>

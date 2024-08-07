@@ -204,12 +204,17 @@ class JL {
         this.log(obj[key])
     }
 
+    isUpperCase(str) {
+        return str === str.toUpperCase();
+    }
+
     processObject(objs,obj) {
         objs = this.copyObject(objs);
         obj = this.copyObject(obj);
 
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
+                if(this.isUpperCase(key)) delete obj[key]; //대문자인경우 조인데이터이기때문에 삭제
                 const value = obj[key];
                 if (value instanceof File) {
                     objs[key] = value;
