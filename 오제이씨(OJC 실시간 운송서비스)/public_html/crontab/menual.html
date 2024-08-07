@@ -1,0 +1,22 @@
+<pre>
+목표 우분투 리눅스 클라우드 서버에서 crontab을 사용하여 php 파일을 실행시킨다. php파일에는 mysql에 접근하는 코드를 작성한다.
+linux 콘솔 창에서 crontab -e 명령 입력하면 아래와 같이 주석이 쭉 나오고 # m h dom mon dow command 주석이 마지막으로 나온다.
+
+m은 분, minute (0-59)
+
+h는 시,hour (0-23)
+
+dom은 날짜, day of month (1-31)
+
+mon은 달, month (1-12)
+
+dow는 요일, day of week (0-7) 0일요일 1월요일...6토요일 7일요일
+
+아래에 0 12 * * *의 의미는 0분, 12시, 모든 날짜, 모든 달, 모든 요일마다 실행하겠다는 의미이다.
+
+만약 1분마다 계속 실행하게 하려면 * * * * *이다.
+
+명령 하나마다 한 줄에 입력해야 한다.
+
+ 0 12 * * * php /var/insertDate.php는 매일 12시가 되면 /var 폴더에 있는 insertDate.php라는 php 파일을 실행시키겠다는 의미다.
+ </pre>
