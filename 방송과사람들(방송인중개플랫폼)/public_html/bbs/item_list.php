@@ -29,7 +29,7 @@ include_once('./_head.php');
     <div id="app">
 
         <div id="area_product">
-            <product-list parent_idx="<?=$_GET['ctg']?>"></product-list>
+            <product-list ctg="<?=$_GET['ctg']?>" category_idx="<?=$_GET['category_idx']?>"></product-list>
         </div>
     </div>
 

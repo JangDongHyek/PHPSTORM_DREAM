@@ -149,8 +149,14 @@ switch($_POST['mode']){
         $mb_lng = $_POST['mb_lng']; 
         $mb_addr_detail = $_POST['mb_addr_detail']; // 상세주소
         $mb_name = $_POST['mb_name']; // 담당자 성함
-        $mb_hp = $_POST['mb_hp']; // 담당자 전화번호        
-                
+        $mb_hp = $_POST['mb_hp']; // 담당자 전화번호
+        $mb_name2 = $_POST['mb_name2']; // 담당자 성함
+        $mb_hp2 = $_POST['mb_hp2']; // 담당자 전화번호
+        $mb_name3 = $_POST['mb_name3']; // 담당자 성함
+        $mb_hp3 = $_POST['mb_hp3']; // 담당자 전화번호
+        $mb_name4 = $_POST['mb_name4']; // 담당자 성함
+        $mb_hp4 = $_POST['mb_hp4']; // 담당자 전화번호
+
         $setSql = "
             mb_password = '{$mb_password}',
             mb_company_name = '{$mb_company_name}',
@@ -163,7 +169,13 @@ switch($_POST['mode']){
             mb_lng = '{$mb_lng}',
             mb_addr_detail = '{$mb_addr_detail}',
             mb_name = '{$mb_name}',
-            mb_hp = '{$mb_hp}'
+            mb_hp = '{$mb_hp}',
+            mb_name2 = '{$mb_name2}',
+            mb_hp2 = '{$mb_hp2}',
+            mb_name3 = '{$mb_name3}',
+            mb_hp3 = '{$mb_hp3}',
+            mb_name4 = '{$mb_name4}',
+            mb_hp4 = '{$mb_hp4}'
         ";
         
         // 가입시
@@ -267,6 +279,12 @@ switch($_POST['mode']){
                 mb_id AS company_mb_id,
                 mb_name AS customer_mb_name,
                 mb_hp AS customer_mb_hp,
+               mb_name2 AS customer_mb_name2,
+                mb_hp2 AS customer_mb_hp2,
+               mb_name3 AS customer_mb_name3,
+                mb_hp3 AS customer_mb_hp3,
+               mb_name4 AS customer_mb_name4,
+                mb_hp4 AS customer_mb_hp4,
                 mb_addr AS customer_addr,
                 mb_zip_code AS customer_zip_code,
                 mb_lat AS customer_lat,
@@ -350,6 +368,12 @@ switch($_POST['mode']){
         $real_company_name = $_POST['real_company_name'];
         $customer_mb_name = $_POST['customer_mb_name'];
         $customer_mb_hp = $_POST['customer_mb_hp'];
+        $customer_mb_name2 = $_POST['customer_mb_name2'];
+        $customer_mb_hp2 = $_POST['customer_mb_hp2'];
+        $customer_mb_name3 = $_POST['customer_mb_name3'];
+        $customer_mb_hp3 = $_POST['customer_mb_hp3'];
+        $customer_mb_name4 = $_POST['customer_mb_name4'];
+        $customer_mb_hp4 = $_POST['customer_mb_hp4'];
         $customer_addr = $_POST['customer_addr'];
         $customer_addr_detail = $_POST['customer_addr_detail'];
         $customer_zip_code = $_POST['customer_zip_code'];
@@ -389,6 +413,12 @@ switch($_POST['mode']){
             real_company_name = '{$real_company_name}',
             customer_mb_name = '{$customer_mb_name}',
             customer_mb_hp = '{$customer_mb_hp}',
+            customer_mb_name2 = '{$customer_mb_name2}',
+            customer_mb_hp2 = '{$customer_mb_hp2}',
+            customer_mb_name3 = '{$customer_mb_name3}',
+            customer_mb_hp3 = '{$customer_mb_hp3}',
+            customer_mb_name4 = '{$customer_mb_name4}',
+            customer_mb_hp4 = '{$customer_mb_hp4}',
             customer_addr = '{$customer_addr}',
             customer_addr_detail = '{$customer_addr_detail}',
             customer_zip_code = '{$customer_zip_code}',
@@ -446,6 +476,18 @@ switch($_POST['mode']){
 			);
 			
 			$result['alimTalk'] = sendAlimTalk(0, $params, $customer_mb_hp, $dispatch_idx);
+			if($customer_mb_hp2) {
+                $params['mbName'] = $customer_mb_name2;
+                sendAlimTalk(0, $params, $customer_mb_hp2, $dispatch_idx);
+            }
+            if($customer_mb_hp3) {
+                $params['mbName'] = $customer_mb_name3;
+                sendAlimTalk(0, $params, $customer_mb_hp3, $dispatch_idx);
+            }
+            if($customer_mb_hp4) {
+                $params['mbName'] = $customer_mb_name4;
+                sendAlimTalk(0, $params, $customer_mb_hp4, $dispatch_idx);
+            }
 		}
 		
     break;

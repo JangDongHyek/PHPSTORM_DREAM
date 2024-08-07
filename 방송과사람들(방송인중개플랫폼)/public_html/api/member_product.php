@@ -33,6 +33,26 @@ try {
                 if(strpos($key,"search_value") !== false) $obj[$column] = $value;
             }
 
+            if($obj["parent_idx"]) {
+                unset($obj['category_idx']);
+                $joinModel = new Model(array(
+                    "table" => $join_table,
+                    "primary" => "idx"
+                ));
+                $joinModel->where("parent_idx", $obj["parent_idx"]);
+                $join_data = $joinModel->get()['data'];
+
+                $model->group_start();
+                foreach($join_data as $index => $data) {
+                    $model->or_where("category_idx",$data["idx"]);
+                }
+                $model->group_end();
+
+                $response['sql'] = $model->getSql();
+
+                $joinModel = null; // 메모리해제
+            }
+
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
 

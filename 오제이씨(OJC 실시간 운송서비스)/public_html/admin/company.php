@@ -184,13 +184,37 @@ $totalCount = $listData['totalCount'];
                         <th>상세주소</th>
                         <td><input type="text" id="mb_addr_detail" placeholder="주소지를 입력하세요."></td>
                     </tr>
-                    <tr>
-                        <th>담당자 성함</th>
+                    <tr style="border-top: 1px solid #eee">
+                        <th>담당자① 성함</th>
                         <td><input type="text" id="mb_name" placeholder="담당자 성함을 입력하세요."></td>
                     </tr>
                     <tr>
-                        <th>담당자 전화번호</th>
+                        <th>담당자① 전화번호</th>
                         <td><input type="text" id="mb_hp" placeholder="담당자 전화번호를 입력하세요." onkeyup="setHyphen($(this));"></td>
+                    </tr>
+                    <tr style="border-top: 1px solid #eee">
+                        <th>담당자② 성함</th>
+                        <td><input type="text" id="mb_name2" placeholder="담당자 성함을 입력하세요."></td>
+                    </tr>
+                    <tr>
+                        <th>담당자② 전화번호</th>
+                        <td><input type="text" id="mb_hp2" placeholder="담당자 전화번호를 입력하세요." onkeyup="setHyphen($(this));"></td>
+                    </tr>
+                    <tr style="border-top: 1px solid #eee">
+                        <th>담당자③ 성함</th>
+                        <td><input type="text" id="mb_name3" placeholder="담당자 성함을 입력하세요."></td>
+                    </tr>
+                    <tr>
+                        <th>담당자③ 전화번호</th>
+                        <td><input type="text" id="mb_hp3" placeholder="담당자 전화번호를 입력하세요." onkeyup="setHyphen($(this));"></td>
+                    </tr>
+                    <tr style="border-top: 1px solid #eee">
+                        <th>담당자④ 성함</th>
+                        <td><input type="text" id="mb_name4" placeholder="담당자 성함을 입력하세요."></td>
+                    </tr>
+                    <tr>
+                        <th>담당자④ 전화번호</th>
+                        <td><input type="text" id="mb_hp4" placeholder="담당자 전화번호를 입력하세요." onkeyup="setHyphen($(this));"></td>
                     </tr>
                 </table>
             </div>
@@ -225,6 +249,12 @@ $totalCount = $listData['totalCount'];
         $('#mb_addr_detail').val(isInsert ? '' : data.mb_addr_detail);
         $('#mb_name').val(isInsert ? '' : data.mb_name);
         $('#mb_hp').val(isInsert ? '' : telNoHypen(data.mb_hp));
+        $('#mb_name2').val(isInsert ? '' : data.mb_name2);
+        $('#mb_hp2').val(isInsert ? '' : telNoHypen(data.mb_hp2));
+        $('#mb_name3').val(isInsert ? '' : data.mb_name3);
+        $('#mb_hp3').val(isInsert ? '' : telNoHypen(data.mb_hp3));
+        $('#mb_name4').val(isInsert ? '' : data.mb_name4);
+        $('#mb_hp4').val(isInsert ? '' : telNoHypen(data.mb_hp4));
 
         // 수정이면 아이디 수정금지
         $mb_id.attr('readonly', !isInsert);
@@ -245,6 +275,12 @@ $totalCount = $listData['totalCount'];
             $mb_addr_detail = $('#mb_addr_detail'), // 상세주소
             $mb_name = $('#mb_name'), // 담당자 성함
             $mb_hp = $('#mb_hp'), // 담당자 전화번호
+            $mb_name2 = $('#mb_name2'), // 담당자 성함
+            $mb_hp2 = $('#mb_hp2'), // 담당자 전화번호
+            $mb_name3 = $('#mb_name3'), // 담당자 성함
+            $mb_hp3 = $('#mb_hp3'), // 담당자 전화번호
+            $mb_name4 = $('#mb_name4'), // 담당자 성함
+            $mb_hp4 = $('#mb_hp4'), // 담당자 전화번호
             settingType = $('#company_setting_type').val(),
             target = null,
             falseMsg = '';
@@ -313,7 +349,13 @@ $totalCount = $listData['totalCount'];
             mb_lng: $('#mb_lng').val(),
             mb_addr_detail: $mb_addr_detail.val(),
             mb_name: $mb_name.val(),
-            mb_hp: unHypen($mb_hp.val())
+            mb_hp: unHypen($mb_hp.val()),
+            mb_name2: $mb_name2.val(),
+            mb_hp2: unHypen($mb_hp2.val()),
+            mb_name3: $mb_name3.val(),
+            mb_hp3: unHypen($mb_hp3.val()),
+            mb_name4: $mb_name4.val(),
+            mb_hp4: unHypen($mb_hp4.val())
         });
 
         if (!saveCompanyRes.result) {

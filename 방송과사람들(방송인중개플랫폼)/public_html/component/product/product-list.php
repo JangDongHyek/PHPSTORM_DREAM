@@ -25,23 +25,23 @@
                 </div>
             </div>
             <ul id="product_list">
-                <li class="nodata" v-if="total == 0">
+                <li class="nodata" v-if="products_count == 0">
                     <div class="nodata_wrap">
                         <div class="area_img"><img src="<?php echo G5_THEME_IMG_URL ?>/app/img_nodata.svg"></div>
                         <p>등록된 재능이 없습니다.</p>
                     </div>
                 </li>
 
-                <li v-else>
-                    <i onclick="heart_click(15,this)" class="heart"></i>
-                    <a href="https://itforone.com:443/~broadcast/bbs/item_view.php?idx=15">
+                <li v-else v-for="item in products">
+                    <i class="heart on"></i>
+                    <a :href="`${jl.root}/bbs/item_view.php?idx=${item.idx}`">
                         <div class="area_img">
-                            <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg">
+                            <img :src="jl.root+item.main_image_array[0].src">
                         </div>
                         <div class="area_txt">
-                            <span></span> <h3>영상제작</h3>
+                            <span></span> <h3>{{ item.name }}</h3>
                             <div class="star"><i></i><em>5.0</em></div>
-                            <div class="price">50,000원 </div>
+                            <div class="price">{{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원 </div>
                         </div>
                     </a>
                 </li>
@@ -60,24 +60,27 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            parent_idx : {type : String,default : ""}
+            ctg : {type : String,default : ""},
+            category_idx : {type : String,default : ""},
         },
         data: function(){
             return {
                 jl : null,
                 filter : {
-                    idx : this.parent_idx
+                    idx : this.ctg
                 },
                 data : {
 
                 },
                 category : {},
-                total : 0
+                products : [],
+                products_count : 0,
             };
         },
         created: function(){
             this.jl = new JL('<?=$componentName?>');
-            this.getCategory()
+            this.getCategory();
+            this.getProduct();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -85,6 +88,18 @@
             });
         },
         methods: {
+            getProduct : function() {
+                var parent_idx = this.category_idx ? '' : this.ctg;
+                var category_idx = this.ctg;
+
+                var filter = {parent_idx : parent_idx, category_idx : category_idx}
+
+                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                if(res){
+                    this.products = res.response.data;
+                    this.products_count = res.response.count;
+                }
+            },
             getCategory: function () {
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));

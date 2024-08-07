@@ -302,13 +302,37 @@ $totalCount = $listData['totalCount'];
                         <td><input type="text" id="real_company_name" placeholder="선택된 업체" readonly></td>
                     </tr>
 
-                    <tr class="cpBox hide">
-                        <th>인수 담당자</th>
+                    <tr class="cpBox hide" style="border-top: 1px solid #eee">
+                        <th>인수 담당자①</th>
                         <td><input type="text" id="customer_mb_name" placeholder="인수 담당자를 입력하세요."></td>
                     </tr>
                     <tr class="cpBox hide">
-                        <th>인수 담당자 연락처</th>
+                        <th>인수 담당자① 연락처</th>
                         <td><input type="text" id="customer_mb_hp" placeholder="인수 담당자 연락처를 입력하세요." onkeyup="setHyphen($(this))"></td>
+                    </tr>
+                    <tr class="cpBox hide" style="border-top: 1px solid #eee">
+                        <th>인수 담당자②</th>
+                        <td><input type="text" id="customer_mb_name2" placeholder="인수 담당자를 입력하세요."></td>
+                    </tr>
+                    <tr class="cpBox hide">
+                        <th>인수 담당자② 연락처</th>
+                        <td><input type="text" id="customer_mb_hp2" placeholder="인수 담당자 연락처를 입력하세요." onkeyup="setHyphen($(this))"></td>
+                    </tr>
+                    <tr class="cpBox hide" style="border-top: 1px solid #eee">
+                        <th>인수 담당자③</th>
+                        <td><input type="text" id="customer_mb_name3" placeholder="인수 담당자를 입력하세요."></td>
+                    </tr>
+                    <tr class="cpBox hide">
+                        <th>인수 담당자③ 연락처</th>
+                        <td><input type="text" id="customer_mb_hp3" placeholder="인수 담당자 연락처를 입력하세요." onkeyup="setHyphen($(this))"></td>
+                    </tr>
+                    <tr class="cpBox hide" style="border-top: 1px solid #eee">
+                        <th>인수 담당자④</th>
+                        <td><input type="text" id="customer_mb_name4" placeholder="인수 담당자를 입력하세요."></td>
+                    </tr>
+                    <tr class="cpBox hide">
+                        <th>인수 담당자④ 연락처</th>
+                        <td><input type="text" id="customer_mb_hp4" placeholder="인수 담당자 연락처를 입력하세요." onkeyup="setHyphen($(this))"></td>
                     </tr>
 
                     <tr class="cpBox hide">
@@ -591,12 +615,19 @@ $totalCount = $listData['totalCount'];
 
     /* 업체 셋팅 */
     function setCustomer(data) {
+        console.log(data);
         let isData = !isEmptyObj(data);
 
         $('#real_company_name').val(isData ? (`${data.real_company_name}`) : '');
         $('#company_mb_id').val(isData ? data.company_mb_id : '');
         $('#customer_mb_name').val(isData ? data.customer_mb_name : '');
         $('#customer_mb_hp').val(isData ? telNoHypen(data.customer_mb_hp) : '');
+        $('#customer_mb_name2').val(isData ? data.customer_mb_name2 : '');
+        $('#customer_mb_hp2').val(isData ? telNoHypen(data.customer_mb_hp2) : '');
+        $('#customer_mb_name3').val(isData ? data.customer_mb_name3 : '');
+        $('#customer_mb_hp3').val(isData ? telNoHypen(data.customer_mb_hp3) : '');
+        $('#customer_mb_name4').val(isData ? data.customer_mb_name4 : '');
+        $('#customer_mb_hp4').val(isData ? telNoHypen(data.customer_mb_hp4) : '');
         $('#customer_addr').val(isData ? data.customer_addr : '');
         $('#customer_zip_code').val(isData ? data.customer_zip_code : '');
         $('#customer_lat').val(isData ? data.customer_lat : '');
@@ -660,6 +691,12 @@ $totalCount = $listData['totalCount'];
             $company_mb_id = $('#company_mb_id'), // 조회한 업체 id
             $customer_mb_name = $('#customer_mb_name'), // 업체 - 인수 담당자
             $customer_mb_hp = $('#customer_mb_hp'), // 업체 - 인수 담당자 연락처
+            $customer_mb_name2 = $('#customer_mb_name2'), // 업체 - 인수 담당자
+            $customer_mb_hp2 = $('#customer_mb_hp2'), // 업체 - 인수 담당자 연락처
+            $customer_mb_name3 = $('#customer_mb_name3'), // 업체 - 인수 담당자
+            $customer_mb_hp3 = $('#customer_mb_hp3'), // 업체 - 인수 담당자 연락처
+            $customer_mb_name4 = $('#customer_mb_name4'), // 업체 - 인수 담당자
+            $customer_mb_hp4 = $('#customer_mb_hp4'), // 업체 - 인수 담당자 연락처
 
             $delivery_mb_id = $('#delivery_mb_id'), // 기사 - id
             $delivery_mb_hp = $('#delivery_mb_hp'), // 기사 - 연락처
@@ -723,6 +760,12 @@ $totalCount = $listData['totalCount'];
             real_company_name: $('#real_company_name').val(),
             customer_mb_name: $customer_mb_name.val(),
             customer_mb_hp: unHypen($customer_mb_hp.val()),
+            customer_mb_name2: $customer_mb_name2.val(),
+            customer_mb_hp2: unHypen($customer_mb_hp2.val()),
+            customer_mb_name3: $customer_mb_name3.val(),
+            customer_mb_hp3: unHypen($customer_mb_hp3.val()),
+            customer_mb_name4: $customer_mb_name4.val(),
+            customer_mb_hp4: unHypen($customer_mb_hp4.val()),
             customer_addr: $('#customer_addr').val(),
             customer_addr_detail: $('#customer_addr_detail').val(),
             customer_zip_code: $('#customer_zip_code').val(),

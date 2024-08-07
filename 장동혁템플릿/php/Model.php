@@ -30,19 +30,19 @@ class Model extends JL{
         if(function_exists("mysqli_connect")) $this->mysqli = true;
 
         //connect전 필수 정보확인
-        if(!$this->DB["hostname"]) throw new \Exception("hostname를 입력해주세요.");
+        if(!$this->DB["hostname"]) throw new \Exception("Model : hostname를 입력해주세요.");
         $this->hostname = $this->DB["hostname"];
-        if(!$this->DB["username"]) throw new \Exception("username를 입력해주세요.");
+        if(!$this->DB["username"]) throw new \Exception("Model : username를 입력해주세요.");
         $this->username = $this->DB["username"];
-        if(!$this->DB["password"]) throw new \Exception("password를 입력해주세요.");
+        if(!$this->DB["password"]) throw new \Exception("Model : password를 입력해주세요.");
         $this->password = $this->DB["password"];
-        if(!$this->DB["database"]) throw new \Exception("database를 입력해주세요.");
+        if(!$this->DB["database"]) throw new \Exception("Model : database를 입력해주세요.");
         $this->database = $this->DB["database"];
 
         //DB Connection
         if($this->mysqli) {
             $connect = new \mysqli($this->hostname, $this->username, $this->password, $this->database);
-            if ($connect->connect_errno) throw new \Exception('1');
+            if ($connect->connect_errno) throw new \Exception(mysqli_error($this->connect));
         }else {
             $connect = mysql_connect($this->hostname, $this->username, $this->password);
             if(!$connect) throw new \Exception(2);
@@ -54,7 +54,7 @@ class Model extends JL{
             "columns" => array()
         );
 
-        if(!$object["table"]) throw new \Exception("테이블명이 없습니다.");
+        if(!$object["table"]) throw new \Exception("Model : 테이블명이 없습니다.");
         $this->table =$object["table"];
         $this->primary = $object["primary"] ? $object["primary"] : "idx";
         $this->autoincrement = $object["autoincrement"] ? $object["autoincrement"] : true;
@@ -71,7 +71,7 @@ class Model extends JL{
             $result = mysql_num_rows($result);
         }
 
-        if(!$result) throw new \Exception("테이블을 찾을수 없습니다.");
+        if(!$result) throw new \Exception("Model : 테이블을 찾을수 없습니다.");
 
         // 테이블 스키마 정보 조회
         $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$this->table}' AND TABLE_SCHEMA='{$this->database}' ";
@@ -210,7 +210,7 @@ class Model extends JL{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) throw new \Exception("고유 키 값이 존재하지 않습니다.");
+        if(!$param[$this->primary]) throw new \Exception("Model : 고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
@@ -243,7 +243,7 @@ class Model extends JL{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) throw new \Exception("고유 키 값이 존재하지 않습니다.");
+        if(!$param[$this->primary]) throw new \Exception("Model : 고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
@@ -261,7 +261,7 @@ class Model extends JL{
     }
 
     function whereDelete(){
-        if($this->sql == "") throw new \Exception("조건 삭제에 조건이 없습니다.");
+        if($this->sql == "") throw new \Exception("Model : 조건 삭제에 조건이 없습니다.");
 
         $sql = "DELETE FROM {$this->table} WHERE 1 $this->sql ";
 
@@ -300,9 +300,9 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new \Exception("필터를 입력해주새요.");
-            if(!in_array($second,array("DESC","ASC"))) throw new \Exception("DESC , ASC 둘중 하나만 선택가능합니다.");
+            if($first == "") throw new \Exception("Model : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("Model : 필터를 입력해주새요.");
+            if(!in_array($second,array("DESC","ASC"))) throw new \Exception("Model : DESC , ASC 둘중 하나만 선택가능합니다.");
             if(in_array($first, $this->schema['columns'])){
                 if($this->sql_order_by) ",";
                 $this->sql_order_by .= " {$first} {$second}";
@@ -326,9 +326,9 @@ class Model extends JL{
     }
 
     function between($column,$start,$end,$type = "AND") {
-        if($column == "") throw new \Exception("컬럼명을 대입 해주새요.");
-        if($start == "") throw new \Exception("시작시간을 대입 해주새요.");
-        if($end == "") throw new \Exception("종료시간을 대입 해주새요.");
+        if($column == "") throw new \Exception("Model : 컬럼명을 대입 해주새요.");
+        if($start == "") throw new \Exception("Model : 시작시간을 대입 해주새요.");
+        if($end == "") throw new \Exception("Model : 종료시간을 대입 해주새요.");
 
         if(in_array($column, $this->schema['columns'])){
             if($this->group_bool) {
@@ -365,8 +365,8 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new \Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("Model : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("Model : 필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
@@ -404,8 +404,8 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new \Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("Model : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("Model : 필터를 입력해주새요.");
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
@@ -439,8 +439,8 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new \Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("Model : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("Model : 필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
@@ -475,8 +475,8 @@ class Model extends JL{
         }
 
         if(is_string($first)) {
-            if($first == "") throw new \Exception("컬럼명을 입력해주새요.");
-            if($second == "") throw new \Exception("필터를 입력해주새요.");
+            if($first == "") throw new \Exception("Model : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("Model : 필터를 입력해주새요.");
 
             if(in_array($first, $this->schema['columns'])) {
                 if($this->group_bool) {
