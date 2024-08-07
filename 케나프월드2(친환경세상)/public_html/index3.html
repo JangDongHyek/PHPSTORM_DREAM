@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>글로리팜</title>
+<style>
+*{padding:0; margin:0;}
+body{padding:20px 0;}
+.phone{min-width:300px; width:400px; height:840px; margin:0px auto; background:url(img/sian-phone.png) no-repeat 0 0; padding:103px 14px 99px 11px; box-sizing:border-box;}
+.screen{width:375px; height:638px; overflow:hidden; border:1px solid #ddd; box-sizing:border-box; padding:0; margin:0; position:relative; background:none;/*padding-top:63px;*/}
+.scroll{position:relative; height:calc(638px - 55px); overflow-x:hidden; overflow-y:scroll; margin:0px 0; margin-right:-17px;}
+.scroll img{width:100%;}
+.hd{border-bottom:1px solid rgba(0,0,0,0.3);margin-bottom:1px;}
+.hd, .ft, .ft2{position:absolute; width:100%; left:0; z-index:2;/* box-shadow:0 0 10px rgba(0,0,0,0.2);*/}
+.hd{top:0;}
+.ft{bottom:0; z-index:100;}
+.ft2{bottom:70px;}
+@media (max-width: 991px) {
+body{padding:0;}
+.phone{width:100%; height:auto; background:none; padding:0;}
+.screen{width:100%; height:auto; overflow:auto; border:0; /*padding-top:160px;*/ padding-bottom:170px;}
+.scroll{position:relative; height:auto; overflow:auto; margin:0;}
+.hd, .ft, .ft2{position:fixed; width:100%; left:0; z-index:2;}
+.hd{top:0;}
+.ft{bottom:0;}
+.ft2{bottom:183px;}
+}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	<div class="phone">
+    	<div class="screen">
+            <div class="scroll"> <a href="index4.html"><img src="img/sian_list.jpg"></a></div>
+            <img src="img/ft_btn01.jpg" border="0" usemap="#Map" class="ft2">
+            <img src="img/ft_btn.png" border="0" usemap="#Map" class="ft">
+        </div>
+	</div>
+</body>
+</html>

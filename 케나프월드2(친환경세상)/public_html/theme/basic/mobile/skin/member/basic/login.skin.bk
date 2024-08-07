@@ -1,0 +1,167 @@
+<?php
+if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+
+// add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
+add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
+?>
+<style>
+/*
+html, body{width:100%;height:100%;min-height:500px;background:url(<?php echo $member_skin_url ?>/img/bg.png) #f0f0f0; overflow-y:hidden; overflow-x:hidden;}
+*/
+</style>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+<!-- 로그인 시작 { -->
+
+<div class="icons" style="position: absolute; right: 10px; top: 10px;">
+		<?/*
+		<a href="<?php echo G5_URL ?>"><i class="fa fa-home"></i><span class="sound_only">홈으로</span></a>
+		<a href="#"><i class="fa fa-cog"></i><span class="sound_only">설정</span></a>
+		*/?>
+		<a href="javascript:history.back();" class="closed"><img src="<?php echo G5_THEME_IMG_URL ?>/mobile/menu_close_b.png"><span class="sound_only">닫기</span></a>
+	</div> 
+
+
+<div id="mb_login" class="mbskin">
+	<img src="<?php echo G5_THEME_IMG_URL ?>/mobile/login_logo.png" style="width: 60%; height: auto; margin: 100px 20%;" alt="로고"/>
+    <?/*
+	<h1><img src="<?php echo $member_skin_url ?>/img/mobile_logo.png" alt="연습고" /></h1>
+	*/?>
+	<!--<p class="text-center">
+		간단한 회원가입으로 응답하라 동두천의 모든 기능을 이용할 수 있습니다.
+	</p>-->
+    
+	<form name="flogin" action="<?php echo $login_action_url ?>" onsubmit="return flogin_submit(this);" method="post">
+    <input type="hidden" name="url" value="<?php echo $login_url ?>">
+
+    <fieldset id="login_fs">
+        <legend>회원로그인</legend>
+        <label for="login_id" class="sound_only">회원아이디<strong class="sound_only"> 필수</strong></label>
+        <input type="text" name="mb_id" id="login_id" placeholder="아이디 입력(필수)" required class="frm_input required" size="20" maxLength="20">
+        <label for="login_pw" class="sound_only">비밀번호<strong class="sound_only"> 필수</strong></label>
+        <input type="password" name="mb_password" id="login_pw" placeholder="비밀번호 입력(필수)" required class="frm_input required" size="20" maxLength="20">
+        <input type="submit" value="로그인" class="btn_submit">
+		<input type="hidden" name="auto_login" id="login_auto_login" value="1">
+        <!--<input type="checkbox" name="auto_login" id="login_auto_login">
+        <label for="login_auto_login">자동로그인</label> -->
+    </fieldset>
+    	<article class="login_sns">
+        <!-- 카카오톡 회원가입 -->
+            <div class="smt-kakao text-center">
+                <a class="btn-submit" onclick="loginWithKakao();">
+                    <img src="<?php echo $member_skin_url; ?>/img/join_kaka.png" alt="카카오로그인"> 카카오톡 로그인
+                </a> 
+            </div>
+            <!-- 카카오톡 회원가입 -->
+            
+            <!-- 네이버 회원가입 -->
+          <!--  <div class="smt-naver text-center">
+                <a href="<?php echo $apiURL ?>" class="btn-submit_naver" onclick="alert('준비중입니다.'); return false;">
+                    <img src="<?php echo $member_skin_url; ?>/img/join_naver.png" alt="네이버로그인"> 네이버 로그인
+                </a> 
+            </div>
+            <!-- 네이버 회원가입 -->
+            
+            <!-- 페이스북 회원가입 -->
+           <!-- <div class="smt-facebook text-center">
+                <a class="btn-submit_naver" onclick="FB_Login()" style="cursor:pointer;">
+                    <img src="<?php echo $member_skin_url; ?>/img/join_facebook.png" alt="페이스북로그인"> 페이스북 로그인
+                </a> 
+                <!--
+                <input type="button" onclick="alert('준비중입니다.'); return false; FB_Login();" value="&#xf09a;  페이스북으로 회원가입" class="btn-submit_facebook">
+                
+            </div> -->
+		<!-- 페이스북 회원가입 -->
+	</article>
+
+   <!-- <aside id="login_info">
+        <!--<h2>회원로그인 안내</h2>
+        <p>
+            회원아이디 및 비밀번호가 기억 안나실 때는 아이디/비밀번호 찾기를 이용하십시오.<br>
+            아직 회원이 아니시라면 회원으로 가입 후 이용해 주십시오.
+        </p>
+        <div class="find_id">
+            <a href="<?php echo G5_BBS_URL ?>/password_lost.php" id="login_password_lost" class="btn02">아이디 비밀번호 찾기</a>
+        </div>
+        <div class="join">
+            <a href="./register.php" class="btn01">회원 가입</a>
+        </div>
+    </aside>-->
+
+   <!-- <div class="btn_confirm">
+        <a href="<?php echo G5_URL ?>/">메인으로 돌아가기</a>
+    </div>-->
+
+    </form>
+
+</div>
+
+<script>
+
+
+// 사용할 앱의 JavaScript 키를 설정해 주세요.
+Kakao.init('54f2c6498b32ae9b78390713a7eb74e9');
+function loginWithKakao() {
+  // 로그인 창을 띄웁니다.
+  Kakao.Auth.login({
+	success: function(authObj) {
+	  alert(JSON.stringify(authObj));
+	},
+	fail: function(err) {
+	  alert(JSON.stringify(err));
+	}
+  });
+};
+
+
+$(function(){
+    $("#login_auto_login").click(function(){
+        if (this.checked) {
+            this.checked = confirm("자동로그인을 사용하시면 다음부터 회원아이디와 비밀번호를 입력하실 필요가 없습니다.\n\n공공장소에서는 개인정보가 유출될 수 있으니 사용을 자제하여 주십시오.\n\n자동로그인을 사용하시겠습니까?");
+        }
+    });
+});
+
+/* 페북 회원가입 */
+window.fbAsyncInit = function() {
+FB.init({
+	appId      : '180638805811082',
+	cookie     : true,
+	xfbml      : true,
+	version    : 'v2.8'
+});
+FB.AppEvents.logPageView();   
+};
+
+(function(d, s, id){
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) {return;}
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_US/sdk.js";
+	fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+/* 페북 회원가입 */
+
+function FB_Login(){
+	FB.login(function(response) {
+		if (response.status === 'connected') {
+			fbAPI();
+		} else if (response.status === 'not_authorized') {
+		} else {
+		}
+	}, { scope: 'public_profile,email' });
+}
+
+function fbAPI() {
+	FB.api('/me', function(response) {
+		//$("#mb_email").val(response.email);
+		location.href='<?php echo G5_PLUGIN_URL;?>/oauth/login_with_facebook.php?mb_token='+response.id;
+	});
+}
+	
+function flogin_submit(f)
+{
+    return true;
+}
+</script>
+<!-- } 로그인 끝 -->
