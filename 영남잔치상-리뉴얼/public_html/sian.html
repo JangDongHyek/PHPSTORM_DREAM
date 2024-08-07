@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>영남잔치상 시안</title>
+</head>
+<style>
+    html,body{
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    img{
+/*        width: 100%;*/
+/*        display: flex;*/
+        padding: 0;
+        margin: 0 auto;
+    }
+    .wrap{
+        width: 100%;
+        background: url(./images/bg.jpg) no-repeat center top;
+        text-align: center;
+    }
+/*
+    .con{
+        width: 100%;
+        position: relative;
+    }
+    .bg{
+        max-width: 1920px;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+    .container{
+        max-width: 1400px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        z-index: 1;
+    }
+*/
+    .q_menu{
+        cursor: pointer;
+        position: fixed;
+        top: 0;
+/*        transform: translateY(-50%);*/
+        right: 0;
+        z-index: 999;
+        width: 300px;
+        height: 100%;
+        background: url(./images/q_menu_on.png) no-repeat right top;
+    }
+    .q_menu:hover{
+        background: url(./images/q_menu.png) no-repeat right center;
+    }
+</style>
+<body>
+   <div class="wrap">
+    <img src="./images/sian.jpg" alt="">
+    <!--<div class="q_menu"></div>-->
+    </div>
+<!--
+    <div class="con">
+        <img src="./images/bg.png" alt="" class="bg">
+        <img src="./images/container.png" alt="" class="container">
+    </div>
+-->
+</body>
+</html>
