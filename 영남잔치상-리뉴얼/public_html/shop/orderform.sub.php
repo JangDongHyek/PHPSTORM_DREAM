@@ -555,14 +555,14 @@ if($member['mb_id']){
                                     */
 
                                     $cDate=strtotime(date("Y-m-d"));
-                                    $plusDate= -2 <= (($cDate-strtotime("2024-02-01"))/86400)?(($cDate-strtotime("2024-02-01"))/86400)+2:0;
+                                    $plusDate= -2 <= (($cDate-strtotime("2024-09-08"))/86400)?(($cDate-strtotime("2024-09-08"))/86400)+2:0;
 
-                                    $currentSec=strtotime("2024-02-01 +".$plusDate." day");
-                                    $currentDate=date("Y-m-d",strtotime("2024-02-01"));
+                                    $currentSec=strtotime("2024-09-08 +".$plusDate." day");
+                                    $currentDate=date("Y-m-d",strtotime("2024-09-08"));
 
-                                    $lastDate=date("2024-02-09");
-                                    $lastSec=strtotime("2024-02-09");
-                                    $default[no_delivery_date]="2024-02-08";
+                                    $lastDate=date("2024-09-16");
+                                    $lastSec=strtotime("2024-09-16");
+                                    $default[no_delivery_date]="2024-09-15";
                                 }
                                 //제사음식 희망배송일 제외하기
                                 if($firstCaId=="10"||$firstCaId=="60"){
@@ -574,8 +574,8 @@ if($member['mb_id']){
                                     }
                                     */
 
-                                    $fDate=strtotime("2024-02-01");
-                                    $lDate=strtotime("2024-02-12");
+                                    $fDate=strtotime("2024-09-08");
+                                    $lDate=strtotime("2024-09-19");
                                     for($j=$fDate;$j<=$lDate;$j=$j+86400){
                                         $default[no_delivery_date].=",".date("Y-m-d",$j);
                                     }
