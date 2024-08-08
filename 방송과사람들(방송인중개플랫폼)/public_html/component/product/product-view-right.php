@@ -109,7 +109,7 @@
         </div>
         <div id="area_btn">
             <!-- 찜하기 눌렀을 때 class="on"추가 -->
-            <div class="icon_jjim on"></div>
+            <div class="icon_jjim" :class="{'on' : checkLike(product.idx)}" @click="postLike(product.idx)"></div>
             <a href="" class="btn_cs">문의하기</a>
             <div class="box_btn"><a href="">구매하기</a></div>
         </div>
@@ -120,7 +120,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            product : {type : Object, default : null}
+            product : {type : Object, default : null},
+            member_idx : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -131,12 +132,14 @@
                 data : {
 
                 },
-                tab : 'basic'
+                tab : 'basic',
+                likes : [],
             };
         },
         created: function(){
             this.jl = new JL('<?=$componentName?>');
             if(this.product.package) this.tab = 'standard'
+            this.getLike();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -144,6 +147,29 @@
             });
         },
         methods: {
+            checkLike : function(product_idx) {
+                return this.likes.some(obj => obj.product_idx == product_idx)
+            },
+            getLike : function() {
+                var filter = {member_idx : this.member_idx}
+                var res = this.jl.ajax("get", filter, "/api/member_product_like.php");
+
+                if (res) {
+                    this.likes = res.response.data
+                }
+            },
+            postLike : function(product_idx) {
+                var data = {
+                    member_idx : this.member_idx,
+                    product_idx : product_idx
+                };
+
+                var res = this.jl.ajax("like", data, "/api/member_product_like.php");
+
+                if (res) {
+                    this.getLike();
+                }
+            },
             checkFile : function(file) {
                 var filter = {file : file};
                 var res = this.jl.ajax("check_file",filter,"/api/common.php");

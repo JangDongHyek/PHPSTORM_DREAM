@@ -50,7 +50,7 @@ $like_cnt = sql_fetch($sql)['cnt'];
 
 
 <div id="viewapp">
-    <product-view primary="<?=$_GET['idx']?>"></product-view>
+    <product-view primary="<?=$_GET['idx']?>" member_idx="<?=$member['mb_no']?>"></product-view>
 </div>
 
     <form style="display: none" method="post" action="./order.php" id="orderfrm">

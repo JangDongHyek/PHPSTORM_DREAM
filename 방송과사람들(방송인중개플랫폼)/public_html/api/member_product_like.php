@@ -31,6 +31,9 @@ try {
                 if(strpos($key,"primary") !== false) $obj[$model->primary] = $value;
                 if(strpos($key,"search_key") !== false) $column = $value;
                 if(strpos($key,"search_value") !== false) $obj[$column] = $value;
+                if(strpos($key,"order_by_desc") !== false) $model->order_by($obj['order_by_desc'],"DESC");
+                if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
+
             }
 
             $model->where($obj);
@@ -114,6 +117,23 @@ try {
 
             //$file->deleteDirGate($obj['data_column']);
             $data = $model->delete($obj);
+
+            $response['success'] = true;
+            break;
+        }
+
+        case "like" :
+        {
+            $obj = $model->jsonDecode($_POST['obj']);
+            if(!$obj["member_idx"]) throw new Exception("로그인을 하셔야합니다.");
+            $model->where($obj);
+            $object = $model->get($obj["page"], $obj["limit"]);
+
+            if($object["count"]) {
+                $model->sqlDelete();
+            }else {
+                $model->insert($obj);
+            }
 
             $response['success'] = true;
             break;

@@ -2,7 +2,9 @@
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 include_once('./_common.php');
 include_once(G5_THEME_MOBILE_PATH.'/head.php');
+include_once("../../../class/Lib.php");
 
+$jl = new JL();
 //신규 재능 상품
 $sql = "select * from new_item order by i_idx desc limit 8";
 $new_result = sql_query($sql);
@@ -293,15 +295,7 @@ $big_ctg = ctg_list(0);
 
 			</section>*/?>
 
-			<section>
-				<h3 class="title">신규 재능 상품</h3>
-				<ul id="product_list">
-                    <?php for ($i = 0; $row = sql_fetch_array($new_result); $i++) {
-                            include(G5_BBS_PATH."/li_content.php");
-                    } ?>
-
-				</ul>
-			</section>
+            <product-main-list member_idx="<?=$member['mb_no']?>"></product-main-list>
                 <section>
                     <h3 class="title">프로젝트 의뢰</h3>
                     <div id="area_bn2" onclick="location.href='<?php echo G5_BBS_URL ?>/contest_list.php'">
@@ -334,6 +328,8 @@ $big_ctg = ctg_list(0);
 </div>
 
 <?php
+$jl->vueLoad("content");
+include_once($jl->ROOT."/component/product/product-main-list.php");
 include_once(G5_PATH.'/tail.php');
 ?>
 

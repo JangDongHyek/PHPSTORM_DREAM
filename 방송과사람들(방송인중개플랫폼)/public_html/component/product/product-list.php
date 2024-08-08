@@ -19,7 +19,7 @@
                 <li><a href="" class="current">{{category.name}}</a></li>
             </ul>
             <div id="list_top">
-                <div class="total">총 1건</div>
+                <div class="total">총 {{products_count}}건</div>
                 <div class="sort_list">
                     <span data-toggle="modal" data-target="#listModal">최신순</span>
                 </div>
@@ -33,7 +33,7 @@
                 </li>
 
                 <li v-else v-for="item in products">
-                    <i class="heart on"></i>
+                    <i class="heart" :class="{'on' : checkLike(item.idx)}" @click="postLike(item.idx)"></i>
                     <a :href="`${jl.root}/bbs/item_view.php?idx=${item.idx}`">
                         <div class="area_img">
                             <img :src="jl.root+item.main_image_array[0].src">
@@ -50,7 +50,7 @@
             </ul>
 
 
-
+            <paging2-component :page="page" :total="products_count" :limit="limit" @change="page=$event"></paging2-component>
 
         </div>
     </div>
@@ -62,6 +62,7 @@
         props: {
             ctg : {type : String,default : ""},
             category_idx : {type : String,default : ""},
+            member_idx : {type : String,default : ""},
         },
         data: function(){
             return {
@@ -75,12 +76,17 @@
                 category : {},
                 products : [],
                 products_count : 0,
+                page : 1,
+                limit : 10,
+
+                likes : [],
             };
         },
         created: function(){
             this.jl = new JL('<?=$componentName?>');
             this.getCategory();
             this.getProduct();
+            this.getLike();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -88,6 +94,29 @@
             });
         },
         methods: {
+            checkLike : function(product_idx) {
+                return this.likes.some(obj => obj.product_idx == product_idx)
+            },
+            getLike : function() {
+                var filter = {member_idx : this.member_idx}
+                var res = this.jl.ajax("get", filter, "/api/member_product_like.php");
+
+                if (res) {
+                    this.likes = res.response.data
+                }
+            },
+            postLike : function(product_idx) {
+                var data = {
+                    member_idx : this.member_idx,
+                    product_idx : product_idx
+                };
+
+                var res = this.jl.ajax("like", data, "/api/member_product_like.php");
+
+                if (res) {
+                    this.getLike();
+                }
+            },
             getProduct : function() {
                 var parent_idx = this.category_idx ? '' : this.ctg;
                 var category_idx = this.ctg;
@@ -120,7 +149,9 @@
 
         },
         watch : {
-
+            page : function() {
+                this.getProduct();
+            }
         }
     });
 </script>

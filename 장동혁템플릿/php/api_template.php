@@ -31,6 +31,8 @@ try {
                 if(strpos($key,"primary") !== false) $obj[$model->primary] = $value;
                 if(strpos($key,"search_key") !== false) $column = $value;
                 if(strpos($key,"search_value") !== false) $obj[$column] = $value;
+                if(strpos($key,"order_by_desc") !== false) $model->order_by($obj['order_by_desc'],"DESC");
+                if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
             }
 
             $model->where($obj);

@@ -33,7 +33,7 @@
                     <!--공유하기버튼--><a class="btn_share"><i class="fa-regular fa-share-nodes"></i></a>
                 </div>
 
-                <product-view-right :product="data"></product-view-right>
+                <product-view-right :product="data" :member_idx="member_idx"></product-view-right>
 
                 <div class="item_left">
                     <div class="area_tab">
@@ -381,7 +381,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            primary: {type: String, default: ""}
+            primary: {type: String, default: ""},
+            member_idx: {type: String, default: ""}
         },
         data: function () {
             return {

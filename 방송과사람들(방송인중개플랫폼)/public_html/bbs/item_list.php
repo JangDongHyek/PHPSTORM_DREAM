@@ -29,7 +29,9 @@ include_once('./_head.php');
     <div id="app">
 
         <div id="area_product">
-            <product-list ctg="<?=$_GET['ctg']?>" category_idx="<?=$_GET['category_idx']?>"></product-list>
+            <product-list ctg="<?=$_GET['ctg']?>" category_idx="<?=$_GET['category_idx']?>" member_idx="<?=$member['mb_no']?>"></product-list>
+
+
         </div>
     </div>
 
@@ -37,6 +39,7 @@ include_once('./_head.php');
 <?php
 $jl->vueLoad("app");
 $jl->includeDir("/component/product");
+include_once($jl->ROOT."/component/paging2-component.php");
 
 include_once('./_tail.php');
 ?>
