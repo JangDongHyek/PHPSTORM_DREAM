@@ -66,7 +66,8 @@ try {
                 }
             }
 
-            $response['response'] = $object;
+            $response['data'] = $object['data'];
+            $response['count'] = $object['count'];
             $response['filter'] = $obj;
             $response['success'] = true;
             break;

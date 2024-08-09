@@ -53,7 +53,7 @@
                 var res = this.jl.ajax("get",filter,"/api/example.php");
 
                 if(res) {
-                    this.data = res.response.data[0]
+                    this.data = res.data[0]
                 }
             }
         },

@@ -70,6 +70,8 @@ if($member['mb_id']){
                 </thead>
                 <tbody>
                 <?php
+                $is_product = false; // 제사음식 및 시제음식의 실속상일시 true가 됌
+
                 $is_visit = false;//방문수령인지 아닌지 파악하기 배송비에 필요
                 $tot_point = 0;
                 $tot_sell_price = 0;
@@ -114,6 +116,7 @@ if($member['mb_id']){
                 $firstCaId="";
                 for ($i=0; $row=sql_fetch_array($result); $i++)
                 {
+                    if($row['it_id'] == "16533786883749" || $row['it_id'] == "1691111911") $is_product = true;
                     //제사음식/명절차례상/시제음식/추가맞춤음식만 배열담기
                     if(strval(array_search(substr($row[ca_id],0,2),$firstCaIds))!=""){
                         array_push($ca_ids,$row[ca_id]);
@@ -277,6 +280,7 @@ if($member['mb_id']){
                 } else {
                     // 배송비 계산
                     $send_cost = get_sendcost($s_cart_id);
+                    if($is_product && $is_visit) $send_cost = 0;
                 }
 
                 // 복합과세처리

@@ -9,22 +9,22 @@
             <div class="company_info">
                 <div class="profile_box">
                     <div class="profile">
-                        <img v-if="checkFile('/data/file/member/${product.member_idx}.jpg')" :src="`${jl.root}/data/file/member/${product.member_idx}.jpg`">
+                        <img v-if="checkFile(`/data/file/member/${product.member_idx}.jpg`)" :src="`${jl.root}/data/file/member/${product.member_idx}.jpg`">
                         <img v-else :src="`${jl.root}/img/img_smile.jpg`">
                     </div>
                     <div class="profile_info" @click="location.href=jl.root+'/bbs/profile.php?mb_no='+product.member_idx">
                         <h3>{{ product.MEMBER.mb_nick }}</h3>
 
                         <div class="area_star">
-                            <div class="img_star v35">
+                            <div class="img_star" :class="`v${calcReview(product) * 10}`">
                                 <span></span>
                                 <span></span>
                                 <span></span>
                                 <span></span>
                                 <span></span>
                             </div>
-                            <em>5.0</em>
-                            <span class="review">(0개 리뷰)</span>
+                            <em>{{ calcReview(product) }}</em>
+                            <span class="review">({{ product.review_count }}개 리뷰)</span>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
             <!-- 찜하기 눌렀을 때 class="on"추가 -->
             <div class="icon_jjim" :class="{'on' : checkLike(product.idx)}" @click="postLike(product.idx)"></div>
             <a href="" class="btn_cs">문의하기</a>
-            <div class="box_btn"><a href="">구매하기</a></div>
+            <div class="box_btn"><a href="" @click="event.preventDefault(); postOrder();">구매하기</a></div>
         </div>
     </div>
 </script>
@@ -147,6 +147,36 @@
             });
         },
         methods: {
+            calcReview : function(item) {
+                if(item.review_count == 0) return 0;
+
+                let score = item.review_score / item.review_count;
+
+                return Math.round(score * 2) / 2 / 10;
+            },
+            postOrder : function() {
+                if(!this.member_idx) {
+                    alert("로그인이 필요한 기능입니다.");
+                    return false;
+                }
+
+
+                let order = {
+                    member_idx : this.member_idx,
+                    seller_idx : this.product.member_idx,
+                    product_idx : this.product.idx,
+                    package : this.tab,
+                    options : "옵션 아직 회의진행중",
+                    price : parseInt(this.product[this.tab].price),
+                    status : "진행대기"
+                }
+
+                var res = this.jl.ajax("insert", order, "/api/member_order.php");
+
+                if (res) {
+                    alert("구매가 완료되었습니다.");
+                }
+            },
             checkLike : function(product_idx) {
                 return this.likes.some(obj => obj.product_idx == product_idx)
             },

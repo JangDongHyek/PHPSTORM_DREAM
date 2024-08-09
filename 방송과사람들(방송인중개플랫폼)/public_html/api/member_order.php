@@ -1,12 +1,12 @@
 <?php
 include_once("../class/Model.php");
-include_once("../class/File.php");
+//include_once("../class/File.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
 
 $model_config = array(
-    "table" => "member_product",
+    "table" => "member_order",
     "primary" => "idx",
     "autoincrement" => true,
     "empty" => false
@@ -16,10 +16,10 @@ $model_config = array(
 try {
     $model = new Model($model_config);
 
-    $join_table = "category";
+    $join_table = "member_product";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    $file = new File("/data/member_product");
+    //$file = new File("/data/example");
 
     switch (strtolower($_method)) {
         case "get":
@@ -35,26 +35,6 @@ try {
                 if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
             }
 
-            if($obj["parent_idx"]) {
-                unset($obj['category_idx']);
-                $joinModel = new Model(array(
-                    "table" => $join_table,
-                    "primary" => "idx"
-                ));
-                $joinModel->where("parent_idx", $obj["parent_idx"]);
-                $join_data = $joinModel->get()['data'];
-
-                $model->group_start();
-                foreach($join_data as $index => $data) {
-                    $model->or_where("category_idx",$data["idx"]);
-                }
-                $model->group_end();
-
-                $response['sql'] = $model->getSql();
-
-                $joinModel = null; // 메모리해제
-            }
-
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
 
@@ -64,21 +44,19 @@ try {
                     "table" => $join_table,
                     "primary" => "idx"
                 ));
-
-                $joinModel2 = new Model(array(
+                $memberModel = new Model(array(
                     "table" => "g5_member",
                     "primary" => "mb_no"
                 ));
 
                 foreach ($object["data"] as $index => $data) {
-                    $joinModel->where($joinModel->primary, $data["category_idx"]);
-                    $join_data = $joinModel->get();
-
-                    $joinModel2->where($joinModel2->primary, $data["member_idx"]);
-                    $join_data2 = $joinModel2->get()['data'][0];
+                    $joinModel->where($joinModel->primary, $data["product_idx"]);
+                    $join_data = $joinModel->get()['data'][0];
+                    $memberModel->where($memberModel->primary, $join_data["member_idx"]);
+                    $member = $memberModel->get()['data'][0];
 
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
-                    $object["data"][$index]['MEMBER'] = $join_data2;
+                    $object["data"][$index]["MEMBER"] = $member;
 
                     if ($join_table_delete) {
                         if (!$join_data) array_push($deletes, $index);
@@ -110,7 +88,14 @@ try {
                 $obj[$key] = $file_result;
             }
 
+            //사용자가 구매시 상품의 해당 값을 저장하기위한 필드
+            $productModel = new Model(array("table" => "member_product","primary" => "idx"));
+            $productModel->where("idx",$obj['product_idx']);
+            $product = $productModel->get()['data'][0];
+            $obj['product_log'] = json_encode($product, JSON_UNESCAPED_UNICODE);
+
             $model->insert($obj);
+
             $response['success'] = true;
             break;
         }
@@ -149,6 +134,12 @@ try {
             $response['success'] = true;
             break;
         }
+
+        case "where_delete" :
+            $obj = $model->jsonDecode($_POST['obj'],false);
+
+            $model->where($obj);
+            $data = $model->whereDelete();
 
         case "deletes":
         {

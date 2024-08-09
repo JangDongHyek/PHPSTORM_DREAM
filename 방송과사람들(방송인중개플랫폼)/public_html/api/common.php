@@ -12,8 +12,10 @@ try {
     switch (strtolower($_method)) {
         case "check_file":
         {
-
-            $response['result'] = file_exists($jl->ROOT.$_POST['file']);
+            $obj = $jl->jsonDecode($_POST['obj']);
+            $response['result'] = file_exists($jl->ROOT.$obj['file']);
+            $response['11'] = $jl->ROOT.$obj['file'];
+            $response['obj'] = $obj;
             $response['success'] = true;
             break;
         }

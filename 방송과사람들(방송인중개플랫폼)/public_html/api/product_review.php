@@ -1,12 +1,12 @@
 <?php
 include_once("../class/Model.php");
-include_once("../class/File.php");
+//include_once("../class/File.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
 
 $model_config = array(
-    "table" => "member_product",
+    "table" => "product_review",
     "primary" => "idx",
     "autoincrement" => true,
     "empty" => false
@@ -16,10 +16,10 @@ $model_config = array(
 try {
     $model = new Model($model_config);
 
-    $join_table = "category";
+    $join_table = "g5_member";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    $file = new File("/data/member_product");
+    //$file = new File("/data/example");
 
     switch (strtolower($_method)) {
         case "get":
@@ -35,26 +35,6 @@ try {
                 if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
             }
 
-            if($obj["parent_idx"]) {
-                unset($obj['category_idx']);
-                $joinModel = new Model(array(
-                    "table" => $join_table,
-                    "primary" => "idx"
-                ));
-                $joinModel->where("parent_idx", $obj["parent_idx"]);
-                $join_data = $joinModel->get()['data'];
-
-                $model->group_start();
-                foreach($join_data as $index => $data) {
-                    $model->or_where("category_idx",$data["idx"]);
-                }
-                $model->group_end();
-
-                $response['sql'] = $model->getSql();
-
-                $joinModel = null; // 메모리해제
-            }
-
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
 
@@ -62,23 +42,14 @@ try {
                 $deletes = array();
                 $joinModel = new Model(array(
                     "table" => $join_table,
-                    "primary" => "idx"
-                ));
-
-                $joinModel2 = new Model(array(
-                    "table" => "g5_member",
                     "primary" => "mb_no"
                 ));
 
                 foreach ($object["data"] as $index => $data) {
-                    $joinModel->where($joinModel->primary, $data["category_idx"]);
-                    $join_data = $joinModel->get();
-
-                    $joinModel2->where($joinModel2->primary, $data["member_idx"]);
-                    $join_data2 = $joinModel2->get()['data'][0];
+                    $joinModel->where($joinModel->primary, $data["member_idx"]);
+                    $join_data = $joinModel->get()['data'][0];
 
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
-                    $object["data"][$index]['MEMBER'] = $join_data2;
 
                     if ($join_table_delete) {
                         if (!$join_data) array_push($deletes, $index);
@@ -95,7 +66,8 @@ try {
                 }
             }
 
-            $response['response'] = $object;
+            $response['data'] = $object['data'];
+            $response['count'] = $object['count'];
             $response['filter'] = $obj;
             $response['success'] = true;
             break;
@@ -109,6 +81,17 @@ try {
                 $file_result = $file->bindGate($file_data);
                 $obj[$key] = $file_result;
             }
+
+            // 리뷰가 달릴때 상품의 리뷰카운트 증가 * 조인으로 처리할시 쿼리복잡도 코드 복잡도가 상승하여 이렇게 처리
+            $productModel = new Model(array(
+                "table" => "member_product",
+                "primary" => "idx"
+            ));
+            $productModel->where("idx",$obj['product_idx']);
+            $product = $productModel->get()['data'][0];
+            $product['review_count'] = (int)$product['review_count']+ 1;
+            $product['review_score'] = (int)$product['review_score']+ (int)$obj['score'];
+            $productModel->update($product);
 
             $model->insert($obj);
             $response['success'] = true;
@@ -135,6 +118,16 @@ try {
                 $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
             }
 
+            // 리뷰가 달릴때 상품의 리뷰카운트 증가 * 조인으로 처리할시 쿼리복잡도 코드 복잡도가 상승하여 이렇게 처리
+            $productModel = new Model(array(
+                "table" => "member_product",
+                "primary" => "idx"
+            ));
+            $productModel->where("idx",$obj['product_idx']);
+            $product = $productModel->get()['data'][0];
+            $product['review_score'] = (int)$product['review_score'] - (int)$obj['prev_score'] + (int)$obj['score'];
+            $productModel->update($product);
+
             $model->update($obj);
             $response['success'] = true;
             break;
@@ -149,6 +142,12 @@ try {
             $response['success'] = true;
             break;
         }
+
+        case "where_delete" :
+            $obj = $model->jsonDecode($_POST['obj'],false);
+
+            $model->where($obj);
+            $data = $model->whereDelete();
 
         case "deletes":
         {

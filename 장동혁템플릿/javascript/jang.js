@@ -75,21 +75,21 @@ function ajax(url,objs) {
                 try {
 
                     // 가져온 데이터 JSON.parse 가능하면 가공 안하면 업데이트나 할때 오류남
-                    if (res.response.data.length > 0) {
-                        for (let i = 0; i < res.response.data.length; i++) {
-                            var obj = res.response.data[i];
-                            for (field in obj) {
-                                if (field.indexOf("_id") !== -1) continue;
-                                try {
-                                    obj[field] = JSON.parse(obj[field]);
-                                } catch (e) {
-
-                                }
-                            }
-                            res.response.data[i] = obj;
-                        }
-
-                    }
+                    // if (res.response.data.length > 0) {
+                    //     for (let i = 0; i < res.response.data.length; i++) {
+                    //         var obj = res.response.data[i];
+                    //         for (field in obj) {
+                    //             if (field.indexOf("_id") !== -1) continue;
+                    //             try {
+                    //                 obj[field] = JSON.parse(obj[field]);
+                    //             } catch (e) {
+                    //
+                    //             }
+                    //         }
+                    //         res.response.data[i] = obj;
+                    //     }
+                    //
+                    // }
                 }catch(ee) {
 
                 }

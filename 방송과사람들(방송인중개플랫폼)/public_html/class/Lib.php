@@ -14,14 +14,19 @@ class JL {
 
     function jsonDecode($json,$encode = true) {
         // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
+        $json = addslashes($json);
         $obj = str_replace('\\', '', $json);
+        $obj = str_replace('\\\\', '', $obj);
         $obj = json_decode($obj, true);
+
+
 
         // 오브젝트 비교할때가있어 파라미터가 false값일땐 모든값 decode
         if($encode) {
             // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
             foreach ($obj as $key => $value) {
                 if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
+                if (is_object($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
             }
         }
 

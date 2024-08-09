@@ -21,6 +21,9 @@
             <div class="menu-container">
                 <div class="menu-wrapper">
                 <ul id="gnb_1dul" class="menu">
+                    <li class="gnb_1dli single_menu">
+                        <a :href="`${jl.root}/bbs/item_list.php?ctg=${category_idx}`" class="gnb_1da">전체<span></span></a>
+                    </li>
                     <li class="gnb_1dli single_menu" v-for="item in categories">
                         <a :href="`${JL_base_url}/bbs/item_list.php?ctg=${item.idx}&category_idx=${item.parent_idx}`" class="gnb_1da">
                             {{item.name}}<span></span>
@@ -36,8 +39,8 @@
                     </li>
                 </ul>
                 </div>
-                <button class="scroll-button left-button"><i class="fa-light fa-angle-left"></i></button>
-                <button class="scroll-button right-button"><i class="fa-light fa-angle-right"></i></button>
+                <!--<button class="scroll-button left-button"><i class="fa-light fa-angle-left"></i></button>
+                <button class="scroll-button right-button"><i class="fa-light fa-angle-right"></i></button>-->
             </div>
         </nav>
     </div>
@@ -45,26 +48,42 @@
 
 <script>
     //상단 메뉴 슬라이드
-    document.addEventListener('DOMContentLoaded', () => {
-        const leftButton = document.querySelector('.left-button');
-        const rightButton = document.querySelector('.right-button');
+        document.addEventListener('DOMContentLoaded', function() {
         const menuWrapper = document.querySelector('.menu-wrapper');
-        const menu = document.querySelector('.menu');
-        let scrollAmount = 0;
-        const scrollStep = 100; // Adjust the scroll step as needed
+        let isDragging = false;
+        let startX;
+        let scrollLeft;
 
-        leftButton.addEventListener('click', () => {
-            scrollAmount -= scrollStep;
-            if (scrollAmount < 0) scrollAmount = 0;
-            menu.style.transform = `translateX(-${scrollAmount}px)`;
-        });
+        menuWrapper.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX - menuWrapper.offsetLeft;
+        scrollLeft = menuWrapper.scrollLeft;
+        menuWrapper.style.cursor = 'grabbing';
+    });
 
-        rightButton.addEventListener('click', () => {
-            scrollAmount += scrollStep;
-            const maxScroll = menu.scrollWidth - menuWrapper.clientWidth;
-            if (scrollAmount > maxScroll) scrollAmount = maxScroll;
-            menu.style.transform = `translateX(-${scrollAmount}px)`;
-        });
+        menuWrapper.addEventListener('mouseleave', () => {
+        isDragging = false;
+        menuWrapper.style.cursor = 'grab';
+    });
+
+        menuWrapper.addEventListener('mouseup', () => {
+        isDragging = false;
+        menuWrapper.style.cursor = 'grab';
+    });
+
+        menuWrapper.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - menuWrapper.offsetLeft;
+        const walk = (x - startX) * 3; // 스크롤 속도 조절
+        menuWrapper.scrollLeft = scrollLeft - walk;
+    });
+
+        // 마우스 휠 이벤트 추가
+        menuWrapper.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        menuWrapper.scrollLeft += e.deltaY;
+    });
     });
 
 </script>

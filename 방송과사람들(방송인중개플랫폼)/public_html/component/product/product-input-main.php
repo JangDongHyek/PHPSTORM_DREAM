@@ -167,7 +167,8 @@
                 var res = this.jl.ajax(method, this.data, "/api/member_product.php");
 
                 if (res) {
-
+                    alert("완료하였습니다.");
+                    window.location.href= `${this.jl.root}/bbs/mypage_item.php`
                 }
             },
             getData: function () {

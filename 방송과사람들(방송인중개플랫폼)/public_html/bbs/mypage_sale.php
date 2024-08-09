@@ -3,7 +3,8 @@ include_once('./_common.php');
 $name = "cmypage";
 $g5['title'] = '마이페이지';
 include_once('./_head.php');
-
+include_once("../class/Lib.php");
+$jl = new JL();
 ?>
 
 <? if($name=="cmypage") { ?>
@@ -45,126 +46,9 @@ include_once('./_head.php');
 		<div class="inr">		
 			<div id="mypage_wrap">
 				<?php include_once('./mypage_info.php'); ?> 
-				
-				<div class="mypage_cont">
-					<div class="box">
-						<h3>판매관리</h3>
-						<ul class="sort_list">
-							<li class="active"><a href="">전체(4)</a></li>
-							<li><a href="">진행대기(1)</a></li>
-							<li><a href="">진행중(1)</a></li>
-							<li><a href="">완료(1)</a></li>
-							<li><a href="">취소(1)</a></li>
-						</ul>
-						<ul id="product_list" class="col01">
-							
-							<!-- nodata
-							<li class="nodata">
-								<div class="box">
-									<img src="<?php echo G5_THEME_IMG_URL ?>/app/icon_nodata.svg">
-									<p>구매한 재능상품이 없습니다.<p>
-								</div>
-							</li>
-							<!-- nodata -->
 
-							<!-- 목록 8개-->
-							
-							
-							<li>								
-								<div class="area_img">
-									<a href="<?php echo G5_BBS_URL ?>/mypage_view.php">
-										<img src="<?php echo G5_IMG_URL ?>/app/img_product03.jpg">
-									</a>
-								</div>
-								<div class="area_right">
-									<i data-toggle="modal" data-target="#listModal" class="type chk"><em></em>진행대기</i>
-									<div class="area_txt">									
-										<a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
-											
-											<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-											<div class="price">200,000원 ~</div> <!-- 가격 -->
-											<div id="seller_info">
-												<div class="photo"><img class="p_img" src='<?php echo G5_THEME_IMG_URL ?>/app/img_company01.jpg'></div>
-												<div class="name"><p>스튜디오오늘</p></div>
-											</div>
-										</a>	
-									</div>	
-								</div>	
+                <order-sell-list member_idx="<?=$member['mb_no']?>"></order-sell-list>
 
-	
-							</li>
-
-							<li>								
-								<div class="area_img">
-									<a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
-										<img src="<?php echo G5_IMG_URL ?>/app/img_product01.jpg">
-									</a>
-								</div>
-								<div class="area_right">
-									<i data-toggle="modal" data-target="#listModal" class="type chk"><em></em>진행중</i>
-									<div class="area_txt">
-										<a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
-											
-											<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.방송국에서 기획하는 가성비 영상 제작해 드립니다.방송국에서 기획하는 가성비 영상 제작해 드립니다.방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-											<div class="price">200,000원 ~</div> <!-- 가격 -->
-											<div id="seller_info">
-												<div class="photo"><img class="p_img" src='<?php echo G5_THEME_IMG_URL ?>/app/img_company01.jpg'></div>
-												<div class="name"><p>스튜디오오늘</p></div>
-											</div>
-										</a>	
-									</div>						
-								</div>						
-							</li>
-							<li>								
-								<div class="area_img">
-									<a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
-										<img src="<?php echo G5_IMG_URL ?>/app/img_product02.jpg">
-									</a>
-								</div>
-							
-								<div class="area_right">
-									<i data-toggle="modal" data-target="#listModal" class="type chk"><em></em>완료</i>
-									<div class="area_txt">
-										<a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
-											
-											<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-											<div class="price">200,000원 ~</div> <!-- 가격 -->
-											<div id="seller_info">
-												<div class="photo"><img class="p_img" src='<?php echo G5_THEME_IMG_URL ?>/app/img_company01.jpg'></div>
-												<div class="name"><p>스튜디오오늘</p></div>
-											</div>
-										</a>	
-									</div>						
-								</div>						
-							</li>
-							<li>								
-								<div class="area_img">
-									<a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
-										<img src="<?php echo G5_IMG_URL ?>/app/img_product03.jpg">
-									</a>
-								</div>
-							
-								<div class="area_right">
-									<i data-toggle="modal" data-target="#listModal" class="type chk"><em></em>취소</i>
-									<div class="area_txt">
-										<a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
-											
-											<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-											<div class="price">200,000원 ~</div> <!-- 가격 -->
-											<div id="seller_info">
-												<div class="photo"><img class="p_img" src='<?php echo G5_THEME_IMG_URL ?>/app/img_company01.jpg'></div>
-												<div class="name"><p>스튜디오오늘</p></div>
-											</div>
-										</a>	
-									</div>						
-								</div>						
-							</li>
-							
-							
-						</ul>
-						
-					</div>
-				</div>
 				<!-- 마이페이지에만 나오는 메뉴 -->
 				<?php include_once('./mypage_menu.php'); ?> 	
 			</div>				
@@ -172,6 +56,9 @@ include_once('./_head.php');
 	</div>
 
 <?
+$jl->vueLoad("area_mypage");
+$jl->includeDir("/component/order");
+include_once($jl->ROOT."/component/slot/slot-modal.php");
 include_once('./_tail.php');
 ?>
 

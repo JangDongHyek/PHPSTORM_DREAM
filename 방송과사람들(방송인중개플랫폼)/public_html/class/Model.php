@@ -188,6 +188,14 @@ class Model extends JL{
 
             while($row = mysqli_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
+                foreach ($row as $key => $value) {
+                    $decoded_value = json_decode($value, true);
+
+                    // JSON 디코딩이 성공했다면 값을 디코딩된 데이터로 변경
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $row[$key] = $decoded_value;
+                    }
+                }
                 array_push($object["data"], $row);
                 $index++;
             }
@@ -500,6 +508,9 @@ class Model extends JL{
     function escape($_param) {
         $param = array();
         foreach($_param as $key => $value){
+            if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            if (is_object($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+
             if($this->mysqli) {
                 $param[$key] = mysqli_real_escape_string($this->connect, $value);
             }else {

@@ -23,7 +23,7 @@
 
                                 <span></span><!-- 업체명 -->
                                 <h3>{{item.name}}</h3> <!-- 제목 -->
-                                <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
+                                <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
                                 <div class="price">{{getPrice(item).format()}}원 </div> <!-- 가격 -->
                             </div>
                         </a>
@@ -69,6 +69,13 @@
             });
         },
         methods: {
+            calcReview : function(item) {
+                if(item.review_count == 0) return 0;
+
+                let score = item.review_score / item.review_count;
+
+                return Math.round(score * 2) / 2 / 10;
+            },
             getPrice : function(item) {
                 var result = 0;
                 if(item.package) {

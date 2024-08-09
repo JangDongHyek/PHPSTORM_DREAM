@@ -40,7 +40,7 @@
                         </div>
                         <div class="area_txt">
                             <span></span> <h3>{{ item.name }}</h3>
-                            <div class="star"><i></i><em>5.0</em></div>
+                            <div class="star"><i></i><em>{{ calcReview(item) }}</em></div>
                             <div class="price">{{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원 </div>
                         </div>
                     </a>
@@ -94,6 +94,13 @@
             });
         },
         methods: {
+            calcReview : function(item) {
+                if(item.review_count == 0) return 0;
+
+                let score = item.review_score / item.review_count;
+
+                return Math.round(score * 2) / 2 / 10;
+            },
             checkLike : function(product_idx) {
                 return this.likes.some(obj => obj.product_idx == product_idx)
             },

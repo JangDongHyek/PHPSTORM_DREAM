@@ -16,8 +16,15 @@ class JL {
 
     function jsonDecode($json,$encode = true) {
         // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
+        $json = addslashes($json);
         $obj = str_replace('\\', '', $json);
+        $obj = str_replace('\\\\', '', $obj);
+
         $obj = json_decode($obj, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception("JL : ".json_last_error_msg());
+        }
 
         // 오브젝트 비교할때가있어 파라미터가 false값일땐 모든값 decode
         if($encode) {

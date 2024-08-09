@@ -1,7 +1,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <section>
-        <h3 class="title">신규 재능 상품</h3>
+        <h3 class="title">{{ title }}</h3>
         <ul id="product_list">
             <li v-for="item in data">
                 <i class="heart" :class="{'on' : checkLike(item.idx)}" @click="postLike(item.idx)"></i>
@@ -13,7 +13,7 @@
 
                         <span>업체명</span><!-- 업체명 -->
                         <h3>{{item.name}}</h3> <!-- 제목 -->
-                        <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
+                        <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
                         <div class="price">{{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원 </div> <!-- 가격 -->
                     </div>
 
@@ -29,12 +29,16 @@
         props: {
             primary : {type : String, default : ""},
             member_idx : {type : String, default : ""},
+            order_by_key : {type : String, default : ""},
+            order_by_value : {type : String, default : ""},
+            title : {type : String, default : ""},
         },
         data: function(){
             return {
                 jl : null,
                 filter : {
-
+                    page : 1,
+                    limit : 8,
                 },
                 data : {
 
@@ -44,6 +48,7 @@
         },
         created: function(){
             this.jl = new JL('<?=$componentName?>');
+            this.filter[this.order_by_key] = this.order_by_value;
 
             this.getData();
             this.getLike();
@@ -54,6 +59,13 @@
             });
         },
         methods: {
+            calcReview : function(item) {
+                if(item.review_count == 0) return 0;
+
+                let score = item.review_score / item.review_count;
+
+                return Math.round(score * 2) / 2 / 10;
+            },
             checkLike : function(product_idx) {
                 return this.likes.some(obj => obj.product_idx == product_idx)
             },
@@ -86,8 +98,7 @@
                 }
             },
             getData: function () {
-                var filter = {page : 1, limit : 8,order_by_desc : "insert_date"}
-                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                var res = this.jl.ajax("get",this.filter,"/api/member_product.php");
 
                 if(res) {
                     this.data = res.response.data

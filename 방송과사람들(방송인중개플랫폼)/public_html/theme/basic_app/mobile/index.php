@@ -128,115 +128,7 @@ $big_ctg = ctg_list(0);
                 </ul>-->
         </div>
 		<div class="inr">
-			<section>
-				<h3 class="title">실시간 인기 재능 상품</h3>
-				<ul id="product_list">
-					<li>
-						<i class="heart on"></i>
-						<a href="">
-							<div class="area_img">
-								<img src="<?php echo G5_IMG_URL ?>/app/img_product01.jpg">
-							</div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-					<li>
-						<i class="heart"></i>
-						<a href="">
-							<div class="area_img">
-								<img src="<?php echo G5_IMG_URL ?>/app/img_product02.jpg">
-							</div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-					<li>
-						<i class="heart"></i>
-						<a href="">
-							<div class="area_img"><img src="<?php echo G5_IMG_URL ?>/app/img_product03.jpg"></div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-					<li>
-						<i class="heart"></i>
-						<a href="">
-							<div class="area_img"><img src="<?php echo G5_IMG_URL ?>/app/img_product04.jpg"></div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-					<li>
-						<i class="heart on"></i>
-						<a href="">
-							<div class="area_img">
-								<img src="<?php echo G5_IMG_URL ?>/app/img_product01.jpg">
-							</div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-					<li>
-						<i class="heart"></i>
-						<a href="">
-							<div class="area_img">
-								<img src="<?php echo G5_IMG_URL ?>/app/img_product02.jpg">
-							</div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-					<li>
-						<i class="heart"></i>
-						<a href="">
-							<div class="area_img"><img src="<?php echo G5_IMG_URL ?>/app/img_product03.jpg"></div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-					<li>
-						<i class="heart"></i>
-						<a href="">
-							<div class="area_img"><img src="<?php echo G5_IMG_URL ?>/app/img_product04.jpg"></div>
-							<div class="area_txt">
-								<span>스튜디오오늘</span><!-- 업체명 -->
-								<h3>방송국에서 기획하는 가성비 영상 제작해 드립니다.</h3> <!-- 제목 -->
-								<div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-								<div class="price">200,000원 ~</div> <!-- 가격 -->
-							</div>
-						</a>
-					</li>
-				</ul>
-			</section>
+            <product-main-list member_idx="<?=$member['mb_no']?>" order_by_key="order_by_desc" order_by_value="review_score" title="인기 재능 상품"></product-main-list>
 
 			<?/*<section id="portfolio_area">
 				<h3 class="title">인기 전문인을 찾아보세요</h3>
@@ -295,7 +187,7 @@ $big_ctg = ctg_list(0);
 
 			</section>*/?>
 
-            <product-main-list member_idx="<?=$member['mb_no']?>"></product-main-list>
+            <product-main-list member_idx="<?=$member['mb_no']?>" order_by_key="order_by_desc" order_by_value="insert_date" title="신규 재능 상품"></product-main-list>
                 <section>
                     <h3 class="title">프로젝트 의뢰</h3>
                     <div id="area_bn2" onclick="location.href='<?php echo G5_BBS_URL ?>/contest_list.php'">
