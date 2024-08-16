@@ -1,5 +1,5 @@
 // Vue 인스턴스 생성
-Vue.data    = {test : JL_base_url};
+Vue.data    = {test : Jl_base_url};
 Vue.methods = {};
 Vue.watch   = {};
 Vue.components = {};
@@ -16,8 +16,8 @@ function vueLoad(app_name) {
         components: Vue.components,
         computed: Vue.computed,
         created: function(){
-            if(!JL_dev) return false;
-            this.jl = new JL(app_name,"#42B883");
+            if(!Jl_dev) return false;
+            this.jl = new Jl(app_name,"#42B883");
             for(var i=0; i<Vue.created.length; i++){
                 Vue.created[i](this);
             }
@@ -59,7 +59,7 @@ function ajax(url,objs) {
 
     var result = null;
     $.ajax({
-        url: JL_base_url + url,
+        url: Jl_base_url + url,
         method: "post",
         enctype: "multipart/form-data",
         processData: false,
@@ -100,13 +100,13 @@ function ajax(url,objs) {
     return result;
 }
 
-class JL {
+class Jl {
     constructor(name,background = "#35495e") {
         this.name = name;
-        this.root = JL_base_url;
-        this.editor = JL_editor;
+        this.root = Jl_base_url;
+        this.editor = Jl_editor;
 
-        if(!JL_dev) return false;
+        if(!Jl_dev) return false;
         console.log(
             '%c' + name,
             `background: ${background}; color: white; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
@@ -311,7 +311,7 @@ class JL {
     }
 
     log(obj,name="",background = "#35495e",color = "white") {
-        if(!JL_dev) return false;
+        if(!Jl_dev) return false;
 
         if(!name) {
             const parsedStack = this.parseStackTrace(new Error().stack);

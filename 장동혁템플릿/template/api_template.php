@@ -1,6 +1,6 @@
 <?php
-include_once("../class/Model.php");
-//include_once("../class/File.php");
+include_once("../jl/JlModel.php");
+//include_once("../jl/JlFile.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
@@ -14,12 +14,12 @@ $model_config = array(
 
 
 try {
-    $model = new Model($model_config);
+    $model = new JlModel($model_config);
 
     $join_table = "";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    //$file = new File("/data/example");
+    //$file = new JlFile("/data/example");
 
     switch (strtolower($_method)) {
         case "get":
@@ -40,7 +40,7 @@ try {
             
             if ($join_table) {
                 $deletes = array();
-                $joinModel = new Model(array(
+                $joinModel = new JlModel(array(
                     "table" => $join_table,
                     "primary" => "idx"
                 ));

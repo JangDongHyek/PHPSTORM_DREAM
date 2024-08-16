@@ -1,6 +1,6 @@
 <?php
-include_once("JL.php");
-class File extends JL{
+include_once("Jl.php");
+class JlFile extends Jl{
 
     private $path;
     private $resizing;
@@ -41,7 +41,7 @@ class File extends JL{
     function save($file, $path = ""){
 
         $path = $path ? $path : $this->path;
-        if(empty($path)) throw new Exception("File : 파일 업로드 경로가 설정되지 않았습니다");
+        if(empty($path)) throw new Exception("JlFile : 파일 업로드 경로가 설정되지 않았습니다");
 
 
         // 업로드 디렉토리 생성
@@ -62,7 +62,7 @@ class File extends JL{
     ///////////////////////////////////////////////////
     function rename($src, $dst, $path = ""){
         $path = $path ? $path : $this->path;
-        if(empty($path)) throw new Exception("File : 파일 경로가 설정되지 않았습니다");
+        if(empty($path)) throw new Exception("JlFile : 파일 경로가 설정되지 않았습니다");
 
 
         rename($path.'/'.$src, $path.'/'.$dst);
@@ -98,11 +98,11 @@ class File extends JL{
             }
             $_idx = uniqid().str_pad(rand(0, 99), 2, "0", STR_PAD_LEFT);
             $path = $path ? $path : $this->path."/$_idx";
-            if(empty($path)) throw new Exception("File : 파일 경로가 설정되지 않았습니다");
+            if(empty($path)) throw new Exception("JlFile : 파일 경로가 설정되지 않았습니다");
             $permission = $permission ? $permission : $this->getPermission();
             $ext = $this->ext($file,true);
             $ext = strtolower($ext);
-            if(!in_array($ext,$permission)) throw new Exception("File : 허용된 파일이 아닙니다.");
+            if(!in_array($ext,$permission)) throw new Exception("JlFile : 허용된 파일이 아닙니다.");
 
             $src = $this->save($file,$path);
 

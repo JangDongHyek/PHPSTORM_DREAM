@@ -17,7 +17,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             /*
             JL.php 에 editor 경로를 입력해줘야합니다.
             그누보드일경우 photo_uploader/popup/php/index.php 파일의 해쉬검증부분 삭제후 사용해야합니다

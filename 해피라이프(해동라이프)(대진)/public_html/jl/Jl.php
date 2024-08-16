@@ -1,7 +1,7 @@
 <?php
-class JL {
+class Jl {
     private $root_dir = "public_html";
-    private $JS = "/js/JL.js";
+    private $JS = "/jl/Jl.js";
     private $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
     private $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
 
@@ -24,7 +24,7 @@ class JL {
         $obj = json_decode($obj, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception("JL : ".json_last_error_msg());
+            throw new \Exception("Jl : ".json_last_error_msg());
         }
 
         // 오브젝트 비교할때가있어 파라미터가 false값일땐 모든값 decode
@@ -41,9 +41,9 @@ class JL {
     function vueLoad($app_name = "app",$plugins = array()) {
         if(!self::$vue_load) {
             echo "<script>";
-            echo "const JL_base_url = '{$this->URL}';";
-            echo "const JL_dev = {$this->DEV};";
-            echo "const JL_editor = '{$this->EDITOR_HTML}';";
+            echo "const Jl_base_url = '{$this->URL}';";
+            echo "const Jl_dev = {$this->DEV};";
+            echo "const Jl_editor = '{$this->EDITOR_HTML}';";
             echo "</script>";
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
@@ -123,7 +123,7 @@ class JL {
         if ($position !== false) {
             $this->ROOT = substr($root, 0, $position).$this->root_dir;
         }else {
-            throw new \Exception("JL : ROOT 위치를 찾을 수 없습니다.");
+            throw new \Exception("Jl : ROOT 위치를 찾을 수 없습니다.");
         }
 
         //URL 구하기
@@ -135,7 +135,7 @@ class JL {
         $this->URL = $http.$host.$user;
 
         //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS)) throw new \Exception("JL : JS 위치를 찾을 수 없습니다.");
+        if(!file_exists($this->ROOT.$this->JS)) throw new \Exception("Jl : JS 위치를 찾을 수 없습니다.");
 
         //DB 설정
         $this->DB = array(
@@ -144,6 +144,7 @@ class JL {
             "password" => "",
             "database" => "example"
         );
+
     }
 }
 
