@@ -103,8 +103,8 @@ function ajax(url,objs) {
 class JL {
     constructor(name,background = "#35495e") {
         this.name = name;
-        this.root = JL_base_url
-        this.editor = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
+        this.root = JL_base_url;
+        this.editor = JL_editor;
 
         if(!JL_dev) return false;
         console.log(

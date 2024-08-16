@@ -68,7 +68,12 @@
             var response = await fetchData(`/order/OrderCheck`, {idx});
             //console.log(response);
             code_html += '[' + response['api_data']['orderNo'] + ']';
-            code_html += response['body']['Message'] + '<br>';
+            
+            if(response['body']['Message'] == 'Success'){
+                code_html += '발송처리 성공<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
         }
 
 
@@ -140,9 +145,12 @@
         var SellerDiscountPrice_total = 0;
         var SettlementPrice_total = 0;
         for (var i = 0; i < listData.length; i++) {
+            var calc = null;
             var idx = listData[i]['idx'];
             var response = await fetchData(`/order/GetOrder`, {idx});
+            var OrderNo = response['result']['OrderNo'];
             //console.log(response);
+
             code_html += '<tr>';
             code_html += '<td>' + response['result']['OrderNo'] + '</td>';
             code_html += '<td>' + response['result']['GoodsName'] + '</td>';
@@ -246,7 +254,14 @@
             var response = await fetchData(`/order/OrderShippingExpectedDate`, {data_arr});
             //console.log(response);
             code_html += '[' + response['api_data']['orderNo'] + ']';
-            code_html += response['body']['Message'] + '<br>';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '발송예정일 등록 성공<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+
+
         }
 
 
@@ -309,6 +324,7 @@
 
     }
 
+    //발송처리
     const orderSend_modal = async () => {
         const ids = document.querySelectorAll('input[name="idx[]"]:checked');
         const listData = [];
@@ -340,7 +356,13 @@
                 var response = await fetchData(`/order/OrderSend`, {data_arr});
                 //console.log(response);
                 code_html += '[' + response['api_data']['orderNo'] + ']';
-                code_html += response['body']['Message'] + '<br>';
+
+                if(response['body']['Message'] == 'Success'){
+                    code_html += '발송처리 성공<br>';
+                }else{
+                    code_html += response['body']['Message'] + '<br>';
+                }
+
             } else {
                 code_html += '[' + $('#OrderNo' + idx).html() + ']';
                 code_html += '송장번호가 없습니다.<br>';
@@ -394,15 +416,105 @@
 
     }
 
+    //미수령신고 철회요청
+    const orderClaimRelease_modal = async () => {
 
-    function orderCancel_modal() {
+        const defModal = $('#orderDeliCancelModal');
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "미수령신고 철회요청",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+        if($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 1){
+            if(!$('#OrderClaimRelease_DeliveryCompCode').val()){
+                Swal.fire({
+                    text: "택배사를 선택해주세요."
+                });
+                return false;
+            }
+            if(!$('#OrderClaimRelease_InvoiceNo').val()){
+                Swal.fire({
+                    text: "운송장번호를 입력해주세요."
+                });
+                return false;
+            }
+        }
+
+        if($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 2){
+            if(!$('#OrderClaimRelease_CancelComment').val()){
+                Swal.fire({
+                    text: "철회요청 메세지를 입력해주세요."
+                });
+                return false;
+            }
+        }
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+
+
+
+            var data_arr =
+                {
+                    idx: idx,
+                    DeliveryCompCode: $('#OrderClaimRelease_DeliveryCompCode').val(),
+                    InvoiceNo: $('#OrderClaimRelease_InvoiceNo').val(),
+                    ClaimCancelType: $("input[name='OrderClaimRelease_ClaimCancelType']:checked").val(),
+                    CancelComment: $("#OrderClaimRelease_CancelComment").val()
+                };
+            var response = await fetchData(`/order/OrderClaimRelease`, {data_arr});
+            console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '미수령신고 철회요청 성공<br>';
+            }else if(response['body']['Message'] == null) {
+                code_html += '결과값이 없습니다.' + '<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
 
         Swal.fire({
-            title: "취소처리",
+            title: "미수령신고 철회요청",
             html: `
             <div class="text_form">
-                <p>선택 <span class="txt-blue">0</span>건이 취소처리 되었습니다.</p>
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 미수령신고 철회요청 되었습니다.</p>
             </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
               `,
             showCloseButton: true,
             showCancelButton: false,
@@ -411,8 +523,618 @@
             //        cancelButtonText: ``,
 
             closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
         });
     }
+
+    const orderCancelCheck_modal = async () => {
+
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var response = await fetchData(`/order/OrderCancelCheck`, {idx});
+            console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '취소처리 성공<br>';
+            }else if(response['body']['Message'] == null) {
+                code_html += '결과값이 없습니다.' + '<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "취소처리",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+        Swal.fire({
+            title: "취소처리",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 취소처리 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+    const orderCancelSoldOut_modal = async (check) => {
+
+        const defModal = $('#orderCancelModal');
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "판매취소",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+        if(check){
+            $('#cancelSoldOutCnt').html(listData.length);
+            defModal.modal();
+            return false;
+        }
+
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var data_arr =
+                {
+                    idx: idx,
+                    cancelSoldOutReason: $('#cancelSoldOutReason').val()
+                };
+
+            console.log(data_arr);
+            var response = await fetchData(`/order/OrderCancelSoldOut`, {data_arr});
+            console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '판매취소 성공<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
+
+        Swal.fire({
+            title: "판매취소",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 판매취소 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+    const orderReturnCheck_modal = async () => {
+
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var response = await fetchData(`/order/OrderReturnCheck`, {idx});
+            console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '반품처리 성공<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "반품처리",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+        Swal.fire({
+            title: "반품처리",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 반품처리 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+    //판매자 직접반품신청
+    const orderReturnSelf_modal = async (check) => {
+
+        const defModal = $('#orderDeliReModal');
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "판매자 직접반품신청",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+        if(check){
+            var idx = listData[0].idx;
+            var response = await fetchData(`/order/GetOrder`, {idx});
+            console.log(response);
+            if (response.result) {
+                var data = response.result;
+                $('#returnSelfModal_SiteGoodsNo').html(data.SiteGoodsNo);
+                $('#returnSelfModal_OrderNo').html(data.OrderNo);
+                onclick="openSiteGoodsNo('2','3120470039');"
+
+                $('#returnSelfModal_GoodsName').attr('onclick', ' openSiteGoodsNo('+ data.SiteType + ',' + data.SiteGoodsNo + ')');
+                $('#returnSelfModal_GoodsName').html(data.GoodsName);
+                data.SalePrice = AddComma(data.SalePrice);
+                $('#returnSelfModal_SalePrice').html(data.SalePrice);
+                $('#returnSelfModal_ContrAmount').html(data.ContrAmount);
+
+                var option = JSON.parse(data.ItemOptionSelectList);
+                var option_html = '';
+                //console.log(option);
+                option_html += '<ul>';
+                for (var i = 0; i < option.length; i++) {
+                    option_html += option[i]['ItemOptionValue'] + ' ' + option[i]['ItemOptionOrderCnt'] + ' ' + option[i]['ItemOptionCode'];
+                    option_html += '</br>';
+                }
+                option_html += '</ul>';
+                $('#returnSelfModal_ItemOptionSelectList').html(option_html);
+
+                var Addition = JSON.parse(data.ItemOptionAdditionList);
+                var Addition_html = '';
+                Addition_html += '<ul>';
+                for (var j = 0; j < Addition.length; j++) {
+                    Addition_html += Addition[j]['ItemOptionValue'] + ' ' + Addition[j]['ItemOptionOrderCnt'] + ' ' + Addition[j]['ItemOptionCode'];
+                    Addition_html += '</br>';
+                }
+                Addition_html += '</ul>';
+                $('#returnSelfModal_ItemOptionAdditionList').html(Addition_html);
+                $('#returnSelfModal_BuyerName').html(data.BuyerName);
+                $('#returnSelfModal_ReceiverName').html(data.ReceiverName);
+                $('#returnSelfModal_BuyerMobileTel').html(data.BuyerMobileTel);
+                $('#returnSelfModal_HpNo').html(data.HpNo);
+                $('#returnSelfModal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
+                $('#returnSelfModal_TakbaeName').html(data.TakbaeName);
+                $('#returnSelfModal_NoSongjang').html(data.NoSongjang);
+
+
+                /*
+                $('#modal_FreeGift').html(data.FreeGift);
+                data.OrderAmount = AddComma(data.OrderAmount);
+                $('#modal_OrderAmount').html(data.OrderAmount);
+                data.ShippingFee = AddComma(data.ShippingFee);
+                $('#modal_ShippingFee').html(data.ShippingFee);
+                //$('#modal_TransType').html(data.TransType);
+                $('#modal_BuyerId').html(data.BuyerId);
+
+
+                $('#modal_BuyerTel').html(data.BuyerTel);
+
+                $('#modal_TelNo').html(data.TelNo);
+
+                $('#modal_DelMemo').html(data.DelMemo);
+                 */
+                defModal.modal();
+            }
+            return false;
+        }
+
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var data_arr =
+                {
+                    idx: idx,
+                    cancelSoldOutReason: $('#cancelSoldOutReason').val(),
+                    reason: $('#returnSelfModal_ReasonCode').val(),
+                    itemStatus: $('#returnSelfModal_GoodsStatus').val(),
+                    alreadySent: $("input[name='returnSelfModal_PickupInfoStatus']:checked").val(),
+                    pickupCompCode: $('#returnSelfModal_DeliveryCompName').val(),
+                    invoiceNo: $('#returnSelfModal_InvoiceNo').val(),
+                };
+            var response = await fetchData(`/order/OrderCancelSoldOut`, {data_arr});
+            console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '판매자 직접반품신청 성공<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
+
+        Swal.fire({
+            title: "판매자 직접반품신청",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 판매자 직접반품신청 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+    //반품건 교환전환 API
+    const orderReturnExchange_modal = async (check) => {
+
+        const defModal = $('#orderReExchangeModal');
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "반품건 교환전환",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+        if(check){
+            var idx = listData[0].idx;
+            var data_arr =
+                {
+                    idx: idx,
+                    join_table: 'order_return_list',
+
+                };
+
+            var response = await fetchData(`/order/GetJoinOrder`, {data_arr});
+            //console.log(response);
+            if (response.result) {
+                var data = response.result;
+                $('#ReturnExchange_SiteGoodsNo').html(data.SiteGoodsNo);
+                $('#ReturnExchange_OrderNo').html(data.OrderNo);
+                $('#ReturnExchange_GoodsName').attr('onclick', ' openSiteGoodsNo('+ data.SiteType + ',' + data.SiteGoodsNo + ')');
+                $('#ReturnExchange_GoodsName').html(data.GoodsName);
+                data.SalePrice = AddComma(data.SalePrice);
+                $('#ReturnExchange_SalePrice').html(data.SalePrice);
+                $('#ReturnExchange_ContrAmount').html(data.ContrAmount);
+                $('#ReturnExchange_BuyerName').html(data.BuyerName);
+                $('#ReturnExchange_return_ReasonDetail').html(data.return_ReasonDetail);
+
+                var return_AddReturnShippingFeeWay = {0: '없음', 1 : '지금결제함(카드결제, 핸드폰결제등)', 2 : '환불금 차감 대기' , 3 : '판매자 직접 결제' , 4 : '상품에 동봉함' , 5 : '스마일캐시 결제' , 6 : '기타'};
+                $('#ReturnExchange_return_AddReturnShippingFeeWay').html(return_AddReturnShippingFeeWay[data.return_AddReturnShippingFeeWay]);
+                defModal.modal();
+            }
+            return false;
+        }
+
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var data_arr =
+                {
+                    idx: idx,
+                    DeliveryCompCode: $('#ReturnExchange_ResendInfo_DeliveryCompName').val(),
+                    InvoiceNo: $('#ReturnExchange_ResendInfo_InvoiceNo').val(),
+                };
+            var response = await fetchData(`/order/OrderReturnExchange`, {data_arr});
+            console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '반품건 교환전환 성공<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
+
+        Swal.fire({
+            title: "반품건 교환전환",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 반품건 교환전환 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+    //교환건 반품전환 API
+    const orderExchangeReturn_modal = async (check) => {
+
+        const defModal = $('#orderExReturnModal');
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "교환건 반품전환",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+        if(check){
+            var idx = listData[0].idx;
+            var data_arr =
+                {
+                    idx: idx,
+                    join_table: 'order_return_list',
+
+                };
+
+            var response = await fetchData(`/order/GetJoinOrder`, {data_arr});
+            //console.log(response);
+            if (response.result) {
+                var data = response.result;
+                $('#ExchangeReturn_SiteGoodsNo').html(data.SiteGoodsNo);
+                $('#ExchangeReturn_OrderNo').html(data.OrderNo);
+                $('#ExchangeReturn_GoodsName').attr('onclick', ' openSiteGoodsNo('+ data.SiteType + ',' + data.SiteGoodsNo + ')');
+                $('#ExchangeReturn_GoodsName').html(data.GoodsName);
+                data.SalePrice = AddComma(data.SalePrice);
+                $('#ExchangeReturn_SalePrice').html(data.SalePrice);
+                $('#ExchangeReturn_ContrAmount').html(data.ContrAmount);
+                $('#ExchangeReturn_BuyerName').html(data.BuyerName);
+                $('#ExchangeReturn_return_ReasonDetail').html(data.return_ReasonDetail);
+
+                var return_AddReturnShippingFeeWay = {0: '없음', 1 : '지금결제함(카드결제, 핸드폰결제등)', 2 : '환불금 차감 대기' , 3 : '판매자 직접 결제' , 4 : '상품에 동봉함' , 5 : '스마일캐시 결제' , 6 : '기타'};
+                $('#ExchangeReturn_return_AddReturnShippingFeeWay').html(return_AddReturnShippingFeeWay[data.return_AddReturnShippingFeeWay]);
+                defModal.modal();
+            }
+            return false;
+        }
+
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var data_arr =
+                {
+                    idx: idx,
+                    DeliveryCompCode: $('#ReturnExchange_ResendInfo_DeliveryCompName').val(),
+                    InvoiceNo: $('#ReturnExchange_ResendInfo_InvoiceNo').val(),
+                };
+            var response = await fetchData(`/order/OrderReturnExchange`, {data_arr});
+            console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if(response['body']['Message'] == 'Success'){
+                code_html += '교환건 반품전환 성공<br>';
+            }else{
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
+
+        Swal.fire({
+            title: "교환건 반품전환",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 교환건 반품전환 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+
+
 
     // 주문번호 상세 모달
     const orderNo_modal = async (idx) => {
@@ -459,7 +1181,7 @@
             data.ShippingFee = AddComma(data.ShippingFee);
             $('#modal_ShippingFee').html(data.ShippingFee);
             //$('#modal_TransType').html(data.TransType);
-            $('#modal_BuyerID').html(data.BuyerID);
+            $('#modal_BuyerId').html(data.BuyerId);
             $('#modal_BuyerName').html(data.BuyerName);
             $('#modal_BuyerMobileTel').html(data.BuyerMobileTel);
             $('#modal_BuyerTel').html(data.BuyerTel);
@@ -488,7 +1210,8 @@
 
                 progress_html += '<td>';
                 if(progress_data[k]['TrackingUrl'] != null){
-                    progress_html += progress_data[k]['TrackingUrl'];
+                    //progress_html += progress_data[k]['TrackingUrl'];
+                    progress_html += '<button type="button" class="btn btn-white btn-mini" onclick="window.open(\'' + progress_data[k]['TrackingUrl'] + '\')">상품위치확인</button>';
                 }
                 progress_html += '</td>';
 
@@ -838,42 +1561,41 @@
                             <tbody>
                             <tr>
                                 <th>상품번호/주문번호</th>
-                                <td>3120210083 / 4154145528</td>
-                                <th>선물주문여부</th>
-                                <td>N</td>
+                                <td colspan="3"><span id="returnSelfModal_SiteGoodsNo"></span> / <span id="returnSelfModal_OrderNo"></span></td>
                             </tr>
                             <tr>
                                 <th>상품명</th>
                                 <td colspan="3">
-                                    <a>기아 쏘렌토MQ4 / 국산 전차종 하드론 프리미엄 상신브레이크패드</a><br>
+                                    <a id="returnSelfModal_GoodsName"></a><br>
                                     <div class="detailview">
-                                        <div class="dveiw" id="detailView1">
+                                        <div class="dveiw" id="returnSelfModal_ItemOptionSelectList">
                                             <ul>
-                                                앞/뒤:앞 / 20년1월 이후 / HP4464/1개, 장착유형:자택수령/1개, 차량번호 차대번호:12345/1개
                                             </ul>
+                                        </div>
+                                        <div class="dveiw" id="returnSelfModal_ItemOptionAdditionList">
                                         </div>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th>금액/개수</th>
-                                <td colspan="3">28,120 원 / 1 개</td>
+                                <td colspan="3"><span id="returnSelfModal_SalePrice"></span> 원 / <span id="returnSelfModal_ContrAmount"></span> 개</td>
                             </tr>
                             <tr>
                                 <th>구매자명/수령인명</th>
-                                <td>김해리 / 김해리</td>
+                                <td><span id="returnSelfModal_BuyerName"></span> / <span id="returnSelfModal_ReceiverName"></span></td>
                                 <th>연락처</th>
-                                <td>010-5833-4843 / 010-5833-4843</td>
+                                <td><span id="returnSelfModal_BuyerMobileTel"></span> / <span id="returnSelfModal_HpNo"></span></td>
                             </tr>
                             <tr>
                                 <th>주소</th>
-                                <td colspan="3">서울특별시 영등포구 국제금융로6길 33 맨하탄빌딩 1115호</td>
+                                <td colspan="3" id="returnSelfModal_DelFullAddress"></td>
                             </tr>
                             <tr>
                                 <th>발송택배사</th>
-                                <td>경동택배</td>
+                                <td id="returnSelfModal_TakbaeName"></td>
                                 <th>송장번호</th>
-                                <td>567891</td>
+                                <td id="returnSelfModal_NoSongjang"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -885,21 +1607,21 @@
                             <tr>
                                 <th>반품사유</th>
                                 <td>
-                                    <select id="ReturnReasonCode" name="ReturnReasonCode" class="border_gray">
-                                        <option value="1" who="B" selected="selected">구매자변심</option>
-                                        <option value="2" who="B">사이즈, 색상등 선택사항 변경</option>
-                                        <option value="3" who="S">상품 파손/훼손</option>
-                                        <option value="4" who="S">색상등 다른 상품 잘못 배송</option>
-                                        <option value="5" who="S">상품이 도착하지 않고 있음</option>
+                                    <select id="returnSelfModal_ReasonCode" name="ReturnReasonCode" class="border_gray">
+                                        <option value="NC" who="B" selected="selected">구매자변심</option>
+                                        <option value="BG" who="B">사이즈, 색상등 선택사항 변경</option>
+                                        <option value="OG" who="S">색상등 다른 상품 잘못 배송</option>
+                                        <option value="DD" who="S">상품이 도착하지 않고 있음</option>
+                                        <option value="RG" who="S">상품 파손/훼손</option>
                                     </select>
                                 </td>
                                 <th>상품상태</th>
                                 <td>
-                                    <select id="ReturnProdState" name="ReturnProdState" class="border_gray">
+                                    <select id="returnSelfModal_GoodsStatus" name="ReturnProdState" class="border_gray">
                                         <option value="0">== 선택하세요 ==</option>
-                                        <option value="1" selected="selected">개봉후 미사용</option>
-                                        <option value="2">미개봉</option>
-                                        <option value="3">개봉후 사용</option>
+                                        <option value="OP" selected="selected">개봉후 미사용</option>
+                                        <option value="NP">미개봉</option>
+                                        <option value="UP">개봉후 사용</option>
                                     </select>
                                 </td>
                             </tr>
@@ -907,10 +1629,10 @@
                                 <th colspan="2">고객님이 상품을 이미 보내셨습니까?</th>
                                 <td colspan="2">
                                     <div class="select">
-                                        <input type="radio" class="rdo" id="SendYN1" name="SendYN" value="Y"
-                                               checked="checked"> <label>예</label>
-                                        <input type="radio" class="rdo" id="SendYN2" name="SendYN" value="N"
-                                               disabled="disabled"> <label>아니요</label>
+                                        <input type="radio" class="rdo" id="returnSelfModal_PickupInfoStatus1" name="returnSelfModal_PickupInfoStatus" value="true"
+                                               checked="checked"> <label for="returnSelfModal_PickupInfoStatus1">예</label>
+                                        <input type="radio" class="rdo" id="returnSelfModal_PickupInfoStatus2" name="returnSelfModal_PickupInfoStatus" value="false"
+                                               > <label for="returnSelfModal_PickupInfoStatus2">아니요</label>
                                     </div>
                                 </td>
                             </tr>
@@ -930,187 +1652,15 @@
                             <tr class="input_y">
                                 <th>택배사명</th>
                                 <td>
-                                    <select class="border_gray" id="deliveryComp" name="deliveryComp">
-                                        <option value="10013^CJ택배^N">CJ택배</option>
-                                        <option value="10001^대한통운^N">대한통운</option>
-                                        <option value="10007^한진택배^N">한진택배</option>
-                                        <option value="10005^우체국택배^N">우체국택배</option>
-                                        <option value="10008^롯데택배^N">롯데택배</option>
-                                        <option value="10003^로젠택배^N">로젠택배</option>
-                                        <option value="10016^경동택배^N">경동택배</option>
-                                        <option value="10183^1004홈^N">1004홈</option>
-                                        <option value="10147^2fast익스프레스^N">2fast익스프레스</option>
-                                        <option value="10050^건영택배^N">건영택배</option>
-                                        <option value="10191^고박스^N">고박스</option>
-                                        <option value="10139^골드스넵스^N">골드스넵스</option>
-                                        <option value="10178^국제익스프레스^N">국제익스프레스</option>
-                                        <option value="10162^굿투럭^N">굿투럭</option>
-                                        <option value="10034^기타택배^N">기타택배</option>
-                                        <option value="10184^나은물류^N">나은물류</option>
-                                        <option value="10165^노곡물류^N">노곡물류</option>
-                                        <option value="10143^농협택배^N">농협택배</option>
-                                        <option value="10189^대림통운^N">대림통운</option>
-                                        <option value="10014^대신택배^N">대신택배</option>
-                                        <option value="10078^대우전자^N">대우전자</option>
-                                        <option value="10107^대운글로벌^N">대운글로벌</option>
-                                        <option value="10193^더바오^N">더바오</option>
-                                        <option value="10171^도도플렉스^N">도도플렉스</option>
-                                        <option value="10158^두발히어로^N">두발히어로</option>
-                                        <option value="10006^등기우편^N">등기우편</option>
-                                        <option value="10187^딜리래빗^N">딜리래빗</option>
-                                        <option value="10224^딜리박스^N">딜리박스</option>
-                                        <option value="10197^라스트마일시스템즈^N">라스트마일시스템즈</option>
-                                        <option value="10196^로지스밸리^N">로지스밸리</option>
-                                        <option value="10154^로지스밸리택배^N">로지스밸리택배</option>
-                                        <option value="10190^로지스파트너^N">로지스파트너</option>
-                                        <option value="10167^로지스팟^N">로지스팟</option>
-                                        <option value="10119^로토스^N">로토스</option>
-                                        <option value="10075^롯데국제특송^N">롯데국제특송</option>
-                                        <option value="10096^롯데마트^N">롯데마트</option>
-                                        <option value="10176^롯데칠성^N">롯데칠성</option>
-                                        <option value="10175^바바바로지스^N">바바바로지스</option>
-                                        <option value="10203^반품구조대^N">반품구조대</option>
-                                        <option value="10177^발렉스^N">발렉스</option>
-                                        <option value="10035^방문수령^N">방문수령</option>
-                                        <option value="10172^배송하기좋은날^N">배송하기좋은날</option>
-                                        <option value="10079^범한판토스^N">범한판토스</option>
-                                        <option value="10099^부릉^N">부릉</option>
-                                        <option value="10114^브리지로지스^N">브리지로지스</option>
-                                        <option value="10186^삼다수가정배송^N">삼다수가정배송</option>
-                                        <option value="10028^삼성전자물류^N">삼성전자물류</option>
-                                        <option value="10045^성원글로벌^N">성원글로벌</option>
-                                        <option value="10201^성훈물류^N">성훈물류</option>
-                                        <option value="10082^세방택배^N">세방택배</option>
-                                        <option value="10084^쉽트랙^N">쉽트랙</option>
-                                        <option value="10223^쉽트랙(Ship G)^N">쉽트랙(Ship G)</option>
-                                        <option value="10117^스마트로지스^N">스마트로지스</option>
-                                        <option value="10166^스페이시스원^N">스페이시스원</option>
-                                        <option value="10132^시노트랜스^N">시노트랜스</option>
-                                        <option value="10113^시알로지텍^N">시알로지텍</option>
-                                        <option value="10102^아르고^N">아르고</option>
-                                        <option value="10156^애니트랙^N">애니트랙</option>
-                                        <option value="10118^에스더쉬핑^N">에스더쉬핑</option>
-                                        <option value="10108^에어보이익스프레스^N">에어보이익스프레스</option>
-                                        <option value="10174^에이스물류^N">에이스물류</option>
-                                        <option value="10135^에이씨티앤코아물류^N">에이씨티앤코아물류</option>
-                                        <option value="10198^에이치케이홀딩스^N">에이치케이홀딩스</option>
-                                        <option value="10185^엔티엘피스^N">엔티엘피스</option>
-                                        <option value="10153^엘서비스^N">엘서비스</option>
-                                        <option value="10138^엠티인터네셔널^N">엠티인터네셔널</option>
-                                        <option value="10194^오늘회러쉬^N">오늘회러쉬</option>
-                                        <option value="10126^올타코리아^N">올타코리아</option>
-                                        <option value="10141^용마로지스^N">용마로지스</option>
-                                        <option value="10151^우리동네택배^N">우리동네택배</option>
-                                        <option value="10039^우리택배^N">우리택배</option>
-                                        <option value="10128^웅지익스프레스^N">웅지익스프레스</option>
-                                        <option value="10142^원더스퀵^N">원더스퀵</option>
-                                        <option value="10103^위니온로지스^N">위니온로지스</option>
-                                        <option value="10179^윈핸드해운항공^N">윈핸드해운항공</option>
-                                        <option value="10121^유프레이트 코리아^N">유프레이트 코리아</option>
-                                        <option value="10120^은하쉬핑^N">은하쉬핑</option>
-                                        <option value="10100^이마트몰^N">이마트몰</option>
-                                        <option value="10173^이투마스^N">이투마스</option>
-                                        <option value="10024^일반우편^N">일반우편</option>
-                                        <option value="10015^일양택배^N">일양택배</option>
-                                        <option value="10150^자이언트^N">자이언트</option>
-                                        <option value="10032^자체배송^N">자체배송</option>
-                                        <option value="10155^제니엘시스템^N">제니엘시스템</option>
-                                        <option value="10157^제이로지스트^N">제이로지스트</option>
-                                        <option value="10163^지니고^N">지니고</option>
-                                        <option value="10125^지디에이코리아^N">지디에이코리아</option>
-                                        <option value="10202^지비에스^N">지비에스</option>
-                                        <option value="10221^지에이치스피드^N">지에이치스피드</option>
-                                        <option value="10199^직구문^N">직구문</option>
-                                        <option value="10031^직접배송^N">직접배송</option>
-                                        <option value="10017^천일택배^N">천일택배</option>
-                                        <option value="10164^카카오 T 당일배송^N">카카오 T 당일배송</option>
-                                        <option value="10124^캐나다쉬핑^N">캐나다쉬핑</option>
-                                        <option value="10192^케이제이티^N">케이제이티</option>
-                                        <option value="10025^퀵서비스^N">퀵서비스</option>
-                                        <option value="10159^큐런^N">큐런</option>
-                                        <option value="10200^큐브플로우^N">큐브플로우</option>
-                                        <option value="10089^택배사미정^N">택배사미정</option>
-                                        <option value="10180^탱고앤고^N">탱고앤고</option>
-                                        <option value="10101^투데이^N">투데이</option>
-                                        <option value="10225^티에스지로지스^N">티에스지로지스</option>
-                                        <option value="10210^팀프레시^N">팀프레시</option>
-                                        <option value="10133^패스트박스^N">패스트박스</option>
-                                        <option value="10134^팬스타국제특송^N">팬스타국제특송</option>
-                                        <option value="10152^퍼레버택배^N">퍼레버택배</option>
-                                        <option value="10073^편의점택배(GS25)^N">편의점택배(GS25)</option>
-                                        <option value="10169^프레시메이트^N">프레시메이트</option>
-                                        <option value="10160^프레시솔루션^N">프레시솔루션</option>
-                                        <option value="10182^핑퐁^N">핑퐁</option>
-                                        <option value="10122^하이브시티^N">하이브시티</option>
-                                        <option value="10195^한국야구르트^N">한국야구르트</option>
-                                        <option value="10104^한덱스^N">한덱스</option>
-                                        <option value="10161^한샘^N">한샘</option>
-                                        <option value="10081^한의사랑택배^N">한의사랑택배</option>
-                                        <option value="10074^합동택배^N">합동택배</option>
-                                        <option value="10131^허싱카고코리아^N">허싱카고코리아</option>
-                                        <option value="10098^현대글로비스^N">현대글로비스</option>
-                                        <option value="10149^홈이노베이션로지스^N">홈이노베이션로지스</option>
-                                        <option value="10048^홈플러스택배^N">홈플러스택배</option>
-                                        <option value="10188^홈픽오늘도착^N">홈픽오늘도착</option>
-                                        <option value="10145^홈픽택배^N">홈픽택배</option>
-                                        <option value="10204^화물을부탁해^N">화물을부탁해</option>
-                                        <option value="10130^ACCcargo^N">ACCcargo</option>
-                                        <option value="10116^ACE express^N">ACE express</option>
-                                        <option value="10085^ACI^N">ACI</option>
-                                        <option value="10140^BGF포스트^N">BGF포스트</option>
-                                        <option value="10072^CJ국제특송^N">CJ국제특송</option>
-                                        <option value="10115^Cway express^N">Cway express</option>
-                                        <option value="10022^DHL^N">DHL</option>
-                                        <option value="10168^DHL GlobalMail^N">DHL GlobalMail</option>
-                                        <option value="10111^ECMS익스프레스^N">ECMS익스프레스</option>
-                                        <option value="10112^EFS^N">EFS</option>
-                                        <option value="10036^EMS^N">EMS</option>
-                                        <option value="10023^FEDEX^N">FEDEX</option>
-                                        <option value="10094^Global Shipping^N">Global Shipping</option>
-                                        <option value="10209^Global Shipping10^N">Global Shipping10</option>
-                                        <option value="10211^Global Shipping11^N">Global Shipping11</option>
-                                        <option value="10212^Global Shipping12^N">Global Shipping12</option>
-                                        <option value="10213^Global Shipping13^N">Global Shipping13</option>
-                                        <option value="10214^Global Shipping14^N">Global Shipping14</option>
-                                        <option value="10215^Global Shipping15^N">Global Shipping15</option>
-                                        <option value="10216^Global Shipping16^N">Global Shipping16</option>
-                                        <option value="10217^Global Shipping17^N">Global Shipping17</option>
-                                        <option value="10218^Global Shipping18^N">Global Shipping18</option>
-                                        <option value="10219^Global Shipping19^N">Global Shipping19</option>
-                                        <option value="10091^Global Shipping2^N">Global Shipping2</option>
-                                        <option value="10220^Global Shipping20^N">Global Shipping20</option>
-                                        <option value="10092^Global Shipping3^N">Global Shipping3</option>
-                                        <option value="10093^Global Shipping4^N">Global Shipping4</option>
-                                        <option value="10095^Global Shipping5^N">Global Shipping5</option>
-                                        <option value="10205^Global Shipping6^N">Global Shipping6</option>
-                                        <option value="10206^Global Shipping7^N">Global Shipping7</option>
-                                        <option value="10207^Global Shipping8^N">Global Shipping8</option>
-                                        <option value="10208^Global Shipping9^N">Global Shipping9</option>
-                                        <option value="10080^GPS LOGIX^N">GPS LOGIX</option>
-                                        <option value="10086^Gsfresh^N">Gsfresh</option>
-                                        <option value="10110^GSI익스프레스^N">GSI익스프레스</option>
-                                        <option value="10043^GSMNTON^N">GSMNTON</option>
-                                        <option value="10148^GTS로지스^N">GTS로지스</option>
-                                        <option value="10144^HI택배^N">HI택배</option>
-                                        <option value="10137^ibpcorp^N">ibpcorp</option>
-                                        <option value="10106^i-parcel^N">i-parcel</option>
-                                        <option value="10146^KGL네트웍스^N">KGL네트웍스</option>
-                                        <option value="10136^kt express^N">kt express</option>
-                                        <option value="10027^LG전자물류^N">LG전자물류</option>
-                                        <option value="10109^LineExpress^N">LineExpress</option>
-                                        <option value="10123^LTL^N">LTL</option>
-                                        <option value="10170^NK로지솔루션^N">NK로지솔루션</option>
-                                        <option value="10226^ocs^N">ocs</option>
-                                        <option value="10097^Qxpress^N">Qxpress</option>
-                                        <option value="10181^SBGLS^N">SBGLS</option>
-                                        <option value="10077^SLX^N">SLX</option>
-                                        <option value="10105^TNT^N">TNT</option>
-                                        <option value="10042^UPS^N">UPS</option>
-                                        <option value="10041^USPS^N">USPS</option>
-                                        <option value="10044^WarpEx^N">WarpEx</option>
-                                        <option value="10051^WIZWA^N">WIZWA</option>
-                                        <option value="10129^YDH^N">YDH</option>
-                                        <option value="10127^yunda express^N">yunda express</option>
+                                    <?php
+                                    $delivery_company_list = get_delivery_company_list();
+                                    ?>
+                                    <select class="border_gray" id="returnSelfModal_DeliveryCompName">
+                                        <option value="">선택</option>
+                                        <? foreach ($delivery_company_list as $index => $data): ?>
+                                            <option value="<?= $data['code'] ?>"
+                                                    data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>
+                                        <? endforeach; ?>
                                     </select>
                                     <p class="ignore_prod_num">
                                         <input type="checkbox" name="IgnoreInvoiceNo" value="Y" id="ignore_prod_num">
@@ -1119,8 +1669,8 @@
                                 </td>
                                 <th>운송장 번호</th>
                                 <td>
-                                    <input class="border_gray" id="invoiceNo" name="invoiceNo" type="text"
-                                           value="송장번호/등기번호 입력하세요">
+                                    <input class="border_gray" id="returnSelfModal_InvoiceNo" name="invoiceNo" type="text"
+                                           value="" placeholder="송장번호/등기번호 입력하세요">
                                 </td>
                             </tr>
                             </tbody>
@@ -1131,7 +1681,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary">바로환불</button>
-                <button type="button" class="btn btn-primary">신청</button>
+                <button type="button" class="btn btn-primary" onclick="orderReturnSelf_modal()">신청</button>
             </div>
         </div>
     </div>
@@ -1536,213 +2086,44 @@
                         <table>
                             <tbody>
                             <tr>
+                                <div class="select gap10 nowrap">
+                                    <input type="radio" class="rdo" id="OrderClaimRelease_ClaimCancelType1" name="OrderClaimRelease_ClaimCancelType" value="1" checked>
+                                    <label class="btn" for="OrderClaimRelease_ClaimCancelType1">송장번호 재입력</label>
+                                    <input type="radio" class="rdo" id="OrderClaimRelease_ClaimCancelType2" name="OrderClaimRelease_ClaimCancelType" value="2">
+                                    <label class="btn" for="OrderClaimRelease_ClaimCancelType2">철회요청 메세지입력</label>
+                                </div>
+                                <br>
+                            </tr>
+                            <tr>
                                 <th>택배사명</th>
                                 <td>
                                     <div class="input_select">
-
-                                        <select class="border_gray" id="selDeliveryComp" name="selDeliveryComp">
-                                            <option value="0">선택</option>
-                                            <option value="10013">CJ택배</option>
-                                            <option value="10001">대한통운</option>
-                                            <option value="10007">한진택배</option>
-                                            <option value="10005">우체국택배</option>
-                                            <option value="10008">롯데택배</option>
-                                            <option value="10003">로젠택배</option>
-                                            <option value="10016">경동택배</option>
-                                            <option value="10065">(G마켓)CJ택배</option>
-                                            <option value="10183">1004홈</option>
-                                            <option value="10147">2fast익스프레스</option>
-                                            <option value="10050">건영택배</option>
-                                            <option value="10191">고박스</option>
-                                            <option value="10139">골드스넵스</option>
-                                            <option value="10178">국제익스프레스</option>
-                                            <option value="10162">굿투럭</option>
-                                            <option value="10034">기타택배</option>
-                                            <option value="10184">나은물류</option>
-                                            <option value="10165">노곡물류</option>
-                                            <option value="10143">농협택배</option>
-                                            <option value="10189">대림통운</option>
-                                            <option value="10014">대신택배</option>
-                                            <option value="10078">대우전자</option>
-                                            <option value="10107">대운글로벌</option>
-                                            <option value="10193">더바오</option>
-                                            <option value="10171">도도플렉스</option>
-                                            <option value="10158">두발히어로</option>
-                                            <option value="10006">등기우편</option>
-                                            <option value="10187">딜리래빗</option>
-                                            <option value="10224">딜리박스</option>
-                                            <option value="10197">라스트마일시스템즈</option>
-                                            <option value="10196">로지스밸리</option>
-                                            <option value="10154">로지스밸리택배</option>
-                                            <option value="10190">로지스파트너</option>
-                                            <option value="10167">로지스팟</option>
-                                            <option value="10119">로토스</option>
-                                            <option value="10075">롯데국제특송</option>
-                                            <option value="10096">롯데마트</option>
-                                            <option value="10176">롯데칠성</option>
-                                            <option value="10175">바바바로지스</option>
-                                            <option value="10203">반품구조대</option>
-                                            <option value="10177">발렉스</option>
-                                            <option value="10035">방문수령</option>
-                                            <option value="10172">배송하기좋은날</option>
-                                            <option value="10079">범한판토스</option>
-                                            <option value="10099">부릉</option>
-                                            <option value="10114">브리지로지스</option>
-                                            <option value="10186">삼다수가정배송</option>
-                                            <option value="10028">삼성전자물류</option>
-                                            <option value="10045">성원글로벌</option>
-                                            <option value="10201">성훈물류</option>
-                                            <option value="10082">세방택배</option>
-                                            <option value="10084">쉽트랙</option>
-                                            <option value="10223">쉽트랙(Ship G)</option>
-                                            <option value="10117">스마트로지스</option>
-                                            <option value="10166">스페이시스원</option>
-                                            <option value="10132">시노트랜스</option>
-                                            <option value="10113">시알로지텍</option>
-                                            <option value="10102">아르고</option>
-                                            <option value="10156">애니트랙</option>
-                                            <option value="10118">에스더쉬핑</option>
-                                            <option value="10108">에어보이익스프레스</option>
-                                            <option value="10174">에이스물류</option>
-                                            <option value="10135">에이씨티앤코아물류</option>
-                                            <option value="10198">에이치케이홀딩스</option>
-                                            <option value="10185">엔티엘피스</option>
-                                            <option value="10153">엘서비스</option>
-                                            <option value="10138">엠티인터네셔널</option>
-                                            <option value="10194">오늘회러쉬</option>
-                                            <option value="10126">올타코리아</option>
-                                            <option value="10141">용마로지스</option>
-                                            <option value="10151">우리동네택배</option>
-                                            <option value="10039">우리택배</option>
-                                            <option value="10128">웅지익스프레스</option>
-                                            <option value="10142">원더스퀵</option>
-                                            <option value="10103">위니온로지스</option>
-                                            <option value="10179">윈핸드해운항공</option>
-                                            <option value="10121">유프레이트 코리아</option>
-                                            <option value="10120">은하쉬핑</option>
-                                            <option value="10100">이마트몰</option>
-                                            <option value="10173">이투마스</option>
-                                            <option value="10024">일반우편</option>
-                                            <option value="10015">일양택배</option>
-                                            <option value="10150">자이언트</option>
-                                            <option value="10032">자체배송</option>
-                                            <option value="10155">제니엘시스템</option>
-                                            <option value="10157">제이로지스트</option>
-                                            <option value="10163">지니고</option>
-                                            <option value="10125">지디에이코리아</option>
-                                            <option value="10202">지비에스</option>
-                                            <option value="10221">지에이치스피드</option>
-                                            <option value="10199">직구문</option>
-                                            <option value="10031">직접배송</option>
-                                            <option value="10017">천일택배</option>
-                                            <option value="10164">카카오 T 당일배송</option>
-                                            <option value="10124">캐나다쉬핑</option>
-                                            <option value="10192">케이제이티</option>
-                                            <option value="10025">퀵서비스</option>
-                                            <option value="10159">큐런</option>
-                                            <option value="10200">큐브플로우</option>
-                                            <option value="10089">택배사미정</option>
-                                            <option value="10180">탱고앤고</option>
-                                            <option value="10101">투데이</option>
-                                            <option value="10225">티에스지로지스</option>
-                                            <option value="10210">팀프레시</option>
-                                            <option value="10133">패스트박스</option>
-                                            <option value="10134">팬스타국제특송</option>
-                                            <option value="10152">퍼레버택배</option>
-                                            <option value="10073">편의점택배(GS25)</option>
-                                            <option value="10169">프레시메이트</option>
-                                            <option value="10160">프레시솔루션</option>
-                                            <option value="10182">핑퐁</option>
-                                            <option value="10122">하이브시티</option>
-                                            <option value="10195">한국야구르트</option>
-                                            <option value="10104">한덱스</option>
-                                            <option value="10161">한샘</option>
-                                            <option value="10081">한의사랑택배</option>
-                                            <option value="10074">합동택배</option>
-                                            <option value="10131">허싱카고코리아</option>
-                                            <option value="10098">현대글로비스</option>
-                                            <option value="10149">홈이노베이션로지스</option>
-                                            <option value="10048">홈플러스택배</option>
-                                            <option value="10188">홈픽오늘도착</option>
-                                            <option value="10145">홈픽택배</option>
-                                            <option value="10204">화물을부탁해</option>
-                                            <option value="10130">ACCcargo</option>
-                                            <option value="10116">ACE express</option>
-                                            <option value="10085">ACI</option>
-                                            <option value="10140">BGF포스트</option>
-                                            <option value="10072">CJ국제특송</option>
-                                            <option value="10115">Cway express</option>
-                                            <option value="10022">DHL</option>
-                                            <option value="10168">DHL GlobalMail</option>
-                                            <option value="10111">ECMS익스프레스</option>
-                                            <option value="10112">EFS</option>
-                                            <option value="10036">EMS</option>
-                                            <option value="10023">FEDEX</option>
-                                            <option value="10094">Global Shipping</option>
-                                            <option value="10209">Global Shipping10</option>
-                                            <option value="10211">Global Shipping11</option>
-                                            <option value="10212">Global Shipping12</option>
-                                            <option value="10213">Global Shipping13</option>
-                                            <option value="10214">Global Shipping14</option>
-                                            <option value="10215">Global Shipping15</option>
-                                            <option value="10216">Global Shipping16</option>
-                                            <option value="10217">Global Shipping17</option>
-                                            <option value="10218">Global Shipping18</option>
-                                            <option value="10219">Global Shipping19</option>
-                                            <option value="10091">Global Shipping2</option>
-                                            <option value="10220">Global Shipping20</option>
-                                            <option value="10092">Global Shipping3</option>
-                                            <option value="10093">Global Shipping4</option>
-                                            <option value="10095">Global Shipping5</option>
-                                            <option value="10205">Global Shipping6</option>
-                                            <option value="10206">Global Shipping7</option>
-                                            <option value="10207">Global Shipping8</option>
-                                            <option value="10208">Global Shipping9</option>
-                                            <option value="10080">GPS LOGIX</option>
-                                            <option value="10086">Gsfresh</option>
-                                            <option value="10110">GSI익스프레스</option>
-                                            <option value="10043">GSMNTON</option>
-                                            <option value="10148">GTS로지스</option>
-                                            <option value="10144">HI택배</option>
-                                            <option value="10137">ibpcorp</option>
-                                            <option value="10106">i-parcel</option>
-                                            <option value="10146">KGL네트웍스</option>
-                                            <option value="10136">kt express</option>
-                                            <option value="10027">LG전자물류</option>
-                                            <option value="10109">LineExpress</option>
-                                            <option value="10123">LTL</option>
-                                            <option value="10170">NK로지솔루션</option>
-                                            <option value="10226">ocs</option>
-                                            <option value="10097">Qxpress</option>
-                                            <option value="10181">SBGLS</option>
-                                            <option value="10077">SLX</option>
-                                            <option value="10105">TNT</option>
-                                            <option value="10042">UPS</option>
-                                            <option value="10041">USPS</option>
-                                            <option value="10044">WarpEx</option>
-                                            <option value="10051">WIZWA</option>
-                                            <option value="10129">YDH</option>
-                                            <option value="10127">yunda express</option>
+                                        <select class="border_gray" id="OrderClaimRelease_DeliveryCompCode" name="selDeliveryComp">
+                                            <option value="">선택</option>
+                                            <? foreach ($delivery_company_list as $index => $data): ?>
+                                                <option value="<?= $data['code'] ?>"
+                                                        data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>
+                                            <? endforeach; ?>
                                         </select>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th>운송장번호</th>
-                                <td><input id="txtInvoice" type="text" class="border_gray"></td>
+                                <td><input id="OrderClaimRelease_InvoiceNo" type="text" class="border_gray"></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <h2 class="popstit">철회요청 메세지 입력</h2>
-                    <textarea class="border_gray"></textarea>
+                    <textarea class="border_gray" id="OrderClaimRelease_CancelComment"></textarea>
                 </div>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">요청</button>
+                <button type="button" class="btn btn-primary" onclick="orderClaimRelease_modal()">요청</button>
             </div>
         </div>
     </div>
@@ -1775,49 +2156,9 @@
                     </dl>
 
                     <div id="print_label_list">
-                        g2g2g
+
                     </div>
-                    <!--
-                    <div class="print_label">
-                        <p class="title_txt"><img src="https://pics.esmplus.com/front/icon/bl_arrow.gif" alt="">
-                            3119927870 (4154498584) 현대 아반떼 CN7 / 국산 전차종 하드론 프리미엄 상신브레이크패드 앞/뒤:뒤 / 전자파킹 전용 /
-                            HP4463/-11120원/1개, 장착유형:자택수령/1개, 차량번호 차대번호:kmhlt41fgmu201007/1개 (1)
-                        </p>
-                        <div class="send_recipient">
-                            <div class="box_area">
-                                <div class="box_line">
-                                    <p class="tit">보내는 사람</p>
-                                    <p class="address">
-                                        <span class="nubmer">11906</span>
-                                        경기도 구리시 동구릉로460번길 37 1층 카스트코코리아
-                                    </p>
-                                    <div class="seller_buyer">
-                                        <p class="name">비투피</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dotted_line"><img
-                                        src="https://pics.esmplus.com/front/img/img_label_print_bar.gif" alt="절취선">
-                            </div>
-                            <div class="box_area">
-                                <div class="box_line">
-                                    <p class="tit">받는 사람</p>
-                                    <p class="address">
-                                        <span class="nubmer">31529</span>
-                                        충청남도 아산시 배미로 7-2 102호 제이에스원카
-                                    </p>
-                                    <div class="seller_buyer">
-                                        <p class="name">정승원 귀하 <span style="display: none;">(구매자ID : f4pantom)</span>
-                                        </p>
-                                        <p class="order">주문내역 : 앞/뒤:뒤 / 전자파킹 전용 / HP4463/-11120원/1개, 장착유형:자택수령/1개, 차량번호
-                                            차대번호:kmhlt41fgmu201007/1개 <br><span style="display: none;">(Tel : 010-2963-2494 / HP : 010-2963-2494)</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
+
                 </div>
             </div>
 
@@ -2245,7 +2586,7 @@
                 <h2 class="popstit text-center">
                     판매를 취소하는 경우 페널티가 부여됩니다.
                     <br>
-                    선택 <span class="txt-blue">0</span>건을 취소하시겠습니까?
+                    선택 <span class="txt-blue" id="cancelSoldOutCnt">0</span>건을 취소하시겠습니까?
                 </h2>
                 <br>
                 <h2 class="popstit">
@@ -2253,21 +2594,21 @@
                 </h2>
                 <div class="input_select">
 
-                    <select class="border_gray">
-                        <option value="">재고가 부족함</option>
-                        <option value="">상품에 하자가 생겨서 판매불가</option>
-                        <option value="">기타 사유</option>
-                        <option value="">해당 선택/옵션 정보만 품절처리</option>
-                        <option value="">해당 상품 품절처리</option>
-                        <option value="">구매의사 취소</option>
-                        <option value="">선택사항 변경</option>
-                        <option value="">배송지연 7일이상</option>
+                    <select class="border_gray" id="cancelSoldOutReason">
+                        <option value="재고가 부족함">재고가 부족함</option>
+                        <option value="상품에 하자가 생겨서 판매불가">상품에 하자가 생겨서 판매불가</option>
+                        <option value=기타 사유">기타 사유</option>
+                        <option value="해당 선택/옵션 정보만 품절처리">해당 선택/옵션 정보만 품절처리</option>
+                        <option value="해당 상품 품절처리">해당 상품 품절처리</option>
+                        <option value="구매의사 취소">구매의사 취소</option>
+                        <option value="선택사항 변경">선택사항 변경</option>
+                        <option value="배송지연 7일이상">배송지연 7일이상</option>
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">취소</button>
+                <button type="button" class="btn btn-primary" onclick="orderCancelSoldOut_modal()">확인</button>
             </div>
         </div>
     </div>
@@ -2358,70 +2699,11 @@
                                 <td id="modal_ShippingFee" colspan="3">
                                     3,000
                                 </td>
-                                <!--
-                               <th>
-                                   배송방법
-                               </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                               <td id="modal_TransType">
-                                   일반택배
-                               </td>
-                               -->
-                            </tr>
-                            <!--
-                            <tr>
-                                <th>
-                                    설치주문여부
-                                </th>
-                                <td name="SiteGoodsNo">
-                                    N
-                                </td>
-                                <th>
-                                    설치예약일
-                                </th>
-                                <td name="SiteGoodsNo">
-                                </td>
-                            </tr>
-                            -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <!--
-                    <h2 class="popstit">
-                        선물수신정보
-                    </h2>
-                    <div class="table">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <th>
-                                    선물주문여부
-                                </th>
-                                <td>
-                                    N
-                                </td>
-                                <th>
-                                    선물수락마감일
-                                </th>
-                                <td>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    선물주문상태
-                                </th>
-                                <td>
-                                </td>
-                                <th>
-                                    선물수락일시
-                                </th>
-                                <td>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    -->
                     <h2 class="popstit">
                         구매자정보
                     </h2>
@@ -2432,7 +2714,7 @@
                                 <th>
                                     구매자ID
                                 </th>
-                                <td id="modal_BuyerID">
+                                <td id="modal_BuyerId">
                                     f4pantom
                                 </td>
                                 <th>
@@ -2529,16 +2811,7 @@
                             <tbody id="deli_progress">
 
                             <tr name="SiteGoodsNo">
-                                <!--
-                                <td>
-                                    2024-06-04 12:13:33
-                                </td>
-                                <td>
-                                    주문일
-                                </td>
-                                <td>
-                                </td>
-                                -->
+
                             </tr>
 
                             </tbody>
@@ -2657,30 +2930,30 @@
                         <tbody>
                         <tr>
                             <th>상품번호/주문번호</th>
-                            <td>상품번호/주문번호</td>
+                            <td><span id="ReturnExchange_SiteGoodsNo"></span> / <span id="ReturnExchange_OrderNo"></span></td>
                         </tr>
                         <tr>
                             <th>상품명</th>
-                            <td>상품명</td>
+                            <td id="ReturnExchange_GoodsName"></td>
                         </tr>
                         <tr>
                             <th>금액/개수</th>
-                            <td>원/개</td>
+                            <td><span id="ReturnExchange_SalePrice"></span>원 / <span id="ReturnExchange_ContrAmount"></span>개</td>
                         </tr>
                         <tr>
                             <th>구매자명</th>
-                            <td>구매자명</td>
+                            <td id="ReturnExchange_BuyerName"></td>
                         </tr>
                         <tr>
                             <th>반품사유</th>
-                            <td>반품사유</td>
+                            <td id="ReturnExchange_return_ReasonDetail"></td>
                         </tr>
                         <tr>
                             <th rowspan="2">반품배송비</th>
-                            <td>0원</td>
+                            <td><span id="ReturnExchange_return_ReturnShippingFee">0</span>원</td>
                         </tr>
                         <tr>
-                            <td>결제여부 | Y</td>
+                            <td>결제여부 | <span id="ReturnExchange_return_AddReturnShippingFeeWay"></span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -2690,33 +2963,32 @@
                     반품건을 교환으로 전환시 반품배송비는 구매고객에게 환불됩니다.<br>
                     교환배송비등 추가비용은 구매고객님과 합의하시기 바랍니다.
                 </p>
-                <div class="box_white2">
-                    <p><strong>반품상품을 받으셨습니까?</strong></p>
-                    <div class="select">
-                        <input type="radio" class="" name="" value="o"> <label>예</label>
-                        <input type="radio" class="" name="" checked="checked" value="x"> <label>아니요</label>
-                    </div>
-                </div>
                 <br>
                 <p>반품신청건을 교환처리 하기 위해서는 교환발송 정보를 입력하여주시기 바랍니다.</p>
                 <div class="box_white table">
                     <table>
                         <tbody>
+                        <!-- 날짜 보내는 api없음
                         <tr>
                             <td>재발송일자</td>
-                            <td><input type="date" class="border_gray"/></td>
+                            <td><input type="date" class="border_gray" id="ReturnExchange_ResendInfo_ResendDate"/></td>
                         </tr>
+                        -->
                         <tr>
                             <td>택배사명</td>
                             <td>
-                                <select>
-                                    <option>택배사</option>
+                                <select id="ReturnExchange_ResendInfo_DeliveryCompName">
+                                    <option value="">선택</option>
+                                    <? foreach ($delivery_company_list as $index => $data): ?>
+                                        <option value="<?= $data['code'] ?>"
+                                                data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>
+                                    <? endforeach; ?>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <td>운송장 번호</td>
-                            <td><input type="text" class="border_gray"/></td>
+                            <td><input type="text" class="border_gray" id="ReturnExchange_ResendInfo_InvoiceNo"/></td>
                         </tr>
                         </tbody>
                     </table>
@@ -2725,7 +2997,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">확인</button>
+                <button type="button" class="btn btn-primary" onclick="orderReturnExchange_modal()">확인</button>
             </div>
         </div>
     </div>

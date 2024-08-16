@@ -2,6 +2,7 @@
 
 use App\Libraries\Model;
 use CodeIgniter\RESTful\ResourceController;
+use App\Models\GmarketApiModel;
 use Matrix\Exception;
 
 class CalculateAPIController extends ResourceController {
@@ -48,6 +49,30 @@ class CalculateAPIController extends ResourceController {
 
 
         return $this->respond($this->api_response);
+    }
+
+    public function checkAPI($OrderNo) {
+        $data['api_method'] = "POST";
+        $data['api_url'] = "https://sa2.esmplus.com/account/v1/settle/getsettleorder";
+        $data['api_data'] = [];
+        $data['api_type'] = GM;
+        $time_start = date('Y-m-d', strtotime('-60Day'));
+        $time_end = date('Y-m-d', strtotime('+1Day'));
+
+        $data['api_data'] = [
+            "SiteType" => "G",
+            "ContrNo" => $OrderNo,
+            "SrchType" => "D7",
+            "SrchStartDate" => $time_start,
+            "SrchEndDate" => $time_end,
+            "PageNo" => 0,
+            "PageRowCnt" => 0
+        ];
+
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->checkOrder($data);
+
+        var_dump($result);
     }
 
 }

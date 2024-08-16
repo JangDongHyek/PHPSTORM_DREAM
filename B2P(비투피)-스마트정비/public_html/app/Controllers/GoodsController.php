@@ -90,6 +90,36 @@ class GoodsController extends BaseController {
             }
         }
 
+        if(!empty($this->data['copy_idx']) && !empty($this->data['copy_goods_no'])){
+            // api로 지마켓 데이터를 가져옴
+            $goodsModel = new GoodsModel();
+            $this->data['api_type'] = GMAC;
+            $this->data['api_method'] = "GET";
+            $this->data['api_url'] = "https://sa2.esmplus.com/item/v1/goods/{$this->data['copy_goods_no']}";
+            $result = $goodsModel->callApi($this->data);
+
+            if(!empty($result['body'])){
+                // 데이터가 있으면 즉시 db업데이트
+                $goodsData = json_decode($result['body'], true);
+                $goodsData['w'] = 'u';
+                $goodsData['goods_no'] = $this->data['copy_goods_no'];
+                $goodsModel->updateGoods($goodsData);
+            }
+
+            // db에서 상품정보 가져옴
+            $getData = [
+                'member' => ['mb_id' => $this->data['member']['mb_id'], 'mb_level' => $this->data['member']['mb_level']],
+                'page' => 1,
+                'items_per_page' => 1,
+                'idx' => $this->data['copy_idx']
+            ];
+            $this->data['goods_data'] = $goodsModel->getList($getData, 'goods_list')['list'][0];
+            if($this->data['goods_data']['is_view'] != 'T'){
+                session()->setFlashdata('msg', '삭제되었거나 일시적인 오류입니다. 나중에 다시 시도해주세요.');
+                return redirect()->to("/goods/goods_list");
+            }
+        }
+
         return view('goods/goods_form',$this->data);
     }
 

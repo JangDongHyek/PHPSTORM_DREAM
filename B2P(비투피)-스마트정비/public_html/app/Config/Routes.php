@@ -14,6 +14,9 @@ $routes->get('common/logout', 'LoginController::logout');
 $routes->post('common/login/authenticate', 'LoginController::authenticate');
 $routes->cli('queueprocessor/(:any)', 'QueueProcessor::$1');
 
+$routes->post('/api/resve/confirm','UserController::resveConfirm');
+$routes->post('/api/maintenance/result','UserController::maintenanceReulst');
+
 // 회원가입
 $routes->group('signup', ['namespace' => '\App\Controllers'], static function ($routes) {
     $routes->get('seller', 'RegisterController::seller');
@@ -151,8 +154,6 @@ $routes->group('admin', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     /*
     $routes->get('cancel_list', 'AdminController::cancel_list');*/
 
-    // 예약관리
-    $routes->get('reserv', 'AdminController::reserv_list');
 
     // 정산리스트
     $routes->get('calcul_list', 'AdminController::calcul_list');
@@ -181,13 +182,13 @@ $routes->group('order', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     // 입금확인중
     $routes->get('waiting', 'AdminController::waiting_list');
     // 신규주문
-    $routes->get('new', 'OrderController::newlist');
+    $routes->get('new', 'OrderController::Newlist');
     // 발송처리
-    $routes->get('send', 'OrderController::sendlist');
+    $routes->get('send', 'OrderController::Sendlist');
     // 배송중완료
-    $routes->get('deliver', 'OrderController::deliverlist');
+    $routes->get('deliver', 'OrderController::Deliverlist');
     // 구매결정완료
-    $routes->get('confirm', 'OrderController::confirmlist');
+    $routes->get('confirm', 'OrderController::Confirmlist');
     // 발송처리현황
     $routes->get('state', 'AdminController::state_list');
 
@@ -198,17 +199,21 @@ $routes->group('order', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     //주문가져오기
     $routes->post('GetOrder', 'OrderController::GetOrderByIdx');
     $routes->get('GetOrder/(:num)', 'OrderController::GetOrderByIdx/$1');
+    //정산 API 가져오기
+    //$routes->get('GetCalc/(:num)', 'CalculateAPIController::checkAPI/$1');
+    $routes->post('GetCalc/(:num)', 'OrderController::getCalc/$1');
+
+    //Join주문가져오기
+    $routes->post('GetJoinOrder', 'OrderController::GetJoinOrderByIdx');
 
     //주문가져오기
     $routes->post('OrderDeliProgress', 'OrderController::OrderDeliProgress');
     $routes->get('OrderDeliProgress/(:num)', 'OrderController::OrderDeliProgress/$1');
 
-    // 취소관리
-    $routes->get('cancel', 'AdminController::cancel_list');
     // 반품관리
-    $routes->get('return', 'AdminController::return_list');
+    $routes->get('return', 'OrderController::Returnlist');
     // 교환관리
-    $routes->get('exchange', 'AdminController::exchange_list');
+    $routes->get('exchange', 'OrderController::Exchangelist');
     // 주문통합검색
     $routes->get('search', 'AdminController::order_search');
 });
@@ -228,7 +233,7 @@ $routes->group('calculate', ['namespace' => '\App\Controllers' , 'filter' => 'au
 });
 
 $routes->post('/api/calculate/getData', 'CalculateAPIController::getData');
-
+$routes->get('/api/calculate/checkAPI', 'CalculateAPIController::checkAPI');
 
 // 제조사
 $routes->group('jejo', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function ($routes) {
@@ -280,21 +285,47 @@ $routes->group('jungbi', ['namespace' => '\App\Controllers' , 'filter' => 'auth:
 // user
 $routes->group('user', ['namespace' => '\App\Controllers'], static function ($routes) {
     $routes->get('login', 'UserController::login');
+    $routes->get('logout', 'UserController::logout');
     $routes->get('rvList', 'UserController::rv_list01');
     $routes->get('rvDone', 'UserController::rv_list02');
     $routes->get('rvWrite', 'UserController::rv_write');
     $routes->get('rvConfirm', 'UserController::rv_confirm');
 
+    // 예약관리
+    $routes->get('reserv', 'UserController::reserv_list', ['filter' => 'auth']);
+
+
     $routes->post('ajax_check_order', 'UserController::ajax_check_order');
+    $routes->get('getStore', 'UserController::getStoreByRegionFromDb');
+    $routes->get('getStoreFromApi', 'UserController::getStoreFromApi');
+    $routes->post('getReservationDataFromApi', 'UserController::getReservationDataFromApi');
+    $routes->post('saveReservation', 'UserController::saveReservation');
 });
 
 // 관리자
 $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($routes) {
     $routes->get('GetOrder/(:segment)/(:segment)', 'OrderController::GetOrder/$1/$2');
     $routes->get('GetOrderCancel/(:segment)', 'OrderController::GetOrderCancel/$1');
+    $routes->get('GetOrderReturn/(:segment)/(:segment)', 'OrderController::GetOrderReturn/$1/$2');
+    $routes->get('GetOrderExchange/(:segment)/(:segment)', 'OrderController::GetOrderExchange/$1/$2');
     $routes->get('test', 'OrderController::Test');
     $routes->get('OrderCheck/(:segment)', 'OrderController::OrderCheck/$1');
     $routes->post('OrderCheck', 'OrderController::OrderCheck');
+    $routes->get('OrderCancelCheck/(:segment)', 'OrderController::OrderCancelCheck/$1');
+    $routes->post('OrderCancelCheck', 'OrderController::OrderCancelCheck');
+    $routes->get('OrderCancelSoldOut', 'OrderController::OrderCancelSoldOut');
+    $routes->post('OrderCancelSoldOut', 'OrderController::OrderCancelSoldOut');
+    $routes->get('OrderReturnCheck/(:segment)', 'OrderController::OrderReturnCheck/$1');
+    $routes->post('OrderReturnCheck', 'OrderController::OrderReturnCheck');
+    $routes->get('OrderReturnSelf/(:segment)', 'OrderController::OrderReturnSelf/$1');
+    $routes->post('OrderReturnSelf', 'OrderController::OrderReturnSelf');
+    $routes->get('GetClaimList/(:segment)', 'OrderController::GetClaimList/$1');
+    $routes->post('OrderReturnExchange', 'OrderController::OrderReturnExchange');
+    $routes->get('OrderClaimRelease/(:segment)', 'OrderController::OrderClaimRelease/$1');
+    $routes->post('OrderClaimRelease', 'OrderController::OrderClaimRelease');
+    $routes->get('OrderReturnExchange', 'OrderController::OrderReturnExchange');
+    $routes->get('GetClaimList_cron', 'OrderController::GetClaimList_cron');
+
     $routes->post('OrderShippingExpectedDate', 'OrderController::OrderShippingExpectedDate');
     $routes->post('OrderSend', 'OrderController::OrderSend');
     // 발주서출력
@@ -320,6 +351,8 @@ $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($
 
 // 결제관련
 $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($routes) {
+
+    $routes->get('', 'PayController::PayHub');
     $routes->get('test', 'PayController::Test');
     //배치키 발급받는곳
     $routes->get('OrderKeyMobile', 'PayController::OrderKeyMobile');
@@ -338,8 +371,12 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->post('OrderPayPop', 'PayController::OrderPayPop');
     $routes->get('OrderPayResult', 'PayController::OrderPayResult');
     $routes->post('OrderPayResult', 'PayController::OrderPayResult');
+    $routes->get('OrderPayCancel', 'PayController::OrderPayCancel');
+    $routes->post('OrderPayCancel', 'PayController::OrderPayCancel');
+    $routes->get('OrderPayCancelPop', 'PayController::OrderPayCancelPop');
+    $routes->post('OrderPayCancelPop', 'PayController::OrderPayCancelPop');
 
-    //펌뱅킹 가상계좌 받는곳
+    //KCP 가상계좌 받는곳
     $routes->get('OrderVcnt', 'PayController::OrderVcnt');
     $routes->post('OrderVcnt', 'PayController::OrderVcnt');
     $routes->get('OrderVcntPop', 'PayController::OrderVcntPop');
@@ -349,23 +386,28 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->get('OrderVcntNoti', 'PayController::OrderVcntNoti');
     $routes->post('OrderVcntNoti', 'PayController::OrderVcntNoti');
 
-    //펌뱅킹 가상계좌 취소하는곳
+    //KCP 가상계좌 취소하는곳
     $routes->get('OrderVcntCancle', 'PayController::OrderVcntCancle');
     $routes->post('OrderVcntCancle', 'PayController::OrderVcntCancle');
     $routes->get('OrderVcntCanclePop', 'PayController::OrderVcntCanclePop');
     $routes->post('OrderVcntCanclePop', 'PayController::OrderVcntCanclePop');
     $routes->get('OrderVcntCancleResult', 'PayController::OrderVcntCancleResult');
     $routes->post('OrderVcntCancleResult', 'PayController::OrderVcntCancleResult');
-    
+
+    //펌뱅킹 잔액확인
+    $routes->get('GetFirmBalance', 'PayController::GetFirmBalance');
+    $routes->post('GetFirmBalance', 'PayController::GetFirmBalance');
+    //펌뱅킹 지급이체(송금)
+    $routes->get('GetFirmTransfer', 'PayController::GetFirmTransfer');
+    $routes->post('GetFirmTransfer', 'PayController::GetFirmTransfer');
+
     //매입요청 하는 곳
     $routes->get('OrderPerchase/(:segment)', 'PayController::OrderPerchase/$1');
     $routes->post('OrderPerchase', 'PayController::OrderPerchase');
     $routes->get('OrderPerchaseRequest', 'PayController::OrderPerchaseRequest');
     $routes->post('OrderPerchaseRequest', 'PayController::OrderPerchaseRequest');
-    $routes->get('OrderPerchaseUp', 'PayController::OrderPerchaseUp');
-    $routes->get('OrderPerchaseUp2', 'PayController::OrderPerchaseUp2');
+    $routes->get('OrderPerchaseUp/(:segment)', 'PayController::OrderPerchaseUp/$1');
     $routes->post('OrderPerchaseUp', 'PayController::OrderPerchaseUp');
-    $routes->post('OrderPerchaseUp2', 'PayController::OrderPerchaseUp2');
 });
 
 

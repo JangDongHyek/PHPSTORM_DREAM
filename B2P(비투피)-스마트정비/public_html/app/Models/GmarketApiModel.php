@@ -289,7 +289,47 @@ class GmarketApiModel extends Model {
         ];
     }
 
-    
+    // 정산관련 API 데이터 비교
+    public function checkOrder($data){
+        $curl = curl_init();
+
+        // HTTP 헤더 설정
+        $headers = $this->creatHeader($data['api_type']);
+        $headerArray = ['Content-Type: application/json'];
+        foreach ($headers as $key => $value) {
+            $headerArray[] = $key . ': ' . $value;
+        }
+
+        // 데이터 검증
+
+        // 데이터 설정
+        $api_data = $data['api_data'];
+
+        $postData = json_encode($api_data);
+
+        $options = [
+            CURLOPT_URL => $data['api_url'],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CUSTOMREQUEST => $data['api_method'],
+            CURLOPT_HTTPHEADER => $headerArray,
+            CURLOPT_POSTFIELDS => $postData
+        ];
+
+        curl_setopt_array($curl, $options);
+
+        $response = curl_exec($curl);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        curl_close($curl);
+
+        // 결과를 객체나 배열로 반환
+        return [
+            'api_data' => $api_data,
+            'body' => json_decode($response, true),
+            'status' => $statusCode,
+        ];
+    }
 
     
 }

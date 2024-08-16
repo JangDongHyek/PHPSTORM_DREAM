@@ -13,6 +13,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <input type="hidden" name="uid" value="<?php echo get_uniqid(); ?>">
     <input type="hidden" name="w" value="<?php echo $w ?>">
     <input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
+    <input type="hidden" name="wr_content" value="11">
     <input type="hidden" name="wr_id" value="<?php echo $wr_id ?>">
     <input type="hidden" name="sca" value="<?php echo $sca ?>">
     <input type="hidden" name="sfl" value="<?php echo $sfl ?>">
@@ -142,7 +143,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 <!-- 최소/최대 글자 수 사용 시 -->
                 <p id="char_count_desc">이 게시판은 최소 <strong><?php echo $write_min; ?></strong>글자 이상, 최대 <strong><?php echo $write_max; ?></strong>글자 이하까지 글을 쓰실 수 있습니다.</p>
                 <?php } ?>
-                <?php echo $editor_html; // 에디터 사용시는 에디터로, 아니면 textarea 로 노출 ?>
+                <?php //echo $editor_html; // 에디터 사용시는 에디터로, 아니면 textarea 로 노출 ?>
+                <naver-editor name="content" content="<?=$content?>" ref="naverEditor"></naver-editor>
                 <?php if($write_min || $write_max) { ?>
                 <!-- 최소/최대 글자 수 사용 시 -->
                 <div id="char_count_wrap"><span id="char_count"></span>글자</div>
@@ -195,6 +197,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     </form>
 
 
+<?
+$jl->vueLoad("scont",["editor"]);
+include_once($jl->ROOT."/component/naver-editor.php");
+?>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="<?php echo G5_THEME_JS_URL ?>/ko.js"></script>
@@ -295,10 +301,11 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
     function fwrite_submit(f)
     {
-        <?php echo $editor_js; // 에디터 사용시 자바스크립트에서 내용을 폼필드로 넣어주며 내용이 입력되었는지 검사함   ?>
+        f.wr_content.value = Vue['scont'].$refs.naverEditor.connect();
 
         var subject = "";
         var content = "";
+
         $.ajax({
             url: g5_bbs_url+"/ajax.filter.php",
             type: "POST",

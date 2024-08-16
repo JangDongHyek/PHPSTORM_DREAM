@@ -2,6 +2,9 @@
 include_once('./_common.php');
 include_once(G5_EDITOR_LIB);
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
+include_once("../class/JL.php");
+
+$jl = new JL();
 
 if (!$board['bo_table']) {
     alert('존재하지 않는 게시판입니다.', G5_URL);

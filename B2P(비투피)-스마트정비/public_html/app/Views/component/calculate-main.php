@@ -126,7 +126,7 @@
                                 <summary>총 할인 {{ totalDiscount(item).format() }}원</summary>
                                 <dl>
                                     <dt>판매자할인</dt>
-                                    <dd>-{{parseInt(item.SellerDiscountPrice1).format()}}</dd>
+                                    <dd>-{{parseInt(item.SellerDiscountPrice).format()}}</dd>
                                     <dt>쿠폰할인</dt>
                                     <dd>-</dd>
                                     <dt>지마켓(비투피)할인</dt>
@@ -137,7 +137,7 @@
                             </details>
                         </td>
                         <td>{{ parseInt(item.AcntMoney).format() }}원</td>
-                        <td>{{ (parseInt(item.OrderAmount) * 0.03).format() }}원</td>
+                        <td>{{ (parseInt(item.OrderAmount) * b2p_commission).format() }}원</td>
                         <!--td>{카드 수수료}원</td // 대기-->
                         <td>{{ calcPrice(item).format() }}원</td>
                     </tr>
@@ -175,7 +175,8 @@
                 total : 0,
                 total_orders : [],
 
-                month : 0
+                month : 0,
+                b2p_commission : 0.05
             };
         },
         created: function(){
@@ -203,7 +204,7 @@
                 let OrderAmount = parseInt(item.OrderAmount);
                 let AcntMoney = parseInt(item.AcntMoney);
                 let SettlementPrice = parseInt(item.SettlementPrice);
-                let btp_commission = OrderAmount * 0.03 // 판매금액의 3퍼 수수료
+                let btp_commission = OrderAmount * this.b2p_commission // 판매금액의 3퍼 수수료
 
 
                 return SettlementPrice - btp_commission;
@@ -275,7 +276,7 @@
             totalDiscount : function(item) {
                 var result = 0;
                 result += item.SellerCashBackMoney ? parseInt(item.SellerCashBackMoney) : 0;
-                result += item.SellerDiscountPrice1 ? parseInt(item.SellerDiscountPrice1) : 0;
+                result += item.SellerDiscountPrice ? parseInt(item.SellerDiscountPrice) : 0;
 
                 return result;
             }

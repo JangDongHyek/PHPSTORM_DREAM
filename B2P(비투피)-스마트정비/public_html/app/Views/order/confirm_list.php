@@ -31,7 +31,7 @@ $header_name = "주문 관리";
                         <div class="input_select">
                             <select class="border_gray" name="sfl">
                                 <?
-                                $sflList = ['OrderNo' => '주문번호', 'SiteGoodsNo'=>'상품번호', 'BuyerName'=> '구매자명', 'BuyerID'=>'구매자ID', 'GoodsName'=>'상품명'];
+                                $sflList = ['OrderNo' => '주문번호', 'SiteGoodsNo'=>'상품번호', 'BuyerName'=> '구매자명', 'BuyerId'=>'구매자ID', 'GoodsName'=>'상품명'];
                                 foreach ($sflList AS $key=>$val) {
                                     ?>
                                     <option value="<?=$key?>" <?=$_GET['sfl']==$key?'selected':''?>><?=$val?></option>
@@ -102,7 +102,7 @@ $header_name = "주문 관리";
 
                 <div class="wrap w100 flex">
                     <button type="button" class="btn btn-white btn-mini" onclick="orderAmount_modal()">정산예정금액보기</button>
-                    <button type="button" class="btn btn-white btn-mini" data-toggle="modal" data-target="#orderDeliReModal">판매자 직접반품신청
+                    <button type="button" class="btn btn-white btn-mini" onclick="orderReturnSelf_modal(true)">판매자 직접반품신청
                     </button>
                     <button type="button" class="btn btn-white btn-mini" data-toggle="modal" data-target="#orderDeliChangeModal">판매자 직접교환신청
                     </button>
@@ -124,7 +124,9 @@ $header_name = "주문 관리";
                     <thead>
                     <tr>
                         <th><input id="all_check" name="all_check" type="checkbox"/></th>
+                        <th>셀러ID</th>
                         <th>구분</th>
+                        <th>구분상태</th>
                         <th>구매결정일자</th>
                         <th>정산상태</th>
                         <th>주문번호</th>
@@ -135,17 +137,13 @@ $header_name = "주문 관리";
                     <?php foreach ($order_data['list'] as $row): ?>
                         <tr>
                             <td><input type="checkbox" name="idx[]" value="<?=$row['idx']?>"></td>
+                            <td><?=$row['mb_id']?></td>
                             <td alt="구분">
                                 <?php if ($row['SiteType'] == 1): ?>
                                     <div class="box__flag box__flag--auction"><span class="for-a11y">옥션</span></div>
                                 <?php else: ?>
                                     <div class="box__flag box__flag--gmarket"><span class="for-a11y">G마켓</span></div>
                                 <?php endif ?>
-                                <?php
-                                $OrderStatus = [1 => '신규주문', 2 => '발송대기중', 3 => '배송중', 4 => '배송완료', 5 => '구매결정완료'];
-                                ?>
-                                <?= $OrderStatus[$row['OrderStatus']] ?>
-
                                 <!-- 주문옵션, 추가구성에 맞춰서 br해주는곳 -->
                                 <?php
                                 $data_br = 0;
@@ -171,6 +169,12 @@ $header_name = "주문 관리";
                                     echo '</br>';
                                 }
                                 ?>
+                            </td>
+                            <td alt="구분상태">
+                                <?php
+                                $OrderStatus = [1 => '신규주문', 2 => '발송대기중', 3 => '배송중', 4 => '배송완료', 5 => '구매결정완료'];
+                                ?>
+                                <?= $OrderStatus[$row['OrderStatus']] ?>
                             </td>
                             <td alt="구매결정일자"><?= $row['BuyDecisionDate'] ?></td>
                             <td alt="정산상태"><?= $row[''] ?></td>
@@ -227,7 +231,7 @@ $header_name = "주문 관리";
                     <tbody>
                     <?php foreach ($this->data['order_data']['list'] as $row) { ?>
                         <tr>
-                            <td alt="구매자ID"><?= $row['BuyerID'] ?></td>
+                            <td alt="구매자ID"><?= $row['BuyerId'] ?></td>
                             <td alt="수령인명"><?= $row['ReceiverName'] ?></td>
                             <td alt="상품번호"><a
                                         onclick="openSiteGoodsNo('<?= $row['SiteType'] ?>','<?= $row['SiteGoodsNo'] ?>');"><?= $row['SiteGoodsNo'] ?></a>
