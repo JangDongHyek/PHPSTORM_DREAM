@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="21ecae00-c72c-4d05-9dee-5f580abbf925" name="해피라이프(해동라이프)(대진)" url="http://apworlddaejin.itforone.co.kr">
+        <fileTransfer host="apworlddaejin.itforone.co.kr" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
