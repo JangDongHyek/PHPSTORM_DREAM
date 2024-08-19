@@ -1,14 +1,17 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <!--파일 부분-->
+        <!-- 파일 부분 -->
         <input type="file" @change="jl.changeFile($event,data,'upfile')"> <!-- 데이터의 기본값은 '' -->
 
-        <!--드래그 파일부분 -->
+        <!-- 드래그 파일부분 -->
         <input type="file" ref="multiUpload" multiple>
         <div class="dragZone" @click="$refs.multiUpload.click()"
              @drop.prevent="jl.dropFile($event,data,'upfile_array')" @dragover.prevent @dragleave.prevent>
         </div>
+
+        <!-- 페이징 -->
+        <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
     </div>
 </script>
 
@@ -22,8 +25,14 @@
             return {
                 jl : null,
                 filter : {
-
+                    page : 1,
+                    limit : 1,
+                    count : 0,
+                    order_by_desc : "insert_date"
                 },
+                required : [
+                    {name : "",message : ""},
+                ],
                 data : {
 
                 },
@@ -41,19 +50,23 @@
         },
         methods: {
             postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
+                let method = this.primary ? "update" : "insert";
 
-                if(res) {
-
+                try {
+                    let res = this.jl.ajax(method,this.data,"/api/example.php",this.required);
+                }catch (e) {
+                    alert(e)
                 }
+
             },
             getData: function () {
-                var filter = {primary: this.primary}
-                var res = this.jl.ajax("get",filter,"/api/example.php");
+                let filter = {primary: this.primary}
 
-                if(res) {
+                try {
+                    let res = this.jl.ajax("get",filter,"/api/example.php");
                     this.data = res.data[0]
+                }catch (e) {
+                    alert(e)
                 }
             }
         },

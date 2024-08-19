@@ -1,6 +1,8 @@
 <?php namespace App\Controllers;
 
 use App\Libraries\JL;
+use App\Libraries\Model;
+use App\Models\AdminModel;
 
 class AdminController extends BaseController {
     public function manager01_01_list() {
@@ -69,12 +71,7 @@ class AdminController extends BaseController {
         return view('admin/cancel_list',$this->data);
     }
 */
-//  예약관리
-    public function reserv_list()
-    {
-        $this->data['pid'] = 'reserv_list';
-        return view('admin/reserv_list',$this->data);
-    }
+
     
 //  정산리스트
     public function calcul_list()
@@ -182,10 +179,50 @@ class AdminController extends BaseController {
     public function calculate_view()
     {
         $this->data['pid'] = 'calculate_view';
-        $jl = new JL();
-        $this->data['aa'] = $jl->ROOT;
-        $this->data['jl'] = $jl;
-        return view('calculate/calculate_view',$this->data,['jl' => $jl]);
+
+        $model_config = array(
+            "table" => "order_list",
+            "primary" => "idx",
+            "autoincrement" => true,
+            "empty" => false
+        );
+        $model = new Model($model_config);
+
+        // 기본 조건문
+        $model->where("mb_id",$this->data['member']['mb_id']);
+        $model->between("OrderDate",date('Y')."-01-01",date('Y')."-12-31");
+        // 모든 데이터
+        $this->data['all_orders'] = $model->get();
+
+        // 조건문 및 필터링
+        $model->reset();
+        if(empty($this->data['year'])) $this->data['year'] = date("y");
+        if(empty($this->data['month'])) $this->data['month'] = date("n");
+        if(empty($this->data['page'])) $this->data['page'] = 1;
+        if(empty($this->data['limit'])) $this->data['limit'] = 10;
+
+        //일자 조건문
+        $model->where("mb_id",$this->data['member']['mb_id']);
+        if($this->data['start_day'] && $this->data['end_day']) {
+            $start_day = $this->data['start_day'];
+            $end_day = $this->data['end_day'];
+        }else {
+            $start_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'], 1, $this->data['year']));
+            $end_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'] + 1, 0, $this->data['year']));
+        }
+        $model->between("OrderDate",$start_day,$end_day);
+
+        //검색 조건문
+        if($this->data['search_key'] && $this->data['search_value']) {
+            $model->like($this->data['search_key'],$this->data['search_value']);
+        }
+
+        $this->data['orders'] = $model->get($this->data['page'],$this->data['limit']);
+        $this->data['search_all_orders'] = $model->get();
+
+        $this->data['last'] = ceil($this->data['orders']['count'] / $this->data['limit']);
+
+        return view('calculate/calculate_view',$this->data);
     }
 
 
@@ -232,7 +269,9 @@ class AdminController extends BaseController {
         $this->data['pid'] = 'lms_log_list';
         return view('admin/lms_log_list',$this->data);
     }
-    
+
+
+
 //   출고지관리
     public function delivery_info_list()
     {

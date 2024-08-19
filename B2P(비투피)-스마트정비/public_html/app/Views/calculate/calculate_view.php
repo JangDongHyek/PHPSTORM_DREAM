@@ -3,22 +3,315 @@
 echo view('common/header_adm');
 echo view('common/adm_head');
 $header_name = "정산 관리";
+
+function sortMonthOrder($month,$objects) {
+    $year = date('Y');
+    $start_day = date('Y-m-d', mktime(0, 0, 0, $month, 1, $year));
+    $end_day = date('Y-m-d', mktime(0, 0, 0, $month + 1, 0, $year));
+
+    $start_date = new DateTime($start_day);
+    $end_date = new DateTime($end_day);
+
+    $result = 0;
+    foreach ($objects as $index => $data) {
+        $data_date = new DateTime($data['OrderDate']);
+
+        if($start_date <= $data_date && $data_date <= $end_date) {
+            $b2p_commission = (int)$data['OrderAmount'] * 0.05;
+            $SettlementPrice = (int)$data['SettlementPrice'];
+
+            $result += $SettlementPrice - $b2p_commission;
+        }
+    }
+
+    return number_format($result);
+}
+
+function totalOrderKey($objects,$key) {
+    $total_order = 0;
+    $total_commission = 0;
+    $total_calc = 0;
+    foreach ($objects as $index => $data) {
+        $OrderAmount = (int)$data['OrderAmount'];
+        $b2p_commission = $OrderAmount * 0.05;
+        $ServiceFee = (int)$data['ServiceFee'];
+        $SettlementPrice = (int)$data['SettlementPrice'];
+
+        $total_order += $OrderAmount;
+        $total_commission += ($b2p_commission + $ServiceFee);
+        $total_calc += ($SettlementPrice - $b2p_commission);
+    }
+
+    switch ($key) {
+        case 'order' :
+            return number_format($total_order);
+        case 'commission' :
+            return number_format($total_commission);
+        case 'calc' :
+            return number_format($total_calc);
+    }
+}
+
 ?>
 
 
 <?php echo view('calculate/calcu_head', $this->data); ?>
+<?php
+//echo var_dump($this->data['orders']['data']);
+//var_dump(totalMonthOrder(8,$this->data['orders']['data']));
+?>
+<div class="sch_wrap">
+    <p class="tit">검색조건
+        <a class="btn btn-gray btn-md male-auto" href="/calculate" >조건초기화</a>
+        <button class="btn btn-blue btn-md" onclick="searchData()">검색하기</button></p>
+    </p>
+    <div class="box flexwrap">
+        <div>
+            <p>일자구분</p>
+            <div class="input_date">
+                <div class="input_select w150px">
+                    <select class="border_gray">
+                        <option value="D1" selected="">입금확인일</option>
+                        <option value="D3">매출기준일</option>
+                        <option value="D7">구매결정일</option>
+                        <option value="D4">환불일</option>
+                        <option value="D6">정산완료일</option>
+                    </select>
+                </div>
+                <div class="input_select">
+                    <!--i class="fa-duotone fa-calendar"></i-->
+                    <input type="date" class="border_gray" id="start_day" name="start_day" <?if($this->data['start_day']) echo "value='{$this->data['start_day']}'"?>>
+                </div>
+                ~
+                <div class="input_select">
+                    <!--i class="fa-duotone fa-calendar"></i-->
+                    <input type="date" class="border_gray" id="end_day" name="end_day" <?if($this->data['end_day']) echo "value='{$this->data['end_day']}'"?>>
+                </div>
+                <div class="select flex nowrap">
+                    <input type="radio" id="date1" name="date" value="">
+                    <label for="date1" onclick="changeDay(0)">오늘</label>
+                    <input type="radio" id="date2" name="date" value="">
+                    <label for="date2" onclick="changeDay(7)">일주일</label>
+                    <input type="radio" id="date3" name="date" value="">
+                    <label for="date3" onclick="changeDay(30)">한달</label>
+                    <input type="radio" id="date4" name="date" value="">
+                    <label for="date4" onclick="changeDay(90)">3개월</label>
+                </div>
+            </div>
+        </div>
 
-<div id="app">
-    <calculate-main mb_id="<?=$this->data['member']['mb_id']?>"></calculate-main>
+        <div>
+            <p>검색하기</p>
+            <div class="flex gap5">
+                <div class="input_select">
+                    <select class="border_gray" id="search_key">
+                        <option value="PayNo" <?if($this->data['search_key'] == "PayNo") echo "selected"?>>결제번호</option>
+                        <option value="OrderNo" <?if($this->data['search_key'] == "OrderNo") echo "selected"?>>주문번호</option>
+                        <option value="SiteGoodsNo" <?if($this->data['search_key'] == "SiteGoodsNo") echo "selected"?>>상품번호</option>
+                    </select>
+                </div>
+                <div class="input_search">
+                    <input type="text" placeholder="검색어를 입력하세요" class="border_gray" id="search_value" value="<?=$this->data['search_value']?>">
+                    <button onclick="searchData()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-<?php
-$this->data['jl']->vueLoad();
 
-echo view("component/calculate-main");
-echo view("component/calculate-paging");
-?>
+<div class="result_wrap">
+    <div class="box_gray">
+        <? for ($i=1;$i <= 12; $i++) {?>
+        <div class="monthBox <?php if($this->data['month'] == $i) echo "monthBg";?>" data-action="calcMonth" data-month="<?=$i?>" onclick="changeMonth(<?=$i?>)">
+            <h2><?=$i?>월</h2>
+            <p><?=sortMonthOrder($i,$this->data['all_orders']['data'])?>원</p>
+        </div>
+        <?}?>
+    </div>
+    <div class="top_text">
+        <div class="wrap w100 flex">
+            <?if($this->data['start_day'] && $this->data['end_day']) {?>
+            <h1>정산 내역 <span class="color-blue"><?=$this->data['start_day']?> ~ <?=$this->data['end_day']?></span></h1>
+            <?} else {?>
+            <h1>정산 내역 <span class="color-blue"><?=$this->data['year']?>.<?=$this->data['month']?></span></h1>
+            <?}?>
+        </div>
+    </div>
+    <div class="table">
+        <table>
+            <colgroup>
+                <col style="width: 50px;">
+                <col style="width: ;">
+                <col style="width: 50px;">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>판매일자</th>
+                <th>구분</th>
+                <th>판매자코드/거래처명</th>
+                <th>주문번호</th>
+                <th>구매자명(아이디)</th>
+                <th>상품명</th>
+                <th>결제방식</th>
+                <th>주문금액</th>
+                <th>할인금액</th>
+                <th>최종결제금액</th>
+                <th>카테고리 수수료</th>
+                <!--th>카드 수수료</th // 대기-->
+                <th>정산누계</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="sum">
+                <td colspan="2">기간 내 합계</td>
+                <td colspan="1"><b>주문금액</b></td>
+                <td colspan="3"><b><?=totalOrderKey($this->data['search_all_orders']['data'],"order")?>원</b></td>
+                <td colspan="1"><b>수수료</b></td>
+                <td colspan="3"><b><?=totalOrderKey($this->data['search_all_orders']['data'],"commission")?>원</b></td>
+                <td colspan="1"><b>정산금액</b></td>
+                <td colspan="3"><b><?=totalOrderKey($this->data['search_all_orders']['data'],"calc")?>원</b></td>
+            </tr>
+
+            <?php foreach ($this->data['orders']['data'] as $index => $data) {
+                $data['SellerCashBackMoney'] = $data['SellerCashBackMoney'] ? (int)$data['SellerCashBackMoney'] : 0;
+                $data['SellerDiscountPrice'] = $data['SellerDiscountPrice'] ? (int)$data['SellerDiscountPrice'] : 0;
+                $data['OrderAmount'] = $data['OrderAmount'] ? (int)$data['OrderAmount'] : 0;
+                $data['SettlementPrice'] = $data['SettlementPrice'] ? (int)$data['SettlementPrice'] : 0;
+
+                $b2p_commission = $data['OrderAmount'] * 0.05;
+                $totalDiscount = 0;
+                $totalDiscount .= $data['SellerCashBackMoney'] + $data['SellerDiscountPrice'];
+                $calcPrice = $data['SettlementPrice'] - $b2p_commission;
+            ?>
+            <tr>
+                <td><?=$data['data_page_no']?></td>
+                <td><?=$data['OrderDate']?></td>
+                <td>
+                    <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
+                </td>
+                <td><?=$data['OutGoodsNo']?></td>
+                <td><a data-toggle="modal" data-target="#orderSheetModal"><?=$data['OrderNo']?></a></td>
+                <td><?=$data['BuyerName']?> (<?=$data['BuyerID']?>)</td>
+                <td><?=$data['GoodsName']?></td>
+                <td>카드결제</td>
+                <td><?=number_format($data['OrderAmount'])?>원</td>
+                <td>
+                    <details>
+                        <summary>총 할인 <?=number_format($totalDiscount)?>원</summary>
+                        <dl>
+                            <dt>판매자할인</dt>
+                            <dd>-<?=number_format($data['SellerDiscountPrice'])?></dd>
+                            <dt>쿠폰할인</dt>
+                            <dd>-</dd>
+                            <dt>지마켓(비투피)할인</dt>
+                            <dd>-</dd>
+                            <dt>스마일캐시지급</dt>
+                            <dd>-<?=number_format($data['SellerCashBackMoney'])?></dd>
+                        </dl>
+                    </details>
+                </td>
+                <td><?=number_format($data['AcntMoney'])?>원</td>
+                <td><?=number_format($b2p_commission + $data['ServiceFee'])?>원</td>
+                <!--<td>누계</td>-->
+                <td><?=number_format($calcPrice)?>원</td>
+            </tr>
+            <?php }?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination_wrap">
+        <a href="" class="page-prev" onclick="event.preventDefault(); changePage(<?=$this->data['page'] - 1?>)"><i class="fa-regular fa-angle-left"></i></a>
+        <div class="page-now"><?=$this->data['page']?> / <?=$this->data['last']?></div>
+        <a href="" class="page-next" onclick="event.preventDefault(); changePage(<?=$this->data['page'] + 1?>)"><i class="fa-regular fa-angle-right"></i></a>
+    </div>
+
+</div>
+
+<script>
+    let last = <?=$this->data['last']?>;
+    let page = <?=$this->data['page']?>;
+    let month = <?=$this->data['month']?>;
+    let start_day = "<?=$this->data['start_day']?>";
+    let end_day = "<?=$this->data['end_day']?>";
+    let search_key = "<?=$this->data['search_key']?>";
+    let search_value = "<?=$this->data['search_value']?>";
+
+    function getSelectData(select_day) {
+        // 현재 날짜 가져오기
+        const today = new Date();
+
+        const pastDate = new Date(today.getTime() - parseInt(select_day) * 24 * 60 * 60 * 1000);
+
+        // 연도, 월, 일 가져오기
+        const year = pastDate.getFullYear();
+        const month = String(pastDate.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const day = String(pastDate.getDate()).padStart(2, '0');
+
+        // YYYY-MM-DD 형식으로 반환
+        return `${year}-${month}-${day}`;
+    }
+
+    function changeDay(select_day) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const day = String(today.getDate()).padStart(2, '0');
+
+        let end_day = `${year}-${month}-${day}`;
+        let start_day = getSelectData(select_day);
+
+        let object = {
+            end_day : end_day,
+            start_day : start_day
+        }
+
+        objectHref(object);
+    }
+
+    function objectHref(object) {
+        let url = "?";
+        Object.keys(object).forEach(function (key) {
+            url += `${key}=${object[key]}&`;
+        });
+
+        window.location.href = url;
+    }
+
+    function searchData() {
+        let object = {
+            start_day : $('#start_day').val(),
+            end_day : $('#end_day').val(),
+            search_key : $('#search_key').val(),
+            search_value : $('#search_value').val()
+        }
+
+        objectHref(object)
+    }
+
+    function changeMonth(m) {
+        window.location.href = `?month=${m}`;
+    }
+
+    function changePage(p) {
+        if(p > last) return false;
+        if(p < 1) return false;
+
+        let object = {
+            page : p,
+            month : month,
+            start_day : start_day,
+            end_day : end_day,
+            search_key : search_key,
+            search_value : search_value
+        }
+
+        objectHref(object)
+    }
+</script>
 
 <?php echo view('order/order_modal', $this->data); ?>
 <?php

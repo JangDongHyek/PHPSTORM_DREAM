@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\GmAc\OrderModel;
+use App\Models\UserModel;
 use App\Models\GmarketApiModel;
 use App\Models\GmAc\GoodsModel;
 use CodeIgniter\Model;
@@ -94,8 +95,8 @@ class OrderController extends BaseController
         ];
 
         $orderModel = new OrderModel();
-        $this->data['order_data'] = $orderModel->getList($getData);
-
+        $this->data['order_data'] = $orderModel->getJoinlList($getData, 'order_exchange_list');
+        //$this->data['order_data'] = $orderModel->getList($getData);
         return view('order/deliver_list', $this->data);
     }
 
@@ -309,6 +310,8 @@ class OrderController extends BaseController
                 $get_data['SiteType'] = $SiteType;
                 //$request_orders = json_encode($get_data);
                 $result2 = $orderModel->setOrder($get_data);
+                $orderModel->sendOrderSMS($result2['type'],$get_data);
+
                 //log_message('error','cron : GetOrder실행 :  $get_data - ' . print_r($get_data,true));
             }
         } else {
@@ -369,6 +372,10 @@ class OrderController extends BaseController
         $apiModel = new GmarketApiModel();
         $result = $apiModel->getOrder($this->data);
         $orderModel = new OrderModel();
+
+        //오아시스 취소하는부분
+        $userModel = new UserModel;
+
         //log_message('pay', 'cron : GetOrder실행 : api_data - ' . print_r($this->data['api_data'], true));
 
         if ($result['body']['Data'][0]) {
@@ -376,7 +383,10 @@ class OrderController extends BaseController
             foreach ($result['body']['Data'] as $get_data) {
                 //$request_orders = json_encode($get_data);
                 $result2 = $orderModel->setOrderCancel($get_data);
-                //log_message('error','cron : GetOrderCancel실행 :  $get_data - ' . print_r($get_data,true));
+                
+                //오아시스 취소
+                $resveCancel = $userModel->resveCancel($get_data['OrderNo']);
+                log_message('error','cron : GetOrderCancel실행 :  $resveCancel - ' . print_r($resveCancel,true));
                 //log_message('error','cron : GetOrderCancel실행 :  $result2 - ' . print_r($result2,true));
             }
         } else {
@@ -439,11 +449,20 @@ class OrderController extends BaseController
         $apiModel = new GmarketApiModel();
         $result = $apiModel->getOrder($this->data);
         $orderModel = new OrderModel();
+
+        //오아시스 취소하는부분
+        $userModel = new UserModel;
+
         //log_message('error','cron : GetOrderReturn :  $result - ' . print_r($result,true));
         if ($result['body']['Data'][0]) {
             foreach ($result['body']['Data'] as $get_data) {
                 //$request_orders = json_encode($get_data);
                 $result2 = $orderModel->setOrderReturn($get_data);
+
+                //오아시스 취소
+                $resveCancel = $userModel->resveCancel($get_data['OrderNo']);
+                log_message('error','cron : GetOrderReturn :  $resveCancel - ' . print_r($resveCancel,true));
+
                 //log_message('error', 'cron : GetOrderReturn :  $get_data - ' . print_r($get_data, true));
                 //log_message('error', 'cron : GetOrderReturn :  $result2 - ' . print_r($result2, true));
             }
@@ -505,10 +524,17 @@ class OrderController extends BaseController
         $apiModel = new GmarketApiModel();
         $result = $apiModel->getOrder($this->data);
         $orderModel = new OrderModel();
+        //오아시스 취소하는부분
+        $userModel = new UserModel;
+
         //log_message('error','cron : GetOrderReturn :  $result - ' . print_r($result,true));
         if ($result['body']['Data'][0]) {
             foreach ($result['body']['Data'] as $get_data) {
                 $result2 = $orderModel->setOrderExchange($get_data);
+
+                //오아시스 취소
+                $resveCancel = $userModel->resveCancel($get_data['OrderNo']);
+                log_message('error','cron : GetOrderExchange :  $resveCancel - ' . print_r($resveCancel,true));
             }
         } else {
             //log_message('error','cron : GetOrder실행 :  $result[body][Data] - ' . print_r($result['body']['Data'],true));
@@ -581,6 +607,77 @@ class OrderController extends BaseController
     }
 
     /**
+     * ESM Trading API 정산 목록 가져오기
+     *
+     * @param string $api_type 사이트 구분
+     * GM : G마켓
+     * AC : 옥션
+     */
+    public function GetSettleOrder($api_type = 'GM')
+    {
+        $result = [];
+        $this->data['api_method'] = "POST";
+        $this->data['api_url'] = "https://sa2.esmplus.com/account/v1/settle/getsettleorder";
+        $this->data['api_data'] = [];
+        $time_start = date('Y-m-d', strtotime('-6Day'));
+        $time_end = date('Y-m-d', strtotime('+1Day'));
+
+        /* SrchType
+         * D1 : 입금확인일 -정상
+         * D2 : 배송일 -정상
+         * D3 : 배송완료일 -정상
+         * D4 : 구매결정일 -정상
+         * D5 : 정산예정일
+         * D6 : 송금일(당일데이터는 영업일 기준 D+1일 조회가능함)
+         * D7 : 환불일 -환불
+         * D8 : 입금확인일+환불일(지마켓), 송금일 + 송금취소일 (옥션)
+         * D9 : 배송완료일(옥션은 매출기준일) + 배송완료일 있는 환불일
+         */
+        $this->data['api_data'] = [
+            "SrchStartDate" => $time_start,
+            "SrchEndDate" => $time_end,
+            "SrchType" => 'D5',
+            "PageNo" => 1,
+            "PageRowCnt" => 100
+        ];
+
+        if ($api_type == 'GM') {
+            $this->data['api_type'] = GM;
+            $this->data['api_data']['siteType'] = 'G';
+        } else if ($api_type == 'AC') {
+            $this->data['api_type'] = AC;
+            $this->data['api_data']['siteType'] = 'A';
+        }
+
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->getOrder($this->data);
+
+        $orderModel = new OrderModel();
+
+        if ($result['body']['Data']['RequestOrders'][0]) {
+            $SiteType = $result['body']['Data']['SiteType'];
+            foreach ($result['body']['Data']['RequestOrders'] as $get_data) {
+                $get_data['SiteType'] = $SiteType;
+                //$request_orders = json_encode($get_data);
+                $result2 = $orderModel->setSettleOrder($get_data);
+                //log_message('alert','cron : GetSettleOrder :  $get_data - ' . print_r($result2,true));
+            }
+        } else {
+            //log_message('error','cron : GetSettleOrder :  $result[body][Data] - ' . print_r($result['body']['Data'],true));
+        }
+
+        //log_message('alert','cron : GetSettleOrder :  $orderStatus - ' . print_r($result,true) . ' $result ' . $result);
+        //log_message('error','cron : GetSettleOrder :  $timers - ' . print_r($timers,true));
+
+        if ($this->response === null) {
+            //log_message('error', 'Response object is null');
+        } else {
+            return $this->response->setJSON($result);
+        }
+
+    }
+
+    /**
      * ESM Trading API 미수령신고조회
      * SearchType : 1 미수령신고일 조회 (최대 7일)
      */
@@ -590,7 +687,6 @@ class OrderController extends BaseController
         $result = [];
         $post = $this->data;
 
-
         $this->data['api_method'] = "POST";
         $this->data['api_url'] = "https://sa2.esmplus.com/shipping/v1/Delivery/ClaimList";
         $this->data['api_data'] = [];
@@ -598,10 +694,6 @@ class OrderController extends BaseController
         $time_end = date('Y-m-d', strtotime('+1Day'));
 
         $orderModel = new OrderModel();
-        if (!$idx) {
-            $idx = $post['OrderLabelPrint_idx'];
-        }
-
         $orderData['result'] = $orderModel->getOrderInfoByIdx($idx);
         $OrderNo = $orderData['result']['OrderNo'];
 
@@ -623,20 +715,19 @@ class OrderController extends BaseController
         $apiModel = new GmarketApiModel();
         $result = $apiModel->getOrder($this->data);
 
-        log_message('alert', 'cron : GetClaimList : api_data - ' . print_r($this->data['api_data'], true));
+        //log_message('alert', 'cron : GetClaimList : api_data - ' . print_r($this->data['api_data'], true));
 
         if ($result['body']['Data'][0]) {
             $SiteType = $result['body']['Data']['SiteType'];
             foreach ($result['body']['Data'] as $get_data) {
                 //$request_orders = json_encode($get_data);
                 $result2 = $orderModel->setClaim($get_data);
-                //log_message('error','cron : GetClaimList :  $get_data - ' . print_r($get_data,true));
-                //log_message('error','cron : GetClaimList :  $result2 - ' . print_r($result2,true));
+                //log_message('alert','cron : GetClaimList :  $get_data - ' . print_r($get_data,true));
+                //log_message('alert','cron : GetClaimList :  $result2 - ' . print_r($result2,true));
             }
         } else {
             //log_message('error','cron : GetClaimList :  $result[body][Data] - ' . print_r($result['body']['Data'],true));
         }
-        log_message('alert','cron : GetClaimList :  $timers - ' . print_r($timers,true));
 
         if ($this->response === null) {
             //log_message('error', 'Response object is null');
@@ -676,7 +767,7 @@ class OrderController extends BaseController
         $orderData = [];
         $post = $this->data['data_arr'];
         $post = json_decode(json_encode($post), true);
-        //log_message('error','OrderClaimRelease 실행 :  $post - ' . print_r($post,true));
+        log_message('alert','OrderClaimRelease 실행 :  $post - ' . print_r($post,true));
         $idx = $post['idx'];
 
         $orderModel = new OrderModel();
@@ -684,50 +775,62 @@ class OrderController extends BaseController
         $OrderNo = $orderData['result']['OrderNo'];
 
         $result = [];
-        if($post['ClaimCancelType'] == 1 && ( !$post['DeliveryCompCode'] || !$post['InvoiceNo'])){
-            $result['api_data']['orderNo'] = $OrderNo;
-            $result['body']['Message'] = '송방번호 재입력 필수입력값을 입력해주세요.';
-            return $this->response->setJSON($result);
-        }
-
-        if($post['ClaimCancelType'] == 2 && !$post['CancelComment']){
-            $result['api_data']['orderNo'] = $OrderNo;
-            $result['body']['Message'] = '송방번호 재입력 필수입력값을 입력해주세요.';
-            return $this->response->setJSON($result);
-        }
 
         $this->data['api_method'] = "POST";
         $this->data['api_url'] = "https://sa2.esmplus.com/shipping/v1/Delivery/ClaimRelease";
         $this->data['api_data'] = [
             "orderNo" => $OrderNo,
-            "DeliveryCompCode" => $post['DeliveryCompCode'],
-            "InvoiceNo" => $post['InvoiceNo'],
-            "ClaimCancelType" => $post['ClaimCancelType']
+            "ClaimCancelType" => $post['ClaimCancelType'],
         ];
 
-        log_message('error', 'OrderClaimRelease 실행 :  api_data - ' . print_r($this->data['api_data'], true));
+
+            $this->data['api_data']['DeliveryCompCode'] = $post['DeliveryCompCode'];
+            $this->data['api_data']['InvoiceNo'] = $post['InvoiceNo'];
+            $this->data['api_data']['CancelComment'] = $post['CancelComment'];
+
+        if($post['ClaimCancelType'] == 1 && !$post['DeliveryCompCode'] ){
+            $result['api_data']['orderNo'] = $OrderNo;
+            $result['body']['Message'] = '택배사를 선택해주세요.';
+            return $this->response->setJSON($result);
+        }
+
+        if($post['ClaimCancelType'] == 1 &&  !$post['InvoiceNo'] ){
+            $result['api_data']['orderNo'] = $OrderNo;
+            $result['body']['Message'] = '송장번호를 입력해주세요.';
+            return $this->response->setJSON($result);
+        }
+
+        if($post['ClaimCancelType'] == 2 && !$post['CancelComment']){
+            $result['api_data']['orderNo'] = $OrderNo;
+            $result['body']['Message'] = '철회요청 메시지를 입력해주세요';
+            return $this->response->setJSON($result);
+        }
+
+
+
+        log_message('alert', 'OrderClaimRelease 실행 :  api_data - ' . print_r($this->data['api_data'], true));
 
         if ($orderData['result']['SiteType'] == 2) {
             $this->data['api_type'] = GM;
-            $this->data['api_data']['siteType'] = 2;
+            //$this->data['api_data']['siteType'] = 2;
         } else if ($orderData['result']['SiteType'] == 1) {
             $this->data['api_type'] = AC;
-            $this->data['api_data']['siteType'] = 1;
+            //$this->data['api_data']['siteType'] = 1;
         }
+
 
         //getOrder 공통으로씀
         $apiModel = new GmarketApiModel();
         $result = $apiModel->getOrder($this->data);
-        log_message('error', 'OrderClaimRelease 실행 :  $result - ' . print_r($result, true));
+        log_message('alert', 'OrderClaimRelease 실행 :  $result - ' . print_r($result, true));
         $result['api_data']['OrderNo'] = $OrderNo;
         //성공 ResultCode = 0
         if (!$result['body']['ResultCode']) {
-            $result['body']['result'] = $orderModel->setOrderCancelSoldOut($OrderNo);
-
-            log_message('error', 'OrderClaimRelease 실행 :  $get_data - ' . print_r($result['body'], true));
-            log_message('error','OrderClaimRelease 실행 :  OrderCancelCheck - ' . print_r($this->data,true));
+            $result['body']['result'] = $orderModel->setClaimRelease($result['api_data']);
+            log_message('alert', 'OrderClaimRelease 실행 :  $get_data - ' . print_r($result['body'], true));
+            log_message('alert','OrderClaimRelease 실행 :  OrderCancelCheck - ' . print_r($this->data,true));
         } else {
-            log_message('error', 'OrderClaimRelease 실행 :  $result[body] - ' . print_r($result['body'], true));
+            log_message('alert', 'OrderClaimRelease 실행 :  $result[body] - ' . print_r($result['body'], true));
         }
 
         //log_message('error','cron : GetOrder실행 :  $orderStatus - ' . $orderStatus . ' $api_type ' . $api_type);
@@ -1533,14 +1636,14 @@ class OrderController extends BaseController
         $result['api_data']['OrderNo'] = $OrderNo;
         $result['api_data']['api_url'] = $this->data['api_url'];
         $result['api_data']['api_method'] = $this->data['api_method'];
-        log_message('error', 'OrderReturnCheck 실행 :  $result - ' . print_r($result, true));
+        log_message('alert', 'OrderReturnCheck 실행 :  $result - ' . print_r($result, true));
         //성공 ResultCode = 0
         if (!$result['body']['ResultCode']) {
             $result['body']['result'] = $orderModel->setOrderReturnCheckByOrderNo($OrderNo);
-            log_message('error', 'OrderReturnCheck 실행 :  $get_data - ' . print_r($result['body'], true));
-            log_message('error','OrderReturnCheck 실행 :  OrderCancelCheck - ' . print_r($this->data,true));
+            log_message('alert', 'OrderReturnCheck 실행 :  $get_data - ' . print_r($result['body'], true));
+            log_message('alert','OrderReturnCheck 실행 :  OrderCancelCheck - ' . print_r($this->data,true));
         } else {
-            log_message('error', 'OrderReturnCheck 실행 :  $result[body] - ' . print_r($result['body'], true));
+            log_message('alert', 'OrderReturnCheck 실행 :  $result[body] - ' . print_r($result['body'], true));
         }
 
         //log_message('error','cron : GetOrder실행 :  $orderStatus - ' . $orderStatus . ' $api_type ' . $api_type);
@@ -1577,16 +1680,18 @@ class OrderController extends BaseController
             return $this->response->setJSON($result);
         }
 
+        $OrderReturnCheck = $post['returnSelfModal_OrderReturnCheck'];
+
         $this->data['api_method'] = "POST";
         $this->data['api_url'] = "https://sa2.esmplus.com/claim/v1/sa/Return/{$OrderNo}/Request";
         $this->data['api_data'] = [
             "orderNo" => $OrderNo,
-            "payNo" => $orderData['result']['payNo'],
-            "reason" => $post['returnSelfModal_ReasonCode'],
-            "itemStatus" => $post['returnSelfModal_GoodsStatus'],
-            "alreadySent" => $post['returnSelfModal_PickupInfoStatus'],
-            "pickupCompCode" => $post['returnSelfModal_DeliveryCompName'],
-            "invoiceNo" => $post['returnSelfModal_InvoiceNo']
+            "payNo" => $orderData['result']['PayNo'],
+            "reason" => $post['reason'],
+            "itemStatus" => $post['itemStatus'],
+            "alreadySent" => $post['alreadySent'] ? true : false,
+            "pickupCompCode" => $post['pickupCompCode'],
+            "invoiceNo" => $post['invoiceNo']
         ];
 
         log_message('error', 'OrderReturnSelf 실행 :  api_data - ' . print_r($this->data['api_data'], true));
@@ -1606,12 +1711,13 @@ class OrderController extends BaseController
         $result['api_data']['OrderNo'] = $OrderNo;
         //성공 ResultCode = 0
         if (!$result['body']['ResultCode']) {
-            $result['body']['result'] = $orderModel->setOrderCancelSoldOut($OrderNo);
-
-            log_message('error', 'OrderReturnSelf 실행 :  $get_data - ' . print_r($result['body'], true));
-            log_message('error','OrderReturnSelf 실행 :  OrderCancelCheck - ' . print_r($this->data,true));
+            //바로환불시 반품확인api 호출
+            if($OrderReturnCheck){
+                $this->OrderReturnCheck($idx);
+            }
+            //$result['body']['result'] = $orderModel->setOrderReturnSelf($result);
         } else {
-            log_message('error', 'OrderReturnSelf 실행 :  $result[body] - ' . print_r($result['body'], true));
+            //log_message('error', 'OrderReturnSelf 실행 :  $result[body] - ' . print_r($result['body'], true));
         }
 
         //log_message('error','cron : GetOrder실행 :  $orderStatus - ' . $orderStatus . ' $api_type ' . $api_type);

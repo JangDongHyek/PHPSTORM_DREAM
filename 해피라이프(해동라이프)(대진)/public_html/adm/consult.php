@@ -16,6 +16,8 @@ include_once('./admin.head.php');
 <?php
 $jl->vueLoad("vueApp");
 $jl->includeDir("/component/consult");
+$jl->includeDir("/component/slot");
+$jl->includeDir("/component/part");
 ?>
 
 <?php

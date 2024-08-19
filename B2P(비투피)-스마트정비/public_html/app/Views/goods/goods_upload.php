@@ -74,13 +74,18 @@ alert($msg);
                     <? } else {
                         foreach ($goods_excel_list as $index => $data){
                             $process = "대기중";
-                            $reason = "";
+                            $msg = "";
                             if($data['is_process'] == 'T'){
                                 if($data['is_success'] == "T"){
                                     $process = "완료";
                                 } else if($data['is_success'] == "F"){
                                     $process = "실패";
-                                    $reason = json_decode($data['reason'], true)['message'];
+                                    $reason = json_decode($data['reason'], true);
+                                    if (isset($reason['message']) && !empty($reason['message'])) {
+                                        $msg = $reason['message'];
+                                    } else {
+                                        $msg = $data['reason'];
+                                    }
                                 }
                             }
 
@@ -88,7 +93,7 @@ alert($msg);
                             <tr>
                                 <td><?=$data['goods_name']?></td>
                                 <td><?=$process?></td>
-                                <td><?=$data['reason']?></td>
+                                <td><?=$msg?></td>
                                 <td><?=$data['goods_no']?></td>
                                 <td><?=$data['reg_date']?></td>
                             </tr>

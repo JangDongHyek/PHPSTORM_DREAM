@@ -24,6 +24,10 @@ function getDatabaseConnection() {
  * @return mixed 쿼리 결과 객체 또는 실패 시 false.
  */
 function sql_query($sql, $error = true, $db = null) {
+    if(empty($sql)){
+        return false;
+    }
+
     $db = $db ?: getDatabaseConnection();
     $sql = trim($sql);
     $sql = preg_replace("#^select.*from.*[\s\(]+union[\s\)]+.*#i", "select 1", $sql);
@@ -227,9 +231,15 @@ function sql_unlock($db = null) {
  * @return string 이스케이프된 문자열.
  */
 function sql_real_escape_string($string, $db = null) {
+    // 데이터베이스 연결 가져오기
     $db = $db ?: getDatabaseConnection();
 
-    return $db->escapeString($string);
+    // 입력 값이 문자열인 경우에만 이스케이프 처리
+    if (is_string($string)) {
+        return $db->escapeString($string);
+    } else {
+        return $string;
+    }
 }
 
 /**

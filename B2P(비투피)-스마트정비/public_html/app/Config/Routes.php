@@ -154,6 +154,8 @@ $routes->group('admin', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     /*
     $routes->get('cancel_list', 'AdminController::cancel_list');*/
 
+    // 예약관리
+    $routes->get('reserv', 'AdminController::reserv_list');
 
     // 정산리스트
     $routes->get('calcul_list', 'AdminController::calcul_list');
@@ -171,6 +173,8 @@ $routes->group('admin', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     $routes->get('msgWrite', 'AdminController::msg_write');
     // LMS로그
     $routes->get('lms', 'AdminController::lms_log_list');
+    // 스티커신청
+    $routes->get('sticker', 'AdminController::sticker_list');
 
 });
 
@@ -284,6 +288,7 @@ $routes->group('jungbi', ['namespace' => '\App\Controllers' , 'filter' => 'auth:
 
 // user
 $routes->group('user', ['namespace' => '\App\Controllers'], static function ($routes) {
+    $routes->get('', 'UserController::login');
     $routes->get('login', 'UserController::login');
     $routes->get('logout', 'UserController::logout');
     $routes->get('rvList', 'UserController::rv_list01');
@@ -305,6 +310,7 @@ $routes->group('user', ['namespace' => '\App\Controllers'], static function ($ro
 // 관리자
 $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($routes) {
     $routes->get('GetOrder/(:segment)/(:segment)', 'OrderController::GetOrder/$1/$2');
+    $routes->get('GetSettleOrder/(:segment)', 'OrderController::GetSettleOrder/$1');
     $routes->get('GetOrderCancel/(:segment)', 'OrderController::GetOrderCancel/$1');
     $routes->get('GetOrderReturn/(:segment)/(:segment)', 'OrderController::GetOrderReturn/$1/$2');
     $routes->get('GetOrderExchange/(:segment)/(:segment)', 'OrderController::GetOrderExchange/$1/$2');
