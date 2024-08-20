@@ -35,50 +35,6 @@ Number.prototype.format = function (n, x) {
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
 
-function ajax(url,objs) {
-
-    var form = new FormData();
-
-    for (var i in objs) {
-        var obj = objs[i];
-        if(Array.isArray(obj)) {
-            obj.forEach(file => {
-                form.append(i+"[]", file);
-
-            })
-        }else {
-            form.append(i, objs[i]);
-
-        }
-    }
-
-    // 폼데이터 로그
-    // for (var pair of form.entries()) {
-    //     console.log(pair[0] + ': ' + pair[1]);
-    // }
-
-    var result = null;
-    $.ajax({
-        url: Jl_base_url + url,
-        method: "post",
-        enctype: "multipart/form-data",
-        processData: false,
-        contentType: false,
-        async: false,
-        cache: false,
-        data: form,
-        dataType: "json",
-        success: function (res) {
-            if (!res.success) throw new Error(res.message);
-            else {
-                result = res;
-            }
-        }
-    });
-
-    return result;
-}
-
 class Jl {
     constructor(name,background = "#35495e") {
         this.name = name;
@@ -92,27 +48,78 @@ class Jl {
         );
     }
 
-    ajax(method,obj,url,required = []) {
-        var object = this.copyObject(obj);
+    ajax(method,obj,url,options = {}) {
+        return new Promise((resolve, reject) => {
+            var object = this.copyObject(obj);
 
-        for (let i = 0; i < required.length; i++) {
-            let req = required[i];
-            if(req.name == "") continue;
+            if("required" in options) {
+                for (let i = 0; i < options.required.length; i++) {
+                    let req = options.required[i];
+                    if(req.name == "") continue;
 
-            if(object[req.name].trim() == "") throw new Error(req.message);
-        }
+                    if(object[req.name].trim() == "") reject(new Error(req.message));
+                }
+            }
 
-        var objects = {_method : method};
-        objects = this.processObject(objects,object);
+            var objects = {_method : method};
+            objects = this.processObject(objects,object);
 
-        var res = ajax(url, objects);
+            //form 으로 데이터가공
+            var form = new FormData();
+            for (let i in objects) {
+                let data = objects[i];
+                if(Array.isArray(data)) {
+                    data.forEach(file => {
+                        form.append(i+"[]", file);
 
-        const parsedStack = this.parseStackTrace(new Error().stack);
-        var function_name = parsedStack[1].function.replace('a.','');
+                    })
+                }else {
+                    form.append(i, objects[i]);
 
-        this.log(res,function_name);
+                }
+            }
 
-        return res
+            // 통신부분
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', Jl_base_url + url, true);
+            xhr.responseType = "download" in options ? 'blob' : "json";
+
+            let res = null
+            let jl = this;
+
+            xhr.onload = function () {
+                res = xhr.response;
+                if (xhr.status === 200) {
+                    if("download" in options && options.download) {
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(res);
+                        link.download = options.download;  // 다운로드할 파일 이름 설정
+                        link.click();
+
+                        // 메모리 해제를 위해 URL 객체를 폐기
+                        window.URL.revokeObjectURL(link.href);
+                    }else {
+                        if (!res.success) reject(new Error(res.message));
+                    }
+                    jl.log(res,function_name);
+                    resolve(res);
+
+                } else {
+                    reject(new Error("xhr Status 200 아님"));
+                    console.log(xhr.statusText);
+                }
+            };
+
+            xhr.onerror = function () {
+                reject(new Error("xhr on error 발생"));
+            };
+
+            xhr.send(form);
+
+            // 로그 부분
+            const parsedStack = this.parseStackTrace(new Error().stack);
+            var function_name = parsedStack[1].function.replace('a.','');
+        });
     }
 
     commonFile(files,obj,key,permission) {

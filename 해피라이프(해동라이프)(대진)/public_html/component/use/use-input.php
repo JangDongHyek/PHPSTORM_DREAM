@@ -95,7 +95,7 @@
                 let data = this.jl.copyObject(this.data);
                 data.phone = data.phone.join("-");
                 try {
-                    let res = await this.jl.ajax(method,data,"/api/consult.php",options);
+                    let res = await this.jl.ajax(method,data,"/api/use.php",options);
 
                     alert("등록되었습니다");
                     window.location.reload();
@@ -103,16 +103,6 @@
                     alert(e.message)
                 }
 
-            },
-            getData: async function () {
-                let filter = {primary: this.primary}
-
-                try {
-                    let res = this.jl.ajax("get",filter,"/api/example.php");
-                    this.data = res.data[0]
-                }catch (e) {
-                    alert(e.message)
-                }
             }
         },
         computed: {

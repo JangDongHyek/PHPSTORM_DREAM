@@ -28,6 +28,10 @@
                     page : 1,
                     limit : 1,
                     count : 0,
+                    search_key1 : "",
+                    search_value1 : "",
+                    search_like_key1 : "",
+                    search_like_value1 : "",
                     order_by_desc : "insert_date"
                 },
                 required : [
@@ -49,21 +53,19 @@
             });
         },
         methods: {
-            postData : function() {
+            async postData() {
                 let method = this.primary ? "update" : "insert";
-
+                let options = {required : this.required};
                 try {
-                    let res = this.jl.ajax(method,this.data,"/api/example.php",this.required);
+                    let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
                 }catch (e) {
                     alert(e)
                 }
 
             },
-            getData: function () {
-                let filter = {primary: this.primary}
-
+            async getData() {
                 try {
-                    let res = this.jl.ajax("get",filter,"/api/example.php");
+                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
                     this.data = res.data[0]
                 }catch (e) {
                     alert(e)

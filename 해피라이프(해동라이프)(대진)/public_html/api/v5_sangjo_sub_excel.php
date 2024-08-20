@@ -2,8 +2,12 @@
 
 include_once("../jl/JlModel.php");
 
+function isDate($date) {
+    return (bool)strtotime($date);
+}
+
 $model_config = array(
-    "table" => "consult",
+    "table" => "v5_sangjo_sub",
     "primary" => "idx",
     "autoincrement" => true,
     "empty" => false
@@ -25,7 +29,7 @@ $model->where($obj);
 $object = $model->get();
 // CSV 파일에 기록할 데이터 배열
 $data = [
-    ['날짜', '구분', '성명',"연락처","고객사명","비고"]
+    ['구분', '캐쉬백 신청일시', '신청인 성명',"신청인 휴대폰","신청인 고객사명","해피라이프 이용일자","이용인 성명"]
 ];
 
 
@@ -44,12 +48,13 @@ foreach ($data as $row) {
 
 foreach ($object['data'] as $index => $row) {
     $array = [
-        $row['insert_date'],
         $row['type'],
-        $row['name'],
-        $row['phone'],
-        $row['company'],
-        $row['content']
+        "\t".$row['reg_date'],
+        $row['mb_name'],
+        $row['mb_hp'],
+        $row['mb_company'],
+        "\t".$row['use_date'],
+        $row['use_name']
     ];
     fputcsv($output, $array);
 }

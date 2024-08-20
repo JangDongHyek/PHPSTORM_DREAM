@@ -5,9 +5,9 @@
             <select class="search-select" v-model="filter.search_key">
                 <option value="">선택해주세요.</option>
                 <option value="type">구분</option>
-                <option value="name">성명</option>
-                <option value="phone">연락처</option>
-                <option value="company">고객사명</option>
+                <option value="mb_name">성명</option>
+                <option value="mb_hp">연락처</option>
+                <option value="mb_company">고객사명</option>
             </select>
             <input type="text" class="search-input" placeholder="검색어를 입력하세요" v-model="filter.search_value">
             <button class="search-button" @click="getData()">
@@ -29,42 +29,28 @@
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th>날짜</th>
                     <th>구분</th>
-                    <th>성명</th>
-                    <th>연락처</th>
-                    <th>고객사명</th>
-                    <th>비고</th>
-                    <th></th>
+                    <th>캐쉬백 신청일시</th>
+                    <th>신청인 성명</th>
+                    <th>신청인 휴대폰</th>
+                    <th>신청인 고객사명</th>
+                    <th>해피라이프 이용일자</th>
+                    <th>이용인 성명</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="item in data">
                     <td>{{item.data_page_no}}</td>
-                    <td>{{item.insert_date}}</td>
                     <td>{{item.type}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.phone}}</td>
-                    <td>{{item.company}}</td>
-                    <td>{{item.content}}</td>
-                    <td>
-                        <button class="delete-button" aria-label="삭제" @click="deleteData(item)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M3 6l3 18.338c.149.888.906 1.662 1.803 1.662h8.395c.896 0 1.654-.774 1.802-1.662l3-18.338h-18.999zm16 2v15.5c0 .276-.226.5-.501.5h-10.998c-.275 0-.501-.224-.501-.5v-15.5h12zm-9 12h-1v-10h1v10zm3 0h-1v-10h1v10zm3 0h-1v-10h1v10zm-9-15v-3h10v3h7v2h-24v-2h7z"/>
-                            </svg>
-                        </button>
-                    </td>
+                    <td>{{item.reg_date}}</td>
+                    <td>{{item.mb_name}}</td>
+                    <td>{{item.mb_hp}}</td>
+                    <td>{{item.mb_company}}</td>
+                    <td>{{item.use_date}}</td>
+                    <td>{{item.use_name}}</td>
                 </tr>
                 </tbody>
             </table>
-
-            <button class="register-button" @click="modal = true">+ 고객등록</button>
-
-            <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
-
-            <slot-modal v-if="modal" @close="modal = false;">
-                <consult-input></consult-input>
-            </slot-modal>
         </div>
     </div>
 </script>
@@ -84,7 +70,7 @@
                     count : 0,
                     search_key : "",
                     search_value : "",
-                    order_by_desc : "insert_date"
+                    order_by_desc : "reg_date"
                 },
                 required : [
                     {name : "",message : ""},
@@ -92,9 +78,6 @@
                 data : {
 
                 },
-
-
-                modal : false,
             };
         },
         created: function(){
@@ -115,31 +98,19 @@
                 const month = ('0' + (date.getMonth() + 1)).slice(-2);  // 월은 0부터 시작하므로 +1 필요
                 const day = ('0' + date.getDate()).slice(-2);
 
-                let options = {"download" : `${year}${month}${day}상담리스트.csv`}
+                let options = {"download" : `${year}${month}${day}캐쉬백신청리스트.csv`}
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/consult_excel.php",options);
+                    let res = await this.jl.ajax("get",this.filter,"/api/v5_sangjo_sub_excel.php",options);
 
                 }catch (e) {
                     alert(e)
                 }
-            },
-            async deleteData(item) {
-                try {
-                    if(confirm("정말 삭제하시겠습니까?")) {
-                        let res = await this.jl.ajax("delete",item,"/api/consult.php");
-                        alert("삭제되었습니다.");
-                        this.getData();
-                    }
-                }catch (e) {
-                    alert(e)
-                }
-
             },
             async postData() {
                 let method = this.primary ? "update" : "insert";
-
+                let options = {required : this.required};
                 try {
-                    let res = await this.jl.ajax(method,this.data,"/api/example.php",this.required);
+                    let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
                 }catch (e) {
                     alert(e)
                 }
@@ -147,9 +118,8 @@
             },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/consult.php");
-                    this.data = res.data;
-                    this.filter.count = res.count;
+                    let res = await this.jl.ajax("get",this.filter,"/api/v5_sangjo_sub.php");
+                    this.data = res.data
                 }catch (e) {
                     alert(e)
                 }

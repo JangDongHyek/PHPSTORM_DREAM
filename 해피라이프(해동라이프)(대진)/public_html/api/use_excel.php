@@ -3,7 +3,7 @@
 include_once("../jl/JlModel.php");
 
 $model_config = array(
-    "table" => "consult",
+    "table" => "g5_use",
     "primary" => "idx",
     "autoincrement" => true,
     "empty" => false

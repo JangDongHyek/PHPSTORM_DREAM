@@ -6,8 +6,8 @@ $menu['menu200'] = array (
 	array('200300', '회원문자발송목록', G5_ADMIN_URL.'/sms_list.php', 'sms_list'),
 	array('200400', '행사사진', G5_ADMIN_URL.'/bbs/board.php?bo_table=photo', 'photo'),
     array('200500', '상담리스트', G5_ADMIN_URL.'/consult.php', 'consult'),
-    array('200600', '이용리스트', G5_ADMIN_URL.'/bbs/board.php?bo_table=photo', 'photo'),
-    array('200700', '캐쉬백신청리스트', G5_ADMIN_URL.'/bbs/board.php?bo_table=photo', 'photo')
+    array('200600', '이용리스트', G5_ADMIN_URL.'/use.php', 'use'),
+    array('200700', '캐쉬백신청리스트', G5_ADMIN_URL.'/sangjo.php', 'sangjo')
     
 
 	/*

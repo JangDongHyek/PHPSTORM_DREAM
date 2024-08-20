@@ -63,7 +63,7 @@
             <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
 
             <slot-modal v-if="modal" @close="modal = false;">
-                <consult-input></consult-input>
+                <use-input></use-input>
             </slot-modal>
         </div>
     </div>
@@ -115,9 +115,9 @@
                 const month = ('0' + (date.getMonth() + 1)).slice(-2);  // 월은 0부터 시작하므로 +1 필요
                 const day = ('0' + date.getDate()).slice(-2);
 
-                let options = {"download" : `${year}${month}${day}상담리스트.csv`}
+                let options = {"download" : `${year}${month}${day}이용리스트.csv`}
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/consult_excel.php",options);
+                    let res = await this.jl.ajax("get",this.filter,"/api/use_excel.php",options);
 
                 }catch (e) {
                     alert(e)
@@ -126,7 +126,7 @@
             async deleteData(item) {
                 try {
                     if(confirm("정말 삭제하시겠습니까?")) {
-                        let res = await this.jl.ajax("delete",item,"/api/consult.php");
+                        let res = await this.jl.ajax("delete",item,"/api/use.php");
                         alert("삭제되었습니다.");
                         this.getData();
                     }
@@ -135,19 +135,9 @@
                 }
 
             },
-            async postData() {
-                let method = this.primary ? "update" : "insert";
-
-                try {
-                    let res = await this.jl.ajax(method,this.data,"/api/example.php",this.required);
-                }catch (e) {
-                    alert(e)
-                }
-
-            },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/consult.php");
+                    let res = await this.jl.ajax("get",this.filter,"/api/use.php");
                     this.data = res.data;
                     this.filter.count = res.count;
                 }catch (e) {

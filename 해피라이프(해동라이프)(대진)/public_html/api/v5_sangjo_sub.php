@@ -30,24 +30,14 @@ try {
             //필터 가공
             foreach ($obj as $key => $value) {
                 if(strpos($key,"primary") !== false) $obj[$model->primary] = $value;
-                if(strpos($key,"search_key") !== false) $column = $value;
-                if(strpos($key,"search_value") !== false) $obj[$column] = $value;
                 if(strpos($key,"order_by_desc") !== false) $model->order_by($obj['order_by_desc'],"DESC");
                 if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
             }
-            //라이크 부분 필터 가공
-            $search_like_key = "";
-            foreach ($obj as $key => $value) {
-                if(strpos($key,"search_like_key") !== false) $search_like_key = $value;
-                if(strpos($key,"search_like_value") !== false && $search_like_key) {
-                    $model->like($search_like_key,$obj['search_like_value']);
-                    $search_like_key = "";
-                }
-            }
+            if($obj['search_key'] && $obj['search_value']) $model->like($obj['search_key'],$obj['search_value']);
 
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
-            
+
             if ($join_table) {
                 $deletes = array();
                 $joinModel = new JlModel(array(
@@ -76,6 +66,7 @@ try {
                 }
             }
 
+            $response['sql'] = $model->getSql();
             $response['data'] = $object['data'];
             $response['count'] = $object['count'];
             $response['filter'] = $obj;
