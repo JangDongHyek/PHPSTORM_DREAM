@@ -29,7 +29,7 @@
                 <div class="box_list">
                     <div class="box_content">
                         <div class="box_write02">
-                            <h4 class="b_tit">메인이미지등록 <em><i class="point" name="point">{{ product.main_image_array.length }}</i>/4</em></h4>
+                            <h4 class="b_tit">메인이미지등록 <em><i class="point" name="point">{{ product.main_image_array.length }}</i>/1</em></h4>
                             <div class="cont">
                                 <div class="area_box">
 
@@ -63,7 +63,7 @@
 
                     <div class="box_content">
                         <div class="box_write02">
-                            <h4 class="b_tit">상세이미지등록 <em><i class="point" name="subpoint">{{ product.content_image_array.length }}</i>/8</em></h4>
+                            <h4 class="b_tit">상세이미지등록 <em><i class="point" name="subpoint">{{ product.content_image_array.length }}</i>/10</em></h4>
                             <div class="cont">
                                 <div class="area_box">
 
@@ -96,20 +96,22 @@
                     </div>
                     <div class="box_content">
                         <div class="box_write02">
-                            <h4 class="b_tit">동영상 등록 <em><i class="point" name="subpoint">{{product.movie_file_array.length}}</i>/8</em>
+                            <h4 class="b_tit">동영상 등록
+<!--                                <em><i class="point" name="subpoint">{{product.movie_file_array.length}}</i>/8</em>-->
+                                <em><i class="point" name="subpoint">{{product.movie_link.length}}</i>/10</em>
                                 <!--<p><input type="checkbox"><label>링크 등록</label></p>--></h4>
                             <div class="cont">
                                 <div class="area_box">
-                                    <div class="video_active box_dashed">
-                                        <ul>
-                                            <li v-for="item,index in product.movie_file_array">
-                                                <p>{{ item.name }}</p>
-                                                <a class="del" href="" @click="event.preventDefault(); product.movie_file_array.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>
-                                            </li>
-                                        </ul>
-                                        <button class="btn_add" @click="$refs.movieRef.click()"><i class="fa-light fa-folder-arrow-up"></i> 동영상 업로드</button>
-                                        <input v-show="false" type="file" ref="movieRef" @change="jl.changeFile($event,product,'movie_file_array')">
-                                    </div>
+<!--                                    <div class="video_active box_dashed">-->
+<!--                                        <ul>-->
+<!--                                            <li v-for="item,index in product.movie_file_array">-->
+<!--                                                <p>{{ item.name }}</p>-->
+<!--                                                <a class="del" href="" @click="event.preventDefault(); product.movie_file_array.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>-->
+<!--                                            </li>-->
+<!--                                        </ul>-->
+<!--                                        <button class="btn_add" @click="$refs.movieRef.click()"><i class="fa-light fa-folder-arrow-up"></i> 동영상 업로드</button>-->
+<!--                                        <input v-show="false" type="file" ref="movieRef" @change="jl.changeFile($event,product,'movie_file_array')">-->
+<!--                                    </div>-->
                                     <div class="link_active box_dashed">
                                         <dl v-for="item,index in product.movie_link">
                                             <dt>동영상 링크 {{ (index+1).toString().padStart(2,'0') }}.</dt>

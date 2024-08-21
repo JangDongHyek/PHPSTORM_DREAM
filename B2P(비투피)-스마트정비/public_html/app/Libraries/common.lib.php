@@ -221,6 +221,8 @@ function isStr($str) {
  * @return array ["success" => bool, "value" => mixed]
  */
 function isNum($str) {
+    $str = str_replace(",","",$str);
+
     if (empty($str)) {
         return ["success" => false, "value" => ""];
     } elseif (is_numeric($str)) {
@@ -228,6 +230,68 @@ function isNum($str) {
     } else {
         return ["success" => false, "value" => ""];
     }
+}
+
+/*
+====================================================================
+1. 문자박스 로그인
+http://biz2.smsbox.co.kr/
+ID : letskt080
+PW : 3001jun
+
+2. 마이페이지 - 회신번호관리 - 회신번호등록
+관리계정
+1. sms만 사용		: letskt0802 (165서버)
+2. mms 함께 사용	: seongu (184서버)
+
+3. DB정보
+letskt0802 계정 : http://211.51.221.165/_phpMyadmin/
+---------------------------------------------------------------------
+*/
+function goSms($reserv_phone, $msg, $send_phone="0518910088")
+{
+    return;
+    //lets0802
+    $conn_db = mysqli_connect("211.51.221.165", "emma", "wjsghk!@#", "emma");
+    $mart_id = "b2p";			//계정명
+
+    $number_receive_people = 0;
+    $tran_phone1 = $reserv_phone;			// 수신번호
+    $tran_callback1 = $send_phone;			// 발신번호
+    $msg1 = $msg;							// 문자내용
+    $send_date = date("YmdHis");
+
+    $sql = "select count(tran_pr) cnt from emma.em_all_log
+            where tran_date like '".G5_TIME_YMD."%' and tran_phone = '{$reserv_phone}' ";
+
+    $result = mysqli_query($conn_db,$sql);
+    $result = mysqli_fetch_array($result);
+    //6회부터 오류창 표시
+    if ($result['cnt'] > 20){
+        //die(json_encode(array( 'msg' => "하루 인증횟수(20회)를 초과하였습니다.")));
+        //exit();
+    }
+    if(!$tran_callback1){
+        //die(json_encode(array( 'msg' => "전화번호가 잘못되었습니다. 다시 입력해주세요.")));
+        exit();
+    }
+
+    $tran_msg1 = iconv("UTF-8", "EUC-KR", $msg1);
+
+    $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1')";
+    $result = mysqli_query($conn_db, $sms_query);
+    if(!$result) {
+        //echo mysql_error();
+        return false;
+    }
+
+    //전체기록남기기
+    $all_query = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1',curdate())";
+    $result2 = mysqli_query($conn_db, $all_query);
+
+    $query = "Insert into tbl_sms(f_idno,f_from_phone,f_to_phone,f_comment,f_wdate) values('$mart_id','$tran_callback1','$tran_phone1','$tran_msg1','$send_date')";
+    mysqli_query($conn_db,$query);
+
 }
 
 ?>

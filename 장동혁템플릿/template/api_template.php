@@ -48,6 +48,7 @@ try {
                     $joinModel->where($joinModel->primary, $data["example_idx"]);
                     $join_data = $joinModel->get()['data'][0];
 
+                    //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
 
                     if ($join_table_delete) {

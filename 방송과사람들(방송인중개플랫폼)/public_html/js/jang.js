@@ -87,7 +87,9 @@ function ajax(url,objs) {
                             for (field in obj) {
                                 if (field.indexOf("_id") !== -1) continue;
                                 try {
-                                    obj[field] = JSON.parse(obj[field]);
+                                    if(typeof obj[field] === "string") {
+                                        obj[field] = JSON.parse(obj[field]);
+                                    }
                                 } catch (e) {
 
                                 }
@@ -206,6 +208,10 @@ class JL {
 
     isUpperCase(str) {
         return str === str.toUpperCase();
+    }
+
+    findObject(arrays,key,value) {
+        return arrays.find(obj => obj[key] === value);
     }
 
     processObject(objs,obj) {

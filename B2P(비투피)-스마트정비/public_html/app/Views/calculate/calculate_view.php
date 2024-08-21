@@ -36,9 +36,10 @@ function totalOrderKey($objects,$key) {
         $b2p_commission = $OrderAmount * 0.05;
         $ServiceFee = (int)$data['ServiceFee'];
         $SettlementPrice = (int)$data['SettlementPrice'];
+        $SellerDiscountPrice = (int)$data['SellerDiscountPrice'];
 
         $total_order += $OrderAmount;
-        $total_commission += ($b2p_commission + $ServiceFee);
+        $total_commission += ($b2p_commission + $ServiceFee) + $SellerDiscountPrice;
         $total_calc += ($SettlementPrice - $b2p_commission);
     }
 
@@ -159,21 +160,13 @@ function totalOrderKey($objects,$key) {
                 <th>주문금액</th>
                 <th>할인금액</th>
                 <th>최종결제금액</th>
+                <th>배송비</th>
                 <th>카테고리 수수료</th>
                 <!--th>카드 수수료</th // 대기-->
-                <th>정산누계</th>
+                <th>최종정산금액</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="sum">
-                <td colspan="2">기간 내 합계</td>
-                <td colspan="1"><b>주문금액</b></td>
-                <td colspan="3"><b><?=totalOrderKey($this->data['search_all_orders']['data'],"order")?>원</b></td>
-                <td colspan="1"><b>수수료</b></td>
-                <td colspan="3"><b><?=totalOrderKey($this->data['search_all_orders']['data'],"commission")?>원</b></td>
-                <td colspan="1"><b>정산금액</b></td>
-                <td colspan="3"><b><?=totalOrderKey($this->data['search_all_orders']['data'],"calc")?>원</b></td>
-            </tr>
 
             <?php foreach ($this->data['orders']['data'] as $index => $data) {
                 $data['SellerCashBackMoney'] = $data['SellerCashBackMoney'] ? (int)$data['SellerCashBackMoney'] : 0;
@@ -181,11 +174,17 @@ function totalOrderKey($objects,$key) {
                 $data['OrderAmount'] = $data['OrderAmount'] ? (int)$data['OrderAmount'] : 0;
                 $data['SettlementPrice'] = $data['SettlementPrice'] ? (int)$data['SettlementPrice'] : 0;
 
+                $data['DirectDiscountPrice'] = $data['DirectDiscountPrice'] ? (int)$data['DirectDiscountPrice'] : 0;
+                $data['SellerFundingDiscountPrice'] = $data['SellerFundingDiscountPrice'] ? (int)$data['SellerFundingDiscountPrice'] : 0;
+
                 $b2p_commission = $data['OrderAmount'] * 0.05;
                 $totalDiscount = 0;
-                $totalDiscount .= $data['SellerCashBackMoney'] + $data['SellerDiscountPrice'];
+                $totalDiscount += $data['SellerCashBackMoney'] + $data['SellerDiscountPrice'];
                 $calcPrice = $data['SettlementPrice'] - $b2p_commission;
-            ?>
+                
+                //해당 부분은 바뀔수있음
+                $totalDiscount += $data['DirectDiscountPrice'] + $data['SellerFundingDiscountPrice'];
+                ?>
             <tr>
                 <td><?=$data['data_page_no']?></td>
                 <td><?=$data['OrderDate']?></td>
@@ -205,29 +204,44 @@ function totalOrderKey($objects,$key) {
                             <dt>판매자할인</dt>
                             <dd>-<?=number_format($data['SellerDiscountPrice'])?></dd>
                             <dt>쿠폰할인</dt>
-                            <dd>-</dd>
+                            <dd>-<?=number_format($data['DirectDiscountPrice'])?></dd>
                             <dt>지마켓(비투피)할인</dt>
-                            <dd>-</dd>
+                            <dd>-<?=number_format($data['SellerFundingDiscountPrice'])?></dd>
                             <dt>스마일캐시지급</dt>
                             <dd>-<?=number_format($data['SellerCashBackMoney'])?></dd>
                         </dl>
                     </details>
                 </td>
                 <td><?=number_format($data['AcntMoney'])?>원</td>
+                <td><?=number_format($data['ShippingFee'])?>원</td>
                 <td><?=number_format($b2p_commission + $data['ServiceFee'])?>원</td>
                 <!--<td>누계</td>-->
                 <td><?=number_format($calcPrice)?>원</td>
             </tr>
             <?php }?>
+
+            <tr class="sum">
+                <td colspan="2">기간 내 합계</td>
+                <td colspan="4" class="text-right">
+                    <b>주문금액</b> |
+                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"order")?>원</b>
+                </td>
+                <td colspan="3" class="text-right">
+                    <b>수수료</b> |
+                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"commission")?>원</b>
+                </td>
+                <td colspan="5" class="text-right">
+                    <b>정산금액</b> |
+                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"calc")?>원</b>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="pagination_wrap">
-        <a href="" class="page-prev" onclick="event.preventDefault(); changePage(<?=$this->data['page'] - 1?>)"><i class="fa-regular fa-angle-left"></i></a>
-        <div class="page-now"><?=$this->data['page']?> / <?=$this->data['last']?></div>
-        <a href="" class="page-next" onclick="event.preventDefault(); changePage(<?=$this->data['page'] + 1?>)"><i class="fa-regular fa-angle-right"></i></a>
-    </div>
+
+
+    <?php echo createPagination($this->data['page'], $this->data['orders']['count'], $this->data['limit'], getCurrentUrl()); ?>
 
 </div>
 

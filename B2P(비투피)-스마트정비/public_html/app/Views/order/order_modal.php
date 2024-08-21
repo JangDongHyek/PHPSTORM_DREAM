@@ -155,25 +155,43 @@
             var calc = null;
             var idx = listData[i]['idx'];
             var response = await fetchData(`/order/GetOrder`, {idx});
+
             var OrderNo = response['result']['OrderNo'];
-            //console.log(response);
+            var response2 = await fetchData(`/order/GetCalc/${OrderNo}`);
+            var calc_data = null;
+            if(response2.count) calc_data = response2['data'][0];
+
+            var OrderAmount =  calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
+            var ServiceFee =  calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
+            var CostPrice =  calc_data ? calc_data['GoodsCost'] : response['result']['CostPrice']
+            var SellerDiscountPrice =  calc_data ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice']
+            var SettlementPrice =  calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
+
+            //부가적인 설정
+            SellerDiscountPrice = SellerDiscountPrice * -1;     // 음수화
+            if(ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
+            var b2p_commission = OrderAmount * 0.05;            // b2p 자체 수수료 (판매금액의 5퍼센트)
+
+            ServiceFee = ServiceFee - b2p_commission;
+            SettlementPrice = SettlementPrice - b2p_commission;
+
 
             code_html += '<tr>';
             code_html += '<td>' + response['result']['OrderNo'] + '</td>';
             code_html += '<td>' + response['result']['GoodsName'] + '</td>';
-            code_html += '<td>' + AddComma(response['result']['OrderAmount']) + '</td>';
-            code_html += '<td>' + AddComma(response['result']['ServiceFee']) + '</td>';
-            code_html += '<td>' + AddComma(response['result']['CostPrice']) + '</td>';
-            code_html += '<td>' + AddComma(response['result']['SellerDiscountPrice']) + '</td>';
-            code_html += '<td>' + AddComma(response['result']['SettlementPrice']) + '</td>';
+            code_html += '<td>' + AddComma(OrderAmount) + '</td>';
+            code_html += '<td>' + AddComma(ServiceFee) + '</td>';
+            code_html += '<td>' + AddComma(CostPrice) + '</td>';
+            code_html += '<td>' + AddComma(SellerDiscountPrice) + '</td>';
+            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';
             //code_html += response['body']['Message'] + '<br>';
             code_html += '</tr>';
 
-            OrderAmount_total += (response['result']['OrderAmount']) * 1;
-            ServiceFee_total += (response['result']['ServiceFee']) * 1;
-            CostPrice_total += (response['result']['CostPrice']) * 1;
-            SellerDiscountPrice_total += (response['result']['SellerDiscountPrice']) * 1;
-            SettlementPrice_total += (response['result']['SettlementPrice']) * 1;
+            OrderAmount_total += (OrderAmount) * 1;
+            ServiceFee_total += (ServiceFee) * 1;
+            CostPrice_total += (CostPrice) * 1;
+            SellerDiscountPrice_total += (SellerDiscountPrice) * 1;
+            SettlementPrice_total += (SettlementPrice) * 1;
 
         }
 
@@ -794,7 +812,7 @@
             });
             return false;
         }
-        
+
         if(check){
             var idx = listData[0].idx;
             var response = await fetchData(`/order/GetOrder`, {idx});
@@ -3700,61 +3718,83 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
                 <div class="table">
                     <table>
                         <tbody>
                         <tr>
                             <th>상품번호/주문번호</th>
-                            <td>상품번호/주문번호</td>
+                            <td><span id="exchangeModal_SiteGoodsNo"></span> / <span id="exchangeModal_OrderNo"></span></td>
                         </tr>
                         <tr>
                             <th>상품명</th>
-                            <td>상품명</td>
+                            <td id="exchangeModal_GoodsName"></td>
                         </tr>
                         <tr>
                             <th>금액/개수</th>
-                            <td>원/개</td>
+                            <td><span id="exchangeModal_SalePrice"></span>원 / <span id="exchangeModal_ContrAmount"></span>개</td>
                         </tr>
                         <tr>
                             <th>구매자명</th>
-                            <td>구매자명</td>
+                            <td id="exchangeModal_BuyerName"></td>
                         </tr>
                         <tr>
                             <th>교환사유</th>
-                            <td>교환사유</td>
+                            <td id="exchangeModal_return_ReasonDetail"></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
+
                 <div class="box_white2">
                     <p><strong>교환상품을 받으셨습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="" value="o"> <label>예</label>
-                        <input type="radio" class="" name="" checked="checked" value="x"> <label>아니요</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi1" id="exchangeModal_return_radoi1_1" value="o" onclick="$('#exchangeModal_return_radoi2').show();$('#exchangeModal_return_radoi2_hide').focus()"> <label for="exchangeModal_return_radoi1_1">예</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi1" id="exchangeModal_return_radoi1_2" checked="checked" value="x" onclick="$('#exchangeModal_return_radoi2').hide();$('#exchangeModal_return_radoi2_2').click()"> <label for="exchangeModal_return_radoi1_2">아니요</label>
                     </div>
                 </div>
                 <br>
-                <div class="box_white2">
-                    <p><strong>교환재발송 하시겠습니까?</strong></p>
+                <div class="box_white2" id="exchangeModal_return_radoi2" style="display: none">
+                    <p><strong>교환 재발송 하시겠습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="" value="o"> <label>예</label>
-                        <input type="radio" class="" name="" checked="checked" value="x"> <label>아니요</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi2" id="exchangeModal_return_radoi2_1" value="o" onclick="$('#exchangeModal_return_radoi3').show();$('#exchangeModal_ResendInfo_InvoiceNo').focus()"> <label for="exchangeModal_return_radoi2_1">예</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi2" id="exchangeModal_return_radoi2_2" checked="checked" value="x" onclick="$('#exchangeModal_return_radoi3').hide();$('#exchangeModal_ResendInfo_InvoiceNo').val('')"> <label for="exchangeModal_return_radoi2_2">아니요</label>
+                        <input type="text" id="exchangeModal_return_radoi2_hide" readonly style="width: 0px;height: 0px;border: none">
                     </div>
                 </div>
-                <!--교환재발송  시-->
-                <div class="box_white">
-                    <p>재발송일자</p>
-                    <input type="date" id="" name="" class="border_gray">
-                    <p>택배사명</p>
-                    <select>
-                        <option>택배사</option>
-                    </select>
-                    <p>운송장번호</p>
-                    <input type="text" id="" name="" class="border_gray">
+
+                <div class="box_white table" id="exchangeModal_return_radoi3" style="display: none">
+                    <p>교환재발송 처리 위해서는 교환발송 정보를 입력하여주시기 바랍니다.</p>
+                    <table>
+                        <tbody>
+                        <!-- 날짜 보내는 api없음
+                        <tr>
+                            <td>재발송일자</td>
+                            <td><input type="date" class="border_gray" id="ReturnExchange_ResendInfo_ResendDate"/></td>
+                        </tr>
+                        -->
+                        <tr>
+                            <td>택배사명</td>
+                            <td>
+                                <select id="exchangeModal_ResendInfo_DeliveryCompName">
+                                    <option value="">선택</option>
+                                    <? foreach ($delivery_company_list as $index => $data): ?>
+                                        <option value="<?= $data['code'] ?>"
+                                                data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>
+                                    <? endforeach; ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>운송장 번호</td>
+                            <td><input type="text" class="border_gray" id="exchangeModal_ResendInfo_InvoiceNo"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <br>
+
                 <div class="box_white2">
                     <p><strong>교환보류 설정하시겠습니까?</strong></p>
                     <div class="select">
@@ -3779,7 +3819,6 @@
                     <p>예상재발송일</p>
                     <input type="date" id="" name="" class="border_gray">
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>

@@ -38,6 +38,7 @@
                     member_idx: this.mb_no,
 
                     //tab1
+                    portfolios : [],
                     name: "",
                     category_idx: "",
                     gender: "",
@@ -83,6 +84,11 @@
         },
         methods: {
             postData: function () {
+                if(this.data.portfolios.length > 5) {
+                    alert("포트폴리오는 5개까지만 가능합니다.");
+                    return false;
+                }
+
                 if(this.data.keywords.length > 5) {
                     alert("검색 키워드는 5개까지만 가능합니다.");
                     return false;
@@ -158,6 +164,27 @@
                         alert("가격정보의 수정 횟수는 필수값입니다.");
                         return false;
                     }
+                }
+
+                if(!this.data.main_image_array.length) {
+                    alert("메인 이미지 1장은 필수입니다.");
+                    return false;
+                }
+                if(this.data.main_image_array.length > 1) {
+                    alert("메인 이미지는 1장까지 가능합니다");
+                    return false;
+                }
+                if(this.data.content_image_array.length > 10) {
+                    alert("상세 이미지는 10장까지 가능합니다");
+                    return false;
+                }
+                if(this.data.movie_file_array.length > 8) {
+                    alert("동영상 등록은 8개까지 가능합니다");
+                    return false;
+                }
+                if(this.data.movie_link.length > 10) {
+                    alert("동영상 링크 등록은 10개까지 가능합니다");
+                    return false;
                 }
 
                 //naverEditor 값 필드에 담기

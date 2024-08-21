@@ -33,7 +33,7 @@
                     </div>
                 <div class="box_content">
 					<div class="box_write02">
-						<h4 class="b_tit">메인이미지등록 <em><i class="point" name="point">{{ data.main_image_array.length }}</i>/4</em></h4>
+						<h4 class="b_tit">메인이미지등록 <em><i class="point" name="point">{{ data.main_image_array.length }}</i>/1</em></h4>
 						<div class="cont">
 							<div class="area_box">
 
@@ -66,7 +66,7 @@
 				</div>
 				<div class="box_content">
 					<div class="box_write02">
-						<h4 class="b_tit">상세이미지등록 <em><i class="point" name="subpoint">{{ data.content_image_array.length }}</i>/8</em></h4>
+						<h4 class="b_tit">상세이미지등록 <em><i class="point" name="subpoint">{{ data.content_image_array.length }}</i>/10</em></h4>
 						<div class="cont">
 							<div class="area_box">
 
@@ -99,20 +99,22 @@
 				</div>
                 <div class="box_content">
                     <div class="box_write02">
-                        <h4 class="b_tit">동영상 등록 <em><i class="point" name="subpoint">{{data.movie_file_array.length}}</i>/8</em>
-                            <!--<p><input type="checkbox"><label>링크 등록</label></p>--></h4>
+                        <h4 class="b_tit">동영상 등록
+<!--                            동영상 기획 정리될때까지 주석처리-->
+<!--                            <em><i class="point" name="subpoint">{{data.movie_file_array.length}}</i>/8</em>-->
+                            <em><i class="point" name="subpoint">{{data.movie_link.length}}</i>/10</em>
                         <div class="cont">
                             <div class="area_box">
-                                <div class="video_active box_dashed">
-                                    <ul>
-                                        <li v-for="item,index in data.movie_file_array">
-                                            <p>{{ item.name }}</p>
-                                            <a class="del" href="" @click="event.preventDefault(); data.movie_file_array.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>
-                                        </li>
-                                    </ul>
-                                    <button class="btn_add" @click="$refs.movieRef.click()"><i class="fa-light fa-folder-arrow-up"></i> 동영상 업로드</button>
-                                    <input v-show="false" type="file" ref="movieRef" @change="jl.changeFile($event,data,'movie_file_array')">
-                                </div>
+<!--                                <div class="video_active box_dashed">-->
+<!--                                    <ul>-->
+<!--                                        <li v-for="item,index in data.movie_file_array">-->
+<!--                                            <p>{{ item.name }}</p>-->
+<!--                                            <a class="del" href="" @click="event.preventDefault(); data.movie_file_array.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>-->
+<!--                                        </li>-->
+<!--                                    </ul>-->
+<!--                                    <button class="btn_add" @click="$refs.movieRef.click()"><i class="fa-light fa-folder-arrow-up"></i> 동영상 업로드</button>-->
+<!--                                    <input v-show="false" type="file" ref="movieRef" @change="jl.changeFile($event,data,'movie_file_array')">-->
+<!--                                </div>-->
                                 <div class="link_active box_dashed">
                                     <dl v-for="item,index in data.movie_link">
                                         <dt>동영상 링크 {{ (index+1).toString().padStart(2,'0') }}.</dt>
@@ -213,16 +215,20 @@
                     alert("메인 이미지 1장은 필수입니다.");
                     return false;
                 }
-                if(this.data.main_image_array.length > 4) {
-                    alert("메인 이미지는 4장까지 가능합니다");
+                if(this.data.main_image_array.length > 1) {
+                    alert("메인 이미지는 1장까지 가능합니다");
                     return false;
                 }
-                if(this.data.content_image_array.length > 8) {
-                    alert("상세 이미지는 8장까지 가능합니다");
+                if(this.data.content_image_array.length > 10) {
+                    alert("상세 이미지는 10장까지 가능합니다");
                     return false;
                 }
                 if(this.data.movie_file_array.length > 8) {
                     alert("동영상 등록은 8개까지 가능합니다");
+                    return false;
+                }
+                if(this.data.movie_link.length > 10) {
+                    alert("동영상 링크 등록은 10개까지 가능합니다");
                     return false;
                 }
                 if(!this.agree) {

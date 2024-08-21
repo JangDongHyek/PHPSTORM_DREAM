@@ -1,7 +1,9 @@
 <?php
-include_once("Lib.php");
+namespace App\Libraries;
 
-class Model extends JL{
+include_once("JL.php");
+
+class JlModel extends JL{
     //Database 설정
     private $hostname;
     private $username;
@@ -20,7 +22,6 @@ class Model extends JL{
     private $sql_order_by = "";
     private $group_bool = false;
     private $group_index = 0;
-    public  $not = false;
 
     function __construct($object = array()) {
         //부모 생성자
@@ -188,15 +189,6 @@ class Model extends JL{
 
             while($row = mysqli_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
-                foreach ($row as $key => $value) {
-                    $decoded_value = json_decode($value, true);
-
-                    // JSON 디코딩이 성공했다면 값을 디코딩된 데이터로 변경
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        $row[$key] = $decoded_value;
-
-                    }
-                }
                 array_push($object["data"], $row);
                 $index++;
             }
@@ -269,7 +261,9 @@ class Model extends JL{
         return $param[$this->primary];
     }
 
-    function sqlDelete(){
+    function sqlDelete($_param){
+
+        $param = $this->escape($_param);
 
         if($this->sql == "") throw new \Exception("조건 삭제에 조건이 없습니다.");
 
@@ -283,7 +277,7 @@ class Model extends JL{
             if(!$result) throw new \Exception(mysql_error());
         }
 
-        return $result;
+        return $param[$this->primary];
     }
 
     function getSql() {
@@ -353,8 +347,6 @@ class Model extends JL{
     }
 
     function where($first,$second = "") {
-        $equals = $this->not ? "!=" : "=";
-
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -369,7 +361,7 @@ class Model extends JL{
                         $this->sql .= " AND ";
                     }
 
-                    $this->sql .= "`{$key}` $equals '{$value}'";
+                    $this->sql .= "`{$key}` = '{$value}'";
                 }
             }
         }
@@ -386,14 +378,12 @@ class Model extends JL{
                     $this->sql .= " AND ";
                 }
 
-                $this->sql .= "`{$first}` $equals '{$second}'";
+                $this->sql .= "`{$first}` = '{$second}'";
             }
         }
     }
 
     function or_where($first,$second = "") {
-        $equals = $this->not ? "!=" : "=";
-
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -408,7 +398,7 @@ class Model extends JL{
                         $this->sql .= " OR ";
                     }
 
-                    $this->sql .= "`{$key}` $equals '{$value}'";
+                    $this->sql .= "`{$key}` = '{$value}'";
                 }
             }
         }
@@ -424,7 +414,7 @@ class Model extends JL{
                     $this->sql .= " OR ";
                 }
 
-                $this->sql .= "`{$first}` $equals '{$second}'";
+                $this->sql .= "`{$first}` = '{$second}'";
             }
         }
     }
@@ -509,9 +499,6 @@ class Model extends JL{
     function escape($_param) {
         $param = array();
         foreach($_param as $key => $value){
-            if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-            if (is_object($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-
             if($this->mysqli) {
                 $param[$key] = mysqli_real_escape_string($this->connect, $value);
             }else {

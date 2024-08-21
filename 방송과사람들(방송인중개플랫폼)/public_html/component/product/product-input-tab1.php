@@ -31,6 +31,25 @@
                     </ul>
                 </div>
                 <div class="box_list">
+
+                    <div class="box_content">
+                        <div class="box_write02">
+                            <h4 class="b_tit">포트폴리오 <em><i class="point" name="subpoint">{{ product.portfolios.length }}</i>/5</em></h4>
+                            <div class="cont">
+                                <div class="area_box">
+                                    <ul class="photo_list" id="file_list">
+                                        <li class="file_1" v-for="item,index in product.portfolios">
+                                            <div class="area_img" v-if="jl.findObject(portfolios,'idx',item)">
+                                                <img :src="jl.root + jl.findObject(portfolios,'idx',item).main_image_array[0].src">
+                                                <div class="area_delete" @click="product.portfolios.splice(index,1)"><span class="sound_only">삭제</span></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="portfolio text-right">
                         <button class="btn" @click="modal = true"><i class="fa-regular fa-arrow-down-to-line"></i> 포트폴리오 불러오기</button>
                     </div>
@@ -53,6 +72,7 @@
                                             <h3>{{item.name}}</h3> <!-- 제목 -->
                                         </div>
                                     </a>
+                                    <button @click="product.portfolios.push(item.idx)">등록하기</button>
                                 </li>
                             </ul>
                     </slot-modal>
@@ -210,7 +230,8 @@
                                                     <th>작업 기간<span class="required">*</span></th>
                                                     <td>
                                                         <select required v-model="product.basic.work">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 30" :value="item">{{ item }}일</option>
                                                         </select>
                                                     </td>
                                                 </tr>
@@ -218,7 +239,9 @@
                                                     <th>수정 횟수<span class="required">*</span></th>
                                                     <td>
                                                         <select required v-model="product.basic.modify">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 15" :value="item">{{ item }}회</option>
+                                                            <option value="제한없음">제한없음</option>
                                                         </select>
                                                     </td>
                                                 </tr>
@@ -280,17 +303,20 @@
                                                     <th>작업 기간<span class="required">*</span></th>
                                                     <td>
                                                         <select required v-model="product.standard.work">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 30" :value="item">{{ item }}일</option>
                                                         </select>
                                                     </td>
                                                     <td>
                                                         <select required v-model="product.deluxe.work">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 30" :value="item">{{ item }}일</option>
                                                         </select>
                                                     </td>
                                                     <td>
                                                         <select required v-model="product.premium.work">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 30" :value="item">{{ item }}일</option>
                                                         </select>
                                                     </td>
                                                 </tr>
@@ -298,17 +324,23 @@
                                                     <th>수정 횟수<span class="required">*</span></th>
                                                     <td>
                                                         <select required v-model="product.standard.modify">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 15" :value="item">{{ item }}회</option>
+                                                            <option value="제한없음">제한없음</option>
                                                         </select>
                                                     </td>
                                                     <td>
                                                         <select required v-model="product.deluxe.modify">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 15" :value="item">{{ item }}회</option>
+                                                            <option value="제한없음">제한없음</option>
                                                         </select>
                                                     </td>
                                                     <td>
                                                         <select required v-model="product.premium.modify">
-                                                            <option>선택해주세요</option>
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="item in 15" :value="item">{{ item }}회</option>
+                                                            <option value="제한없음">제한없음</option>
                                                         </select>
                                                     </td>
                                                 </tr>

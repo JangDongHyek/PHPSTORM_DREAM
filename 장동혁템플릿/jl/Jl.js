@@ -194,6 +194,10 @@ class Jl {
         return str === str.toUpperCase();
     }
 
+    findObject(arrays,key,value) {
+        return arrays.find(obj => obj[key] === value);
+    }
+
     processObject(objs,obj) {
         objs = this.copyObject(objs);
         obj = this.copyObject(obj);
