@@ -188,6 +188,7 @@ class JlModel extends Jl{
 
             while($row = mysqli_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
+                $row["data_page_nor"] = $object['count'] - $index + 1;
                 foreach ($row as $key => $value) {
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
@@ -206,6 +207,7 @@ class JlModel extends Jl{
 
             while($row = mysql_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
+                $row["data_page_nor"] = $object['count'] - $index + 1;
                 foreach ($row as $key => $value) {
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
@@ -347,6 +349,9 @@ class JlModel extends Jl{
         if($column == "") throw new \Exception("JlModel : 컬럼명을 대입 해주새요.");
         if($start == "") throw new \Exception("JlModel : 시작시간을 대입 해주새요.");
         if($end == "") throw new \Exception("JlModel : 종료시간을 대입 해주새요.");
+
+        if(strpos($start,":") === false) $start .= " 00:00:00";
+        if(strpos($end,":") === false) $end .= " 23:59:59";
 
         if(in_array($column, $this->schema['columns'])){
             if($this->group_bool) {

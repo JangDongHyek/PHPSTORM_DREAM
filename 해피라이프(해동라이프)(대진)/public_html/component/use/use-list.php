@@ -10,6 +10,8 @@
                 <option value="company">고객사명</option>
             </select>
             <input type="text" class="search-input" placeholder="검색어를 입력하세요" v-model="filter.search_value">
+            <input type="date" class="search-input" v-model="filter.sdate">~
+            <input type="date" class="search-input" v-model="filter.edate">
             <button class="search-button" @click="getData()">
                 <img src="https://img.icons8.com/material-rounded/24/000000/search.png" alt="검색">
             </button>
@@ -17,6 +19,8 @@
         </div>
 
         <div style="float : right; top: 10px; right: 10px; padding: 10px 20px">
+            <button style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;" @click="modal = true">+ 고객등록</button>
+
             <button style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px;" @click="csvData">
                 엑셀 다운로드
             </button>
@@ -40,7 +44,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="item in data">
-                    <td>{{item.data_page_no}}</td>
+                    <td>{{item.data_page_nor}}</td>
                     <td>{{item.insert_date}}</td>
                     <td>{{item.type}}</td>
                     <td>{{item.name}}</td>
@@ -49,16 +53,12 @@
                     <td>{{item.content}}</td>
                     <td>
                         <button class="delete-button" aria-label="삭제" @click="deleteData(item)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M3 6l3 18.338c.149.888.906 1.662 1.803 1.662h8.395c.896 0 1.654-.774 1.802-1.662l3-18.338h-18.999zm16 2v15.5c0 .276-.226.5-.501.5h-10.998c-.275 0-.501-.224-.501-.5v-15.5h12zm-9 12h-1v-10h1v10zm3 0h-1v-10h1v10zm3 0h-1v-10h1v10zm-9-15v-3h10v3h7v2h-24v-2h7z"/>
-                            </svg>
+                            <i class="far fa-trash-alt"></i>
                         </button>
                     </td>
                 </tr>
                 </tbody>
             </table>
-
-            <button class="register-button" @click="modal = true">+ 고객등록</button>
 
             <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
 
@@ -84,6 +84,8 @@
                     count : 0,
                     search_key : "",
                     search_value : "",
+                    sdate : "",
+                    edate : "",
                     order_by_desc : "insert_date"
                 },
                 required : [
@@ -166,6 +168,8 @@
         border: 1px solid #ccc;
         border-radius: 4px 0 0 4px;
         outline: none;
+        height: 40px;
+        margin: 0;
     }
 
     .search-input {
@@ -175,6 +179,7 @@
         width: 200px;
         border-radius: 0;
         outline: none;
+        margin-top: 0!important;
     }
 
     .search-button {
@@ -185,6 +190,7 @@
         cursor: pointer;
         border-radius: 0 4px 4px 0;
         outline: none;
+        height: 40px;
     }
 
     .search-button img {
@@ -257,13 +263,11 @@
         padding: 10px;
     }
 
-    .delete-button svg {
-        width: 24px;
-        height: 24px;
-        fill: #ff0000; /* 빨간색으로 아이콘 색상을 지정 */
+    .delete-button i {
+        color: #ff0000; /* 빨간색으로 아이콘 색상을 지정 */
     }
 
-    .delete-button svg:hover {
-        fill: #cc0000; /* 호버 시 색상 변경 */
+    .delete-button i:hover {
+        color: #733f3f; /* 호버 시 색상 변경 */
     }
 </style>

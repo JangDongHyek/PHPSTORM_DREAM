@@ -29,7 +29,8 @@
                     limit : 1,
                     count : 0,
                     search_key1 : "",
-                    search_value1 : "",
+                    search_value1_1 : "",
+                    search_value1_2 : "",
                     search_like_key1 : "",
                     search_like_value1 : "",
                     order_by_desc : "insert_date"
@@ -76,7 +77,10 @@
 
         },
         watch : {
-
+            search_key1() {
+                this.search_value1_1 = "";
+                this.search_value1_2 = "";
+            }
         }
     });
 </script>

@@ -8,8 +8,16 @@
                 <option value="mb_name">성명</option>
                 <option value="mb_hp">연락처</option>
                 <option value="mb_company">고객사명</option>
+                <option value="reg_date">캐쉬백 신청일시</option>
+                <option value="use_date">해피라이프 이용일자</option>
             </select>
-            <input type="text" class="search-input" placeholder="검색어를 입력하세요" v-model="filter.search_value">
+            <template v-if="filter.search_key == 'reg_date' || filter.search_key == 'use_date'">
+                <input type="date" class="search-input" v-model="filter.sdate">~
+                <input type="date" class="search-input" v-model="filter.edate">
+            </template>
+            <template v-else>
+                <input type="text" class="search-input" placeholder="검색어를 입력하세요" v-model="filter.search_value">
+            </template>
             <button class="search-button" @click="getData()">
                 <img src="https://img.icons8.com/material-rounded/24/000000/search.png" alt="검색">
             </button>
@@ -40,7 +48,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="item in data">
-                    <td>{{item.data_page_no}}</td>
+                    <td>{{item.data_page_nor}}</td>
                     <td>{{item.type}}</td>
                     <td>{{item.reg_date}}</td>
                     <td>{{item.mb_name}}</td>
@@ -51,6 +59,8 @@
                 </tr>
                 </tbody>
             </table>
+
+            <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
         </div>
     </div>
 </script>
@@ -70,6 +80,8 @@
                     count : 0,
                     search_key : "",
                     search_value : "",
+                    sdate : "",
+                    edate : "",
                     order_by_desc : "reg_date"
                 },
                 required : [
@@ -100,7 +112,7 @@
 
                 let options = {"download" : `${year}${month}${day}캐쉬백신청리스트.csv`}
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/v5_sangjo_sub_excel.php",options);
+                    let res = await this.jl.ajax("csv",this.filter,"/api/v5_sangjo_sub.php",options);
 
                 }catch (e) {
                     alert(e)
@@ -120,6 +132,7 @@
                 try {
                     let res = await this.jl.ajax("get",this.filter,"/api/v5_sangjo_sub.php");
                     this.data = res.data
+                    this.filter.count = res.count;
                 }catch (e) {
                     alert(e)
                 }
@@ -146,6 +159,8 @@
         border: 1px solid #ccc;
         border-radius: 4px 0 0 4px;
         outline: none;
+        height: 40px;
+        margin: 0;
     }
 
     .search-input {
@@ -155,6 +170,8 @@
         width: 200px;
         border-radius: 0;
         outline: none;
+        margin-top: 0!important;
+        height: 40px;
     }
 
     .search-button {
@@ -165,6 +182,7 @@
         cursor: pointer;
         border-radius: 0 4px 4px 0;
         outline: none;
+        height: 40px;
     }
 
     .search-button img {

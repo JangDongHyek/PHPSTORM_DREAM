@@ -619,7 +619,7 @@ class OrderController extends BaseController
         $this->data['api_method'] = "POST";
         $this->data['api_url'] = "https://sa2.esmplus.com/account/v1/settle/getsettleorder";
         $this->data['api_data'] = [];
-        $time_start = date('Y-m-d', strtotime('-6Day'));
+        $time_start = date('Y-m-d', strtotime('-29Day'));
         $time_end = date('Y-m-d', strtotime('+1Day'));
 
         /* SrchType
@@ -636,7 +636,7 @@ class OrderController extends BaseController
         $this->data['api_data'] = [
             "SrchStartDate" => $time_start,
             "SrchEndDate" => $time_end,
-            "SrchType" => 'D5',
+            "SrchType" => 'D2',
             "PageNo" => 1,
             "PageRowCnt" => 100
         ];
@@ -653,21 +653,20 @@ class OrderController extends BaseController
         $result = $apiModel->getOrder($this->data);
 
         $orderModel = new OrderModel();
-
-        if ($result['body']['Data']['RequestOrders'][0]) {
+        log_message('alert','cron : GetSettleOrder :  $result - ' . print_r($result,true));
+        if ($result['body']['Data'][0]) {
             $SiteType = $result['body']['Data']['SiteType'];
-            foreach ($result['body']['Data']['RequestOrders'] as $get_data) {
+            $ResultCode = $result['body']['Data']['ResultCode'];
+            $Message = $result['body']['Data']['Message'];
+            foreach ($result['body']['Data'] as $get_data) {
                 $get_data['SiteType'] = $SiteType;
-                //$request_orders = json_encode($get_data);
+                $get_data['ResultCode'] = $ResultCode;
+                $get_data['Message'] = $Message;
                 $result2 = $orderModel->setSettleOrder($get_data);
-                //log_message('alert','cron : GetSettleOrder :  $get_data - ' . print_r($result2,true));
             }
         } else {
             //log_message('error','cron : GetSettleOrder :  $result[body][Data] - ' . print_r($result['body']['Data'],true));
         }
-
-        //log_message('alert','cron : GetSettleOrder :  $orderStatus - ' . print_r($result,true) . ' $result ' . $result);
-        //log_message('error','cron : GetSettleOrder :  $timers - ' . print_r($timers,true));
 
         if ($this->response === null) {
             //log_message('error', 'Response object is null');
@@ -1118,6 +1117,8 @@ class OrderController extends BaseController
         $apiModel = new GmarketApiModel();
         $result = $apiModel->getOrder($this->data);
 
+        $result['api_data']['OrderNo'] = $OrderNo;
+
         //성공 ResultCode = 0
         if (!$result['body']['ResultCode']) {
             $result['body']['result'] = $orderModel->setOrderSendByOrderNo($this->data['api_data']);
@@ -1228,6 +1229,136 @@ class OrderController extends BaseController
             log_message('error', 'OrderDeliEdit 실행 :  $get_data - ' . print_r($result['body'], true));
         } else {
             log_message('error', 'OrderDeliEdit 실행 :  $result[body] - ' . print_r($result['body'], true));
+        }
+        if ($this->response === null) {
+            //log_message('error', 'Response object is null');
+        } else {
+            return $this->response->setJSON($result);
+        }
+
+    }
+
+    /**
+     * ESM Trading API 반품수거 송장등록
+     */
+    public function OrderReturnDeliEdit()
+    {
+        $orderData = [];
+        $post = $this->data['data_arr'];
+
+        $post = json_decode(json_encode($post), true);
+        //log_message('error','OrderSend 실행 :  $post - ' . print_r($post,true));
+        $idx = $post['idx'];
+        $orderModel = new OrderModel();
+        $orderData['result'] = $orderModel->getOrderInfoByIdx($idx);
+        $OrderNo = $orderData['result']['OrderNo'];
+
+        /*
+        $result = [];
+        if($orderData['result']['ShippingExpectedDate']){
+            $result['api_data']['orderNo'] = $OrderNo;
+            $result['body']['Message'] = '이미 발송예정일이 등록된 주문입니다.';
+            return $this->response->setJSON($result);
+        }*/
+
+        $this->data['api_method'] = "POST";
+        $this->data['api_url'] = "https://sa2.esmplus.com/claim/v1/sa/return/{$OrderNo}/pickup";
+        $this->data['api_data'] = [];
+
+        $now = date('Y-m-d h:i:s ', time());
+        $this->data['api_data'] = [
+            "orderNo" => $OrderNo,
+            "ShippingDate" => $now,
+            "DeliveryCompanyCode" => $post['companyNo'],
+            "DeliveryCompCode" => $post['companyNo'],
+            "InvoiceNo" => $post['NoSongjang'],
+            "TakbaeName" => $post['TakbaeName'],
+        ];
+
+
+        if ($orderData['result']['SiteType'] == 2) {
+            $this->data['api_type'] = GM;
+            $this->data['api_data']['siteType'] = 2;
+        } else if ($orderData['result']['SiteType'] == 1) {
+            $this->data['api_type'] = AC;
+            $this->data['api_data']['siteType'] = 1;
+        }
+
+        //getOrder 공통으로씀
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->getOrder($this->data);
+
+        //성공 ResultCode = 0
+        if (!$result['body']['ResultCode']) {
+            $result['body']['result'] = $orderModel->setOrderSendByOrderNo2($this->data['api_data']);
+            log_message('error', 'OrderReturnDeliEdit 실행 :  $get_data - ' . print_r($result['body'], true));
+        } else {
+            log_message('error', 'OrderReturnDeliEdit 실행 :  $result[body] - ' . print_r($result['body'], true));
+        }
+        if ($this->response === null) {
+            //log_message('error', 'Response object is null');
+        } else {
+            return $this->response->setJSON($result);
+        }
+
+    }
+
+    /**
+     * ESM Trading API 교환수거 송장등록
+     */
+    public function OrderExchangeDeliEdit()
+    {
+        $orderData = [];
+        $post = $this->data['data_arr'];
+
+        $post = json_decode(json_encode($post), true);
+        //log_message('error','OrderSend 실행 :  $post - ' . print_r($post,true));
+        $idx = $post['idx'];
+        $orderModel = new OrderModel();
+        $orderData['result'] = $orderModel->getOrderInfoByIdx($idx);
+        $OrderNo = $orderData['result']['OrderNo'];
+
+        /*
+        $result = [];
+        if($orderData['result']['ShippingExpectedDate']){
+            $result['api_data']['orderNo'] = $OrderNo;
+            $result['body']['Message'] = '이미 발송예정일이 등록된 주문입니다.';
+            return $this->response->setJSON($result);
+        }*/
+
+        $this->data['api_method'] = "POST";
+        $this->data['api_url'] = "https://sa2.esmplus.com/claim/v1/sa/exchange/{$OrderNo}/pickup";
+        $this->data['api_data'] = [];
+
+        $now = date('Y-m-d h:i:s ', time());
+        $this->data['api_data'] = [
+            "orderNo" => $OrderNo,
+            "ShippingDate" => $now,
+            "DeliveryCompanyCode" => $post['companyNo'],
+            "DeliveryCompCode" => $post['companyNo'],
+            "InvoiceNo" => $post['NoSongjang'],
+            "TakbaeName" => $post['TakbaeName'],
+        ];
+
+
+        if ($orderData['result']['SiteType'] == 2) {
+            $this->data['api_type'] = GM;
+            $this->data['api_data']['siteType'] = 2;
+        } else if ($orderData['result']['SiteType'] == 1) {
+            $this->data['api_type'] = AC;
+            $this->data['api_data']['siteType'] = 1;
+        }
+
+        //getOrder 공통으로씀
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->getOrder($this->data);
+
+        //성공 ResultCode = 0
+        if (!$result['body']['ResultCode']) {
+            $result['body']['result'] = $orderModel->setOrderSendByOrderNo2($this->data['api_data']);
+            log_message('error', 'OrderExchangeDeliEdit 실행 :  $get_data - ' . print_r($result['body'], true));
+        } else {
+            log_message('error', 'OrderExchangeDeliEdit 실행 :  $result[body] - ' . print_r($result['body'], true));
         }
         if ($this->response === null) {
             //log_message('error', 'Response object is null');
@@ -1657,6 +1788,62 @@ class OrderController extends BaseController
     }
 
     /**
+     * ESM Trading API 반품보류
+     */
+    public function OrderReturnHold()
+    {
+        $orderData = [];
+        $post = $this->data['data_arr'];
+        $post = json_decode(json_encode($post), true);
+        $idx = $post['idx'];
+
+        $orderModel = new OrderModel();
+        $orderData['result'] = $orderModel->getOrderInfoByIdx($idx);
+        $OrderNo = $orderData['result']['OrderNo'];
+
+        $this->data['api_method'] = "POST";
+        $this->data['api_url'] = "https://sa2.esmplus.com/claim/v1/sa/return/{$OrderNo}/hold";
+
+        if(!$post['ReturnShippingFee']){
+            $post['ReturnShippingFee'] = 0;
+        }
+
+        $this->data['api_data'] = [
+            "orderNo" => $OrderNo,
+            "HoldReason" => (int)$post['HoldReason'],
+            "HoldReasonDetail" => $post['HoldReasonDetail'],
+            "ReturnShippingFee" => $post['ReturnShippingFee']
+        ];
+
+        if ($orderData['result']['SiteType'] == 2) {
+            $this->data['api_type'] = GM;
+            $this->data['api_data']['siteType'] = 2;
+        } else if ($orderData['result']['SiteType'] == 1) {
+            $this->data['api_type'] = AC;
+            $this->data['api_data']['siteType'] = 1;
+        }
+
+        //getOrder 공통으로씀
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->getOrder($this->data);
+        log_message('alert', 'OrderReturnHold 실행 :  $result - ' . print_r($result, true));
+        $result['api_data']['OrderNo'] = $OrderNo;
+        //성공 ResultCode = 0
+        if (!$result['body']['ResultCode']) {
+            $result['body']['result'] = $orderModel->setOrderReturnHoldByOrderNo($OrderNo);
+        } else {
+            //log_message('error', 'OrderReturnSelf 실행 :  $result[body] - ' . print_r($result['body'], true));
+        }
+
+        if ($this->response === null) {
+            //log_message('error', 'Response object is null');
+        } else {
+            return $this->response->setJSON($result);
+        }
+
+    }
+
+    /**
      * ESM Trading API 판매자 직접 반품 신청
      *
      * @param int $idx order_list의 idx주문번호.
@@ -1731,9 +1918,69 @@ class OrderController extends BaseController
     }
 
     /**
-     * ESM Trading API 판매자 직접 반품 신청
-     *
-     * @param int $idx order_list의 idx주문번호.
+     * ESM Trading API 교환건 반품전환
+     */
+    public function OrderExchangeReturn()
+    {
+        $orderData = [];
+        $post = $this->data['data_arr'];
+        $post = json_decode(json_encode($post), true);
+        $idx = $post['idx'];
+
+        $orderModel = new OrderModel();
+        $orderData['result'] = $orderModel->getOrderInfoByIdx($idx);
+        $OrderNo = $orderData['result']['OrderNo'];
+
+        $result = [];
+        if($orderData['result']['SiteType'] == 1 && !$post['InvoiceNo']){
+            $result['api_data']['OrderNo'] = $OrderNo;
+            $result['body']['Message'] = '옥션은 재배송 송장번호가 필수입니다.';
+            return $this->response->setJSON($result);
+        }
+
+        $this->data['api_method'] = "POST";
+        $this->data['api_url'] = "https://sa2.esmplus.com/claim/v1/sa/exchange/{$OrderNo}/return";
+        $this->data['api_data'] = [
+            "OrderNo" => $OrderNo,
+            "DeliveryCompCode" => $post['DeliveryCompCode'],
+            "InvoiceNo" => $post['InvoiceNo']
+        ];
+
+        if ($orderData['result']['SiteType'] == 2) {
+            $this->data['api_type'] = GM;
+            $this->data['api_data']['siteType'] = 2;
+        } else if ($orderData['result']['SiteType'] == 1) {
+            $this->data['api_type'] = AC;
+            $this->data['api_data']['siteType'] = 1;
+        }
+
+        //getOrder 공통으로씀
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->getOrder($this->data);
+        log_message('error', 'OrderExchangeReturn 실행 :  $result - ' . print_r($result, true));
+        $result['api_data']['OrderNo'] = $OrderNo;
+        //성공 ResultCode = 0
+        if (!$result['body']['ResultCode']) {
+            $result['body']['result'] = $orderModel->setOrderExchangeReturn($this->data['api_data']);
+
+            log_message('error', 'OrderExchangeReturn 실행 :  $get_data - ' . print_r($result['body'], true));
+            log_message('error','OrderExchangeReturn 실행 :  OrderCancelCheck - ' . print_r($this->data,true));
+        } else {
+            log_message('error', 'OrderExchangeReturn 실행 :  $result[body] - ' . print_r($result['body'], true));
+        }
+
+        //log_message('error','cron : OrderExchangeReturn :  $orderStatus - ' . $orderStatus . ' $api_type ' . $api_type);
+
+        if ($this->response === null) {
+            //log_message('error', 'Response object is null');
+        } else {
+            return $this->response->setJSON($result);
+        }
+
+    }
+
+    /**
+     * ESM Trading API 반품건 교환전환
      */
     public function OrderReturnExchange()
     {

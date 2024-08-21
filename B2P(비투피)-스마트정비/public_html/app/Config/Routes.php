@@ -14,8 +14,8 @@ $routes->get('common/logout', 'LoginController::logout');
 $routes->post('common/login/authenticate', 'LoginController::authenticate');
 $routes->cli('queueprocessor/(:any)', 'QueueProcessor::$1');
 
-$routes->post('/api/resve/confirm','UserController::resveConfirm');
-$routes->post('/api/maintenance/result','UserController::maintenanceReulst');
+$routes->get('/api/resve/confirm','UserController::resveConfirm');
+$routes->get('/api/maintenance/result','UserController::maintenanceReulst');
 
 // 회원가입
 $routes->group('signup', ['namespace' => '\App\Controllers'], static function ($routes) {
@@ -128,7 +128,7 @@ $routes->group('delivery', ['namespace' => '\App\Controllers' , 'filter' => 'aut
 
     //발송정책 아작스
     $routes->post('setDispatchPolicy', 'DeliveryController::setDispatchPolicy');
-    $routes->post('getDispatchPolicy', 'DeliveryController::getDispatchPolicy');
+    $routes->get('getDispatchPolicy', 'DeliveryController::getDispatchPolicy');
 });
 
 
@@ -173,10 +173,20 @@ $routes->group('admin', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     $routes->get('msgWrite', 'AdminController::msg_write');
     // LMS로그
     $routes->get('lms', 'AdminController::lms_log_list');
-    // 스티커신청
-    $routes->get('sticker', 'AdminController::sticker_list');
+
 
 });
+
+$routes->group('sticker', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function ($routes) {
+    // 스티커신청
+    $routes->get('list', 'StickerController::stickerList');
+    $routes->post('setSticker','StickerController::setSticker');
+    $routes->post('setStickerShipInfo', 'StickerController::setStickerShipInfo');
+    $routes->post('cancelSticker', 'StickerController::cancelSticker');
+
+});
+
+
 
 // 주문관리
 $routes->group('order', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function ($routes) {
@@ -323,14 +333,18 @@ $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($
     $routes->post('OrderCancelSoldOut', 'OrderController::OrderCancelSoldOut');
     $routes->get('OrderReturnCheck/(:segment)', 'OrderController::OrderReturnCheck/$1');
     $routes->post('OrderReturnCheck', 'OrderController::OrderReturnCheck');
+    $routes->get('OrderReturnHold', 'OrderController::OrderReturnHold');
+    $routes->post('OrderReturnHold', 'OrderController::OrderReturnHold');
     $routes->get('OrderReturnSelf/(:segment)', 'OrderController::OrderReturnSelf/$1');
     $routes->post('OrderReturnSelf', 'OrderController::OrderReturnSelf');
     $routes->get('GetClaimList/(:segment)', 'OrderController::GetClaimList/$1');
-    $routes->post('OrderReturnExchange', 'OrderController::OrderReturnExchange');
     $routes->get('OrderClaimRelease/(:segment)', 'OrderController::OrderClaimRelease/$1');
     $routes->post('OrderClaimRelease', 'OrderController::OrderClaimRelease');
-    $routes->get('OrderReturnExchange', 'OrderController::OrderReturnExchange');
     $routes->get('GetClaimList_cron', 'OrderController::GetClaimList_cron');
+    $routes->post('OrderReturnExchange', 'OrderController::OrderReturnExchange');
+    $routes->get('OrderReturnExchange', 'OrderController::OrderReturnExchange');
+    $routes->post('OrderExchangeReturn', 'OrderController::OrderExchangeReturn');
+    $routes->get('OrderExchangeReturn', 'OrderController::OrderExchangeReturn');
 
     $routes->post('OrderShippingExpectedDate', 'OrderController::OrderShippingExpectedDate');
     $routes->post('OrderSend', 'OrderController::OrderSend');
@@ -342,7 +356,9 @@ $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($
     $routes->post('OrderSendExcelUpload', 'OrderController::OrderSendExcelUpload');
     //배송정보수정
     $routes->post('OrderDeliEdit', 'OrderController::OrderDeliEdit');
-    
+    $routes->post('OrderReturnDeliEdit', 'OrderController::OrderReturnDeliEdit');
+    $routes->post('OrderExchangeDeliEdit', 'OrderController::OrderExchangeDeliEdit');
+
     //배송진행정보
     $routes->post('OrderDeliProgress', 'OrderController::OrderDeliProgress');
 

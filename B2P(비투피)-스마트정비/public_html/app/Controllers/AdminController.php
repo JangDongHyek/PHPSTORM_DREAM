@@ -217,6 +217,8 @@ class AdminController extends BaseController {
             $model->like($this->data['search_key'],$this->data['search_value']);
         }
 
+        $model->order_by("OrderDate","DESC");
+
         $this->data['orders'] = $model->get($this->data['page'],$this->data['limit']);
         $this->data['search_all_orders'] = $model->get();
 

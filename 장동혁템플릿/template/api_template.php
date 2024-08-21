@@ -1,6 +1,5 @@
 <?php
-include_once("../jl/JlModel.php");
-//include_once("../jl/JlFile.php");
+include_once("../jl/JlConfig.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
@@ -27,23 +26,13 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
-            //필터 가공
-            foreach ($obj as $key => $value) {
-                if(strpos($key,"primary") !== false) $obj[$model->primary] = $value;
-                if(strpos($key,"search_key") !== false) $column = $value;
-                if(strpos($key,"search_value") !== false) $obj[$column] = $value;
-                if(strpos($key,"order_by_desc") !== false) $model->order_by($obj['order_by_desc'],"DESC");
-                if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
-            }
-            //라이크 부분 필터 가공
-            $search_like_key = "";
-            foreach ($obj as $key => $value) {
-                if(strpos($key,"search_like_key") !== false) $search_like_key = $value;
-                if(strpos($key,"search_like_value") !== false && $search_like_key) {
-                    $model->like($search_like_key,$obj['search_like_value']);
-                    $search_like_key = "";
-                }
-            }
+            //필터링
+            if($obj['primary']) $obj[$model->primary] = $obj['primary'];
+            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2'] == "") $model->where($obj['search_key1'],$obj['search_value1_1']);
+            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2']) $model->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
+            if($obj['search_like_key1'] && $obj['search_like_value1']) $model->like($obj['search_like_key1'],$obj['search_like_value1']);
+            if($obj['order_by_desc']) $model->order_by($obj['order_by_desc'],"DESC");
+            if($obj['order_by_asc']) $model->order_by($obj['order_by_asc'],"ASC");
 
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
@@ -137,6 +126,7 @@ try {
 
             $model->where($obj);
             $data = $model->whereDelete();
+            break;
 
         case "deletes":
         {
@@ -152,6 +142,32 @@ try {
             $response['success'] = true;
             break;
         }
+
+        //csv 파일 만들고 다운받는 처리
+        case "csv" :
+            $obj = $model->jsonDecode($_POST['obj']);
+
+            //필터 가공
+            foreach ($obj as $key => $value) {
+                if(strpos($key,"primary") !== false) $obj[$model->primary] = $value;
+                if(strpos($key,"order_by_desc") !== false) $model->order_by($obj['order_by_desc'],"DESC");
+                if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
+            }
+            if($obj['search_key'] && $obj['search_value']) $model->like($obj['search_key'],$obj['search_value']);
+
+            $model->where($obj);
+            $object = $model->get();
+
+            $header = [
+                ['구분', '캐쉬백 신청일시', '신청인 성명',"신청인 휴대폰","신청인 고객사명","해피라이프 이용일자","이용인 성명"]
+            ];
+            $field = [
+                "type","reg_date","mb_name","mb_hp","mb_company","use_date","use_name"
+            ];
+            $csv = new JlCsv($header,$field,$object);
+
+            $csv->getCsv();
+            die(); //return이 안되는 void메소드 echo로 파일출력값을 찍어내기때문에 바로 die처리
     }
 } catch (Exception $e) {
     $response['success'] = false;

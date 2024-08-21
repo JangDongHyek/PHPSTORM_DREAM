@@ -34,6 +34,7 @@ try {
             }
 
             if($obj['search_key'] && $obj['search_value']) $model->like($obj['search_key'],$obj['search_value']);
+            if($obj['sdate'] && $obj['edate']) $model->between("insert_date",$obj['sdate'],$obj['edate']);
 
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
