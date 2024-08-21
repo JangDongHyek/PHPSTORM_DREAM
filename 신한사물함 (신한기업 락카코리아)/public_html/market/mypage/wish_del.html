@@ -1,0 +1,64 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+if( !$UnameSess ){
+	echo("
+		<script>
+		window.alert('찜하기는 회원 전용공간입니다. \\n로그인을 하셔야 합니다.');
+		</script>
+	");
+	exit;
+}
+
+if( $flag == "del" ){
+	//=============================== 해당하는 찜하기를 검색함 ===========================
+	$sql1 = "select * from $Pre_SelectTable where mart_id='$mart_id' and id='$UnameSess' and pre_no='$pre_no'";
+	$res1 = mysql_query( $sql1, $dbconn );
+	$tot1 = mysql_num_rows($res1);
+	if( $tot1 > 0 ){
+		$query = "delete from $Pre_SelectTable where pre_no='$pre_no' and id ='$UnameSess'";
+		$result = mysql_query( $query, $dbconn );
+
+		if( $result ){
+			echo("
+				<meta http-equiv='refresh' content='0;url=wish.html'>
+			");
+			exit;
+		}else{
+			echo("
+				<script>
+				window.alert('삭제에 실패했습니다.');
+				self.close();
+				</script>
+			");
+			exit;
+		}
+	}
+}
+if( $flag == "all" ){
+	$query = "delete from $Pre_SelectTable where id ='$UnameSess'";
+	$result = mysql_query( $query, $dbconn );
+
+	if( $result ){
+		echo("
+			<meta http-equiv='refresh' content='0;url=wish.html'>
+		");
+		exit;
+	}else{
+		echo("
+			<script>
+			window.alert('삭제에 실패했습니다.');
+			self.close();
+			</script>
+		");
+		exit;
+	}
+
+}
+
+mysql_close( $dbconn );
+?>

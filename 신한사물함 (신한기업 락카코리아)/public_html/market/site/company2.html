@@ -1,0 +1,210 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top" bgcolor="#000000">&nbsp;</td>
+        <td width="888" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top" background="../images/menu_bg.gif">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td>
+                    <td height="100%" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="D4CFC3">
+                                  <tr>
+                                    <td height="25" bgcolor="EAE6E2"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td><img src="../images/proudct/product_info_title_icon.gif" width="13" height="13" align="absmiddle" /> <span class="category_title2">천마란</span></td>
+                                          <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 천마란 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5" valign="top"></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="40"><img src="../images/site/site_title11.gif" width="84" height="30" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" align="center">
+                                  <tr><td><img src="../images/greet2_img.gif" width="700" height="2496"></td>
+                                  </tr></table></td>
+                              </tr>
+                              <tr>
+                                <td><table width="700" border="0" align="center" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td><table width="95%" border="0" align="right" cellpadding="0" cellspacing="0">
+                                      <tr>
+                                        <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#DBD7C8">
+                                            <tr>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>비교내역</strong></div></td>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>전통가공법</strong></div></td>
+                                              <td bgcolor="#ECEAE1"><div align="center"><strong>나노가공법</strong></div></td>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>비 고 </strong></div></td>
+                                            </tr>
+                                            <tr>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>가 공 </strong></div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center">열에 의한 주요성분<br>
+                                                손실로 약효 저하 </div></td>
+                                              <td bgcolor="#ECEAE1"><div align="center">저온 불리추출로<br>
+                                                주요성분 손실 무 </div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center"></div></td>
+                                            </tr>
+                                            <tr>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>건 조 </strong></div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center">열풍건조 (성분손실)<br>
+                                                자연건조(건조상태 불균일,비위생적임) </div></td>
+                                              <td bgcolor="#ECEAE1"><div align="center">불필요</div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center"></div></td>
+                                            </tr>
+                                            <tr>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>보 관</strong></div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center">일반상태 보관으로 비위생적임 </div></td>
+                                              <td bgcolor="#ECEAE1"><div align="center">제품용기에 포장,<br>
+                                                냉장보관으로 위생적이고<br>
+                                                변질 없음 </div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center"></div></td>
+                                            </tr>
+                                            <tr>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>약성유지</strong></div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center">생 약재 함유분의 20% 정도 유지 </div></td>
+                                              <td bgcolor="#ECEAE1"><div align="center">생 약재 함유분의<br>
+                                                99% 이상 유지 </div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center"></div></td>
+                                            </tr>
+                                            <tr>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>성분흡수 </strong></div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center">약성 유지분의 5% 이하 </div></td>
+                                              <td bgcolor="#ECEAE1"><div align="center">약성 유지분의<br>
+                                                90% 이상 </div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center"></div></td>
+                                            </tr>
+                                            <tr>
+                                              <td bgcolor="#F5F4F1"><div align="center"><strong>투여효과</strong></div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center">소화, 흡수 후로 시간이 오래 걸림 </div></td>
+                                              <td bgcolor="#ECEAE1"><div align="center">세포가 흡수하므로<br>
+                                                바로 효과를 나타낸다. </div></td>
+                                              <td bgcolor="#FFFFFF"><div align="center"></div></td>
+                                            </tr>
+                                        </table></td>
+                                      </tr>
+                                    </table></td>
+                                  </tr>
+                                  <tr>
+                                    <td>&nbsp;</td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td><div align="center"><img src="../images/greet2_img2.gif" width="700" height="143"></div></td>
+                              </tr>
+                              <tr>
+                                <td height="100%"><div align="center"><img src="../images/greet2_img3.gif" width="700" height="860"></div></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="9" bgcolor="#000000"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

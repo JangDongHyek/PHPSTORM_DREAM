@@ -1,0 +1,48 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images2/main/top_bg.gif" style="background-repeat:repeat-x">&nbsp;</td>
+    <td width="1000"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><a href="../main/index.html"><img src="../images2/main/logo.gif" border="0"></a></td>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><img src="../images2/main/gnb.gif" border="0" usemap="#Map_gnbb"></td>
+                <td><? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?><a href="../bbs/mb_login.php"><a href="../bbs/mb_logout.php?url=../main/index.html"><img src="../images2/main/logout.gif"><?}else{ //로그아웃 상태일때?><a href="../bbs/mb_login.php"><img src="../images2/main/admin.gif" border="0"><?}?></td>
+  </tr>
+</table>
+</td>
+  </tr>
+  <tr>
+    <td width="640" height="67">&nbsp;</td>
+  </tr>
+</table>
+</td>
+  </tr>
+</table>
+</td>
+  </tr>
+  <tr>
+    <td><img src="../images2/main/menu.gif" border="0" usemap="#Map"></td>
+  </tr>
+</table>
+</td>
+    <td background="../images2/main/top_bg.gif" style="background-repeat:repeat-x">&nbsp;</td>
+  </tr>
+</table>
+
+<map name="Map">
+  <area shape="rect" coords="379,3,477,41" href="../main/index.html">
+  <area shape="rect" coords="505,2,618,41" href="../site/company.html">
+  <area shape="rect" coords="650,2,743,41" href="../board/board_list.php?bbs_no=8">
+  <area shape="rect" coords="759,2,868,40" href="../board/board_list.php?bbs_no=4">
+  <area shape="rect" coords="886,2,976,41" href="../board/board_list.php?bbs_no=5">
+</map>
+
+<map name="Map_gnbb">
+  <area shape="rect" coords="507,8,549,26" href="../main/index.html">
+  <area shape="rect" coords="552,8,586,26" href="../board/board_list.php?bbs_no=4">
+</map>

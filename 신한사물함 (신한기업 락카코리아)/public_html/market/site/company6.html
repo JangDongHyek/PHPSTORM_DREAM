@@ -1,0 +1,225 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="950" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="250" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>        </td>
+        <td valign="top"><table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="700"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/info_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 사이트안내 &gt;회사소개</div></td>
+                            <td width="2%">&nbsp;</td>
+                          </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/info_3.gif" width="477" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/info_4.gif" width="223" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="83%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="company.html"><img src="../images/info_over_5.gif" width="59" height="25" border="0"></a></td>
+                                    <td width="2%"><a href="send.html"><img src="../images/info_6.gif" width="79" height="25" border="0"></a></td>
+                                    <td width="27%"><a href="sitemap.html"><img src="../images/info_7.gif" width="63" height="25" border="0"></a></td>
+                                    <td><img src="../images/info_8.gif" width="22" height="25"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/info_9.gif" width="223" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td align="center"><table width="95%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><table width="95%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td><img src="../img/company6.gif" width="683" height="779" border="0" usemap="#Map">
+                              <table width="530" border="0" align="right" cellpadding="0" cellspacing="0">
+                                <tr>
+                                  <td><table width="500" border="0" cellspacing="0" cellpadding="0">
+																	<form name="application" method="post" action="application.php" enctype="multipart/form-data">
+                                    <tr>
+                                      <td width="120" height="25"><img src="../img/company6_s1.gif" width="120" height="25"></td>
+                                      <td><select name="select">
+                                        <option>선택해주세요</option>
+                                        <option>------------------------</option>
+                                        <option>SUPPLY 제휴</option>
+                                        <option>CO - MARKETING 제휴</option>
+                                        <option>입점 제휴</option>
+                                        <option>NEW CATEGORY 제휴</option>
+                                        <option>SYSTEM 제휴</option>
+                                        <option>OFF - LINE MULTI SHOP 제휴</option>
+                                      </select></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" colspan="2" bgcolor="#CCCCCC"></td>
+                                      </tr>
+                                    <tr>
+                                      <td height="25"><div align="left"><img src="../img/company6_s2.gif" width="120" height="25"></div></td>
+                                      <td><input name="company" type="text" class="input_03" id="subject" itemname="회사명 " required></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" colspan="2" bgcolor="#CCCCCC"></td>
+                                      </tr>
+                                    <tr>
+                                      <td height="25"><div align="left"><img src="../img/company6_s3.gif" width="120" height="25"></div></td>
+                                      <td><input name="subject2" type="text" class="input_03" id="subject2" itemname="웹사이트 주소 " required></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" colspan="2" bgcolor="#CCCCCC"></td>
+                                      </tr>
+                                    <tr>
+                                      <td height="25"><div align="left"><img src="../img/company6_s4.gif" width="120" height="25"></div></td>
+                                      <td><input name="subject3" type="text" class="input_03" id="subject3" itemname="담당자명 " required></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" colspan="2" bgcolor="#CCCCCC"></td>
+                                      </tr>
+                                    <tr>
+                                      <td height="25"><div align="left"><img src="../img/company6_s5.gif" width="120" height="25"></div></td>
+                                      <td><input name="subject32" type="text" class="input_03" id="subject32" itemname="담당자 이메일 " required></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" colspan="2" bgcolor="#CCCCCC"></td>
+                                      </tr>
+                                    <tr>
+                                      <td height="25"><div align="left"><img src="../img/company6_s6.gif" width="120" height="25"></div></td>
+                                      <td><input name="subject4" type="text" class="input_03" id="subject4" size="10" maxlength="4" itemname="연락처 " required>
+                                        -
+                                          <input name="subject42" type="text" class="input_03" id="subject42" size="10" maxlength="4" itemname="연락처 " required>
+                                          -
+                                          <input name="subject43" type="text" class="input_03" id="subject43" size="10" maxlength="4" itemname="연락처 " required></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" colspan="2" bgcolor="#CCCCCC"></td>
+                                      </tr>
+                                    <tr>
+                                      <td height="25"><div align="left"><img src="../img/company6_s7.gif" width="120" height="25"></div></td>
+                                      <td><input name="subject5" type="file" class="input_03" id="subject5" size="40">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" colspan="2" bgcolor="#CCCCCC"></td>
+                                      </tr>
+                                    <tr>
+                                      <td height="25" valign="top"><img src="../img/company6_s8.gif" width="120" height="25"></td>
+                                      <td><textarea name="textarea2" class="textarea" style="width:340px;height:100px">자기소개서를 작성해주세요.</textarea></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="60" colspan="2"><div align="center"><input type="image" src="../img/send_btn.gif" width="104" height="41">  &nbsp;<input type="image" src="../img/cancel_btn.gif" width="104" height="41" onclick="this.form.reset();return false;"></div>
+                                        <div align="center"></div></td>
+                                      </tr>
+                                  </table></td>
+                                </tr>
+                                <tr>
+                                  <td>&nbsp;</td>
+                                </tr>
+																</form>
+                              </table>
+                              <map name="Map">
+                                <area shape="rect" coords="14,116,124,141" href="../site/company.html">
+                                <area shape="rect" coords="14,141,124,164" href="../site/company2.html">
+                                <area shape="rect" coords="14,164,124,188" href="../site/company3.html">
+                                <area shape="rect" coords="14,188,124,214" href="../site/company4.html">
+                                <area shape="rect" coords="14,214,124,240" href="../site/company5.html">
+                                <area shape="rect" coords="13,253,124,282" href="../site/company6.html">
+                              </map></td>
+                          </tr>
+                          <tr>
+                            <td>&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td>&nbsp;</td>
+                          </tr>                          
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

@@ -1,0 +1,36 @@
+<table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" bgcolor="9B002B">
+                                    <tr>
+                                      <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                          <tr>
+                                            <td width="220"><img src="../images/mypage/mypage_img1.jpg" width="169" height="66" /></td>
+                                            <td><div align="right">
+                                                <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                  <tr>
+                                                    <td background="../images/mypage/mypage_menu_bg.gif">
+													
+   <? if($is_iPad == "iPad"||$is_iPhone == "iPhone"||$is_iPod == "iPod"||$is_Android == "Android"){ ?>
+   <img src="../images2/mypage_menu_img.gif" width="460" height="66" border="0" usemap="#mypage_menu_map">
+   <? }else{ ?>
+   <script type="text/javascript">flashWrite('../swf/mypage_menu.swf','460','66')</script>
+   <?}?>
+	
+	
+	
+	</td>
+                                                  </tr>
+                                                </table>
+                                            </div></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table>
+								
+								
+<map name="mypage_menu_map">
+  <area shape="rect" coords="392,35,449,60" href="../mypage/out.html">
+  <area shape="rect" coords="334,35,391,60" href="../mypage/point.html">
+  <area shape="rect" coords="222,35,333,60" href="../stat/order.html">
+  <area shape="rect" coords="158,35,221,60" href="../mypage/wish.html">
+  <area shape="rect" coords="93,35,157,60" href="../cart/cart.html">
+  <area shape="rect" coords="16,35,92,60" href="../mypage/update.html">
+</map>

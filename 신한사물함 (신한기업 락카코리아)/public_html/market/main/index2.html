@@ -1,0 +1,209 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<?
+//============================= 방문자를 카운트 함 =======================================
+$today = date("Ymd");
+$co_sql = "select * from $Mart_CounterTable where mart_id='$mart_id' and date='$today'";
+$co_res = mysql_query($co_sql, $dbconn);
+$co_tot = mysql_num_rows($co_res);
+if($co_tot > 0){
+	$co_row = mysql_fetch_array($co_res);
+	$index_no = $co_row[index_no];
+	$client_ip = $co_row[client_ip];
+	if( $client_ip != $REMOTE_ADDR ){
+		$coup_sql = "update $Mart_CounterTable set count_num=count_num + 1, client_ip='$REMOTE_ADDR' where index_no='$index_no' and mart_id='$mart_id'";
+		$coup_res = mysql_query($coup_sql, $dbconn);
+		if($coup_res == false){
+			echo "방문 통계 쿼리 실패";
+		}
+	}
+}else{
+	$coin_sql = "insert into $Mart_CounterTable(mart_id, date, count_num, client_ip) values('$mart_id', '$today', '1', '$REMOTE_ADDR')";
+	$coin_res = mysql_query($coin_sql, $dbconn);
+	if($coin_res == false){
+		echo "방문 통계 쿼리 실패";
+	}
+}
+if( $co_res ){
+	mysql_free_result( $co_res );
+}
+
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta http-equiv="imagetoolbar" content="no">
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+}
+-->
+</style>
+<link href="../main/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<?include("../include/top3.htm");?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><img src="../images2/main/s_menu.gif" border="0" usemap="#Map_mee"></td>
+  </tr>
+  <tr>
+    <td><img src="../images2/main/left_call.gif"></td>
+  </tr>
+</table>
+</td>
+    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><img src="../images2/main/main.jpg"></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><img src="../images2/main/company.gif" border="0" usemap="#Map_comm"></td>
+<td width="304" height="126" valign="top" background="../images2/main/qna_bg.gif" style="background-repeat:no-repeat; padding:18px 0 0 10px"><table width="95%"  border="0" align="left" cellpadding="0" cellspacing="0">
+                                  <?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='4' order by ansno asc limit 5";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+                                  <?
+		if( $board_tot == "0" ){
+		?>
+                                  <tr valign='top'>
+                                    <td height='10' colspan="2" align='center' valign="middle">등록된 새글이  없습니다.</td>
+                                  </tr>
+                                  <?
+		}
+		?>
+                                  <?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,40);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+                                  <tr height="20" valign='top'>
+                                    <!--td width='80' align=center valign="middle">[<?=$board_date?>]</td-->
+                                    <td valign="middle">&nbsp;<a href='../board/board_read.php?index_no=<?=$board_no?>&bbs_no=1&mart_id=<?=$mart_id?>'>
+                                    <?=$board_title?>
+                                    </a></td>
+                                  </tr>
+                                  <?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+                              </table>
+</td>
+  </tr>
+</table>
+</td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><a href="../board/board_list.php?bbs_no=8"><img src="../images2/main/gallery_t.gif" border="0"></a></td>
+  </tr>
+  <tr>
+    <td height="137" valign="top" style="padding-left:31px;">
+	<table width="780" cellpadding=0 cellspacing=0 border=0>
+	<tr>
+		<?
+		$gallery_img_width = "130";
+		$gallery_img_height = "100";
+		$upload = "../../up/$mart_id/";
+		$i_sql = "select * from $New_BoardTable where bbs_no='8' and mart_id='$mart_id' order by ansno asc limit 5";
+		$i_qry = mysql_query($i_sql,$dbconn);
+		$i_num = mysql_num_rows($i_qry);
+		if($i_num > 0){
+			for($ii=0; $ii<$i_num; $ii++){
+			$i_row = mysql_fetch_array($i_qry);
+			$target = "$upload"."$i_row[userfile]";
+		?>
+		<td width="156" valign="top" align="center">
+		<table width="130" cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td width="130" align="center">
+			<a href='../board/board_read.php?index_no=<?=$i_row[index_no]?>&bbs_no=8&mart_id=<?=$mart_id?>'><img src="<?=$target?>" width="<?=$gallery_img_width?>" height="<?=$gallery_img_height?>"></a>
+			</td>
+		</tr>
+		<tr>
+			<td align="center" height="26" valign="middle"><a href='../board/board_read.php?index_no=<?=$i_row[index_no]?>&bbs_no=8&mart_id=<?=$mart_id?>'><?=han_cut($i_row[subject_new],20)?></a></td>
+		</tr>
+		</table>
+		</td>
+		<?
+			}
+		}
+		?>
+	</tr>
+	</table>
+	</td>
+  </tr>
+</table>
+</td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><a href="../main/product_list.html?category_num=126"><img src="../images2/main/product.gif" border="0"></a></td>
+    <td><a href="../board/board_list.php?bbs_no=5"><img src="../images2/main/estimate.gif" border="0"></a></td>
+    <td><a href="../site/company.html"><img src="../images2/main/map.gif" border="0"></a></td>
+  </tr>
+</table>
+</td>
+  </tr>
+</table>
+</td>
+  </tr>
+</table>
+</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<?include("../include/bottom3.htm");?>
+
+<map name="Map_comm">
+  <area shape="rect" coords="25,93,98,118" href="../site/company.html">
+  <area shape="rect" coords="454,85,522,108" href="../board/board_list.php?bbs_no=4">
+</map>
+
+<map name="Map_mee">
+  <area shape="rect" coords="20,54,155,78" href="../main/product_list.html?category_num=126">
+  <area shape="rect" coords="19,84,155,107" href="../main/product_list.html?category_num=114">
+  <area shape="rect" coords="18,113,156,135" href="../main/product_list.html?category_num=37">
+  <area shape="rect" coords="16,141,156,164" href="../main/product_list.html?category_num=35">
+  <area shape="rect" coords="16,172,155,195" href="../main/product_list.html?category_num=123">
+  <area shape="rect" coords="17,200,154,222" href="../main/product_list.html?category_num=32">
+  <area shape="rect" coords="17,228,156,251" href="../main/product_list.html?category_num=31">
+  <area shape="rect" coords="18,257,154,281" href="../main/product_list.html?category_num=34">
+  <area shape="rect" coords="15,286,156,310" href="../main/product_list.html?category_num=138">
+  <area shape="rect" coords="15,315,154,341" href="../main/product_list.html?category_num=85">
+  <area shape="rect" coords="17,345,155,370" href="../main/product_list.html?category_num=58">
+  <area shape="rect" coords="15,375,154,397" href="../main/product_list.html?category_num=33">
+</map>
+</body>
+</html>

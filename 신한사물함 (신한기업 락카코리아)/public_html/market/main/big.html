@@ -1,0 +1,193 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 상품 정보를 불러옴 ==================================================
+$item_sql = "select * from $ItemTable where mart_id='$mart_id' and item_no='$item_no'";
+$item_res = mysql_query($item_sql, $dbconn);
+$item_tot = mysql_num_rows($item_res);
+if($item_tot > 0){
+	$item_row = mysql_fetch_array($item_res);
+
+	$img_big = $item_row[img_big];
+	$img_big2 = $item_row[img_big2];
+	$img_big3 = $item_row[img_big3];
+	$img_big4 = $item_row[img_big4];
+	$img_big5 = $item_row[img_big5];
+
+	if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+		if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+			$img_str1 = "<img src='../..$Co_img_DOWN$mart_id/$img_big' width='50' height='50' border='0' onMouseOver='document.all.hotelimg.src=this.src;' style='cursor:hand'>";
+		}
+	}else{
+		$img_str1 = "<img src='../image/logo_50.gif' width='50' height='50' border='0'>";
+	}
+
+	if($img_big2 != "" && file_exists("$Co_img_UP$mart_id/$img_big2")){
+		if (strstr(strtolower(substr($img_big2,-4)),'.jpg') || strstr(strtolower(substr($img_big2,-4)),'.gif')){
+			$img_str2 = "<img src='../..$Co_img_DOWN$mart_id/$img_big2' border='0' width='50' height='50' border='0' onMouseOver='document.all.hotelimg.src=this.src;' style='cursor:hand'>";
+		}
+	}else{
+		$img_str2 = "<img src='../image/logo_50.gif' width='50' height='50' border='0'>";
+	}
+
+	if($img_big3 != "" && file_exists("$Co_img_UP$mart_id/$img_big3")){
+		if (strstr(strtolower(substr($img_big3,-4)),'.jpg') || strstr(strtolower(substr($img_big3,-4)),'.gif')){
+			$img_str3 = "<img src='../..$Co_img_DOWN$mart_id/$img_big3' border='0' width='50' height='50' border='0' onMouseOver='document.all.hotelimg.src=this.src;' style='cursor:hand'>";
+		}
+	}else{
+		$img_str3 = "<img src='../image/logo_50.gif' width='50' height='50' border='0'>";
+	}
+
+	if($img_big4 != "" && file_exists("$Co_img_UP$mart_id/$img_big4")){
+		if (strstr(strtolower(substr($img_big4,-4)),'.jpg') || strstr(strtolower(substr($img_big4,-4)),'.gif')){
+			$img_str4 = "<img src='../..$Co_img_DOWN$mart_id/$img_big4' border='0' width='50' height='50' border='0' onMouseOver='document.all.hotelimg.src=this.src;' style='cursor:hand'>";
+		}
+	}else{
+		$img_str4 = "<img src='../image/logo_50.gif' width='50' height='50' border='0'>";
+	}
+
+	if($img_big5 != "" && file_exists("$Co_img_UP$mart_id/$img_big5")){
+		if (strstr(strtolower(substr($img_big5,-4)),'.jpg') || strstr(strtolower(substr($img_big5,-4)),'.gif')){
+			$img_str5 = "<img src='../..$Co_img_DOWN$mart_id/$img_big5' border='0' width='50' height='50' border='0' onMouseOver='document.all.hotelimg.src=this.src;' style='cursor:hand'>";
+		}
+	}else{
+		$img_str5 = "<img src='../image/logo_50.gif' width='50' height='50' border='0'>";
+	}
+}
+?>
+<html>
+<head>
+<title>확대사진보기</title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+<meta http-equiv="imagetoolbar" content="no">
+<?
+if( $Mall_Admin_ID ){
+?>
+<script language="javascript" src="../js/common_login.js"></script>
+<?
+}else{
+?>
+<script language="javascript" src="../js/common.js"></script>
+<?
+}
+?>
+<script language=javascript src='../js/menu_select.js'></script>
+</head>
+<? if($Mall_Admin_ID&&$MemberLevel==1){ ?>
+<body topmargin="0" leftmargin="0">
+<?}else{?>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false" topmargin="0" leftmargin="0"> 
+<?}?>
+<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="10" rowspan="3"></td>
+	    <td height="34">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+					<td background="../image/blank/title_bg.gif"><img src="../image/blank/title_3.gif" width="241" height="34"></td>
+					<td width="20"><img src="../image/blank/title_right.gif" width="20" height="34"></td>
+        		</tr>
+        	</table>
+    	</td>
+	    <td width="10" rowspan="3"></td>
+	</tr>
+	<tr>
+		<td width="50" valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" width="670" style="layout:fixed;">
+				<tr> 
+					<td width="600" align="center"><img style='cursor:hand' src='<?=$file?>' border='0' id='hotelimg' onclick="javascript:window.close();"></td>
+<!----------------------------- 썸네일 이미지 시작 -------------------------------------->
+				    <td width="70" align="center" valign="top">
+						<table width="100%"  border="0" cellspacing="0" cellpadding="10">
+							<tr>
+								<td>
+									<table width="100%"  border="0" align="center" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<table width="100%"  border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
+													<tr>
+														<td bgcolor="#FFFFFF"><?=$img_str1?></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td height="5"></td>
+										</tr>
+										<tr>
+											<td>
+												<table width="100%"  border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
+													<tr>
+														<td bgcolor="#FFFFFF"><?=$img_str2?></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td height="5"></td>
+										</tr>
+										<tr>
+											<td>
+												<table width="100%"  border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
+													<tr>
+														<td bgcolor="#FFFFFF"><?=$img_str3?></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td height="5"></td>
+										</tr>
+										<tr>
+											<td>
+												<table width="100%"  border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
+													<tr>
+														<td bgcolor="#FFFFFF"><?=$img_str4?></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td height="5"></td>
+										</tr>
+										<tr>
+											<td>
+												<table width="100%"  border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
+													<tr>
+														<td bgcolor="#FFFFFF"><?=$img_str5?></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td height="5"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+<!----------------------------- 썸네일 이미지 끝 ---------------------------------------->
+				</tr>
+			</table>	  
+		</td>
+	</tr>
+	<tr>
+		<td height="50">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+					<td width="20"><img src="../image/blank/bottom_left.gif" width="20" height="50"></td>
+					<td align="center" background="../image/blank/bottom_bg.gif"><img src="../image/bu_close.gif" width="60" height="20" style="cursor:hand;" onclick="window.close()"></td>
+					<td width="20"><img src="../image/blank/bottom_right.gif" width="20" height="50"></td>
+        		</tr>
+        	</table>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+$category_html = $row[category_html];
+$category_html = str_replace("<br />","",$category_html);
+$category_html = str_replace("<BODY>","<BODY><br>",$category_html);
+$category_html = str_replace("</BODY>","<br></BODY>",$category_html);
+$category_html = str_replace("&nbsp;", "", $category_html);
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<script language='JavaScript'>
+<!--
+function checkform(f){
+	if(f.mobile1.value=="") {
+	    alert("\n휴대폰 번호를 입력하세요.");
+	    f.mobile1.focus();
+	    return false;
+	}
+	if(f.email.value=="") {
+	    alert("\n이메일을 입력하세요.");
+	    f.email.focus();
+	    return false;
+	}
+	if(f.name.value==""){
+	    alert("\n성명을 입력하세요.");
+	    f.name.focus();
+	    return false;
+	}
+	return true;
+}
+function check(){
+    var str = document.f.passport1.value.length;
+    if(str == 6) {
+       document.f.passport2.focus();
+    }
+
+} 
+
+function check1(){
+    var str = document.f.passport2.value.length;
+    if(str == 7) {
+       document.f.name.focus();
+	}   	
+}
+//-->
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top">&nbsp;</td>
+        <td width="888" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td>
+                    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="2" bgcolor="ffffff"></td>
+                        </tr>
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="D4CFC3">
+                                  <tr>
+                                    <td height="25" bgcolor="EAE6E2"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td><img src="../images/proudct/product_info_title_icon.gif" width="13" height="13" align="absmiddle" /> <span class="category_title2">멤버페이지</span></td>
+                                          <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <a href="../main/index.html">홈</a> &gt; 멤버페이지 &gt; 아이디/비밀번호 찾기 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5" valign="top"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><? include "../include/member_menu.htm"; ?></td>
+                              </tr>
+                              <tr>
+                                <td height="8"></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="40"><img src="../images/member/member_title3.gif" width="405" height="30" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td>
+									<table width="475" border="0" align="center" cellpadding="0" cellspacing="0">
+										<form name='f' onsubmit='return checkform(this)' action='idfind_ok.html'>
+										<input type='hidden' name='flag' value='check'>				  
+										  <tr>
+											<td width="87">휴대폰번호</td>
+											<td width="274"><input name="mobile1" type="text" class="input_03" id="mobile1" size="4" maxlength="4">
+									  -
+										<input name="mobile2" type="text" class="input_03" id="mobile2" size="5" maxlength="4">
+										-
+										<input name="mobile3" type="text" class="input_03" id="mobile3" size="5" maxlength="4"></td>
+											<td width="114" rowspan="5"><input type='image' src="../images/find_btn.gif" width="114" height="83"></td>
+										  </tr>
+										  <tr>
+											<td height="5" colspan="2"></td>
+										  </tr>
+										  <tr>
+											<td>이름</td>
+											<td><input name="name" type="text" id="name" size="23" class="input_03"></td>
+										  </tr>
+										  <tr>
+											<td colspan="2" height="5"></td>
+										  </tr>
+										  <tr>
+											<td>이메일</td>
+											<td><input name="email" type="text" id="email" size="23" class="input_03"></td>
+										  </tr>
+									  </form>
+								    </table>								</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="9"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>

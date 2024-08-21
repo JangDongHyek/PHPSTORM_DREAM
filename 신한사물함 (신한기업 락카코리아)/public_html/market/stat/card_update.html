@@ -1,0 +1,328 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+
+$order_sql = "select * from $Order_BuyTable_Temp where order_num='$order_num_query' and mart_id='$mart_id'";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+
+$order_row = mysql_fetch_array($order_res);
+$buyer_name = $order_row[name];
+$passport1 = $order_row[passport1];
+$passport2 = $order_row[passport2];
+$buyer_tel = $order_row[tel1];
+$buyer_tel1 = $order_row[tel2];
+$email = $order_row[email];
+$buyer_zip = $order_row[buyer_zip];
+$buyer_address = $order_row[buyer_address];
+$buyer_address_d = $order_row[buyer_address_d ];
+$receiver = $order_row[receiver];
+$rev_tel = $order_row[rev_tel];
+$rev_tel1 = $order_row[rev_tel1];
+$zip = $order_row[zip];
+$address = $order_row[address];
+$address_d = $order_row[address_d];
+$message = $order_row[message];
+$paymethod = $order_row[paymethod];
+if($paymethod == "bycard" || $paymethod == "bycard_point")
+{
+	$pay_method = "100000000000";
+	$pay_method_str = "카드결제";
+}
+elseif($paymethod == "byaccount" || $paymethod == "byaccount_point")
+{
+	$pay_method = "010000000000";
+	$pay_method_str = "계좌이체";
+}
+
+//==================kcp 카드 환경설정 불러옴===================================
+$sql_kcp = "select * from kcp_config where mart_id ='$mart_id'";
+$res_kcp = mysql_query($sql_kcp, $dbconn);
+$row_kcp = mysql_fetch_array($res_kcp);
+
+$kcp_site_cd = $row_kcp[kcp_site_cd];					//KCP 에서 발급하는 사이트코드
+if(!$kcp_site_cd)					// 사이트 코드가 없을때 테스트결제
+	$kcp_site_cd = "T0000";
+$kcp_site_key = $row_kcp[kcp_site_key];	 				//KCP 에서 발급하는 사이트코드로 만든 사이트키
+if($kcp_site_cd == "T0000")		// 사이트 코드가 T0000일때 없을때 테스트결제
+	$kcp_site_key = "3grptw1.zW0GSo4PQdaGvsF__";
+
+$kcp_site_name = $row_kcp[kcp_site_name];			
+$kcp_site_logo = $row_kcp[kcp_site_logo];
+$kcp_quotaopt = $row_kcp[kcp_quotaopt];
+// 카드회사의 포인트 사용여부
+$kcp_pnt_issue = $row_kcp[kcp_pnt_issue];
+$kcp_use_pnt = $row_kcp[kcp_use_pnt];
+$kcp_soc_no = $row_kcp[kcp_soc_no];
+?>
+<?
+$sndGoodname = "$item_name";
+$name = str_replace( "\n", "<br>", $Name );
+?>
+<? if($kcp_site_cd == "T0000"){ // 사이트 코드가 T0000일때 테스트결제?>	
+<script language="javascript" src='https://pay.kcp.co.kr/plugin/payplus_test.js'></script>
+<?	 }else{ ?>
+<script language="javascript" src='https://pay.kcp.co.kr/plugin/payplus.js'></script>
+<? } ?>
+<!--※ 주의!!!
+     테스트 결제시 : src='https://pay.kcp.co.kr/plugin/payplus_test.js'
+     리얼   결제시 : src='https://pay.kcp.co.kr/plugin/payplus.js'     로 설정해 주시기 바랍니다. -->
+<script language="javascript">
+    // 플러그인 설치(확인)
+    StartSmartUpdate();
+
+    function  jsf__pay( form )
+    {
+        if( document.Payplus.object == null )
+        {
+            openwin = window.open( 'chk_plugin.html', 'chk_plugin', 'width=420, height=100, top=300, left=300' );
+        }
+
+        if ( MakePayMessage( form ) == true )
+        {
+            openwin = window.open( 'proc_win.html', 'proc_win', 'width=420, height=100, top=300, left=300' );
+            return  true;
+        }
+        else
+        {
+            return  false;
+        }
+    }
+    
+    function refer_point(form)
+    {			
+        if(ReferPoints(form)) 
+        {
+		    return true;
+		} else
+		{
+			return false;
+		}
+    }
+</script>
+<script>
+function OpenWindow(){   	
+var winopts = "width=570,height=470,  toolbar=no, status=no, statusbar=no, menubar=no, scrollbars=yes";
+var popWindow = window.open('','POPWIN', winopts);
+}
+</script>
+<body>
+
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="960" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="700" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지 &gt; 장바구니 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/mypage_3.gif" width="227" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/update.html?mart_id=<?=$mart_id?>"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_over_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td><a href="../stat/order.html"><img src="../images/mypage_new.gif" width="126" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_14.gif"></td>
+                                    <td width="5%"><a href="../mypage/point.html"><img src="../images/mypage_15.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/mypage_20.gif" width="700" height="46"></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><!---------------------- 진행과정 시작 -------------------------------------------------->
+                            <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td width="90"><img src="../image/mypage/step_1.gif" width="90" height="40"></td>
+                                <td width="90"><img src="../image/mypage/step_2.gif" width="90" height="40"></td>
+                                <td width="90"><img src="../image/mypage/step_3_on.gif" width="90" height="40"></td>
+                                <td width="90"><img src="../image/mypage/step_4.gif" width="90" height="40"></td>
+                                <td bgcolor="#F3F3F3">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="20" colspan="5"></td>
+                              </tr>
+                            </table>
+                            <!---------------------- 진행과정 끝 ---------------------------------------------------->
+                            <table width="80%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td width="20"><img src="../image/table_1.gif" width="20" height="20"></td>
+                                <td background="../image/table_1_bg.gif">&nbsp;</td>
+                                <td width="20"><img src="../image/table_2.gif" width="20" height="20"></td>
+                              </tr>
+                              <tr>
+                                <td background="../image/table_4_bg.gif">&nbsp;</td>
+                                <td height="150"><table width="80%" border="0" align="center" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+                                    <tr>
+                                      <td height="30" align="center" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle"><?=$pay_method_str?>를 진행하실려면 결제하기 버튼을 누르십시오.<br>
+                                          <br>
+                                          새창에서 <?=$pay_method_str?>가 진행되므로 창을 닫으시면 결제가 진행되지 않습니다.</td>
+                                    </tr>
+                                </table></td>
+                                <td background="../image/table_2_bg.gif">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="20"><img src="../image/table_4.gif" width="20" height="20"></td>
+                                <td background="../image/table_3_bg.gif">&nbsp;</td>
+                                <td><img src="../image/table_3.gif" width="20" height="20"></td>
+                              </tr>
+                            </table>
+                            <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+<!----------------------------결제 폼 시작------------------------------------>
+							    <form name="order_info" action="pp_ax_hub.php" method="post" onSubmit="return jsf__pay(this)">
+								<!-- 결제 수단-->
+								<input type='hidden' name='paymethod' value='<?=$paymethod?>'>	<!-- (추가)-->
+								<input type='hidden' name="pay_method" value="<?=$pay_method?>">
+								<!-- 결제자 정보 -->
+								<input type='hidden' name='ordr_idxx' value='<?=$order_num?>' >
+								<input type='hidden' name='good_name' value='<?=$item_name?>'>
+								<input type='hidden' name='good_mny' value='<?=$mon_tot_freight?>'>
+								<input type='hidden' name='buyr_name' value='<?=$buyer_name?>'>
+								<input type='hidden' name='buyr_mail' value='<?=$email?>'>
+								<input type='hidden' name='buyr_tel1' value='<?=$buyer_tel?>'>
+								<input type='hidden' name='buyr_tel2' value='<?=$buyer_tel1?>'>
+								<!-- 사이트 로고 -->
+								<input type='hidden' name='site_logo' value='<?=$kcp_site_logo?>'>
+
+								<!-- 필수 항목  ##변경 할 것 시작##-->
+								<!-- 최대 할부 설정 0~12  0은 사용안함 -->
+								<input type='hidden' name="quotaopt" value="<?=$kcp_quotaopt?>">
+								<!-- 요청종류 승인(pay)/취소,매입(mod) 요청시 사용 -->
+								<input type='hidden' name='req_tx'    value='pay'>
+
+								<!-- 테스트 결제시 : T0000 으로 설정, 리얼 결제시 : 부여받은 사이트코드 입력 -->
+								<input type='hidden' name='site_cd'   value='<?=$kcp_site_cd?>'>
+								<input type='hidden' name='site_key'  value='<?=$kcp_site_key?>'>
+
+								<!-- MPI 결제창에서 사용 한글 사용 불가 -->
+								<input type='hidden' name='site_name' value='<?=$kcp_site_name?>'>
+								<!-- http://testpay.kcp.co.kr/Pay/Test/site_key.jsp 로 접속하신후 부여받은 사이트코드를 입력하고 나온 값을 입력하시기 바랍니다. -->
+								<!-- 필수 항목  ##변경 할 것 끝##-->
+
+								<!-- 필수 항목 : PULGIN 설정 정보 변경하지 마세요 -->
+								<input type='hidden' name='module_type' value='01'>
+								<!-- 필수 항목 : 결제 금액/화폐단위 -->
+								<input type='hidden' name='currency' value='WON'>
+
+								<!-- 필수 항목 : PLUGIN에서 값을 설정하는 부분으로 반드시 포함되어야 합니다. ※수정하지 마십시오.-->
+								<input type='hidden' name='res_cd'         value=''>
+								<input type='hidden' name='res_msg'        value=''>
+								<input type='hidden' name='tno'            value=''>
+								<input type='hidden' name='trace_no'       value=''>
+								<input type='hidden' name='enc_info'       value=''>
+								<input type='hidden' name='enc_data'       value=''>
+								<input type='hidden' name='ret_pay_method' value=''>
+								<input type='hidden' name='tran_cd'        value=''>
+								<input type='hidden' name='bank_name'      value=''>
+								<input type='hidden' name='use_pay_method' value=''>
+
+								<!-- 현금영수증 관련 정보 : PLUGIN 에서 내려받는 정보입니다 -->
+								<input type='hidden' name='cash_tsdtime'   value=''>
+								<input type='hidden' name='cash_yn'        value=''>
+								<input type='hidden' name='cash_authno'    value=''>
+
+								<!-- 카드사 포인트 -->
+								<!-- My LG 포인트, BCTOP 포인트를 2개 다 쓸때, 설정 하시면 됩니다.
+									 카드사 포인트를 한개만 쓰실 경우는 셋팅 안하셔도 됩니다. -->
+								<!-- My LG 포인트:PTLG, BC TOP: PTBC -->
+								<input type="hidden" name='pnt_issue' value="<?=$kcp_pnt_issue?>">
+								<!-- 사용가능한 포인트 -->
+								<input type="hidden" name='use_pnt'   value="<?=$kcp_use_pnt?>">
+								<!-- 비씨 TOP 포인트 결제 시에는 반드시 value에 값을 입력. 결제 시 사용자로 부터 입력 받지 않도록 하여야 합니다. -->
+								<input type='hidden' name='soc_no' value='<?=$kcp_soc_no?>'>
+
+                                  <td height="70" align="center"><input type="image" src="../image/bu_account2.gif" width="120" height="50" border="0" style='cursor:hand' > <a href="card_account_cancel.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>"><img src="../image/bu_cancel.gif" width="100" height="50" border="0"></a></td>
+                                </form>
+<!------------------------------결제 폼 끝------------------------------------>
+                              </tr>
+                            </table>
+                        </td>
+                      </tr>
+                  </table></td>
+                </tr>                
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+
+<?
+mysql_close($dbconn);
+?>

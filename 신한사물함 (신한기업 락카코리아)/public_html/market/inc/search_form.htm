@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+		<SCRIPT LANGUAGE="JavaScript">
+		<!--
+		function search_check(){
+			if(!document.search_form.kw.value){
+				alert('검색어를 입력해주세요');
+				document.search_form.kw.focus();
+				return false;
+			}
+			return true;
+		}
+		//-->
+		</SCRIPT>		
+
+</head>
+
+<body>
+<table width="336" border="0" cellspacing="0" cellpadding="0">
+<form name='search_form' method='get' action='../main/product_list.html' onsubmit='return search_check();'>
+<input type='hidden' name='ss[search_mode]' value='default'>
+  <tr>
+    <td width="65"><img src="../images/main_13.gif" width="65" height="20" /></td>
+    <td width="141"><div align="center">
+      <input name="kw" type="text" required="required" itemname="검색어" class="input_02" style="width:130px;height:16px;padding-left:5px; BACKGROUND-IMAGE: url(http://www.lets080.com/~picasso/market/inc/img/input_text1.gif); BACKGROUND-REPEAT: no-repeat;" onfocus="this.style.backgroundImage = 'url(none)'" />
+    </div></td>
+    <td width="66"><input type="image" src="../images/main_15.gif" width="66" height="20" /></td>
+    <td width="64"><a href="../main/product_list.html?ss[search_mode]=detail"><img src="../images/main_16.gif" width="64" height="20" /></a></td>
+  </tr>
+	</form>
+</table>
+</body>
+</html>

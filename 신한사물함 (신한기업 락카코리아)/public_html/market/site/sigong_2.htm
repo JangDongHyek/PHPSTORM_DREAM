@@ -1,0 +1,192 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+
+
+
+<style type="text/css">
+<!--
+/* 나눔고딕 */
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 700;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 800;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.ttf) format('truetype');
+}
+
+
+table tr td {font-family:Nanum Gothic;}
+table tr td .title {font-size:18px; letter-spacing:0px; font-weight:900; *text-shadow:1px 1px 1px #000}
+table tr td .title a{color:#FFF;}
+table tr td .title a:hover{color:#FFF;}
+table tr td .title span{font-size:14px;}
+table tr td .contents {font-size:17px; letter-spacing:0px; font-weight:600;}
+table tr td .contents a {color:#8c0048;}
+table tr td .contents a:hover {color:#8c0048;}
+
+
+
+-->
+</style>
+
+
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td>
+                    <td align="center" valign="top"><table width="800" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td height="661" align="center" valign="top" background="sigong_bg_2.gif"><table width="93%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td height="150">&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td height="30" class="title"><a href="../main/product_list.html?category_num=184">사우나 / 목욕탕 / 스파 <span>(총 2건)</span></a></td>
+                          </tr>
+
+                          <tr>
+                            <td height="30" class="contents"><a href="../main/product_list.html?category_num=211">사우나 (0)</a> | <a href="../main/product_list.html?category_num=212">목욕탕 (1)</a> | <a href="../main/product_list.html?category_num=214">스파 (1)</a> | <a href="../main/product_list.html?category_num=213">온천 (1)</a></td>
+                          </tr>
+                          <tr>
+                            <td height="40" class="contents">&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td height="30" class="title"><a href="../main/product_list.html?category_num=193">골프장 <span>(총 2건)</span></a></td>
+                          </tr>
+    
+                          <tr>
+                            <td height="30" class="contents"><a href="../main/product_list.html?category_num=201">골프 클럽하우스 (1)</a> | <a href="../main/product_list.html?category_num=200">골프 연습장 (야외) (0)</a> | <a href="../main/product_list.html?category_num=199">스크린 골프장 (실내) (0)</a> | <a href="../main/product_list.html?category_num=197">골프채 락카 (1)</a></td>
+                          </tr>
+                          <tr>
+                            <td height="40" class="contents">&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td height="30" class="title"><a href="../main/product_list.html?category_num=194">휘트니스헬스장 <span>(총 1건)</span></a></td>
+                          </tr>
+       
+                          <tr>
+                            <td height="30" class="contents"><a href="../main/product_list.html?category_num=203">헬스장 (0)</a> | <a href="../main/product_list.html?category_num=202">휘트니스 (1)</a> | <a href="../main/product_list.html?category_num=204">요가 (0) </a></td>
+                          </tr>
+                          <tr>
+                            <td height="40" class="contents">&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td height="30" class="title"><a href="../main/product_list.html?category_num=195">식품 / 공장 <span>(총 3건)</span></a></td>
+                          </tr>
+
+                          <tr>
+                            <td height="30" class="contents"><a href="../main/product_list.html?category_num=205">식품 (2)</a> | <a href="../main/product_list.html?category_num=206">공장 (1) </a></td>
+                          </tr>
+                          <tr>
+                            <td height="40" class="contents">&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td height="30" class="title"><a href="../main/product_list.html?category_num=196">기타 / 대형공사 <span>(총 3건)</span></a></td>
+                          </tr>
+  
+                          <tr>
+                            <td height="30" class="contents"><a href="../main/product_list.html?category_num=210">롤러장 (1)</a> | <a href="../main/product_list.html?category_num=209">수영장 (1)</a> | <a href="../main/product_list.html?category_num=208">병원 (1)</a> </td>
+                          </tr>
+          
+                        </table></td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

@@ -1,0 +1,38 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+?>
+<?
+$SQL = "select title,name,content,username,point,item_no from $EstimateTable where est_no = $est_no and mart_id='$mart_id' order by est_no desc";
+$dbresult = mysql_query($SQL, $dbconn);
+
+$title = mysql_result($dbresult,0,0);
+$name = mysql_result($dbresult,0,1);
+$content = mysql_result($dbresult,0,2);
+$username = mysql_result($dbresult,0,3);
+$point = mysql_result($dbresult,0,4);
+$item_no = mysql_result($dbresult,0,5);
+
+if($UnameSess != $username){
+	echo "
+	<script>
+	alert(\"글쓰신분과 아이디가 다릅니다.\");
+	window.close();
+	</script>
+	";
+	exit;
+}
+
+$SQL = "delete from $EstimateTable where mart_id='$mart_id' and est_no='$est_no'";
+
+$dbresult = mysql_query($SQL, $dbconn);
+mysql_close($dbconn);
+
+echo "
+<script>
+alert(\"삭제되었습니다.\");
+window.close();
+window.opener.location.reload();
+</script>
+";
+?>

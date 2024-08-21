@@ -1,0 +1,41 @@
+
+
+<table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" bgcolor="9B002B">
+                                    <tr>
+                                      <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                          <tr>
+                                            <td width="220"><img src="../images/member/member_img.jpg" width="169" height="66" /></td>
+                                            <td><div align="right">
+                                                <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                  <tr>
+                                                    <td background="../images/member/member_menu_bg.gif">
+													
+													<?
+            if($is_iPad == "iPad"||$is_iPhone == "iPhone"||$is_iPod == "iPod"||$is_Android == "Android"){
+          ?>
+		  <img src="../images2/login_img.gif" border="0" usemap="#login_map_3">
+   <?
+   }else{
+   ?>
+<script type="text/javascript">flashWrite('../swf/member_menu.swf','460','66')</script>
+    <?}?>
+													
+													</td>
+                                                  </tr>
+                                                </table>
+                                            </div></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table>
+
+
+
+	
+	
+
+<map name="login_map_3">
+  <area shape="rect" coords="339,35,458,60" href="../member/idfind.html">
+  <area shape="rect" coords="289,35,339,60" href="../member/login.html">
+  <area shape="rect" coords="229,35,289,60" href="../member/index.html">
+</map>

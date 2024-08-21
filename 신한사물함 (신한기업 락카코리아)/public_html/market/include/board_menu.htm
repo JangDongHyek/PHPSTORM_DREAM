@@ -1,0 +1,35 @@
+<table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" bgcolor="9B002B">
+                                  <tr>
+                                    <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                        <tr>
+                                          <td width="169"><img src="../images/board/board_img1.gif" width="169" height="66"></td>
+                                          <td><div align="right">
+                                              <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                  <td background="../images/board/boad_menu_bg.gif">
+												  
+<? if($is_iPad == "iPad"||$is_iPhone == "iPhone"||$is_iPod == "iPod"||$is_Android == "Android"){ ?>
+<img src="../images2/board_menu_img.gif" width="460" height="66" border="0" usemap="#board_menu_map">
+<? }else{ ?>
+<script type="text/javascript">flashWrite('../swf/board_menu.swf','460','66')</script>
+<?}?>
+
+</td>
+                                                </tr>
+                                              </table>
+                                          </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+</table>
+
+
+<map name="board_menu_map" id="board_menu_map">
+  <area shape="rect" coords="386,35,448,60" href="../board/board_list.php?bbs_no=5" />
+  <area shape="rect" coords="308,35,386,60" href="../board/board_list.php?bbs_no=4" />
+  <area shape="rect" coords="222,35,307,60" href="../board/change.html" />
+  <area shape="rect" coords="137,35,222,60" href="../board/board_list.php?bbs_no=3" />
+  <area shape="rect" coords="74,35,136,60" href="../board/board_list.php?bbs_no=2" />
+  <area shape="rect" coords="7,35,74,60" href="../board/board_list.php?bbs_no=1" />
+</map>
+

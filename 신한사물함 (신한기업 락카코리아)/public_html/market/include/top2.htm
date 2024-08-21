@@ -1,0 +1,125 @@
+
+<!-- AceCounter Log Gathering Script V.8.0.2019080601 -->
+<script language='javascript'>
+	var _AceGID=(function(){var Inf=['gtb20.acecounter.com','8080','BI3A47477099599','AW','0','NaPm,Ncisy','ALL','0']; var _CI=(!_AceGID)?[]:_AceGID.val;var _N=0;var _T=new Image(0,0);if(_CI.join('.').indexOf(Inf[3])<0){ _T.src ="https://"+Inf[0]+'/?cookie'; _CI.push(Inf);  _N=_CI.length; } return {o: _N,val:_CI}; })();
+	var _AceCounter=(function(){var G=_AceGID;var _sc=document.createElement('script');var _sm=document.getElementsByTagName('script')[0];if(G.o!=0){var _A=G.val[G.o-1];var _G=(_A[0]).substr(0,_A[0].indexOf('.'));var _C=(_A[7]!='0')?(_A[2]):_A[3];var _U=(_A[5]).replace(/\,/g,'_');_sc.src='https:'+'//cr.acecounter.com/Web/AceCounter_'+_C+'.js?gc='+_A[2]+'&py='+_A[4]+'&gd='+_G+'&gp='+_A[1]+'&up='+_U+'&rd='+(new Date().getTime());_sm.parentNode.insertBefore(_sc,_sm);return _sc.src;}})();
+</script>
+<!-- AceCounter Log Gathering Script End -->
+
+
+
+
+		<SCRIPT LANGUAGE="JavaScript">
+		<!--
+		function search_check(){
+			if(!document.search_form.kw.value){
+				alert('검색어를 입력해주세요');
+				document.search_form.kw.focus();
+				return false;
+			}
+			return true;
+		}
+		//-->
+		</SCRIPT>
+		
+		
+		<!-- 스마트폰에서 플래시 이미지 대체 스크립트 -->
+<?
+ $arr_browser = array ("iPad","iPhone","iPod","Android");      
+  for($indexi = 0 ; $indexi < count($arr_browser) ; $indexi++) {          
+   if(strpos($_SERVER['HTTP_USER_AGENT'],$arr_browser[$indexi]) == true){             
+    $is_iPad = "iPad";
+                $is_iPhone = "iPhone";
+                $is_iPod = "iPod";
+                $is_Android = "Android";
+   }       
+  } 
+?> 
+<!-- //스마트폰에서 플래시 이미지 대체 스크립트 --> 
+
+
+
+		<script language='JavaScript' src='../js/printEmbed.js'></script>
+		
+		
+		<link href="../main/style.css" rel="stylesheet" type="text/css" />
+<body oncontextmenu='return false' ondragstart='return false' onselectstart='return false'>		
+<div id="hd">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/top_bg.gif"><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td rowspan="4"><a href="../main/index.html"><img src="../images/start_01.gif" width="319" height="78" border="0" /></a></td>
+        <td rowspan="4"><img src="../images/start_02.gif" width="315" height="78" /></td>
+        <td width="366" height="35"> <?	if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/top2.htm';
+													}
+													else
+														include '../inc/top1.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/top2.htm';
+												}
+												?></td>
+      </tr>
+      <tr>
+        <td height="9"></td>
+      </tr>
+<form name='search_form' method='get' action='../main/product_list.html' onsubmit='return search_check();'>
+<input type='hidden' name='ss[search_mode]' value='default'>
+      <tr>
+        <td height="25"><TABLE WIDTH=366 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+          <TR>
+            <TD ROWSPAN=3><IMG SRC="../images/search_img_01.gif" WIDTH=97 HEIGHT=25 ALT=""></TD>
+            <TD><IMG SRC="../images/search_img_02.gif" WIDTH=147 HEIGHT=5 ALT=""></TD>
+            <TD ROWSPAN=3><IMG SRC="../images/search_img_03.gif" WIDTH=7 HEIGHT=25 ALT=""></TD>
+            <TD ROWSPAN=3><input name="image" type="image" src="../images/search_img_04.gif" width="43" height="25"></TD>
+            <TD ROWSPAN=3><a href="../main/product_list.html?ss[search_mode]=detail"><img src="../images/search_img_05.gif" width="60" height="25" border="0"></a></TD>
+            <TD ROWSPAN=3><IMG SRC="../images/search_img_06.gif" WIDTH=12 HEIGHT=25 ALT=""></TD>
+          </TR>
+          <TR>
+            <TD width="147" height="16" align="center"><input name="kw" type="text" class="search_box" style="height:14px; padding-left:3px; BACKGROUND-IMAGE: url(../images/serch_text.gif); BACKGROUND-REPEAT: no-repeat;" onFocus="this.style.backgroundImage = 'url(none)'" size="21" /></TD>
+          </TR>
+          <TR>
+            <TD><IMG SRC="../images/search_img_08.gif" WIDTH=147 HEIGHT=4 ALT=""></TD>
+          </TR>
+        </TABLE></td>
+      </tr>
+</form>
+      <tr>
+        <td height="9"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/menu_bg.gif"><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="268"><img src="../images/start_07.gif" width="268" height="51" /></td>
+        <td><img src="../images2/menu_img.gif" width="732" height="51" border="0" usemap="#menu_map"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+</div>	
+
+<map name="menu_map">
+  <area shape="rect" coords="606,4,707,39" href="../board/board_list.php?bbs_no=10">
+  <area shape="rect" coords="505,4,606,39" href="../board/board_list.php?bbs_no=5">
+  <area shape="rect" coords="405,4,506,39" href="../board/board_list.php?bbs_no=4">
+  <area shape="rect" coords="305,4,406,39" href="../stat/order.html">
+  <area shape="rect" coords="205,4,306,39" href="../main/history.htm">
+  <area shape="rect" coords="105,4,206,39" href="../site/sigong.htm">
+<area shape="rect" coords="6,4,107,39" href="../site/company.html">
+</map>
+
+
+<map name="menu_mapMap">
+  <area shape="rect" coords="205,4,306,39" href="#">
+</map>

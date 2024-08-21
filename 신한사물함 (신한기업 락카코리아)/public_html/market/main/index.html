@@ -1,0 +1,174 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<?
+//============================= 방문자를 카운트 함 =======================================
+$today = date("Ymd");
+$co_sql = "select * from $Mart_CounterTable where mart_id='$mart_id' and date='$today'";
+$co_res = mysql_query($co_sql, $dbconn);
+$co_tot = mysql_num_rows($co_res);
+if($co_tot > 0){
+	$co_row = mysql_fetch_array($co_res);
+	$index_no = $co_row[index_no];
+	$client_ip = $co_row[client_ip];
+	if( $client_ip != $REMOTE_ADDR ){
+		$coup_sql = "update $Mart_CounterTable set count_num=count_num + 1, client_ip='$REMOTE_ADDR' where index_no='$index_no' and mart_id='$mart_id'";
+		$coup_res = mysql_query($coup_sql, $dbconn);
+		if($coup_res == false){
+			echo "방문 통계 쿼리 실패";
+		}
+	}
+}else{
+	$coin_sql = "insert into $Mart_CounterTable(mart_id, date, count_num, client_ip) values('$mart_id', '$today', '1', '$REMOTE_ADDR')";
+	$coin_res = mysql_query($coin_sql, $dbconn);
+	if($coin_res == false){
+		echo "방문 통계 쿼리 실패";
+	}
+}
+if( $co_res ){
+	mysql_free_result( $co_res );
+}
+
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta http-equiv="imagetoolbar" content="no">
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+}
+-->
+</style>
+<script src="../js/ui.js"></script>
+<link href="../main/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<?include("../include/top2.htm");?>
+<table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="9">&nbsp;</td>
+    <td width="154" valign="top"><?include("../include/sub_menu.htm");?></td>
+    <td width="9" valign="top">&nbsp;</td>
+    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="444" colspan="2"><img src="../images2/main_img_1.jpg"><!--?include("../main/main_slide.htm");?--></td>
+      </tr>
+      <tr>
+        <td colspan="2"><img src="../images/main_banner.jpg" width="828" height="403" border="0" usemap="#main_banner_map"></td>
+        </tr>
+      
+      <tr>
+        <td colspan="2">&nbsp;</td>
+        </tr>
+
+    </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="321"><a href="../main/product_list.html?category_num=37"><img src="../images/start_18.gif" width="321" height="110" border="0" /></a></td>
+            <td width="81"><img src="../images/start_19.gif" width="81" height="110" /></td>
+            <td valign="top"><!---------------------- 공지사항 게시판 -------------------->
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td valign="top" background=""><table width="95%"  border="0" align="left" cellpadding="0" cellspacing="0">
+                        <?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 5";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+                        <?
+		if( $board_tot == "0" ){
+		?>
+                        <tr valign='top'>
+                          <td height='30' colspan="2" align='center' valign="middle">등록된 공지사항이  없습니다.</td>
+                          </tr>
+                        <?
+		}
+		?>
+                        <?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,40);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+                        <tr height="20" valign='top'>
+                          <!--td width='80' align=center valign="middle">[<?=$board_date?>]</td-->
+                          <td valign="middle">&nbsp;</td>
+                                      <td valign="middle"><img src="../images/notice_icon.gif" align="absmiddle">&nbsp;<a href='../board/board_read.php?index_no=<?=$board_no?>&bbs_no=1&mart_id=<?=$mart_id?>'>
+                                        <?=$board_title?>
+                                        </a></td>
+                          </tr>
+                        <?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+                        </table></td>
+                    </tr>
+                    <tr>
+                      <td style="height:5px"></td>
+                    </tr>
+                    </table></td>
+                </tr>
+              </table>
+                        <!---------------------- 공지사항 끝 ----------------------></td>
+        </tr>
+      </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><img src="../images/start_27.gif" width="722" height="37" /></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td><?include("../include/new_item.htm");?></td>
+          </tr>
+          
+          <tr>
+            <td><img src="../images/start_22.gif" width="722" height="33" /></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td><?include("../include/rec_item.htm");?></td>
+          </tr>
+          <tr>
+            <td valign="top">&nbsp;</td>
+          </tr>
+    </table></td></tr>
+</table>
+<?include("../include/bottom.htm");?>
+
+
+
+</body>
+</html>
+
+
+<map name="main_banner_map">
+  <area shape="rect" coords="415,203,817,392" href="../main/product_info_sin.html?mart_id=rakca&category_num=205&flag=&item_no=2866&page=1&mode=">
+  <area shape="rect" coords="2,203,404,392" href="../main/product_info_sin.html?mart_id=rakca&category_num=202&flag=&item_no=2872&page=1&mode=">
+  <area shape="rect" coords="416,2,818,191" href="../main/product_info_sin.html?mart_id=rakca&category_num=197&flag=&item_no=2881&page=1&mode=">
+  <area shape="rect" coords="1,1,403,190" href="../main/product_info_sin.html?mart_id=rakca&category_num=214&flag=&item_no=2868&page=1&mode=">
+</map>
