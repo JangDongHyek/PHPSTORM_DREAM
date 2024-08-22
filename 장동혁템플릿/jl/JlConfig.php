@@ -1,5 +1,5 @@
 <?php
-include_once("Jl.php");
+require_once("Jl.php");
 include_once("JlFile.php");
 include_once("JlCsv.php");
 

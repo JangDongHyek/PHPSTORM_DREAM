@@ -20,23 +20,23 @@
                     </li>
                     <li v-else v-for="item in data">
                         <div class="area_img">
-                            <a :href="`${jl.root}/bbs/mypage_sale_view.php`">
+                            <a :href="`${jl.root}/bbs/mypage_sale_view.php?order_no=${item.order_no}`">
                                 <img :src="jl.root+item.MEMBER_PRODUCT.main_image_array[0].src">
                             </a>
                         </div>
                         <div class="area_right">
-                            <i class="type chk" @click="select_item = item; modal = true"><em></em>{{ item.status }}</i>
+                            <i class="type" :class="getClass(item)" @click="select_item = item; modal = true"><em></em>{{ item.status }}</i>
                             <div class="area_txt">
                                 <a href="<?php echo G5_BBS_URL ?>/mypage_sale_view.php">
 
                                     <h3>{{ item.MEMBER_PRODUCT.name }}</h3> <!-- 제목 -->
-                                    <div class="price">{{ parseInt(item.MEMBER_PRODUCT[item.package].price).format() }}원 ~</div> <!-- 가격 -->
+                                    <div class="price">{{ parseInt(item.price).format() }}원</div> <!-- 가격 -->
                                     <div id="seller_info">
                                         <div class="photo">
-                                            <img class="p_img" v-if="checkFile(`/data/file/member/${item.MEMBER.mb_no}.jpg`)" :src="`${jl.root}/data/file/member/${item.MEMBER.mb_no}.jpg`">
+                                            <img class="p_img" v-if="checkFile(`/data/file/member/${item.BUYER.mb_no}.jpg`)" :src="`${jl.root}/data/file/member/${item.BUYER.mb_no}.jpg`">
                                             <img class="p_img" v-else :src="`${jl.root}/img/img_smile.jpg`">
                                         </div>
-                                        <div class="name"><p>{{ item.MEMBER.mb_nick }}</p></div>
+                                        <div class="name"><p>{{ item.BUYER.mb_nick }}</p></div>
                                     </div>
                                 </a>
                             </div>
@@ -92,6 +92,20 @@
             });
         },
         methods: {
+            getClass : function(item) {
+                switch (item.status) {
+                    case "진행대기" :
+                        return "";
+                    case "진행중" :
+                        return "v2";
+                    case "완료" :
+                        return "v3";
+                    case "취소" :
+                        return "v4";
+                    default :
+                        return "";
+                }
+            },
             checkFile : function(file) {
                 var filter = {file : file};
                 var res = this.jl.ajax("check_file",filter,"/api/common.php");

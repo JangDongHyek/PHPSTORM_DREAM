@@ -220,6 +220,8 @@ function totalOrderKey($objects,$key) {
             </tr>
             <?php }?>
 
+            <?php if($this->data['orders']['count']) {?>
+
             <tr class="sum">
                 <td colspan="2">기간 내 합계</td>
                 <td colspan="4" class="text-right">
@@ -235,6 +237,13 @@ function totalOrderKey($objects,$key) {
                     <b><?=totalOrderKey($this->data['search_all_orders']['data'],"calc")?>원</b>
                 </td>
             </tr>
+            <?php }else {?>
+                <tr>
+                    <td colspan="99" class="empty">
+                        데이터가 없습니다.
+                    </td>
+                </tr>
+            <?php }?>
             </tbody>
         </table>
     </div>

@@ -35,15 +35,14 @@
                                 <a :href="`${jl.root}/bbs/mypage_view.php`">
                                     <h3>{{ item.MEMBER_PRODUCT.name }}</h3> <!-- 제목 -->
                                     <div class="price">
-                                        {{ parseInt(item.MEMBER_PRODUCT[item.package].price).format() }}
-                                        원 ~
+                                        {{ parseInt(item.price).format() }}원
                                     </div> <!-- 가격 -->
                                     <div id="seller_info">
                                         <div class="photo">
-                                            <img class="p_img" v-if="checkFile(`/data/file/member/${item.MEMBER.mb_no}.jpg`)" :src="`${jl.root}/data/file/member/${item.MEMBER.mb_no}.jpg`">
+                                            <img class="p_img" v-if="checkFile(`/data/file/member/${item.SELLER.mb_no}.jpg`)" :src="`${jl.root}/data/file/member/${item.SELLER.mb_no}.jpg`">
                                             <img class="p_img" v-else :src="`${jl.root}/img/img_smile.jpg`">
                                         </div>
-                                        <div class="name"><p>{{ item.MEMBER.mb_nick }}</p></div>
+                                        <div class="name"><p>{{ item.SELLER.mb_nick }}</p></div>
                                     </div>
                                 </a>
                             </div>

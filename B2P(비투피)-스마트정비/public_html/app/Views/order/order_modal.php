@@ -68,17 +68,17 @@
             var response = await fetchData(`/order/OrderCheck`, {idx});
             //console.log(response);
 
-            if(!response['api_data']['orderNo']){
+            if (!response['api_data']['orderNo']) {
                 code_html += '';
-            }else{
+            } else {
                 code_html += '[' + response['api_data']['orderNo'] + ']';
             }
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '발송처리 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '결과값이 없습니다.' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
         }
@@ -159,17 +159,20 @@
             var OrderNo = response['result']['OrderNo'];
             var response2 = await fetchData(`/order/GetCalc/${OrderNo}`);
             var calc_data = null;
-            if(response2.count) calc_data = response2['data'][0];
+            if (response2.count) calc_data = response2['data'][0];
 
-            var OrderAmount =  calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
-            var ServiceFee =  calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
-            var CostPrice =  calc_data ? calc_data['GoodsCost'] : response['result']['CostPrice']
-            var SellerDiscountPrice =  calc_data ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice']
-            var SettlementPrice =  calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
+            //console.log(response)
+            //console.log(response2)
+
+            var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
+            var ServiceFee = calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
+            var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
+            var SellerDiscountPrice = calc_data ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice']
+            var SettlementPrice = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
 
             //부가적인 설정
             SellerDiscountPrice = SellerDiscountPrice * -1;     // 음수화
-            if(ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
+            if (ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             var b2p_commission = OrderAmount * 0.05;            // b2p 자체 수수료 (판매금액의 5퍼센트)
 
             ServiceFee = ServiceFee - b2p_commission;
@@ -280,11 +283,11 @@
             //console.log(response);
             code_html += '[' + response['api_data']['orderNo'] + ']';
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '발송예정일 등록 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '결과값이 없습니다.' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
 
@@ -361,8 +364,8 @@
                 idx: idx,
             });
         });
-        
-        
+
+
         //송장번호 입력안된거 막아주기
         for (var j = 0; j < listData.length; j++) {
             var idx = listData[j]['idx'];
@@ -387,7 +390,7 @@
                 return false;
             }
         }
-        
+
         //for문
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
@@ -410,11 +413,11 @@
                 console.log(response);
                 code_html += '[' + response['api_data']['orderNo'] + ']';
 
-                if(response['body']['Message'] == 'Success'){
+                if (response['body']['Message'] == 'Success') {
                     code_html += '발송처리 성공<br>';
-                }else if(response['body']['Message'] == null) {
+                } else if (response['body']['Message'] == null) {
                     code_html += '결과값이 없습니다.' + '<br>';
-                }else{
+                } else {
                     code_html += response['body']['Message'] + '<br>';
                 }
 
@@ -506,14 +509,14 @@
             return false;
         }
 
-        if($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 1){
-            if(!$('#OrderClaimRelease_DeliveryCompCode').val()){
+        if ($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 1) {
+            if (!$('#OrderClaimRelease_DeliveryCompCode').val()) {
                 Swal.fire({
                     text: "택배사를 선택해주세요."
                 });
                 return false;
             }
-            if(!$('#OrderClaimRelease_InvoiceNo').val()){
+            if (!$('#OrderClaimRelease_InvoiceNo').val()) {
                 Swal.fire({
                     text: "운송장번호를 입력해주세요."
                 });
@@ -521,8 +524,8 @@
             }
         }
 
-        if($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 2){
-            if(!$('#OrderClaimRelease_CancelComment').val()){
+        if ($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 2) {
+            if (!$('#OrderClaimRelease_CancelComment').val()) {
                 Swal.fire({
                     text: "철회요청 메세지를 입력해주세요."
                 });
@@ -534,7 +537,6 @@
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
-
 
 
             var data_arr =
@@ -549,15 +551,14 @@
             //console.log(response);
             code_html += '[' + response['api_data']['OrderNo'] + ']';
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '미수령신고 철회요청 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '미수령신고 철회요청 성공' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
         }
-
 
 
         Swal.fire({
@@ -611,7 +612,7 @@
 
             if (result.isConfirmed) {
                 orderCancelCheck_modal();
-            }else{
+            } else {
                 return false;
             }
 
@@ -637,11 +638,11 @@
             //console.log(response);
             code_html += '[' + response['api_data']['OrderNo'] + ']';
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '취소처리 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '결과값이 없습니다.' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
         }
@@ -723,7 +724,7 @@
             return false;
         }
 
-        if(check){
+        if (check) {
             $('#cancelSoldOutCnt').html(listData.length);
             defModal.modal();
             return false;
@@ -745,15 +746,14 @@
             //console.log(response);
             code_html += '[' + response['api_data']['OrderNo'] + ']';
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '판매취소 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '결과값이 없습니다.' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
         }
-
 
 
         Swal.fire({
@@ -813,7 +813,7 @@
             return false;
         }
 
-        if(check){
+        if (check) {
             var idx = listData[0].idx;
             var response = await fetchData(`/order/GetOrder`, {idx});
             console.log(response);
@@ -821,7 +821,7 @@
                 var data = response.result;
                 $('#returnModal_SiteGoodsNo').html(data.SiteGoodsNo);
                 $('#returnModal_OrderNo').html(data.OrderNo);
-                $('#returnModal_GoodsName').attr('onclick', ' openSiteGoodsNo('+ data.SiteType + ',\'' + data.SiteGoodsNo + '\')');
+                $('#returnModal_GoodsName').attr('onclick', ' openSiteGoodsNo(' + data.SiteType + ',\'' + data.SiteGoodsNo + '\')');
                 $('#returnModal_GoodsName').html(data.GoodsName);
                 data.SalePrice = AddComma(data.SalePrice);
                 $('#returnModal_SalePrice').html(data.SalePrice);
@@ -877,7 +877,7 @@
             return false;
         }
 
-        if($('#returnModal_ResendInfo_HoldReason').val() == 2 && $('#returnModal_ReturnShippingFee').val() < 1000 ){
+        if ($('#returnModal_ResendInfo_HoldReason').val() == 2 && $('#returnModal_ReturnShippingFee').val() < 1000) {
             Swal.fire({
                 title: "반품처리",
                 html: `
@@ -905,7 +905,7 @@
         var code_title = '';
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
-            if($('#returnModal_return_radoi2_1').is(":checked")){
+            if ($('#returnModal_return_radoi2_1').is(":checked")) {
                 var data_arr =
                     {
                         idx: idx,
@@ -918,37 +918,36 @@
                 console.log(response);
                 code_html += '[' + response['api_data']['OrderNo'] + ']';
                 code_title = '환불보류';
-                if(response['body']['Message'] == 'Success'){
+                if (response['body']['Message'] == 'Success') {
                     code_html += '환불보류 성공<br>';
-                }else if(response['body']['Message'] == null) {
+                } else if (response['body']['Message'] == null) {
                     code_html += '결과값이 없습니다.' + '<br>';
-                }else{
+                } else {
                     code_html += response['body']['Message'] + '<br>';
                 }
 
-            }else{
+            } else {
 
                 var response = await fetchData(`/order/OrderReturnCheck`, {idx});
                 //console.log(response);
                 code_html += '[' + response['api_data']['OrderNo'] + ']';
                 code_title = '반품처리';
-                if(response['body']['Message'] == 'Success'){
+                if (response['body']['Message'] == 'Success') {
                     code_html += '반품처리 성공<br>';
-                }else if(response['body']['Message'] == null) {
+                } else if (response['body']['Message'] == null) {
                     code_html += '결과값이 없습니다.' + '<br>';
-                }else{
+                } else {
                     code_html += response['body']['Message'] + '<br>';
                 }
             }
         }
 
 
-
         Swal.fire({
             title: "반품처리",
             html: `
             <div class="text_form">
-                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 `+ code_title +` 되었습니다.</p>
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 ` + code_title + ` 되었습니다.</p>
             </div>
             <div class="text_form">
                    ` + code_html + `
@@ -1002,7 +1001,7 @@
             return false;
         }
 
-        if(check){
+        if (check) {
             var idx = listData[0].idx;
             var response = await fetchData(`/order/GetOrder`, {idx});
             //console.log(response);
@@ -1010,7 +1009,7 @@
                 var data = response.result;
                 $('#returnSelfModal_SiteGoodsNo').html(data.SiteGoodsNo);
                 $('#returnSelfModal_OrderNo').html(data.OrderNo);
-                $('#returnSelfModal_GoodsName').attr('onclick', ' openSiteGoodsNo('+ data.SiteType + ',\'' + data.SiteGoodsNo + '\')');
+                $('#returnSelfModal_GoodsName').attr('onclick', ' openSiteGoodsNo(' + data.SiteType + ',\'' + data.SiteGoodsNo + '\')');
                 $('#returnSelfModal_GoodsName').html(data.GoodsName);
                 data.SalePrice = AddComma(data.SalePrice);
                 $('#returnSelfModal_SalePrice').html(data.SalePrice);
@@ -1066,7 +1065,7 @@
             return false;
         }
 
-        if(!$('#returnSelfModal_GoodsStatus').val()){
+        if (!$('#returnSelfModal_GoodsStatus').val()) {
             Swal.fire({
                 title: "판매자 직접반품신청",
                 html: `
@@ -1088,7 +1087,7 @@
             return false;
         }
 
-        if(!$('#returnSelfModal_DeliveryCompName').val()){
+        if (!$('#returnSelfModal_DeliveryCompName').val()) {
             Swal.fire({
                 title: "판매자 직접반품신청",
                 html: `
@@ -1111,7 +1110,7 @@
         }
 
 
-        if(!$('#returnSelfModal_InvoiceNo').val()){
+        if (!$('#returnSelfModal_InvoiceNo').val()) {
             Swal.fire({
                 title: "판매자 직접반품신청",
                 html: `
@@ -1134,8 +1133,6 @@
         }
 
 
-
-
         //for문
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
@@ -1154,15 +1151,14 @@
             //console.log(response);
             code_html += '[' + response['api_data']['orderNo'] + ']';
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '판매자 직접반품신청 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '결과값이 없습니다.' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
         }
-
 
 
         Swal.fire({
@@ -1223,7 +1219,7 @@
             return false;
         }
 
-        if(check){
+        if (check) {
             var idx = listData[0].idx;
             var data_arr =
                 {
@@ -1238,7 +1234,7 @@
                 var data = response.result;
                 $('#ReturnExchange_SiteGoodsNo').html(data.SiteGoodsNo);
                 $('#ReturnExchange_OrderNo').html(data.OrderNo);
-                $('#ReturnExchange_GoodsName').attr('onclick', ' openSiteGoodsNo('+ data.SiteType + ',' + data.SiteGoodsNo + ')');
+                $('#ReturnExchange_GoodsName').attr('onclick', ' openSiteGoodsNo(' + data.SiteType + ',' + data.SiteGoodsNo + ')');
                 $('#ReturnExchange_GoodsName').html(data.GoodsName);
                 data.SalePrice = AddComma(data.SalePrice);
                 $('#ReturnExchange_SalePrice').html(data.SalePrice);
@@ -1246,7 +1242,15 @@
                 $('#ReturnExchange_BuyerName').html(data.BuyerName);
                 $('#ReturnExchange_return_ReasonDetail').html(data.return_ReasonDetail);
 
-                var return_AddReturnShippingFeeWay = {0: '없음', 1 : '지금결제함(카드결제, 핸드폰결제등)', 2 : '환불금 차감 대기' , 3 : '판매자 직접 결제' , 4 : '상품에 동봉함' , 5 : '스마일캐시 결제' , 6 : '기타'};
+                var return_AddReturnShippingFeeWay = {
+                    0: '없음',
+                    1: '지금결제함(카드결제, 핸드폰결제등)',
+                    2: '환불금 차감 대기',
+                    3: '판매자 직접 결제',
+                    4: '상품에 동봉함',
+                    5: '스마일캐시 결제',
+                    6: '기타'
+                };
                 $('#ReturnExchange_return_AddReturnShippingFeeWay').html(return_AddReturnShippingFeeWay[data.return_AddReturnShippingFeeWay]);
                 defModal.modal();
             }
@@ -1268,15 +1272,14 @@
             console.log(response);
             code_html += '[' + response['api_data']['OrderNo'] + ']';
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '반품건 교환전환 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '결과값이 없습니다.' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
         }
-
 
 
         Swal.fire({
@@ -1337,7 +1340,7 @@
             return false;
         }
 
-        if(check){
+        if (check) {
             var idx = listData[0].idx;
             var data_arr =
                 {
@@ -1352,7 +1355,7 @@
                 var data = response.result;
                 $('#ExchangeReturn_SiteGoodsNo').html(data.SiteGoodsNo);
                 $('#ExchangeReturn_OrderNo').html(data.OrderNo);
-                $('#ExchangeReturn_GoodsName').attr('onclick', ' openSiteGoodsNo('+ data.SiteType + ',' + data.SiteGoodsNo + ')');
+                $('#ExchangeReturn_GoodsName').attr('onclick', ' openSiteGoodsNo(' + data.SiteType + ',' + data.SiteGoodsNo + ')');
                 $('#ExchangeReturn_GoodsName').html(data.GoodsName);
                 data.SalePrice = AddComma(data.SalePrice);
                 $('#ExchangeReturn_SalePrice').html(data.SalePrice);
@@ -1360,7 +1363,15 @@
                 $('#ExchangeReturn_BuyerName').html(data.BuyerName);
                 $('#ExchangeReturn_return_ReasonDetail').html(data.exchange_ResonDetail);
 
-                var exchange_ExchangeShippingFeeWay = {0: '없음', 1 : '지금결제함(카드결제, 핸드폰결제등)', 2 : '환불금 차감 대기' , 3 : '판매자 직접 결제' , 4 : '상품에 동봉함' , 5 : '스마일캐시 결제' , 6 : '기타'};
+                var exchange_ExchangeShippingFeeWay = {
+                    0: '없음',
+                    1: '지금결제함(카드결제, 핸드폰결제등)',
+                    2: '환불금 차감 대기',
+                    3: '판매자 직접 결제',
+                    4: '상품에 동봉함',
+                    5: '스마일캐시 결제',
+                    6: '기타'
+                };
                 $('#ExchangeReturn_return_AddReturnShippingFeeWay').html(exchange_ExchangeShippingFeeWay[data.exchange_ExchangeShippingFeeWay]);
                 defModal.modal();
             }
@@ -1382,15 +1393,14 @@
             console.log(response);
             code_html += '[' + response['api_data']['OrderNo'] + ']';
 
-            if(response['body']['Message'] == 'Success'){
+            if (response['body']['Message'] == 'Success') {
                 code_html += '교환건 반품전환 성공<br>';
-            }else if(response['body']['Message'] == null) {
+            } else if (response['body']['Message'] == null) {
                 code_html += '결과값이 없습니다.' + '<br>';
-            }else{
+            } else {
                 code_html += response['body']['Message'] + '<br>';
             }
         }
-
 
 
         Swal.fire({
@@ -1415,8 +1425,6 @@
             history.go(0);
         });
     }
-
-
 
 
     // 주문번호 상세 모달
@@ -1476,7 +1484,7 @@
             defModal.modal();
         }
 
-        if(response2.body.Data){
+        if (response2.body.Data) {
 
             var progress_data = response2.body.Data;
             var progress_html = '';
@@ -1492,7 +1500,7 @@
                 progress_html += '</td>';
 
                 progress_html += '<td>';
-                if(progress_data[k]['TrackingUrl'] != null){
+                if (progress_data[k]['TrackingUrl'] != null) {
                     //progress_html += progress_data[k]['TrackingUrl'];
                     progress_html += '<button type="button" class="btn btn-white btn-mini" onclick="window.open(\'' + progress_data[k]['TrackingUrl'] + '\')">상품위치확인</button>';
                 }
@@ -1582,38 +1590,38 @@
     }
 
     //발송정보일괄등록 업로드
-    function uploadSendExcel(){
+    function uploadSendExcel() {
 
-        if($('#selOrderNoCell').val() == $('#selDeliveryCompCell').val()){
+        if ($('#selOrderNoCell').val() == $('#selDeliveryCompCell').val()) {
             alert('주문번호행과 택배사행을 다르게 설정해주세요.');
             return false;
         }
 
-        if($('#selDeliveryCompCell').val() == $('#selInvoiceCell').val()){
+        if ($('#selDeliveryCompCell').val() == $('#selInvoiceCell').val()) {
             alert('택배사행과 운송장/등기번호행을 다르게 설정해주세요.');
             return false;
         }
 
-        if($('#selOrderNoCell').val() == $('#selInvoiceCell').val()){
+        if ($('#selOrderNoCell').val() == $('#selInvoiceCell').val()) {
             alert('주문번호행과 운송장/등기번호행을 다르게 설정해주세요.');
             return false;
         }
 
-        if(!$('#OrderSendExcelFile').val()){
+        if (!$('#OrderSendExcelFile').val()) {
             alert('파일을 선택해주세요.');
             $('#FileuploadName').focus();
             return false;
         }
 
-        window.open("", "OrderSendExcelUploadForm","status=no,scrollbars=no,resizable=no,top=100,left=100,width=790,height=550");
+        window.open("", "OrderSendExcelUploadForm", "status=no,scrollbars=no,resizable=no,top=100,left=100,width=790,height=550");
         //만약 submit() 통해 띄운 팝업 페이지에 팝업 옵션을 주고 싶다면 이런식으로 옵션을 지정한다.
         //팝업에 옵션이 필요 없다면 이부분은 생략 가능하다.
 
-        var url    = "<?= base_url('order/OrderSendExcelUpload') ?>";
-        OrderSendExcelUploadForm.action    =  url;
+        var url = "<?= base_url('order/OrderSendExcelUpload') ?>";
+        OrderSendExcelUploadForm.action = url;
 
         //팝업으로 띄울 페이지 주소를 액션으로 지정
-        OrderSendExcelUploadForm.target="OrderSendExcelUploadForm";
+        OrderSendExcelUploadForm.target = "OrderSendExcelUploadForm";
         //서브밋을 날릴 타겟 설정, 만약 window.open을 통해 팝업 옵션을 주는 경우 window.open에서 사용할 타겟 이름과 이부분의
         //타겟 이름이 동일해야한다.
         //타겟이름은 다른 곳에 지정된 타겟 이름과 겹치지 않게 자유롭게 지정한다. 예) NoticePop
@@ -1665,7 +1673,7 @@
             defModal.modal();
         }
 
-        if(!$('#orderDeliEdit_InvoiceNo').val()){
+        if (!$('#orderDeliEdit_InvoiceNo').val()) {
             return false;
         }
 
@@ -1690,11 +1698,11 @@
                 console.log(response);
                 code_html += '[' + response['api_data']['orderNo'] + ']';
 
-                if(response['body']['Message'] == 'Success'){
+                if (response['body']['Message'] == 'Success') {
                     code_html += '배송정보 수정 성공';
-                }else if(response['body']['Message'] == null){
+                } else if (response['body']['Message'] == null) {
                     code_html += '데이터가 없습니다.';
-                }else{
+                } else {
                     code_html += response['body']['Message'] + '<br>';
                 }
             } else {
@@ -1704,6 +1712,106 @@
 
         }
 
+
+        Swal.fire({
+            title: "배송정보수정",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 배송정보수정 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+    const orderDeliProgress_modal = async () => {
+
+        const defModal = $('#orderDeliEditModal');
+
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "배송정보수정",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+        var idx = listData[0]['idx'];
+        var response_order = await fetchData(`/order/GetOrder`, {idx});
+
+        if (response_order.result) {
+            var data = response_order.result;
+            //console.log(data);
+            $('#orderDeliEdit_TakbaeName').html(data.TakbaeName);
+            $('#orderDeliEdit_NoSongjang').html(data.NoSongjang);
+            defModal.modal();
+        }
+
+        if (!$('#orderDeliEdit_InvoiceNo').val()) {
+            return false;
+        }
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var TakbaeName = $('#orderDeliEdit_companyNo').find("option:selected").data("name");
+            //var TakbaeName = $('#companyNo' + idx).data('name');
+            var data_arr =
+                {
+                    idx: idx,
+                    companyNo: $('#orderDeliEdit_companyNo').val(),
+                    NoSongjang: $('#orderDeliEdit_InvoiceNo').val(),
+                    TakbaeName: TakbaeName
+                };
+
+            console.log(data_arr);
+
+            if ($('#orderDeliEdit_InvoiceNo').val()) {
+                var response = await fetchData(`/order/OrderDeliEdit`, {data_arr});
+                console.log(response);
+                code_html += '[' + response['api_data']['orderNo'] + ']';
+                code_html += response['body']['Message'] + '<br>';
+            } else {
+                code_html += '[' + $('#OrderNo' + idx).html() + ']';
+                code_html += '송장번호가 없습니다.<br>';
+            }
+
+        }
 
 
         Swal.fire({
@@ -1774,7 +1882,7 @@
             defModal.modal();
         }
 
-        if(!$('#orderReturnDeliEdit_InvoiceNo').val()){
+        if (!$('#orderReturnDeliEdit_InvoiceNo').val()) {
             return false;
         }
 
@@ -1799,11 +1907,11 @@
                 console.log(response);
                 code_html += '[' + response['api_data']['orderNo'] + ']';
 
-                if(response['body']['Message'] == 'Success'){
+                if (response['body']['Message'] == 'Success') {
                     code_html += '반품 수거택배 수정 성공';
-                }else if(response['body']['Message'] == null){
+                } else if (response['body']['Message'] == null) {
                     code_html += '데이터가 없습니다.';
-                }else{
+                } else {
                     code_html += response['body']['Message'] + '<br>';
                 }
             } else {
@@ -1812,7 +1920,6 @@
             }
 
         }
-
 
 
         Swal.fire({
@@ -1836,6 +1943,131 @@
         }).then(result => {
             history.go(0);
         });
+    }
+
+    //교환재발송 배송완료
+    const orderExchangeReDeliComplete_modal = async (idx) => {
+
+        if (!idx) {
+            Swal.fire({
+                title: "교환재발송 배송완료",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+
+        var code_html = '';
+        var response = await fetchData(`/order/OrderExchangeReDeliComplete`, {idx});
+        console.log(response);
+        code_html += '[' + response['api_data']['orderNo'] + ']';
+
+        if (response['body']['Message'] == 'Success') {
+            code_html += '교환재발송 배송완료';
+        } else if (response['body']['Message'] == null) {
+            code_html += '데이터가 없습니다.';
+        } else {
+            code_html += response['body']['Message'] + '<br>';
+        }
+
+        Swal.fire({
+            title: "교환재발송 배송완료",
+            html: `
+            <div class="text_form">
+                <p>교환재발송 배송완료 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+
+
+    }
+
+    const orderExchangeHoldRelease_modal = async (idx) => {
+
+        if (!idx) {
+            Swal.fire({
+                title: "교환보류해제",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+
+        var code_html = '';
+        var response = await fetchData(`/order/OrderExchangeHoldRelease`, {idx});
+        console.log(response);
+        code_html += '[' + response['api_data']['orderNo'] + ']';
+
+        if (response['body']['Message'] == 'Success') {
+            code_html += '교환보류해제 성공';
+        } else if (response['body']['Message'] == null) {
+            code_html += '데이터가 없습니다.';
+        } else {
+            code_html += response['body']['Message'] + '<br>';
+        }
+
+        Swal.fire({
+            title: "교환보류해제",
+            html: `
+            <div class="text_form">
+                <p>교환보류해제 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+
+
     }
 
     const orderExchangeDeliEdit_modal = async () => {
@@ -1883,7 +2115,7 @@
             defModal.modal();
         }
 
-        if(!$('#orderExchangeDeliEdit_InvoiceNo').val()){
+        if (!$('#orderExchangeDeliEdit_InvoiceNo').val()) {
             return false;
         }
 
@@ -1907,12 +2139,12 @@
                 var response = await fetchData(`/order/OrderExchangeDeliEdit`, {data_arr});
                 console.log(response);
                 code_html += '[' + response['api_data']['orderNo'] + ']';
-                
-                if(response['body']['Message'] == 'Success'){
+
+                if (response['body']['Message'] == 'Success') {
                     code_html += '교환 수거택배 수정 성공';
-                }else if(response['body']['Message'] == null){
+                } else if (response['body']['Message'] == null) {
                     code_html += '데이터가 없습니다.';
-                }else{
+                } else {
                     code_html += response['body']['Message'] + '<br>';
                 }
             } else {
@@ -1921,7 +2153,6 @@
             }
 
         }
-
 
 
         Swal.fire({
@@ -1947,10 +2178,11 @@
         });
     }
 
-    const orderDeliProgress_modal = async () => {
 
-        const defModal = $('#orderDeliEditModal');
+    //교환처리
+    const orderExchange_modal = async (check) => {
 
+        const defModal = $('#orderExchangeModal');
         const ids = document.querySelectorAll('input[name="idx[]"]:checked');
         const listData = [];
         ids.forEach(input => {
@@ -1962,7 +2194,7 @@
 
         if (listData.length <= 0) {
             Swal.fire({
-                title: "배송정보수정",
+                title: "교환처리",
                 html: `
             <div class="text_form">
                 <p>선택된 주문이 없습니다.</p>
@@ -1981,59 +2213,195 @@
             return false;
         }
 
-        var idx = listData[0]['idx'];
-        var response_order = await fetchData(`/order/GetOrder`, {idx});
+        if (check) {
+            var idx = listData[0].idx;
+            var response = await fetchData(`/order/GetOrder`, {idx});
+            console.log(response);
+            if (response.result) {
+                var data = response.result;
+                $('#exchangeModal_SiteGoodsNo').html(data.SiteGoodsNo);
+                $('#exchangeModal_OrderNo').html(data.OrderNo);
+                $('#exchangeModal_GoodsName').attr('onclick', ' openSiteGoodsNo(' + data.SiteType + ',\'' + data.SiteGoodsNo + '\')');
+                $('#exchangeModal_GoodsName').html(data.GoodsName);
+                data.SalePrice = AddComma(data.SalePrice);
+                $('#exchangeModal_SalePrice').html(data.SalePrice);
+                $('#exchangeModal_ContrAmount').html(data.ContrAmount);
 
-        if (response_order.result) {
-            var data = response_order.result;
-            //console.log(data);
-            $('#orderDeliEdit_TakbaeName').html(data.TakbaeName);
-            $('#orderDeliEdit_NoSongjang').html(data.NoSongjang);
-            defModal.modal();
-        }
+                var option = JSON.parse(data.ItemOptionSelectList);
+                var option_html = '';
+                //console.log(option);
+                option_html += '<ul>';
+                for (var i = 0; i < option.length; i++) {
+                    option_html += option[i]['ItemOptionValue'] + ' ' + option[i]['ItemOptionOrderCnt'] + ' ' + option[i]['ItemOptionCode'];
+                    option_html += '</br>';
+                }
+                option_html += '</ul>';
+                $('#exchangeModal_ItemOptionSelectList').html(option_html);
 
-        if(!$('#orderDeliEdit_InvoiceNo').val()){
+                var Addition = JSON.parse(data.ItemOptionAdditionList);
+                var Addition_html = '';
+                Addition_html += '<ul>';
+                for (var j = 0; j < Addition.length; j++) {
+                    Addition_html += Addition[j]['ItemOptionValue'] + ' ' + Addition[j]['ItemOptionOrderCnt'] + ' ' + Addition[j]['ItemOptionCode'];
+                    Addition_html += '</br>';
+                }
+                Addition_html += '</ul>';
+                $('#exchangeModal_ItemOptionAdditionList').html(Addition_html);
+                $('#exchangeModal_BuyerName').html(data.BuyerName);
+                $('#exchangeModal_ReceiverName').html(data.ReceiverName);
+                $('#exchangeModal_BuyerMobileTel').html(data.BuyerMobileTel);
+                $('#exchangeModal_HpNo').html(data.HpNo);
+                $('#exchangeModal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
+                $('#exchangeModal_TakbaeName').html(data.TakbaeName);
+                $('#exchangeModal_NoSongjang').html(data.NoSongjang);
+
+
+                /*
+                $('#modal_FreeGift').html(data.FreeGift);
+                data.OrderAmount = AddComma(data.OrderAmount);
+                $('#modal_OrderAmount').html(data.OrderAmount);
+                data.ShippingFee = AddComma(data.ShippingFee);
+                $('#modal_ShippingFee').html(data.ShippingFee);
+                //$('#modal_TransType').html(data.TransType);
+                $('#modal_BuyerId').html(data.BuyerId);
+
+
+                $('#modal_BuyerTel').html(data.BuyerTel);
+
+                $('#modal_TelNo').html(data.TelNo);
+
+                $('#modal_DelMemo').html(data.DelMemo);
+                 */
+                defModal.modal();
+            }
             return false;
         }
 
-        //for문
-        var code_html = '';
-        for (var i = 0; i < listData.length; i++) {
-            var idx = listData[i]['idx'];
-            var TakbaeName = $('#orderDeliEdit_companyNo').find("option:selected").data("name");
-            //var TakbaeName = $('#companyNo' + idx).data('name');
-            var data_arr =
-                {
-                    idx: idx,
-                    companyNo: $('#orderDeliEdit_companyNo').val(),
-                    NoSongjang: $('#orderDeliEdit_InvoiceNo').val(),
-                    TakbaeName: TakbaeName
-                };
+        if ($('#exchangeModal_return_radoi2_1').is(":checked") && ( !$('#exchangeModal_ResendInfo_InvoiceNo').val() || !$('#exchangeModal_ResendInfo_DeliveryCompName').val())) {
+            Swal.fire({
+                title: "교환처리",
+                html: `
+            <div class="text_form">
+                <p>운송장번호를 입력해주세요.</p>
+            </div>
 
-            console.log(data_arr);
 
-            if ($('#orderDeliEdit_InvoiceNo').val()) {
-                var response = await fetchData(`/order/OrderDeliEdit`, {data_arr});
-                console.log(response);
-                code_html += '[' + response['api_data']['orderNo'] + ']';
-                code_html += response['body']['Message'] + '<br>';
-            } else {
-                code_html += '[' + $('#OrderNo' + idx).html() + ']';
-                code_html += '송장번호가 없습니다.<br>';
-            }
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
 
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            }).then(result => {
+                $('#exchangeModal_ResendInfo_InvoiceNo').focus();
+            });
+            return false;
+        }
+
+        if ($('#exchangeModal_return_radoi4_1').is(":checked") && ( !$('#exchangeModal_HoldReason').val() || !$('#exchangeModal_ResendExpectDate').val())) {
+            Swal.fire({
+                title: "교환처리",
+                html: `
+            <div class="text_form">
+                <p>예상재발송일을 입력해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            }).then(result => {
+                $('#exchangeModal_ResendExpectDate').focus();
+            });
+            return false;
         }
 
 
+        //for문
+        var code_html = '';
+        var code_html2 = '';
+        var code_html3 = '';
+
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var data_arr = '';
+
+            //교환 수거완료
+            if ($('#exchangeModal_return_radoi1_1').is(":checked")) {
+
+                var response = await fetchData(`/order/OrderExchangeDeliComplete`, {idx});
+                console.log(response);
+                code_html += '[' + response['api_data']['OrderNo'] + ' 교환 수거완료 ]';
+                if (response['body']['Message'] == 'Success') {
+                    code_html += '교환 수거완료 성공<br>';
+                } else if (response['body']['Message'] == null) {
+                    code_html += '결과값이 없습니다.' + '<br>';
+                } else {
+                    code_html += response['body']['Message'] + '<br>';
+                }
+
+            }
+
+            //교환 재발송
+            if ($('#exchangeModal_return_radoi2_1').is(":checked")) {
+                var data_arr =
+                    {
+                        idx: idx,
+                        companyNo: $('#exchangeModal_ResendInfo_DeliveryCompName').val(),
+                        NoSongjang: $('#exchangeModal_ResendInfo_InvoiceNo').val(),
+                    };
+
+                var response2 = await fetchData(`/order/OrderExchangeReDeliEdit`, {data_arr});
+                console.log(response2);
+                code_html2 += '[' + response2['api_data']['OrderNo'] + ' 교환 재발송 ]';
+                if (response2['body']['Message'] == 'Success') {
+                    code_html2 += '교환 재발송 성공<br>';
+                } else if (response2['body']['Message'] == null) {
+                    code_html2 += '결과값이 없습니다.' + '<br>';
+                } else {
+                    code_html2 += response2['body']['Message'] + '<br>';
+                }
+            }
+            
+            //교환보류
+            if ($('#exchangeModal_return_radoi4_1').is(":checked")) {
+                var data_arr =
+                    {
+                        idx: idx,
+                        HoldReason: $('#exchangeModal_HoldReason').val(),
+                        ResendExpectDate: $('#exchangeModal_ResendExpectDate').val(),
+                    };
+
+                var response3 = await fetchData(`/order/OrderExchangeHold`, {data_arr});
+                console.log(response3);
+                code_html3 += '[' + response3['api_data']['OrderNo'] + ' 교환 보류 ]';
+
+                if (response3['body']['Message'] == 'Success') {
+                    code_html3 += '교환 재발송 성공<br>';
+                } else if (response3['body']['Message'] == null) {
+                    code_html3 += '결과값이 없습니다.' + '<br>';
+                } else {
+                    code_html3 += response3['body']['Message'] + '<br>';
+                }
+            }
+        }
+
 
         Swal.fire({
-            title: "배송정보수정",
+            title: "교환처리",
             html: `
             <div class="text_form">
-                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 배송정보수정 되었습니다.</p>
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 교환처리 되었습니다.</p>
             </div>
             <div class="text_form">
-                   ` + code_html + `
+                   ` + code_html + ` ` + code_html2 + ` ` + code_html3 + `
              </div>
 
               `,
@@ -2069,7 +2437,8 @@
                             <tbody>
                             <tr>
                                 <th>상품번호/주문번호</th>
-                                <td colspan="3"><span id="returnSelfModal_SiteGoodsNo"></span> / <span id="returnSelfModal_OrderNo"></span></td>
+                                <td colspan="3"><span id="returnSelfModal_SiteGoodsNo"></span> / <span
+                                            id="returnSelfModal_OrderNo"></span></td>
                             </tr>
                             <tr>
                                 <th>상품명</th>
@@ -2087,13 +2456,17 @@
                             </tr>
                             <tr>
                                 <th>금액/개수</th>
-                                <td colspan="3"><span id="returnSelfModal_SalePrice"></span> 원 / <span id="returnSelfModal_ContrAmount"></span> 개</td>
+                                <td colspan="3"><span id="returnSelfModal_SalePrice"></span> 원 / <span
+                                            id="returnSelfModal_ContrAmount"></span> 개
+                                </td>
                             </tr>
                             <tr>
                                 <th>구매자명/수령인명</th>
-                                <td><span id="returnSelfModal_BuyerName"></span> / <span id="returnSelfModal_ReceiverName"></span></td>
+                                <td><span id="returnSelfModal_BuyerName"></span> / <span
+                                            id="returnSelfModal_ReceiverName"></span></td>
                                 <th>연락처</th>
-                                <td><span id="returnSelfModal_BuyerMobileTel"></span> / <span id="returnSelfModal_HpNo"></span></td>
+                                <td><span id="returnSelfModal_BuyerMobileTel"></span> / <span
+                                            id="returnSelfModal_HpNo"></span></td>
                             </tr>
                             <tr>
                                 <th>주소</th>
@@ -2137,10 +2510,13 @@
                                 <th colspan="2">고객님이 상품을 이미 보내셨습니까?</th>
                                 <td colspan="2">
                                     <div class="select">
-                                        <input type="radio" class="rdo" id="returnSelfModal_PickupInfoStatus1" name="returnSelfModal_PickupInfoStatus" value="1"
-                                               checked="checked"> <label for="returnSelfModal_PickupInfoStatus1">예</label>
-                                        <input type="radio" class="rdo" id="returnSelfModal_PickupInfoStatus2" name="returnSelfModal_PickupInfoStatus" value="0"
-                                               > <label for="returnSelfModal_PickupInfoStatus2">아니요</label>
+                                        <input type="radio" class="rdo" id="returnSelfModal_PickupInfoStatus1"
+                                               name="returnSelfModal_PickupInfoStatus" value="1"
+                                               checked="checked"> <label
+                                                for="returnSelfModal_PickupInfoStatus1">예</label>
+                                        <input type="radio" class="rdo" id="returnSelfModal_PickupInfoStatus2"
+                                               name="returnSelfModal_PickupInfoStatus" value="0"
+                                        > <label for="returnSelfModal_PickupInfoStatus2">아니요</label>
                                     </div>
                                 </td>
                             </tr>
@@ -2174,7 +2550,8 @@
                                 </td>
                                 <th>운송장 번호</th>
                                 <td>
-                                    <input class="border_gray" id="returnSelfModal_InvoiceNo" name="invoiceNo" type="text"
+                                    <input class="border_gray" id="returnSelfModal_InvoiceNo" name="invoiceNo"
+                                           type="text"
                                            value="" placeholder="송장번호/등기번호 입력하세요">
                                 </td>
                             </tr>
@@ -2185,7 +2562,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="orderReturnSelf_modal(false,true)">바로환불</button>
+                <button type="button" class="btn btn-secondary" onclick="orderReturnSelf_modal(false,true)">바로환불
+                </button>
                 <button type="button" class="btn btn-primary" onclick="orderReturnSelf_modal()">신청</button>
             </div>
         </div>
@@ -2592,9 +2970,11 @@
                             <tbody>
                             <tr>
                                 <div class="select gap10 nowrap">
-                                    <input type="radio" class="rdo" id="OrderClaimRelease_ClaimCancelType1" name="OrderClaimRelease_ClaimCancelType" value="1" checked>
+                                    <input type="radio" class="rdo" id="OrderClaimRelease_ClaimCancelType1"
+                                           name="OrderClaimRelease_ClaimCancelType" value="1" checked>
                                     <label class="btn" for="OrderClaimRelease_ClaimCancelType1">송장번호 재입력</label>
-                                    <input type="radio" class="rdo" id="OrderClaimRelease_ClaimCancelType2" name="OrderClaimRelease_ClaimCancelType" value="2">
+                                    <input type="radio" class="rdo" id="OrderClaimRelease_ClaimCancelType2"
+                                           name="OrderClaimRelease_ClaimCancelType" value="2">
                                     <label class="btn" for="OrderClaimRelease_ClaimCancelType2">철회요청 메세지입력</label>
                                 </div>
                                 <br>
@@ -2603,7 +2983,8 @@
                                 <th>택배사명</th>
                                 <td>
                                     <div class="input_select">
-                                        <select class="border_gray" id="OrderClaimRelease_DeliveryCompCode" name="selDeliveryComp">
+                                        <select class="border_gray" id="OrderClaimRelease_DeliveryCompCode"
+                                                name="selDeliveryComp">
                                             <option value="">선택</option>
                                             <? foreach ($delivery_company_list as $index => $data): ?>
                                                 <option value="<?= $data['code'] ?>"
@@ -2648,15 +3029,19 @@
                     <dl class="label_choice grid grid4">
                         <dt><strong>수신인 전화번호</strong></dt>
                         <dd class="select">
-                            <input type="radio" class="rdo" name="phone_number" checked="checked" value="x" onclick="$('.phone_number_show').hide()">
+                            <input type="radio" class="rdo" name="phone_number" checked="checked" value="x"
+                                   onclick="$('.phone_number_show').hide()">
                             <label>표시안함</label>
-                            <input type="radio" class="rdo" name="phone_number" value="o" onclick="$('.phone_number_show').show()"> <label>표시함</label>
+                            <input type="radio" class="rdo" name="phone_number" value="o"
+                                   onclick="$('.phone_number_show').show()"> <label>표시함</label>
                         </dd>
                         <dt><strong>구매자 ID</strong></dt>
                         <dd class="select">
-                            <input type="radio" class="rdo" name="buyer_id" checked="checked" value="x" onclick="$('.buyer_id_show').hide()">
+                            <input type="radio" class="rdo" name="buyer_id" checked="checked" value="x"
+                                   onclick="$('.buyer_id_show').hide()">
                             <label>표시안함</label>
-                            <input type="radio" class="rdo" name="buyer_id" value="o" onclick="$('.buyer_id_show').show()"> <label>표시함</label>
+                            <input type="radio" class="rdo" name="buyer_id" value="o"
+                                   onclick="$('.buyer_id_show').show()"> <label>표시함</label>
                         </dd>
                     </dl>
 
@@ -2686,171 +3071,178 @@
                 </button>
             </div>
 
-            <form id="OrderSendExcelUploadForm" name="OrderSendExcelUploadForm" action="<?= base_url('order/OrderSendExcelUpload') ?>" target="_blank" method="post" enctype="multipart/form-data">
-            <div class="modal-body">
-                <div>
-                    <ul class="guide">
-                        <li>발송정보는 <strong>1회 최대 500건 (750kb) 까지</strong> 일괄업로드가 가능합니다.</li>
-                        <li>파일 업로드시 정확한 주문정보가 아닐경우 업로드에 실패하며, 이와 같은 경우에는 발송처리를 다시 시도해 주셔야합니다.</li>
-                        <li><strong>업로드 실패후 재 시도시 이전에 업로드하신 모든 주문건을 다시 업로드 해주셔야 합니다.</strong></li>
-                        <li>컴퓨터 성능에 따라 다량의 주문건을 한꺼번에 등록시 일시적인 오류가 발생할 수 있습니다.</li>
-                        <li>운송장/등기번호가 기입된 엑셀파일에서 <strong>주문번호/택배사/운송장등기번호가</strong> 있는 엑셀열을 선택하세요</li>
-                        <li>엑셀 파일은 파일형식 xls 파일만 업로드가 가능합니다.</li>
-                        <li>엑셀 파일 문서를 닫으신 후 등록하세요</li>
-                        <li>메모리를 많이 사용하는 프로그램 등을 종료하고 등록해주시기 바랍니다.</li>
-                    </ul>
-                    <div class="table">
-                        <table>
-                            <colgroup>
-                                <col style="width: 20%;">
-                                <col>
-                                <col style="width: 25%;">
-                                <col>
-                            </colgroup>
-                            <tbody>
-                            <tr>
+            <form id="OrderSendExcelUploadForm" name="OrderSendExcelUploadForm"
+                  action="<?= base_url('order/OrderSendExcelUpload') ?>" target="_blank" method="post"
+                  enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div>
+                        <ul class="guide">
+                            <li>발송정보는 <strong>1회 최대 500건 (750kb) 까지</strong> 일괄업로드가 가능합니다.</li>
+                            <li>파일 업로드시 정확한 주문정보가 아닐경우 업로드에 실패하며, 이와 같은 경우에는 발송처리를 다시 시도해 주셔야합니다.</li>
+                            <li><strong>업로드 실패후 재 시도시 이전에 업로드하신 모든 주문건을 다시 업로드 해주셔야 합니다.</strong></li>
+                            <li>컴퓨터 성능에 따라 다량의 주문건을 한꺼번에 등록시 일시적인 오류가 발생할 수 있습니다.</li>
+                            <li>운송장/등기번호가 기입된 엑셀파일에서 <strong>주문번호/택배사/운송장등기번호가</strong> 있는 엑셀열을 선택하세요</li>
+                            <li>엑셀 파일은 파일형식 xls 파일만 업로드가 가능합니다.</li>
+                            <li>엑셀 파일 문서를 닫으신 후 등록하세요</li>
+                            <li>메모리를 많이 사용하는 프로그램 등을 종료하고 등록해주시기 바랍니다.</li>
+                        </ul>
+                        <div class="table">
+                            <table>
+                                <colgroup>
+                                    <col style="width: 20%;">
+                                    <col>
+                                    <col style="width: 25%;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
 
-                                <th>
-                                    주문번호
-                                </th>
-                                <td>
+                                    <th>
+                                        주문번호
+                                    </th>
+                                    <td>
 
-                                    <div class="input_select">
+                                        <div class="input_select">
 
-                                        <select id="selOrderNoCell" name="selOrderNoCell" class="border_gray">
-                                            <option value="" selected="selected">-선택-</option>
-                                            <option value="A">A열</option>
-                                            <option value="B">B열</option>
-                                            <option value="C">C열</option>
-                                            <option value="D">D열</option>
-                                            <option value="E">E열</option>
-                                            <option value="F">F열</option>
-                                            <option value="G">G열</option>
-                                            <option value="H">H열</option>
-                                            <option value="I">I열</option>
-                                            <option value="J">J열</option>
-                                            <option value="K">K열</option>
-                                            <option value="L">L열</option>
-                                            <option value="M">M열</option>
-                                            <option value="N">N열</option>
-                                            <option value="O">O열</option>
-                                            <option value="P">P열</option>
-                                            <option value="Q">Q열</option>
-                                            <option value="R">R열</option>
-                                            <option value="S">S열</option>
-                                            <option value="T">T열</option>
-                                            <option value="U">U열</option>
-                                            <option value="V">V열</option>
-                                            <option value="W">W열</option>
-                                            <option value="X">X열</option>
-                                            <option value="Y">Y열</option>
-                                            <option value="Z">Z열</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    택배사
-                                </th>
-                                <td>
-                                    <div class="input_select">
+                                            <select id="selOrderNoCell" name="selOrderNoCell" class="border_gray">
+                                                <option value="" selected="selected">-선택-</option>
+                                                <option value="A">A열</option>
+                                                <option value="B">B열</option>
+                                                <option value="C">C열</option>
+                                                <option value="D">D열</option>
+                                                <option value="E">E열</option>
+                                                <option value="F">F열</option>
+                                                <option value="G">G열</option>
+                                                <option value="H">H열</option>
+                                                <option value="I">I열</option>
+                                                <option value="J">J열</option>
+                                                <option value="K">K열</option>
+                                                <option value="L">L열</option>
+                                                <option value="M">M열</option>
+                                                <option value="N">N열</option>
+                                                <option value="O">O열</option>
+                                                <option value="P">P열</option>
+                                                <option value="Q">Q열</option>
+                                                <option value="R">R열</option>
+                                                <option value="S">S열</option>
+                                                <option value="T">T열</option>
+                                                <option value="U">U열</option>
+                                                <option value="V">V열</option>
+                                                <option value="W">W열</option>
+                                                <option value="X">X열</option>
+                                                <option value="Y">Y열</option>
+                                                <option value="Z">Z열</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        택배사
+                                    </th>
+                                    <td>
+                                        <div class="input_select">
 
-                                        <select id="selDeliveryCompCell" name="selDeliveryCompCell" class="border_gray">
-                                            <option value="" selected="selected">-선택-</option>
-                                            <option value="A">A열</option>
-                                            <option value="B">B열</option>
-                                            <option value="C">C열</option>
-                                            <option value="D">D열</option>
-                                            <option value="E">E열</option>
-                                            <option value="F">F열</option>
-                                            <option value="G">G열</option>
-                                            <option value="H">H열</option>
-                                            <option value="I">I열</option>
-                                            <option value="J">J열</option>
-                                            <option value="K">K열</option>
-                                            <option value="L">L열</option>
-                                            <option value="M">M열</option>
-                                            <option value="N">N열</option>
-                                            <option value="O">O열</option>
-                                            <option value="P">P열</option>
-                                            <option value="Q">Q열</option>
-                                            <option value="R">R열</option>
-                                            <option value="S">S열</option>
-                                            <option value="T">T열</option>
-                                            <option value="U">U열</option>
-                                            <option value="V">V열</option>
-                                            <option value="W">W열</option>
-                                            <option value="X">X열</option>
-                                            <option value="Y">Y열</option>
-                                            <option value="Z">Z열</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <th>
-                                    운송장/등기번호
-                                </th>
-                                <td>
+                                            <select id="selDeliveryCompCell" name="selDeliveryCompCell"
+                                                    class="border_gray">
+                                                <option value="" selected="selected">-선택-</option>
+                                                <option value="A">A열</option>
+                                                <option value="B">B열</option>
+                                                <option value="C">C열</option>
+                                                <option value="D">D열</option>
+                                                <option value="E">E열</option>
+                                                <option value="F">F열</option>
+                                                <option value="G">G열</option>
+                                                <option value="H">H열</option>
+                                                <option value="I">I열</option>
+                                                <option value="J">J열</option>
+                                                <option value="K">K열</option>
+                                                <option value="L">L열</option>
+                                                <option value="M">M열</option>
+                                                <option value="N">N열</option>
+                                                <option value="O">O열</option>
+                                                <option value="P">P열</option>
+                                                <option value="Q">Q열</option>
+                                                <option value="R">R열</option>
+                                                <option value="S">S열</option>
+                                                <option value="T">T열</option>
+                                                <option value="U">U열</option>
+                                                <option value="V">V열</option>
+                                                <option value="W">W열</option>
+                                                <option value="X">X열</option>
+                                                <option value="Y">Y열</option>
+                                                <option value="Z">Z열</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <th>
+                                        운송장/등기번호
+                                    </th>
+                                    <td>
 
-                                    <div class="input_select">
+                                        <div class="input_select">
 
-                                        <select id="selInvoiceCell" name="selInvoiceCell" class="border_gray">
-                                            <option value="" selected="selected">-선택-</option>
-                                            <option value="A">A열</option>
-                                            <option value="B">B열</option>
-                                            <option value="C">C열</option>
-                                            <option value="D">D열</option>
-                                            <option value="E">E열</option>
-                                            <option value="F">F열</option>
-                                            <option value="G">G열</option>
-                                            <option value="H">H열</option>
-                                            <option value="I">I열</option>
-                                            <option value="J">J열</option>
-                                            <option value="K">K열</option>
-                                            <option value="L">L열</option>
-                                            <option value="M">M열</option>
-                                            <option value="N">N열</option>
-                                            <option value="O">O열</option>
-                                            <option value="P">P열</option>
-                                            <option value="Q">Q열</option>
-                                            <option value="R">R열</option>
-                                            <option value="S">S열</option>
-                                            <option value="T">T열</option>
-                                            <option value="U">U열</option>
-                                            <option value="V">V열</option>
-                                            <option value="W">W열</option>
-                                            <option value="X">X열</option>
-                                            <option value="Y">Y열</option>
-                                            <option value="Z">Z열</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="n_invoice_case">
-                        <p class="guide">예) D열-주문번호, C열-택배사, H열 – 운송장번호 D, C, H 선택</p>
-                        <img src="https://pics.esmplus.com/front/data/img_ivcase.gif" class="w100">
-                    </div>
-                    <br>
-                    <h2 class="popstit">
-                        저장문서 가져오기
-                    </h2>
+                                            <select id="selInvoiceCell" name="selInvoiceCell" class="border_gray">
+                                                <option value="" selected="selected">-선택-</option>
+                                                <option value="A">A열</option>
+                                                <option value="B">B열</option>
+                                                <option value="C">C열</option>
+                                                <option value="D">D열</option>
+                                                <option value="E">E열</option>
+                                                <option value="F">F열</option>
+                                                <option value="G">G열</option>
+                                                <option value="H">H열</option>
+                                                <option value="I">I열</option>
+                                                <option value="J">J열</option>
+                                                <option value="K">K열</option>
+                                                <option value="L">L열</option>
+                                                <option value="M">M열</option>
+                                                <option value="N">N열</option>
+                                                <option value="O">O열</option>
+                                                <option value="P">P열</option>
+                                                <option value="Q">Q열</option>
+                                                <option value="R">R열</option>
+                                                <option value="S">S열</option>
+                                                <option value="T">T열</option>
+                                                <option value="U">U열</option>
+                                                <option value="V">V열</option>
+                                                <option value="W">W열</option>
+                                                <option value="X">X열</option>
+                                                <option value="Y">Y열</option>
+                                                <option value="Z">Z열</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="n_invoice_case">
+                            <p class="guide">예) D열-주문번호, C열-택배사, H열 – 운송장번호 D, C, H 선택</p>
+                            <img src="https://pics.esmplus.com/front/data/img_ivcase.gif" class="w100">
+                        </div>
+                        <br>
+                        <h2 class="popstit">
+                            저장문서 가져오기
+                        </h2>
 
-                        <input type="file" id="OrderSendExcelFile" name="OrderSendExcelFile" accept=".xls,.xlsx"  style="display:none" onchange="$('#FileuploadName').val(this.value.split('\\').reverse()[0])">
-                        <input id="FileuploadName" type="text" class="border_gray" onclick="$('#OrderSendExcelFile').click()">
+                        <input type="file" id="OrderSendExcelFile" name="OrderSendExcelFile" accept=".xls,.xlsx"
+                               style="display:none"
+                               onchange="$('#FileuploadName').val(this.value.split('\\').reverse()[0])">
+                        <input id="FileuploadName" type="text" class="border_gray"
+                               onclick="$('#OrderSendExcelFile').click()">
                         <label for="OrderSendExcelFile" class="btn btn-gray btn-md w100px">파일 선택</label>
-                    <br>
-                    <ul class="guide">
-                        <li>* 엑셀 2010 파일형식인 xlsx 파일은 지원하지 않습니다.</li>
-                        <li>엑셀 2010 사용자분들은 <strong>엑셀 97-2003 파일형식인 xls</strong>로 저장 후 업로드해 주세요.</li>
-                        <li>엑셀2010에서 업로드 하실 엑셀파일을 저장하실 경우 파일 메뉴의 ‘다른이름으로 저장’을 선택하고 하단 파일형식을 ‘Excel 97 - 2003 통합문서’로 선택한
-                            후 저장해주세요.
-                        </li>
-                    </ul>
+                        <br>
+                        <ul class="guide">
+                            <li>* 엑셀 2010 파일형식인 xlsx 파일은 지원하지 않습니다.</li>
+                            <li>엑셀 2010 사용자분들은 <strong>엑셀 97-2003 파일형식인 xls</strong>로 저장 후 업로드해 주세요.</li>
+                            <li>엑셀2010에서 업로드 하실 엑셀파일을 저장하실 경우 파일 메뉴의 ‘다른이름으로 저장’을 선택하고 하단 파일형식을 ‘Excel 97 - 2003 통합문서’로
+                                선택한
+                                후 저장해주세요.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
             </form>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
@@ -3102,7 +3494,8 @@
                     <select class="border_gray" id="cancelSoldOutReason">
                         <option value="재고가 부족함">재고가 부족함</option>
                         <option value="상품에 하자가 생겨서 판매불가">상품에 하자가 생겨서 판매불가</option>
-                        <option value=기타 사유">기타 사유</option>
+                        <option value=기타 사유
+                        ">기타 사유</option>
                         <option value="해당 선택/옵션 정보만 품절처리">해당 선택/옵션 정보만 품절처리</option>
                         <option value="해당 상품 품절처리">해당 상품 품절처리</option>
                         <option value="구매의사 취소">구매의사 취소</option>
@@ -3352,7 +3745,8 @@
                         </tr>
                         <tr>
                             <th>금액/개수</th>
-                            <td><span id="returnModal_SalePrice"></span>원 / <span id="returnModal_ContrAmount"></span>개</td>
+                            <td><span id="returnModal_SalePrice"></span>원 / <span id="returnModal_ContrAmount"></span>개
+                            </td>
                         </tr>
                         <tr>
                             <th>구매자명</th>
@@ -3377,17 +3771,30 @@
                 <div class="box_white2">
                     <p><strong>반품상품을 받으셨습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_1" value="o" onclick="$('#returnModal_return_radoi2').show();$('#returnModal_return_radoi2_hide').focus()"> <label for="returnModal_return_radoi1_1">예</label>
-                        <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_2" checked="checked" value="x" onclick="$('#returnModal_return_radoi2').hide();$('#returnModal_return_radoi2_2').click()"> <label for="returnModal_return_radoi1_2">아니요</label>
+                        <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_1"
+                               value="o"
+                               onclick="$('#returnModal_return_radoi2').show();$('#returnModal_return_radoi2_hide').focus()">
+                        <label for="returnModal_return_radoi1_1">예</label>
+                        <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_2"
+                               checked="checked" value="x"
+                               onclick="$('#returnModal_return_radoi2').hide();$('#returnModal_return_radoi2_2').click()">
+                        <label for="returnModal_return_radoi1_2">아니요</label>
                     </div>
                 </div>
                 <br>
                 <div class="box_white2" id="returnModal_return_radoi2" style="display: none">
                     <p><strong>환불보류설정을 하시겠습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_1" value="o" onclick="$('#returnModal_return_radoi3').show();$('#returnModal_ResendInfo_HoldReasonDetail').focus()"> <label for="returnModal_return_radoi2_1">예</label>
-                        <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_2" checked="checked" value="x" onclick="$('#returnModal_return_radoi3').hide();$('#returnModal_ResendInfo_HoldReasonDetail').val('');$('#returnModal_ReturnShippingFee').val('')"> <label for="returnModal_return_radoi2_2">아니요</label>
-                        <input type="text" id="returnModal_return_radoi2_hide" readonly style="width: 0px;height: 0px;border: none">
+                        <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_1"
+                               value="o"
+                               onclick="$('#returnModal_return_radoi3').show();$('#returnModal_ResendInfo_HoldReasonDetail').focus()">
+                        <label for="returnModal_return_radoi2_1">예</label>
+                        <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_2"
+                               checked="checked" value="x"
+                               onclick="$('#returnModal_return_radoi3').hide();$('#returnModal_ResendInfo_HoldReasonDetail').val('');$('#returnModal_ReturnShippingFee').val('')">
+                        <label for="returnModal_return_radoi2_2">아니요</label>
+                        <input type="text" id="returnModal_return_radoi2_hide" readonly
+                               style="width: 0px;height: 0px;border: none">
                     </div>
                 </div>
 
@@ -3412,11 +3819,13 @@
                         </tr>
                         <tr>
                             <td>보류상세사유</td>
-                            <td><input type="text" class="border_gray" id="returnModal_ResendInfo_HoldReasonDetail"/></td>
+                            <td><input type="text" class="border_gray" id="returnModal_ResendInfo_HoldReasonDetail"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>추가반품배송비</td>
-                            <td><input type="number" class="border_gray" id="returnModal_ReturnShippingFee"  value="0"/></td>
+                            <td><input type="number" class="border_gray" id="returnModal_ReturnShippingFee" value="0"/>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -3447,7 +3856,8 @@
                         <tbody>
                         <tr>
                             <th>상품번호/주문번호</th>
-                            <td><span id="ReturnExchange_SiteGoodsNo"></span> / <span id="ReturnExchange_OrderNo"></span></td>
+                            <td><span id="ReturnExchange_SiteGoodsNo"></span> / <span
+                                        id="ReturnExchange_OrderNo"></span></td>
                         </tr>
                         <tr>
                             <th>상품명</th>
@@ -3455,7 +3865,9 @@
                         </tr>
                         <tr>
                             <th>금액/개수</th>
-                            <td><span id="ReturnExchange_SalePrice"></span>원 / <span id="ReturnExchange_ContrAmount"></span>개</td>
+                            <td><span id="ReturnExchange_SalePrice"></span>원 / <span
+                                        id="ReturnExchange_ContrAmount"></span>개
+                            </td>
                         </tr>
                         <tr>
                             <th>구매자명</th>
@@ -3485,17 +3897,30 @@
                 <div class="box_white2">
                     <p><strong>상품을 받으셨습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="ReturnExchange_return_radoi1" id="ReturnExchange_return_radoi1_1" value="o" onclick="$('#ReturnExchange_return_radoi2').show();$('#ReturnExchange_return_radoi2_hide').focus()"> <label for="ReturnExchange_return_radoi1_1">예</label>
-                        <input type="radio" class="" name="ReturnExchange_return_radoi1" id="ReturnExchange_return_radoi1_2" checked="checked" value="x" onclick="$('#ReturnExchange_return_radoi2').hide();$('#ReturnExchange_return_radoi2_2').click()"> <label for="ReturnExchange_return_radoi1_2">아니요</label>
+                        <input type="radio" class="" name="ReturnExchange_return_radoi1"
+                               id="ReturnExchange_return_radoi1_1" value="o"
+                               onclick="$('#ReturnExchange_return_radoi2').show();$('#ReturnExchange_return_radoi2_hide').focus()">
+                        <label for="ReturnExchange_return_radoi1_1">예</label>
+                        <input type="radio" class="" name="ReturnExchange_return_radoi1"
+                               id="ReturnExchange_return_radoi1_2" checked="checked" value="x"
+                               onclick="$('#ReturnExchange_return_radoi2').hide();$('#ReturnExchange_return_radoi2_2').click()">
+                        <label for="ReturnExchange_return_radoi1_2">아니요</label>
                     </div>
                 </div>
                 <br>
                 <div class="box_white2" id="ReturnExchange_return_radoi2" style="display: none">
                     <p><strong>반품상품을 교환처리하시겠습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="ReturnExchange_return_radoi2" id="ReturnExchange_return_radoi2_1" value="o" onclick="$('#ReturnExchange_return_radoi3').show();$('#ReturnExchange_ResendInfo_InvoiceNo').focus()"> <label for="ReturnExchange_return_radoi2_1">예</label>
-                        <input type="radio" class="" name="ReturnExchange_return_radoi2" id="ReturnExchange_return_radoi2_2" checked="checked" value="x" onclick="$('#ReturnExchange_return_radoi3').hide();$('#ReturnExchange_ResendInfo_InvoiceNo').val('')"> <label for="ReturnExchange_return_radoi2_2">아니요</label>
-                        <input type="text" id="ReturnExchange_return_radoi2_hide" readonly style="width: 0px;height: 0px;border: none">
+                        <input type="radio" class="" name="ReturnExchange_return_radoi2"
+                               id="ReturnExchange_return_radoi2_1" value="o"
+                               onclick="$('#ReturnExchange_return_radoi3').show();$('#ReturnExchange_ResendInfo_InvoiceNo').focus()">
+                        <label for="ReturnExchange_return_radoi2_1">예</label>
+                        <input type="radio" class="" name="ReturnExchange_return_radoi2"
+                               id="ReturnExchange_return_radoi2_2" checked="checked" value="x"
+                               onclick="$('#ReturnExchange_return_radoi3').hide();$('#ReturnExchange_ResendInfo_InvoiceNo').val('')">
+                        <label for="ReturnExchange_return_radoi2_2">아니요</label>
+                        <input type="text" id="ReturnExchange_return_radoi2_hide" readonly
+                               style="width: 0px;height: 0px;border: none">
                     </div>
                 </div>
 
@@ -3725,7 +4150,8 @@
                         <tbody>
                         <tr>
                             <th>상품번호/주문번호</th>
-                            <td><span id="exchangeModal_SiteGoodsNo"></span> / <span id="exchangeModal_OrderNo"></span></td>
+                            <td><span id="exchangeModal_SiteGoodsNo"></span> / <span id="exchangeModal_OrderNo"></span>
+                            </td>
                         </tr>
                         <tr>
                             <th>상품명</th>
@@ -3733,7 +4159,9 @@
                         </tr>
                         <tr>
                             <th>금액/개수</th>
-                            <td><span id="exchangeModal_SalePrice"></span>원 / <span id="exchangeModal_ContrAmount"></span>개</td>
+                            <td><span id="exchangeModal_SalePrice"></span>원 / <span
+                                        id="exchangeModal_ContrAmount"></span>개
+                            </td>
                         </tr>
                         <tr>
                             <th>구매자명</th>
@@ -3751,17 +4179,30 @@
                 <div class="box_white2">
                     <p><strong>교환상품을 받으셨습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="exchangeModal_return_radoi1" id="exchangeModal_return_radoi1_1" value="o" onclick="$('#exchangeModal_return_radoi2').show();$('#exchangeModal_return_radoi2_hide').focus()"> <label for="exchangeModal_return_radoi1_1">예</label>
-                        <input type="radio" class="" name="exchangeModal_return_radoi1" id="exchangeModal_return_radoi1_2" checked="checked" value="x" onclick="$('#exchangeModal_return_radoi2').hide();$('#exchangeModal_return_radoi2_2').click()"> <label for="exchangeModal_return_radoi1_2">아니요</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi1"
+                               id="exchangeModal_return_radoi1_1" value="o"
+                               onclick="$('#exchangeModal_return_radoi2').show();$('#exchangeModal_return_radoi2_hide').focus()">
+                        <label for="exchangeModal_return_radoi1_1">예</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi1"
+                               id="exchangeModal_return_radoi1_2" checked="checked" value="x"
+                               onclick="$('#exchangeModal_return_radoi2').hide();$('#exchangeModal_return_radoi2_2').click()">
+                        <label for="exchangeModal_return_radoi1_2">아니요</label>
                     </div>
                 </div>
                 <br>
                 <div class="box_white2" id="exchangeModal_return_radoi2" style="display: none">
                     <p><strong>교환 재발송 하시겠습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="exchangeModal_return_radoi2" id="exchangeModal_return_radoi2_1" value="o" onclick="$('#exchangeModal_return_radoi3').show();$('#exchangeModal_ResendInfo_InvoiceNo').focus()"> <label for="exchangeModal_return_radoi2_1">예</label>
-                        <input type="radio" class="" name="exchangeModal_return_radoi2" id="exchangeModal_return_radoi2_2" checked="checked" value="x" onclick="$('#exchangeModal_return_radoi3').hide();$('#exchangeModal_ResendInfo_InvoiceNo').val('')"> <label for="exchangeModal_return_radoi2_2">아니요</label>
-                        <input type="text" id="exchangeModal_return_radoi2_hide" readonly style="width: 0px;height: 0px;border: none">
+                        <input type="radio" class="" name="exchangeModal_return_radoi2"
+                               id="exchangeModal_return_radoi2_1" value="o"
+                               onclick="$('#exchangeModal_return_radoi3').show();$('#exchangeModal_ResendInfo_InvoiceNo').focus()">
+                        <label for="exchangeModal_return_radoi2_1">예</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi2"
+                               id="exchangeModal_return_radoi2_2" checked="checked" value="x"
+                               onclick="$('#exchangeModal_return_radoi3').hide();$('#exchangeModal_ResendInfo_InvoiceNo').val('')">
+                        <label for="exchangeModal_return_radoi2_2">아니요</label>
+                        <input type="text" id="exchangeModal_return_radoi2_hide" readonly
+                               style="width: 0px;height: 0px;border: none">
                     </div>
                 </div>
 
@@ -3798,26 +4239,20 @@
                 <div class="box_white2">
                     <p><strong>교환보류 설정하시겠습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="" value="o"> <label>예</label>
-                        <input type="radio" class="" name="" checked="checked" value="x"> <label>아니요</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi4" id="exchangeModal_return_radoi4_1" value="o" onclick="$('#exchangeModal_return_radoi4').show();$('#exchangeModal_ResendExpectDate').focus()"> <label for="exchangeModal_return_radoi4_1">예</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi4" id="exchangeModal_return_radoi4_2" checked="checked" value="x" onclick="$('#exchangeModal_return_radoi4').hide()"> <label for="exchangeModal_return_radoi4_2">아니요</label>
                     </div>
                 </div>
                 <!-- 보류 시-->
-                <div class="box_white">
+                <div class="box_white" id="exchangeModal_return_radoi4" style="display: none">
                     <p>교환보류설정</p>
-                    <select>
-                        <option>(G)교환배송비청구</option>
-                        <option>(G)교환상품미도착</option>
-                        <option>(A)교환배송비추가협의</option>
-                        <option>(A)발송/포장의 어려움</option>
-                        <option>(A)물품을 다른곳에서 받아와야함</option>
-                        <option>(A)단기재고부족</option>
-                        <option>(A)주문폭주로 인한 작업지연</option>
-                        <option>반품상품미도착</option>
-                        <option>기타사유</option>
+                    <select id="exchangeModal_HoldReason">
+                        <option value="0">기타유보사유</option>
+                        <option value="1">교환배송비청구</option>
+                        <option value="4">교환입고미확인</option>
                     </select>
                     <p>예상재발송일</p>
-                    <input type="date" id="" name="" class="border_gray">
+                    <input type="date" name="exchangeModal_ResendExpectDate" id="exchangeModal_ResendExpectDate" class="border_gray">
                 </div>
             </div>
             <div class="modal-footer">
@@ -3845,7 +4280,8 @@
                         <tbody>
                         <tr>
                             <th>상품번호/주문번호</th>
-                            <td><span id="ExchangeReturn_SiteGoodsNo"></span> / <span id="ExchangeReturn_OrderNo"></span></td>
+                            <td><span id="ExchangeReturn_SiteGoodsNo"></span> / <span
+                                        id="ExchangeReturn_OrderNo"></span></td>
                         </tr>
                         <tr>
                             <th>상품명</th>
@@ -3853,7 +4289,9 @@
                         </tr>
                         <tr>
                             <th>금액/개수</th>
-                            <td><span id="ExchangeReturn_SalePrice"></span>원 / <span id="ExchangeReturn_ContrAmount"></span>개</td>
+                            <td><span id="ExchangeReturn_SalePrice"></span>원 / <span
+                                        id="ExchangeReturn_ContrAmount"></span>개
+                            </td>
                         </tr>
                         <tr>
                             <th>구매자명</th>
@@ -3883,17 +4321,30 @@
                 <div class="box_white2">
                     <p><strong>상품을 받으셨습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="ExchangeReturn_return_radoi1" id="ExchangeReturn_return_radoi1_1" value="o" onclick="$('#ExchangeReturn_return_radoi2').show();$('#ExchangeReturn_return_radoi2_hide').focus()"> <label for="ExchangeReturn_return_radoi1_1">예</label>
-                        <input type="radio" class="" name="ExchangeReturn_return_radoi1" id="ExchangeReturn_return_radoi1_2" checked="checked" value="x" onclick="$('#ExchangeReturn_return_radoi2').hide();$('#ExchangeReturn_return_radoi2_2').click()"> <label for="ExchangeReturn_return_radoi1_2">아니요</label>
+                        <input type="radio" class="" name="ExchangeReturn_return_radoi1"
+                               id="ExchangeReturn_return_radoi1_1" value="o"
+                               onclick="$('#ExchangeReturn_return_radoi2').show();$('#ExchangeReturn_return_radoi2_hide').focus()">
+                        <label for="ExchangeReturn_return_radoi1_1">예</label>
+                        <input type="radio" class="" name="ExchangeReturn_return_radoi1"
+                               id="ExchangeReturn_return_radoi1_2" checked="checked" value="x"
+                               onclick="$('#ExchangeReturn_return_radoi2').hide();$('#ExchangeReturn_return_radoi2_2').click()">
+                        <label for="ExchangeReturn_return_radoi1_2">아니요</label>
                     </div>
                 </div>
                 <br>
                 <div class="box_white2" id="ExchangeReturn_return_radoi2" style="display: none">
                     <p><strong>교환상품을 반품처리하시겠습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="ExchangeReturn_return_radoi2" id="ExchangeReturn_return_radoi2_1" value="o" onclick="$('#ExchangeReturn_return_radoi3').show();$('#ExchangeReturn_ResendInfo_InvoiceNo').focus()"> <label for="ExchangeReturn_return_radoi2_1">예</label>
-                        <input type="radio" class="" name="ExchangeReturn_return_radoi2" id="ExchangeReturn_return_radoi2_2" checked="checked" value="x" onclick="$('#ExchangeReturn_return_radoi3').hide();$('#ExchangeReturn_ResendInfo_InvoiceNo').val('')"> <label for="ExchangeReturn_return_radoi2_2">아니요</label>
-                        <input type="text" id="ExchangeReturn_return_radoi2_hide" readonly style="width: 0px;height: 0px;border: none">
+                        <input type="radio" class="" name="ExchangeReturn_return_radoi2"
+                               id="ExchangeReturn_return_radoi2_1" value="o"
+                               onclick="$('#ExchangeReturn_return_radoi3').show();$('#ExchangeReturn_ResendInfo_InvoiceNo').focus()">
+                        <label for="ExchangeReturn_return_radoi2_1">예</label>
+                        <input type="radio" class="" name="ExchangeReturn_return_radoi2"
+                               id="ExchangeReturn_return_radoi2_2" checked="checked" value="x"
+                               onclick="$('#ExchangeReturn_return_radoi3').hide();$('#ExchangeReturn_ResendInfo_InvoiceNo').val('')">
+                        <label for="ExchangeReturn_return_radoi2_2">아니요</label>
+                        <input type="text" id="ExchangeReturn_return_radoi2_hide" readonly
+                               style="width: 0px;height: 0px;border: none">
                     </div>
                 </div>
 

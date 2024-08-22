@@ -34,7 +34,7 @@ try {
             }
 
             $model->where($obj);
-            $object = $model->get($obj["page"], $obj["limit"]);
+            $object = $model->get();
 
             if ($join_table) {
                 $deletes = array();

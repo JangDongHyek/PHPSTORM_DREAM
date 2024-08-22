@@ -162,6 +162,7 @@
 
 
                 let order = {
+                    order_no : this.jl.createOrderNo(),
                     member_idx : this.member_idx,
                     seller_idx : this.product.member_idx,
                     product_idx : this.product.idx,

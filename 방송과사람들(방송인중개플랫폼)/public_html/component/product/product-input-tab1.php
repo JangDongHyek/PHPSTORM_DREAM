@@ -355,72 +355,66 @@
                             <div class="cont">
                                 <div class="box_ck">
                                     <ul class="area_filter" id="area_filter">
-                                        <li>
+                                        <li v-for="item,index in product.options">
                                             <div>
-                                                <input type="checkbox" id="filter0<?=$i?>" name="option_arr[]" value="<?=$i?>">
-                                                <label for="filter0<?=($i)?>">촬영 시간(분) 추가</label>
+                                                <input type="checkbox" :id="'filter'+index" v-model="item.bool">
+                                                <label :for="'filter'+index">{{ item.name }}</label>
                                             <div>
-                                            <div class="filter_active">
-                                                <div class="grid4">
-                                                    <input type="text" placeholder="최소 1,000"><span>원 추가시</span>
-                                                    <select><option>선택해주세요</option></select><span>분 추가</span>
-                                                </div>
-                                                <!--패키지 일때-->
-                                                <div class="grid5">
-                                                    <strong>STANDARD</strong>
-                                                    <input type="text" placeholder="최소 1,000"><span>원 추가시</span>
-                                                    <select><option>선택해주세요</option></select><span>분 추가</span>
-                                                </div>
-                                                <div class="grid5">
-                                                    <strong>DELUXE</strong>
-                                                    <input type="text" placeholder="최소 1,000"><span>원 추가시</span>
-                                                    <select><option>선택해주세요</option></select><span>분 추가</span>
-                                                </div>
-                                                <div class="grid5">
-                                                    <strong>PREMIUM</strong>
-                                                    <input type="text" placeholder="최소 1,000"><span>원 추가시</span>
-                                                    <select><option>선택해주세요</option></select><span>분 추가</span>
-                                                </div>
-                                                <!--패키지 일때-->
+                                            <div class="filter_active" v-if="item.detail == 'detail'">
+                                                <template v-if="!product.package">
+                                                    <div class="grid4">
+                                                        <input type="text" placeholder="최소 1,000" v-model="item.basic.price"><span>원 추가시</span>
+                                                        <select v-model="item.basic.option">
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="opt in item.basic.options" :value="opt">{{ opt }}</option>
+                                                        </select>
+                                                    </div>
+                                                </template>
+
+                                                <template v-else>
+                                                    <div class="grid5">
+                                                        <strong>STANDARD</strong>
+                                                        <input type="text" placeholder="최소 1,000" v-model="item.standard.price"><span>원 추가시</span>
+                                                        <select v-model="item.standard.option">
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="opt in item.standard.options" :value="opt">{{ opt }}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="grid5">
+                                                        <strong>DELUXE</strong>
+                                                        <input type="text" placeholder="최소 1,000" v-model="item.deluxe.price"><span>원 추가시</span>
+                                                        <select v-model="item.deluxe.option">
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="opt in item.deluxe.options" :value="opt">{{ opt }}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="grid5">
+                                                        <strong>PREMIUM</strong>
+                                                        <input type="text" placeholder="최소 1,000" v-model="item.premium.price"><span>원 추가시</span>
+                                                        <select v-model="item.premium.option">
+                                                            <option value="">선택해주세요</option>
+                                                            <option v-for="opt in item.premium.options" :value="opt">{{ opt }}</option>
+                                                        </select>
+                                                    </div>
+                                                </template>
                                             </div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <input type="checkbox" id="filter1" >
-                                                <label for="filter1">상업적 이용 가능</label>
-                                            <div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <input type="checkbox" id="filter2" >
-                                                <label for="filter2">원본 파일 제공</label>
-                                            <div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <input type="checkbox" id="filter3" >
-                                                <label for="filter3">자막 삽입</label>
-                                            <div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <input type="checkbox" id="filter4" >
-                                                <label for="filter4">맞춤 옵션 추가</label>
-                                            <div>
-                                            <div class="filter_active">
+
+                                            <div class="filter_active" v-if="item.detail == 'custom'">
                                                 <div>
                                                     <dl class="grid">
                                                         <dt><label>제목</label></dt>
-                                                        <dd><input type="text" placeholder="제목을 입력해주세요"></dd>
+                                                        <dd><input type="text" placeholder="제목을 입력해주세요" v-model="item.name"></dd>
                                                         <dt><label>설명</label></dt>
-                                                        <dd><input type="text" placeholder="설명을 입력해주세요"></dd>
-                                                        <dt><label>추가금액</label></dt>
-                                                        <dd class="flex"><input type="text" placeholder="최소1,000"><span>원 추가시</span></dd>
-                                                        <dt><label>추가작업일</label></dt>
-                                                        <dd class="flex"><select><option>선택해주세요</option></select><span>분 추가</span></dd>
+                                                        <dd><input type="text" placeholder="설명을 입력해주세요" v-model="item.description"></dd>
                                                     </dl>
                                                 </div>
                                             </div>
+                                        </li>
+
+                                        <li v-if="parent_category">
+                                            <div>
+                                                <span @click="$emit('addOption')">맞춤옵션 추가</span>
+                                            <div>
                                         </li>
                                     </ul>
                                 </div>
@@ -520,6 +514,9 @@
                     this.bool = true;
                 }
 
+            },
+            parent_category : function(){
+                this.$emit('change',this.parent_category)
             }
         }
     });

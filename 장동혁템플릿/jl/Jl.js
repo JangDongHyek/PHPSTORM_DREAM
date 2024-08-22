@@ -190,6 +190,12 @@ class Jl {
         this.log(obj[key])
     }
 
+    createOrderNo(length = 15) {
+        const timestamp = Date.now().toString(); // 현재 시간을 밀리초 단위로 문자열로 변환 * 13자
+        const randomPart = Math.floor(Math.random() * 100).toString(); // 2자리 랜덤 숫자 생성
+        return timestamp + randomPart; // 15자 (동일한 밀리세컨드안에 주문이 들어갈경우 중복될 확률 1퍼)
+    }
+
     isUpperCase(str) {
         return str === str.toUpperCase();
     }

@@ -189,7 +189,8 @@ class AdminController extends BaseController {
         $model = new Model($model_config);
 
         // 기본 조건문
-        $model->where("mb_id",$this->data['member']['mb_id']);
+        if($this->data['member']['mb_id'] != "lets080") $model->where("mb_id",$this->data['member']['mb_id']);
+
         $model->between("OrderDate",date('Y')."-01-01",date('Y')."-12-31");
         // 모든 데이터
         $this->data['all_orders'] = $model->get();
@@ -202,7 +203,7 @@ class AdminController extends BaseController {
         if(empty($this->data['limit'])) $this->data['limit'] = 10;
 
         //일자 조건문
-        $model->where("mb_id",$this->data['member']['mb_id']);
+        if($this->data['member']['mb_id'] != "lets080") $model->where("mb_id",$this->data['member']['mb_id']);
         if($this->data['start_day'] && $this->data['end_day']) {
             $start_day = $this->data['start_day'];
             $end_day = $this->data['end_day'];

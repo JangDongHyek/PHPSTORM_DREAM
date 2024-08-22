@@ -2,7 +2,7 @@
 <script type="text/x-template" id="<?= $componentName ?>-template">
     <div>
 
-            <product-input-tab1 v-show="tab == 1" ref="tab1"
+            <product-input-tab1 v-show="tab == 1" ref="tab1" @change="parent_category = $event" @addOption="data.options.push(createOption('','custom'))"
                                 :product="data" :mb_no="mb_no" @changeTab="tab = $event"
             ></product-input-tab1>
 
@@ -32,10 +32,15 @@
                 tab: 1,
                 default_content : [], //naver-editor 참조 변수
 
+                parent_category : null,
+                render : true,
+
+
                 data: {
                     //common
                     idx: "",
                     member_idx: this.mb_no,
+
 
                     //tab1
                     portfolios : [],
@@ -53,7 +58,7 @@
                     standard : {name : "",description : "",price : "",work : "", modify : ""},
                     deluxe : {name : "",description : "",price : "",work : "", modify : ""},
                     premium : {name : "",description : "",price : "",work : "", modify : ""},
-                    //추가옵션부분은 회의 끝나면 추가
+                    options : [],
 
                     //tab2
                     service: "",
@@ -78,7 +83,10 @@
         },
         mounted: function () {
             this.$nextTick(() => {
-                if(this.primary) this.getData();
+                if(this.primary) {
+                    this.render = false;
+                    this.getData();
+                }
 
             });
         },
@@ -206,13 +214,151 @@
                     this.data = res.response.data[0]
                     this.$refs.tab1.parent_category_idx = this.data.CATEGORY.data[0].parent_idx;
                 }
+            },
+            createOption : function(name = "",detail = "") {
+                let obj = {
+                    name : name,
+                    bool : false,
+                    description : "",
+                    detail : ""
+                };
+
+                let detail_obj = {
+                    detail : "detail",
+                    basic : {
+                        price : "",
+                        options : [],
+                        option :""
+                    },
+                    standard : {
+                        price : "",
+                        options : [],
+                        option :""
+                    },
+                    deluxe : {
+                        price : "",
+                        options : [],
+                        option :""
+                    },
+                    premium : {
+                        price : "",
+                        options : [],
+                        option :""
+                    }
+                };
+
+                let custom_obj = {
+                    detail : "custom",
+                }
+
+                if(detail) {
+                    if(name == "시간(분) 추가") {
+                        detail_obj.basic.options = ["30분","60분","90분","120분","150분","180분","210분","240분","270분","300분"];
+                        detail_obj.standard.options = ["30분","60분","90분","120분","150분","180분","210분","240분","270분","300분"];
+                        detail_obj.deluxe.options = ["30분","60분","90분","120분","150분","180분","210분","240분","270분","300분"];
+                        detail_obj.premium.options = ["30분","60분","90분","120분","150분","180분","210분","240분","270분","300분"];
+                    }
+                    if(name == "기간 추가") {
+                        let arrays = []
+                        for (let i = 1; i < 31; i++) {
+                            arrays.push(`${i}일`);
+                        }
+                        detail_obj.basic.options = arrays;
+                    }
+                    if(detail == "detail") Object.assign(obj,detail_obj);
+                    else Object.assign(obj,custom_obj);
+                }
+
+                return obj
             }
         },
-        computed: {},
+        computed: {
+
+        },
         watch: {
             tab: function () {
                 window.scrollTo(0, 0)
-            }
+            },
+            parent_category : function() {
+                if(this.render) {
+                    this.data.options = [];
+
+                    // 공통 옵션
+                    this.data.options.push(this.createOption("시간(분) 추가","detail"));
+                    this.data.options.push(this.createOption("기간 추가","detail"));
+
+                    switch (this.parent_category.name) {
+                        case "영상·사진·음향 제작" :
+                            this.data.options.push(this.createOption("상업적 이용 가능"));
+                            this.data.options.push(this.createOption("원본파일제공"));
+                            this.data.options.push(this.createOption("자막 삽입"));
+                            this.data.options.push(this.createOption("더빙"));
+                            this.data.options.push(this.createOption("배경음악"));
+                            this.data.options.push(this.createOption("로고삽입"));
+                            this.data.options.push(this.createOption("FULL HD(1080P)"));
+                            this.data.options.push(this.createOption("색보정"));
+
+                            break;
+
+                        case "방송디자인·편집" :
+                            this.data.options.push(this.createOption("상업적 이용 가능"));
+                            this.data.options.push(this.createOption("원본파일제공"));
+                            this.data.options.push(this.createOption("자막 삽입"));
+                            this.data.options.push(this.createOption("이미지장수추가"));
+                            this.data.options.push(this.createOption("응용디자인"));
+                            this.data.options.push(this.createOption("인쇄최적화"));
+                            break;
+
+                        case "방송마케팅" :
+                            break;
+
+                        case "방송·배우·연기" :
+                            break;
+
+                        case "모델" :
+                            break;
+
+                        case "방송스태프" :
+                            break;
+
+                        case "방송·시나리오·작가" :
+                            break;
+
+                        case "뷰티·패션" :
+                            this.data.options.push(this.createOption("준비물 제공 비용 추가"));
+                            this.data.options.push(this.createOption("작업실 제공 추가"));
+                            break;
+
+                        case "MC·행사·이벤트" :
+                            this.data.options.push(this.createOption("준비물 제공 비용 추가"));
+                            this.data.options.push(this.createOption("작업실 제공 추가"));
+                            break;
+
+                        case "레슨" :
+                            this.data.options.push(this.createOption("준비물 제공 비용 추가"));
+                            this.data.options.push(this.createOption("강의실 제공 추가"));
+                            this.data.options.push(this.createOption("레슨 횟수 추가"));
+                            break;
+
+                        case "심리상담" :
+                            this.data.options.push(this.createOption("상담 요약 파일 제공"));
+                            this.data.options.push(this.createOption("문서 추가 제공"));
+                            break;
+
+                        case "기타" :
+                            this.data.options.push(this.createOption("이용 인원 추가"));
+                            break;
+
+                    }
+
+
+                    //this.data.options.push(this.createOption("","custom"));
+
+                    console.log(this.data.options)
+                }else {
+                    this.render = true;
+                }
+            },
         }
     });
 </script>

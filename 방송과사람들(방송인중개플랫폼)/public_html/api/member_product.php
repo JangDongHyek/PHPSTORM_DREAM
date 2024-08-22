@@ -35,6 +35,14 @@ try {
                 if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
             }
 
+            if($obj['group_ors']) {
+                $groups = $model->jsonDecode($obj['group_ors']);
+                $model->group_start();
+                foreach ($groups as $g)
+                $model->or_where("idx",$g);
+                $model->group_end();
+            }
+
             if($obj["parent_idx"]) {
                 unset($obj['category_idx']);
                 $joinModel = new Model(array(
@@ -95,6 +103,7 @@ try {
                 }
             }
 
+            $response['$groups'] = $groups;
             $response['response'] = $object;
             $response['filter'] = $obj;
             $response['success'] = true;

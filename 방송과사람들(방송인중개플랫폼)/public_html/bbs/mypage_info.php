@@ -1,10 +1,22 @@
 <?php
+include_once("../class/Model.php");
 
-//찜한 서비스
-$sql = "select count(*) cnt from new_heart where mb_no = '{$member['mb_no']}' ";
-$like_cnt = sql_fetch($sql)['cnt'];
+$model_config = array(
+    "table" => "member_product_like",
+    "primary" => "idx",
+);
 
+$member_product_like = new Model($model_config);
+$model_config['table'] = "member_order";
+$member_order = new Model($model_config);
 
+// 상품 찜
+$member_product_like->where("member_idx",$member['mb_no']);
+$product_likes = $member_product_like->count();
+
+// 구매상품
+$member_order->where("member_idx",$member['mb_no']);
+$order_count = $member_order->count();
 ?>
 <div id="area_my" class="company">
 	<div class="myinfo">
@@ -36,8 +48,8 @@ $like_cnt = sql_fetch($sql)['cnt'];
         <a class="btn_type" onclick="request_conversion()"><span><?= ($member["mb_level"] > '2') ? "의뢰인" : "전문가" ?>로 전환</span></a>
 	</div>
 	<ul class="my_qna">
-		<li><em>찜한 서비스</em><a href="<?=G5_BBS_URL.'/mypage_jjim.php'?>"><?=$like_cnt?></a></li>
-		<li><em>구매한 서비스</em><a href="<?=G5_BBS_URL.'/mypage.php'?>">0</a></li>
+		<li><em>찜한 서비스</em><a href="<?=G5_BBS_URL.'/mypage_jjim.php'?>"><?=$product_likes?></a></li>
+		<li><em>구매한 서비스</em><a href="<?=G5_BBS_URL.'/mypage.php'?>"><?=$order_count?></a></li>
 		<li><em>문의한 서비스</em><a href="javascript:void(0);">0</a></li>
 	</ul>
 

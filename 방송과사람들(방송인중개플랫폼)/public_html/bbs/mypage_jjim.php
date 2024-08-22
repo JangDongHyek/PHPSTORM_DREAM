@@ -1,5 +1,8 @@
 <?
 include_once('./_common.php');
+include_once("../class/Lib.php");
+$jl = new JL();
+
 $name = "cmypage";
 $pid = "mypage_jjim";
 $g5['title'] = '찜 목록';
@@ -41,32 +44,12 @@ $result = sql_query($sql);
     <div id="area_mypage" class="jjim">
 		<div class="inr">		
 			<div id="mypage_wrap">
-				<?php include_once('./mypage_info.php'); ?> 
-				
-				<div class="mypage_cont">
-					<div class="box">
-						<h3>찜한내역</h3>
-						
-						<ul id="product_list">
-                            <?php if (sql_num_rows($result) == 0){?>
-                                <li class="nodata">
-                                    <div class="nodata_wrap">
-                                        <div class="area_img"><img src="<?php echo G5_THEME_IMG_URL ?>/app/img_nodata.svg"></div>
-                                        <p>찜한 재능이 없습니다.</p>
-                                    </div>
-                                </li>
-                            <?php  }else {
-                                for ($i = 0; $row = sql_fetch_array($result); $i++) {
-                                    include("./li_content.php");
-                                }
-                            } ?>
+				<?php include_once('./mypage_info.php'); ?>
 
-						</ul>
-						
-					</div>
-                    <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, "?$qstr&amp;page="); ?>
-
+                <div id="app">
+                    <product-mypage-like mb_no="<?=$member['mb_no']?>"></product-mypage-like>
                 </div>
+
 				<!-- 마이페이지에만 나오는 메뉴 -->
 				<?php include_once('./mypage_menu.php'); ?> 	
 			</div>				
@@ -76,6 +59,8 @@ $result = sql_query($sql);
 
 
 <?
+$jl->vueLoad("app");
+include_once($jl->ROOT."/component/product/product-mypage-like.php");
 include_once('./_tail.php');
 ?>
 

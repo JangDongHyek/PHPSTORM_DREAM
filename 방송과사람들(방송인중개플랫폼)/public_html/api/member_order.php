@@ -52,11 +52,19 @@ try {
                 foreach ($object["data"] as $index => $data) {
                     $joinModel->where($joinModel->primary, $data["product_idx"]);
                     $join_data = $joinModel->get()['data'][0];
-                    $memberModel->where($memberModel->primary, $join_data["member_idx"]);
-                    $member = $memberModel->get()['data'][0];
+
+
+                    $memberModel->where($memberModel->primary, $data["seller_idx"]);
+                    $seller = $memberModel->get()['data'][0];
+
+
+                    $memberModel->where($memberModel->primary, $data["member_idx"]);
+                    $buyer = $memberModel->get()['data'][0];
+
 
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
-                    $object["data"][$index]["MEMBER"] = $member;
+                    $object["data"][$index]["SELLER"] = $seller;
+                    $object["data"][$index]["BUYER"] = $buyer;
 
                     if ($join_table_delete) {
                         if (!$join_data) array_push($deletes, $index);
@@ -73,6 +81,7 @@ try {
                 }
             }
 
+            $response['$obj'] = $obj;
             $response['response'] = $object;
             $response['filter'] = $obj;
             $response['success'] = true;
