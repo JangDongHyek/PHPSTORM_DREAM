@@ -29,7 +29,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
             if ($view['file']['count']) {
                 $cnt = 0;
                 for ($i=0; $i<count($view['file']); $i++) {
-                    if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] && !$view['file'][$i]['view'])
+                    if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] )
                         $cnt++;
                 }
             }
@@ -41,7 +41,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                     <?php
                     // Variable files
                     for ($i=0; $i<count($view['file']); $i++) {
-                        if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] && !$view['file'][$i]['view']) {
+                        if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] ) {
                             ?>
                             <li>
                                 <a href="<?php echo $view['file'][$i]['href'];  ?>" class="view_file_download">
@@ -144,19 +144,19 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
         <?php
         // 파일 출력
-        $v_img_count = count($view['file']);
-        if($v_img_count) {
-            echo "<div id=\"bo_v_img\">\n";
-
-            for ($i=0; $i<=count($view['file']); $i++) {
-                if ($view['file'][$i]['view']) {
-                    //echo $view['file'][$i]['view'];
-                    echo get_view_thumbnail($view['file'][$i]['view']);
-                }
-            }
-
-            echo "</div>\n";
-        }
+        //$v_img_count = count($view['file']);
+        //if($v_img_count) {
+        //    echo "<div id=\"bo_v_img\">\n";
+        //
+        //    for ($i=0; $i<=count($view['file']); $i++) {
+        //        if ($view['file'][$i]['view']) {
+        //            //echo $view['file'][$i]['view'];
+        //            echo get_view_thumbnail($view['file'][$i]['view']);
+        //        }
+        //    }
+        //
+        //    echo "</div>\n";
+        //}
          ?>
 
         <!-- 본문 내용 시작 { -->

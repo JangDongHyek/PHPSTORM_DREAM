@@ -1,12 +1,13 @@
 <?php
-include_once("../jl/JlConfig.php");
+include_once("../class/Model.php");
+include_once("../class/File.php");
 
 $response = array("message" => "");
 $_method = $_POST["_method"];
 $file_name = str_replace(".php","",basename(__FILE__));
 
 try {
-    $model = new JlModel(array(
+    $model = new Model(array(
         "table" => $file_name,
         "primary" => "idx",
         "autoincrement" => true,
@@ -28,16 +29,19 @@ try {
             if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2'] == "") $model->where($obj['search_key1'],$obj['search_value1_1']);
             if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2']) $model->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
             if($obj['search_like_key1'] && $obj['search_like_value1']) $model->like($obj['search_like_key1'],$obj['search_like_value1']);
-            if($obj['order_by_desc']) $model->orderBy($obj['order_by_desc'],"DESC");
-            if($obj['order_by_asc']) $model->orderBy($obj['order_by_asc'],"ASC");
-            if($obj['not_key1'] && $obj['not_value1']) $model->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
-            if($obj['in_key1'] && $obj['in_value1']) $model->in($obj['in_key1'],$model->jsonDecode($obj['in_value1']));
+            if($obj['order_by_desc']) $model->order_by($obj['order_by_desc'],"DESC");
+            if($obj['order_by_asc']) $model->order_by($obj['order_by_asc'],"ASC");
+            if($obj['not_key1'] && $obj['not_value1']) {
+                $model->not = true;
+                $model->where($obj['not_key1'],$obj['not_value1']);
+                $model->not = false;
+            }
 
             $object = $model->where($obj)->get($obj["page"], $obj["limit"]);
 
             if ($join_table) {
                 $deletes = array();
-                $joinModel = new JlModel(array(
+                $joinModel = new Model(array(
                     "table" => $join_table,
                     "primary" => "idx"
                 ));
@@ -74,6 +78,11 @@ try {
         case "insert":
         {
             $obj = $model->jsonDecode($_POST['obj']);
+
+            $model->where("member_idx",$obj["member_idx"]);
+            $data = $model->where("product_idx",$obj["product_idx"])->get();
+
+            if($data['count']) $model->delete($data['data'][0]);
 
             foreach ($_FILES as $key => $file_data) {
                 $file_result = $file->bindGate($file_data);
@@ -164,10 +173,6 @@ try {
 
             $csv->getCsv();
             die(); //return이 안되는 void메소드 echo로 파일출력값을 찍어내기때문에 바로 die처리
-
-        default :
-            $response['success'] = false;
-            $response['message'] = "_method가 존재하지않습니다.";
     }
 } catch (Exception $e) {
     $response['success'] = false;

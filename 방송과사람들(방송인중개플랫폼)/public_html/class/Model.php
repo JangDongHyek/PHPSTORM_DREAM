@@ -152,7 +152,7 @@ class Model extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n".$this->getSql());
 
             $total_count = mysqli_num_rows($result);
 
@@ -184,7 +184,7 @@ class Model extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect));
+            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n".$this->getSql());
 
             while($row = mysqli_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
@@ -364,6 +364,8 @@ class Model extends Jl{
 
             $this->sql .= "{$column} BETWEEN '{$start}' AND '{$end}' ";
         }
+
+        return $this;
     }
 
     function where($first,$second = "") {
@@ -403,6 +405,8 @@ class Model extends Jl{
                 $this->sql .= "`{$first}` $equals '{$second}'";
             }
         }
+
+        return $this;
     }
 
     function or_where($first,$second = "") {
@@ -441,6 +445,8 @@ class Model extends Jl{
                 $this->sql .= "`{$first}` $equals '{$second}'";
             }
         }
+
+        return $this;
     }
 
     function like($first,$second = "") {
@@ -477,6 +483,8 @@ class Model extends Jl{
                 $this->sql .= "`{$first}` LIKE '%{$second}%'";
             }
         }
+
+        return $this;
     }
 
     function or_like($first,$second = "") {
@@ -513,9 +521,73 @@ class Model extends Jl{
                 $this->sql .= "`{$first}` LIKE '%{$second}%'";
             }
         }
+
+        return $this;
     }
 
+    function in($first,$second = "",$operator = "AND") {
+        if(is_array($first)) {
+            $param = $this->escape($first);
 
+            foreach($param as $key => $value){
+                if(in_array($key, $this->schema['columns'])){
+                    if(!is_array($value)) throw new \Exception("JlModel in() : 비교값이 배열이아닙니다.");
+
+                    if($this->group_bool) {
+                        if(!$this->group_index) $this->group_index = 1;
+                        else $this->sql .= " $operator ";
+                    }else {
+                        $this->sql .= " $operator ";
+                    }
+
+                    $this->sql .= "`{$key}` IN (";
+
+                    $bool = false;
+                    foreach($value as $v) {
+                        if($bool) $this->sql .= ", ";
+                        else $bool = true;
+
+                        if(is_numeric($v)) $this->sql .= "$v";
+                        else $this->sql .= "'$v'";
+                    }
+
+                    $this->sql .= ")";
+
+                }
+            }
+        }
+
+        if(is_string($first)) {
+            if($first == "") throw new \Exception("JlModel where() : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("JlModel where() : 필터를 입력해주새요.");
+            if(!is_array($second)) throw new \Exception("JlModel where() : 비교값이 배열이 아닙니다.");
+
+            if(in_array($first, $this->schema['columns'])){
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " $operator ";
+                }else {
+                    $this->sql .= " $operator ";
+                }
+
+                $this->sql .= "`{$first}` IN (";
+
+                $bool = false;
+                foreach($second as $v) {
+                    if($bool) $this->sql .= ", ";
+                    else $bool = true;
+
+                    if(is_numeric($v)) $this->sql .= "$v";
+                    else $this->sql .= "'$v'";
+
+                }
+
+                $this->sql .= ")";
+            }
+        }
+
+        return $this;
+    }
 
 
 

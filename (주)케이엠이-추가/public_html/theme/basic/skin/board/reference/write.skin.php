@@ -20,6 +20,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <input type="hidden" name="sst" value="<?php echo $sst ?>">
     <input type="hidden" name="sod" value="<?php echo $sod ?>">
     <input type="hidden" name="page" value="<?php echo $page ?>">
+
+    <input type="hidden" name="wr_content" value="내용이 없는 게시판.">
     <?php
     $option = '';
     $option_hidden = '';
@@ -125,31 +127,31 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <tr>
             <th scope="row"><label for="">SHIPYARD<strong class="sound_only">필수</strong></label></th>
             <td>
-                <input type="text" name="" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_1" value="" id="" required class="frm_input required" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
             <th scope="row"><label for="">SHIP TYPE<strong class="sound_only">필수</strong></label></th>
             <td>
-                <input type="text" name="" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_2" value="" id="" required class="frm_input required" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
             <th scope="row"><label for="">PROJ.NO.<strong class="sound_only">필수</strong></label></th>
             <td>
-                <input type="text" name="" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_3" value="" id="" required class="frm_input required" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
             <th scope="row"><label for="">PAPPLICATION ITEM<strong class="sound_only">필수</strong></label></th>
             <td>
-                <input type="text" name="" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_4" value="" id="" required class="frm_input required" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
             <th scope="row"><label for="">DELIVERY<strong class="sound_only">필수</strong></label></th>
             <td>
-                <input type="text" name="" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_5" value="" id="" required class="frm_input required" size="50" maxlength="255">
             </td>
         </tr>
 

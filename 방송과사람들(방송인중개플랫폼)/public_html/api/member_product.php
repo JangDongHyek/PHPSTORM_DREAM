@@ -35,6 +35,17 @@ try {
                 if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
             }
 
+            if($obj["not_key"] && $obj['not_value']) {
+                $model->not = true;
+                $model->where($obj['not_key'],$obj['not_value']);
+                $model->not = false;
+            }
+
+            if($obj['in_key1'] && $obj['in_value1']) {
+                $model->in($obj['in_key1'],$model->jsonDecode($obj['in_value1']));
+                $response['sql'] = $model->getSql();
+            }
+
             if($obj['group_ors']) {
                 $groups = $model->jsonDecode($obj['group_ors']);
                 $model->group_start();
@@ -104,6 +115,7 @@ try {
             }
 
             $response['$groups'] = $groups;
+
             $response['response'] = $object;
             $response['filter'] = $obj;
             $response['success'] = true;

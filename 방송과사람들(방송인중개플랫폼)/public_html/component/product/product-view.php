@@ -61,6 +61,45 @@
                                     </div>
                                 </div>
                                 <br>
+                                <!--포트폴리오 디자인 추가-->
+                                <div class="portfolio_list">
+                                        <ul>
+                                            <li>
+                                                <div class="port_conts"><!--더보기 클릭시 클래스 expanded 추가-->
+                                                    <div class="port_title">000 콘텐츠 인터뷰</div>
+                                                    <div class="port_img">
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTEyMjNfMTMx%2FMDAxNjQwMjQyNzg3NTg4.wVfSHV1O10zd5-5-iUC9Oc5XXMltjpq_Qm5QIe-ecDwg.qPoymCA_M0zgj9LNGjrQaVSQj3iWoJ1PJOj9CkZ7t5cg.JPEG.eunu3061%2F490e499d692102c64cfd76f927c0132b.jpeg&type=sc960_832"></p>
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA2MDRfMTMx%2FMDAxNjg1ODg4NDI0NDUz.VVct5HfUDUo8OkmUndkfKZLvtZaU7zADX-P1KEe-zF8g.CrT81-Z97KOJi0hX8u4JkIO_sYLatu-SeNCDN71yF_Yg.JPEG.alsdud838%2Foutput_1546078941.jpg&type=sc960_832"></p>
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F144%2F2022%2F02%2F22%2F0000794913_001_20220222191502036.jpg&type=sc960_832"></p>
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fpost.phinf.naver.net%2FMjAyMjAyMjJfMjgz%2FMDAxNjQ1NDk2NjIyMzc5.QeuRbbR9Topan8FQt-_Rhx0oBbxtCzcJDIM1yZBNm84g.oYqeFiHwwgmNhxVrLGZst_fQFs6J7M27wktdZSYueBgg.JPEG%2FIJ0xkTj9swH6yj_ejD_Uwp1IRM6Q.jpg&type=sc960_832"></p>
+                                                    </div>
+                                                    <div class="port_detail">
+                                                        <strong>포트폴리오 설명</strong>
+                                                        <p>2020년도 10월에 촬영한 000광고 화보촬영입니다</p>
+                                                    </div>
+                                                </div>
+                                                <button name="btnToggle" class="port_btn">더보기</button>
+                                            </li>
+                                            <li>
+                                                <div class="port_conts">
+                                                    <div class="port_title">000 콘텐츠 인터뷰</div>
+                                                    <div class="port_img">
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTEyMjNfMTMx%2FMDAxNjQwMjQyNzg3NTg4.wVfSHV1O10zd5-5-iUC9Oc5XXMltjpq_Qm5QIe-ecDwg.qPoymCA_M0zgj9LNGjrQaVSQj3iWoJ1PJOj9CkZ7t5cg.JPEG.eunu3061%2F490e499d692102c64cfd76f927c0132b.jpeg&type=sc960_832"></p>
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA2MDRfMTMx%2FMDAxNjg1ODg4NDI0NDUz.VVct5HfUDUo8OkmUndkfKZLvtZaU7zADX-P1KEe-zF8g.CrT81-Z97KOJi0hX8u4JkIO_sYLatu-SeNCDN71yF_Yg.JPEG.alsdud838%2Foutput_1546078941.jpg&type=sc960_832"></p>
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F144%2F2022%2F02%2F22%2F0000794913_001_20220222191502036.jpg&type=sc960_832"></p>
+                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fpost.phinf.naver.net%2FMjAyMjAyMjJfMjgz%2FMDAxNjQ1NDk2NjIyMzc5.QeuRbbR9Topan8FQt-_Rhx0oBbxtCzcJDIM1yZBNm84g.oYqeFiHwwgmNhxVrLGZst_fQFs6J7M27wktdZSYueBgg.JPEG%2FIJ0xkTj9swH6yj_ejD_Uwp1IRM6Q.jpg&type=sc960_832"></p>
+                                                    </div>
+                                                    <div class="port_detail">
+                                                        <strong>포트폴리오 설명</strong>
+                                                        <p>2020년도 10월에 촬영한 000광고 화보촬영입니다</p>
+                                                    </div>
+                                                </div>
+                                                <button name="btnToggle" class="port_btn">더보기</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                <!--//포트폴리오 디자인 추가-->
+
                                 <!--서비스 추가 옵션-->
                                 <dl class="service_option">
                                     <dt>성별</dt>
@@ -185,17 +224,16 @@
                                 <h3>포트폴리오</h3>
                                 <div class="swiper ftSwiper">
                                     <ul id="product_list" class="swiper-wrapper">
-                                        <li class="swiper-slide">
+                                        <li class="swiper-slide" v-for="item in portfolios">
                                             <i class="heart " onclick="heart_click(15,this)"></i>
                                             <a href="https://itforone.com:443/~broadcast/bbs/item_view.php?idx=15">
                                                 <div class="area_img">
-                                                    <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg"
-                                                         title="">
+                                                    <img :src="`${jl.root}${item.main_image_array[0].src}`" title="">
                                                 </div>
                                                 <div class="area_txt">
 
                                                     <span></span><!-- 업체명 -->
-                                                    <h3>영상제작</h3> <!-- 제목 -->
+                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
                                                     <div class="price">50,000원</div> <!-- 가격 -->
                                                     <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
                                                 </div>
@@ -210,19 +248,19 @@
                                 <h3>관련 인기 상품</h3>
                                 <div class="swiper ftSwiper">
                                     <ul id="product_list" class="swiper-wrapper">
-                                        <li class="swiper-slide">
+                                        <li class="swiper-slide" v-for="item in products">
                                             <i class="heart " onclick="heart_click(15,this)"></i>
-                                            <a href="https://itforone.com:443/~broadcast/bbs/item_view.php?idx=15">
+                                            <a :href="`${jl.root}/bbs/item_view.php?idx=${item.idx}`">
                                                 <div class="area_img">
-                                                    <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg"
-                                                         title="">
+                                                    <img :src="jl.root+item.main_image_array[0].src">
                                                 </div>
                                                 <div class="area_txt">
-
                                                     <span></span><!-- 업체명 -->
-                                                    <h3>영상제작</h3> <!-- 제목 -->
-                                                    <div class="price">50,000원</div> <!-- 가격 -->
-                                                    <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
+                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
+                                                    <div class="price">
+                                                        {{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원
+                                                    </div> <!-- 가격 -->
+                                                    <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
                                                 </div>
 
                                             </a>
@@ -235,19 +273,19 @@
                                 <h3>최근 본 서비스</h3>
                                 <div class="swiper ftSwiper">
                                     <ul id="product_list" class="swiper-wrapper">
-                                        <li class="swiper-slide">
+                                        <li class="swiper-slide" v-for="item in products_log">
                                             <i class="heart " onclick="heart_click(15,this)"></i>
-                                            <a href="https://itforone.com:443/~broadcast/bbs/item_view.php?idx=15">
+                                            <a :href="`${jl.root}/bbs/item_view.php?idx=${item.idx}`">
                                                 <div class="area_img">
-                                                    <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg"
-                                                         title="">
+                                                    <img :src="jl.root+item.main_image_array[0].src">
                                                 </div>
                                                 <div class="area_txt">
-
                                                     <span></span><!-- 업체명 -->
-                                                    <h3>영상제작</h3> <!-- 제목 -->
-                                                    <div class="price">50,000원</div> <!-- 가격 -->
-                                                    <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
+                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
+                                                    <div class="price">
+                                                        {{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원
+                                                    </div> <!-- 가격 -->
+                                                    <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
                                                 </div>
 
                                             </a>
@@ -283,6 +321,10 @@
                 limit : 5,
                 reviews_count : 0,
                 mores : [],
+
+                portfolios : [],
+                products : [],
+                products_log : [],
             };
         },
         created: function () {
@@ -291,6 +333,10 @@
             if(this.primary) this.getData();
             this.getCategory();
             this.getReview();
+            this.getPortfolio();
+            this.getProduct();
+            this.postProductLog();
+            this.getProductLog();
         },
         mounted: function () {
             this.$nextTick(() => {
@@ -298,6 +344,84 @@
             });
         },
         methods: {
+            getLogProduct(arrays) {
+                let filter = {
+                    page : 1,
+                    limit : 5,
+                    in_key1 : "idx",
+                    in_value1 : arrays
+                };
+
+
+                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                if(res) {
+                    this.products_log = res.response.data;
+                }
+            },
+            getProductLog : function() {
+                if(!this.member_idx) return false;
+                let filter = {
+                    member_idx : this.member_idx,
+                    not_key1 : "product_idx",
+                    not_value1 : this.data.idx
+                }
+
+                var res = this.jl.ajax("get",filter,"/api/member_product_log.php");
+                if(res) {
+                    let arrays = [];
+
+                    res.data.forEach(function(item) {
+                        arrays.push(item.product_idx);
+                    })
+
+                    this.getLogProduct(arrays)
+                }
+            },
+            postProductLog : function() {
+                if(!this.member_idx) return false;
+
+                let obj = {
+                    member_idx : this.member_idx,
+                    product_idx : this.data.idx
+                }
+
+                var res = this.jl.ajax("insert",obj,"/api/member_product_log.php");
+            },
+            calcReview : function(item) {
+                if(item.review_count == 0) return 0;
+
+                let score = item.review_score / item.review_count;
+
+                return Math.round(score * 2) / 2 / 10;
+            },
+            getProduct() {
+                let filter = {
+                    order_by_desc : "review_score",
+                    page : 1,
+                    limit : 5,
+                    not_key : "idx",
+                    not_value : this.data.idx,
+                    category_idx : this.data.category_idx,
+                };
+
+                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                if(res) {
+                    this.products = res.response.data;
+                }
+            },
+            getPortfolio() {
+                let filter = {
+                    member_idx : this.member_idx,
+                    page : 1,
+                    limit : 5
+                }
+
+                var res = this.jl.ajax("get",filter,"/api/member_portfolio.php");
+                if(res) {
+                    this.portfolios = res.response.data;
+                }
+
+            },
             checkFile : function(file) {
                 var filter = {file : file};
                 var res = this.jl.ajax("check_file",filter,"/api/common.php");

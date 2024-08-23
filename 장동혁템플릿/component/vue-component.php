@@ -33,7 +33,12 @@
                     search_value1_2 : "",
                     search_like_key1 : "",
                     search_like_value1 : "",
-                    order_by_desc : "insert_date"
+                    not_key1 : "",
+                    not_value1 : "",
+                    in_key1 : "",
+                    in_value : [],
+                    order_by_desc : "insert_date",
+                    order_by_asc : "",
                 },
                 required : [
                     {name : "",message : ""},

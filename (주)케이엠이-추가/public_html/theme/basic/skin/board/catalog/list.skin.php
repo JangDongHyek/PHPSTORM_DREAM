@@ -1,5 +1,13 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+include_once(G5_PATH."/jl/JlConfig.php");
+
+$model = new JlModel(array(
+    "table" => "g5_board_file",
+    "primary" => "wr_id",
+    "autoincrement" => true,
+    "empty" => false
+));
 
 // 선택옵션으로 인해 셀합치기가 가변적으로 변함
 $colspan = 5;
@@ -102,6 +110,13 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
         <tbody>
         <?php
         for ($i=0; $i<count($list); $i++) {
+            $model->where("bo_table","catalog");
+            $model->where("wr_id",$list[$i]['wr_id']);
+            try {
+                $files = $model->get();
+            }catch (Exception $e) {
+                $msg= $e;
+            }
          ?>
         <tr class="<?php if ($list[$i]['is_notice']) echo "bo_notice"; ?>">
             <td class="td_num">
@@ -145,7 +160,11 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 
                  ?>
             </td>
-            <td class="text-center" style="padding-top: 6px; padding-bottom: 6px;"><button class="btn btn-outline-primary fs-7" download="2023_01.pdf" type="button" style="font-size: 1em;">download</button></td>
+            <td class="text-center" style="padding-top: 6px; padding-bottom: 6px;">
+                <?foreach ($files['data'] as $index => $data) {?>
+                <a class="btn btn-outline-primary fs-7" href="<?=G5_URL."/data/file/catalog/".$data['bf_file']?>" download="<?=$data['bf_source']?>" type="button" style="font-size: 1em;">download<?=$index+1?></a>
+                <?}?>
+            </td>
             <td class="td_name sv_use"><?php echo $list[$i]['name'] ?></td>
             <td class="td_date hidden-xs"><?php echo $list[$i]['datetime2'] ?></td>
             <td class="td_num hidden-xs"><?php echo $list[$i]['wr_hit'] ?></td>

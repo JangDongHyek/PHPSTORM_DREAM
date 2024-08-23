@@ -1,6 +1,14 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 include_once(G5_LIB_PATH.'/thumbnail.lib.php');
+include_once(G5_PATH."/jl/JlConfig.php");
+
+$model = new JlModel(array(
+    "table" => "g5_board_file",
+    "primary" => "wr_id",
+    "autoincrement" => true,
+    "empty" => false
+));
 
 $imgmaxwidth = 349;
 $imgmaxheight = 175;
@@ -139,11 +147,11 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                                     </a>
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-gear me-1"></i>
-                                        <div class="text-secondary fs-6_5 text-break-1">3,200Ro-ROPax.Ferry</div>
+                                        <div class="text-secondary fs-6_5 text-break-1"><?=$list[$i]['wr_2']?></div>
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-calendar-check me-1"></i>
-                                        <div class="text-secondary fs-6_5 text-break-1">2016</div>
+                                        <div class="text-secondary fs-6_5 text-break-1"><?=$list[$i]['wr_5']?></div>
                                     </div>
                             </div>
                             <hr class="bg-secondary my-0">
@@ -188,7 +196,17 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 <!-- } 게시판 목록 끝 -->
 
 <!-- Bootstrap 모달 구조 추가 -->
-<?php for ($i=0; $i<count($list); $i++) { ?>
+<?php for ($i=0; $i<count($list); $i++) {
+    $model->where("bo_table","reference");
+    $model->where("wr_id",$list[$i]['wr_id']);
+    try {
+        $files = $model->get();
+        var_dump($files);
+    }catch (Exception $e) {
+        $msg= $e;
+    }
+    echo 1;
+    ?>
     <div class="modal fade" id="performance_<?php echo $list[$i]['wr_id'] ?>" data-bs-keyboard="false" tabindex="-1" aria-labelledby="performance_<?php echo $list[$i]['wr_id'] ?>Label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
@@ -199,31 +217,31 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 <div class="modal-body">
                     <div class="d-lg-flex border-top border-bottom">
                         <div class="bg-light ps-3 py-4 performance-modal-width">· SHIPYARD</div>
-                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['shipyard'] ?></div>
+                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['wr_1'] ?></div>
                     </div>
                     <div class="d-lg-flex border-bottom">
                         <div class="bg-light ps-3 py-4 performance-modal-width">· SHIP TYPE</div>
-                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['ship_type'] ?></div>
+                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['wr_2'] ?></div>
                     </div>
                     <div class="d-lg-flex border-bottom">
                         <div class="bg-light ps-3 py-4 performance-modal-width">· PROJ.NO.</div>
-                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['project_no'] ?></div>
+                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['wr_3'] ?></div>
                     </div>
                     <div class="d-lg-flex border-bottom">
                         <div class="bg-light ps-3 py-4 performance-modal-width">· APPLICATION ITEM</div>
-                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['application_item'] ?></div>
+                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['wr_4'] ?></div>
                     </div>
                     <div class="d-lg-flex border-bottom">
                         <div class="bg-light ps-3 py-4 performance-modal-width">· DELIVERY</div>
-                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['delivery'] ?></div>
+                        <div class="ps-4 ps-lg-3 py-4 fw-bold"><?php echo $list[$i]['wr_5'] ?></div>
                     </div>
                     <div class="d-lg-flex pt-3">
-                        <div class="w-100 border border-dark mb-3 mb-lg-0 me-0 me-lg-3">
-                            <img src="<?php echo $list[$i]['image1'] ?>" class="img-fluid w-100" alt="">
-                        </div>
-                        <div class="w-100 border border-dark">
-                            <img src="<?php echo $list[$i]['image2'] ?>" class="img-fluid w-100" alt="">
-                        </div>
+                        <?foreach ($files['data'] as $data) {
+                            ?>
+                            <div class="w-100 border border-dark mb-3 mb-lg-0 me-0 me-lg-3">
+                                <img src="<?=G5_URL."/data/file/reference/".$data['bf_file']?>" class="img-fluid w-100" alt="">
+                            </div>
+                        <?}?>
                     </div>
                 </div>
             </div>

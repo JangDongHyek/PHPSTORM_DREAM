@@ -12,16 +12,26 @@
                         <div class="area_img" v-if="item.main_image_array.length > 0">
                             <img :src="jl.root+item.main_image_array[0].src">
                         </div>
-                        <div class="area_txt">
-
-                            <span>업체명</span><!-- 업체명 -->
-                            <h3>{{ item.name }}</h3> <!-- 제목 -->
-                        </div>
-
                     </a>
-                    <a class="list_btn" :href="`${jl.root}/bbs/portfolio_write.php?idx=${item.idx}`">수정</a>
-                    <a class="list_btn" href="" @click="event.preventDefault(); deleteData(item)">삭제</a>
-                    <!-- 제목 -->
+                    <div class="area_txt">
+                        <!-- <span>업체명</span>업체명 -->
+                        <div class="grid">
+                            <h3>{{ item.name }}</h3> <!-- 제목 -->
+                            <a :href="`${jl.root}/bbs/portfolio_write.php?idx=${item.idx}`"><i class="fa-regular fa-pen"></i><!--수정--></a>
+                            <a href="" @click="event.preventDefault(); deleteData(item)"><i class="fa-light fa-trash"></i><!--삭제--></a>
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="write_btn">
+                    <a @click="location.href=`${jl.root}/bbs/portfolio_write.php`">
+                        <button class="area_img">
+                            <i class="fa-light fa-plus"></i>
+                        </button>
+                    </a>
+                    <div class="area_txt">
+                        <h3>포트폴리오 추가하기</h3>
+                    </div>
                 </li>
 
                 <li class="nodata" v-if="data.length == 0">
@@ -32,10 +42,7 @@
                 </li>
             </ul>
         </div>
-
-        <button @click="location.href=`${jl.root}/bbs/portfolio_write.php`" class="btn">
-            포트폴리오 등록하기
-        </button>
+        
     </div>
 </script>
 

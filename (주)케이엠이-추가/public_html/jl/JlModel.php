@@ -20,6 +20,7 @@ class JlModel extends Jl{
     private $sql_order_by = "";
     private $group_bool = false;
     private $group_index = 0;
+    public  $not = false;
 
     function __construct($object = array()) {
         //부모 생성자
@@ -132,7 +133,7 @@ class JlModel extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n $sql");
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) throw new \Exception(mysql_error());
@@ -151,7 +152,7 @@ class JlModel extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n $sql");
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
 
             $total_count = mysqli_num_rows($result);
 
@@ -183,7 +184,7 @@ class JlModel extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n $sql");
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
 
             while($row = mysqli_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
@@ -249,7 +250,7 @@ class JlModel extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n $sql");
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) throw new \Exception(mysql_error());
@@ -272,7 +273,7 @@ class JlModel extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n $sql");
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) throw new \Exception(mysql_error());
@@ -290,7 +291,7 @@ class JlModel extends Jl{
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
-            if(!$result) throw new \Exception(mysqli_error($this->connect)."\n $sql");
+            if(!$result) throw new \Exception(mysqli_error($this->connect));
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) throw new \Exception(mysql_error());
@@ -307,11 +308,11 @@ class JlModel extends Jl{
         return $sql;
     }
 
-    function addSql($query) {
+    function add_sql($query) {
         $this->sql .= "$query";
     }
 
-    function orderBy($first,$second = "") {
+    function order_by($first,$second = "") {
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -335,14 +336,14 @@ class JlModel extends Jl{
         }
     }
 
-    function groupStart($operator = "AND") {
+    function group_start($type = "AND") {
         if($this->group_bool) return false;
 
         $this->group_bool = true;
-        $this->sql .= " {$operator} ( ";
+        $this->sql .= " {$type} ( ";
     }
 
-    function groupEnd() {
+    function group_end() {
         if(!$this->group_bool) return false;
 
         $this->group_bool = false;
@@ -350,7 +351,7 @@ class JlModel extends Jl{
         $this->sql .= " ) ";
     }
 
-    function between($column,$start,$end,$operator = "AND") {
+    function between($column,$start,$end,$type = "AND") {
         if($column == "") throw new \Exception("JlModel between() : 컬럼명을 대입 해주새요.");
         if($start == "") throw new \Exception("JlModel between() : 시작시간을 대입 해주새요.");
         if($end == "") throw new \Exception("JlModel between() : 종료시간을 대입 해주새요.");
@@ -361,82 +362,18 @@ class JlModel extends Jl{
         if(in_array($column, $this->schema['columns'])){
             if($this->group_bool) {
                 if(!$this->group_index) $this->group_index = 1;
-                else $this->sql .= " {$operator} ";
+                else $this->sql .= " {$type} ";
             }else {
-                $this->sql .= " {$operator} ";
+                $this->sql .= " {$type} ";
             }
 
             $this->sql .= "{$column} BETWEEN '{$start}' AND '{$end}' ";
         }
-
-        return $this;
     }
 
-    function in($first,$second = "",$operator = "AND") {
-        if(is_array($first)) {
-            $param = $this->escape($first);
+    function where($first,$second = "") {
+        $equals = $this->not ? "!=" : "=";
 
-            foreach($param as $key => $value){
-                if(in_array($key, $this->schema['columns'])){
-                    if(!is_array($value)) throw new \Exception("JlModel in() : 비교값이 배열이아닙니다.");
-
-                    if($this->group_bool) {
-                        if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
-                    }else {
-                        $this->sql .= " $operator ";
-                    }
-
-                    $this->sql .= "`{$key}` IN (";
-
-                    $bool = false;
-                    foreach($value as $v) {
-                        if($bool) $this->sql .= ", ";
-                        else $bool = true;
-
-                        if(is_numeric($v)) $this->sql .= "$v";
-                        else $this->sql .= "'$v'";
-                    }
-
-                    $this->sql .= ")";
-
-                }
-            }
-        }
-
-        if(is_string($first)) {
-            if($first == "") throw new \Exception("JlModel where() : 컬럼명을 입력해주새요.");
-            if($second == "") throw new \Exception("JlModel where() : 필터를 입력해주새요.");
-            if(!is_array($second)) throw new \Exception("JlModel where() : 비교값이 배열이 아닙니다.");
-
-            if(in_array($first, $this->schema['columns'])){
-                if($this->group_bool) {
-                    if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
-                }else {
-                    $this->sql .= " $operator ";
-                }
-
-                $this->sql .= "`{$first}` IN (";
-
-                $bool = false;
-                foreach($second as $v) {
-                    if($bool) $this->sql .= ", ";
-                    else $bool = true;
-
-                    if(is_numeric($v)) $this->sql .= "$v";
-                    else $this->sql .= "'$v'";
-
-                }
-
-                $this->sql .= ")";
-            }
-        }
-
-        return $this;
-    }
-
-    function where($first,$second = "",$operator = "AND") {
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -446,12 +383,12 @@ class JlModel extends Jl{
 
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
+                        else $this->sql .= " AND ";
                     }else {
-                        $this->sql .= " $operator ";
+                        $this->sql .= " AND ";
                     }
 
-                    $this->sql .= "`{$key}` = '{$value}'";
+                    $this->sql .= "`{$key}` $equals '{$value}'";
                 }
             }
         }
@@ -463,19 +400,55 @@ class JlModel extends Jl{
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
+                    else $this->sql .= " AND ";
                 }else {
-                    $this->sql .= " $operator ";
+                    $this->sql .= " AND ";
                 }
 
-                $this->sql .= "`{$first}` = '{$second}'";
+                $this->sql .= "`{$first}` $equals '{$second}'";
+            }
+        }
+    }
+
+    function or_where($first,$second = "") {
+        $equals = $this->not ? "!=" : "=";
+
+        if(is_array($first)) {
+            $param = $this->escape($first);
+
+            foreach($param as $key => $value){
+                if(in_array($key, $this->schema['columns'])){
+                    if($this->empty && $value == "") continue;
+
+                    if($this->group_bool) {
+                        if(!$this->group_index) $this->group_index = 1;
+                        else $this->sql .= " OR ";
+                    }else {
+                        $this->sql .= " OR ";
+                    }
+
+                    $this->sql .= "`{$key}` $equals '{$value}'";
+                }
             }
         }
 
-        return $this;
+        if(is_string($first)) {
+            if($first == "") throw new \Exception("JlModel or_where() : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("JlModel or_where() : 필터를 입력해주새요.");
+            if(in_array($first, $this->schema['columns'])){
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " OR ";
+                }else {
+                    $this->sql .= " OR ";
+                }
+
+                $this->sql .= "`{$first}` $equals '{$second}'";
+            }
+        }
     }
 
-    function like($first,$second = "",$operator = "AND") {
+    function like($first,$second = "") {
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -484,9 +457,9 @@ class JlModel extends Jl{
                     if($this->empty && $value == "") continue;
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
+                        else $this->sql .= " AND ";
                     }else {
-                        $this->sql .= " $operator ";
+                        $this->sql .= " AND ";
                     }
 
                     $this->sql .= "`{$key}` LIKE '%{$value}%'";
@@ -501,17 +474,56 @@ class JlModel extends Jl{
             if(in_array($first, $this->schema['columns'])){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
+                    else $this->sql .= " AND ";
                 }else {
-                    $this->sql .= " $operator ";
+                    $this->sql .= " AND ";
                 }
 
                 $this->sql .= "`{$first}` LIKE '%{$second}%'";
             }
         }
-
-        return $this;
     }
+
+    function or_like($first,$second = "") {
+        if(is_array($first)) {
+            $param = $this->escape($first);
+
+            foreach($param as $key => $value){
+                if(in_array($key, $this->schema['columns'])){
+                    if($this->empty && $value == "") continue;
+                    if($this->group_bool) {
+                        if(!$this->group_index) $this->group_index = 1;
+                        else $this->sql .= " OR ";
+                    }else {
+                        $this->sql .= " OR ";
+                    }
+
+                    $this->sql .= "`{$key}` LIKE '%{$value}%'";
+                }
+            }
+        }
+
+        if(is_string($first)) {
+            if($first == "") throw new \Exception("JlModel or_like() : 컬럼명을 입력해주새요.");
+            if($second == "") throw new \Exception("JlModel or_like() : 필터를 입력해주새요.");
+
+            if(in_array($first, $this->schema['columns'])) {
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " OR ";
+                }else {
+                    $this->sql .= " OR ";
+                }
+
+                $this->sql .= "`{$first}` LIKE '%{$second}%'";
+            }
+        }
+    }
+
+
+
+
+
 
     function escape($_param) {
         $param = array();

@@ -96,7 +96,13 @@
                                     <dt>수정횟수</dt>
                                     <dd>{{ product[tab].modify }}회</dd>
                                     <dt>추가옵션</dt>
-                                    <dd>서울/경기 외 타지 촬영 집결 가능</dd>
+                                    <span class="line"></span>
+                                    <template v-for="item in product.options" v-if="item.bool">
+                                        <dt>{{ item.name }}</dt>
+                                        <dd v-if="item.detail == 'detail'">{{parseInt(item[tab].price).format()}}원 추가시 {{item[tab].option}}</dd>
+                                        <dd v-if="item.detail == 'custom'">{{item.description}}</dd>
+                                        <dd v-if="!item.detail"></dd>
+                                    </template>
                                     <span class="line"></span>
                                     <dt>세금계산서 발행</dt>
                                     <dd>가능</dd>

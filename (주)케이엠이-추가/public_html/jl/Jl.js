@@ -49,8 +49,6 @@ class Jl {
     }
 
     ajax(method,obj,url,options = {}) {
-        if(!obj) new Error("obj 가 존재하지않습니다.");
-
         return new Promise((resolve, reject) => {
             var object = this.copyObject(obj);
 

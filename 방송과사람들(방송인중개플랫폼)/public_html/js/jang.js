@@ -123,7 +123,6 @@ class JL {
 
     ajax(method,obj,url) {
 
-
         var object = this.copyObject(obj);
 
         var objects = {_method : method};
