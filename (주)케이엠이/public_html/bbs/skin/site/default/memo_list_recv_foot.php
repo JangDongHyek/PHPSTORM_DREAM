@@ -1,0 +1,2 @@
+</table>
+<?=$print_page?>

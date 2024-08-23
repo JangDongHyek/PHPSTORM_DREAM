@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/public_html/connect_login.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/index.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/member/login.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/member/login.php" charset="EUC-KR" />
+  </component>
+</project>

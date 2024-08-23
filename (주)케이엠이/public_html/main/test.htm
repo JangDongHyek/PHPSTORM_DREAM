@@ -1,0 +1,27 @@
+<html>
+<head>
+<script type='text/javascript' src='http://code.jquery.com/jquery-latest.min.js'></script>	
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#subnav a').each(function(index) {
+        if(this.href.trim() == window.location)
+            $(this).addClass("selected");
+    });
+});
+</script>
+
+<style>
+.selected {
+    background-color: red;
+}
+</style>
+
+</head>
+
+<body>
+    <ul id="subnav">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="hackya.html">HackYa</a></li>
+    </ul>
+</body>
+</html>

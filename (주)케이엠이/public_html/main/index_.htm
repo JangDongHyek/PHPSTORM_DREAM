@@ -1,0 +1,150 @@
+<? 
+   $site_path = "/home/kme/public_html/bbs/"; 
+   $site_url = "../bbs/";
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+body {
+	background-image: url(../images/main/back.gif);
+}
+</style>
+<!--###################### 롤링 스크립트 시작 #########################-->
+<script type="text/javascript" src="jsRolling2.js" charset="utf-8"></script>
+<style type="text/css"> 
+.outDiv{margin:0px auto; padding:0px 0px 0px 0px; border:3px solid #ffffff; width:618px; height:111px;}
+</style>
+<!--###################### 롤링 스크립트 종료 #########################-->
+</head>
+<body>
+<? include '../inc/top.htm'; ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="419" valign="top" background="../images/main/m_bg.jpg"><? include '../main_roll/index.html'; ?></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main/main_14.jpg" width="663" height="149" border="0" usemap="#Mappro"></td>
+              </tr>
+              <tr>
+                <td height="118" valign="top" background="../images/main/main_14_bg.jpg"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="23">&nbsp;</td>
+                    <td valign="top">
+				<!--######################롤링 시작########################-->
+					<div id="r_table_2" class="outDiv">
+<?
+	$sql = "select * from rg_pro_gal01_body 
+				union all select * from rg_pro_gal02_body
+				union all select * from rg_pro_gal03_body
+				union all select * from rg_pro_gal04_body
+				union all select * from rg_pro_gal05_body
+				union all select * from rg_pro_gal06_body
+				union all select * from rg_pro_gal07_body
+				union all select * from rg_pro_gal08_body
+				union all select * from rg_pro_gal09_body 
+				where `rg_reg_date` order by `rg_reg_date` desc limit 0,8";
+	$res = mysql_query($sql, $dbcon);
+	$tot = mysql_num_rows($res);
+	?>
+<?
+for( $k = 0; $row = mysql_fetch_array($res); $k++ ){
+	$doc_num=$row[rg_doc_num];
+	$rg_title=$row[rg_title];
+	$file_name=$row[rg_file1_name];
+	$bbs_id = $row[bbs_id];
+
+	$file_upup = "../bbs/data/$bbs_id/".$doc_num."\$1\$th\$".$file_name;
+	if(!file_exists($file_upup)){
+		$file_upup = "../bbs/data/$bbs_id/".$doc_num."\$1\$th2\$".$file_name;
+		if(!file_exists($file_upup)){
+			$file_upup = "../bbs/data/$bbs_id/".$doc_num."\$1\$".$file_name;
+		}
+	}
+
+	$img_str = "<a href='../bbs/view.php?bbs_id=$bbs_id&page=$page&doc_num=$doc_num'><img width='142' height='84' src='$file_upup' style='margin-left:15px;'/></a>";
+	$rg_title ="<a href='../bbs/view.php?bbs_id=$bbs_id&page=$page&doc_num=$doc_num'>".$rg_title."</a>";
+?>
+						<table border="0" cellpadding="0" cellspacing="0">
+							<tr><td width="142" height="84" align="center" valign="top"><?=$img_str?></td><td width></td></tr>
+							<tr><td align="center"><div style="width:120px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;"><!--<?=$item_name?>--><?=$rg_title?></div></td></tr>
+						</table>
+<?
+}
+?>	
+					</div>
+<?if($tot<=4){?>
+<script type="text/javascript"> 
+//<![CDATA[
+var r_table_2;
+window.onload = function(){
+	
+	//--- TABLE
+	r_table_2 = new jsRolling(document.getElementById('r_table_2'));
+	r_table_2.setDirection(4);
+}
+//]]>
+</script>
+<?}else{?>
+<script type="text/javascript"> 
+//<![CDATA[
+var r_table_2;
+window.onload = function(){
+	
+	//--- TABLE
+	r_table_2 = new jsRolling(document.getElementById('r_table_2'));
+	r_table_2.setDirection(4);
+	r_table_2.start();
+}
+//]]>
+</script>
+<? } ?>
+				</td>
+                    <td width="20">&nbsp;</td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main/main_15.jpg" border="0"></td>
+              </tr>
+              <tr>
+                <td><img src="../images/main/main_16.jpg" border="0" usemap="#Map2bbs"></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<? include '../inc/copy.htm'; ?>
+<map name="Map2bbs">
+  <area shape="circle" coords="298,51,36" href="../bbs/list.php?bbs_id=noticee">
+  <area shape="circle" coords="222,51,36" href="../bbs/list.php?bbs_id=dataa">
+</map>
+
+<map name="Mappro">
+  <area shape="rect" coords="266,19,326,40" href="../bbs/list.php?bbs_id=pro_gal01">
+  <area shape="rect" coords="589,20,650,41" href="../bbs/list.php?bbs_id=pro_gal06">
+</map>
+</body>
+</html>
