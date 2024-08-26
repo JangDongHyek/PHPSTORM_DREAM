@@ -15,7 +15,18 @@ if($OID==""){
 	$OID=$moid;
 }
 
-$sql="update $Order_BuyTable_Temp set authnumber='$AuthCode',field3='".iconv("utf-8","euc-kr",$AcquCardName)."',field2='$CardQuota',card_paid='t',field4='$TID' where order_num='$OID'";
+$name = iconv("utf-8","euc-kr",$name);
+$GoodsName = iconv("utf-8","euc-kr",$GoodsName);
+$ResultMsg = iconv("utf-8","euc-kr",$ResultMsg);
+$fn_name = iconv("utf-8","euc-kr",$fn_name);
+$AcquCardName = iconv("utf-8","euc-kr",$AcquCardName);
+
+$in_sql = "insert into innopay_log (idx,order_num,PayMethod,MID,TID,mallUserID,Amt,name,GoodsName,AuthDate,AuthCode,ResultCode,ResultMsg,MallReserved,SUB_ID,BuyerEmail,fn_cd,fn_name,AcquCardCode,AcquCardName,CardQuota,MOID)";
+$in_sql .= " values ";
+$in_sql .= "('','$OID','$PayMethod','$MID','$TID','$mallUserID','$Amt','$name','$GoodsName','$AuthDate','$AuthCode','$ResultCode','$ResultMsg','$MallReserved','$SUB_ID','$BuyerEmail','$fn_cd','$fn_name','$AcquCardCode','$AcquCardName','$CardQuota','$OID')";
+mysql_query($in_sql);
+
+$sql="update $Order_BuyTable_Temp set authnumber='$AuthCode',field3='".$AcquCardName."',field2='$CardQuota',card_paid='t',field4='$TID' where order_num='$OID'";
 mysql_query($sql);
 //================== 임시주문서 내용을 주문서 테이블로 복사함 ========================
 $ordcopy_sql = "insert into $Order_BuyTable ( select * from $Order_BuyTable_Temp where order_num='$OID' and mart_id='$mart_id')";
