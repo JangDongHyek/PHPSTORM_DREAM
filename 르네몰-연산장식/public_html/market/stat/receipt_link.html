@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+<style>
+    body{background-color: #eee;}
+    #receipt{max-width: 400px; min-width: 300px; width: 80%; margin: 10% auto; background-color: #fff; border-radius: 1rem; padding: 2rem;}
+    #receipt .hd{display: flex; align-items: center; justify-content: space-between}
+    #receipt .hd h1{font-size: 1.2em}
+    #receipt .hd .btn_wrap{display: flex; align-items: center; justify-content: right;}
+    #receipt .hd .btn_wrap > a{display: inline-block; margin-left: 4px;}
+    #receipt .hd .btn_wrap > a:last-child:before{content: ""; display: inline-block; width: 1px; height: 14px; background-color: #eee; margin: -2px 10px 2px; vertical-align: middle;}
+    #receipt .conts{font-size: 0.9em;}
+    #receipt .conts dl{display: grid; grid-template-columns: 1fr 1fr;}
+    #receipt .conts dl:not(:last-child){border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 1rem;}
+    #receipt .conts dt, #receipt .conts dd{ padding: 0.2rem 0;}
+    #receipt .conts dt{font-weight: 600;}
+    #receipt .conts dd{text-align: right;}
+    #receipt .conts .price{ font-weight: 600; color: #808FEE;}
+</style>
+<div id="receipt">
+    <div class="hd">
+        <h1>신용 카드 전표 출력</h1>
+        <div class="btn_wrap">
+            <a><i class="fas fa-link"></i></a>
+            <a><i class="fas fa-print"></i></a>
+            <a><i class="fas fa-times"></i></a>
+        </div>
+    </div>
+    <div class="conts">
+        <dl>
+            <dt>주문번호</dt>
+            <dd>12346546854</dd>
+            <dt>구매자</dt>
+            <dd>김토스</dd>
+            <dt>구매상품</dt>
+            <dd>토스 티셔츠 외 2건</dd>
+        </dl>
+        <dl>
+            <dt>카드종류</dt>
+            <dd>신한 마스타</dd>
+            <dt>할부</dt>
+            <dd>일시불</dd>
+            <dt>거래상태</dt>
+            <dd>승인</dd>
+            <dt>승인번호</dt>
+            <dd>123246546812312</dd>
+            <dt>결제일시</dt>
+            <dd>2024.03.01 13:00:00</dd>
+        </dl>
+        <dl>
+            <dt>과세금액</dt>
+            <dd>50,000원</dd>
+            <dt>부과세</dt>
+            <dd>5,000원</dd>
+            <dt class="price">결제금액</dt>
+            <dd class="price">55,000원</dd>
+        </dl>
+    </div>
+</div>
