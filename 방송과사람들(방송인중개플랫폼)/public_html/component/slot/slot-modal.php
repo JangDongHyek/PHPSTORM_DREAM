@@ -11,7 +11,7 @@
                     <div class="modal-body">
                         <slot></slot>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" v-if="footer">
                         <button v-if="confirm" type="button" class="btn btn-default" data-dismiss="modal" @click="$emit('onEvent')">확인</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal" @click="$emit('close')">닫기</button>
                     </div>
@@ -28,6 +28,7 @@
             modal : {type : Boolean, default : false},
             title : {type : String, default : ""},
             confirm : {type : Boolean, default : false},
+            footer : {type : Boolean, default : true},
         },
         data: function(){
             return {

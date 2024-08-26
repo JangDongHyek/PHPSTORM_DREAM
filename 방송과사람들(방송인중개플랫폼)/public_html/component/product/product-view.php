@@ -273,7 +273,7 @@
                                 <h3>최근 본 서비스</h3>
                                 <div class="swiper ftSwiper">
                                     <ul id="product_list" class="swiper-wrapper">
-                                        <li class="swiper-slide" v-for="item in products_log">
+                                        <li class="swiper-slide" v-for="item in products_log" v-if="item.idx != data.idx">
                                             <i class="heart " onclick="heart_click(15,this)"></i>
                                             <a :href="`${jl.root}/bbs/item_view.php?idx=${item.idx}`">
                                                 <div class="area_img">
@@ -347,7 +347,7 @@
             getLogProduct(arrays) {
                 let filter = {
                     page : 1,
-                    limit : 5,
+                    limit : 6,
                     in_key1 : "idx",
                     in_value1 : arrays
                 };
@@ -362,8 +362,6 @@
                 if(!this.member_idx) return false;
                 let filter = {
                     member_idx : this.member_idx,
-                    not_key1 : "product_idx",
-                    not_value1 : this.data.idx
                 }
 
                 var res = this.jl.ajax("get",filter,"/api/member_product_log.php");

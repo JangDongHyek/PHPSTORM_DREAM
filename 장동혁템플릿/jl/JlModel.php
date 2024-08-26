@@ -379,6 +379,7 @@ class JlModel extends Jl{
             foreach($param as $key => $value){
                 if(in_array($key, $this->schema['columns'])){
                     if(!is_array($value)) throw new \Exception("JlModel in() : 비교값이 배열이아닙니다.");
+                    if(!count($value)) continue;
 
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
@@ -409,7 +410,7 @@ class JlModel extends Jl{
             if($second == "") throw new \Exception("JlModel where() : 필터를 입력해주새요.");
             if(!is_array($second)) throw new \Exception("JlModel where() : 비교값이 배열이 아닙니다.");
 
-            if(in_array($first, $this->schema['columns'])){
+            if(in_array($first, $this->schema['columns']) && count($second)){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
                     else $this->sql .= " $operator ";

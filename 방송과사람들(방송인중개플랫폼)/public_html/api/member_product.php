@@ -42,6 +42,7 @@ try {
             }
 
             if($obj['in_key1'] && $obj['in_value1']) {
+                $arrays = $model->jsonDecode($obj['in_value1']);
                 $model->in($obj['in_key1'],$model->jsonDecode($obj['in_value1']));
                 $response['sql'] = $model->getSql();
             }

@@ -1,9 +1,12 @@
 <?
 include_once('./_common.php');
+include_once('../class/Lib.php');
 $name = "chat_list";
 $pid = 'chat';
 $g5['title'] = '채팅리스트';
 include_once('./_head.php');
+
+$jl = new JL();
 
 /** 채팅리스트 **/
 if(!$is_member){
@@ -38,30 +41,9 @@ if(!$is_member){
             </form>
         </div> <!-- 채팅방 이름 검색 -->
 
-        <div class="tab_container">
-            <div id="tab1" class="tab_content">
-                <!-- bbs/ajax.chat_list.php -->
-                <ul class="chat_list ul_chat_list">
-                    <!--<li>
-                        <a href="<?/*=G5_BBS_URL*/?>/chat.php">
-                            <div class="area_img"><img class="basic" src="<?php /*echo G5_IMG_URL */?>/img_smile.svg"></div>
-                            <div class="chat_txt">
-                                <div class="info"><em class="name">PODOSEA</em><span clas="data">11월 5일</span></div>
-                                <div class="cont">김철수 고객님 안녕하세요. 요청하신 견적 제안금액입니다.김철수 고객님 안녕하세요. 요청하신 견적 제안금액입니다.김철수 고객님 안녕하세요. 요청하신 견적 제안금액입니다.김철수 고객님 안녕하세요. 요청하신 견적 제안금액입니다.김철수 고객님 안녕하세요. 요청하신 견적 제안금액입니다.</div>
-                            </div>
-                            <div class="badge">2</div>
-                        </a>
-                    </li>-->
-                </ul>
-            </div>
-            <!--<div id="tab2" class="tab_content">
-                <ul class="chat_list">
-                    <li class="nodata">
-                        <p>채팅 내역이 없습니다.</p>
-                    </li>
-                </ul>
-            </div>-->
-        </div>
+        <chat-list mb_no="<?=$member['mb_no']?>"></chat-list>
+
+
     </div>
 </div>
 
@@ -72,11 +54,13 @@ if(!$is_member){
 </form>
 
 <?
+$jl->vueLoad("area_chat");
+$jl->includeDir("/component/chat");
 include_once('./_tail.php');
 ?>
 
-<script src="<?=G5_JS_URL?>/socket.io.js"></script>
-<script src="<?=G5_JS_URL?>/chat.js"></script>
+<!--<script src="--><?//=G5_JS_URL?><!--/socket.io.js"></script>-->
+<!--<script src="--><?//=G5_JS_URL?><!--/chat.js"></script>-->
 <script>
 
 $(document).ready(function() {

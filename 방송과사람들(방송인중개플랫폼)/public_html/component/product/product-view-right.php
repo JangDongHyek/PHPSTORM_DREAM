@@ -55,7 +55,7 @@
                 </ul>
                 <!--자기소개글-->
                 <p class="pf_produce">자기소개글</p>
-                <a href="" class="btn_cs">전문가에게 문의하기</a>
+                <a href="" class="btn_cs" @click="event.preventDefault(); postChatRoom();">전문가에게 문의하기</a>
             </div>
             <br>
             <div class="price_info">
@@ -153,6 +153,20 @@
             });
         },
         methods: {
+            postChatRoom : function() {
+                if(this.member_idx) {
+                    let obj = {
+                        buyer_idx : this.member_idx,
+                        seller_idx : this.product.member_idx
+                    }
+
+                    var res = this.jl.ajax("insert", obj, "/api/member_chat_room.php");
+
+                    window.location.href = `${this.jl.root}/bbs/chat.php?idx=${res.data.idx}`
+                }else {
+                    alert("로그인이 필요한 기능입니다.");
+                }
+            },
             calcReview : function(item) {
                 if(item.review_count == 0) return 0;
 
