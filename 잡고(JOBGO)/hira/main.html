@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Object Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .controls button {
+      font-size: 16px;
+      padding: 8px 16px;
+      margin-right: 8px;
+      border: none;
+      background-color: #f2f2f2;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <button id="front">정면</button>
+    <button id="side">측면</button>
+    <button id="back">후면</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+  <script>
+    // Scene, Camera, Renderer 생성
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    // Renderer 크기 설정
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // DOM에 Renderer 추가
+    document.body.appendChild(renderer.domElement);
+
+    // 조명 추가
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(0, 10, 0);
+    scene.add(directionalLight);
+
+    // 카메라 위치 설정
+    camera.position.z = 5;
+
+    // obj 파일 로드
+    const objLoader = new THREE.OBJLoader();
+    const objUrl = 'https://www.jobgo.ac/hira/src/static/example_mesh.obj';
+    objLoader.load(objUrl, (object) => {
+      scene.add(object);
+    });
+
+    // 회전 관련 변수
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
+// 회전 관련 변수
+const touchStart = { x: 0, y: 0 };
+let touchMove = { x: 0, y: 0 };
+const touchEnd = { x: 0, y: 0 };
+const distance = 10;
+const currentAngle = { x: 0, y: 0 };
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
+
+
+// 줌 관련 변수
+let zoom = 1;
+const zoomFactor = 0.1;
+const minZoom = 0.5;
+const maxZoom = 2;
+
+// 이벤트 리스너 등록
+document.addEventListener('dblclick', onDoubleClick);
+document.addEventListener('mousedown', onMouseDown);
+document.addEventListener('mousemove', onMouseMove);
+document.addEventListener('mouseup', onMouseUp);
+document.addEventListener('touchstart', onTouchStart);
+document.addEventListener('touchmove', onTouchMove);
+document.addEventListener('touchend', onTouchEnd);
+
+// 더블클릭 이벤트 핸들러
+function onDoubleClick(event) {
+  event.preventDefault();
+  zoom += zoomFactor;
+  zoom = Math.min(zoom, maxZoom);
+  updateCamera();
+}
+
+// 마우스 이벤트 핸들러
+function onMouseDown(event) {
+  event.preventDefault();
+  touchStart.x = event.clientX;
+  touchStart.y = event.clientY;
+
+  if (event.touches.length === 2) {
+    const touch1 = event.touches[0];
+    const touch2 = event.touches[1];
+    touchStartPos.x = (touch1.clientX + touch2.clientX) / 2;
+    touchStartPos.y = (touch1.clientY + touch2.clientY) / 2;
+    touchMovePos = { x: touchStartPos.x, y: touchStartPos.y };
+    touchEndPos = { x: touchStartPos.x, y: touchStartPos.y };
+  }
+}
+
+function onMouseMove(event) {
+  event.preventDefault();
+  if (event.buttons === 1) {
+    const diffX = event.clientX - touchMove.x;
+    const diffY = event.clientY - touchMove.y;
+    currentAngle.y += diffX * 0.01;
+    currentAngle.x += diffY * 0.01;
+  } else if (event.touches.length === 2) {
+    const touch1 = event.touches[0];
+    const touch2 = event.touches[1];
+    touchEndPos.x = (touch1.clientX + touch2.clientX) / 2;
+    touchEndPos.y = (touch1.clientY + touch2.clientY) / 2;
+
+    const distanceStart = Math.sqrt(
+      (touchStartPos.x - touchMovePos.x) ** 2 + (touchStartPos.y - touchMovePos.y) ** 2
+    );
+    const distanceEnd = Math.sqrt(
+      (touchEndPos.x - touchMovePos.x) ** 2 + (touchEndPos.y - touchMovePos.y) ** 2
+    );
+    const distanceDiff = distanceEnd - distanceStart;
+
+    zoom -= distanceDiff * 0.01;
+    zoom = Math.max(zoom, minZoom);
+    zoom = Math.min(zoom, maxZoom);
+
+    updateCamera();
+
+    touchMovePos.x = touchEndPos.x;
+    touchMovePos.y = touchEndPos.y;
+  }
+  touchMove.x = event.clientX;
+  touchMove.y = event.clientY;
+}
+
+function onMouseUp(event) {
+  event.preventDefault();
+}
+
+// 터치 이벤트 핸들러
+function onTouchStart(event) {
+  event.preventDefault();
+  touchStart.x = event.touches[0].clientX;
+  touchStart.y = event.touches[0].clientY;
+}
+
+function onTouchMove(event) {
+  event.preventDefault();
+  const diffX = event.touches[0].clientX - touchMove.x;
+  const diffY = event.touches[0].clientY - touchMove.y;
+  currentAngle.y += diffX * 0.01;
+  currentAngle.x += diffY * 0.01;
+  touchMove.x = event.touches[0].clientX;
+  touchMove.y = event.touches[0].clientY;
+}
+
+function onTouchEnd(event) {
+	if (event.touches.length < 2) {
+    touchStartPos = { x: 0, y: 0 };
+    touchMovePos = { x: 0, y: 0 };
+    touchEndPos = { x: 0, y: 0 };
+  }
+  event.preventDefault();
+}
+
+// 렌더링 함수
+function render() {
+  // 회전각도에 맞게 카메라와 조명 회전
+  const angleX = currentAngle.x;
+  const angleY = currentAngle.y;
+  camera.position.x = distance * Math.sin(angleY) * Math.cos(angleX);
+  camera.position.y = distance * Math.sin(angleX);
+  camera.position.z = distance * Math.cos(angleY) * Math.cos(angleX);
+  camera.lookAt(scene.position);
+
+  directionalLight.position.set(
+    distance * Math.sin(angleY) * Math.cos(angleX),
+    distance * Math.sin(angleX),
+    distance * Math.cos(angleY) * Math.cos(angleX)
+  );
+
+  // 렌더러에 씬과 카메라 추가
+  renderer.render(scene, camera);
+
+  // 반복 실행
+
+  requestAnimationFrame(render);
+}
+	 render();
+
+// 카메라 업데이트 함수
+function updateCamera() {
+  camera.position.x = distance * zoom * Math.sin(currentAngle.y) * Math.cos(currentAngle.x);
+  camera.position.y = distance * zoom * Math.sin(currentAngle.x);
+  camera.position.z = distance * zoom * Math.cos(currentAngle.y) * Math.cos(currentAngle.x);
+
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
+}
+    // 버튼 이벤트 핸들러 추가
+    const frontBtn = document.getElementById('front');
+    const sideBtn = document.getElementById('side');
+    const backBtn = document.getElementById('back');
+
+    frontBtn.addEventListener('click', () => {
+      scene.rotation.y = 0;
+      scene.rotation.x = 0;
+    });
+
+    sideBtn.addEventListener('click', () => {
+      scene.rotation.y = -Math.PI / 2;
+      scene.rotation.x = 0;
+    });
+
+    backBtn.addEventListener('click', () => {
+      scene.rotation.y = -Math.PI;
+      scene.rotation.x = 0;
+    });
+
+    // 윈도우 리사이즈 이벤트 핸들러 추가
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

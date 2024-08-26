@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./src/style.css" />
+    <script
+      async
+      src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"
+    ></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./src/modules/three.module.js"
+        }
+      }
+    </script>
+    <script type="module" src="./src/index.js?time=<?=$time?>"></script>
+    <script type="module" src="./src/index2.js?time=<?=$time?>"></script>
+  </head>
+
+  <body>
+    <div id="root">
+      <script type="x-shader/x-vertex" id="vertexShader">
+
+        varying vec2 vUv;
+
+        void main() {
+
+          vUv = uv;
+
+          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+        }
+      </script>
+      <script type="x-shader/x-fragment" id="fragmentShader">
+
+        uniform sampler2D baseTexture;
+        uniform sampler2D bloomTexture;
+
+        varying vec2 vUv;
+
+        void main() {
+
+          gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
+
+        }
+      </script>
+      <div id="scene"></div>
+      <div id="scene2"></div>
+    </div>
+  </body>
+</html>

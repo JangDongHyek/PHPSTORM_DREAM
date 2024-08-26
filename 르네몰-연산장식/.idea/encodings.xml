@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/public_html/admin/order/order_detail.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/admin/order/order_update.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/mb_login.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/cart/innopay.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/cart/order2.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/cart/order_ok.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/cart/order_ok2.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/js/common.js" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/stat/order_view.html" charset="EUC-KR" />
+  </component>
+</project>

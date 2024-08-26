@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="87dc80d4-a911-423b-af38-c3f50b7dc091" name="잡고(JOBGO)" url="http://jobgo.ac">
+        <fileTransfer rootFolder="/home/jobgo/public_html" accessType="SFTP" host="211.51.221.142" port="2020" sshConfigId="0581b52a-0ced-4f79-b3e8-e9edfd4d7748" sshConfig="root@211.51.221.142:2020 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

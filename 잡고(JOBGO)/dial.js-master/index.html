@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>
+    <script src="./dial.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./dial.css" rel="stylesheet" />
+    <style>
+      * {
+        font-family: "Noto Sans KR", sans-serif;
+        overscroll-behavior: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="mydial"></div>
+    <script>
+      // ResultData: [{id: string, level: "정상" | "주의" | "위험"}]
+      const data = [
+        { id: "비만", level: "정상" },
+        { id: "시각이상", level: "위험" },
+        { id: "청각이상", level: "정상" },
+        { id: "고혈압", level: "주의" },
+        { id: "신장질환", level: "주의" },
+        { id: "빈혈", level: "정상" },
+        { id: "당뇨병", level: "정상" },
+        { id: "이상지질혈증", level: "주의" },
+        { id: "만성신장질환", level: "정상" },
+        { id: "간장질환", level: "정상" },
+        { id: "폐결핵흉부질환", level: "위험" },
+        { id: "골다공증", level: "정상" },
+      ];
+
+      const dial = new Dial({
+        data: data,
+        bindTo: "#mydial",
+        // 선택된 항목이 바뀌면 호출되는 함수
+        onselectchange: (e) => {
+          console.log(e);
+        },
+      });
+
+      function animate(time) {
+        dial.update();
+        TWEEN.update();
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>

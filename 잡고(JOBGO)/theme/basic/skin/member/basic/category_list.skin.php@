@@ -1,0 +1,179 @@
+<?php
+if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+
+// add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
+add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
+?>
+
+<!--재능 카테고리-->
+
+<article id="cate_list">
+    
+    <section id="goods">
+            <div class="in">
+                <!--<h2 class="title">회원들이 많이 <strong>찾아 본</strong> 서비스</h2>회원들이 많이 검색하고 찾아본 상품들이 추출될 예정-->
+                <div class="list cf">
+                    <div class="thm">
+                        <a href="<?php echo G5_BBS_URL; ?>/item_view.php">
+                            <div class="mg">
+                                <span class="pri">PRIME</span><!--prime 광고등록 상품은 해당 아이콘이 뜨도록-->
+                                <div class="heart">
+                                    <button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button><!--좋아요 누른후-->
+                                    <!--<button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>--><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm21.jpg"></div></div><!--상품사진-->
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">인스타그램 마케팅관리, 계정 활성화 및 게시물 피드 관리해 드립니다.</div><!--상품제목(최대2줄까지만 추출, 나머지는 ... 처리함)-->
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 5.0</span><span>100명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 25</div><!--사람들이 좋아요 한 횟수-->
+                                </div>
+                                <div class="price">11,000원</div><!--상품가격-->
+                            </div>
+                        </a>
+                    </div>
+                    <div class="thm">
+                        <a href="javascript:;">
+                            <div class="mg">
+                                <span class="pri">PRIME</span>
+                                <div class="heart">
+                                    <!--<button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button>--><!--좋아요 누른후-->
+                                    <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm22.jpg"></div></div>
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">유튜브 구독자, 조회수 높은채널 활용 영상 채널수익창출 드립니다.</div>
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 4.8</span><span>165명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 50</div>
+                                </div>
+                                <div class="price">5,000원~</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="thm">
+                        <a href="javascript:;">
+                            <div class="mg">
+                                <div class="heart">
+                                    <!--<button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button>--><!--좋아요 누른후-->
+                                    <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm23.jpg"></div></div>
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">한글속기 보유, 속기사무소 소장 직접 작업 녹취록, 각종 타이핑 드립니다.</div>
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 4.8</span><span>98명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 70</div>
+                                </div>
+                                <div class="price">28,000원</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="thm">
+                        <a href="javascript:;">
+                            <div class="mg">
+                                <div class="heart">
+                                    <!--<button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button>--><!--좋아요 누른후-->
+                                    <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm24.jpg"></div></div>
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">영어 번역 회사소개서, 카달로그, 게임, 홈페이지 브로셔 해드립니다.</div>
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 5.0</span><span>54명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 125</div>
+                                </div>
+                                <div class="price">65,000원</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="thm">
+                        <a href="javascript:;">
+                            <div class="mg">
+                                <span class="pri">PRIME</span>
+                                <div class="heart">
+                                    <button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button><!--좋아요 누른후-->
+                                    <!--<button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>--><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm25.jpg"></div></div>
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">가격파괴 블로그 모바일 및 PC 블로그탭 타겟 키워드 한달 유지해 드립니다.</div>
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 5.0</span><span>100명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 25</div>
+                                </div>
+                                <div class="price">11,000원</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="thm">
+                        <a href="javascript:;">
+                            <div class="mg">
+                                <span class="pri">PRIME</span>
+                                <div class="heart">
+                                    <!--<button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button>--><!--좋아요 누른후-->
+                                    <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm26.jpg"></div></div>
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">모던한 디자인으로 간단한 웹사이트와 안드로이드 앱 저렴한 가격에 개발해 드립니다..</div>
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 4.8</span><span>165명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 50</div>
+                                </div>
+                                <div class="price">770,000원~</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="thm">
+                        <a href="javascript:;">
+                            <div class="mg">
+                                <div class="heart">
+                                    <!--<button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button>--><!--좋아요 누른후-->
+                                    <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm27.jpg"></div></div>
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">기악 및 작곡전공생이  클래식 기타 및 클래식 악기를 가르쳐 드립니다.</div>
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 4.8</span><span>98명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 70</div>
+                                </div>
+                                <div class="price">155,000원</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="thm">
+                        <a href="javascript:;">
+                            <div class="mg">
+                                <div class="heart">
+                                    <!--<button type="button" class="heart on"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_on.png" alt="좋아요on" title="좋아요on"></button>--><!--좋아요 누른후-->
+                                    <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button><!--좋아요 누르기전-->
+                                </div>
+                                <div class="mg_in"><div class="over"><img src="<?php echo G5_THEME_IMG_URL ?>/main/thm28.jpg"></div></div>
+                            </div><!--mg-->
+                            <div class="info">
+                                <div class="tit">영상학과 전공, 100건의 다양한 경험으로 고퀄리티 2D, 3D 모션그래픽 영상 제작합니다. </div>
+                                <div class="rate cf">
+                                    <div class="star"><span><i class="fas fa-star"></i> 5.0</span><span>54명의 평가</span></div>
+                                    <div class="heart_hit"><span><i class="fas fa-heart"></i></span> 125</div>
+                                </div>
+                                <div class="price">100,000원</div>
+                            </div>
+                        </a>
+                    </div>
+                </div><!--list-->
+            </div><!--in-->
+    </section>
+
+</article>
+
+
+<!--//재능 카테고리-->
