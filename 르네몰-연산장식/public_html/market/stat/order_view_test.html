@@ -1,0 +1,909 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$order_sql = "select * from $Order_BuyTable where order_num='$order_num_query' and mart_id='$mart_id'";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+
+$order_row = mysql_fetch_array($order_res);
+$name = $order_row[name];
+$passport1 = $order_row[passport1];
+$passport2 = $order_row[passport2];
+$buyer_tel1 = $order_row[tel1];
+$buyer_tel2 = $order_row[tel2];
+$email = $order_row[email];
+$buyer_zip = $order_row[buyer_zip];
+$buyer_address = $order_row[buyer_address];
+$buyer_address_d = $order_row[buyer_address_d ];
+$receiver = $order_row[receiver];
+$rev_tel = $order_row[rev_tel];
+$rev_tel1 = $order_row[rev_tel1];
+$zip = $order_row[zip];
+$address = $order_row[address];
+$address_d = $order_row[address_d];
+$message = $order_row[message];
+$paymethod = $order_row[paymethod];
+$account_no = $order_row[account_no];
+$status = $order_row[status];
+$date = $order_row[date];
+$pay_day = $order_row[pay_day];
+$money_sender = $order_row[money_sender];
+$date_str = substr($date,0,4)."년 ".substr($date,5,2)."월 ".substr($date,8,2)."일 ".substr($date,11,2)."시 ".substr($date,14,2)."분 ".substr($date,17,2)."초 ";
+$if_use_bonus = $order_row[if_use_bonus];
+$use_bonus_tot = $order_row[use_bonus_tot];
+$freight_fee = $order_row[freight_fee];
+$keeper_message = $order_row[keeper_message];
+$app_no = $order_row[authnumber];
+$tno = $order_row[field1];
+$quota = $order_row[field2];
+$card_name = $order_row[field3];
+$noinf = $order_row[field4];
+$bank_name = $order_row[field3];
+$card_paid = $order_row[card_paid];
+$pay_message = $order_row[field5];
+$field1 = $order_row[field1];
+
+//====================== 결제방법 정보 ===================================================
+if($paymethod== 'byonline' || $paymethod== 'byonline_point'){
+	$pay_sql = "select * from $BankTable where mart_id='$mart_id' and account_no='$account_no'";
+	$pay_res = mysql_query($pay_sql, $dbconn);
+	$pay_row = mysql_fetch_array($pay_res);
+	$account_no = $pay_row[account_no];
+	$bank_name = $pay_row[bank_name];
+	$bank_number = $pay_row[bank_number];
+	$owner_name = $pay_row[owner_name];
+}
+
+if($paymethod== 'bycard'){
+	$paystr = "카드결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'bycard_point'){
+	$paystr = "카드결제 + 포인트결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'byaccount'){
+	$paystr = "계좌이체";
+	$totpaystr = "계좌이체 금액";
+}
+if($paymethod== 'byaccount_point'){
+	$paystr = "계좌이체 + 포인트결제";
+	$totpaystr = "계좌이체 금액";
+}
+
+if($card_paid == 'f' && eregi("bycard", $paymethod))
+	$paystr = "<b>카드 결제 실패</b>";
+if($card_paid == 'f' && eregi("byaccount", $paymethod))
+	$paystr = "<b>계좌이체 실패</b>";
+
+//====================== 온라인 입금시 계좌 정보 =========================================
+if($paymethod== 'byonline'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'byonline_point'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금 + 포인트결제";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'bypoint'){
+	$paystr = "포인트결제";
+	$totpaystr = "결제 금액";
+}
+
+if($status == 1) $status_str = "주문";
+if($status == 2) $status_str = "입금확인";
+if($status == 3) $status_str = "배송완료";
+if($status == 4) $status_str = "환불";
+if($status == 5) $status_str = "주문취소";
+if($status == 6) $status_str = "배송중";
+if($status == 7) $status_str = "교환";
+if($status == 8) $status_str = "<font color='red'>고객주문취소</font>";	
+if($status == 10) $status_str = "<font color='red'>결제취소</font>";	
+
+if($status == 1||$status == 2){
+	if($card_paid == 't')
+	{
+		$cancel_str = "<input type='image' src='../image/bu_ordercancel.gif' width='65' height='20' border='0' align='absmiddle'>";
+	}else
+	{
+		$cancel_str = "<a href='order_cancel.html?flag=cancel&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html' onclick='return really()'><img src='../image/bu_ordercancel.gif' width='65' height='20' border='0' align='absmiddle'></a>";	
+	}
+	$modify_str = "<a href='order_update_test.html?flag=modify&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html'><img src='../image/bu_modify.gif' border='0' align='absmiddle'></a>";
+}
+if($status == 1)
+{
+	//$payment_update_str = "<a href='payment_update.html?flag=payment_update&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html'>[결제변경]</a>";
+}
+?>
+
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script>
+function really(){
+	if(confirm("정말 주문을 취소하시겠습니까?")) return true;
+	else return false;
+}
+</script>
+<script>
+function receipt_win(mart_id,order_num){
+	var url = "../receipt/receipt.php?mart_id="+mart_id+"&order_num="+order_num
+	var uploadwin = window.open(url,"receipt","width=600,height=550,scrollbars=yes,toolbar=no,navationbar=no,resizable=yes");
+}
+</script>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><?	include "../include/sub_top.htm"; ?>
+										<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지 &gt; 주문내역 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/mypage_3.gif" width="277" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/out.html"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td width="5%"><a href="../stat/order.html"><img src="../images/mypage_over_11.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_12.gif"></td>
+                                    <td width="5%"><a href="../mypage/send.html"><img src="../images/mypage_13.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_14.gif"></td>
+                                    <td width="5%"><a href="../mypage/point.html"><img src="../images/mypage_15.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/order_title.gif" width="750" height="46"></td>
+                </tr>
+                <tr>
+                  <td style="padding: 5px; ">
+<?
+//==================kcp 카드 환경설정 불러옴===================================
+$sql_kcp = "select * from kcp_config where mart_id ='$mart_id'";
+$res_kcp = mysql_query($sql_kcp, $dbconn);
+$row_kcp = mysql_fetch_array($res_kcp);
+
+$kcp_site_cd = $row_kcp[kcp_site_cd];					//KCP 에서 발급하는 사이트코드
+if(!$kcp_site_cd)					// 사이트 코드가 없을때 테스트결제
+	$kcp_site_cd = "T0000";
+$kcp_site_key = $row_kcp[kcp_site_key];	 				//KCP 에서 발급하는 사이트코드로 만든 사이트키
+if($kcp_site_cd == "T0000")		// 사이트 코드가 T0000일때 없을때 테스트결제
+	$kcp_site_key = "3grptw1.zW0GSo4PQdaGvsF__";
+
+?>
+<? if($kcp_site_cd == "T0000"){ // 사이트 코드가 T0000일때 테스트결제?>	
+<script language="javascript" src='https://pay.kcp.co.kr/plugin/payplus_test.js'></script>
+<?	 }else{ ?>
+<script language="javascript" src='https://pay.kcp.co.kr/plugin/payplus.js'></script>
+<? } ?>
+<script language='javascript'>
+function  jsf__go_mod( form )
+{
+    if ( form.mod_type.value != 'mod_type_not_sel' )
+    {
+        if ( form.tno.value.length < 14 )
+        {
+            alert( "KCP 거래 번호를 입력하세요" );
+            form.tno.focus();
+            form.tno.select();
+        }
+        else
+        {
+            openwin = window.open( 'proc_win.html', 'proc_win', 'width=420, height=100, top=300, left=300' );
+            form.submit();
+        }
+    }
+    else
+    {
+        alert( "거래 구분을 선택하여 주십시요." );
+        form.mod_type.focus();
+    }
+}
+</script><br>
+				  <!---------------------- 상세주문내역 시작 --------------------->
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+					  <form name="mod_form" action="../cart/pp_ax_hub.php?order_pro_no=<?=$order_pro_no?>&order_num_query=<?=$order_num_query?>&mart_id=<?=$mart_id?>&order_num=<?=$order_num?>&target=order.html" method="post" onSubmit="return really()">
+						<input type="hidden" name="site_cd" value="<?=$kcp_site_cd?>">
+						<input type="hidden" name="site_key" value="<?=$kcp_site_key?>">
+						<input type="hidden" name="req_tx" value="mod">
+						<input type="hidden" name="mod_type" value="STSC">
+						<input type="hidden" name="tno" value="<?=$tno?>">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">
+                              <?=$name?> 님이 구매하신 상품의 상세내역입니다</td>
+                          <td align="right" bgcolor="FBEADC"><?=$cancel_str?></td>
+                        </tr>
+						</form>
+                      </table>
+                      <table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td width="130"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문번호</td>
+                          <td width="420"><span class="price">
+                            <?=$order_num_query?>
+                          </span></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문일시</td>
+                          <td><?=$date_str?></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문상태</td>
+                          <td><?=$status_str?></td>
+                       	</tr> 
+                        <tr>
+                          <td colspan="2" bgcolor="#F7F7F7" class="text_14_s2"><table width="100%"  border="0" cellpadding="0" cellspacing="1" bgcolor="E5E5E5">
+                              <tr height="25" align="center" bgcolor="#F9FCEF" >
+                                <td width='28%' class="mypage_4">상품명</td>
+                                <td width='15%' class="mypage_4">단 가</td>
+                                <td width='5%' class="mypage_4">수 량</td>
+                                <td width='13%' class="mypage_4">소 계</td>
+<? if($bonus_ok == "t"){ ?>
+								<td width='8%' class="mypage_4">포인트</td>
+<? } ?>
+                                <td width='12%' class="mypage_4">송장번호</td>
+                                <td width='10%' class="mypage_4">택배회사</td>
+                                <td width='10%' class="mypage_4">상 태</td>
+                              </tr>
+                              <?
+$order_sql1 = "select * from $Order_ProTable where mart_id='$mart_id' and order_num = '$order_num_query' and status > 0 order by order_pro_no desc";
+$order_res1 = mysql_query($order_sql1, $dbconn);
+$order_tot1 = mysql_num_rows($order_res1);
+$mon_tot = 0;
+$bonus_tot = 0;
+$tot_price_str = 0;
+for ($i=0; $i<$order_tot1; $i++) {
+	mysql_data_seek($order_res1,$i);
+	$order_row1 = mysql_fetch_array($order_res1);
+
+	$order_pro_no = $order_row1[order_pro_no];
+	$mart_id = $order_row1[mart_id];
+	$item_name = $order_row1[item_name];
+	$opt = $order_row1[opt];
+	$z_price = $order_row1[z_price];
+	$bonus = $order_row1[bonus];
+	$good_status = $order_row1[status];
+	$pro_freight_code = $order_row1[pro_freight_code];
+	$pro_delivery = $order_row1[pro_delivery];
+	$item_no_forcash = $order_row1[item_no];
+	$z_price_str = number_format($z_price);
+	$bonus_str = number_format($bonus);
+	$bonus_tot += $bonus;
+	$use_bonus = $order_row1[use_bonus];
+	$quantity = $order_row1[quantity];
+	$sum = $z_price*$quantity;
+	$sum_str = number_format($sum);
+	$sum_total = $sum;
+
+	$opt1_price = $order_row1[opt1_price];
+	$opt2_price = $order_row1[opt2_price];
+	$opt3_price = $order_row1[opt3_price];
+
+	$opt1_quantity_total = $order_row1[opt1_quantity_total];
+	$opt2_quantity_total = $order_row1[opt2_quantity_total];
+	$opt3_quantity_total = $order_row1[opt3_quantity_total];
+
+	
+	$mon_tot += $sum;
+	
+	$if_cash_str = '';
+	$cart_sql1 = "select * from $ItemTable where item_no='$item_no_forcash'";
+	$cart_res1 = mysql_query($cart_sql1, $dbconn);
+	$cart_row1 = mysql_fetch_array($cart_res1);
+
+	$prevno = $cart_row1[prevno];
+	$cate_num = $cart_row1[category_num];
+	$if_cash = $cart_row1[if_cash];
+	$mart_id_tmp = $cart_row1[mart_id];
+	
+	if($mart_id == $mart_id_tmp){
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}else{
+		$SQL_T = "select if_cash from gnt_item where seller_id='$mart_id' and item_no='$item_no_forcash'";
+		$dbresult_T = mysql_query($SQL_T, $dbconn);
+		$numRows_T = mysql_num_rows($dbresult_T);
+		if($numRows_T > 0)
+		$if_cash = mysql_result($dbresult_T,0,0);
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}
+
+	if($good_status == 1){
+		$good_status_str = "주문";
+	}else if($good_status == 2){
+		$good_status_str = "입금확인";
+	}else if($good_status == 3){
+		$good_status_str = "배송완료";
+	}else if($good_status == 4){
+		$good_status_str = "환불";
+	}else if($good_status == 5){
+		$good_status_str = "주문취소";
+	}else if($good_status == 6){
+		$good_status_str = "배송중";
+	}else if($good_status == 7){
+		$good_status_str = "교환";
+	}else if($good_status == 10)
+		$good_status_str = "결제취소";	
+?>
+                              <tr bgcolor="#FFFFFF" height="30" align="center">
+                                <td width='28%'><table width="100%"  border="0" cellspacing="0" cellpadding="5">
+                                    <tr>
+                                      <td><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no_forcash?>'>
+                                        <?=$item_name?>
+                                        </a>
+                                          <?=$if_cash_str?>
+<?
+		if(isset($opt)&&$opt!=""&&$opt!="!!"){
+			echo ("	
+			<br>
+					<img src='../images/optionbar.gif'>옵션<BR>
+				");
+				$opts = explode("!", $opt);
+			
+			
+			if($opts[0] != ""){
+				$opt1_arr = explode("^", $opts[0]);
+				echo "옵션1 : ";
+				if($opt1_arr[1] != ""){
+					echo $opt1_arr[0]."<BR>";
+					$opt1_qtt_str = "".$opt1_quantity_total."개<BR>";
+					$opt1_price_str = "옵션1:".number_format($opt1_price)."원<BR>";
+					$sum_total = $sum_total + ($opt1_price * $opt1_quantity_total);
+				}else{
+					$opt1_qtt_str = "";
+					$opt1_price_str = "";
+					echo $opt1_arr[0];
+					echo "<BR>";
+				}
+			}
+			if($opts[1] != ""){
+				$opt2_arr = explode("^", $opts[1]);
+				echo "옵션2 : ";
+				if($opt2_arr[1] != ""){
+					echo $opt2_arr[0]."<BR>";
+					$opt2_qtt_str = "".$opt2_quantity_total."개<BR>";
+					$opt2_price_str = "옵션2:".number_format($opt2_price)."원<BR>";
+					$sum_total = $sum_total + ($opt2_price * $opt2_quantity_total);
+				}else{
+					$opt2_qtt_str = "";
+					$opt2_price_str = "";
+					echo $opt2_arr[0];
+					echo "<BR>";
+				}
+			}
+			if($opts[2] != ""){
+				$opt3_arr = explode("^", $opts[2]);
+				echo "옵션3 : ";
+				if($opt3_arr[1] != ""){
+					echo $opt3_arr[0]."<BR>";
+					$opt3_qtt_str = "".$opt3_quantity_total."개<BR>";
+					$opt3_price_str = "옵션3:".number_format($opt3_price)."원<BR>";
+					$sum_total = $sum_total + ($opt3_price * $opt3_quantity_total);
+				}else{
+					$opt3_qtt_str = "";
+					$opt3_price_str = "";
+					echo $opt3_arr[0];
+					echo "<BR>";
+				}
+			}
+
+			$tot_price_str = $tot_price_str + $sum_total;
+
+
+
+			/*
+			if(strstr($opts[0],'^'))
+				$opts_1 = explode("^", $opts[0]);
+			else {
+				$opts_1[0] = $opts[0];
+				$opts_1[1] = '';
+			}
+			if($opts_1[0] != ""){
+				echo "$opts_1[0]";
+			}
+			if($opts_1[1] != ""){
+				echo "($opts_1[1] 원)&nbsp;";
+			}
+			if($opts[1] != ""){		
+				$opts2_1=explode("^",$opts[1]);
+				if($opts2_1[1] == 0 || $opts2_1[1] == ""){
+					echo "&nbsp;$opts2_1[0]";
+				}else{
+					echo "&nbsp;$opts2_1[0](+$opts2_1[1] 원)";
+				}
+			}
+			if($opts[2] != ""){
+				$opts3_1=explode("^",$opts[2]);
+				if($opts3_1[1] == 0 || $opts3_1[1] == ""){
+					echo "&nbsp;$opts3_1[0]";
+				}else{
+					echo "&nbsp;$opts3_1[0](+$opts3_1[1] 원)";
+				}
+			}
+			*/
+		}
+?>
+                                      </td>
+                                    </tr>
+                                </table></td>
+                                <td width='15%'>
+								제품1:<?=$z_price_str?>원<BR>
+								  <?
+								  echo $opt1_price_str;
+								  echo $opt2_price_str;
+								  echo $opt3_price_str;
+								  ?>
+								</td>
+                                <td width='5%'>
+								<?=$quantity?>개<BR>
+								  <?
+								  echo $opt1_qtt_str;
+								  echo $opt2_qtt_str;
+								  echo $opt3_qtt_str;
+								  ?>
+								  <?
+								  $opt1_qtt_str = "";
+								  $opt1_price_str = "";
+								  $opt2_qtt_str = "";
+								  $opt2_price_str = "";
+								  $opt3_qtt_str = "";
+								  $opt3_price_str = "";
+								  ?>
+								</td>
+                                <td width='13%'><span class="price"><?=number_format($sum_total)?>원</span></td>
+								<td width="8%"><?=number_format($bonus*$quantity)?> 원</td>
+                                <td width='12%'><?=$pro_freight_code?></td>
+                                <td width='10%'>
+								<?
+								if($pro_delivery == "로젠택배"){
+									$tak_url = "http://www.ilogen.com/d2d/delivery/invoice_search.jsp";
+								}elseif($pro_delivery == "옐로우캡택배"){
+									$tak_url = "http://www.yellowcap.co.kr/index.asp";
+								}elseif($pro_delivery == "경동택배"){
+									$tak_url = "http://www.kdexp.com/sub4_1.asp";
+								}elseif($pro_delivery=="대한통운택배"){
+									$tak_url="https://www.doortodoor.co.kr/parcel/pa_004.jsp";
+								}elseif($pro_delivery=="CJ택배"){
+									$tak_url="http://www.cjgls.co.kr/kor/delivery/booking/search.asp";
+								}elseif($pro_delivery=="한진택배"){
+									$tak_url="http://www.hanjin.co.kr/Delivery_html/inquiry/personal_inquiry.jsp";
+								}elseif($pro_delivery=="대신정기화물"){
+									$tak_url="http://apps.ds3211.co.kr/freight/internalFreightForm.jsp";
+								}elseif($pro_delivery=="천일택배"){
+									$tak_url="http://www.cyber1001.co.kr/kor/taekbae/HTrace.jsp";
+								}elseif($pro_delivery=="동부택배"){
+									$tak_url="https://www.dongbuexpress.co.kr/newHtml/delivery/dvsearch.jsp";
+								}
+								?>
+								
+								<a href="<?=$tak_url?>" target="_blank"><b><?=$pro_delivery?></b></a>
+								
+								
+								</td>
+                                <td width='10%'><?=$good_status_str?></td>
+                              </tr>
+                              <?
+}
+if($freight_fee == ''){
+	if($tot_price_str >= $freight_limit){
+		$freight_fee = 0;
+	}else{
+		$freight_fee = $freight_cost;
+	}
+}
+
+$mon_tot_freight = $tot_price_str + $freight_fee;
+?>
+                              <tr bgcolor="F4F4F4">
+                                <td height="40" colspan="8" align="center">총합계:
+                                    <span class="product"> <?=number_format($mon_tot_freight)?></span> 원 
+                                    <!-- <span class="text_red">[ 소계:<?=number_format($mon_tot)?>원 ] -->
+<? if($freight_fee){ ?>
+									<span class="text_red">[ 배송료 <?=number_format($freight_fee)?>원 ]</span>
+<? } ?>
+<? if($bonus_tot){ ?>
+									<!-- <span class="text_red">[ 포인트 <?=number_format($bonus_tot)?>원 ]</span> -->
+<? } ?>
+                                </td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                      </table>
+                      <!---------------------- 배송지정보 시작 --------------------->
+                      <br>
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">구매자정보</td>
+						  <td bgcolor="FBEADC" class="mypage_3" align="right"><?=$modify_str?></td>
+                        </tr>
+                      </table>
+                      <table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td width="80"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">구매자</td>
+                          <td><span class="price">
+                            <?=$name?>
+                          </span></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">연락처</td>
+                          <td><?=$buyer_tel1?></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">휴대폰번호</td>
+                          <td><?=$buyer_tel2?></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주소</td>
+                          <td>[
+                              <?=$buyer_zip?>
+                              ]
+                              <?=$buyer_address?>
+                              <?=$buyer_address_d?></td>
+                        </tr>
+                      </table>
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">배송지정보</td>
+                        </tr>
+                      </table>
+                      <table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td width="80" bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">받는사람</td>
+                          <td><span class="price">
+                            <?=$receiver?>
+                          </span></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">연락처</td>
+                          <td><?=$rev_tel?></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">휴대폰번호</td>
+                          <td><?=$rev_tel1?></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주소</td>
+                          <td>[
+                              <?=$zip?>
+                              ]
+                              <?=$address?>
+							  <?=$address_d?></td>
+                        </tr>                        
+                      </table>
+                      <!---------------------- 배송지정보 끝 -------------------------->
+                      <!---------------------- 결제방법 및 금액 시작 --------------------->
+                      <br>
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">결제방법 및 금액</td>
+						  <td bgcolor="FBEADC" class="mypage_3" align="right"><?=$payment_update_str?></td>
+                        </tr>
+                      </table>
+                      <table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <?
+if($if_use_bonus == 1){
+	$use_bonus_tot_str = number_format($use_bonus_tot);
+	//실제 결제해야될 금액 
+	$money_to_pay = $mon_tot_freight - $use_bonus_tot;
+	$money_to_pay_str = number_format($money_to_pay);
+	/*
+	if( !empty($paystr) ){
+		$paystr = $paystr." + 포인트 사용";
+	}else{
+		$paystr = "포인트 사용";
+	}*/
+?>
+                        <tr>
+                          <td width="80" bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">포인트 사용</td>
+                          <td><span class="price">
+                            <?=$use_bonus_tot_str?>
+                            원</span></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle"><?=$totpaystr?></td>
+                          <td><span class="price">
+                            <?=$money_to_pay_str?>
+                            원</span></td>
+                        </tr>
+                        <?
+}
+?>					
+                        <tr>
+                          <td width="80" bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">결제방법</td>
+                          <td><?=$paystr?>
+                              <?=$account_str?>
+						  </td>
+                        </tr>
+<?################################################################### 현금영수증 ####################################################################?>
+<script language="JavaScript" src="http://pgweb.uplus.co.kr/WEB_SERVER/js/receipt_link.js"></script>
+<?
+$LGD_HASHDATA = md5("lets08078".$field1."d029110e594e9f1950c25ce6f0ce4e3c");	
+?>
+<?################################################################### 현금영수증 ####################################################################?>
+
+
+<?
+	if($paymethod== 'bycard' || $paymethod== 'bycard_point'){
+		if($quota == "00")
+		{
+			$quota_str = "일시불";
+		}
+		if($noinf == 'y')
+		{
+			$noinf_str = "무이자";
+		}
+
+		if($card_paid == 't'){
+?>
+						<tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">카드명</td>
+                          <td><?=$card_name?></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">승인번호</td>
+                          <td><?=$app_no?> <input onclick="javascript:showReceiptByTID('lets08078', '<?=$field1?>', '<?=$LGD_HASHDATA?>')" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="신용카드 전표출력"></td>
+                        </tr>
+						<tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">할부</td>
+                          <td><?=$quota_str?>&nbsp;<?=$noinf_str?></td>
+                        </tr>
+<?
+		}
+	}else if($paymethod== 'byaccount' || $paymethod== 'byaccount_point'){
+?>
+						<tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">은행명</td>
+                          <td><?=$bank_name?>
+						  <input onclick="javascript:showCashReceipts('lets08078','<?=$order_num_query?>','seqno','BANK','service')" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="현금영수증 출력"></td>
+
+                        </tr>
+<?
+	}
+?>
+<?
+if( $use_bonus_tot < $mon_tot_freight ){
+?>
+<?
+	if($paymethod== 'byonline'||$paymethod== 'byonline_point'){
+?>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금자명</td>
+                          <td><?=$money_sender?>						 <input onclick="javascript:showCashReceipts('lets08078','<?=$order_num_query?>','seqno','CR','service')" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="현금영수증 출력"></td>
+
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금예정일</td>
+                          <td><?=$pay_day?></td>
+                        </tr>
+                        <?
+	}
+?>
+<?
+}
+?>
+<? if($pay_message){ ?>
+						<tr>
+                          <td width="80" bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">기타</td>
+                          <td><?=$pay_message?>
+						  </td>
+                        </tr>
+<? } ?>
+                      </table>
+                      <!---------------------- 결제방법 및 금액 끝 -------------------->
+                      <br>
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">기타요청사항</td>
+                        </tr>
+                      </table>
+                      <table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" bgcolor="#F7F7F7"><?=$message?></td>
+                        </tr>
+                      </table>
+                      <br>
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">고객님께 알려드립니다 </td>
+                        </tr>
+                      </table>
+                      <table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" bgcolor="#F7F7F7"><?=$keeper_message?></td>
+                        </tr>
+                      </table>
+                      <!---------------------- 쇼핑가이드 시작 -------------------->
+                      <!-- <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td height="10"></td>
+							</tr>
+							<tr>
+								<td>
+									<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="10" height="10"><img src="../image/table1_1.gif" width="10" height="9"></td>
+											<td bgcolor="F4F4F4"></td>
+											<td width="10"><img src="../image/table1_2.gif" width="9" height="10"></td>
+										</tr>
+										<tr bgcolor="F4F4F4">
+											<td></td>
+											<td>
+												<table width="100%"  border="0" cellspacing="10" cellpadding="0">
+													<tr>
+														<td width="110" valign="top"><img src="../image/guide.gif" width="110" height="90"></td>
+														<td bgcolor="#FFFFFF">
+															<table width="98%"  border="0" align="center" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td width="100" height="23" class="text_blue_s">안심클릭카드결제</td>
+																	<td class="search_type">삼성,LG,외환,현대(다이너스). 신한, 하나, 롯데(아멕스), 한미, 수협, 전북, 제주, 시티 </td>
+																</tr>
+																<tr>
+																	<td height="23" class="text_blue_s">ISP카드결제</td>
+																	<td class="search_type">국민, BC</td>
+																</tr>
+																<tr>
+																	<td height="23" class="text_blue_s">기타카드결제</td>
+																	<td class="search_type">기타신용카드 (광주, 평화 등) </td>
+																</tr>
+																<tr>
+																	<td height="23" colspan="2" class="text_orange">안심클릭카드, ISP카드외에 다른카드는 무이자할부가 되지않습니다.</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td></td>
+										</tr>
+										<tr>
+											<td height="10"><img src="../image/table1_4.gif" width="9" height="10"></td>
+											<td bgcolor="F4F4F4"></td>
+											<td><img src="../image/table1_3.gif" width="10" height="9"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="10"></td>
+							</tr>
+						</table> -->
+                      <!---------------------- 쇼핑가이드 끝 ----------------------->
+                      <!---------------------- 버튼 시작 -------------------->
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td height="70" align="center"><img src="../image/bu_list2.gif" width="110" height="50" border="0" style='cursor:hand' onclick="location.href='order.html?mart_id=<?=$mart_id?>&ordernum=<?=$order_num_query?>&name_query=<?=$name?>'">
+                              <?
+if($status == 2 || $status == 3 || $status == 6 || $status == 7){
+?>
+                              <img src="../image/bu_print.gif" width="150" height="50" border="0" style='cursor:hand' onclick="receipt_win('<?=$mart_id?>', '<?=$order_num_query?>')">
+                              <?
+}
+?>
+                              <!--클릭해서 새창에 나오는'프린트하기 버튼은 bu_print2.gif 입니다-->
+                          </td>
+                          <td align="right"><!-- <a href='http://allthegate.co.kr/support/card.jsp' target='_blank'><img src="../image/mypage/orderlist_bu_print.gif" width="210" height="40" border="0"></a> --></td>
+                        </tr>
+                      </table>
+                      <!---------------------- 버튼 끝 --------------------->
+                      <!---------------------- 상세주문내역 끝 ---------------------->
+                  </td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

@@ -1,0 +1,141 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$SQL = "select * from $Member_WelcomeTable where mart_id ='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$doctype = mysql_result($dbresult, 0, "doctype");
+$message = mysql_result($dbresult, 0, "message");
+$bg_img = mysql_result($dbresult, 0, "bg_img");
+//$message = nl2br($message);
+?>
+<?
+$bonus_sql = "select * from $BonusTable where id='$UnameSess'";
+$bonus_res = mysql_query($bonus_sql, $dbconn);
+$bonus_tot = mysql_num_rows( $bonus_res );
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td width="750" valign="top"><?	include "../include/sub_top.htm"; ?>
+				<table width="98%"  border="0" cellspacing="0" cellpadding="0">
+          <form name='f' method='post' onsubmit="return checkform(this)" action='join_regist.php' enctype="multipart/form-data">
+            <input type='hidden' name='flag' value='adduser'>
+            <input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+            <input type='hidden' name='init_bonus' value='<?=$init_bonus?>'>
+            <input type='hidden' name='from_order_sheet_flag' value='<?=$from_order_sheet_flag?>'>
+            <tr>
+              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="12%"><img src="../images/join_1.gif" width="170" height="44"></td>
+                    <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 회원페이지 &gt; 회원가입완료</div></td>
+                          <td width="2%">&nbsp;</td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="63%"><img src="../images/join_3.jpg" width="473" height="66"></td>
+                    <td width="37%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td><img src="../images/join_4.jpg" width="277" height="15"></td>
+                        </tr>
+                        <tr>
+                          <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td width="26%"><a href="index.html"><img src="../images/join_5.gif" width="73" height="25" border="0"></a></td>
+                                <td width="4%"><img src="../images/join_6.jpg" width="4" height="25"></td>
+                                <td width="26%"><a href="login.html"><img src="../images/join_7.gif" width="73" height="25" border="0"></a></td>
+                                <td width="4%"><img src="../images/join_8.jpg" width="4" height="25"></td>
+                                <td width="36%"><a href="idfind.html"><img src="../images/join_9.gif" width="98" height="25" border="0"></a></td>
+                                <td width="4%"><img src="../images/join_10.jpg" width="25" height="25"></td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td><img src="../images/join_11.jpg" width="277" height="26"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td><img src="../images/login_page_title.gif" width="750" height="46"></td>
+            </tr>
+            <tr>
+              <td><table width="80%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="20"><img src="../image/table_1.gif" width="20" height="20"></td>
+                  <td background="../image/table_1_bg.gif">&nbsp;</td>
+                  <td width="20"><img src="../image/table_2.gif" width="20" height="20"></td>
+                </tr>
+                <tr>
+                  <td background="../image/table_4_bg.gif">&nbsp;</td>
+                  <td height="150"><table width="80%" border="0" align="center" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+                      <tr>
+                        <td height="100" align="center" bgcolor="F8F8F8" class="text_14_s2"><p><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">
+                            <?=$message?>
+                        </p></td>
+                      </tr>
+                  </table></td>
+                  <td background="../image/table_2_bg.gif">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td height="20"><img src="../image/table_4.gif" width="20" height="20"></td>
+                  <td background="../image/table_3_bg.gif">&nbsp;</td>
+                  <td><img src="../image/table_3.gif" width="20" height="20"></td>
+                </tr>
+              </table></td>
+            </tr>
+          </form>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>

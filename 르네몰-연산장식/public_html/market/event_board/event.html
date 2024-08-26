@@ -1,0 +1,302 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script LANGUAGE="JavaScript">
+<!--
+function event_view(event_no){
+	document.main.location.replace("./event_view.php?mart_id=<?=$mart_id?>&event_no="+event_no);	
+}
+//-->
+</script>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><?	include "../include/sub_top.htm"; ?>
+							<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/event_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 이벤트 &gt; 현재진행중인이벤트 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/event_3.gif" width="541" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/event_4.gif" width="209" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="event.html"><img src="../images/event_over_5.gif" width="108" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/event_6.gif" width="3" height="25"></td>
+                                    <td width="27%"><a href="event_end.html"><img src="../images/event_7.gif" width="76" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/event_8.gif" width="22" height="25"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/event_9.gif" width="209" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><table width="750"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="10"></td>
+                            <td width="740" height="10">&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td><!---------------------- 이벤트 시작 ---------------------------------------------------->
+                                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="10"><img src="../image/event/table1_left.gif" width="10" height="40"></td>
+                                    <td align="center" background="../image/event/table1_bg.gif"><img src="../image/event/subject.gif" width="50" height="40"></td>
+                                    <td width="1"><img src="../image/event/table1_line.gif" width="1" height="40"></td>
+                                    <td width="150" align="center" background="../image/event/table1_bg.gif"><img src="../image/event/person.gif" width="50" height="40"></td>
+                                    <td width="1"><img src="../image/event/table1_line.gif" width="1" height="40"></td>
+                                    <td width="200" align="center" background="../image/event/table1_bg.gif"><img src="../image/event/date.gif" width="50" height="40"></td>
+                                    <td width="10"><img src="../image/event/table1_right.gif" width="10" height="40"></td>
+                                  </tr>
+                                </table>
+                                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <?
+$today = date("Y-m-d");
+$SQL = "select * from $EventboardTable where mart_id='$mart_id' and (start_date <= '$today') and ('$today' <= end_date) and list_chk='Y' order by event_no desc";
+
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if ($cnfPagecount == "") $cnfPagecount = 10;
+if ($page == "") $page = 1;
+$skipNum = ($page - 1) * $cnfPagecount;
+
+$prev_page = $page - 1;
+$next_page = $page + 1;
+
+$total_page = ($numRows - 1) / $cnfPagecount;
+$total_page = intval($total_page)+1;
+
+if($page % 10 == 0)
+$start_page = $page - 9;
+else
+$start_page = $page - ($page % 10) + 1;
+
+
+$end_page = $start_page + 9;
+if($end_page >= $total_page)
+$end_page = $total_page;
+$prev_start_page = $start_page - 10;
+$next_start_page = $start_page + 10;
+
+for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++){
+	if ($i >= $numRows) break;
+	mysql_data_seek($dbresult, $i);
+	$ary=mysql_fetch_array($dbresult);
+	if($i == $skipNum)
+		$event_no_s = $ary["event_no"];
+
+	$event_no = $ary["event_no"];
+	$title = $ary["title"];
+	$title1 = $ary["title1"];
+	$write_date = $ary["write_date"];
+	$content = $ary["content"];
+	$readnum = $ary["readnum"];
+	$msg_head = $ary["msg_head"];
+	$start_date = $ary["start_date"];
+	$end_date = $ary["end_date"];
+
+	$this_date = date("Y-m-d");
+	if($this_date >= $start_date && $this_date <= $end_date){
+		$date_str =  "<font color='#00CC00'>$start_date ~ $end_date</font>";
+	}else{
+		$date_str =  "<font color='#FF6600'>$start_date ~ $end_date</font";
+	}
+
+	$write_date_str = substr($write_date,0,10);
+	$j = $numRows - $i;
+?>
+                                  <tr>
+                                    <td height="30" class="help"><a href='javascript:event_view(<?=$event_no?>)'>
+                                      <?=$title?>
+                                    </a></td>
+                                    <td width="150" align="center"><?=$title1?></td>
+                                    <td width="210" align="center" class="point"><?=$date_str?></td>
+                                  </tr>
+                                  <?
+	if(($i + 1) < ($cnfPagecount+$skipNum) && ($i + 1 <= $numRows)){ 
+?>
+                                  <tr>
+                                    <td bgcolor="E1E1E1" height="1" colspan="5"></td>
+                                  </tr>
+                                  <?
+	}
+?>
+                                  <?
+}
+?>
+                                </table>
+                                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="10"><img src="../image/helpdesk/table2_left.gif" width="10" height="40"></td>
+                                    <td align="center" background="../image/helpdesk/table2_bg.gif"><?
+if($page == 1){
+?>
+                                        <img src="../image/event/arrow_1_big.gif" width="21" height="14" border="0" align="absmiddle">
+                                        <?
+}else{
+?>
+                                        <a href='<?=$PHP_SELF?>?bbs_no=<?=$bbs_no?>&mart_id=<?=$mart_id?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&page=1'><img src="../image/event/arrow_1_big.gif" width="21" height="14" border="0" align="absmiddle"></a>
+                                        <?
+}
+
+if($start_page > 1){
+?>
+                                        <a href='<?=$PHP_SELF?>?bbs_no=<?=$bbs_no?>&mart_id=<?=$mart_id?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&page=<?=$prev_start_page?>'><img src="../image/event/arrow_1.gif" width="16" height="14" border="0" align="absmiddle"></a>&nbsp;
+                                        <?
+}else{
+?>
+                                        <img src="../image/event/arrow_1.gif" width="16" height="14" border="0" align="absmiddle">&nbsp;
+                                        <?
+}
+for($i=$start_page;$i<=$end_page;$i++){
+	if($i == $page){
+?>
+            [<b>
+            <?=$i?>
+            </b>]
+            <?
+	}else{
+?>
+            <a href='<?=$PHP_SELF?>?bbs_no=<?=$bbs_no?>&mart_id=<?=$mart_id?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&page=<?=$i?>'>
+            <?=$i?>
+            </a>
+            <?
+	}
+}
+if($end_page < $total_page){
+?>
+&nbsp;<a href='<?=$PHP_SELF?>?bbs_no=<?=$bbs_no?>&mart_id=<?=$mart_id?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&page=<?=$next_start_page?>'><img src="../image/event/arrow_2.gif" width="16" height="14" border="0" align="absmiddle"></a>
+            <?
+}else{
+?>
+&nbsp;<img src="../image/event/arrow_2.gif" width="16" height="14" border="0" align="absmiddle">
+            <?
+}
+if($page == $total_page){
+?>
+            <img src="../image/event/arrow_2_big.gif" width="21" height="14" border="0" align="absmiddle">
+            <?
+}else{
+?>
+            <a href='<?=$PHP_SELF?>?bbs_no=<?=$bbs_no?>&mart_id=<?=$mart_id?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&page=<?=$total_page?>'><img src="../image/event/arrow_2_big.gif" width="21" height="14" border="0" align="absmiddle"></a>
+            <?
+}
+?>
+                                    </td>
+                                    <td width="10"><img src="../image/helpdesk/table2_right.gif" width="10" height="40"></td>
+                                  </tr>
+                                </table>
+<script>
+function resize(element, minWidth, minHeight){
+        var objFrame = element;
+        var objBody     = eval(element.id+'.document.body');
+		
+		// 가로 리사이즈
+		if (objFrame.style.width != minWidth)
+                objFrame.style.width = minWidth;
+
+        if (objBody.scrollWidth + (objBody.offsetWidth - objBody.clientWidth) > minWidth)
+                objFrame.style.width = objBody.scrollWidth + (objBody.offsetWidth - objBody.clientWidth);
+		
+		// 세로 리사이즈
+        if (objFrame.style.height != minHeight)
+                objFrame.style.height = minHeight;
+
+        if (objBody.scrollHeight + (objBody.offsetHeight - objBody.clientHeight) > minHeight)
+                objFrame.style.height = objBody.scrollHeight + (objBody.offsetHeight - objBody.clientHeight);
+}
+</script>
+                                <br>
+								
+                                <!--이벤트내용-->
+                                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td align="center"><iframe src="./event_view.php?mart_id=<?=$mart_id?>&event_no=<?=$event_no_s?>"  id="main" name="main" onload="resize(this, 740, 200);" width="760" height="100%" scrolling=no frameborder=0  marginheight=0 marginwidth='0' border='0'></iframe></td>
+                                  </tr>
+                                </table>
+                                <!-- 이벤트 내용 -->
+                                <!---------------------- 이벤트 끝 ------------------------------------------------------>
+                            </td>
+                          </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>                
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

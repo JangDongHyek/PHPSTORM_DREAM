@@ -1,0 +1,120 @@
+<?
+include "../oboard/function.inc";
+include("../oboard/util.php");
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><?	include "../include/sub_top.htm"; ?></td>
+                </tr>
+                <tr>
+                  <td>
+												
+			<?
+$board = "reservation_com"; //게시판 Table 명
+$board_type = "board"; //게시판 Type(board,faq,magazine)
+$code_url = $PHP_SELF; // 부모 url 이자 테이블 페이지 구분 코드값
+if($set == "auth"){
+	include("../oboard_com/auth.php");
+}
+elseif($set == "write" || $set == "reply"){
+	include("../oboard_com/board_write.php");
+}
+else if($set == "modify"){
+	include("../oboard_com/board_write.php");
+}
+else if($set == "list" || !$set){
+	include("../oboard_com/power_board_list.php");
+	include("../oboard_com/board_list.php");
+}
+else if($set == "view"){
+	include("../oboard_com/board_view.php");
+}
+?>								</td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td align="center"><table width="95%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><?=$help?></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td><div align="center"><img src="../images2/usage.gif" width="750" height="320"></div></td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

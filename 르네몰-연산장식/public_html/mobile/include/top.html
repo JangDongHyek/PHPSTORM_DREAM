@@ -1,0 +1,50 @@
+<header>
+	<h1><a href="../index.html"><img src="../images/main_1.png" alt="르네몰" /></a></h1>
+	<div class="topSearch">
+		<form name="searchForm" method="post" action='../main/search.html' onsubmit="check_submit(); return false;">
+		<input type='hidden' name='select_key' value='item_name'>
+		<input type='hidden' name='mode' value='search'>
+		<input type="text" name="searchTerm" style="width:70%;" />
+		<a href="javascript:check_submit();"><img src="../images/search.png" alt="검색" /></a>
+		</form>
+	</div>
+	<nav>
+		<ul>
+			<li style="width:17%;"><?
+			if(!$UnameSess || !$MemberLevel || !$MemberName)
+			{
+				if($NonMemberName)
+				{
+					$Logined_Member_Name = $NonMemberName;
+					echo"<a href='../main/logout.php'>로그아웃</a><script language='javascript'>var m_id   = 'member';</script>";
+				}
+				else
+					echo"<a href='../main/login.html'>로그인</a>";
+			}else{
+				$Logined_Member_Name = $UnameSess;
+				echo"<a href='../main/logout.php'>로그아웃</a>";
+			}
+			?></li>
+			<li style="width:20%;"><a href="../board/board_list.html">고객센터</a></li>
+			<li style="width:20%;"><a href="../main/category.html">카테고리</a></li>
+			<li style="width:20%;"><a href="../cart/cart.html">장바구니</a></li>
+			<li style="width:23%;" class="last">
+			<?
+			if(!$UnameSess || !$MemberLevel || !$MemberName)
+			{
+				if($NonMemberName)
+				{
+					$Logined_Member_Name = $NonMemberName;
+					echo"<a href=\"../main/mypage.html\">마이페이지</a>";
+				}
+				else
+					echo"<a href='../main/join.html'>회원가입</a>";
+			}else{
+				$Logined_Member_Name = $UnameSess;
+				echo"<a href=\"../main/mypage.html\">마이페이지</a>";
+			}
+			?>
+			</li>
+		</ul>
+	</nav>
+</header>

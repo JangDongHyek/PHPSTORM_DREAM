@@ -1,0 +1,647 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$join_sql = "select * from $Join_Form_SetTable where mart_id ='$mart_id'";
+$join_res = mysql_query($join_sql, $dbconn);
+$join_tot = mysql_num_rows($join_res);
+if($join_tot > 0){
+	$join_row = mysql_fetch_array($join_res);
+
+	$passport_use = $join_row[passport_use];
+	$zip_use = $join_row[zip_use];
+	$address_use = $join_row[address_use];
+	$tel_use = $join_row[tel_use];
+	$tel1_use = $join_row[tel1_use];
+	$email_use = $join_row[email_use];
+	$chuchon_use = $join_row[chuchon_use];
+	$msg_use = $join_row[msg_use];
+	$job_use = $join_row[job_use];
+	$com_name_use = $join_row[com_name_use];
+	$homepage_use = $join_row[homepage_use];
+	$hobby_use = $join_row[hobby_use];
+	$religion_use = $join_row[religion_use];
+	$ext1_field = $join_row[ext1_field];
+	$ext1_use = $join_row[ext1_use];
+	$ext2_field = $join_row[ext2_field];
+	$ext2_use = $join_row[ext2_use];
+	$ext3_field = $join_row[ext3_field];
+	$ext3_use = $join_row[ext3_use];
+	$ext4_field = $join_row[ext4_field];
+	$ext4_use = $join_row[ext4_use];
+	$sel_field = $join_row[sel_field];
+	$opt1_field = $join_row[opt1_field];
+	$opt2_field = $join_row[opt2_field];
+	$opt3_field = $join_row[opt3_field];
+	$opt4_field = $join_row[opt4_field];
+	$sel_use = $join_row[sel_use];
+}
+?>
+
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script language='JavaScript'>
+function Svalue(sarray) { return sarray.options[sarray.selectedIndex].value }
+var MSIE, VERSION;
+
+MSIE = navigator.userAgent.indexOf('MSIE') == -1;
+VERSION = navigator.userAgent.substring(8,12);
+
+function Tcheck(target, cmt, astr, lmin, lmax){
+	var i
+	var t = target.value
+
+	if (t.length < lmin || t.length > lmax) {
+		if (lmin == lmax) alert(cmt + '는 ' + lmin + ' 자 이어야 합니다.');
+			 else alert(cmt + '는 ' + lmin + ' ~ ' + lmax + ' 자 이내의 영문 및 숫자로 입력하세요.');
+		target.focus()
+		return true
+	}
+	if (astr.length > 1) {
+			for (i=0; i<t.length; i++)
+					if(astr.indexOf(t.substring(i,i+1))<0) {
+				alert(cmt + '에 허용할 수 없는 문자가 입력되었습니다');
+				target.focus()
+				return true
+			}
+	}
+		return false
+	
+}
+	
+function Jumin_chk(it) {
+	IDtot = 0;
+	IDAdd = "234567892345";
+
+	for(i=0; i<12; i++) IDtot = IDtot + parseInt(it.substring(i, i+1)) * parseInt(IDAdd.substring(i, i+1));
+	IDtot = 11 - (IDtot%11);
+	if (IDtot == 10) IDtot = 0;
+	else if (IDtot == 11) IDtot = 1;
+
+	if(parseInt(it.substring(12, 13)) != IDtot) return true;
+	else return false
+} 
+
+function Eaddcheck(target, cmt){
+	var i
+	var t = target.value
+
+	if (t.length > 1) {
+			for (i=0; i<t.length; i++)
+					if(t.substring(i,i+1) == '@') {
+				return false;
+			}
+	}
+			alert(cmt + '를 정확히 입력하여 주십시오.');
+	target.focus()
+	return true	
+}
+	
+	
+function checkform1(f){
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var Digit = '1234567890';
+
+	if (Tcheck(f.username, '희망 ID', Alpha + Digit, 4, 10)) return false;
+	if (Tcheck(f.password, '비밀번호', Alpha + Digit, 4, 8)) return false;
+	if (Tcheck(f.password1, '비밀번호 확인', Alpha + Digit, 4, 8)) return false;
+	if (f.password.value != f.password1.value) {
+		alert('비밀번호 확인을 다시 해주세요.')
+		f.password.focus()
+		return false;
+	}
+
+	
+	if (f.name.value=="") {
+			alert("\n이름을 입력하세요.");
+			f.name.focus();
+			return false;
+	}/*
+
+<?
+if($passport_use == 0 || $passport_use == ""){
+?>	
+
+	if (f.passport1.value==""){
+		alert("\n주민등록번호 앞자리를 입력하세요.");
+		f.passport1.focus();  
+		return false;
+	}else{
+		var len =f.passport1.value.length;
+		var ret;
+		ret =false;		
+		for(var i=0;i<len;i++){  
+			var ch = f.passport1.value.substring(i,i+1);
+			
+			for (var k=0;k<=Digit.length;k++){				
+				
+				if(Digit.substring(k,k+1) == ch)
+				{					
+					ret = true;
+					break;					
+				}
+			}	
+			 
+			if (!ret){
+					
+					alert("숫자만 입력 하세요");
+					f.passport1.focus();
+					return false;
+			} 
+			ret = false;
+			
+		}
+	
+	}
+	
+	if (f.passport2.value==""){
+		alert("\n주민등록번호 뒷자리를 입력하세요.");
+		f.passport2.focus();  
+		return false;
+	}else{
+		var len =f.passport2.value.length;
+		var ret;
+		ret =false;		
+		
+		for(var i=0;i<len;i++){  
+			var ch = f.passport2.value.substring(i,i+1);
+			for (var k=0;k<=Digit.length;k++){				
+				
+				if(Digit.substring(k,k+1) == ch)
+				{
+					ret = true
+					break;
+				}
+			}	
+			if (!ret){					
+					alert("숫자만 입력 하세요");
+					f.passport2.focus();
+					return false;
+			} 
+			ret = false;
+		}
+	
+	}
+	if (f.passport1.value.length != 6 || f.passport2.value.length != 7){
+		alert("유효한 주민번호를 입력 하세요");
+		f.passport2.focus();
+		return false;
+	
+	}
+	jumin = f.passport1.value + f.passport2.value
+	if(Jumin_chk(jumin)) {
+	alert("주민등록번호가 틀립니다.");
+	return false;
+	} 
+<?
+}?>*/
+<?
+if($zip_use == 0 || $zip_use == ""){
+?>	
+	if (f.zip.value==""){
+		alert("\n우편번호를 입력하세요.");
+		//f.find_button.focus()
+		return false;
+	}
+<?
+}
+if($address_use == 0 || $address_use == ""){
+?>
+	if (f.address.value==""){
+		alert("\n주소를 입력하세요.");
+		f.address.focus();
+		return false;
+	}
+	if (f.address_d.value==""){
+		alert("\n상세주소를 입력하세요.");
+		f.address_d.focus();
+		return false;
+	}
+<?
+}
+if($tel_use == 0 || $tel_use == ""){
+?>
+	if (f.tel.value==""){
+		alert("\n연락처를 입력하세요.");
+		f.tel.focus()
+		return false;
+	}
+<?
+}
+if($tel1_use == 0 || $tel1_use == ""){
+?>
+	if (f.tel1.value==""){
+		alert("\n기타연락처를 입력하세요.");
+		f.tel1.focus()
+		return false;
+	}
+<?
+}
+if($email_use == 0 || $email_use == ""){
+?>
+	var emailchk;
+	emailchk = 0;
+	if (f.email.value ==""){
+		alert("\n이메일을 입력하세요.");
+		f.email.focus()
+		return false;
+	}else{	
+		for (var j=0; j < f.email.value.length ; j++ ){
+			 var ch= f.email.value.substring(j,j+1)
+			 if (ch == "@" | ch== "." ){
+					emailchk = emailchk + 1;
+			 }
+		}
+		if (emailchk < 2 ){
+			alert("유효한 전자우편를 입력하세요!");
+			f.email.focus(); 
+			return (false);
+		}
+	}
+<?
+}
+if($chuchon_use == 0 || $chuchon_use == ""){
+?>
+	if (f.partner.value==""){
+		alert("\n추천인을 입력하세요.");
+		f.partner.focus()
+		return false;
+	}
+<?
+}
+if($msg_use == 0 || $msg_use == ""){
+?>
+	if (f.msg.value==""){
+		alert("\n하고싶은말을 입력하세요.");
+		f.msg.focus()
+		return false;
+	}
+<?
+}
+if($job_use == 0 || $job_use == ""){
+?>
+	if (f.job.value==""){
+		alert("\n직업을 입력하세요.");
+		f.job.focus()
+		return false;
+	}
+<?
+}
+if($com_name_use == 0 || $com_name_use == ""){
+?>
+	if (f.com_name.value==""){
+		alert("\n직장/학교명을 입력하세요.");
+		f.com_name.focus()
+		return false;
+	}
+<?
+}
+if($homepage_use == 0 || $homepage_use == ""){
+?>
+	if (f.homepage.value==""){
+		alert("\n홈페이지 주소를 입력하세요.");
+		f.homepage.focus()
+		return false;
+	}
+<?
+}
+if($hobby_use == 0 || $hobby_use == ""){
+?>
+	if (f.hobby.value==""){
+		alert("\n취미를 입력하세요.");
+		f.hobby.focus()
+		return false;
+	}
+<?
+}
+if($religion_use == 0 || $religion_use == ""){
+?>
+	if (f.religion.value==""){
+		alert("\n종교를 입력하세요.");
+		f.religion.focus()
+		return false;
+	}
+<?
+}
+if(($ext1_use == 0 || $ext1_use == "")&&$ext1_field !=""){
+?>
+	if (f.ext1_content.value==""){
+		alert("\n<?=$ext1_field?>를 입력하세요.");
+		f.ext1_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext2_use == 0 || $ext2_use == "")&&$ext2_field !=""){
+?>
+	if (f.ext2_content.value==""){
+		alert("\n<?=$ext2_field?>를 입력하세요.");
+		f.ext2_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext3_use == 0 || $ext3_use == "")&&$ext3_field !=""){
+?>
+	if (f.ext3_content.value==""){
+		alert("\n<?=$ext3_field?>를 입력하세요.");
+		f.ext3_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext4_use == 0 || $ext4_use == "")&&$ext4_field !=""){
+?>
+	if (f.ext4_content.value==""){
+		alert("\n<?=$ext4_field?>를 입력하세요.");
+		f.ext4_content.focus()
+		return false;
+	}
+<?
+}
+if(($sel_use == 0 || $sel_use == "")&& $sel_field !=""){
+?>
+	if (f.sel_content.value==""){
+		alert("\n<?=$sel_field?>를 선택하세요.");
+		f.sel_content.focus()
+		return false;
+	}
+<?
+}
+?>
+}
+
+
+function idcheck(){
+	var username = document.f.username.value;
+	var url = "idcheck.php?mart_id=<?=$mart_id?>&form_info=f.username&user_id="+username
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	var Digit = '1234567890'
+
+	if (Tcheck(f.username, '희망 ID', Alpha + Digit, 4, 10)) return false;
+	else{
+		var checkwin
+		checkwin = CenterWin(url, 'child','toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=400,height=300');
+		//checkwin.focus(); 
+	}
+}
+
+function find_zip(){
+   	var Sel = CenterWin ( '../member/find_zip.php', 'Zip', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=400,height=270' );
+}
+
+function check(){
+	var str = document.f.passport1.value.length;
+	if(str == 6) {
+	   document.f.passport2.focus();
+	}
+} 
+
+function check1(){
+	var str = document.f.passport2.value.length;
+	if(str == 7) {
+	   document.f.email.focus();
+	   
+	}   	
+}
+</script>
+
+<script language='javascript'>
+<!--
+function formreset(){
+	document.f.reset();
+}
+//-->
+</script>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><?	include "../include/sub_top.htm"; ?>
+				<table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+			<!--	<form name='f' method='post' onSubmit="return checkform1(this)" action='https://www.renemall.co.kr:8001/market/member/join_regist.php' enctype="multipart/form-data">-->
+
+				<form name='f' method='post' onSubmit="return checkform1(this)" action='../member/join_regist.php' enctype="multipart/form-data">
+
+
+				<input type='hidden' name='flag' value='adduser'> 
+				<input type='hidden' name='mart_id' value='<?=$mart_id?>'> 
+				<input type='hidden' name='init_bonus' value='<?=$init_bonus?>'> 
+				<input type='hidden' name='from_order_sheet_flag' value='<?=$from_order_sheet_flag?>'>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/join_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 회원페이지 &gt; 회원가입 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td width="63%"><img src="../images/join_3.jpg" width="473" height="66"></td>
+                      <td width="37%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td><img src="../images/join_4.jpg" width="277" height="15"></td>
+                          </tr>
+                          <tr>
+                            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td width="26%"><a href="index.html"><img src="../images/join_5.gif" width="73" height="25" border="0"></a></td>
+                                  <td width="4%"><img src="../images/join_6.jpg" width="4" height="25"></td>
+                                  <td width="26%"><a href="login.html"><img src="../images/join_7.gif" width="73" height="25" border="0"></a></td>
+                                  <td width="4%"><img src="../images/join_8.jpg" width="4" height="25"></td>
+                                  <td width="36%"><a href="idfind.html"><img src="../images/join_9.gif" width="98" height="25" border="0"></a></td>
+                                  <td width="4%"><img src="../images/join_10.jpg" width="25" height="25"></td>
+                                </tr>
+                            </table></td>
+                          </tr>
+                          <tr>
+                            <td><img src="../images/join_11.jpg" width="277" height="26"></td>
+                          </tr>
+                      </table></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/login_page_title.gif" width="750" height="46"></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/login_page_1.gif" width="750" height="51"></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/login_page_bar1.gif" width="750" height="12"></td>
+                </tr>
+                <tr>
+                  <td><table width="695" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#EFEFEF">
+                      <tr bgcolor="#FFFFFF">
+                        <td width="141"><img src="../images/login_page_text1.gif" width="141" height="33"></td>
+                        <td><span class="price">
+                        <input type="text" name="username" value='<?=$username?>' class="input_03" size="15" style='ime-mode:inactive'>
+                        </span>
+                            <img src="../images/login_page_btn1.gif" width="73" height="20" align="absmiddle" style="cursor:hand" onClick="idcheck();"> (아이디는 영문자, 숫자 포함해서 6자이상) </td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text2.gif" width="141" height="33"></td>
+                        <td><input type='password' name="password" class="input_03" size="15" style='ime-mode:inactive'>
+                  (비밀번호는 영문자, 숫자 포함해서 4~8자 이내)</td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text3.gif" width="141" height="33"></td>
+                        <td><input type='password' name="password1" class="input_03" size="15" style='ime-mode:inactive'></td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text4.gif" width="141" height="33"></td>
+                        <td><input type="text" name="name" value='<?=$name?>' class="input_03" size="15" style='ime-mode:active'></td>
+                      </tr>
+					  <!--
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text5.gif" width="141" height="33"></td>
+                        <td><input type="text" name="passport1" value='<?=$passport1?>' onkeyup='check();' class="input_03" size="10" maxlength='6'>
+                  -
+                    <input type='password' name="passport2" class="input_03" size="10" maxlength='7' onkeyup='check1();'></td>
+                      </tr>-->
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text6.gif" width="141" height="33"></td>
+                        <td><input type="text"  name="email" value='<?=$email?>' class="input_03" size="20" style='ime-mode:inactive'></td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text7.gif" width="141" height="33"></td>
+                        <td><input name='if_maillist' type='radio' value='1' checked <?if($if_maillist == '1'||empty($if_maillist)) echo "checked";?>>
+                          <b>수신합니다</b>
+                          <input type='radio' value='0' name='if_maillist' <?if($if_maillist == '0') echo "checked";?>>
+                          수신하지 않습니다 </td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text8.gif" width="141" height="33"></td>
+                        <td><input id="zip"name="zip" value='<?=$zip?>' type="text" class="input_03" size="10">
+                            <img src="../images/login_page_btn2.gif" width="73" height="20" align="absmiddle" style="cursor:hand" onClick="daumPostcode();"> </td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text9.gif" width="141" height="33"></td>
+                        <td>
+						  <p>
+                            <input type="text" id="address" name="address" value='<?=$address?>' class="input_03" size="40" style='ime-mode:active'><br>
+                            <input type="text" id="address_d" name="address_d" value='<?=$address_d?>' class="input_03" size="40" style='ime-mode:active'>
+                          </p>
+							<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+							<script>
+								function daumPostcode() {
+									new daum.Postcode({
+										oncomplete: function(data) {
+											// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+											// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+											// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+											var fullAddr = ''; // 최종 주소 변수
+											var extraAddr = ''; // 조합형 주소 변수
+
+											// 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+											if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+												fullAddr = data.roadAddress;
+
+											} else { // 사용자가 지번 주소를 선택했을 경우(J)
+												fullAddr = data.jibunAddress;
+											}
+
+											// 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+											if(data.userSelectedType === 'R'){
+												//법정동명이 있을 경우 추가한다.
+												if(data.bname !== ''){
+													extraAddr += data.bname;
+												}
+												// 건물명이 있을 경우 추가한다.
+												if(data.buildingName !== ''){
+													extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+												}
+												// 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+												fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+											}
+
+											// 우편번호와 주소 정보를 해당 필드에 넣는다.
+											document.getElementById("zip").value = data.zonecode;
+											document.getElementById("address").value = fullAddr;
+
+											// 커서를 상세주소 필드로 이동한다.
+											document.getElementById("address_d").focus();
+										}
+									}).open();
+								}
+							</script>
+                          </td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text10.gif" width="141" height="33"></td>
+                        <td><input type="text" name="tel" value='<?=$tel?>' class="input_03" size="20">
+                  (예 : 051-123-4567)</td>
+                      </tr>
+                      <tr bgcolor="#FFFFFF">
+                        <td><img src="../images/login_page_text11.gif" width="141" height="33"></td>
+                        <td><input type="text" name="tel1" value='<?=$tel1?>' class="input_03" size="20">
+                  (예 : 010-1234-5678)</td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/login_page_bar2.gif" width="750" height="16"></td>
+                </tr>
+                <tr>
+                  <td><div align="center"><input type="image" src="../images/login_page_save_btn.gif" width="170" height="39"> <img src="../images/login_page_cancel_btn.gif" width="169" height="39" style="cursor:hand;" onClick="history.back();"></div></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+				</form>				
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+if($stats == "change"){
+	$sql = "update mc set b_uid='$b_uid' where m_uid='$m_uid'";
+	$result = mysql_query( $sql, $dbconn );
+
+	echo "
+		<script language='javascript'>
+			alert('변경되었습니다.');
+			self.close();
+			window.opener.location.href = 'mc_index.html';
+		</script>
+	";
+}
+?>
+<?
+include "../admin_head.php";
+?>
+<script language="javascript">
+function check(){
+	var here = document.form
+
+	if(here.b_uid.value == ""){
+		alert("1차 카테고리를 선택하세요")
+		here.b_uid.focus()
+		return
+	}
+
+	document.form.submit();
+}
+</script>
+
+<body leftmargin="0" topmargin="0">
+<form name="form" method="post" action="<?=$PHP_SELF?>" onsubmit="check(); return false;">
+<input type='hidden' name='stats' value='change'>
+<input type='hidden' name='m_uid' value='<?=$m_uid?>'>
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<td height="10"></td>
+	</tr>
+	<tr>
+		<td bgcolor="F2F2F2" class="black14_b">인터넷상품회사 변경</td>
+	</tr>
+	<tr>
+		<td height="20">&nbsp;</td>
+	</tr>
+</table>
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+	<tr height='10'>
+		<td></td>
+	</tr>
+	<tr>
+		<td>
+			<table width="90%" border="0" align="center" cellpadding="7" cellspacing="0">
+				<tr>
+					<td align="center">변경할 인터넷상품회사를 선택하세요! </td>
+				</tr>
+				<tr>
+					<td height="1" bgcolor="ECECEC"></td>
+				</tr>
+				<tr>
+					<td align="center">
+						<select name="b_uid" class="input" style='width:150px'>
+<?
+$sql0 = "select * from bc order by b_no asc";
+$res0 = mysql_query( $sql0, $dbconn );
+$tot0 = mysql_num_rows( $res0 );
+if( $tot0 == "0" ){
+?>
+							<option value="">등록된 인터넷상품회사가 없습니다.</option>
+<?
+}else{
+?>
+<?
+	while( $row0 = mysql_fetch_array( $res0 ) ){
+?>
+							<option value="<?=$row0[b_uid] ?>" <?if($row0[b_uid]==$buid){echo ("selected");}?>><?=$row0[b_name]?></option>
+<?
+	}
+}
+?>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<br>
+		</td>
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td height="70" align="center">
+			<input type="submit" class="button12" value="변경하기">
+			<input type="button" class="button12" value="닫 기" onclick="self.close();">
+		</td>
+	</tr>
+</table>
+</body>
+</html>
+</form>
+<?
+mysql_close($dbconn);
+?>

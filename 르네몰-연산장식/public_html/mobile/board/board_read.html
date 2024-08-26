@@ -1,0 +1,397 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 설정 파일을 불러옴 =============================================
+include "../../main.class";
+?>
+<?				
+$SQL = "select perms from $MemberTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$perms = mysql_result($dbresult, 0, 0);
+if($perms == "4") {
+	echo ("		
+	<script>
+		alert('미등록 쇼핑몰입니다.');
+		history.go(-1);
+	</script>
+	");
+	exit;
+}
+
+$SQL = "select * from $New_BoardConfigTable where mart_id = '$mart_id' and bbs_no = '$bbs_no'";
+$dbresult = mysql_query($SQL, $dbconn);
+$ary = mysql_fetch_array($dbresult);
+
+$board_title = $ary[board_title];	
+$board_comment = $ary[board_comment];	
+$board_date = $ary[board_date];
+$comment_ok = $ary[comment_ok];
+$item_fg_color = $ary[item_fg_color];	
+$item_bg_color = $ary[item_bg_color];	
+$table_fg_color = $ary[table_fg_color];	
+$table_bg_color = $ary[table_bg_color];	
+$headhtml = $ary[headhtml];
+$tailhtml = $ary[tailhtml];
+$top_body = $ary[top_body];
+$bottom_body = $ary[bottom_body];	
+$board_class = $ary[board_class];	
+$pagecount = $ary[pagecount];	
+$if_use_secret = $ary[if_use_secret];	
+
+if($board_class == 1){	
+	$SQL = "select username from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+	$numRows = mysql_num_rows($dbresult);
+	if($numRows < 1 && !$_SESSION["Mall_Admin_ID"]){
+		echo ("		
+			<script>
+			window.alert('회원전용 공간입니다.');
+			parent.location.href='../main/login.html?url=$url&mart_id=$mart_id';
+			</script>
+		");
+		exit;	
+	}
+}
+
+//===================== 조회수를 1 증가함 ======================================
+$SQL = "update $New_BoardTable set read_num = read_num +1 where index_no = $index_no and mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+if ($dbresult == false) echo "쿼리 실행 실패!";
+
+include "../../market/include/getmartinfo.php";
+//include "../../market/include/head_alltemplate.php";
+?>
+
+<script>
+function checkform(f){
+	if(f.user_pass.value==''){
+		alert("비밀번호를 입력하세요.");
+		f.user_pass.focus();
+		return false;
+	}
+	return true;	
+}	
+function delcheck(num1){
+	var remessage = "다시확인 합니다. \n\n삭제하시겠습니까?";
+
+	if(confirm(remessage)){
+		location.href="board_delete_3.php?mart_id=<?=$mart_id?>&flag=delete&index_no=<?=$index_no?>&=&page=<?=$page?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&bbs_no="+num1;
+	}
+}
+</script>
+<!---------------------- 게시판 시작 ---------------------------------------------------->	
+<?
+$SQL = "select * from $New_BoardTable where index_no = $index_no and mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$ary = mysql_fetch_array($dbresult);
+
+$username = $ary[username];
+$writer = $ary[writer];
+$user_id = $ary[username];
+$email = $ary[email];
+$passwd = $ary[passwd];
+$write_date = $ary[write_date];
+$read_num = $ary[read_num];	
+$ansno = $ary[ansno];
+$subject_new = $ary[subject_new];
+$content = $ary[content];
+$if_secret = $ary[if_secret];
+$userfile = $ary[userfile];
+$userfile1 = $ary[userfile1];
+
+$subject_new = eregi_replace( "\'", "'", $subject_new );
+$content = eregi_replace( "\'", "'", $content );
+
+$content = get_link($content);
+
+//========================= 이미지 태그내의 스크립트 방지 ================================
+$src = "/<img .*src=[a-z0-9\"']*script:[^>]+>/i";
+$des = "";
+$content = preg_replace($src, $des, $content);
+//========================================================================================
+
+$write_date_str = substr($write_date,0,4)."/".substr($write_date,4,2)."/".substr($write_date,6,2);
+
+//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ==================
+if( $user_id ){
+	//========================= 관리자 아이콘이 있으면 아이콘을 작성자에 표시 ============
+	$sql0 = "select admin_img from $MemberTable where username='$user_id'";
+	$res0 = mysql_query( $sql0 , $dbconn );
+	$row0 = mysql_fetch_array( $res0 );
+	if( $row0[admin_img] ){
+		$member_img = "<img src='../../up/$mart_id/$row0[admin_img]' border='0' align='absmiddle' height='20'>";
+	}else{
+		$member_img = $writer;
+	}
+
+	if( !$row0[admin_img] ){
+		//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ==========
+		$sql1 = "select member_img from $Mart_Member_NewTable where username='$user_id'";
+		$res1 = mysql_query( $sql1 , $dbconn );
+		$row1 = mysql_fetch_array( $res1 );
+		if( $row1[member_img] ){
+			$member_img = "<img src='../../up/$mart_id/$row1[member_img]' border='0' align='absmiddle' height='20'>";
+		}else{
+			$member_img = $writer;
+		} 
+	}
+}else{
+	$member_img = $writer;
+}
+//========================= 이메일이 있으면 작성자에 링크함 ==============================
+if( $email ){
+	$member_img = "<a href='mailto:$email'>$member_img</a>";
+}
+
+//========================= 첨부파일처리 =================================================
+//========================= 그림파일이 있을때 출력 =======================================
+$upload = "../../up/$mart_id/"; //업로드 디렉토리
+
+$target = "$upload"."$userfile";
+$target1 = "$upload"."$userfile1";
+$encode_target = "$upload".urlencode("$userfile");
+$encode_target1 = "$upload".urlencode("$userfile1");
+//========================= userfile =====================================================
+if( eregi("\.jpg", $userfile) || eregi("\.gif", $userfile) || eregi("\.JPG", $userfile) || eregi("\.GIF", $userfile) ){
+	//==================== 이미지 사이즈를 구함 ==========================================
+	$img_size = GetImageSize("$target"); 
+
+	if( eregi("\.jpg", $userfile) || eregi("\.gif", $userfile) || eregi("\.JPG", $userfile) || eregi("\.GIF", $userfile) ){
+		$img_width = $img_size[0]; //이미지의 넓이를 알 수 있음 
+		$img_height = $img_size[1]; //이미지의 높이를 알 수 있음
+	}
+
+	//=============================== 가로,세로 비율에 맞게 이미지 맞추기 ================
+	if( $userfile ){
+		list( $height_new, $width_new ) = img_size( "$target", "600", "1000");
+	}
+
+	$img_file = "<img src='$encode_target' width='$width_new' height='$height_new' border='0' hspace='5' style='border: #000000; border-style: solid; border-width:1px'><br>".$img_file;
+}else if(eregi("\.swf", $userfile)){
+	$img_file = "<embed src='$encode_target' border='0'><br>".$img_file;
+}
+
+if( $userfile ){
+	//========================== 파일 사이즈를 구함 ======================================
+	$size = filesize($target);
+	//========================== 파일 사이즈를 이쁘게 꾸밈 ===============================
+	$size = GetFileSize($size);
+}
+//========================= userfile1 ====================================================
+if( eregi("\.jpg", $userfile1) || eregi("\.gif", $userfile1) || eregi("\.JPG", $userfile1) || eregi("\.GIF", $userfile1)){
+	//==================== 이미지 사이즈를 구함 ==========================================
+	$img_size1 = GetImageSize("$target1");
+
+	if( eregi("\.jpg", $userfile1) || eregi("\.gif", $userfile1) || eregi("\.JPG", $userfile1) || eregi("\.GIF", $userfile1)){
+		$img_width1 = $img_size1[0]; //이미지의 넓이를 알 수 있음 
+		$img_height1 = $img_size1[1]; //이미지의 높이를 알 수 있음
+	}
+
+	//=============================== 가로,세로 비율에 맞게 이미지 맞추기 ================
+	if( $userfile1 ){
+		list( $height_new1, $width_new1 ) = img_size( "$target1", "600", "1000");
+	}
+
+	$img_file1 = "<img src='$encode_target1' width='$width_new1' height='$height_new1' border='0' hspace='5' style='border: #000000; border-style: solid; border-width:1px'><br>".$img_file1;
+}else if(eregi("\.swf", $userfile1)){
+	$img_file1 = "<embed src='$encode_target1' border='0'><br>".$img_file1;
+}
+
+if( $userfile1 ){
+	$size1 = filesize($target1);
+	$size1 = GetFileSize($size1);
+}
+//========================= 첨부파일처리 =================================================
+
+if( $board_class == 1 || $board_class == 3 ){ //자신의 글 수정,삭제는 본인만
+	if( $username == "$UnameSess" ){
+		$mod_perm = "<input type=button value='수정' onclick=location.href='board_edit.html?mart_id=$mart_id&index_no=$index_no&bbs_no=$bbs_no&page=$page&keyset=$keyset&searchword=$searchword'>";
+		$del_perm = "<input type=button value='삭제' onclick='delcheck($bbs_no)'>";
+	}else{
+		$mod_perm = "<input type=button value='수정'>";
+		$del_perm = "<input type=button value='삭제'>";
+	}
+}else{
+	$mod_perm = "<input type=button value='수정' onclick=location.href='board_edit.html?mart_id=$mart_id&index_no=$index_no&bbs_no=$bbs_no&page=$page&keyset=$keyset&searchword=$searchword'>";
+	$del_perm = "<input type=button value='삭제' onclick=location.href='board_delete.php?mart_id=$mart_id&flag=del&index_no=$index_no&bbs_no=$bbs_no&page=$page&keyset=$keyset&searchword=$searchword'>";
+}
+
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>르네몰</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+
+				var query = document.searchForm.searchTerm.value;
+
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+<script language="javascript">
+<!--
+function goTo(){
+	var f=document.boardchange;
+	f.action="board_list.html";
+	f.submit();
+}
+
+function member(){
+if (confirm("회원만 사용할 수 있는 메뉴입니다. 로그인하세요.")) return true;
+return false;
+}
+
+//-->
+</script>
+<script>
+function board_check(){
+	var here = document.board_list
+
+	if(here.input_key.value == ""){
+		alert("검색어를 입력하세요")
+		here.input_key.focus()
+		return
+	}
+
+	here.submit()
+}
+</script>
+
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+
+ 
+ 
+		<section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 커뮤니티 > <?if($bbs_no==1){echo"공지사항";}elseif($bbs_no==2){echo"이용안내";}elseif($bbs_no==4){echo"질문 및 답변";}elseif($bbs_no==7){echo"자유게시판";}else{echo"비회원문의";}?></h2>
+				</div>
+			</article>
+ 
+			<article id="contentSub">
+				<article class="btnNews">
+					<ul class="list">
+					
+						
+						<li><a href="../board/board_list.html?bbs_no=1">[공지]</a></li>
+						<li><a href="../board/board_list.html?bbs_no=2">[이용안내]</a></li>
+						<li><a href="../board/board_list.html?bbs_no=4">[질문 및 답변]</a></li>
+						<li><a href="../board/board_list.html?bbs_no=5">[비회원문의]</a></li>
+						<li style="padding-top:10px"><a href="../board/board_list.html?bbs_no=7">[자유게시판]</a></li>
+					</ul>
+				</article>
+
+			<article id="productReview">	
+<?
+if($if_use_secret == '1' && $if_secret=='1' && $passwd != $user_pass){
+	if($user_pass != ''){
+		echo "
+		<script>
+		alert(\"비밀번호가 틀립니다.\");
+		</script>
+		";
+	}	
+?>
+			<table class="orderForm mt10 mb20">
+				<form name='f' action='board_read.html' method='post' onSubmit="return checkform(this)">
+				<input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+				<input type='hidden' name='index_no' value='<?=$index_no?>'>
+				<input type='hidden' name='bbs_no' value='<?=$bbs_no?>'>
+				<input type='hidden' name='page' value='<?=$page?>'>
+				<input type='hidden' name='keyset' value='<?=$keyset?>'>
+				<input type='hidden' name='searchword' value='<?=$searchword?>'>
+				<tr>
+                        <th width=25%>비밀번호</th>
+                        <td><input type='password' name="user_pass" class="input_03"  size="20"> <input type='submit' value=" 확 인 "></td>
+                </tr>
+
+			  </form>
+			  <script>
+			  document.f.user_pass.focus();
+			  </script>
+		    </table>
+			<table width="96%" align="center" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td align="center"><input type=button value="목록으로" onclick=location.href='board_list.html?mart_id=<?=$mart_id?>&bbs_no=<?=$bbs_no?>&page=<?=$page?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'></td>
+				</tr>
+			</table>
+<?}else{?>
+			<table class="orderForm mt10 mb20">
+				<tr>
+                        <th width=25%>제목</th>
+                        <td><?=$subject_new?></td>
+                </tr>
+				<tr>
+                        <th>작성자</th>
+                        <td><?=$member_img?></td>
+                </tr>
+				<tr>
+                        <th>이메일</th>
+                        <td><?=$email?></td>
+                </tr>
+				<tr>
+                        <th>등록일</th>
+                        <td><?=$write_date_str?>&nbsp; &nbsp;조회수 : <?=$read_num?></td>
+                </tr>
+				<tr>
+                        <td colspan=2>						
+						<?
+						if( $img_file ){
+						?>
+							<?=$img_file?><BR>
+						<?
+						}
+						?>
+						<?
+						if( $img_file1 ){
+						?>
+							<?=$img_file1?><BR>
+						<?
+						}
+						?>	
+						<?=$content?></td>
+                        
+                </tr>
+		    </table>
+			<table width="96%" align="center" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td height="50">
+						<?=$mod_perm?><?=$del_perm?><input type=button value="답변" onclick=location.href='board_reply.html?mart_id=<?=$mart_id?>&index_no=<?=$index_no?>&bbs_no=<?=$bbs_no?>&page=<?=$page?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'>
+					</td>
+					<td align="right"><input type=button value="목록으로" onclick=location.href='board_list.html?mart_id=<?=$mart_id?>&bbs_no=<?=$bbs_no?>&page=<?=$page?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'><input type=button value="글쓰기" onclick=location.href='board_write.html?mart_id=<?=$mart_id?>&bbs_no=<?=$bbs_no?>&page=<?=$page?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'></td>
+				</tr>
+			</table>
+<?}?>
+
+			</article>	
+		</section><!-- end content -->
+ 
+ 
+<? include("../include/bottom.html"); ?>
+
+	</body>
+</html>

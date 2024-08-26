@@ -1,0 +1,177 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+$sql1 = "select * from $CategoryTable where category_num='$category_num1' and if_hide='0' and mart_id='$mart_id'";
+$res1 = mysql_query($sql1, $dbconn);
+$row1 = mysql_fetch_array( $res1 );
+$category_prevno1 = $row1[prevno];
+$category_name1 = $row1[category_name];
+//================== 3차 카테고리 정보를 불러옴 ==========================================
+$sql2 = "select * from $CategoryTable where category_num='$category_num2' and if_hide='0' and mart_id='$mart_id'";
+$res2 = mysql_query($sql2, $dbconn);
+$row2 = mysql_fetch_array( $res2 );
+$category_prevno2 = $row2[prevno];
+$category_name2 = $row2[category_name];
+
+//================== 2차 카테고리 정보가 없을때 ==========================================
+if( !$category_num1 ){
+	$nocate_sql2 = "select * from $CategoryTable where prevno='$category_num' and category_num='$cate_num' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res2 = mysql_query($nocate_sql2, $dbconn);
+	$nocate_row2 = mysql_fetch_array( $nocate_res2 );
+	$category_prevno1 = $nocate_row2[prevno];
+	$category_num1 = $nocate_row2[category_num];
+	$category_name1 = $nocate_row2[category_name];
+}
+
+//================== 3차 카테고리 정보가 없을때 ==========================================
+if( !$category_num2 ){
+	$nocate_sql3 = "select * from $CategoryTable where prevno='$category_prevno1' and category_num='$cate_num' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res3 = mysql_query($nocate_sql3, $dbconn);
+	$nocate_row3 = mysql_fetch_array( $nocate_res3 );
+	$category_prevno2 = $nocate_row3[prevno];
+	$category_num2 = $nocate_row3[category_num];
+	$category_name2 = $nocate_row3[category_name];
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main_up_bg.jpg">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><?	include "../include/sub_top.htm"; ?>
+										<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/info_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 사이트안내 &gt; 주문배송정책 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="749"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/info_3.gif" width="527" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/info_4.gif" width="223" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="company.html"><img src="../images/info_5.gif" width="59" height="25" border="0"></a></td>
+                                    <td width="2%"><a href="send.html"><img src="../images/info_over_6.gif" width="79" height="25" border="0"></a></td>
+                                    <td width="27%"><a href="sitemap.html"><img src="../images/info_7.gif" width="63" height="25" border="0"></a></td>
+                                    <td><img src="../images/info_8.gif" width="22" height="25"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/info_9.gif" width="223" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td ><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><table width="96%" border="0" align="center" cellpadding="0" cellspacing="0">
+<?
+	$martintro_sql = "select * from $MartIntroTable where mart_id='$mart_id'";
+	$martintro_res = mysql_query($martintro_sql, $dbconn);
+	$martintro_row = mysql_fetch_array($martintro_res);
+?>
+                            <!---------------------- 배송안내 시작 -------------------------------------------------->
+                            <tr>
+                              <td height="60"><img src="../image/product/info_title_4.gif" ></td>
+                            </tr>
+                            <tr>
+                              <td><?=$martintro_row["delivery"]?></td>
+                            </tr>
+                            <!---------------------- 배송안내 끝 ---------------------------------------------------->
+                            <!---------------------- 교환할부안내 시작 ---------------------------------------------->
+                            <tr>
+                              <td height="60"><img src="../image/product/info_title_6.gif" ></td>
+                            </tr>
+                            <tr>
+                              <td><?=$martintro_row["exchange"]?></td>
+                            </tr>
+                            <tr>
+                              <td height="20"></td>
+                            </tr>
+                            <!---------------------- 교환할부안내 끝 ------------------------------------------------>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

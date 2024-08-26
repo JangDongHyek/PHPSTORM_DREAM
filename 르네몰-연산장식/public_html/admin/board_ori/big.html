@@ -1,0 +1,19 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+	include "../admin_head.php";
+	$upload = "../../up/$mart_id/"; //업로드 디렉토리
+?>
+
+<body topmargin='0' leftmargin='0'>
+<table border="0" cellspacing="0" cellpadding="0">
+	<tr> 
+		<td><img onclick='self.close();' style='cursor:hand' src='<?=$upload?><?=$file?>' border='0'></td>
+	</tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

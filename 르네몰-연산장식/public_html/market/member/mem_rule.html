@@ -1,0 +1,122 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+
+<?
+//================== 이용약관 정보를 불러옴 ==============================================
+/*$filename = "$Co_img_UP$mart_id/agreement";
+if(file_exists($filename)){
+	$fp = fopen($filename,"r");
+	$agreement = fread($fp, filesize ($filename));
+	//$agreement = ereg_replace("<b>","",$agreement);
+	//$agreement = ereg_replace("</b>","",$agreement);
+	$agreement = htmlspecialchars($agreement);
+	$agreement = ereg_replace("\n","<br>",$agreement);
+	fclose($fp);
+}*/
+$info_sql = "select agreement from $MartMngInfoTable where mart_id='$mart_id'";
+$info_res = mysql_query($info_sql, $dbconn);
+$info_row = mysql_fetch_array($info_res);
+$agreement = $info_row[agreement];
+$agreement = eregi_replace( "\n", "<br>", $agreement );
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+		</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="244" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+				</td>
+        <td width="756" valign="top"><?	include "../include/sub_top.htm"; ?>
+				<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+							<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="12%"><img src="../images/join_1.gif" width="170" height="44"></td>
+                  <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 회원페이지 &gt; 이용약관동의 </div></td>
+                        <td width="2%">&nbsp;</td>
+                      </tr>
+                  </table></td>
+                </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td>
+              <table width="749"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="63%"><img src="../images/join_3.jpg" width="473" height="66"></td>
+                  <td width="37%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><img src="../images/join_4.jpg" width="277" height="15"></td>
+                      </tr>
+                      <tr>
+                        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td width="26%"><a href="index.html"><img src="../images/join_5.gif" width="73" height="25" border="0"></a></td>
+                              <td width="4%"><img src="../images/join_6.jpg" width="4" height="25"></td>
+                              <td width="26%"><a href="login.html"><img src="../images/join_7.gif" width="73" height="25" border="0"></a></td>
+                              <td width="4%"><img src="../images/join_8.jpg" width="4" height="25"></td>
+                              <td width="36%"><a href="idfind.html"><img src="../images/join_9.gif" width="98" height="25" border="0"></a></td>
+                              <td width="4%"><img src="../images/join_10.jpg" width="25" height="25"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                      <tr>
+                        <td><img src="../images/join_11.jpg" width="277" height="26"></td>
+                      </tr>
+                  </table></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><img src="../images/join_13.gif" width="750" height="51"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:20px;padding-right:20px;"><?=$agreement?></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?
+//================== DB ���� ������ �ҷ��� ===============================================
+include "../../connect.php";
+	if($_GET[PayMethod]=="CARD"){
+		$paymethod="bycard";
+	}else{
+		$paymethod="byaccount";
+	}
+//	echo iconv("utf-8","euc-kr",$AcquCardName);
+if($PayMethod=="EPAY"){
+	$AcquCardName = "�������";
+	$CardQuota="";
+}
+
+$sql="update $Order_BuyTable_Temp set authnumber='$approvalNo',field3='".iconv("utf-8","euc-kr",$AcquCardName)."',field2='$CardQuota',card_paid='t',field4='$TID' where order_num='$OID'";
+mysql_query($sql);
+
+$ordcopy_sql = "insert into $Order_BuyTable ( select * from $Order_BuyTable_Temp where order_num='$OID' and mart_id='$mart_id')";
+$ordcopy_res = mysql_query($ordcopy_sql, $dbconn);
+
+?>
+
+<script type="text/javascript">
+	window.onload=function(){
+		parent.location.href="./order_ok.html?order_num=<?=$OID?>&paymethod=<?=$paymethod?>";
+	}
+</script>

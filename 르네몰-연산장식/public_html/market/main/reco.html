@@ -1,0 +1,376 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+?>
+<?
+$SQL = "select * from $MemberTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$perms = mysql_result($dbresult, 0, "perms");
+if($perms == "4") {
+	echo ("		
+	<script>
+		alert('미등록 쇼핑몰입니다.');
+		history.go(-1);
+	</script>
+	");
+	exit;
+}
+
+include( '../include/getmartinfo.php' );
+if ($flag == "") {
+	include "../include/head_alltemplate.php";
+?>
+<script language='javascript'>
+function CheckForm(f){
+	if(f.sender.value==""){
+		alert("보내는 사람을 입력하세요.");
+		f.sender.focus();
+		return false;
+	}
+	if(f.sender_email.value==""){
+		alert("보내는 사람 이메일을 입력하세요.");
+		f.sender_email.focus();
+		return false;
+	}
+	if(f.receiver.value==""){
+		alert("받는 사람을 입력하세요.");
+		f.receiver.focus();
+		return false;
+	}
+	if(f.receiver_email.value==""){
+		alert("받는 사람 이메일을 입력하세요.");
+		f.receiver_email.focus();
+		return false;
+	}
+	if(f.content.value==""){
+		alert("내용을 입력하세요.");
+		f.content.focus();
+		return false;
+	}
+	return true;
+}
+</script>
+<form name="recom" method="post" onsubmit='return CheckForm(this)'>
+<input type="hidden" name="flag" value="send">
+<input type="hidden" name="mart_id" value="<?=$mart_id?>">
+<input type="hidden" name="item_no" value="<?=$item_no?>">
+<input type="hidden" name="category_num" value="<?=$category_num?>">
+<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="10" rowspan="3"></td>
+		<td height="70"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        	<tr>
+        		<td background="../image/blank/title_bg.gif"><img src="../image/blank/title_4.gif" width="190" height="70"></td>
+        		<td width="20"><img src="../image/blank/title_right.gif" width="20" height="70"></td>
+        		</tr>
+        	</table></td>
+		<td width="10" rowspan="3"></td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<table width="100%" border="0" cellpadding="10" cellspacing="0">
+				<tr>
+					<td valign="top">
+						<table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+							<tr>
+								<td bgcolor="1F76AF" height="4" colspan="2"></td>
+							</tr>
+<?
+$SQL = "select * from $ItemTable where item_no=$item_no";
+$dbresult = mysql_query($SQL, $dbconn);
+$mart_id_tmp = mysql_result($dbresult, 0, "mart_id");
+$category_num = mysql_result($dbresult, 0, "category_num");
+$item_name = mysql_result($dbresult, 0, "item_name");
+$price = mysql_result($dbresult, 0, "price");
+$z_price = mysql_result($dbresult, 0, "z_price");
+$bonus = mysql_result($dbresult, 0, "bonus");
+
+$price_str = number_format($price);
+if($if_member_price == '1' && $if_login == 1){
+	$z_price = round($z_price * $member_price_percent / 100, -2);
+}
+$z_price_str = number_format($z_price);
+$bonus_str = number_format($bonus);
+
+$use_bonus = mysql_result($dbresult, 0, "use_bonus");
+$jaego = mysql_result($dbresult, 0, "jaego");
+$img = mysql_result($dbresult, 0, "img");
+$img_big = mysql_result($dbresult, 0, "img_big");
+$opt = mysql_result($dbresult, 0, "opt");
+$doctype = mysql_result($dbresult, 0, "doctype");
+$item_explain = mysql_result($dbresult, 0, "item_explain");
+$reg_date = mysql_result($dbresult, 0, "reg_date");
+$item_company = mysql_result($dbresult, 0, "item_company");
+$item_code = mysql_result($dbresult, 0, "item_code");
+$item_explain = nl2br($item_explain);
+
+?>
+							<tr>
+								<td width="90"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">추천상품</td>
+								<td class="price"><?=$item_name?></td>
+							</tr>
+							<tr>
+								<td width="90"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">판매가격</td>
+								<td class="price"><?=$z_price_str?>원</td>
+							</tr>
+							<tr>
+								<td  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">보내는 사람</td>
+								<td><input name="sender" value='<?=$MemberName?>' type="text" class="input_03" size="30" style='ime-mode:active'></td>
+							</tr>
+							<tr>
+								<td  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">보내는 사람 메일</td>
+								<td><input name="sender_email" value='<?=$MemberEmail?>' type="text" class="input_03" size="30" style='ime-mode:inactive'></td>
+							</tr>
+							<tr>
+								<td  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">받는 사람</td>
+								<td><input name="receiver" type="text" class="input_03" size="30" style='ime-mode:active'></td>
+							</tr>
+							<tr>
+								<td  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">받는 사람 메일</td>
+								<td><input name="receiver_email" type="text" class="input_03" size="30" style='ime-mode:inactive'></td>
+							</tr>
+							<tr>
+								<td  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">제목</td>
+								<td><input name="textfield" type="text" class="input_03" size="70" style='ime-mode:active'></td>
+							</tr>
+							<tr>
+								<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">내용</td>
+								<td class="price"><textarea name="content" cols="69" rows="20" class="input_03" style='ime-mode:active'></textarea></td>
+							</tr>
+							<tr>
+								<td bgcolor="1F76AF" height="4" colspan="2"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="50">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+					<td width="20"><img src="../image/blank/bottom_left.gif" width="20" height="50"></td>
+					<td align="center" background="../image/blank/bottom_bg.gif"><input type='image' src="../image/bu_recommail.gif" width="100" height="20" border="0" onfocus='blur();'>&nbsp; <img src="../image/bu_close.gif" width="60" height="20" style="cursor:hand;" onclick="window.close()"></td>
+					<td width="20"><img src="../image/blank/bottom_right.gif" width="20" height="50"></td>
+        		</tr>
+        	</table>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
+<?
+}
+if($flag=='send'){
+
+$http_url = "http://renemall.co.kr";
+
+$SQL = "select * from $ItemTable where item_no=$item_no";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if($numRows > 0){
+	mysql_data_seek($dbresult,0);
+	$ary = mysql_fetch_array($dbresult);
+	$mart_id_tmp  = $ary["mart_id"];
+	$category_num  = $ary["category_num"];
+	$item_name  = $ary["item_name"];
+	$price  = $ary["price"];
+	$z_price  = $ary["z_price"];
+	$bonus = $ary["bonus"];
+	
+	$price_str = number_format($price);
+	if($if_member_price == '1' && $if_login == 1){
+		$z_price = round($z_price * $member_price_percent / 100, -2);
+	}
+	$z_price_str = number_format($z_price);
+	$bonus_str = number_format($bonus);
+	
+	$use_bonus  = $ary["use_bonus"];
+	$jaego = $ary["jaego"];
+	$img = $ary["img"];
+	$img_big = $ary["img_big"];
+	$opt = $ary["opt"];
+	$doctype = $ary["doctype"];
+	$item_explain = $ary["item_explain"];
+	$reg_date = $ary["reg_date"];
+	$item_company = $ary["item_company"];
+	$item_code = $ary["item_code"];
+	
+	//============================ 상품 이미지 =======================================
+	if($img_sml != "" && file_exists("$Co_img_UP$mart_id/$img_sml")){
+		if (strstr(strtolower(substr($img_sml,-4)),'.jpg') || strstr(strtolower(substr($img_sml,-4)),'.gif')){
+			$img_str = "<img src='http://$HTTP_HOST/$Co_img_DOWN$mart_id/$img_sml' border='0' width='150' height='150' border='0'>";
+		}
+		if (strstr(strtolower(substr($img_sml,-4)),'.swf')){
+			$img_str = "<embed src='http://$HTTP_HOST/$Co_img_DOWN$mart_id/$img_sml' width='150' height='150'></embed>";
+		}
+	}else if($img != "" && file_exists("$Co_img_UP$mart_id/$img")){
+		if (strstr(strtolower(substr($img,-4)),'.jpg') || strstr(strtolower(substr($img,-4)),'.gif')){
+			$img_str = "<img src='http://$HTTP_HOST/$Co_img_DOWN$mart_id/$img' border='0' width='150' height='150' border='0'>";
+		}
+		if (strstr(strtolower(substr($img,-4)),'.swf')){
+			$img_str = "<embed src='http://$HTTP_HOST/$Co_img_DOWN$mart_id/$img' width='150' height='150'></embed>";
+		}
+	}else if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+		if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+			$img_str = "<img src='http://$HTTP_HOST/$Co_img_DOWN$mart_id/$img_big' border='0' width='150' height='150' border='0'>";
+		}
+		if (strstr(strtolower(substr($img_big,-4)),'.swf')){
+			$img_str = "<embed src='http://$HTTP_HOST/$Co_img_DOWN$mart_id/$img_big' width='150' height='150'></embed>";
+		}
+	}else{
+		$img_str = "<img src='http://$HTTP_HOST/market/image/noimage_s.gif' border='0' width='150' height='150' border='0'>";
+	}
+	
+}
+$content = nl2br($content);					
+$mailcontent = 	("
+
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=euc-kr'>
+<title>추천 메일</title>
+<style type='text/css'>
+<!--
+.aa {  font-size: 9pt; line-height: 12pt; color: #000000}
+.bb {   font-size: 9pt; color: #6B6B6B}
+.cc {  font-size: 9pt; color: #F78C00}
+.dd {  font-size: 9pt; color: #ffffff}
+.ee {  font-size: 9pt; color: #057BB1}
+A            {font-size: 9pt;text-decoration: none;color: #000000 }  
+ A:hover      {text-decoration: none;  }  -->
+</style>
+</head>
+<body topmargin='0' bgcolor='#FFFFFF' link='#B9B6BD' vlink='#B9B6BD' alink='#B9B6BD'>
+<table border='0' width='750' cellspacing='0' cellpadding='0' height='100%'>
+<tr>
+    <td width='609' valign='top'>
+    	<div align='center'><center>
+    	<table border='0' width='100%'>
+      	<tr>
+        	<td width='100%' height='11'>
+        		<div align='right'>
+        		<table border='0' width='571' cellspacing='0' cellpadding='0'>
+          		<tr>
+            		<td width='100%' colspan='2' height='1'></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='5'><span class='bb'></span></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='10'><span class='bb'>$sender 님께서 
+            			$receiver 님에게 추천하신 상품입니다.</span></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='25'><span class='bb'></span></td>
+          		</tr>
+          		<tr>
+            		<td width='35%' valign='middle'><p align='center'>
+						$img_str</td>
+            		<td width='65%' valign='top'>
+            			<table border='0' width='100%' cellspacing='3' cellpadding='2'>
+              			<tr>
+                			<td width='100%' colspan='2'><b><font size='3' color='#C60000'>$item_name</font>
+                			<font color='#c15d13' size='3'><br>
+                			</font></b><font color='#555555' face='돋움' size='2'><br>
+                			판매가격&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; </font>
+							<font color='#c15d13' size='3'><b>$z_price_str 
+                			원</b></font></td>
+              			</tr>
+              			<tr>
+                			<td width='100%' background='http://211.174.51.11/autocart/market/images/bgpatt.gif' colspan='2'></td>
+              			</tr>
+              			<tr>
+                			<td width='18%'><span class='bb'>쇼핑몰</span></td>
+                			<td width='82%'><font color='#555555' face='돋움' size='2'>:</font><span class='bb'> 
+                				$shopname</span></td>
+              			</tr>
+              			<tr>
+                			<td width='18%'><span class='bb'>제조업체</span></td>
+                			<td width='82%'><font color='#555555' face='돋움' size='2'>:</font><span class='bb'> 
+                				$item_company</span></td>
+              			</tr>
+              			<tr>
+                			<td width='100%' colspan='2'><br>
+                				<!--<input class='bb' onclick=\"window.location.href='http://$HTTP_HOST/market/main/product_info.html?mart_id=$mart_id&item_no=$item_no'\" style='BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px' type='button' value='상품정보 보기'>
+                				//-->
+                				<a href='http://$HTTP_HOST/market/main/product_info.html?mart_id=$mart_id&item_no=$item_no' target='_new'><span class='bb'>상품정보 보기</span></a>
+                				</td>
+              			</tr>
+            			</table>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='5'></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='5'></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' background='http://211.174.51.11/autocart/market/images/bgpatt.gif'></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='5'></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2'>
+            		<img src='http://211.174.51.11/autocart/market/images/reco1.gif' WIDTH='91' HEIGHT='28'>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='5'><span class='bb'></span></td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2'>
+            			<div align='center'><center>
+            			<table border='0' width='90%'>
+              			<tr>
+                			<td width='100%'>
+                				<p align='left'>
+                				<span class='bb'>
+                				$content</span>
+                			</td>
+              			</tr>
+           			</table>
+            			</center></div>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width='100%' colspan='2' height='5'></td>
+          		</tr>
+        		</table>
+        		</div>
+        	</td>
+      	</tr>
+    	</table>
+    	</center></div>
+    </td>
+</tr>
+<tr>
+    <td width='750' valign='top' colspan='3' bgcolor='#9CA49C' height='1'></td>
+</tr>
+<tr>
+    <td width='750' valign='top' colspan='3' height='5'></td>
+</tr>
+</table>
+</body>
+</html>");
+  
+	
+	
+	
+	$title = "$sender 님이 추천하신 상품입니다.";
+	mail("$receiver_email", "$title", "$mailcontent", "From: $sender<$sender_email>\nContent-type: text/html");
+	echo ("
+	<script language='javascript'>
+		alert(\"메일을 보냈습니다.\");
+		self.close();
+	</script>
+	");	
+}
+?>
+<?
+mysql_close($dbconn);
+?>

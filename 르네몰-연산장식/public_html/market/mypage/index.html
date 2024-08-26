@@ -1,0 +1,316 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$m_sql = "select * from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+$m_res = mysql_query($m_sql, $dbconn);
+$m_tot = mysql_num_rows($m_res);
+if($m_tot < 1){
+	echo ("		
+		<script>
+		window.alert('회원전용 공간입니다.');
+		parent.location.href='../member/login.html?url=$url';
+		</script>
+	");
+	exit;
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><?	include "../include/sub_top.htm"; ?>
+				<table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지</div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/mypage_3.gif" width="277" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/update.html?mart_id=<?=$mart_id?>"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td width="5%"><a href="../stat/order.html"><img src="../images/mypage_11.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_12.gif"></td>
+                                    <td width="5%"><a href="../mypage/send.html"><img src="../images/mypage_13.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_14.gif"></td>
+                                    <td width="5%"><a href="../mypage/point.html"><img src="../images/mypage_15.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><table width="750"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="10"></td>
+                            <td width="740" height="90"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td width="230" valign="top"><table width="210"  border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td><img src="../image/mypage/main_img_top.gif" width="210" height="20"></td>
+                                      </tr>
+                                      <tr>
+                                        <td height="40" align="center" background="../image/mypage/main_img_mid.gif"><span class="price">
+                                          <?=$MemberName?>
+                                        </span>고객님 환영합니다! </td>
+                                      </tr>
+                                      <tr>
+                                        <td><img src="../image/mypage/main_img.gif" width="210" height="240"></td>
+                                      </tr>
+                                  </table></td>
+                                  <td valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td><a href='../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>'><img src="../image/mypage/main_banner_1.gif" width="250" height="100" border="0"></a></td>
+                                        <td align="right"><a href="../stat/order.html"><img src="../image/mypage/main_banner_2.gif" width="250" height="100" border="0"></a></td>
+                                      </tr>
+                                      <tr>
+                                        <td height="10" colspan="2"></td>
+                                      </tr>
+                                    </table>
+                                      <table width="100%"  border="0" cellspacing="0" cellpadding="15">
+                                        <tr>
+                                          <td height="1" bgcolor="E67D0E"></td>
+                                        </tr>
+                                        <tr>
+                                          <td bgcolor="F8F8F8"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td><img src="../image/mypage/main_type_1.gif" width="110" height="20"></td>
+                                                <td align="right"><a href='../mypage/update.html?mart_id=<?=$mart_id?>'><img src="../image/mypage/bu_infomodify.gif" width="80" height="20" border="0"></a></td>
+                                              </tr>
+                                              <tr>
+                                                <td height="10" colspan="2"></td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td colspan="2"><!---------------------- 회원정보 시작 -------------------------------------------------->
+                                                    <?
+//================== 회원 정보를 불러옴 ==================================================
+$mem_sql = "select * from $Mart_Member_NewTable where mart_id='$mart_id' and username='$UnameSess'";
+$mem_res = mysql_query($mem_sql, $dbconn);
+$mem_tot = mysql_num_rows($mem_res);
+
+$mem_row = mysql_fetch_array($mem_res);
+
+$email = $mem_row[email];
+$tel = $mem_row[tel];
+$tel1 = $mem_row[tel1];
+$zip = $mem_row[zip];
+$address = $mem_row[address];
+$address_d = $mem_row[address_d];
+
+if( $mem_res ){
+	mysql_free_result( $mem_res );
+}
+?>
+                                                    <table width="96%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                                                      <tr>
+                                                        <td height="10"></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="25"><img src="../image/mypage/main_icon.gif" width="11" height="4" align="absmiddle">
+                                                            <?=$email?></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="1" bgcolor="E5E5E5"></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="25"><img src="../image/mypage/main_icon.gif" width="11" height="4" align="absmiddle">[
+                                                            <?=$zip?>
+                                                            ]
+                                                            <?=$address?>
+                                                            <?=$address_d?></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="1" bgcolor="E5E5E5"></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="25"><img src="../image/mypage/main_icon.gif" width="11" height="4" align="absmiddle">
+                                                            <?=$tel?>
+                              /
+                              <?=$tel1?></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="10"></td>
+                                                      </tr>
+                                                    </table>
+                                                    <!---------------------- 회원정보 끝 ---------------------------------------------------->
+                                                </td>
+                                              </tr>
+                                          </table></td>
+                                        </tr>
+                                        <tr>
+                                          <td height="1" bgcolor="E5E5E5"></td>
+                                        </tr>
+                                        <tr>
+                                          <td bgcolor="F8F8F8"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td><img src="../image/mypage/main_type_2.gif" width="110" height="20"></td>
+                                                <td align="right">&nbsp;</td>
+                                              </tr>
+                                              <tr>
+                                                <td height="10" colspan="2"></td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td colspan="2"><!---------------------- 포인트, Wishlist개수 시작 -------------------------------------->
+                                                    <?
+//================== 포인트 정보를 불러옴 ================================================
+$bonus_sql = "select * from $BonusTable where mart_id ='$mart_id' and id = '$UnameSess' order by num desc";
+$bonus_res = mysql_query($bonus_sql, $dbconn);
+$bonus_tot = mysql_num_rows($bonus_res);
+while ( $bonus_row = mysql_fetch_array($bonus_res) ){
+	$bonus = $bonus_row[bonus];
+	$sum = $sum + $bonus;
+}
+$sum_str = number_format($sum);
+if( $bonus_res ){
+	mysql_free_result( $bonus_res );
+}
+//================== WishList 정보를 불러옴 ==============================================
+$pre_sql = "select * from $Pre_SelectTable where id='$UnameSess' and mart_id='$mart_id' order by pre_no desc";
+$pre_res = mysql_query($pre_sql, $dbconn);
+$pre_tot = mysql_num_rows($pre_res);
+if( $pre_res ){
+	mysql_free_result( $pre_res );
+}
+//================== 주문 정보를 불러옴 ==================================================
+$order_sql = "select * from $Order_BuyTable where mart_id='$mart_id' and id='$UnameSess' and status != 0 and status != 9 order by index_no desc";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+if( $order_res ){
+	mysql_free_result( $order_res );
+}
+?>
+                                                    <table width="96%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                                                      <tr>
+                                                        <td height="10"></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="25"><img src="../image/mypage/main_icon.gif" width="11" height="4" align="absmiddle">현재 포인트 <span class="price">
+                                                          <?=$sum_str?>
+                                                        </span>점<a href="../mypage/point.html"><img src="../image/bu_more.gif" width="30" height="15" hspace="5" border="0" align="absmiddle"></a></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="1" bgcolor="E5E5E5"></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="25"><img src="../image/mypage/main_icon.gif" width="11" height="4" align="absmiddle">Wishlist : <span class="mypage_3">
+                                                          <?=$pre_tot?>
+                                                        </span>개의 상품이 보관되어있습니다.<a href="../mypage/wish.html"><img src="../image/bu_more.gif" width="30" height="15" hspace="5" border="0" align="absmiddle"></a></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="1" bgcolor="E5E5E5"></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="25"><img src="../image/mypage/main_icon.gif" width="11" height="4" align="absmiddle">주문내역 : <span class="mypage_3">
+                                                          <?=$order_tot?>
+                                                        </span>건의 주문건이 있습니다.<a href="../stat/order.html"><img src="../image/bu_more.gif" width="30" height="15" hspace="5" border="0" align="absmiddle"></a></td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td height="10"></td>
+                                                      </tr>
+                                                    </table>
+                                                    <!---------------------- 포인트, Wishlist개수 끝 ---------------------------------------->
+                                                </td>
+                                              </tr>
+                                          </table></td>
+                                        </tr>
+                                        <tr>
+                                          <td height="1" bgcolor="E67D0E"></td>
+                                        </tr>
+                                    </table></td>
+                                </tr>
+                            </table></td>
+                          </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

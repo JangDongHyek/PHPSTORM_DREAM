@@ -1,0 +1,727 @@
+<?
+//========================== 현재 페이지를 url로 저장함 ==================================
+
+
+if($PHP_SELF=="/market/main/product_list.html" || $PHP_SELF=="/market/main/product_list2.html" || $PHP_SELF=="/market/main/product_list3.html"){
+	//모바일 네이버 검색시
+	$mobile_redirect = "http://m.".$_SERVER['SERVER_NAME']."/mobile/main/product_list.html"."?".$QUERY_STRING;
+}
+
+?>
+<script type="text/javascript">
+var ua = window.navigator.userAgent.toLowerCase();
+if ( /iphone/.test(ua) || /android/.test(ua) || /opera/.test(ua) || /bada/.test(ua) ) {
+document.location.href='<?=$mobile_redirect?>';
+}
+</script>
+
+<script type="text/JavaScript">
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+//-->
+</script>
+
+
+<script type="text/javascript"> 
+function large(){ 
+ document.all['flashArea'].style.height = 210; 
+} 
+function small(){ 
+
+ document.all['flashArea'].style.height = 44; 
+} 
+function subView(){
+	document.getElementById("categoryMenu").style.display="inline";
+	document.getElementById("sub1").style.display="none";
+	document.getElementById("sub2").style.display="block";
+}
+function subHidden(){
+	document.getElementById("categoryMenu").style.display="none";
+	document.getElementById("sub1").style.display="block";
+	document.getElementById("sub2").style.display="none";
+}
+</SCRIPT>
+<!-- 플래시메뉴 적용 자바스크립트 끝 -->
+
+<!--메인메뉴 레이어 시작 -->
+<style type="text/css">
+<!--
+#flashArea {
+	position: absolute;
+	top:81px;
+	text-align: center;
+	width: 100%;
+	z-index: 4;
+}
+#Layer {
+margin: 0 auto;
+position: relative;
+width: 1000px;
+height: 100%;
+text-align: center;
+padding-left: 0px;
+}
+-->
+</style>
+
+
+
+<style type="text/css">
+<!--
+#table_all { margin:0 auto; padding:0; border:2px solid #828eea;}
+#table_all tr td{font-family: 'Nanum Gothic'; text-align:left; padding:8px; letter-spacing:-0.5px; font-weight:700; font-size:13px;}
+#table_all tr td span { font-size:15px; font-weight:900; color:#FFFFFF; line-height:20px; padding-left:10px;}
+.style1 {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+-->
+</style>
+
+
+
+<style type="text/css">
+<!--
+
+/* 나눔고딕 */
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 700;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 800;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.ttf) format('truetype');
+}
+
+-->
+</style>
+
+
+<script language="javascript">
+<!--
+function bookmark()
+{
+	//var frame = document.getElementById("addbookmark");
+	//frame.src = "../market/main/addbookmark.php";
+	//window.open("../main/addbookmark.php", "bookmark");
+	//alert("아직 준비중 입니다.");
+	window.external.AddFavorite('http://renemall.co.kr', document.title);
+}
+-->
+</script>
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="244"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center"><a href="../main/index.html"><img src="../images/logo.gif" border="0"></a></td>
+          </tr>
+          <tr>
+            <td><span id="sub1" onclick="subView()" style="cursor:hand"><img src="../images/main_15.gif" width="244" height="36"></span><span id="sub2" onclick="subHidden()" style="cursor:hand;display:none"><img src="../images/main_15.gif"></span></td>
+          </tr>
+        </table>
+		
+		
+		
+		
+		
+		</td>
+        <td valign="bottom"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="339"><img src="../images/main_2.gif" width="339" height="59"></td>
+                <td><?
+			if(!$UnameSess || !$MemberLevel || !$MemberName)
+			{
+				if($NonMemberName)
+				{
+					$Logined_Member_Name = $NonMemberName;
+					include '../include/logout.htm';
+				}
+				else
+					include '../include/login.htm';
+			}else{
+				$Logined_Member_Name = $UnameSess;
+				include '../include/logout.htm';
+			}
+				?></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><a href="../main/index.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image6','','../images/main_over_5.gif',0)"></a><a href="../site/company.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image7','','../images/main_over_6.gif',0)"></a><a href="#" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image8','','../images/main_over_7.gif',0)"></a><a href="../board/board_list.php?bbs_no=4" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image9','','../images/main_over_8.gif',0)"></a><img src="../images2/top_menu.gif" width="389" height="48" border="0" usemap="#top_menu" /></td>
+                <td width="101"><img src="../images/main_9.gif" width="101" height="48"></td>
+                <td width="61"><a href="../cart/cart.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image11','','../images/main_over_10.gif',0)"><img src="../images/main_10.gif" name="Image11" width="61" height="48" border="0"></a></td>
+                <td width="61"><a href="../stat/order.html"><img src="../images/main_11.gif" name="Image12" width="61" height="48" border="0"></a></td>
+                <td width="61"><a href="../board/board_list.php?bbs_no=2" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image13','','../images/main_over_12.gif',0)"><img src="../images/main_12.gif" name="Image13" width="61" height="48" border="0"></a></td>
+                <td width="67"><a href="../mypage/index.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image14','','../images/main_over_13.gif',0)"><img src="../images/main_13.gif" name="Image14" width="67" height="48" border="0"></a></td>
+                <td><img src="../images/main_14.gif" width="16" height="48"></td>
+              </tr>
+            </table></td>
+          </tr>
+<!---------------------- 검색 시작 ------------------------------------------------------>
+<script>
+function search_check(){
+	var here = document.search_form
+
+	if(here.input_key1.value == ""){
+		alert("검색어를 입력하세요")
+		here.input_key1.focus()
+		return
+	}
+
+	here.submit()
+}
+</script>
+<!---------------------- 검색 끝 ------------------------------------------------------>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+						  <form name='search_form' method='get' action='../main/search_list.html' onsubmit='search_check(); return false;'>
+							<input type='hidden' name='select_key' value='item_name'>
+							<input type='hidden' name='mode' value='search'>
+              <tr>
+                <td width="87"><img src="../images/search1.gif" width="87" height="36" /></td>
+                <td width="210"><div align="center">
+                  <input name="input_key1" type="text" id="input_key1" value="<?=$input_key1?>"class="input_03" style="width:200px;height:20px" size="12">
+                </div></td>
+                <td width="51"><input name="image" type="image" src="../images/main_18.gif" width="51" height="36" /></td>
+                <td><a href="../main/search_list2.html"><img src="../images/search_btn2.gif" width="61" height="36" /></a></td>
+                <td width="464">&nbsp;</td>
+              </tr>
+					</form>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+
+
+<div id='categoryMenu' style="display:none;background-color:white;position:absolute;width:100%;z-index:1">
+<table width="1100" id="table_all" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="30" colspan="6" bgcolor="828eea"><span>쇼핑백</span></td>
+  </tr>
+  <tr>
+    <td width="250" height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=205"><strong>펀칭비닐백</strong></a></td>
+    <td width="250" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=206"><strong>손잡이비닐백</strong></a></td>
+    <td width="250" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=320"><strong>도매비닐봉투</strong></a></td>
+    <td width="250" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=207"><strong>종이쇼핑백</strong></a></td>
+    <td width="250" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=292"><strong>폴리백, 투명백 </strong></a></td>
+    <td width="250" align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "205";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "206";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "320";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "207";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "292";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30" colspan="6" valign="top" bgcolor="#828EEA"><span>매장용품 </span></td>
+  </tr>
+  <tr>
+    <td height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=86"><strong>매장용품</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=440"><strong>POP,POP집게</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=436"><strong>가방진열대</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=442"><strong>마네킹</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=443"><strong>매대, 진열장 </strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=438"><strong>모자진열대</strong></a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "86";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">	
+	<?
+	$cate1 = "440";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "436";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "442";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "443";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top"><?
+	$cate1 = "438";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+  </tr>
+  <tr>
+    <td height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=441"><strong>신발진열대</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=437"><strong>악세사리 아크릴진열대 </strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=468"><strong>아크릴진열대</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=439"><strong>벨트, 악세사리걸이 </strong></a></td>
+    <td height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=470"><strong>원목진열대</strong></a></td>
+    <td height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=435"><strong>옷걸이, 바지걸이 </strong></a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><?
+	$cate1 = "441";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "437";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "468";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "439";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "470";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "435";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=434"><strong>탈의봉, 탈의실커튼 </strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=428"><strong>택</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=433"><strong>택 용품 </strong></a></td>
+    <td height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=268"><strong>행거</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=444"><strong>휴대폰 진열대 </strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><?
+	$cate1 = "434";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "428";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "433";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "268";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "444";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+    <td align="center" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30" colspan="6" valign="top" bgcolor="828eea"><span>벽,천정용품</span></td>
+  </tr>
+  <tr>
+    <td height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=469"><strong>벽면행거</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=198"><strong>벽걸이옷걸이</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=402"><strong>벽면,천정용걸이</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=446"><strong>스페이스월</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=448"><strong>선반대,원목선반</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=449"><strong>원목벽걸이옷걸이</strong></a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "469";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "198";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "402";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "446";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "448";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top"><?
+	$cate1 = "449";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>    </td>
+  </tr>
+
+  <tr>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=445"><strong>철망</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=447"><strong>타공판</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+    <td align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+    <td align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+    <td align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><?
+	$cate1 = "445";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>
+    </td>
+    <td align="center" valign="top"><?
+	$cate1 = "447";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+        <a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>">
+          <?=$row_cate[category_name]?>
+      </a><BR>
+        <?
+	}
+	?>
+    </td>
+    <td align="center" valign="top">&nbsp;</td>
+	<td align="center" valign="top">&nbsp;</td>
+	<td align="center" valign="top">&nbsp;</td>
+	
+    <td align="center" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30" colspan="6" valign="top" bgcolor="828eea"><span>기타</span></td>
+  </tr>
+  <tr>
+    <td height="30" align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=471"><strong>목봉</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=83"><strong>생활용품</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=413"><strong>세일/소량판매</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0"><a href="../main/product_list.html?category_num=287"><strong>주문결제창</strong></a></td>
+    <td align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+    <td align="center" valign="top" bgcolor="#F0F0F0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "471";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "83";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "413";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+    <td align="center" valign="top">
+	<?
+	$cate1 = "287";
+	$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$cate1' and if_hide='0' order by cat_order desc";
+	$res_cate = mysql_query($sql_cate, $dbconn);
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	?>
+			<a href="../main/product_list2.html?category_num=<?=$cate1?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a><BR>
+	<?
+	}
+	?>	</td>
+	<td align="center" valign="top">&nbsp;</td>
+    <td align="center" valign="top">&nbsp;</td>
+  </tr>
+</table>
+
+</div>
+
+
+
+<map name="top_menu" id="top_menu">
+<area shape="rect" coords="64,12,130,40" href="../main/" /><area shape="rect" coords="133,12,197,41" href="../site/company.html" />
+<area shape="rect" coords="198,11,258,41" href="../main/product_list.html?category_num=205" /><area shape="rect" coords="261,11,318,41" href="../board/board_list.php?bbs_no=4" />
+<area shape="rect" coords="322,11,386,41" href="../board/board_list.php?bbs_no=7" />
+</map>

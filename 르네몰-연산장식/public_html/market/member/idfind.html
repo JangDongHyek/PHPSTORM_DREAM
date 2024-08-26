@@ -1,0 +1,298 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+$category_html = $row[category_html];
+$category_html = str_replace("<br />","",$category_html);
+$category_html = str_replace("<BODY>","<BODY><br>",$category_html);
+$category_html = str_replace("</BODY>","<br></BODY>",$category_html);
+$category_html = str_replace("&nbsp;", "", $category_html);
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<script language='JavaScript'>
+<!--
+function checkform(f){
+	/*
+	if(f.passport1.value=="") {
+	    alert("\n주민등록번호 앞자리를 입력하세요.");
+	    f.passport1.focus();
+	    return false;
+	}
+	*/
+	/*if(f.passport2.value=="") {
+	    alert("\n주민등록번호 뒷자리를 입력하세요.");
+	    f.passport2.focus();
+	    return false;
+	}*/
+	if(f.name.value==""){
+	    alert("\n성명을 입력하세요.");
+	    f.name.focus();
+	    return false;
+	}
+	return true;
+}
+/*
+function check(){
+    var str = document.f.passport1.value.length;
+    if(str == 6) {
+       document.f.passport2.focus();
+    }
+
+} 
+
+function check1(){
+    var str = document.f.passport2.value.length;
+    if(str == 7) {
+       document.f.name.focus();
+	}   	
+}
+*/
+//-->
+</script>
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><?	include "../include/sub_top.htm"; ?>
+										<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/join_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 회원페이지 &gt; 아이디/비밀번호 찾기 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td width="63%"><img src="../images/join_3.jpg" width="473" height="66"></td>
+                      <td width="37%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td><img src="../images/join_4.jpg" width="277" height="15"></td>
+                          </tr>
+                          <tr>
+                            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td width="26%"><a href="index.html"><img src="../images/member_1_btn.gif" width="73" height="25" border="0"></a></td>
+                                  <td width="4%"><img src="../images/join_6.jpg" width="4" height="25"></td>
+                                  <td width="26%"><a href="login.html"><img src="../images/member_2_btn.gif" width="73" height="25" border="0"></a></td>
+                                  <td width="4%"><img src="../images/join_8.jpg" width="4" height="25"></td>
+                                  <td width="36%"><a href="idfind.html"><img src="../images/member_3_over_btn.gif" width="98" height="25" border="0"></a></td>
+                                  <td width="4%"><img src="../images/join_10.jpg" width="25" height="25"></td>
+                                </tr>
+                            </table></td>
+                          </tr>
+                          <tr>
+                            <td><img src="../images/join_11.jpg" width="277" height="26"></td>
+                          </tr>
+                      </table></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/find_title.gif" width="750" height="46"></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/find_text.gif" width="750" height="58"></td>
+                </tr>
+                <tr>
+                  <td align="center">
+				  
+				  
+				  
+				  
+				 
+<script src="../js/jquery-1.7.1.min.js"></script>
+<script>
+function checkform3(f){
+	if(f.name.value.length <= 0){
+		alert("이름을 입력해주세요!");
+		f.name.focus();
+		return false;
+	}
+
+	if(f.email.value.length <= 0){
+		alert("이메일을 입력해주세요!");
+		f.email.focus();
+		return false;
+	}
+
+	if(f.tel1.value.length <= 0){
+		alert("휴대폰번호를 입력해주세요!");
+		f.tel1.focus();
+		return false;
+	}
+
+	jQuery.ajax({
+		type:"POST",
+		url:"idfind_act.php",
+		data:{name:f.name.value,email:f.email.value,tel1:f.tel1.value},
+		success:function(msg){
+			var msg_arr = msg.split("/");
+			if(msg_arr[0] == "fail"){
+				if(msg_arr[1] == "none_id"){
+					alert("일치하는 아이디가 없습니다!");
+					document.fff.password.value = "";
+					document.fff.password2.value = "";
+					document.fff.username.value = "";
+					document.getElementById("edit_passwd_tbl").style.display = "none";
+				}
+			}else if(msg_arr[0] == "success"){
+				if(msg_arr[1] != ""){
+					document.getElementById("edit_passwd_tbl").style.display = "";
+					document.fff.username.value = msg_arr[1];
+					document.getElementById("your_id").innerHTML = "회원님의 아이디<br>"+msg_arr[1];
+				}
+			}
+		}, error: function(xhr,status,error){
+			alert(error);
+		}
+	});
+}
+</script>
+<form name="f" onsubmit="return checkform3(this)" action="idfind_ok.html">
+<input type="hidden" name="flag" value="id_passwd_find">
+<table width="430" cellpadding=5 cellspacing=1 border=0 bgcolor="#e1e1e1">
+<tr>
+	<td width="100" bgcolor="#ffffff"><b>이름</b></td>
+	<td bgcolor="#ffffff"><input type="text" name="name" value="" style="width:120px; border:1px solid #c8cbce;"></td>
+</tr>
+<tr>
+	<td width="100" bgcolor="#ffffff"><b>이메일</b></td>
+	<td bgcolor="#ffffff"><input type="text" name="email" value="" style="width:200px; border:1px solid #c8cbce;"></td>
+</tr>
+<tr>
+	<td width="100" bgcolor="#ffffff"><b>휴대폰번호</b></td>
+	<td bgcolor="#ffffff"><input type="text" name="tel1" value="" style="width:120px; border:1px solid #c8cbce;"></td>
+</tr>
+<tr>
+	<td colspan="2" align="center" bgcolor="#ffffff"><input type="button" value="찾기" border=0 style="margin:0px 0px 0px 0px; padding:6px 6px 6px 6px; border:1px solid #e33333; background-color:#e33333; color:#ffffff; cursor:pointer;" onclick="checkform3(document.f)"></td>
+</tr>
+</table>
+</form>
+
+<script>
+function fff_act(ff){
+	if(ff.username.value.length <= 0){
+		alert("아이디/비밀번호 찾기를 해주세요!");
+		return false;
+	}
+
+	if(ff.password.value.length <= 0){
+		alert("변경될 비밀번호를 입력해주세요!");
+		ff.password.focus();
+		return false;
+	}
+
+	if(ff.password2.value.length <= 0){
+		alert("변경될 비밀번호확인을 입력해주세요!");
+		ff.password2.focus();
+		return false;
+	}
+
+	if(ff.password.value != ff.password2.value){
+		alert("변경될 비밀번호와 비밀번호확인이 일치하지않습니다.");
+		ff.password.value = "";
+		ff.password2.value = "";
+		ff.password.focus();
+		return false;
+	}
+
+	return true;
+}
+</script>
+<form method="post" name="fff" action="./idfind_act2.php" onsubmit="return fff_act(this);">
+<input type="hidden" name="username" value="" />
+<table width="430" cellpadding=5 cellspacing=1 border=0 bgcolor="#e1e1e1" id="edit_passwd_tbl" style="display:none;">
+<tr>
+	<td colspan="2" align="center" bgcolor="#ffffff"><p id="your_id"></p></td>
+</tr>
+<tr>
+	<td width="140" bgcolor="#ffffff"><b>변경될 비밀번호</b></td>
+	<td bgcolor="#ffffff"><input type="password" name="password" value="" style="width:120px; border:1px solid #c8cbce;"></td>
+</tr>
+<tr>
+	<td width="140" bgcolor="#ffffff"><b>변경될 비밀번호확인</b></td>
+	<td bgcolor="#ffffff"><input type="password" name="password2" value="" style="width:120px; border:1px solid #c8cbce;"></td>
+</tr>
+<tr>
+	<td colspan="2" align="center"><input type="submit" value="변경하기" border=0 style="margin:0px 0px 0px 0px; padding:6px 6px 6px 6px; border:1px solid #e33333; background-color:#e33333; color:#ffffff; cursor:pointer;"></td>
+</tr>
+</table>
+</form>
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  </td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>

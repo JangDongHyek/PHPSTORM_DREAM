@@ -1,0 +1,33 @@
+
+<?
+if( isset($MemberName) ){
+	$login_img1 = "<a href='../member/logout.php'><img src='../image/bu_logout.gif' width='50' height='20' border='0' align='absmiddle'></a>";
+}else{
+	$login_img1 = "<a href='../member/login.html?url=$url'><img src='../image/top_login.gif' width='40' height='20' border='0' align='absmiddle'></a>";
+}
+if( $MemberLevel && $MemberLevel < 5 ){
+	$my_str = "";
+
+	if( $MemberLevel && $MemberLevel < 3 ){
+		$member_img = "<a href='../../admin/.' target='_blank'><img src='../image/top_admin.gif' hspace='3' border='0' align='absmiddle'></a>";
+	}else if( $MemberLevel && $MemberLevel == 3 ){
+		$member_img = "<a href='../../inmall/.' target='_blank'><img src='../image/top_inmall.gif' hspace='3' border='0' align='absmiddle'></a>";
+	}else if( $MemberLevel && $MemberLevel == 4 ){
+		$member_img = "<a href='../../inmember/.' target='_blank'><img src='../image/top_inmember.gif' hspace='3' border='0' align='absmiddle'></a>";
+	}
+}else{
+	$my_str = "<img src='../image/top_line.gif' width='15' height='10' align='absmiddle'><a href='../cart/cart.html?category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no'>장바구니</a><img src='../image/top_line.gif' width='15' height='10' align='absmiddle'><a href='../mypage/wish.html'>Wishlist</a><img src='../image/top_line.gif' width='15' height='10' align='absmiddle'><a href='../stat/order.html'>주문 / 배송조회</a><img src='../image/top_line.gif' width='15' height='10' align='absmiddle'><a href='../mypage/index.html'>마이페이지</a>";
+	if( isset($MemberName) ){
+		$member_img = "";
+	}else{
+		$member_img = "<a href='../member/.'><img src='../image/top_join.gif' width='55' height='20' hspace='3' border='0' align='absmiddle'></a>";
+	}
+}
+?>
+<table width='960' border='0' cellspacing='0' cellpadding='0'>
+	<tr>
+		<td width='30' height='70'></td>
+		<td width='180' align='center'><!--로고--><a href='/market/main/index.html'><img src='../image/logo.gif' border='0'></a></td>
+		<td align='right' class='text_16_s'><a href='/market/main/index.html'>홈으로</a><img src='../image/top_line.gif' width='15' height='10' align='absmiddle'><a href='../board/board_list.php?mart_id=<?=$mart_id?>&bbs_no=1'>공지사항</a><?=$my_str?> <?=$member_img?><?=$login_img1?></td>
+	</tr>
+</table>

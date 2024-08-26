@@ -1,0 +1,63 @@
+
+						<table width="750"  border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td height="10"></td>
+							</tr>
+							<tr>
+								<td>
+									<table width='750' border='0' cellspacing='0' cellpadding='0'>
+										<tr>
+											<td width='10'></td>
+											<td width='490'>
+												<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+													<tr>
+														<td><a href="../mypage/coupon.html"><img src="../image/topmenu_1.gif" border="0"></a></td>
+														<td><a href="../event_board/event.html"><img src="../image/topmenu_2.gif" border="0"></a></td>
+														<td><a href="../main/product_list3.html?category_num=28"><img src="../image/topmenu_3.gif" border="0"></a></td>
+														<td><a href="../board/board_list.php?bbs_no=1"><img src="../image/topmenu_4.gif" border="0"></a></td>
+													</tr>
+												</table>
+											</td>
+											<td width='10'></td>
+											<td valign='bottom'>
+<!---------------------- 검색 시작 ------------------------------------------------------>
+<script>
+function search_check(){
+	var here = document.search_form
+
+	if(here.input_key1.value == ""){
+		alert("검색어를 입력하세요")
+		here.input_key1.focus()
+		return
+	}
+
+	here.submit()
+}
+</script>
+
+												<table width='240'  border='0' cellspacing='0' cellpadding='0'>
+												<form name='search_form' method='get' action='../main/search_list.html' onsubmit='search_check(); return false;'>
+												<input type='hidden' name='select_key' value='item_name'>
+												<input type='hidden' name='mode' value='search'>
+													<tr>
+														<td><img src='../image/search_top.gif' width='240' height='20'></td>
+													</tr>
+													<tr>
+														<td height='20' align='center' bgcolor='#014573'>
+															<input type='text' name='input_key1' value='<?=$input_key1?>' class='input_search' size='15'>
+															<input type='image' onfocus='blur();' src='../image/bu_search.gif' align='absmiddle' width='40' height='20' hspace='3' border='0'>
+															<a href='../main/search_list2.html'><img src='../image/bu_search2.gif' width='55' height='20' border='0' align='absmiddle'></a>
+														</td>
+														</tr>
+													<tr>
+														<td><img src='../image/search_bottom.gif' width='240' height='10'></td>
+													</tr>
+												</form>
+												</table>
+<!---------------------- 검색 끝 -------------------------------------------------------->
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>

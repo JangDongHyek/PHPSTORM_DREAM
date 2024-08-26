@@ -1,0 +1,144 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+$category_html = $row[category_html];
+$category_html = str_replace("<br />","",$category_html);
+$category_html = str_replace("<BODY>","<BODY><br>",$category_html);
+$category_html = str_replace("</BODY>","<br></BODY>",$category_html);
+$category_html = str_replace("&nbsp;", "", $category_html);
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.jpg">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/sub_up_bg.jpg"><table width="960" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="30"><img src="../images/sub_1.gif" width="30" height="116"></td>
+        <td width="180" height="116" valign="bottom" background="../images/sub_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align=center>
+<?
+include "../include/menuselect.htm";
+?>
+			</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+        <td width="750" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><img src="../images/sub_3.gif" width="750" height="66"></td>
+          </tr>
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="35%"><img src="../images/sub_5.gif" width="265" height="50"></td>
+                <td width="61%" background="../images/sub_6.gif">&nbsp;</td>
+                <td width="4%"><img src="../images/sub_7.gif" width="77" height="50" onclick="javascript:history.go(-1)" style="cursor:hand;"></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="960" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		<table width="180"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td background="../images/sub_menu_bg.jpg"><table width="88%"  border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+						  <table width="160" border="0" align="center" cellpadding="0" cellspacing="0">
+							<tr>
+								<td height="10" ></td>
+							</tr>
+<?
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='$category_num' and if_hide='0' order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+$total_cate = mysql_num_rows($res_cate);
+$i = "0";
+while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	$i++;
+?>
+							<tr>
+							<tr>
+									<td width="10%"><div align="center"><img src="../images/sub_menu_icon.gif" width="6" height="7"></div></td>
+									<td><span class="style1"><a href="product_list2.html?category_num=<?=$category_num?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a></span></td>
+							</tr>
+<?
+}
+?>
+						</table>
+				<!-- <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="10%"><div align="center"><img src="../images/sub_menu_icon.gif" width="6" height="7"></div></td>
+                    <td><span class="style1">컴퓨터</span></td>
+                  </tr>
+                </table> --></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td><img src="../images/sub_12.jpg" width="180" height="15"></td>
+          </tr>
+		</table>
+<!----------------------------------서브메뉴 시작------------------------------------------>
+
+<? include "../include/sub_menu.htm" ?>
+
+<!----------------------------------서브메뉴 끝------------------------------------------>
+		</td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

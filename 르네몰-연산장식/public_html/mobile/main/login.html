@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+ 
+ 
+ 
+ 
+ 
+ 
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>르네몰</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+    
+<script>
+function checkform(f){
+	if(f.username.value==""){
+		alert("아이디를 입력하세요.");
+		f.username.focus();
+		return false;
+	}
+	if(f.password.value==""){
+		alert("비밀번호를 입력하세요.");
+		f.password.focus();
+		return false;
+	}
+	return true;
+}
+
+function ordercheck(f){
+	if(f.ordernum.value==""){
+		alert("주문번호를 입력하세요.");
+		f.ordernum.focus();
+		return false;
+	}
+	return true;
+}
+function checkform1(f){
+	if(f.order_name.value==""){
+		alert("주문자 성명을 입력하세요.");
+		f.order_name.focus();
+		return false;
+	}
+	
+	if(f.order_mobile.value==""){
+		alert("휴대폰번호를 입력하세요.");
+		f.order_mobile.focus();
+		return false;
+	}
+	/*
+	if(f.passport2.value==""){
+		alert("주민번호 뒷자리를 입력하세요.");
+		f.passport2.focus();
+		return false;
+	}
+	*/
+	return true;
+}
+
+function check(){
+    var str = document.f1.passport1.value.length;
+	if(str == 6) {
+       document.f1.passport2.focus();
+    }
+
+} 
+	
+function check1(){
+    var str = document.f1.passport2.value.length;
+    if(str == 7) {
+       document.f1.order_name.focus();
+       
+	}   	
+} 
+</script> 
+	</head>
+	<body>
+<? include("../include/top.html"); ?>
+ 
+		
+    <section id="content">
+		<article id="contentSubTitle">
+			<div class="subTitle">
+				<h2>&nbsp;&nbsp;<a href="../">홈</a> > 로그인</h2>
+			</div>
+		</article>
+		<article id="login">
+		<h3>&nbsp;&nbsp;회원로그인</h3>
+		  <form name='f' method='post' action='login_process.php?url=<?=$url?>&mart_id=<?=$mart_id?>' onsubmit='return checkform(this)'>							  
+		  <input type="hidden" name="member_type" value="1">
+			<div class="loginForm">
+ 
+                <table class="loginT" cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+              
+                        <tr>
+                            <td class="pb5 pr5"><input type="text" name="username" value="" class="input" style="width:90%;" placeholder="아이디" /></td>
+                        </tr>
+                        <tr>
+                            <td class="pb5 pr5"><input type="password" name="password" value="" class="input" style="width:90%;" placeholder="패스워드" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="loginB"><input type=submit value="로그인" title="로그인" /></a></div>
+            </div>
+            </form>
+
+		
+			<h3>&nbsp;&nbsp;비회원로그인</h3>
+			<form name='f1' action='temp_login_process.php?url=<?=$url?>&mart_id=<?=$mart_id?>' method="post" onsubmit='return checkform1(this)'>
+			<div class="loginForm">
+ 
+                <table class="loginT" cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        
+                        <tr>
+                            <td class="pb5 pr5"><input type="text" name="order_name" value="" class="input" style="width:90%;" placeholder="주문자성명" /></td>
+                        </tr>
+						<tr>
+                            <td class="pb5 pr5"><input type="text" name="order_mobile" value="" class="input" style="width:90%;" placeholder="휴대폰번호" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="loginB"><input type=submit value="로그인" title="로그인" /></a></div>
+            </div>
+            </form>
+		</article>
+        <article class="loginTxt">
+            아이디 및 비밀번호는 <span>르네몰 홈페이지(www.renemall.co.kr)</span> 에서 확인해 주세요.
+        </article>
+ 
+    </section>
+ 
+ 
+<? include("../include/bottom.html"); ?>
+	</body>
+</html>

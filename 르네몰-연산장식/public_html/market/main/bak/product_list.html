@@ -1,0 +1,566 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+$category_html = $row[category_html];
+$category_html = str_replace("<br />","",$category_html);
+$category_html = str_replace("<BODY>","<BODY><br>",$category_html);
+$category_html = str_replace("</BODY>","<br></BODY>",$category_html);
+$category_html = str_replace("&nbsp;", "", $category_html);
+$category_left = $row["category_left"];
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<body> <!-- oncontextmenu='return false' ondragstart='return false' onselectstart='return false'> -->
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+<!----------------------------------서브메뉴 시작------------------------------------------>
+
+<? include "../include/sub_menu.htm" ?>
+
+<!----------------------------------서브메뉴 끝------------------------------------------>
+<?
+//================== 3차 카테고리 상품을 불러옴 ==========================================
+if( $flag == "z_price_up" ){//높은가격순
+	$flag_name = "z_price";
+	$order = "desc";
+	$flag_img1 = "align_1_on.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4.gif";
+}else if( $flag == "z_price_down" ){//낮은가격순
+	$flag_name = "z_price";
+	$order = "asc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2_on.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4.gif";
+}else if( $flag == "item_name" ){//상품명 정렬
+	$flag_name = "item_name";
+	$order = "asc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3_on.gif";
+	$flag_img4 = "align_4.gif";
+}else if( $flag == "item_no" ){//신상품순
+	$flag_name = "item_no";
+	$order = "desc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4_on.gif";
+}else{//정렬이 아닐때
+	$flag_name = "item_order";
+	$order = "asc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4.gif";
+}
+
+if($page == ""){
+	$page = 1;
+}
+
+
+if( $category_num == "28" ){ //기획상품일때
+	$category_num2 = $category_num;
+}
+
+if($mode == "cate2_search"){
+	$qry = "select count(*) from $ItemTable where ($select_key like '%$input_key%') and mart_id='$mart_id' and firstno='$category_num' and if_hide='0'";	// 3차 상품등록
+}else{
+	$qry = "select count(*) from $ItemTable where mart_id='$mart_id' and firstno='$category_num' and if_hide='0'";	// 3차 상품등록
+}
+
+//==================== 카테고리 상품 개수 구하기 ======================
+$result = mysql_query( $qry, $dbconn );
+$total = mysql_result( $result, 0, 0);
+
+$line = 16;
+$list = 10;
+$total_page = ceil($total/$line);
+$total_list = intval($total_page/$list);
+
+if($total_page%$list == 0){
+	$total_list--;
+}
+
+$curr_list = intval($page/$list);
+
+if($page%$list == 0){
+	$curr_list--;
+}
+
+$start_page = $curr_list*$list+1;
+$prev_list = $start_page - $list;
+$next_list = $start_page + $list;
+$olds = $line*($page-1);
+
+if($mode == "cate2_search"){
+	$sql0 = "select *  from $ItemTable where ($select_key like '%$input_key%') and mart_id='$mart_id' and firstno='$category_num' and if_hide='0' order by $flag_name $order, item_no desc limit $olds,$line";	// 3차 상품등록
+}else{
+	$sql0 = "select * from $ItemTable where mart_id='$mart_id' and firstno='$category_num' and if_hide='0' order by $flag_name $order, item_no desc limit $olds,$line";	// 3차 상품등록
+}
+$res0 = mysql_query( $sql0, $dbconn );
+?>
+		</td>
+        <td valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td valign="top"><?	include "../include/sub_top.htm"; ?>
+						<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="46" background="../images/depth2_list_1.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="2%">&nbsp;</td>
+                    <td width="48%"><img src="../images/list_icon.gif" width="8" height="9" align="absmiddle">
+										<span class="category_title">
+										 <?=$category_name?>
+										</span> (총 <?=$total?>건)
+										</td>
+                    <td width="48%"><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <span class="navi"><a href="../main/index.html">홈</a> &gt; <a href="product_list.html?category_num=<?=$category_num?>"></a><a href="product_list.html?category_num=<?=$category_num?>">
+                      <?=$category_name?>
+                    </a></span></div></td>
+                    <td width="2%">&nbsp;</td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td background="../images/depth2_list_2.gif"><table width="93%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td><span class="category_3">
+                    <?
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+$j = "0";
+$sql_cate = "select * from $CategoryTable where prevno='$category_num' and if_hide='0' and mart_id='$mart_id' order by cat_order desc";		// 3차 상품등록
+$res_cate = mysql_query($sql_cate, $dbconn);
+$total_cate = mysql_num_rows( $res_cate );
+while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	$j++;
+
+	$total_products = mysql_fetch_array(mysql_query("Select count(*) as count from $ItemTable where prevno = '$row_cate[category_num]'", $dbconn));
+
+	if( $j < $total_cate ){
+		$cut = "ㅣ";
+	}else{
+		$cut = "";
+	}
+	$cate_str = "<a href='product_list2.html?category_num=$category_num&category_num1=$row_cate[category_num]'>$row_cate[category_name]($total_products[count])</a> $cut";
+?>
+                    <?=$cate_str?> 
+                    <?
+}
+if( $res_cate ){
+	mysql_free_result( $res_cate );
+}
+?>
+                    </span></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td><img src="../images/depth2_list_3.gif" width="750" height="28"></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td><table width="100%"  border="0" align="center" cellpadding="0" cellspacing="0">
+		
+				<tr>
+				  <td height="50" valign="bottom"><img src="../images/sub_23.gif" width="188" height="51">
+<?
+if($category_num == "143"){
+?>
+<a href="#" onclick="reserv_popup();"><img src="../images/manufacture_menu.gif" border="0"></a>&nbsp;
+	<a href="./reservation_com.html"><img src="../images/manufacture_menu2.gif" border="0"></a>
+<?
+}
+?>
+				  <td align="right" valign="bottom" style="padding-right:10px;"><select name="flag" id="select_flag" onchange="self.location.href='<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&mode=<?=$mode?>&flag='+this.value;">
+<?
+	$arr_sort_list = array("item_order"=>"인기상품순", "item_name"=>"상품명순", "z_price_down"=>"낮은가격순", "z_price_up"=>"높은가격순", "item_no"=>"상품등록일순");
+	echo rg_html_option2($arr_sort_list,'','',$flag);
+?>					</select></td>
+				</tr>
+			  </table></td>
+          </tr>
+          <tr>
+            <td>
+			<!----------------- 카테고리내 검색 시작 ------------------------------------------------>
+                    <script>
+function search_cate2_check(){
+	var here1 = document.search_cate2_form
+
+	if(here1.input_key.value == ""){
+		alert("검색어를 입력하세요")
+		here1.input_key.focus()
+		return
+	}
+
+	here1.submit()
+}
+              </script>
+                    <table width="750" border="0" cellspacing="0" cellpadding="0">
+                      <form name='search_cate2_form' method='get' action='<?=$PHP_SELF?>' onsubmit='search_cate2_check(); return false;'>
+                        <input type='hidden' name='category_num' value='<?=$category_num?>'>
+                        <input type='hidden' name='category_num1' value='<?=$category_num1?>'>
+                        <input type='hidden' name='mode' value='cate2_search'>
+                        <tr>
+                          <td height="10" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td width="10">&nbsp;</td>
+                          <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td width="120"><img src="../image/product/search_title.gif" width="120" height="30"></td>
+                                <td bgcolor="#EAEAEA"> 상품명
+                                    <input type='radio' name='select_key' value='item_name' <?if(($select_key=="item_name") || (!$select_key)){ echo "checked";}?>>
+                &nbsp; 제조사(브랜드)
+                                    <input type='radio' name='select_key' value='item_company' <?if($select_key=="item_company"){ echo "checked";}?>>
+                &nbsp;&nbsp;
+                                    <input name="input_key" value='<?=$input_key?>' type="text" class="input_03" size="30" style='imde-mode:active'>
+                                    <input type='image' src="../image/product/search_bu.gif" width="60" height="30" border="0" align="absmiddle" onfocus='blur();'>
+                                </td>
+                                <td width="20"><img src="../image/product/search_end.gif" width="20" height="30"></td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="10" colspan="2"></td>
+                        </tr>
+                      </form>
+                    </table>
+                    <!----------------- 카테고리내 검색 끝 ------------------->
+						<table width="723"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <?
+if( $total == "0" ){
+?>
+                <td height='50' align='center' colspan='7'><b>등록된 상품이 없습니다.</b></td>
+                <?
+}else{
+?>
+                <?
+	$i = 0;
+	while($row0 = mysql_fetch_array($res0)){
+		$id = $total - ($olds + $i);
+		$i++;
+
+		$cate_num = $row0[category_num];
+		$item_no = $row0[item_no];
+		$item_name = $row0[item_name];
+		$price = $row0[price];
+		$z_price = $row0[z_price];
+		$member_price = $row0[member_price];
+		$bonus = $row0[bonus];
+		$use_bonus = $row0[use_bonus];
+		$jaego = $row0[jaego];
+		$img_sml = $row0[img_sml];
+		$img = $row0[img];
+		$img_big = $row0[img_big];
+		$opt = $row0[opt];
+		$doctype = $row0[doctype];
+		$short_explain = $row0[short_explain];
+		$reg_date = $row0[reg_date];
+		$item_company = $row0[item_company];
+		$icon_no = $row0[icon_no];
+		$jaego_use = $row0[jaego_use];
+		$use_coupon = $row0[use_coupon];
+
+		$item_name = han_cut2($item_name,40);
+		$short_explain = han_cut($short_explain,28);
+		$price_str = number_format($price);
+		if( $if_member_price == '1' && $UnameSess ){
+			if($member_price == 0){
+				$z_price = round($z_price * $member_price_percent / 100, -2);
+			}else{
+				$z_price = $member_price;	
+			}
+		}
+
+		$z_price_str = number_format($z_price);
+		$bonus_str = number_format($bonus);
+
+		if($jaego_use == 1 && $jaego == 0){
+			$icon_str = "<img src='../image/soldout_icon_s.gif' width='25' height='12'>";
+		}else{
+			if($icon_no == 0) $icon_str = "";
+			if($icon_no == 1) $icon_str = "<img src='../image/hot.gif' width='22' height='13'>";
+			if($icon_no == 2) $icon_str = "<img src='../image/new.gif' width='25' height='14'>";
+			if($icon_no == 3) $icon_str = "<img src='../image/sale.gif' width='22' height='13'>";
+			if($icon_no == 4) $icon_str = "<img src='../image/reserv.gif' width='53' height='12'>";
+		}
+
+		//============================ 상품 이미지 =======================================
+		if($img_sml != "" && file_exists("$Co_img_UP$mart_id/$img_sml")){
+			if (strstr(strtolower(substr($img_sml,-4)),'.jpg') || strstr(strtolower(substr($img_sml,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_sml' border='0' width='$list_product_img_width' height='$list_product_img_height' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_sml,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_sml' width='$list_product_img_width' height='$list_product_img_height'></embed>";
+			}
+		}else if($img != "" && file_exists("$Co_img_UP$mart_id/$img")){
+			if (strstr(strtolower(substr($img,-4)),'.jpg') || strstr(strtolower(substr($img,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img' border='0' width='$list_product_img_width' height='$list_product_img_height' border='0'>";
+			}
+			if (strstr(strtolower(substr($img,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img' width='$list_product_img_width' height='$list_product_img_height'></embed>";
+			}
+		}else if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+			if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_big' border='0' width='$list_product_img_width' height='$list_product_img_height' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_big,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_big' width='$list_product_img_width' height='$list_product_img_height'></embed>";
+			}
+		}else{
+			$img_str = "<img src='../image/noimage_s.gif' border='0' width='$list_product_img_width' height='$list_product_img_height' border='0'>";
+		}
+
+		if( $img_big ){
+			$target4 = "../..$Co_img_DOWN$mart_id/$img_big";
+			//==================== 이미지 사이즈를 구함 ======================================
+			$img_size1 = @GetImageSize("$target4"); 
+			$img_width1 = $img_size1[0] + 100; //이미지의 넓이를 알 수 있음 
+			$img_height1 = $img_size1[1]; //이미지의 높이를 알 수 있음
+			$img_height1 = $img_height1 + 120;
+			$new_tar4 = "<a onClick=\"window.open('big.html?item_no=$item_no&file=$target4','원본사진보기','width=$img_width1,height=$img_height1,top=0,left=0,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')\" style='cursor:hand'>";
+		}else if( $img ){
+			$target4 = "../..$Co_img_DOWN$mart_id/$img";
+			//==================== 이미지 사이즈를 구함 ======================================
+			$img_size1 = @GetImageSize("$target4"); 
+			$img_width1 = $img_size1[0] + 100; //이미지의 넓이를 알 수 있음 
+			$img_height1 = $img_size1[1]; //이미지의 높이를 알 수 있음
+			$img_height1 = $img_height1 + 120;
+			$new_tar4 = "<a onClick=\"window.open('big.html?item_no=$item_no&file=$target4','원본사진보기','width=$img_width1,height=$img_height1,top=0,left=0,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')\" style='cursor:hand'>";
+		}else if( $img_sml ){
+			$target4 = "../..$Co_img_DOWN$mart_id/$img_sml";
+			//==================== 이미지 사이즈를 구함 ======================================
+			$img_size1 = @GetImageSize("$target4"); 
+			$img_width1 = $img_size1[0] + 100; //이미지의 넓이를 알 수 있음 
+			$img_height1 = $img_size1[1]; //이미지의 높이를 알 수 있음
+			$img_height1 = $img_height1 + 120;
+			$new_tar4 = "<a onClick=\"window.open('big.html?item_no=$item_no&file=$target4','원본사진보기','width=$img_width1,height=$img_height1,top=0,left=0,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')\" style='cursor:hand'>";
+		}else{
+			$new_tar4 = "";
+		}
+?>
+                <?
+		if( $i%4 != 0 ){
+?>
+                <td width="180" valign="top" align="center"><table width="170"  border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td height="160" align="center"><a href='product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&page=<?=$page?>&mode=<?=$mode?>'>
+                        <?=$img_str?>
+                      </a></td>
+                    </tr>
+                    <!-- <tr>
+						<td height="30" align="center"><?=$icon_str?></td>
+					</tr> -->
+                    <tr height='20'>
+                      <td align="center" class="product"><a href='product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&page=<?=$page?>&mode=<?=$mode?>'>
+                        <?=$item_name?>.
+                      </a></td>
+                    </tr>
+					<tr>
+                      <td height="20" align="center" class="product"><?=$item_company?></td>
+                    </tr>
+<?if($short_explain){?>
+                    <tr>
+                      <td height="25" align="center" class="text_14_s2"><?=$short_explain?></td>
+                    </tr>
+<?}?>
+                    <tr>
+                      <td height="30" align="center" bgcolor="F3F3F3"><?=$new_tar4?>
+                          <img src="../image/product/zoom.gif" width="15" height="15" border="0" align="absmiddle"> <span class="price">
+                          <?=$z_price_str?>
+            원
+            <?=$icon_str?>
+                          </span><br><img src="../image/icon_point.gif" width="13" height="10"><span class="point">
+                          <?=$bonus_str?>
+            원</span></td>
+                    </tr>
+                </table></td>
+                <td width="1" background="../image/point_line.gif"></td>
+                <?
+		}else{
+?>
+                <td width="180" valign="top" align="center"><table width="170"  border="0" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td height="160" align="center"><a href='product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&page=<?=$page?>&mode=<?=$mode?>'>
+                      <?=$img_str?>
+                    </a></td>
+                  </tr>
+                  <!-- <tr>
+						<td height="30" align="center"><?=$icon_str?></td>
+					</tr> -->
+                  <tr height='20'>
+                    <td align="center" class="product"><a href='product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&page=<?=$page?>&mode=<?=$mode?>'>
+                      <?=$item_name?>..
+                    </a></td>
+                  </tr>
+                  <tr>
+                    <td height="20" align="center" class="product"><?=$item_company?></td>
+                  </tr>
+                  <?if($short_explain){?>
+                  <tr>
+                    <td height="25" align="center" class="text_14_s2"><?=$short_explain?></td>
+                  </tr>
+                  <?}?>
+                  <tr>
+                    <td height="30" align="center" bgcolor="F3F3F3"><?=$new_tar4?>
+                        <img src="../image/product/zoom.gif" width="15" height="15" border="0" align="absmiddle"> <span class="price">
+                        <?=$z_price_str?>
+      원
+      <?=$icon_str?>
+                        </span><br>
+                        <img src="../image/icon_point.gif" width="13" height="10"><span class="point">
+                        <?=$bonus?>
+      원</span></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td height="20" colspan="7"></td>
+              </tr>
+              <tr>
+                <?
+		}
+	}
+?>
+                <?
+	$k = 4 - $i;
+	for( $j = 1; $j <= $k; $j++ ){
+?>
+                <td width="180" valign="top"></td>
+                <?
+	}
+}
+?>
+              </tr>
+            </table>
+            <table width="100%"  border="0" cellpadding="5" cellspacing="5" bgcolor="F2F2F2">
+              <tr>
+                <td align="center" bgcolor="#FFFFFF"><? 
+if($prev_list <= 0){ 
+?>
+                  <img src="../image/bu_pre10.gif" width="40" height="20" border='0' align="absmiddle">
+                  <? 
+}else{ 
+?>
+                  <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$prev_list?>&mode=<?=$mode?>"><img src="../image/bu_pre10.gif" border='0' align="absmiddle"></a>
+                  <? 
+} 
+?>
+                  <? 
+if($page-1 <= 0){ 
+?>
+                  <img src="../image/bu_pre.gif" border='0' align="absmiddle">
+                  <? 
+}else{ 
+?>
+                  <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page-1?>&mode=<?=$mode?>"><img src="../image/bu_pre.gif" border='0' align="absmiddle"></a>
+                  <? 
+} 
+?>
+&nbsp;
+<? 
+for($i=$start_page;$i<$start_page+$list;$i++){
+?>
+<? 
+	if($i == $page){ 
+?>
+<b>[
+<?=$i?>
+]</b>
+<? 
+	}else{ 
+?>
+<a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$i?>&mode=<?=$mode?>">[
+<?=$i?>
+]</a>
+<? 
+	} 
+?>
+&nbsp;
+<?
+	if($i>=$total_page)
+	break
+?>
+<? 
+} 
+?>
+<? 
+if($page+1 > $total_page){ 
+?>
+<img src="../image/bu_next.gif" border='0' align="absmiddle">
+<? 
+}else{ 
+?>
+<a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page+1?>&mode=<?=$mode?>"><img src="../image/bu_next.gif" border='0' align="absmiddle"></a>
+<? 
+} 
+?>
+<? 
+if($next_list>$total_page){ 
+?>
+<img src="../image/bu_next10.gif" border='0' align="absmiddle">
+<? 
+}else{ 
+?>
+<a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$next_list?>&mode=<?=$mode?>"><img src="../image/bu_next10.gif" border='0' align="absmiddle"></a>
+<? 
+} 
+?>
+                      </td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

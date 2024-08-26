@@ -1,0 +1,252 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../main.class";
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>르네몰</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="./css/m_style.css" />
+        
+        <!--레이어팝업 스크립트 시작-->
+        <script language='JavaScript'>
+		<!--
+		function setCookie( name, value, expiredays )
+		{
+			var todayDate = new Date();
+				todayDate.setDate( todayDate.getDate() + expiredays );
+				document.cookie = name + '=' + escape( value ) + '; path=/; expires=' + todayDate.toGMTString() + ';'
+		}
+		
+		function closeWin(flag, layer)
+		{
+			var obj  = window.event.srcElement;
+		
+			if ( flag )
+			{
+				setCookie( layer, 'done' , 1 );
+			}
+			document.all[layer].style.visibility = 'hidden';
+		}
+		
+		window.onload = function() // 윈도우즈 로딩이 끝난후
+		{
+			cookiedata = document.cookie;
+			var divs   = document.all.tags('DIV'); // DIV 들을 가져옵니다.
+		
+			for(var i=0; i<divs.length; i++)
+			{
+				if(divs[i].className=='layer_popup') // DIV 중에 class 가 layer_popup 로 지정된 객체들이면
+				{
+					// 쿠키 내에서 해당하는 div 객체의 ID 값을 가지는 객체를 가져와서 동적으로 비교
+					if( cookiedata.indexOf(divs[i].id+'=done')>=0 ) document.all[divs[i].id].style.visibility = 'hidden';
+					else document.all[divs[i].id].style.visibility = 'visible';
+				}
+			}
+		}
+		//-->
+		</script>
+        <!--레이어팝업 스크립트 끝-->
+        
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+        
+    <!--레이어팝업 스타일시트 시작-->   
+    <style type="text/css">
+	#divpop3 {
+	position:absolute;
+	left:10px;
+	top:70px;
+	width:95%;
+	max-width:900px;
+	z-index:100;
+    visibility:visible;
+	background:#000;
+	}
+	</style>
+    <!--레이어팝업 스타일시트 끝-->  
+     
+	</head>
+	<body>
+    <!--레이어팝업 시작
+    <div id='divpop3' class='layer_popup'>
+      <table width='100%' border="0" cellpadding='0' cellspacing='2'>
+        <tr>
+          <td align='center' bgcolor='white'><img src="../mobile/images/pop_cal.jpg" width="100%"></td>
+        </tr>
+        <tr>
+          <td align='right'>
+          <input type='checkbox' name='chkbox2' value='divpop3' onclick='closeWin(true,"divpop3");'>
+              <span class="text_2"><font color="#FFFFFF">오늘 하루 이 창을 열지 않음</font> 
+              <a href='#' value='divpop3' onclick='closeWin(false,"divpop3"); return false;'><B><font color="#FF0000">[닫기]</font></B></a></span></td>
+        </tr>
+      </table>
+    </div>
+    <!--레이어팝업 끝-->
+    
+		<header>
+			<h1><a href="index.html"><img src="./images/main_1.png" alt="르네몰" /></a></h1>
+			<div class="topSearch">
+				<form name="searchForm" method="post" action='./main/search.html' onSubmit="check_submit(); return false;">
+				<input type='hidden' name='select_key' value='item_name'>
+				<input type='hidden' name='mode' value='search'>
+				<input type="text" name="searchTerm" style="width:70%;" />
+				<a href="javascript:check_submit();"><img src="./images/search.png" alt="검색" /></a>
+				</form>
+			</div>
+			<nav>
+				<ul>
+                    <li style="width:17%;"><?
+					if(!$UnameSess || !$MemberLevel || !$MemberName)
+					{
+						if($NonMemberName)
+						{
+							$Logined_Member_Name = $NonMemberName;
+							echo"<a href='./main/logout.php'>로그아웃</a><script language='javascript'>var m_id   = 'member';</script>";
+						}
+						else
+							echo"<a href='./main/login.html'>로그인</a>";
+					}else{
+						$Logined_Member_Name = $UnameSess;
+						echo"<a href='./main/logout.php'>로그아웃</a>";
+					}
+					?></li>                    
+					<li style="width:20%;"><a href="./board/board_list.html">고객센터</a></li>
+					<li style="width:20%;"><a href="./main/category.html">카테고리</a></li>
+					<li style="width:20%;"><a href="./cart/cart.html">장바구니</a></li>
+					<li style="width:23%;" class="last">
+					<?
+					if(!$UnameSess || !$MemberLevel || !$MemberName)
+					{
+						if($NonMemberName)
+						{
+							$Logined_Member_Name = $NonMemberName;
+							echo"<a href=\"./main/mypage.html\">마이페이지</a>";
+						}
+						else
+							echo"<a href='./main/join.html'>회원가입</a>";
+					}else{
+						$Logined_Member_Name = $UnameSess;
+						echo"<a href=\"./main/mypage.html\">마이페이지</a>";
+					}
+					?>
+					</li>
+				</ul>
+			</nav>
+		</header>
+ 
+        <section id="content">
+            <article id="contentSubSp0">
+                <h3><span class="ic"></span>신상품</h3>
+                <ul class="specialList">
+					 <? include "./include/new_item.html" ?>
+                </ul>
+            </article>
+ 
+            <article id="contentSubSp0">
+                <h3><span class="ic"></span>인기상품</h3>
+                <ul class="specialList">
+                
+                    <? include "./include/fav_item.html" ?>
+                
+                </ul>
+            </article>
+ 
+		    <article id="contentSubSp0">
+                <h3><span class="ic"></span>추천상품</h3>
+                <ul class="specialList">
+                
+                    <? include "./include/rec_item.html" ?>
+                
+                </ul>
+            </article>
+ 
+
+
+
+
+
+		  <article id="mainNotice">
+                <h3><span class="ic"></span>공지사항</h3>
+
+				 <?             			
+				$today = date("Ymd");
+				$notice_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 1";
+				$notice_res = mysql_query($notice_sql, $dbconn);
+				$notice_tot = mysql_num_rows( $notice_res );
+				?>
+											<?
+				if( $notice_tot == "0" ){
+				?>
+                <ul>
+                    <li>등록된 공지사항이 없습니다.</li>
+                </ul>
+											<?
+				}
+				?>
+											<?
+				$i = 0;
+				while( $notice_row = mysql_fetch_array($notice_res) ){
+					$notice_no = $notice_row[index_no];
+					$notice_title = $notice_row[subject_new];
+					$notice_title = han_cut($notice_title,40);
+				?>
+                <ul>
+                    <li><a href='./board/board_read.html?index_no=<?=$notice_no?>&bbs_no=1&mart_id=<?=$mart_id?>'>
+												<?=$notice_title?>
+											  </a></li>
+                </ul>
+				<?
+				}
+				if( $notice_res ){
+					mysql_free_result( $notice_res );
+				}
+				?>
+
+		 </article>
+
+
+        </section>
+ 
+ 
+		<footer>
+			<p>상호명:르네몰 부산광역시 동래구 낙민동 162-4번지 / 부산광역시 동래구 반송로 171번길 39(수민동)</p>
+                        <p> 르네몰 대표:남희옥,김준용</p>
+                        <p>대표전화:1600-5276 사업자등록번호:606-16-75125 통신판매업신고번호:부산 제2009-부산동래-0173 호</p>
+			<p class="mt4">개인정보관리 책임자 : 김경아  (<a href="mailto:kim160052@naver.com">&nbsp;&nbsp;kim160052@naver.com</a>)</p>
+		</footer>
+													
+<!-- AceCounter Mobile WebSite Gathering Script V.7.5.20120817 -->
+<script language='javascript'>
+	var _AceGID=(function(){var Inf=['renemall.co.kr','www.renemall.co.kr,renemall.co.kr','AZ1A65486','AM','0','NaPm,Ncisy','ALL','0']; var _CI=(!_AceGID)?[]:_AceGID.val;var _N=0;if(_CI.join('.').indexOf(Inf[3])<0){ _CI.push(Inf);  _N=_CI.length; } return {o: _N,val:_CI}; })();
+	var _AceCounter=(function(){var G=_AceGID;if(G.o!=0){var _A=G.val[G.o-1];var _G=( _A[0]).substr(0,_A[0].indexOf('.'));var _C=(_A[7]!='0')?(_A[2]):_A[3];	var _U=( _A[5]).replace(/\,/g,'_');var _S=((['<scr','ipt','type="text/javascr','ipt"></scr','ipt>']).join('')).replace('tt','t src="'+location.protocol+ '//cr.acecounter.com/Mobile/AceCounter_'+_C+'.js?gc='+_A[2]+'&py='+_A[4]+'&up='+_U+'&rd='+(new Date().getTime())+'" t');document.writeln(_S); return _S;} })();
+</script>
+<noscript><img src='http://gmb.acecounter.com/mwg/?mid=AZ1A65486&tp=noscript&ce=0&' border='0' width='0' height='0' alt=''></noscript>
+<!-- AceCounter Mobile Gathering Script End -->  
+	 
+										
+	</body>
+</html>

@@ -1,0 +1,367 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$m_sql = "select * from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+$m_res = mysql_query($m_sql, $dbconn);
+$m_tot = mysql_num_rows($m_res);
+$m_row = mysql_fetch_array($m_res);
+
+
+
+if($m_tot < 1){
+	echo ("		
+		<script>
+		window.alert('회원전용 공간입니다.');
+		parent.location.href='../member/login.html?url=$url';
+		</script>
+	");
+	exit;
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<?
+//============================== 포인트 기록을 가져옴 ====================================
+$bonus_sql = "select * from $BonusTable where mart_id ='$mart_id' and id = '$UnameSess' order by num desc";
+$bonus_res = mysql_query($bonus_sql, $dbconn);
+$bonus_tot = mysql_num_rows($bonus_res);
+while ( $bonus_row = mysql_fetch_array($bonus_res) ){
+	$bonus = $bonus_row[bonus];
+	$sum = $sum + $bonus;
+}
+$sum_str = number_format($sum);
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><?	include "../include/sub_top.htm"; ?>
+				<table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지 &gt; 포인터 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/mypage_3.gif" width="277" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/update.html?mart_id=<?=$mart_id?>"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td width="5%"><a href="../stat/order.html"><img src="../images/mypage_11.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_12.gif"></td>
+                                    <td width="5%"><a href="../mypage/send.html"><img src="../images/mypage_13.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_14.gif"></td>
+                                    <td width="5%"><a href="../mypage/point.html"><img src="../images/mypage_over_15.gif" width="58" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/point_title.gif" width="750" height="46"></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td><!---------------------- 포인트 목록 시작 ---------------------->
+<?
+//================== 전체포인트 정보를 불러옴 ================================================
+$bonus_sql = "select sum(bonus) as sum_bonus from $BonusTable where mart_id ='$mart_id' and id = '$UnameSess'";
+$bonus_res = mysql_query($bonus_sql, $dbconn);
+$bonus_tot = mysql_num_rows($bonus_res);
+$bonus_row = mysql_fetch_array($bonus_res);
+$sum_str = number_format($bonus_row[sum_bonus]);
+if( $bonus_res ){
+	mysql_free_result( $bonus_res );
+}
+?>
+						  <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+							<tr>
+							  <td bgcolor="#FFFFFF"><img src="../image/icon_2.gif" width="15" height="9">
+										<?
+										if($m_row[mem_grade] == 2){
+										?>
+
+
+								  <?=$MemberName?> 님은 우수회원입니다<b>(포인트2배적립)</b>.<br>
+								 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;현재 사용가능 포인트는 <span class="price"> <?=$sum_str?></span>점입니다.
+
+								  <?}else{?>
+									<?=$MemberName?> 님은 일반회원입니다. 현재 사용가능 포인트는 <span class="price"> <?=$sum_str?></span>점입니다
+								  <?}?>
+							  </td>
+							</tr>
+						  </table>
+                          <table width="100%"  border="0" cellpadding="0" cellspacing="1" bgcolor="#FFFFFF">							
+                            <tr bgcolor="627C12">
+                              <td height="1" colspan="4"></td>
+                            </tr>
+                            <tr align="center" bgcolor="EFF2E7" >
+                              <td width="80" height="30" class="mypage_4">적립일 </td>
+                              <td width="70" class="mypage_4">상태</td>
+                              <td class="mypage_4"> 상세내역</td>
+                              <td width="100" class="mypage_4"> 적립/사용 금액</td>
+                            </tr>
+                            <?
+$SQL = "select * from $BonusTable where mart_id ='$mart_id' and id = '$UnameSess' order by num desc";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if ($cnfPagecount == "") $cnfPagecount = 20;
+if ($page == "") $page = 1;
+$skipNum = ($page - 1) * $cnfPagecount;
+
+$prev_page = $page - 1;
+$next_page = $page + 1;
+
+$total_page = ($numRows - 1) / $cnfPagecount;
+$total_page = intval($total_page)+1;
+
+if($page % 10 == 0)
+$start_page = $page - 9;
+else
+$start_page = $page - ($page % 10) + 1;
+
+$end_page = $start_page + 9;
+if($end_page >= $total_page)
+	$end_page = $total_page;
+$prev_start_page = $start_page - 10;
+$next_start_page = $start_page + 10;
+
+$sum = 0;
+
+for ($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++) {
+	if ($i >= $numRows) break;
+	mysql_data_seek($dbresult, $i);
+	$ary=mysql_fetch_array($dbresult);
+	$num = $ary[num];
+	$mart_id = $ary[mart_id];
+	$id = $ary[id];
+	$t_title = $ary[t_title];
+	$provider_id = $ary[provider_id];
+	$write_date = $ary[write_date];
+	$write_date = substr($write_date,0,10);
+	$bonus = $ary[bonus];
+	$content = nl2br($ary[content]);
+	$order_num = $ary[order_num];
+	
+	if( $bonus > 0 ){
+		$bonum_stats = "적립";
+	}else{
+		$bonum_stats = "사용";
+	}
+	$bonus_str = number_format($bonus);
+	$write_date = str_replace("-","",$write_date);
+	$write_date_str = substr($write_date,0,4)."-".substr($write_date,4,2)."-".substr($write_date,6,2);
+	$sum = $sum + $bonus;
+	$j = $i + 1;
+
+	$year = substr($write_date,0,4); //쿠폰 지급년도
+	$month = substr($write_date,4,2); //쿠폰 지급월
+
+	$num_month = $month + 6; // 6월달 후
+	$num_month = sprintf("%02d",$num_month);
+	if( $num_month == 0 ){
+		$year = $year - 1;
+		$num_month = 12;
+	}
+	if( $num_month > 12 ){
+		$year = $year + 1;
+		$num_month = $num_month - 12;
+	}
+
+	if($bonus != 0){
+		if( $provider_id && $t_title ){
+			$bonus_end = "&nbsp;&nbsp; <b><font color='#E67D0E'>[포인트 만료일 : {$year}년 {$num_month}월]</font></b>";
+		}else{
+			$bonus_end = "";
+		}
+		if($order_num)
+			$content = "<a href='../stat/order_view.html?mart_id=$mart_id&order_num_query=$order_num'>".$content."</a>";
+
+		if($point_arr[$ary[mode]]=="삭감"){
+			if($bonus_str < 0){
+				$point_arr[$ary[mode]]="삭감";
+			}else{
+				$point_arr[$ary[mode]]="부가";
+			}
+		}
+?>
+                            <tr>
+                              <td height="30" align="center"><?=$write_date_str?></td>
+                              <td align="center" class="mypage_1"><?=$point_arr[$ary[mode]]?></td>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="5">
+                                  <tr>
+                                    <td><?=$content?>
+                                        <?=$bonus_end?></td>
+                                  </tr>
+                              </table></td>
+                              <td align="center" class="price"><?=$bonus_str?>
+                                원</td>
+                            </tr>
+                            <?
+		if(($i + 1) < ($cnfPagecount+$skipNum) && ($i + 1 < $numRows)){
+?>
+                            <tr>
+                              <td colspan="4" height="1" bgcolor="E5E5E5"></td>
+                            </tr>
+                            <?
+		}
+?>
+                            <?
+	}
+}
+?>
+                          </table>
+                          <!---------------------- 포인트 목록 끝 ----------------------->
+                          <!---------------------- 버튼 시작 ----------------------->
+                          <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr align="center">
+                              <td height="40" bgcolor="F4F4F4"><?
+if($page == 1){
+?>
+                                  <img src="../image/bu_pre10.gif" border='0' align="absmiddle">
+                                  <?
+}else{
+?>
+                                  <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=1'><img src="../image/bu_pre10.gif" border='0' align="absmiddle"></a>
+                                  <?
+}
+?>
+                                  <?
+if($start_page > 1){
+?>
+                                  <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$prev_start_page?>'><img src="../image/bu_pre.gif" border='0' align="absmiddle"></a>
+                                  <?
+}else{
+?>
+                                  <img src="../image/bu_pre.gif" border='0' align="absmiddle">&nbsp;
+                                  <?
+}
+for($i=$start_page;$i<=$end_page;$i++){
+	if($i == $page){
+?>
+          [<b>
+          <?=$i?>
+          </b>]
+          <?
+	}else{
+?>
+          <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$i?>'>
+          <?=$i?>
+          </a>
+          <?
+	}
+}
+?>
+&nbsp;
+          <?
+if($end_page < $total_page){
+?>
+          <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$next_start_page?>'><img src="../image/bu_next.gif" border='0' align="absmiddle"></a>
+          <?
+}else{
+?>
+          <img src="../image/bu_next.gif" border='0' align="absmiddle">
+          <?
+}
+if($page == $total_page){
+?>
+          <img src="../image/bu_next10.gif" border='0' align="absmiddle">
+          <?
+}else{
+?>
+          <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$total_page?>'><img src="../image/bu_next10.gif" border='0' align="absmiddle"></a>
+          <?
+}
+?>
+                                </tr>
+                          </table>
+                      </td>
+                    </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

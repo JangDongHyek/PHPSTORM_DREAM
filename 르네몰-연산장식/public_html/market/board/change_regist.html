@@ -1,0 +1,34 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+
+$table = "changegood";
+
+$c_content = str_replace( "\n", "<br>", $c_content );
+$c_regdate = date("Y-m-d H:i:s");
+
+//----------------------------------------------------------------------------------------
+$query = "insert into $table ( c_uid, c_title, c_order_num, username, c_name, c_phone, c_email, c_content, c_regdate ) values ( '', '$c_title', '$c_order_num', '$UnameSess', '$c_name', '$c_phone', '$c_email', '$c_content', '$c_regdate' )";
+
+$result = mysql_query( $query, $dbconn );
+
+if( $result ){
+	echo("
+		<script>
+		window.alert('{$c_name}님의 교환/반품 신청이 접수되었습니다.');
+		</script>
+		<meta http-equiv='Refresh' content='0; URL=http://www.renemall.co.kr/market/board/change.html'>
+	");
+}else{
+	echo("
+		<script>
+		window.alert('{$c_name}님의 교환/반품 신청이 실패했습니다!');
+		history.go(-1)
+		</script>
+	");
+	exit;
+}
+
+mysql_close($dbconn);
+
+?>

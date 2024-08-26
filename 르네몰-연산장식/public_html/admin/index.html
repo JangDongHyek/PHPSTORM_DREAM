@@ -1,0 +1,19 @@
+<?
+$LastModified = gmdate("D d M Y H:i:s", filemtime($HTTP_SERVER_VARS[SCRIPT_FILENAME])); 
+header("Last-Modified: $LastModified GMT"); 
+header("ETag: '$LastModified'"); 
+?>
+
+<frameset framespacing="0" border="false" frameborder="0" rows="90,*">
+  <frame name="header" scrolling="no" noresize target="main" src="top.html">
+  <frame name="main" src="main.html">
+  <noframes>
+  <body>
+  <p>This page uses frames, but your browser doesn't support them.</p>
+  </body>
+  </noframes>
+</frameset>
+</html>
+<?
+mysql_close($dbconn);
+?>

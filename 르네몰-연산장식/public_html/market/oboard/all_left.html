@@ -1,0 +1,246 @@
+<?
+include("../include/util.php");
+include("../include/function.inc");
+$connect = my_connect();
+?>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function check_value(){
+	form = document.login;
+	if(!form.user_id.value){
+		alert('아이디를 입력해주세요');
+		form.user_id.focus();
+		return false;
+	}
+	if(!form.user_pw.value){
+		alert('패스워드를 입력해주세요');
+		form.user_pw.focus();
+		return false;
+	}
+	return true;
+}
+//-->
+</SCRIPT>
+          <td width="161" valign="top" bgcolor="#FFFFFF">
+		  <table width="161" border="0" cellpadding="0" cellspacing="0" bgcolor="5A5942">
+                <tr>
+                  <td height="27" bgcolor="39372B" width="161"><div align="center"><img src="maa1.gif" width="116" height="13"></div></td>
+                </tr>
+				<?
+				if($HTTP_COOKIE_VARS[BEAUTYE_ID]){
+					//적립금
+					$result = mysql_query("select sum(reserve) as total_reserve from reserve where user_id='$HTTP_COOKIE_VARS[BEAUTYE_ID]'");
+					db_error($result,"오류");
+					$total_reserve = mysql_result($result,0,0);
+					
+					$result = mysql_query("select * from member where user_id='$HTTP_COOKIE_VARS[BEAUTYE_ID]'");
+					db_error($result,"오류");
+					$rows = mysql_fetch_array($result);
+
+					$end_date_ex = explode("-",$rows[end_date]);
+					 
+					//종료일
+					$f_timestemp = mktime(23,59,59,$end_date_ex[1],$end_date_ex[2],$end_date_ex[0]);
+					
+					//오늘
+					$today_timestemp = mktime(23,59,59,date("m"),date("d"),date("Y"));
+					
+					//지나온 일수 계산하기
+					$temp = ($f_timestemp - $today_timestemp);	
+					$period = $temp / 86400;				
+				?>
+                <tr>
+                  <td><table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td><img src="/image/main_img/blank.gif" width="1" height="5"></td>
+                      </tr>
+                      <tr>
+						<?
+						if($HTTP_COOKIE_VARS[BEAUTYE_GRADE] == 3){
+						?>
+                        <td width="120" height="25" colspan="2" align="center">
+						<a href="../admin/member_list.php"><font color="white">관리자모드</font></a>
+						</td>
+						<?
+						}else{
+						?>
+                        <td width="60" height="25">
+						<p align="right"><font color="white">회원성명:</font></td>
+                        <td width="84"><font color="white">&nbsp;<?=$HTTP_COOKIE_VARS[BEAUTYE_NAME]?>님 </font>
+						</td>
+						<?
+						}
+						?>						
+                      </tr>
+                      <tr>
+                        <td height="25" width="60">
+                                                    <p align="right"><font color="white">마일리지:</font></td>
+                        <td width="84"><font color="white">&nbsp;<?=number_format($total_reserve)?>원</font></td>
+                      </tr>
+                      <tr>
+                        <td height="25" width="60">
+                                                    <p align="right"><font color="white">남은기간:</font></td>
+                        <td width="84"><font color="white">&nbsp;<?=$period?>일</font></td>
+                      </tr>
+                      <tr>
+                        <td><img src="/image/main_img/blank.gif" width="1" height="4"></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr>
+                  <td><table width="85%" height="30" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+
+                      <td width="50%" align="center"><a href="../comp21.php"><img src="../img/btn_info.gif" width="59" height="20" border="0"></a></td>
+                      <td width="50%" align="center">
+                        <a href="../logout.php"><img src="../img/btn_logout.gif" width="59" height="20" border="0"></a></td>
+                      </tr>
+                    </table></td>
+                </tr>
+				<?
+				}else{
+				?>
+				<form name="login" method="post" action="../login_process.php" onSubmit="return check_value()">
+				<input type="hidden" name="ret_url" value="<?=$PHP_SELF?>">
+                <tr>
+                  <td><table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td colspan="2"><img src="/image/main_img/blank.gif" width="1" height="5"></td>
+                      </tr>
+                      <tr>
+                        <td width="43" height="25"><img src="maa3.gif" width="43" height="14"></td>
+                        <td><input name="user_id" type="text" class="unnamed1" size="14"></td>
+                      </tr>
+                      <tr>
+                        <td height="25"><img src="maa4.gif" width="43" height="14"></td>
+                        <td><input name="user_pw" type="password" class="unnamed1" size="14"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2"><img src="/image/main_img/blank.gif" width="1" height="4"></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr>
+                  <td><table width="85%" height="30" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+
+                      <td width="50%" align="center"><a href="../member1.php"><img src="maa7.gif" width="59" height="20" border="0"></a></td>
+                      <td width="50%" align="center">
+                        <input type="image" src="maa8.gif" width="59" height="20" border="0"></td>
+                      </tr>
+                    </table></td>
+                </tr>
+               </form>
+				<?
+				}
+				?>
+
+
+
+
+
+
+				
+
+
+
+
+
+
+                
+                <tr>
+                  <td><table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <tr>
+                        
+                        <td><a href="../id_pass.php"><img src="maa5.gif" width="147" height="18" border="0"></a></td>
+                        
+                        
+                      </tr>
+                      <tr>
+                        <td><a href="../member.php" onFocus="blur()"><img src="maa6.gif" width="147" height="17" border="0"></a></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <!--
+                <tr>
+                  <td><img src="/image/main_img/blank.gif" width="1" height="15"></td>
+                </tr>
+                -->
+            </table>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="5A5942">
+              <tr>
+                <td valign="top"><table width="90%" height="265" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td valign="top">
+                                                <table border="0" cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../sung/a2.php" OnMouseOut="na_restore_img_src('image1', 'document')" OnMouseOver="na_change_img_src('image1', 'document', '../le1_1.gif', true);"><img src="../le1.gif" width="150" height="23" border="0" name="image1"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../ses/c2.php" OnMouseOut="na_restore_img_src('image2', 'document')" OnMouseOver="na_change_img_src('image2', 'document', '../le2_1.gif', true);"><img src="../le2.gif" width="150" height="23" border="0" name="image2"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../ses/c3.php" OnMouseOut="na_restore_img_src('image3', 'document')" OnMouseOver="na_change_img_src('image3', 'document', '../le3_1.gif', true);"><img src="../le3.gif" width="150" height="23" border="0" name="image3"></a><a href="../posi/b3.php" OnMouseOut="na_restore_img_src('image4', 'document')" OnMouseOver="na_change_img_src('image4', 'document', '../le4_1.gif', true);"><img src="../le4.gif" width="150" height="23" border="0" name="image4"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../ses/c16.php" OnMouseOut="na_restore_img_src('image5', 'document')" OnMouseOver="na_change_img_src('image5', 'document', '../le5_1.gif', true);"><img src="../le5.gif" width="150" height="23" border="0" name="image5"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../ee/e17.php" OnMouseOut="na_restore_img_src('image6', 'document')" OnMouseOver="na_change_img_src('image6', 'document', '../le6_1.gif', true);"><img src="../le6.gif" width="150" height="23" border="0" name="image6"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../sung/a11.php" OnMouseOut="na_restore_img_src('image7', 'document')" OnMouseOver="na_change_img_src('image7', 'document', '../le7_1.gif', true);"><img src="../le7.gif" width="150" height="23" border="0" name="image7"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../hot/f12.php" OnMouseOut="na_restore_img_src('image8', 'document')" OnMouseOver="na_change_img_src('image8', 'document', '../le8_1.gif', true);"><img src="../le8.gif" width="150" height="23" border="0" name="image8"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../hot/f8.php" OnMouseOut="na_restore_img_src('image9', 'document')" OnMouseOver="na_change_img_src('image9', 'document', '../le9_1.gif', true);"><img src="../le9.gif" width="150" height="23" border="0" name="image9"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../hot/f9.php" OnMouseOut="na_restore_img_src('image10', 'document')" OnMouseOver="na_change_img_src('image10', 'document', '../le10_1.gif', true);"><img src="../le10.gif" width="150" height="23" border="0" name="image10"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="134">
+                                                            <p><a href="../food/d1.php" OnMouseOut="na_restore_img_src('image11', 'document')" OnMouseOver="na_change_img_src('image11', 'document', '../le11_1.gif', true);"><img src="../le11.gif" width="150" height="23" border="0" name="image11"></a></p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+</td>
+                    </tr>
+                  </table></td>
+              </tr>
+            </table>
+            <table width="160" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+              <tr>
+                 <td><a onfocus="blur()" href="http://www.beautye.net/ver1/cum/notice.php?set=view&board=bbs_cum&uid=116&opti_ex=2007년%201월%20확달라지는%20뷰티e%20서비스를%20기대하세요.%20더%20다양한%20컨텐츠와%20함께%20회원님들에게%20풍성한%20혜택%20역...&check_array=&search_word=&page=1&page_num=9&sort1=&sort2="><img src="../cc4.gif" border="0" width="161" height="52"></a></td>
+              </tr>
+              <tr>
+                 <td><a onfocus="blur()" href="/ver1/cum/g6.php"><img src="../cc5.gif"   border="0" width="161" height="50"></a></td>
+              </tr>
+              <tr>
+                 <td><a onfocus="blur()" href="/ver1/ses/c12.php"><img src="../cc6.gif" border="0" width="161" height="50"></a></td>
+              </tr>
+              <tr>
+                 <td><a href="http://click.interich.com?a_id=vision21&a_num=1&m_id=lclc&m_num=125175" target="blank" ><img src="../g3.gif" border="0" width="161" height="86"></a></td>
+              </tr>
+            </table>
+		</td>

@@ -1,0 +1,39 @@
+<script type="text/javascript">
+function checkform(f){
+	if(f.username.value==""){
+		alert("아이디를 입력하세요.");
+		f.username.focus();
+		return false;
+	}
+	if(f.password.value==""){
+		alert("비밀번호를 입력하세요.");
+		f.password.focus();
+		return false;
+	}
+	return true;
+}
+</script>
+<table width="417" border="0" cellpadding="0" cellspacing="0">
+
+<!--<form name='login_f' method='post' action='https://www.renemall.co.kr:8001/market/member/login_process.php?url=<?=$url?>&mart_id=<?=$mart_id?>' onsubmit='return checkform(this)'>-->
+<form name='login_f' method='post' action='../member/login_process.php?url=<?=$url?>&mart_id=<?=$mart_id?>' onsubmit='return checkform(this)'>
+<input type="hidden" name="member_type" value="1">
+  <tr>
+    <td colspan="8"><img src="../images/login_1.gif" width="417" height="21" alt=""></td>
+  </tr>
+  <tr>
+    <td><img src="../images/login_2.gif" width="23" height="38" alt=""></td>
+    <td width="106"><div align="center">
+      <input name="username" type="text" class="input_03" id="username" style="width:90px;height:20px" size="12">
+    </div></td>
+    <td><img src="../images/login_4.gif" width="24" height="38" alt=""></td>
+    <td width="106"><div align="center">
+      <input name="password" type="password" class="input_03" id="pw" style="width:90px;height:20px" size="12">
+    </div></td>
+    <td><input type="image" src="../images/login_6.gif" width="44" height="38" alt=""></td>
+    <td><a href="../member/."><img src="../images/login_7.gif" width="40" height="38" alt=""></a></td>
+    <td><a href="../member/idfind.html"><img src="../images/login_8.gif" width="65" height="38" alt=""></a></td>
+    <td><img src="../images/login_9.gif" width="9" height="38" alt=""></td>
+  </tr>
+</form>
+</table>

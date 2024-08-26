@@ -1,0 +1,162 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script>
+function really(){
+	if(confirm("정말 삭제하시겠습니까?")) return true;
+	else return false;
+}
+
+function page_reload() { 
+	document.form.submit();
+}
+function addorder(){
+	var form = document.form;	form.action='../cart/cart_in.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>&quantity=1';
+	form.target = "_parent";
+	form.submit();
+}
+</script>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" align="center" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><?	include "../include/sub_top.htm"; ?>
+				<table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지 &gt; 배송조회 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/mypage_3.gif" width="277" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/update.html?mart_id=<?=$mart_id?>"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td width="5%"><a href="../stat/order.html"><img src="../images/mypage_11.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_12.gif"></td>
+                                    <td width="5%"><a href="../mypage/send.html"><img src="../images/mypage_over_13.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_14.gif"></td>
+                                    <td width="5%"><a href="../mypage/point.html"><img src="../images/mypage_15.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/search_title.gif" width="750" height="46"></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td><table width="660" border="0" align="center" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td><a href="http://www.doortodoor.co.kr/jsp/cmn/c03a_s1.jsp" target="_blank"><img src="../image/mypage/send_1.gif" width="220" height="100" border="0"></a></td>
+                            <td><a href="http://www.ilogen.com/customer/reserve_03.asp" target="_blank"><img src="../image/mypage/send_2.gif" width="220" height="100" border="0"></a></td>
+                            <td><a href="https://samsunghth.com/homepage/searchTraceGoods/SearchTraceInput.jhtml?FLAG=2&mc=5" target="_blank"><img src="../image/mypage/send_3.gif" width="220" height="100" border="0"></a></td>
+                          </tr>
+                          <tr>
+                            <td><a href="http://service.epost.go.kr/parcel/gen/amt61010.jsp" target="_blank"><img src="../image/mypage/send_4.gif" width="220" height="100" border="0"></a></td>
+                            <td><a href="http://www.etranet.co.kr/new/index.php" target="_blank"><img src="../image/mypage/send_5.gif" width="220" height="100" border="0"></a></td>
+                            <td><a href="http://www.hanjin.co.kr/transmission/main.htm" target="_blank"><img src="../image/mypage/send_6.gif" width="220" height="100" border="0"></a></td>
+                          </tr>
+                          <tr>
+                            <td><a href="http://www.hyundaiexpress.com/hydex/html/tracking/hlc/tracing.html" target="_blank"><img src="../image/mypage/send_7.gif" width="220" height="100" border="0"></a></td>
+                            <td><a href="http://www.e-family.co.kr/index.html" target="_blank"><img src="../image/mypage/send_8.gif" width="220" height="100" border="0"></a></td>
+                            <td><a href="http://www.cjgls.co.kr/kor/service/service02.asp" target="_blank"><img src="../image/mypage/send_9.gif" width="220" height="100" border="0"></a></td>
+                          </tr>
+                          <tr>
+                            <td><a href="http://www.kgbls.co.kr/trace/default.asp" target="_blank"><img src="../image/mypage/send_10.gif" width="220" height="100" border="0"></a></td>
+                            <td><a href="http://www.ktgls.com/" target="_blank"><img src="../image/mypage/send_11.gif" width="220" height="100" border="0"></a></td>
+                            <td>&nbsp;</td>
+                          </tr>
+                      </table></td>
+                    </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>
