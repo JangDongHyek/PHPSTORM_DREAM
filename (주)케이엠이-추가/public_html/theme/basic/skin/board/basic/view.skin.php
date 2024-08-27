@@ -79,7 +79,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     </div>
 
 
-    <?php
+    <?php /*
     if ($view['link']) {
      ?>
      <!-- 관련링크 시작 { -->
@@ -108,7 +108,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         </ul>
     </section>
     <!-- } 관련링크 끝 -->
-    <?php } ?>
+    <?php }*/ ?>
 
     <!-- 게시물 상단 버튼 시작 { -->
     <div id="bo_v_top">
@@ -245,8 +245,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <div class="text-center" style="width: 100px;">Back</div>
         <div class="mx-lg-5 mx-2">|</div>
         <div class="w-100 text-break-1">
-            <a class="" href="<?php echo $prev_href ?>" target="_self">Korea Industrial Human Resources Corporation signs a parallel
-                work-study system agreement</a>
+            <a class="" href="<?php echo $prev_href ?>" target="_self"><?=$prev_wr_subject?></a>
         </div>
         </div>
     <?php } ?>
@@ -255,8 +254,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
             <div class="text-center" style="width: 100px;">Next</div>
             <div class="mx-lg-5 mx-2">|</div>
             <div class="w-100 text-break-1">
-                <a class="" href="<?php echo $next_href ?>" target="_self">Busan Industrial High School's industry-academic cooperation
-                    agreement was signed</a>
+                <a class="" href="<?php echo $next_href ?>" target="_self"><?=$next_wr_subject?></a>
             </div>
         </div>
     <?php } ?>

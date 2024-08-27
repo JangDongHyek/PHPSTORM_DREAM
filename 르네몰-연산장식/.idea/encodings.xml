@@ -10,5 +10,6 @@
     <file url="file://$PROJECT_DIR$/public_html/market/cart/order_ok2.html" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/market/js/common.js" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/market/stat/order_view.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/market/stat/receipt_link.html" charset="EUC-KR" />
   </component>
 </project>
