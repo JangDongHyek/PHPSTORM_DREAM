@@ -209,7 +209,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 		</tr>
 		<tr>
 		  <th>Food Carving</th>
-		  <td>Class 15</td>
+		  <td>Class 16</td>
 		  <td>Food Carving</td>
 		  <td><div class="checkbox">
 		<label>

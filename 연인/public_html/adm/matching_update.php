@@ -18,6 +18,27 @@ foreach ($list_no AS $key=>$val) {
     $target_no = $_POST['target_no'][$val]; // 상대회원 번호
     $male_mb_no = ($_POST['mb_sex']=="남")? $mb_no : $target_no; // 남자회원 번호
 
+
+    $coupon_count = getMemberCoupon($male_mb_no);
+    $heart_count = getMemberHeart($male_mb_no);
+
+    switch ($match_type) {
+        case $match_type_arr[2] :
+            if($coupon_count <= 0) {
+                echo "남자회원의 쿠폰이 부족합니다.";
+                die;
+            }
+            break;
+
+        case $match_type_arr[3] :   // 2.3 `포인트소개`이면 포인트-10
+            if($heart_count < 10000) {
+                echo "남자회원의 포인트가 부족합니다. 보유 포인트 ($heart_count)";
+                die;
+            }
+            break;
+    }
+
+
 	// 1. 매칭DB 등록
 	$sql = "INSERT INTO g5_matching SET
 			mb_id = '{$_POST['mb_id']}',

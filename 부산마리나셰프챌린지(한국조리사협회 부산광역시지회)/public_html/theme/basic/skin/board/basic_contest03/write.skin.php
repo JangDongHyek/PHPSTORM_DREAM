@@ -236,7 +236,7 @@ add_javascript('<script type="text/javascript" src="' . $board_skin_url . '/js/u
             </tr>
             <tr>
                 <td>Food Carving</td>
-                <td>Class 13</td>
+                <td>Class 14</td>
                 <td>
                     <div class="checkbox">
                         <label>

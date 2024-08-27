@@ -201,11 +201,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     $model->where("wr_id",$list[$i]['wr_id']);
     try {
         $files = $model->get();
-        var_dump($files);
+
     }catch (Exception $e) {
         $msg= $e;
     }
-    echo 1;
     ?>
     <div class="modal fade" id="performance_<?php echo $list[$i]['wr_id'] ?>" data-bs-keyboard="false" tabindex="-1" aria-labelledby="performance_<?php echo $list[$i]['wr_id'] ?>Label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">

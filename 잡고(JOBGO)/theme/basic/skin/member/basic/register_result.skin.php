@@ -3,6 +3,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
+$text = $mb['mb_nick'] ? $mb['mb_nick'] : $mb['mb_name'];
 ?>
 <script type="text/javascript">
 
@@ -12,7 +13,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 	<h1><i class="fad fa-check fa-2x"></i></h1>
 
     <h2>
-        <strong><?php echo get_text($mb['mb_nick']); ?>님</strong><br>반갑습니다.
+
+        <strong><?php echo $text ?>님</strong><br>반갑습니다.
     </h2>
 
     <?php if ($config['cf_use_email_certify']) {  ?>

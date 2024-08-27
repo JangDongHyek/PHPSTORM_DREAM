@@ -1,3 +1,32 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+
+<?
+$order_sql = "select * from order_buy where order_num='$id'";
+$order_res = mysql_query($order_sql, $dbconn);
+$order = mysql_fetch_array($order_res);
+
+$inno_sql = "select * from innopay_log where order_num='$id'";
+$inno_res = mysql_query($inno_sql, $dbconn);
+$inno = mysql_fetch_array($inno_res);
+
+//결제일시 구하기
+$timestamp = $inno['AuthDate'];
+$year = '20' . substr($timestamp, 0, 2);
+$month = substr($timestamp, 2, 2);
+$day = substr($timestamp, 4, 2);
+$hour = substr($timestamp, 6, 2);
+$minute = substr($timestamp, 8, 2);
+$second = substr($timestamp, 10, 2);
+$formattedDate = $year . '.' . $month . '.' . $day . ' ' . $hour . ':' . $minute . ':' . $second;
+
+$price = (int)$inno['Amt'] * 0.9;
+$tax = (int)$inno['Amt'] * 0.1;
+?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
 <style>
     body{background-color: #eee;}
@@ -19,39 +48,61 @@
     <div class="hd">
         <h1>신용 카드 전표 출력</h1>
         <div class="btn_wrap">
-            <a><i class="fas fa-link"></i></a>
-            <a><i class="fas fa-print"></i></a>
-            <a><i class="fas fa-times"></i></a>
+            <a onclick="copyURL();"><i class="fas fa-link"></i></a>
+            <a onclick="window.print();"><i class="fas fa-print"></i></a>
+            <a onclick="window.close();"><i class="fas fa-times"></i></a>
         </div>
     </div>
     <div class="conts">
         <dl>
             <dt>주문번호</dt>
-            <dd>12346546854</dd>
+            <dd><?=$id?></dd>
             <dt>구매자</dt>
-            <dd>김토스</dd>
+            <dd><?=$inno['name']?></dd>
             <dt>구매상품</dt>
-            <dd>토스 티셔츠 외 2건</dd>
+            <dd><?=$inno['GoodsName']?></dd>
         </dl>
         <dl>
             <dt>카드종류</dt>
-            <dd>신한 마스타</dd>
+            <dd><?=$inno['fn_name']?></dd>
             <dt>할부</dt>
-            <dd>일시불</dd>
+            <dd><?=$inno['CardQuota'] == "00" ? "일시불" : $inno['CardQuota']?></dd>
             <dt>거래상태</dt>
             <dd>승인</dd>
             <dt>승인번호</dt>
-            <dd>123246546812312</dd>
+            <dd><?=$inno['AuthCode']?></dd>
             <dt>결제일시</dt>
-            <dd>2024.03.01 13:00:00</dd>
+            <dd><?=$formattedDate?></dd>
         </dl>
         <dl>
             <dt>과세금액</dt>
-            <dd>50,000원</dd>
+            <dd><?=number_format($price)?>원</dd>
             <dt>부과세</dt>
-            <dd>5,000원</dd>
+            <dd><?=number_format($tax)?>원</dd>
             <dt class="price">결제금액</dt>
-            <dd class="price">55,000원</dd>
+            <dd class="price"><?=number_format($price+$tax)?>원</dd>
         </dl>
     </div>
 </div>
+
+<script>
+    function copyURL() {
+        // 현재 페이지의 URL 가져오기
+        var currentURL = window.location.href;
+
+        // 임시 텍스트 영역 생성
+        var tempInput = document.createElement('textarea');
+        tempInput.value = currentURL;
+        document.body.appendChild(tempInput);
+
+        // 텍스트 영역 선택 및 복사
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // 모바일 브라우저 호환성 위해 추가
+        document.execCommand('copy');
+
+        // 임시 텍스트 영역 제거
+        document.body.removeChild(tempInput);
+
+        alert("복사가 완료되었습니다.")
+    }
+</script>

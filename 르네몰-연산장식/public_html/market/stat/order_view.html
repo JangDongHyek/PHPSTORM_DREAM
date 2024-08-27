@@ -664,7 +664,7 @@ $LGD_HASHDATA = md5($xpay_id.$field1.$xpay_key);
                         </tr>
                         <tr>
                           <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">승인번호</td>
-                          <td><?=$app_no?> <input onclick="javascript:showReceiptByTID('<?=$xpay_id?>', '<?=$field1?>', '<?=$LGD_HASHDATA?>')" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="신용카드 전표출력"></td>
+                          <td><?=$app_no?> <input onclick="javascript:openWin('<?=$order_num_query?>')" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="신용카드 전표출력"></td>
                         </tr>
 						<tr>
                           <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">할부</td>
@@ -859,6 +859,13 @@ include "../include/bottom.htm";
 	</td>
   </tr>
 </table>
+
+<script>
+    var aa = "<?=G5_URL?>";
+    function openWin(id) {
+        window.open(`/market/stat/receipt_link.html?id=${id}`,'_blank', 'width=800,height=600');
+    }
+</script>
 </body>
 </html>
 <?

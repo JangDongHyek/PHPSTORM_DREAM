@@ -5,6 +5,8 @@ include_once('./_common.php');
 
 $g5['title'] = '회원가입';
 include_once('./_head.php');
+
+$register_action_url = G5_BBS_URL.'/register_form_update.php';
 ?>
 
 <style>
@@ -34,6 +36,7 @@ include_once('./_head.php');
         <input type="hidden" name="mb_sns" id="mb_sns" value="<?php if($sns == "Y"){ echo $_SESSION['ss_sns']; } ?>" >
         <input type="hidden" name="mb_9" id="mb_9" value="<?php if($sns == "Y"){ echo $_SESSION['chk_age']; } ?>" >
         <input type="hidden" name="r_code" id="r_code" value="<?=$_REQUEST['r_code']?>" >
+        <input type="hidden" name="simple" id="simple" value="true" >
 
         <?php if($w == 'u') { ?>
             <p class="t3 b_padding25 text-center">정보수정</p>
@@ -69,7 +72,7 @@ include_once('./_head.php');
                         <dd class="col-xs-1 req">*</dd>
                         <dd class="col-xs-12">
                             <label for="reg_mb_id_new">아이디</label>
-                            <input type="password" name="now_pw" id="reg_mb_id_new" class="regist-input <?php echo $required ?>" placeholder="아이디">
+                            <input type="text" name="mb_email" id="mb_email" class="regist-input <?php echo $required ?>" placeholder="아이디">
                         </dd>
                     </dl>
                     <?php if($w == "u" && $member['mb_sns'] == ''){ ?>
@@ -83,7 +86,7 @@ include_once('./_head.php');
                              <?php } */ ?>
                                 <?php if($w == "" && $sns != 'Y'){ ?><span id="button_span"><button type="button" id = "btn_send" class="phone" onclick="certi_mail_send();" >인증하기</button></span> <?php } ?>
                                 <label for="reg_mb_id">이메일 입력</label>
-                                <input type="text" name="mb_email" value="<?php if ($w == 'u'){  echo $member['mb_email']; }else if ($sns == "Y"){ echo $_SESSION['ss_check_mb_id']; }else{ echo $_REQUEST['mb_email'];}?>" id="reg_mb_email" class="<?=$email_class?> regist-input <?php echo $required ?> <?php if($w=="u" || $sns == 'Y') echo "readonly";?>" minlength="4" maxlength="50" placeholder="이메일 입력" <?php if($w=="u"  || $sns == 'Y') echo "readonly";?>>
+                                <input type="text" name="mb_e3mail" value="<?php if ($w == 'u'){  echo $member['mb_email']; }else if ($sns == "Y"){ echo $_SESSION['ss_check_mb_id']; }else{ echo $_REQUEST['mb_email'];}?>" id="reg_mb_email" class="<?=$email_class?> regist-input <?php echo $required ?> <?php if($w=="u" || $sns == 'Y') echo "readonly";?>" minlength="4" maxlength="50" placeholder="이메일 입력" <?php if($w=="u"  || $sns == 'Y') echo "readonly";?>>
                             </dd>
                             <dd class="error col-xs-12" id="email_msg"></dd>
                         </dl>
@@ -159,7 +162,7 @@ include_once('./_head.php');
                         <dd class="col-xs-12">
                             <?php if($w == "" && $sns != 'Y'){ ?><span id="button_span"><button type="button" id = "btn_send" class="phone" onclick="nice_certify('1');" >인증하기</button></span> <?php } ?>
                             <label for="reg_mb_id">휴대폰 인증</label>
-                            <input  <?php if($w == "" && $sns != 'Y'){ ?> onclick="nice_certify('1');" <?php } ?> type="text" name="mb_hp" value="<?php if ($w == 'u'){  echo $member['mb_hp']; }else if ($sns == "Y"){ echo $_SESSION['chk_hp']; }else{ echo $_REQUEST['mb_hp'];}?>" id="reg_mb_hp" class="regist-input <?php echo $required ?>" placeholder="휴대폰 번호" <? if ($sns != 'Y') echo "readonly"; ?> maxlength="11">
+                            <input  <?php if($w == "" && $sns != 'Y'){ ?> onclick="nice_certify('1');" <?php } ?> type="text" name="mb_hp" value="010-2475-5170<?php if ($w == 'u'){  echo $member['mb_hp']; }else if ($sns == "Y"){ echo $_SESSION['chk_hp']; }else{ echo $_REQUEST['mb_hp'];}?>" id="reg_mb_hp" class="regist-input <?php echo $required ?>" placeholder="휴대폰 번호" <? if ($sns != 'Y') echo "readonly"; ?> maxlength="11">
                         </dd>
                         <dd class="error col-xs-12" id="phone"></dd>
                     </dl>
@@ -325,6 +328,7 @@ include_once('./_head.php');
 
 
 <?php
+include_once(G5_BBS_PATH."/nice/register.php");
 include_once(G5_BBS_PATH."/register_script.php");
 include_once('./_tail.php');
 ?>

@@ -305,14 +305,14 @@
             }
         }
 
-        if (f.w.value == '' && f.mb_sns.value == "") {
+        if (f.w.value == '' && f.mb_sns.value == "" && f.simple.value == "") {
             if (is_certify != 'Y'){
                 swal('이메일을 인증해주세요.');
                 return false;
             }
         }
 
-        if (f.w.value == "" ) {
+        if (f.w.value == "" && f.simple.value == "") {
             var msg = reg_mb_email_check();
             if (msg) {
                 swal(msg);
@@ -320,10 +320,12 @@
                 return false;
             }
         }
+
         // console.log(f.mb_sns.value);
         // console.log(f.mb_password.value);
         // console.log(f.mb_password_re.value);
         // return false;
+
         if (f.mb_sns.value == "" && f.mb_password.value != f.mb_password_re.value) {
             swal('비밀번호가 같지 않습니다.');
             return false;
@@ -338,6 +340,35 @@
                 return false;
             }
         }
+
+        if(f.simple.value) {
+            if(!f.mb_email.value) {
+                swal("아이디를 입력하십시오.");
+                return false;
+            }
+            
+            if (f.mb_sns.value == "" && f.mb_password.value == "") {
+                swal('비밀번호를 입력해주세요.');
+                return false;
+            }
+
+            if(!f.reg_mb_name.value) {
+                swal("이름을 입력하십시오.");
+                return false;
+            }
+
+            if($("#reg_req1").prop("checked")==false){
+                swal("이용약관 동의(필수)를 체크하십시오");
+                return false;
+            }
+            if($("#reg_req2").prop("checked")==false){
+                swal("개인정보처리방침 동의(필수)를 체크하십시오");
+                return false;
+            }
+            
+
+        }
+
 
         // if ((f.w.value == "") || (f.w.value == "u" && f.mb_nick.defaultValue != f.mb_nick.value)) {
         //     var msg = reg_mb_nick_check();

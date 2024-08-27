@@ -59,10 +59,10 @@ $mb_7           = isset($_POST['mb_7'])             ? trim($_POST['mb_7'])      
 $mb_8           = isset($_POST['mb_8'])             ? trim($_POST['mb_8'])           : "";
 $mb_9           = isset($_POST['mb_9'])             ? trim($_POST['mb_9'])           : "";
 $mb_10          = isset($_POST['mb_10'])            ? trim($_POST['mb_10'])          : "";
+$simple          = isset($_POST['simple'])            ? trim($_POST['simple'])          : "";
 //$mb_birthday          = trim($_POST['mb_year'])."-".trim($_POST['mb_month'])."-".trim($_POST['mb_day']);
 $mb_division          = isset($_POST['mb_division'])            ? trim($_POST['mb_division'])          : "";
 $mb_join_division          = isset($_POST['mb_join_division'])            ? trim($_POST['mb_join_division'])          : "";
-
 $mb_sub_path = "";
 for ($i = 0; $i < count($_POST['mb_sub_path']); $i++) {
     $mb_sub_path .= "," . $_POST['mb_sub_path'][$i];
@@ -119,16 +119,18 @@ if ($w == '' || $w == 'u') {
 //        alert('비밀번호가 일치하지 않습니다.');
 
 //    if ($msg = empty_mb_name($mb_name))       alert($msg, "", true, true);
-    if ($msg = empty_mb_nick($mb_nick))     alert($msg, "", true, true);
-    if ($msg = empty_mb_email($mb_email))   alert($msg, "", true, true);
+    if(!$simple) {
+        if ($msg = empty_mb_nick($mb_nick))     alert($msg, "", true, true);
+        if ($msg = empty_mb_email($mb_email))   alert($msg, "", true, true);
 //    if ($msg = reserve_mb_id($mb_id))       alert($msg, "", true, true);
-    if ($msg = reserve_mb_nick($mb_nick))   alert($msg, "", true, true);
-    // 이름에 한글명 체크를 하지 않는다.
-    //if ($msg = valid_mb_name($mb_name))     alert($msg, "", true, true);
-    if ($msg = valid_mb_nick($mb_nick))     alert($msg, "", true, true);
-    if ($_SESSION['ss_sns'] != 'facebook') {
-        if ($msg = valid_mb_email($mb_email)) alert($msg, "", true, true);
-        if ($msg = prohibit_mb_email($mb_email)) alert($msg, "", true, true);
+        if ($msg = reserve_mb_nick($mb_nick))   alert($msg, "", true, true);
+        // 이름에 한글명 체크를 하지 않는다.
+        //if ($msg = valid_mb_name($mb_name))     alert($msg, "", true, true);
+        if ($msg = valid_mb_nick($mb_nick))     alert($msg, "", true, true);
+        if ($_SESSION['ss_sns'] != 'facebook') {
+            if ($msg = valid_mb_email($mb_email)) alert($msg, "", true, true);
+            if ($msg = prohibit_mb_email($mb_email)) alert($msg, "", true, true);
+        }
     }
 
     // 휴대폰 필수입력일 경우 휴대폰번호 유효성 체크
@@ -141,13 +143,15 @@ if ($w == '' || $w == 'u') {
 //        print_r($_SESSION);
 //        print_r($mb_id);
 //        exit;
-        if (get_session('ss_check_mb_email') != $mb_id &&  get_session('ss_check_mb_id') != $mb_id) {
+        if(!$simple) {
+            if (get_session('ss_check_mb_email') != $mb_id &&  get_session('ss_check_mb_id') != $mb_id) {
 
-            set_session('ss_check_mb_id', '');
-            set_session('chk_hp', '');
+                set_session('ss_check_mb_id', '');
+                set_session('chk_hp', '');
 
 
-            alert('올바른 방법으로 이용해 주십시오.',G5_URL);
+                alert('올바른 방법으로 이용해 주십시오.',G5_URL);
+            }
         }
 
         // 본인확인 체크
@@ -173,7 +177,11 @@ if ($w == '' || $w == 'u') {
         $old_email = $member['mb_email'];
     }
 
-    if ($msg = exist_mb_nick($mb_nick, $mb_id))     alert($msg, "", true, true);
+    if(!$simple) {
+        if ($msg = exist_mb_nick($mb_nick, $mb_id))     alert($msg, "", true, true);
+    }else {
+        if ($msg = exist_mb_id($mb_id))     alert($msg);
+    }
     if ($w == "") {
         if ($msg = exist_mb_email($mb_email, $mb_id)) alert($msg, "", true, true);
     }
@@ -521,10 +529,14 @@ if ($msg)
     echo '<script>alert(\''.$msg.'\');</script>';
 
 if ($w == '') {
-    if ($mb_division == 1){
+    if(!$simple) {
+        if ($mb_division == 1){
+            $url = G5_HTTP_BBS_URL.'/register_result.php';
+        }else{
+            $url = G5_HTTP_BBS_URL.'/register_expert_form03.php';
+        }
+    }else {
         $url = G5_HTTP_BBS_URL.'/register_result.php';
-    }else{
-        $url = G5_HTTP_BBS_URL.'/register_expert_form03.php';
     }
 
     echo '<script>';
