@@ -79,8 +79,11 @@ function matchSubmit(f) {
             var _submit = true;
             $.each($('select.valid_type'), function(index, elem) {
                 if (elem.value == "쿠폰소개") {
-                    var _num = $(elem).data("num");
+                    //var _num = $(elem).data("num");
+                    var _num = 1;
+                    console.log(_num)
                     var _target_coupon = $("[name='target_coupon[" + _num + "]']").val();
+                    console.log(_target_coupon);
 
                     if (parseInt(_target_coupon) < 1) {
                         var _name = $("[name='target_name[" + _num + "]']").val();
@@ -105,7 +108,8 @@ function matchSubmit(f) {
             var _submit = true;
             $.each($('select.valid_type'), function(index, elem) {
                 if (elem.value == "포인트소개") {
-                    var _num = $(elem).data("num");
+                    //var _num = $(elem).data("num");
+                    var _num = 1;
                     var _target_heart = $("[name='target_heart[" + _num + "]']").val();
 
                     if (parseInt(_target_heart) < 10000) {
@@ -153,7 +157,7 @@ function getMemberList() {
 
 // 회원검색-선택
 var list_no = 1;
-function setMatchTarget(no,id, name, sex, age, tel, si, gu) {
+function setMatchTarget(no,id, name, sex, age, tel, si, gu,coupon,heart) {
 	var obj = {};
 
 	// 중복등록확인
@@ -170,6 +174,8 @@ function setMatchTarget(no,id, name, sex, age, tel, si, gu) {
 	obj.tel = tel;
 	obj.si = si;
 	obj.gu = gu;
+	obj.coupon = coupon;
+    obj.heart = heart;
 
 	$.ajax({
 		type : "post",  

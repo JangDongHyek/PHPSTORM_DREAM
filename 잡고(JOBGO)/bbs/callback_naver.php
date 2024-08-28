@@ -1,5 +1,6 @@
 <?php
 include_once('./_common.php');
+include_once("../jl/JlModel.php");
 
 $client_id = "zLJRPBj6a8ai5kXgCYb4";
 $client_secret = "SGOWXGbsL0";
@@ -91,7 +92,52 @@ if($status_code == 200) {
             set_session('chk_hp', $pr_arr['response']['mobile']);
             set_session('chk_birth', $pr_arr['response']['birthyear'].str_replace( '-' , '', $pr_arr['response']['birthday']));
             set_session('ss_sns', 'naver' );
-            goto_url(G5_BBS_URL . '/register_form.php?sns=Y');
+
+            $model = new JlModel(array(
+                "table" => "g5_member",
+                "primary" => "mb_no",
+                "autoincrement" => true,
+                "empty" => false
+            ));
+
+            $obj = array(
+                "mb_id" => $pr_arr['response']['email'],
+                "mb_level" => 2,
+                "mb_birth" => $pr_arr['response']['birthyear'].str_replace( '-' , '', $pr_arr['response']['birthday']),
+                "mb_hp" => $pr_arr['response']['mobile'],
+                "mb_name" => $pr_arr['response']['name'],
+                "mb_adult" => 1,
+                "mb_sns" => "naver"
+            );
+
+            $model->insert($obj);
+
+            $mb = get_member($pr_arr['response']['email']);
+
+            // 로그인데이터 앱저장
+            if ($android == true) {
+
+                echo '
+                <script>
+                    window.Android.updateLoginInfo("'.$mb['mb_id'].'");
+                </script>';
+            }
+
+            set_session('ss_mb_id', $mb["mb_id"]);
+            set_session('ss_mb_key', md5($mb['mb_datetime'] . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']));
+            set_session('ss_mb_no', $mb["mb_no"] );
+            set_session('ss_sns', 'Y' );
+            set_session('ss_naver_token', $refresh_token );
+            set_session('ss_naver_token2', $token );
+
+            $key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $mb['mb_password']);
+            set_cookie('ck_mb_id', $mb['mb_id'], 86400 * 31 * 9999);
+            set_cookie('ck_auto', $key, 86400 * 31 * 9999);
+            set_cookie_app('mb_id', $mb['mb_id'], 86400 * 31 * 9999);
+
+
+            //goto_url(G5_BBS_URL . '/register_new_form.php?sns=Y');
+            goto_url(G5_BBS_URL.'/register_result.php');
         }
 
     } else {

@@ -15,6 +15,11 @@ class Jl {
         $this->INIT();
     }
 
+    function error($msg) {
+        echo $msg;
+        throw new \Exception($msg);
+    }
+
     function jsonDecode($json,$encode = true) {
         // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
         $json = addslashes($json);
@@ -24,7 +29,7 @@ class Jl {
         $obj = json_decode($obj, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception("Jl : ".json_last_error_msg());
+            $this->error("Jl : ".json_last_error_msg());
         }
 
         // 오브젝트 비교할때가있어 파라미터가 false값일땐 모든값 decode
@@ -124,7 +129,7 @@ class Jl {
         if ($position !== false) {
             $this->ROOT = substr($root, 0, $position).$this->root_dir;
         }else {
-            throw new \Exception("Jl : ROOT 위치를 찾을 수 없습니다.");
+            $this->error("Jl : ROOT 위치를 찾을 수 없습니다.");
         }
 
         //URL 구하기
@@ -136,7 +141,7 @@ class Jl {
         $this->URL = $http.$host.$user;
 
         //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS)) throw new \Exception("Jl : JS 위치를 찾을 수 없습니다.");
+        if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl : JS 위치를 찾을 수 없습니다.");
 
         //DB 설정
         $this->DB = array(

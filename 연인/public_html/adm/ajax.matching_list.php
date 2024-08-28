@@ -75,6 +75,9 @@ if ($member['mb_status'] == "관리자") {
 		<input type="hidden" name="list_no[]" value="<?=$list_no?>">
 		<input type="hidden" name="target_id[<?=$list_no?>]" value="<?=$_POST['id']?>"><!-- 매칭상대아이디 -->
         <input type="hidden" name="target_no[<?=$list_no?>]" value="<?=$_POST['no']?>"><!-- 매칭상대인덱스 -->
+        <input type="hidden" name="target_coupon[<?=$list_no?>]" value="<?=$_POST['coupon']?>"><!-- 매칭상대인덱스 -->
+        <input type="hidden" name="target_heart[<?=$list_no?>]" value="<?=$_POST['heart']?>"><!-- 매칭상대인덱스 -->
+        <input type="hidden" name="target_name[<?=$list_no?>]" value="<?=$_POST['mb_name']?>"><!-- 매칭상대인덱스 -->
 	</td>
 </tr>
 </tbody>

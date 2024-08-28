@@ -95,17 +95,11 @@ $uri = $_SERVER['REQUEST_URI'];
                     <form name="frmsearch1" id="form2" action="<?php echo G5_BBS_URL ?>/search.php" onsubmit="return search_submit(this);" autocomplete="off">
                         <label for="sch_str" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
                         <select name="option">
-                            <?php if ($is_private){?>
                                 <option <?php echo get_selected($_GET['option'], "talent"); ?> value="talent">재능거래</option>
                                 <option>캠페인</option>
                                 <option>공모전</option>
                                 <option>마켓</option>
                                 <option>구인구직</option>
-                            <?php } else  /*$is_private*/{?>
-                                <option <?php echo get_selected($_GET['option'], "talent"); ?> value="talent">재능</option>
-                            <?php }?>
-<!--                            <option --><?php //echo get_selected($_GET['option'], "video_lecture"); ?><!-- value="video_lecture">지식재능강의</option>-->
-<!--                            <option --><?php //echo get_selected($_GET['option'], "competition"); ?><!-- value="competition">공모전</option>-->
                         </select>
                         <input type="text" name="stx" value="<?php echo stripslashes(get_text(get_search_string($stx))); ?>" id="sch_str2" placeholder="검색어를 입력하세요." required onclick="input_word('2');">
                         <button type="submit" id="sch_submit"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sch_btn02.png" alt="검색"><span class="sound_only">검색</span></button>
@@ -118,7 +112,6 @@ $uri = $_SERVER['REQUEST_URI'];
                         <?php if ($is_admin) {  ?>
                             <li><a href="<?php echo G5_ADMIN_URL ?>" title="관리자" class="line"><i class="fas fa-cog"></i> 관리자</a></li>
                         <?php }  ?>
-                        <?php if ($is_private){?>
                             <li class="male-auto">
                                 <a href="" title="알림" class="line"><i class="fa-solid fa-bell"></i></a>
                                 <span class="no_read_badge none" onclick="">0</span>
@@ -138,36 +131,10 @@ $uri = $_SERVER['REQUEST_URI'];
                             <li>|</li>
                             <li><a href="<?php echo G5_BBS_URL ?>/mypage.php" title="마이페이지" class="line txt_color">마이페이지</a></li>
                             <li><a href="javascript:logout();" title="로그아웃" class="line">로그아웃</a></li>
-                        <?php } else  /*$is_private*/{?>
-                            <li class="my_tnb">
-                                <a href="<?php echo G5_BBS_URL ?>/mypage.php" title="마이페이지" class="line">마이페이지</a>
-                                <?php
-                                // 전체 읽지 않은 메세지 수
-                                $no_read_badge = sql_fetch("select count(*) as cnt from chat_message_log where user_id='{$member['mb_id']}' and read_status='0'")['cnt']; // 메세지 로그
-                                ?>
-                                <span class="no_read_badge" onclick="chatting();"><?=$no_read_badge?></span>
-                            </li>
-                            <li><a href="javascript:logout();" title="로그아웃" class="line">로그아웃</a></li>
-                            <?php if ($member['mb_division'] == 2 || $is_admin){?>
-                                <li><a href="<?php echo G5_BBS_URL ?>/pro_step01.php" title="재능 등록" class="join"><i class="fal fa-pen"></i> 재능 등록</a></li>
-                                <?php if ($is_admin) {  ?>
-    <!--                            <li><a href="--><?php //echo G5_BBS_URL ?><!--/write.php?bo_table=video_lecture" title="강의 등록" class="join" style="margin-left:10px !important"><i class="fal fa-microphone-alt"></i> 강의 등록</a></li>-->
-                                <?php } ?>
-                            <?php } ?>
-                           <!--  <li><a href="<?php echo G5_BBS_URL ?>/register_contest.php" title="공모전 등록" class="join" style="margin-left:10px !important"><i class="fal fa-trophy-alt"></i> 공모전 등록</a></li> -->
-    <!--                       <li><a href="--><?php //echo G5_BBS_URL ?><!--/board.php?bo_table=video_lecture" title="뼈·살·동" class="join" style="margin-left:10px !important">뼈·살·동</a></li>-->
-
-                        <?php }?>
-                    <?php } else {  ?>
-
-                        <?php if ($is_private){?>
-                        <li><a href="" title="회원가입" class="join us">협업제안</a></li>
+                    <?php } else /*$is_member*/{  ?>
+                        <li><a href="<?php echo G5_URL ?>/new_campaign.php" title="" class="join us">협업제안</a></li>
                         <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인" class="line">로그인</a></li>
                         <li><a href="<?php echo G5_BBS_URL ?>/register_new.php" title="회원가입" class="join">회원가입</a></li>
-                        <?php } else  /*$is_private*/{?>
-                        <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인" class="line">로그인</a></li>
-                        <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="회원가입" class="join">잡고 회원가입</a></li>
-                        <?php }?>
                     <?php }  ?>
                 </ul>
             </div><!--r_area-->
@@ -226,7 +193,7 @@ $uri = $_SERVER['REQUEST_URI'];
             <?php } ?>
 
 			<?php if(strpos($_SERVER['PHP_SELF'], 'chat_room.php') !== false) {?>
-			<a href="javascript:chatRoomDetail();" class="hd_per_more">전문가 상세보기</a>
+			<a href="javascript:chatRoomDetail();" class="hd_per_more visible-xs">전문가 상세보기</a>
             <!--<a href="<?/*=G5_BBS_URL*/?>/chat_list.php" class="hd_per_more">리스트</a>-->
             <?php } ?>
 
@@ -252,7 +219,6 @@ $uri = $_SERVER['REQUEST_URI'];
                         <?php if ($is_admin) {  ?>
                         <li><a href="<?php echo G5_ADMIN_URL ?>" title="관리자" class="line"><i class="fas fa-cog"></i> 관리자</a></li>
                         <?php }  ?>
-                        <?php if ($is_private){?>
                             <li class="male-auto">
                                 <a href="" title="알림" class="line"><i class="fa-solid fa-bell"></i></a>
                                 <span class="no_read_badge none" onclick="">0</span>
@@ -272,34 +238,11 @@ $uri = $_SERVER['REQUEST_URI'];
                             <li>|</li>
                             <li><a href="<?php echo G5_BBS_URL ?>/mypage.php" title="마이페이지" class="line txt_color">마이페이지</a></li>
                             <li><a href="javascript:logout();" title="로그아웃" class="line">로그아웃</a></li>
-                        <?php } else  /*$is_private*/{?>
-                            <li>
-                                <a href="<?php echo G5_BBS_URL ?>/mypage.php" title="마이페이지" class="line">마이페이지</a>
-                                <?php
-                                // 전체 읽지 않은 메세지 수
-                                $no_read_badge = sql_fetch("select count(*) as cnt from chat_message_log where user_id='{$member['mb_id']}' and read_status='0'")['cnt']; // 메세지 로그
-                                ?>
-                                <span class="no_read_badge" onclick="chatting();"><?=$no_read_badge?></span>
-                            </li>
-                            <li><a href="<?php echo G5_BBS_URL ?>/logout.php" title="로그아웃" class="line">로그아웃</a></li>
-                            <?php if ($member['mb_division'] == 2 || $is_admin){?>
-                            <li><a href="<?php echo G5_BBS_URL ?>/pro_step01.php" title="재능 등록" class="join"><i class="fal fa-pen"></i> 재능 등록</a></li>
-                           <?php } ?>
-                            <!--                        <li><a href="--><?php //echo G5_BBS_URL ?><!--/write.php?bo_table=video_lecture" title="재능 등록" class="join" style="margin-left:10px !important"><i class="fal fa-microphone-alt"></i> 강의 등록</a></li>
-                            <li><a href="<?php echo G5_BBS_URL ?>/register_contest.php" title="공모전 등록" class="join" style="margin-left:10px !important"><i class="fal fa-trophy-alt"></i> 공모전 등록</a></li> -->
-    <!--                    <li><a href="--><?php //echo G5_BBS_URL ?><!--/board.php?bo_table=video_lecture" title="뼈 · 살 · 동" class="join" style="margin-left:10px !important">뼈·살·동</a></li>-->
 
-                        <?php }?>
-
-                    <?php } else {  ?>
-                        <?php if ($is_private){?>
-                            <li><a href="" title="회원가입" class="join us">협업제안</a></li>
+                    <?php } else /*$is_member*/{  ?>
+                            <li><a href="<?php echo G5_URL ?>/new_campaign.php" title="" class="join us">협업제안</a></li>
                             <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인" class="line">로그인</a></li>
                             <li><a href="<?php echo G5_BBS_URL ?>/register_new.php" title="회원가입" class="join">회원가입</a></li>
-                        <?php } else  /*$is_private*/{?>
-                            <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인" class="line">로그인</a></li>
-                            <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="회원가입" class="join">잡고 회원가입</a></li>
-                        <?php }?>
                     <?php }  ?>
                 </ul>
             </div><!--r_area-->
@@ -326,7 +269,7 @@ $uri = $_SERVER['REQUEST_URI'];
        
         <div id="nav_area">
 		 <?php if(strpos($_SERVER['PHP_SELF'], 'chat_list.php') !== false || strpos($_SERVER['PHP_SELF'], 'chat_room.php') !== false || strpos($_SERVER['PHP_SELF'], 'chat_room_detail.php') !== false) {} else { ?>
-            <?php if ($sub_id=="mypage" || $sub_id=="pro_step01" || $sub_id=="pro_step02" || $sub_id=="pro_step03" || $sub_id=="my_item"  ||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" || $sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase" || $sub_id=="my_ad_request" || $sub_id=="my_ad_list" || $sub_id=="my_leave" || $sub_id=="register" || $sub_id=="register_form" || $sub_id=="register_expert_form01" || $sub_id=="register_expert_form02" || $sub_id=="register_expert_form03" || $sub_id=="register_contest" || $co_id=="provision" || $co_id=="privacy"|| $sub_id=="chat_ver"){ //마이페이지,재능등록 일때 상단 gnb 숨김 ?>
+            <?php if ($pid=="new_service" || $sub_id=="mypage" || $sub_id=="pro_step01" || $sub_id=="pro_step02" || $sub_id=="pro_step03" || $sub_id=="market_cart" || $sub_id=="my_item"  ||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" || $sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase" || $sub_id=="my_ad_request" || $sub_id=="my_ad_list" || $sub_id=="my_leave" || $sub_id=="register" || $sub_id=="register_form" || $sub_id=="register_expert_form01" || $sub_id=="register_expert_form02" || $sub_id=="register_expert_form03" || $sub_id=="register_contest" || $co_id=="provision" || $co_id=="privacy"|| $sub_id=="chat_ver"){ //마이페이지,재능등록 일때 상단 gnb 숨김 ?>
             <? } else  { ?>
             <nav id="gnb">
                 <!--전체메뉴-->
@@ -337,11 +280,9 @@ $uri = $_SERVER['REQUEST_URI'];
 						<a href="#Link" class="gnb_1da">전체메뉴</a>
 						<ul class="gnb_2dul">
 
-                            <?php if ($is_private){?>
                             <li class="gnb_2dlit">
                                 <a class="gnb_2da">재능거래</a>
                             </li>
-                            <?php }?>
 							<li class="gnb_2dli">
 								<a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" class="gnb_2da">디자인</a>
 								<div class="gnb_2dli_list" style="display:none">
@@ -406,9 +347,28 @@ $uri = $_SERVER['REQUEST_URI'];
 									</ul>
 								</div>
 							</li>
+
+                                <li class="gnb_2dli gnb_2dlit">
+                                    <a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" class="gnb_2da">캠페인</a>
+                                    <div class="gnb_2dli_list" style="display:none">
+                                        <ul class="gnb_2dul ver02">
+                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" target="_self" class="gnb_2da">SNS</a></li>
+                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_design_list.php" target="_self" class="gnb_2da">디자인</a></li>
+                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php" target="_self" class="gnb_2da">체험단</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="gnb_2dlit">
+                                    <a href="<?php echo G5_BBS_URL ?>/compete_list.php" class="gnb_2da">공모전</a>
+                                </li>
+                                <li class="gnb_2dlit">
+                                    <a href="<?php echo G5_BBS_URL ?>/market_list.php" class="gnb_2da">마켓</a>
+                                </li>
+                                <li class="gnb_2dlit">
+                                    <a href="<?php echo G5_BBS_URL ?>/job_list.php" class="gnb_2da">구인구직</a>
+                                </li>
 						</ul>
 					</li>
-                    <?php if ($is_private){?>
                         <li class="gnb_1dli">
                             <a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" target="_self" class="gnb_1da <?php if($pid == 'sns_list'){ echo "head_on"; } ?> ">SNS<span></span></a>
                         </li>
@@ -438,9 +398,9 @@ $uri = $_SERVER['REQUEST_URI'];
                             <a href="<?php echo G5_BBS_URL ?>/job_list.php" target="_self" class="gnb_1da <?php if($pid == 'job_list'||$pid == 'job_view'){ echo "head_on"; } ?>">구인구직<span></span></a>
                         </li>
                         <li class="gnb_1dli">
-                            <a href="" target="_self" class="gnb_1da txt_blue2 txt_bold">협업제안<span></span></a>
+                            <a href="<?php echo G5_URL ?>/new_campaign.php" target="_self" class="gnb_1da txt_blue2 txt_bold">협업제안<span></span></a>
                         </li>
-                    <?php } else /*$is_private*/{?>
+                    <?php  /*{?>
                         <?php
                         $p_code = common_code('ctg','code_ctg','json');
 
@@ -475,7 +435,7 @@ $uri = $_SERVER['REQUEST_URI'];
                         <?php } ?>
                         <!--<li class="gnb_1dli"><a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=video_lecture" class="gnb_1da <?php if(strpos($uri, 'bo_table=video_lecture') == true){ echo "head_on"; } ?>">지식재능강의&nbsp;&nbsp;<i class="fas fa-microphone-alt"></i></a></li>
                         <li class="gnb_1dli"><a href="<?php echo G5_BBS_URL; ?>/contest_list.php" class="gnb_1da <?php if(strpos($uri, 'contest_list.php') == true){ echo "head_on"; } ?>">공모전&nbsp;&nbsp;<i class="fas fa-trophy-alt"></i></a></li>-->
-                    <?php }?>
+                    <?php */?>
                 </ul>
             </nav>
             <?php } ?>
@@ -647,7 +607,7 @@ $uri = $_SERVER['REQUEST_URI'];
                     <? } ?>
 
                     <div id="scont">
-                        <?php if($sub_id=="category_list" || $sub_id=="item_view"  || $sub_id=="register_form" || $sub_id=="search_page" || $sub_id=="my_item" ||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" ||
+                        <?php if($pid=="new_service" ||$sub_id=="category_list" || $sub_id=="item_view"  || $sub_id=="register_form" || $sub_id=="search_page" || $sub_id=="market_cart" || $sub_id=="my_item" ||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" ||
                             $sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase" || $sub_id=="my_ad_request" || $sub_id=="my_ad_list" || $sub_id=="my_leave" || $sub_id=="search_result" || $sub_id=="contest_list" || $sub_id=="contest" || $sub_id=="register_contest" || $sub_id=="mypage" || $sub_id=="contest" || $bo_table=="video_lecture" || $sub_id=="campagin_list" || $sub_id=="campagin_view"|| $sub_id=="compete_list" || $sub_id=="compete_view"|| $sub_id=="market_list" || $sub_id=="market_view"|| $sub_id=="job_list" || $sub_id=="job_view"){ //아이템 리스트?>
                         <? } else { //일반페이지 일때?>
                             <!--서브타이틀-->

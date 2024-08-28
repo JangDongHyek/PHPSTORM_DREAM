@@ -1,8 +1,9 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
-
+include_once(G5_PATH."/jl/Jl.php");
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
+
 
 // 아이디 자동저장
 $ck_id_save = get_cookie("ck_id_save");
@@ -17,6 +18,16 @@ $client_id = "zLJRPBj6a8ai5kXgCYb4";
 $redirectURI =  urlencode(G5_BBS_URL."/callback_naver.php");
 $state = "RAMDOM_STATE";
 $apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=".$client_id."&redirect_uri=".$redirectURI."&state=".$state;
+
+try {
+    $jl = new Jl();
+}catch (Exception $e) {
+    echo $e;
+}
+$redirect = $jl->URL."/bbs/callback_kakao.php";
+$redirect = str_replace("www.","",$redirect);
+$kakao_key = "93bb7b776fef8ab69a652712a974e09b";
+$kakaoURL = "https://kauth.kakao.com/oauth/authorize?client_id={$kakao_key}&response_type=code&redirect_uri={$redirect}";
 
 ?>
 <head>
@@ -52,15 +63,15 @@ html, body{ width:100%;height:100%;min-height:500px; background:#f5f5f5;}
     <aside id="login_info">
         <h2>회원로그인 안내</h2>
         <p class="id"><a href="<?php echo G5_BBS_URL ?>/password_lost.php">아이디·비밀번호를 잊으셨나요?</a></p>
-        <?php if ($is_private){?>
             <div class="join"><a href="./register_new.php"><strong><?=$config['cf_title']?></strong> 회원가입</a></div>
-        <?php } else  /*$is_private*/{?>
+        <?php /*?>
             <div class="join"><a href="./register.php"><strong><?=$config['cf_title']?></strong> 회원가입</a></div>
-        <?php }?>
+        <?php */?>
     </aside>
     <ul id="sns_login">
         <li class="sns naver"><a href="<?=$apiURL?>"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_naver.png" class="네이버로그인"></span>네이버 로그인</a></li>
-        <li class="sns kakao"><a href="javascript:loginWithKakao();"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>
+        <li class="sns kakao"><a href="<?=$kakaoURL?>"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>
+        <!--<li class="sns kakao"><a onclick="alert('아직 준비중입니다.')"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>-->
         <li class="sns google"><a href="javascript:google_login(<?if($mb_1) echo $mb_1; else echo 0;?>);"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_google.png" class="구글로그인"></span>구글 로그인</a></li>
         <li class="sns face"><a href="javascript:fnFbCustomLogin(<?if($mb_1) echo $mb_1; else echo 0;?>);"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_face.png" class="페이스북로그인"></span>페이스북 로그인</a></li>
     </ul><!--lg_btn-->

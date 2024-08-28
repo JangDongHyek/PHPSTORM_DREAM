@@ -4,6 +4,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 $text = $mb['mb_nick'] ? $mb['mb_nick'] : $mb['mb_name'];
+if($text) $text .= "님";
 ?>
 <script type="text/javascript">
 
@@ -14,7 +15,7 @@ $text = $mb['mb_nick'] ? $mb['mb_nick'] : $mb['mb_name'];
 
     <h2>
 
-        <strong><?php echo $text ?>님</strong><br>반갑습니다.
+        <strong><?php echo $text ?></strong><br>반갑습니다.
     </h2>
 
     <?php if ($config['cf_use_email_certify']) {  ?>

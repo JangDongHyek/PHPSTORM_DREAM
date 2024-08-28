@@ -67,7 +67,7 @@ class JlCsv extends Jl{
                 readfile($this->path);
                 exit;
             } else {
-                throw new \Exception("파일이 존재하지 않습니다.");
+                $this->error("파일이 존재하지 않습니다.");
             }
         }
 

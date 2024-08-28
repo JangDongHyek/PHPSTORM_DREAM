@@ -12,6 +12,13 @@ set_session("ss_mb_reg", "");
 
 $g5['title'] = '회원가입';
 include_once('./_head.php');
+
+//네이버 로그인
+$client_id = "zLJRPBj6a8ai5kXgCYb4";
+
+$redirectURI =  urlencode(G5_BBS_URL."/callback_naver.php");
+$state = "RAMDOM_STATE";
+$apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=".$client_id."&redirect_uri=".$redirectURI."&state=".$state;
 ?>
 
 <div id="mb_login" class="mbskin">
@@ -24,7 +31,7 @@ include_once('./_head.php');
         <div class="join"><a href="./register_new_form.php">간단 회원가입</a></div>
     </aside>
     <ul id="sns_login">
-        <li class="sns naver"><a href=""><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_naver.png" class="네이버로 회원가입"></span>네이버로 회원가입</a></li>
+        <li class="sns naver"><a href="<?=$apiURL?>"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_naver.png" class="네이버로 회원가입"></span>네이버로 회원가입</a></li>
         <li class="sns kakao"><a href=""><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_kakao.png" class="카카오로 회원가입"></span>카카오로 회원가입</a></li>
     </ul><!--lg_btn-->
 </div>

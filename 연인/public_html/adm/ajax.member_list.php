@@ -32,7 +32,8 @@ $result_cnt = sql_num_rows($result);
 $srch_arr = array();
 
 for ($i = 0; $i < $result_cnt; $i++) {
-	$srch_arr[$i] = sql_fetch_array($result);
+
+    $srch_arr[$i] = sql_fetch_array($result);
 }
 
 ?>
@@ -54,8 +55,11 @@ for ($i = 0; $i < $result_cnt; $i++) {
 	<?
 	} else {
 		foreach($srch_arr as $key=>$row) {
+            $coupon_count = getMemberCoupon($row['mb_no']);
+            $heart_count = getMemberHeart($row['mb_no']);
+
 			$mb_age = (date("Y") + 1) - $row['mb_birth'];
-			$params = "'{$row['mb_no']}','{$row['mb_id']}', '{$row['mb_name']}', '{$row['mb_sex']}', '{$mb_age}', '{$row['mb_hp']}', '{$row['mb_si']}', '{$row['mb_gu']}'";
+			$params = "'{$row['mb_no']}','{$row['mb_id']}', '{$row['mb_name']}', '{$row['mb_sex']}', '{$mb_age}', '{$row['mb_hp']}', '{$row['mb_si']}', '{$row['mb_gu']}','{$coupon_count}','{$heart_count}'";
 	?>
 	<tr>
 		<td><?=$row['mb_switch']?></td>

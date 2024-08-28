@@ -166,7 +166,7 @@ if ($returnMsg != "") {
 
 
             if(type == 1){
-                var url = "<?= G5_BBS_URL.'/register_form.php' ?>";
+                var url = "<?= G5_BBS_URL.'/register_new_form.php' ?>";
             }else{
                 var url = "<?= G5_BBS_URL.'/register_expert_form02.php' ?>";
 
