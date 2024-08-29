@@ -145,7 +145,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                  ?>
             </td>
             <td class="td_name sv_use"><?php echo $list[$i]['name'] ?></td>
-            <td class="td_date hidden-xs"><?php echo $list[$i]['datetime2'] ?></td>
+            <td class="td_date hidden-xs"><?php echo date('d.m.y', strtotime($list[$i]['datetime'])); ?></td>
             <td class="td_num hidden-xs"><?php echo $list[$i]['wr_hit'] ?></td>
             <?php if ($is_good) { ?><td class="td_num"><?php echo $list[$i]['wr_good'] ?></td><?php } ?>
             <?php if ($is_nogood) { ?><td class="td_num"><?php echo $list[$i]['wr_nogood'] ?></td><?php } ?>
@@ -212,17 +212,17 @@ function fboardlist_submit(f) {
         return false;
     }
 
-    if(document.pressed == "선택복사") {
+    if(document.pressed == "Copy Selected") {
         select_copy("copy");
         return;
     }
 
-    if(document.pressed == "선택이동") {
+    if(document.pressed == "Move Selected") {
         select_copy("move");
         return;
     }
 
-    if(document.pressed == "선택삭제") {
+    if(document.pressed == "Delete Selected") {
         if (!confirm("선택한 게시물을 정말 삭제하시겠습니까?\n\n한번 삭제한 자료는 복구할 수 없습니다\n\n답변글이 있는 게시글을 선택하신 경우\n답변글도 선택하셔야 게시글이 삭제됩니다."))
             return false;
 
@@ -252,3 +252,105 @@ function select_copy(sw) {
 </script>
 <?php } ?>
 <!-- } 게시판 목록 끝 -->
+
+<br><br><br>
+<hr class="bg-secondary mb-5">
+<div class="d-lg-flex">
+    <!-- <div class="sub-title-font pt-0 pt-lg-4">VISIT</div> -->
+    <div class="pb-5 pb-lg-0 me-0 me-lg-5 w-100">
+        <div class="fs-4 fw-bold border bg-light p-3 mb-1">· Busan (Head Office)</div>
+        <div class="d-lg-flex w-100 me-1 mb-1">
+            <div class="d-flex">
+                <div class="">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_01.webp" class="img-fluid">
+                </div>
+                <div class="">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_01-2.webp" class="img-fluid">
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_01-5.webp" class="img-fluid">
+                </div>
+                <div>
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_01-4.webp" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="w-100 mb-1">
+            <!--
+            * 카카오맵 - 약도서비스
+            * 한 페이지 내에 약도를 2개 이상 넣을 경우에는
+            * 약도의 수 만큼 소스를 새로 생성, 삽입해야 합니다.
+            -->
+
+            <!-- 1. 약도 노드 -->
+            <div id="daumRoughmapContainer1722926331727" class="root_daum_roughmap root_daum_roughmap_landing w-100"></div>
+
+            <!-- 2. 설치 스크립트 -->
+            <script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+
+            <!-- 3. 실행 스크립트 -->
+            <script charset="UTF-8">
+                new daum.roughmap.Lander({
+                    "timestamp": "1722926331727",
+                    "key": "2k9w6"
+                }).render();
+            </script>
+        </div>
+        <div class="w-100">
+            <div class="p-1">
+                <div class="d-flex align-items-start my-2">
+                    <div class="me-2"><i class="bi bi-pin"></i></div>
+                    <div>29, NAKDONG-DAERO 1302 BEON-GIL, SASANG-GU, BUSAN, KOREA, 46910</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w-100">
+        <div class="fs-4 fw-bold border bg-light p-3 mb-1">· Gimhae (Office/factory)</div>
+        <div class="d-lg-flex w-100 me-1 mb-1">
+            <div class="d-flex">
+                <div class="">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_02.webp" class="img-fluid">
+                </div>
+                <div class="">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_02-1.webp" class="img-fluid">
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_02-2.webp" class="img-fluid">
+                </div>
+                <div>
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/bg_location/bg_location_02-3.webp" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="w-100 mb-1">
+            <!-- * 카카오맵 - 지도퍼가기 -->
+            <!-- 1. 지도 노드 -->
+            <div id="daumRoughmapContainer1722926559975" class="root_daum_roughmap root_daum_roughmap_landing w-100"></div>
+
+            <!-- 2. 설치 스크립트 * 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다. -->
+            <script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+
+            <!-- 3. 실행 스크립트 -->
+            <script charset="UTF-8">
+                new daum.roughmap.Lander({
+                    "timestamp": "1722926559975",
+                    "key": "2k9wa"
+                }).render();
+            </script>
+        </div>
+        <div class="w-100">
+            <div class="p-1">
+                <div class="d-flex align-items-start my-2">
+                    <div class="me-2"><i class="bi bi-pin"></i></div>
+                    <div>25, Seobu-ro 1331beon-gil, Juchon-myeon, Gimhae-si, Gyeongsangnam-do, Republic of
+                        Korea</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

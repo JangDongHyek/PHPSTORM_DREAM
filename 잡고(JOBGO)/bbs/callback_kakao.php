@@ -61,7 +61,7 @@ if($_GET['code']){
         //set_session('chk_birth', $pr_arr['response']['birthyear'].str_replace( '-' , '', $pr_arr['response']['birthday']));
         set_session('ss_sns', 'kakao' );
 
-        goto_url(G5_BBS_URL . '/register_new_form.php?sns=Y');
+        goto_url($jl->URL . '/bbs/register_new_form.php?sns=Y');
     }
 
 }else {

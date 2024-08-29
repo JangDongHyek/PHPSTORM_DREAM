@@ -25,7 +25,6 @@ try {
     echo $e;
 }
 $redirect = $jl->URL."/bbs/callback_kakao.php";
-$redirect = str_replace("www.","",$redirect);
 $kakao_key = "93bb7b776fef8ab69a652712a974e09b";
 $kakaoURL = "https://kauth.kakao.com/oauth/authorize?client_id={$kakao_key}&response_type=code&redirect_uri={$redirect}";
 

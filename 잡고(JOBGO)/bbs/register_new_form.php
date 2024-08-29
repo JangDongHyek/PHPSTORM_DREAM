@@ -7,9 +7,6 @@ $g5['title'] = '회원가입';
 include_once('./_head.php');
 
 $register_action_url = G5_BBS_URL.'/register_form_update.php';
-
-echo 1;
-echo $_SESSION['ss_sns2'];
 ?>
 
 <style>
