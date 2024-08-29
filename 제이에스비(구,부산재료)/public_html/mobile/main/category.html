@@ -1,0 +1,212 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+ 
+ 
+ 
+ 
+ 
+ 
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>JSB</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+	
+	<script type="text/javascript">
+	//<[CDATA[
+		var currentMenuId = '';
+		
+		function showSubMenu(menuId) {
+			
+			if(currentMenuId != "") {
+				$(".iconSet"+currentMenuId+" .subCategory").toggle();
+				if($(".iconSet"+currentMenuId+" .toggleBullet").is(".btnOn")) {
+					$(".iconSet"+currentMenuId+" .toggleBullet").removeClass("btnOn").addClass("btnOut");
+				}
+			}
+			
+			if(currentMenuId != menuId) {
+				$(".iconSet"+menuId+" .subCategory").slideDown();
+				$(".iconSet"+menuId+" .toggleBullet").removeClass("btnOut").addClass("btnOn");
+				currentMenuId = menuId;
+			} else {
+				currentMenuId = "";
+			}
+		}
+	//]]>
+	</script>
+ 
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+ 
+		
+ 
+<?
+############################################## 케이스  ##########################################################
+if($_SESSION["PageType"] == "ce"){
+?>
+<section id="content">
+	<article id="contentSubTitle">
+		<div class="subTitle">
+			<h2>&nbsp;&nbsp;<a href="../">홈</a> > 카테고리</h2>
+		</div>
+	</article>
+	<article id="sublist">
+		<ul class="iconSetCategory">
+
+<?
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide='0' and (category_num = '39' or category_num = '446' or category_num = '36' or category_num = '31') order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+$total_cate = mysql_num_rows($res_cate);
+$i = 0;
+while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	$i++;
+	$category_num = $row_cate[category_num];
+	$category_name = $row_cate[category_name];
+
+	$sql_cate3 = "select * from $ItemTable where mart_id='$mart_id' and firstno='$category_num' and if_hide='0'";
+	$res_cate3 = mysql_query($sql_cate3, $dbconn);
+	$total_cate3 = mysql_num_rows($res_cate3);
+
+	$sql_cate4 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$category_num' and if_hide='0' order by cat_order desc";
+	$res_cate4 = mysql_query($sql_cate4, $dbconn);
+	$total_cate4 = mysql_num_rows($res_cate4);
+
+?>
+
+
+
+					<li class="iconSet<?=$i?>">
+					<?if($total_cate4>0){?>
+						<a href="javascript:showSubMenu('<?=$i?>');" class="off"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;<?=$category_name?>&nbsp;(<?=$total_cate3?>)</a>
+					<?}else{?>
+						<a href="../main/product_list.html?category_num=<?=$category_num?>"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;<?=$category_name?>&nbsp;(<?=$total_cate3?>)</a>
+					<?}?>
+
+						
+<ul class="subCategory" style="display:none;">
+							<?
+							$sql_cate2 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$category_num' and if_hide='0' order by cat_order desc";
+							$res_cate2 = mysql_query($sql_cate2, $dbconn);
+							$total_cate2 = mysql_num_rows($res_cate2);
+							while( $row_cate2 = mysql_fetch_array( $res_cate2 ) ){
+							$k = "0";
+							?>
+								<li >
+								<a href="../main/product_list.html?category_num=<?=$category_num?>&category_num1=<?=$row_cate2[category_num]?>">ㆍ<?=$row_cate2[category_name]?></a></li>
+							<?
+							}
+							?>
+							
+							
+						</ul>
+					</li>
+
+<?}?>
+		</ul>
+	</article>
+</section>
+<?}else{
+########################################################## 재료 ########################################
+?>
+<section id="content">
+	<article id="contentSubTitle">
+		<div class="subTitle">
+			<h2>&nbsp;&nbsp;<a href="../">홈</a> > 카테고리</h2>
+		</div>
+	</article>
+	<article id="sublist">
+		<ul class="iconSetCategory">
+
+<?
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide='0' and category_num != '39' and category_num != '446' and category_num != '36' and category_num != '31' order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+$total_cate = mysql_num_rows($res_cate);
+$i = 0;
+while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	$i++;
+	$category_num = $row_cate[category_num];
+	$category_name = $row_cate[category_name];
+
+	$sql_cate3 = "select * from $ItemTable where mart_id='$mart_id' and firstno='$category_num' and if_hide='0'";
+	$res_cate3 = mysql_query($sql_cate3, $dbconn);
+	$total_cate3 = mysql_num_rows($res_cate3);
+
+	$sql_cate4 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$category_num' and if_hide='0' order by cat_order desc";
+	$res_cate4 = mysql_query($sql_cate4, $dbconn);
+	$total_cate4 = mysql_num_rows($res_cate4);
+
+?>
+
+
+
+					<li class="iconSet<?=$i?>">
+					<?if($total_cate4>0){?>
+						<a href="javascript:showSubMenu('<?=$i?>');" class="off"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;<?=$category_name?>&nbsp;(<?=$total_cate3?>)</a>
+					<?}else{?>
+						<a href="../main/product_list.html?category_num=<?=$category_num?>"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;<?=$category_name?>&nbsp;(<?=$total_cate3?>)</a>
+					<?}?>
+
+						
+<ul class="subCategory" style="display:none;">
+							<?
+							$sql_cate2 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$category_num' and if_hide='0' order by cat_order desc";
+							$res_cate2 = mysql_query($sql_cate2, $dbconn);
+							$total_cate2 = mysql_num_rows($res_cate2);
+							while( $row_cate2 = mysql_fetch_array( $res_cate2 ) ){
+							$k = "0";
+							?>
+								<li >
+								<a href="../main/product_list.html?category_num=<?=$category_num?>&category_num1=<?=$row_cate2[category_num]?>">ㆍ<?=$row_cate2[category_name]?></a></li>
+							<?
+							}
+							?>
+							
+							
+						</ul>
+					</li>
+
+<?}?>
+		</ul>
+	</article>
+</section>
+<?}?>
+ 
+ 
+ 
+	<? include("../include/bottom.html"); ?>
+	</body>
+</html>

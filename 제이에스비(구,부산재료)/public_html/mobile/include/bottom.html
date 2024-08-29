@@ -1,0 +1,56 @@
+<meta name="format-detection" content="telephone=no">
+<style>
+.copy a{letter-spacing:1px;}
+</style>
+<meta name="format-detection" content="telephone=no">
+<style>
+.copy a{letter-spacing:1px;}
+</style>
+
+<footer>
+			<div class="menu">
+		<dl>
+			<dd><?
+					if(!$UnameSess || !$MemberLevel || !$MemberName)
+					{
+						if($NonMemberName)
+						{
+							$Logined_Member_Name = $NonMemberName;
+							echo"<a href='../main/logout.php'>로그아웃</a>";
+						}
+						else
+							echo"<a href='../main/login.html'>로그인</a>";
+					}else{
+						$Logined_Member_Name = $UnameSess;
+						echo"<a href='../main/logout.php'>로그아웃</a>";
+					}
+					?></a></dd>
+			<!--<dd>
+            <?
+						if(!$UnameSess || !$MemberLevel || !$MemberName)
+						{
+							if($NonMemberName)
+							{
+								$Logined_Member_Name = $NonMemberName;
+								echo"<a href='../main/update.html'>정보수정</a>";
+							}
+							else
+								echo"<a href='../main/join.html'>회원가입</a>";
+						}else{
+							$Logined_Member_Name = $UnameSess;
+							echo"<a href='../main/update.html'>정보수정</a>";
+						}
+						?></dd>-->
+			<dd><a href="../../market/main/" target="_blank">PC버전</a></dd>
+			<!--<dd><a href="sms:01035790365">문자전송</a></dd>-->
+			<dd style="border:0px;" class="last"><a href="tel:0516324122">전화걸기</a></dd>
+		</dl>
+</div>
+			<div class="copy">
+			  <p>상호명 : 제이에스비 | 대표 :  이선호 | 사업장주소  :  부산광역시 부산진구 골드테마길 2-14, 1층 (범천동) | 개인정보관리 및 청소년 보호책임자  :  이선호 | 사업자등록번호 :  192-49-00142 | 통신판매업신고 :  제 2016-부산부산진-0025호 | 대표전화  : <a href="tel:051-632-4122" style="position:relative; font-size:11px; color:#909090; letter-spacing:0px; text-decoration:none; padding-left:10px;">051-632-4122 </a>  | 팩스 :  051-633-4131 | E-mail  : jsbusan4122@hanmail.net</p>
+              <div class="copyright">copyrightⓒ2007 http://www.jsbusan.com .All right Reserved.</div>
+</div>
+		</footer>
+<script type="text/javascript"> 
+wcs_do();
+</script>

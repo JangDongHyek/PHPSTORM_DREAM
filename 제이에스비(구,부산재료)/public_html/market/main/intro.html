@@ -1,0 +1,191 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+
+unset($_SESSION["PageType"]);
+
+?>
+<?
+//============================= 방문자를 카운트 함 =======================================
+$today = date("Ymd");
+$co_sql = "select * from $Mart_CounterTable where mart_id='$mart_id' and date='$today'";
+$co_res = mysql_query($co_sql, $dbconn);
+$co_tot = mysql_num_rows($co_res);
+if($co_tot > 0){
+	$co_row = mysql_fetch_array($co_res);
+	$index_no = $co_row[index_no];
+	$client_ip = $co_row[client_ip];
+	if( $client_ip != $REMOTE_ADDR ){
+		$coup_sql = "update $Mart_CounterTable set count_num=count_num + 1, client_ip='$REMOTE_ADDR' where index_no='$index_no' and mart_id='$mart_id'";
+		$coup_res = mysql_query($coup_sql, $dbconn);
+		if($coup_res == false){
+			echo "방문 통계 쿼리 실패";
+		}
+	}
+}else{
+	$coin_sql = "insert into $Mart_CounterTable(mart_id, date, count_num, client_ip) values('$mart_id', '$today', '1', '$REMOTE_ADDR')";
+	$coin_res = mysql_query($coin_sql, $dbconn);
+	if($coin_res == false){
+		echo "방문 통계 쿼리 실패";
+	}
+}
+if( $co_res ){
+	mysql_free_result( $co_res );
+}
+
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+
+<script type="text/javascript" src="http://wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript"> 
+ if (!wcs_add) var wcs_add={};
+ wcs_add["wa"] = "s_3c28b0886335";
+// 체크아웃 whitelist가 있을 경우
+wcs.checkoutWhitelist = ["jsbusan.com", "www.jsbusan.com"]; 
+// 유입 추적 함수 호출
+wcs.inflow("jsbusan.com");
+</script>
+
+
+<style type="text/css">
+<!--
+#Layer1 {
+	position:absolute;
+	left:250px;
+	top:220px;
+	width:421px;
+	height:300px;
+	z-index:1;
+	visibility: visible;
+}
+body {
+	background-color: #F7F7F7;
+}
+-->
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+
+
+
+
+//if ( getCookie( "Notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/popup2014.htm','notice1','left=0, top=0, width=500,height=520');
+	//noticeWindow.opener = self;
+//} 
+
+// -->
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</SCRIPT>
+
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body leftmargin="0" topmargin="0" onLoad="MM_preloadImages('../images/intro2_on.png','../images/intro3_on.png')">
+<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" valign="middle"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="2" align="center"><img src="../images/intro1.png" border="0"></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center"><table width="559" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="245"><a href="../main/session.php?pagetype=ce" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image2','','../images/intro2_on.png',1)"><img src="../images/intro2.png" name="Image2" border="0"></a></td>
+            <td width="69">&nbsp;</td>
+            <td width="245"><a href="../main/session.php?pagetype=je" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image3','','../images/intro3_on.png',1)"><img src="../images/intro3.png" name="Image3" border="0"></a></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="144">&nbsp;</td>
+            <td width="321" align="right"><img src="../images/bottom1.png"></td>
+            <td>&nbsp;</td>
+           <td width="385" align="left"><img src="../images/bottom2.png"></td>
+            <td width="81">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td align="center"><img src="../images/intro_foot.png"></td>
+        <td align="center"><?
+												if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName && $NonMemberPass)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/admin_logout.htm';
+													}
+													else
+														include '../inc/admin_login.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/admin_logout.htm';
+												}
+												?></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<script type="text/javascript"> 
+wcs_do(); 
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<script type="text/javascript" src="http://wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript"> 
+ if (!wcs_add) var wcs_add={};
+ wcs_add["wa"] = "s_3c28b0886335";
+// 체크아웃 whitelist가 있을 경우
+wcs.checkoutWhitelist = ["jsbusan.com", "www.jsbusan.com"]; 
+// 유입 추적 함수 호출
+wcs.inflow("jsbusan.com");
+</script>
+ 
+
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+		<header>
+		<div id="top">
+
+
+<?
+############################################## 케이스  ##########################################################
+if($_SESSION["PageType"] == "ce"){
+?>
+
+		    
+            <div id="back2"><a href="../main/session.php?pagetype=je"><img src="../images/tool_bb.gif" border="0" /></a></div>
+		   <div id="logo">
+		   <a href="../main/"><img src="../images/logo.gif" border="0" /></a></div>
+  </div>
+<?}else if($_SESSION["PageType"] == "je"){?>
+		    
+             <div id="back2"><a href="../main/session.php?pagetype=ce"><img src="../images/case_bb.gif" border="0" /></a></div>
+            <div id="logo">
+               <a href="../main/index2.html"><img src="../images/logo2.gif" border="0" /></a></div>
+			</div>
+<?}else{?>
+	<?if($pagetype=="ce"){?>
+            <div id="back2"><a href="../main/session.php?pagetype=je"><img src="../images/tool_bb.gif" border="0" /></a></div>
+		   <div id="logo">
+		   <a href="../main/"><img src="../images/logo.gif" border="0" /></a></div>
+			</div>
+	<?}elseif($pagetype=="je"){?>
+             <div id="back2"><a href="../main/session.php?pagetype=ce"><img src="../images/case_bb.gif" border="0" /></a></div>
+            <div id="logo">
+               <a href="../main/index2.html"><img src="../images/logo2.gif" border="0" /></a></div>
+			</div>
+	<?}else{?>
+		<meta http-equiv="refresh" content="0; url=../main/intro.html">
+	<?}?>
+<?}?>
+
+
+			<div class="topSearch">
+				<form name="searchForm" method="post" action='../main/search.html' onsubmit="check_submit(); return false;">
+				<input type='hidden' name='select_key' value='item_name'>
+				<input type='hidden' name='mode' value='search'>
+				<input type="text" name="searchTerm" class="search">
+				<input name="submit" type="submit" class="btn" value="검색" />
+				</form>
+			</div>
+			<nav>
+				<div class="menu">
+		            <dl>
+		 	            <dd><a href="../main/greet01.htm">회사소개</a></dd>
+		 	            <dd><a href="../main/category.html">카테고리</a></dd>
+			            <dd><a href="../board/board_list.html?bbs_no=1">커뮤니티</a></dd>
+						<dd><a href="../cart/cart.html">장바구니</a></dd>
+			            <dd style="border:0px;" class="b"><a href="../main/mypage.html">마이페이지</a></dd>
+                   </dl>
+</div>
+			</nav>
+		</header>

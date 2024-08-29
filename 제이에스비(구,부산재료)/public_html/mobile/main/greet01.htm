@@ -1,0 +1,73 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>JSB</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	
+    
+		<section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 회사소개</h2>
+				</div>
+			</article>
+			<article id="sublist">
+			<!--2차메뉴
+			<div class="subm">
+		<dl>
+			<dd><a href="../main/greet01.htm" class="on">인사말</a></dd>
+			<dd><a href="../main/greet02.htm">연혁</a></dd>
+			<dd><a href="../main/greet03.htm">조직도</a></dd>
+			<dd><a href="../main/greet04.htm">인증서</a></dd>
+			<dd style="border:0px;" class="last"><a href="../main/greet05.htm">오시는 길</a></dd>
+		</dl>
+</div> -->
+			<!--페이지 -->
+			<div class="page">
+			<p align="center"><img src="../images/co1.jpg" width="100%"></p>
+			<p><br>
+			 → 주소  :  부산광역시 부산진구 범일로 142번길 20<br>
+→ 지하철 범일역 12번 출구<br>
+→ 버스 5-1, 57, 63, 81, 83, 83-1, 10, 43, 52, 80, 99, 1000, 1004, 23, 68, 108, 138, 583
+<br><br>
+</p>
+			</div>
+			<!--페이지 -->
+			</article>
+		</section>
+    
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

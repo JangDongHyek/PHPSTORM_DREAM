@@ -1,0 +1,144 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+$sql1 = "select * from $CategoryTable where category_num='$category_num1' and if_hide='0' and mart_id='$mart_id'";
+$res1 = mysql_query($sql1, $dbconn);
+$row1 = mysql_fetch_array( $res1 );
+$category_prevno1 = $row1[prevno];
+$category_name1 = $row1[category_name];
+//================== 3차 카테고리 정보를 불러옴 ==========================================
+$sql2 = "select * from $CategoryTable where category_num='$category_num2' and if_hide='0' and mart_id='$mart_id'";
+$res2 = mysql_query($sql2, $dbconn);
+$row2 = mysql_fetch_array( $res2 );
+$category_prevno2 = $row2[prevno];
+$category_name2 = $row2[category_name];
+
+//================== 2차 카테고리 정보가 없을때 ==========================================
+if( !$category_num1 ){
+	$nocate_sql2 = "select * from $CategoryTable where prevno='$category_num' and category_num='$cate_num' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res2 = mysql_query($nocate_sql2, $dbconn);
+	$nocate_row2 = mysql_fetch_array( $nocate_res2 );
+	$category_prevno1 = $nocate_row2[prevno];
+	$category_num1 = $nocate_row2[category_num];
+	$category_name1 = $nocate_row2[category_name];
+}
+
+//================== 3차 카테고리 정보가 없을때 ==========================================
+if( !$category_num2 ){
+	$nocate_sql3 = "select * from $CategoryTable where prevno='$category_prevno1' and category_num='$cate_num' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res3 = mysql_query($nocate_sql3, $dbconn);
+	$nocate_row3 = mysql_fetch_array( $nocate_res3 );
+	$category_prevno2 = $nocate_row3[prevno];
+	$category_num2 = $nocate_row3[category_num];
+	$category_name2 = $nocate_row3[category_name];
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000"><? include "../include/company_menu.htm" ?></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="font-size:27px ;color:#111111; font-weight:bold; line-height:28px;">주문배송정책</td>
+                      <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <a href="../main/index.html">홈</a> &gt; 주문배송정책 </div></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td ><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><table width="96%" border="0" cellpadding="0" cellspacing="1" class="baesong" bgcolor="#e9e9e9">
+<?
+	$martintro_sql = "select * from $MartIntroTable where mart_id='$mart_id'";
+	$martintro_res = mysql_query($martintro_sql, $dbconn);
+	$martintro_row = mysql_fetch_array($martintro_res);
+?>
+                            <!---------------------- 배송안내 시작 ------------------------->
+                                    <tr>
+                                      <td width="100" align="center" bgcolor="#F9F9F9" style="font-weight: bold">배송안내</td>
+                                      <td bgcolor="#FFFFFF"><?=$martintro_row["delivery"]?></td>
+                                    </tr>
+                            <!---------------------- 배송안내 끝 ------------------------>
+                            <!---------------------- 교환할부안내 시작 ------------------>
+                                    <tr>
+                                      <td align="center" bgcolor="#F9F9F9" style="font-weight: bold">교환환불안내</td>
+                                      <td bgcolor="#FFFFFF"><?=$martintro_row["exchange"]?></td>
+                                    </tr>
+                            <!---------------------- 교환할부안내 끝 ------------------------------------------------>
+                        </table>
+                        
+
+                        </td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

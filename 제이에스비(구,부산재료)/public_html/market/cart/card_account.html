@@ -1,0 +1,262 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<html>
+
+
+<?
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//  mertkey 확인 방법 
+//  1. 상점관리자(서비스: http://pgweb.dacom.net  테스트: http://pgweb.dacom.net/tmert) 접속
+//  2. Dacom 에서 받은 테스트 아이디나 서비스 아이디로 로그인
+//  3. 계약정보 -> 상점정보관리 -> 결과전송정보 에서 확인이 가능
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$mid = "jsbusan4122";				//Dacom 제공 상점아이디
+$oid = "$OrderID";				//주문번호
+$amount = "$Amount";		//결제금액
+$mertkey = "5a0ac3c10d39bd08550df96e09bf54ea";		//데이콤에서 발급받은 키값
+
+////////////////////////////// hashdata 생성 - 결제요청무결성검증 //////////////////////////////
+
+$hashdata = md5($mid.$oid.$amount.$mertkey);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+?>
+<script language = 'javascript'>
+<!--
+function openWindow()
+{
+window.open("","Window","width=330, height=430, status=yes, scrollbars=no,resizable=yes, menubar=no");
+document.mainForm.action="http://pg.dacom.net/card/cardAuthAppInfo.jsp";
+/*
+========
+신용카드
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/card/cardAuthAppInfo.jsp;
+서비스용 결제창 URL				http://pg.dacom.net/card/cardAuthAppInfo.jsp;
+
+========
+계좌이체
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/transfer/transferSelectBank.jsp 
+서비스용 결제창 URL				http://pg.dacom.net/transfer/transferSelectBank.jsp 
+
+========
+휴대폰
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/wireless/wirelessAuthAppInfo1.jsp
+서비스용 결제창 URL				http://pg.dacom.net/wireless/wirelessAuthAppInfo1.jsp
+
+========
+무통장입금
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/cas/casRequestSA.jsp
+서비스용 결제창 URL				http://pg.dacom.net/cas/casRequestSA.jsp 
+
+
+Test ID로 테스트시 테스트용 URL로 테스트 하셔야 합니다.
+
+*/
+document.mainForm.target = "Window";
+document.mainForm.submit();
+}
+//-->
+</script>
+
+<body>
+
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="950"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="950" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="700" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지 &gt; 장바구니 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="93%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/mypage_3.gif" width="227" height="66"></td>
+                        <td width="98%" valign="top"><table width="90%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td background="../image/mypage/mypage_menu_bg.gif"><table width="100"  border="0" align="right" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/update.html?mart_id=<?=$mart_id?>"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_over_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td><a href="../stat/order.html"><img src="../images/mypage_new.gif" width="126" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/mypage_20.gif" width="700" height="46"></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><!---------------------- 진행과정 시작 -------------------------------------------------->
+                            <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td width="90"><img src="../image/mypage/step_1.gif" width="90" height="40"></td>
+                                <td width="90"><img src="../image/mypage/step_2.gif" width="90" height="40"></td>
+                                <td width="90"><img src="../image/mypage/step_3_on.gif" width="90" height="40"></td>
+                                <td width="90"><img src="../image/mypage/step_4.gif" width="90" height="40"></td>
+                                <td bgcolor="#F3F3F3">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="20" colspan="5"></td>
+                              </tr>
+                            </table>
+                            <!---------------------- 진행과정 끝 ---------------------------------------------------->
+                            <table width="80%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td width="20"><img src="../image/table_1.gif" width="20" height="20"></td>
+                                <td background="../image/table_1_bg.gif">&nbsp;</td>
+                                <td width="20"><img src="../image/table_2.gif" width="20" height="20"></td>
+                              </tr>
+                              <tr>
+                                <td background="../image/table_4_bg.gif">&nbsp;</td>
+                                <td height="150"><table width="80%" border="0" align="center" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+                                    <tr>
+                                      <td height="30" align="center" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">카드결제를 진행하실려면 결제하기 버튼을 누르십시오.<br>
+                                          <br>
+                                          새창에서 카드결제가 진행되므로 창을 닫으시면 결제가 진행되지 않습니다.</td>
+                                    </tr>
+                                </table></td>
+                                <td background="../image/table_2_bg.gif">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="20"><img src="../image/table_4.gif" width="20" height="20"></td>
+                                <td background="../image/table_3_bg.gif">&nbsp;</td>
+                                <td><img src="../image/table_3.gif" width="20" height="20"></td>
+                              </tr>
+                            </table>
+                            <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+<!----------------------------결제 폼 시작------------------------------------>
+							    <!----------------------------결제 폼 시작------------------------------------>
+<!--  
+        ******* 필독 *******
+		 1. 각각의 결제 수단별로 요청정보에 차이가 있을 수 있으니 반드시 메뉴얼을 참고하셔서 결제연동을 하셔야 합니다. 
+		 2. ret_url 페이지의 경우 고객이 결제를 확인하는 페이지 이므로 쇼핑몰에서 직접 제작하셔야 합니다.
+-->
+<form name="mainForm" method="POST" action="">
+<!-- 결제를 위한 필수 hidden정보 -->
+<input type="hidden" name="hashdata" value="<?= $hashdata ?>">			<!-- 결제요청 검증(무결성) 필드-->
+<input type="hidden" name="mid" value="<?= $mid?>">								<!-- 상점ID -->
+<input type="hidden" name="oid" value="<?= $oid?>">								<!-- 주문번호 -->
+<input type="hidden" name="amount" value="<?= $amount?>">					<!-- 결제금액 -->
+<?
+	$Ret_URL=str_replace(":8026","",$Ret_URL);
+	$note_url=str_replace(":8026","",$note_url);
+?>
+<input type="hidden" name="ret_url" value="<?=$Ret_URL?>">			<!-- 팝업창 사용: 리턴URL -->
+<input type="hidden" name="buyer" value="<?=$Name?>">									<!-- 구매자 -->
+<input type="hidden" name="productinfo" value="<?=$item_name?>">							<!-- 상품명 -->
+
+<input type="hidden" name="note_url" value="<?=$note_url?>">			<!-- 결제결과 데이타처리URL(웹전송연동방식) -->
+<!-- 통계서비스를 위한 선택적인 hidden정보 -->
+<input type="hidden" name="producttype" value="상품유형">
+<input type="hidden" name="productcode" value="상품코드">
+<input type="hidden" name="buyerid" value="구매자아이디">
+<input type="hidden" name="buyeremail" value="<?=$email?>">
+<input type="hidden" name="deliveryinfo" value="배송처">
+<input type="hidden" name="receiver" value="수취인">
+<input type="hidden" name="receiverphone" value="수취인 전화번호">
+<!-- 할부개월 선택창 제어를 위한 선택적인 hidden정보 -->
+<input type="hidden" name="install_range" value="">									<!-- 할부개월 범위-->
+<input type="hidden" name="install_fr" value="">										<!-- 할부개월범위 시작-->
+<input type="hidden" name="install_to" value="">										<!-- 할부개월범위 끝-->
+<!-- 무이자 할부(수수료 상점부담) 여부를 선택하는 hidden정보 -->
+<input type="hidden" name="noint_inf" value="선택무이자">
+<input type="hidden" name="nointerest" value="0">
+<input type="hidden" name="formflag" value="Y">
+
+</form>
+  <td height="70" align="center"><a href="#" onClick="javascript:openWindow()"><img src="../image/bu_account2.gif" width="120" height="50" border="0" style='cursor:hand' ></a> <a href="card_account_cancel.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>"><img src="../image/bu_cancel.gif" width="100" height="50" border="0"></a></td>
+                              </tr>
+                            </table>
+                        </td>
+                      </tr>
+                  </table></td>
+                </tr>                
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+
+<?
+mysql_close($dbconn);
+?>

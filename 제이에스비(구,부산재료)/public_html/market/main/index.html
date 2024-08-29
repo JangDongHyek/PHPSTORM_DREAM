@@ -1,0 +1,233 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate2.php";
+?>
+<?
+
+//============================= 방문자를 카운트 함 =======================================
+$today = date("Ymd");
+$co_sql = "select * from $Mart_CounterTable where mart_id='$mart_id' and date='$today'";
+$co_res = mysql_query($co_sql, $dbconn);
+$co_tot = mysql_num_rows($co_res);
+if($co_tot > 0){
+	$co_row = mysql_fetch_array($co_res);
+	$index_no = $co_row[index_no];
+	$client_ip = $co_row[client_ip];
+	if( $client_ip != $REMOTE_ADDR ){
+		$coup_sql = "update $Mart_CounterTable set count_num=count_num + 1, client_ip='$REMOTE_ADDR' where index_no='$index_no' and mart_id='$mart_id'";
+		$coup_res = mysql_query($coup_sql, $dbconn);
+		if($coup_res == false){
+			echo "방문 통계 쿼리 실패";
+		}
+	}
+}else{
+	$coin_sql = "insert into $Mart_CounterTable(mart_id, date, count_num, client_ip) values('$mart_id', '$today', '1', '$REMOTE_ADDR')";
+	$coin_res = mysql_query($coin_sql, $dbconn);
+	if($coin_res == false){
+		echo "방문 통계 쿼리 실패";
+	}
+}
+if( $co_res ){
+	mysql_free_result( $co_res );
+}
+
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+#Layer1 {
+	position:absolute;
+	left:250px;
+	top:220px;
+	width:421px;
+	height:300px;
+	z-index:1;
+	visibility: visible;
+}
+-->
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+<?
+$now_date = date("Y-m-d");
+if($now_date < "2024-02-13"){
+?>
+
+
+if ( getCookie( "Notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+  noticeWindow  =  window.open('../pop/pop_sul_2024.htm','Notice1','left=0, top=10, width=500,height=630');
+  noticeWindow.opener = self;
+} 
+
+
+<?}?> 
+
+
+// -->
+</SCRIPT>
+
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<? include "../include/top2.htm"; ?>
+<? include("main_slide.htm"); ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+           <tr>
+            <td>&nbsp;</td>
+          </tr>
+		  <tr>
+            <td>&nbsp;</td>
+          </tr>
+		  <tr>
+            <td height="80" align="center"><img src="../images/main_title_1.gif"></td>
+          </tr>
+          <tr>
+            <td><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <td><div align="center"><? include("../include/new_item.htm"); ?></div></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+          <td height="25">&nbsp;</td>
+          </tr>
+          <tr>
+            <td></td>
+          </tr>
+          <tr>
+           <td height="80" align="center"><img src="../images/main_title_2.gif"></td>
+          </tr>
+          <tr>
+           <td><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr>
+                <td><div align="center"><? include("../include/fav_item.htm"); ?></div></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="25">&nbsp;</td>
+          </tr>
+          <tr>
+           <td height="80" align="center"><img src="../images/main_title_3.gif"></td>
+          </tr>
+          <tr>
+            <td><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td><div align="center">
+                    <? include("../include/rec_item.htm"); ?>
+                  </div></td>
+                </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="25">&nbsp;</td>
+          </tr>
+
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td align="center" bgcolor="#F7F7F7" style="padding:10px 0;"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td scope="row">
+        
+        <ul class="cus_banner">
+        	<li>
+            	<h3>NOTICE</h3>
+                <div>
+                                  <?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 3";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+                                  <?
+		if( $board_tot == "0" ){
+		?>
+        등록된 공지사항이  없습니다.
+                                  <?
+		}
+		?>
+                                  <?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,30);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+                                  <a href='../board/board_read.php?index_no=<?=$board_no?>&amp;bbs_no=1&amp;mart_id=<?=$mart_id?>'>
+                                      <?=$board_title?>
+                                    </a>
+                                  <?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+                                </div>
+            </li>
+        	<li>
+                <h3>고객센터</h3>
+                <p>051-632-4122</p>
+                <div>평　일 : 오전9시30분~오후6시30분<br>
+                토요일 : 오전9시30분~오후5시30분<br>
+                (일요일 및 법정공휴일 휴무)</div>
+            </li>
+            <li>
+                <h3>온라인 상담</h3>
+                <div>제품에 관하여 문의하실 사항이 <br>
+                있으시면 온라인 상담 게시판에<br>
+                글을 남겨주세요.</div>
+                <a href="../board/board_list.php?bbs_no=4">바로가기 ></a>
+            </li>
+            <li>
+                <h3>계좌안내</h3>
+                <p class="bank">1030-0539-5087</p>
+                <div>은행명 : 수협은행<br>예금주 : 이선호</div>
+            </li>
+        </ul></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<? include "../include/bottom2.htm"; ?>
+</body>
+</html>

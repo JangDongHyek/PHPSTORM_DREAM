@@ -1,0 +1,454 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+if( !$category_num ){
+	$category_num = 6;
+}
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+$sql1 = "select * from $CategoryTable where category_num='$category_num1' and if_hide='0' and mart_id='$mart_id'";
+$res1 = mysql_query($sql1, $dbconn);
+$row1 = mysql_fetch_array( $res1 );
+$category_prevno1 = $row1[prevno];
+$category_name1 = $row1[category_name];
+//================== 3차 카테고리 정보를 불러옴 ==========================================
+$sql2 = "select * from $CategoryTable where category_num='$category_num2' and if_hide='0' and mart_id='$mart_id'";
+$res2 = mysql_query($sql2, $dbconn);
+$row2 = mysql_fetch_array( $res2 );
+$category_prevno2 = $row2[prevno];
+$category_name2 = $row2[category_name];
+
+//================== 3차 카테고리 상품을 불러옴 ==========================================
+if( $flag == "z_price_up" ){//높은가격순
+	$flag_name = "z_price";
+	$order = "desc";
+	$flag_img1 = "align_1_on.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4.gif";
+}else if( $flag == "z_price_down" ){//낮은가격순
+	$flag_name = "z_price";
+	$order = "asc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2_on.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4.gif";
+}else if( $flag == "item_name" ){//상품명 정렬
+	$flag_name = "item_name";
+	$order = "asc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3_on.gif";
+	$flag_img4 = "align_4.gif";
+}else if( $flag == "item_no" ){//신상품순
+	$flag_name = "item_no";
+	$order = "desc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4_on.gif";
+}else{//정렬이 아닐때
+	$flag_name = "item_order";
+	$order = "asc";
+	$flag_img1 = "align_1.gif";
+	$flag_img2 = "align_2.gif";
+	$flag_img3 = "align_3.gif";
+	$flag_img4 = "align_4.gif";
+}
+
+if($page == ""){         
+	$page = 1;
+}
+
+if($mode == "search"){
+	$qry = "select count(*) from $ItemTable where ($select_key like '%$searchTerm%') and mart_id='$mart_id' and if_hide='0'";
+}else{
+	$qry = "select count(*) from $ItemTable where mart_id='$mart_id' and if_hide='0'";
+}
+$result = mysql_query( $qry, $dbconn );
+$total = mysql_result( $result, 0, 0);
+
+$line = 10;
+$list = 5;
+$total_page = ceil($total/$line);
+$total_list = intval($total_page/$list);
+
+if($total_page%$list == 0){
+	$total_list--;
+}
+
+$curr_list = intval($page/$list);
+
+if($page%$list == 0){
+	$curr_list--;
+}
+
+$start_page = $curr_list*$list+1;
+$prev_list = $start_page - $list;
+$next_list = $start_page + $list;
+$olds = $line*($page-1);
+
+
+if($_SESSION["PageType"] == "ce"){
+	$add_query = " and (firstno = '39' or firstno = '446' or firstno = '36' or firstno = '31') ";
+}else{
+	$add_query = " and firstno != '39' and firstno != '446' and firstno != '36' and firstno != '31' ";
+}
+
+
+if($mode == "search"){
+	$sql0 = "select *  from $ItemTable where ($select_key like '%$searchTerm%') and mart_id='$mart_id' and if_hide='0' $add_query order by $flag_name $order limit $olds,$line";
+}else{
+	$sql0 = "select *  from $ItemTable where mart_id='$mart_id' and if_hide='0' $add_query order by $flag_name $order limit $olds,$line";
+}
+$res0 = mysql_query( $sql0, $dbconn );
+
+
+
+
+//================== 2차 카테고리 정보가 없을때 ==========================================
+if( !$category_num1 ){
+	$nocate_sql2 = "select * from $CategoryTable where prevno='$category_num' and category_num='$cate_num' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res2 = mysql_query($nocate_sql2, $dbconn);
+	$nocate_row2 = mysql_fetch_array( $nocate_res2 );
+	$category_prevno1 = $nocate_row2[prevno];
+	$category_num1 = $nocate_row2[category_num];
+	$category_name1 = $nocate_row2[category_name];
+}
+
+//================== 3차 카테고리 정보가 없을때 ==========================================
+if( !$category_num2 ){
+	$nocate_sql3 = "select * from $CategoryTable where prevno='$category_prevno1' and category_num='$cate_num' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res3 = mysql_query($nocate_sql3, $dbconn);
+	$nocate_row3 = mysql_fetch_array( $nocate_res3 );
+	$category_prevno2 = $nocate_row3[prevno];
+	$category_num2 = $nocate_row3[category_num];
+	$category_name2 = $nocate_row3[category_name];
+}
+
+//================== 검색어를 디비에 넣음 ================================================
+if( !$UnameSess ){
+	$UnameSess = "guest";
+}
+if( $searchTerm ){
+	$search_sql = "select * from search_word where search_word='$searchTerm' and user_id='$UnameSess'";
+	$search_res = mysql_query($search_sql, $dbconn);
+	$search_tot = mysql_num_rows($search_res);
+
+	if($search_tot <= 0){
+		$search_sql1 = "insert into search_word (id, search_word, count, date, user_id) values ('', '$searchTerm', '1', now() , '$UnameSess')";
+		$search_res1 = mysql_query($search_sql1, $dbconn);
+	}else{
+		$search_sql1 = "update search_word set count=count+1 where search_word='$searchTerm' and user_id='$UnameSess'";
+		$search_res1 = mysql_query($search_sql1, $dbconn);
+	}
+}
+
+
+
+
+?>
+<?
+include "../../market/include/getmartinfo.php";
+//include "../../market/include/head_alltemplate.php";
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>JSB</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+		
+ 
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+
+		
+ 
+
+		<section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 검색결과</h2>
+				</div>
+			</article>
+ 
+			<article id="contentSub">
+				<h3>&nbsp;&nbsp;총 <strong><?=$total?></strong>개의 상품이 있습니다.</h3>
+			</article>
+
+			<article class="productList">
+				<ul class="list">
+						
+			
+					
+					
+<?
+if( $total == "0" ){
+?>
+                              <td height='50' align='center' colspan='7'><b>등록된 상품이 없습니다.</b></td>
+<?
+}else{
+
+	$i = 0;
+	while($row0 = mysql_fetch_array($res0)){
+		$id = $total - ($olds + $i);
+		$i++;
+
+		$cate_num = $row0[category_num];
+		$item_no = $row0[item_no];
+		$item_name = $row0[item_name];
+		$price = $row0[price];
+		$z_price = $row0[z_price];
+		$member_price = $row0[member_price];
+		$bonus = $row0[bonus];
+		$use_bonus = $row0[use_bonus];
+		$jaego = $row0[jaego];
+		$img_sml = $row0[img_sml];
+		$img = $row0[img];
+		$img_big = $row0[img_big];
+		$opt = $row0[opt];
+		$doctype = $row0[doctype];
+		$short_explain = $row0[short_explain];
+		$reg_date = $row0[reg_date];
+		$item_company = $row0[item_company];
+		$icon_no = $row0[icon_no];
+		$jaego_use = $row0[jaego_use];
+		$use_coupon = $row0[use_coupon];
+
+		
+		$short_explain = han_cut($short_explain,28);
+		$price_str = number_format($price);
+		if( $if_member_price == '1' && $UnameSess ){
+			if($member_price == 0){
+				$z_price = round($z_price * $member_price_percent / 100, -2);
+			}else{
+				$z_price = $member_price;	
+			}
+		}
+
+		$z_price_str = number_format($z_price);
+		$bonus_str = number_format($bonus);
+
+		if($jaego_use == 1 && $jaego == 0){
+			$icon_str = "<img src='../image/soldout_icon_s.gif' width='25' height='12'>";
+		}else{
+			if($icon_no == 0) $icon_str = "";
+			if($icon_no == 1) $icon_str = "<img src='../image/hot.gif' width='22' height='13'>";
+			if($icon_no == 2) $icon_str = "<img src='../image/new.gif' width='25' height='14'>";
+			if($icon_no == 3) $icon_str = "<img src='../image/sale.gif' width='22' height='13'>";
+			if($icon_no == 4) $icon_str = "<img src='../image/reserv.gif' width='53' height='12'>";
+		}
+
+		//============================ 상품 이미지 =======================================
+		if($img_sml != "" && file_exists("$Co_img_UP$mart_id/$img_sml")){
+			if (strstr(strtolower(substr($img_sml,-4)),'.jpg') || strstr(strtolower(substr($img_sml,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_sml' class='img'>";
+			}
+			if (strstr(strtolower(substr($img_sml,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_sml'></embed>";
+			}
+		}else if($img != "" && file_exists("$Co_img_UP$mart_id/$img")){
+			if (strstr(strtolower(substr($img,-4)),'.jpg') || strstr(strtolower(substr($img,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img' class='img'>";
+			}
+			if (strstr(strtolower(substr($img,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img'></embed>";
+			}
+		}else if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+			if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_big' class='img'>";
+			}
+			if (strstr(strtolower(substr($img_big,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_big'></embed>";
+			}
+		}else{
+			$img_str = "<img src='../image/noimage_s.gif' class='img'>";
+		}
+
+		if( $img_big ){
+			$target4 = "../..$Co_img_DOWN$mart_id/$img_big";
+			$new_tar4 = "<a onClick=\"window.open('big.html?item_no=$item_no&file=$target4','원본사진보기','width=600,height=620,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no')\" style='cursor:hand'>";
+		}else if( $img ){
+			$target4 = "../..$Co_img_DOWN$mart_id/$img";
+			$new_tar4 = "<a onClick=\"window.open('big.html?item_no=$item_no&file=$target4','원본사진보기','width=600,height=620,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no')\" style='cursor:hand'>";
+		}else if( $img_sml ){
+			$target4 = "../..$Co_img_DOWN$mart_id/$img_sml";
+			$new_tar4 = "<a onClick=\"window.open('big.html?item_no=$item_no&file=$target4','원본사진보기','width=600,height=620,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no')\" style='cursor:hand'>";
+		}else{
+			$new_tar4 = "";
+		}
+?>					
+					
+
+					
+					
+					<li>
+						<div class="imgbox"><a href='product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&page=<?=$page?>&mode=<?=$mode?>'><?=$img_str?></a></div>
+							<a href='product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&page=<?=$page?>&mode=<?=$mode?>'>
+							<div><?=$item_name?></div>
+							
+							<div class="price"> <?=$z_price_str?>원</div>
+						</a>					</li>
+
+					
+<?
+	}
+}
+?>
+
+
+
+
+				</ul>
+			</article>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<article class="paging">
+ 
+	
+     
+        
+        
+
+                      <? 
+if($page-1 <= 0){ 
+?>
+                     <
+                      <? 
+}else{ 
+?>
+
+                      <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&searchTerm=<?=$searchTerm?>&input_key=<?=$input_key?>&page=<?=$page-1?>&mode=<?=$mode?>"><</a>
+                      <? 
+} 
+?>
+&nbsp;
+<? 
+for($i=$start_page;$i<$start_page+$list;$i++){
+?>
+<? 
+	if($i == $page){ 
+?>
+<b>[
+<?=$i?>
+]</b>
+<? 
+	}else{ 
+?>
+<a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&searchTerm=<?=$searchTerm?>&input_key=<?=$input_key?>&page=<?=$i?>&mode=<?=$mode?>">
+<?=$i?>
+</a>
+<? 
+	} 
+?>
+&nbsp;
+<?
+	if($i>=$total_page)
+	break
+?>
+<? 
+} 
+?>
+<? 
+if($page+1 > $total_page){ 
+?>
+>
+<? 
+}else{ 
+?>
+<a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&flag=<?=$flag?>&select_key=<?=$select_key?>&searchTerm=<?=$searchTerm?>&input_key=<?=$input_key?>&page=<?=$page+1?>&mode=<?=$mode?>">></a>
+<? 
+} 
+?>
+
+    
+ 
+</article>
+		</section>
+ 
+	 
+ 
+<? include("../include/bottom.html"); ?>
+	</body>
+</html>

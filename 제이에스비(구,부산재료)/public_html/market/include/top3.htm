@@ -1,0 +1,50 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg2.jpg"><table width="950" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>&nbsp;</td>
+                <td width="123"><img src="../images/logo.jpg" /></td>
+                <td width="41">&nbsp;</td>
+                <td width="347" align="right"><?
+												if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName && $NonMemberPass)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/top_menu4.htm';
+													}
+													else
+														include '../inc/top_menu3.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/top_menu4.htm';
+												}
+												?></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="31" align="center"><? include '../inc/search_product2.htm'; ?></td>
+          </tr>
+          <tr>
+            <td height="25">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="250"><img src="../images/main_16.gif" width="250" height="70"></td>
+            <td>
+			<script type="text/javascript">flashWrite('../swf/shop_menu.swf?pageNum=<?= $num ?>&subNum=<?= $sub ?>','700','70','transparent')</script>
+			</td>
+          </tr>
+        </table></td>
+        </tr>
+    </table></td>
+  </tr>
+</table>

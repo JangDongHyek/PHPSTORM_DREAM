@@ -1,0 +1,193 @@
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="http://wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript"> 
+ if (!wcs_add) var wcs_add={};
+ wcs_add["wa"] = "s_3c28b0886335";
+// 체크아웃 whitelist가 있을 경우
+wcs.checkoutWhitelist = ["jsbusan.com", "www.jsbusan.com"]; 
+// 유입 추적 함수 호출
+wcs.inflow("jsbusan.com");
+</script>
+<script type="text/javascript"> 
+wcs_do(); 
+</script>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #E3E3E3;">
+  <tr>
+  	<td align="center" style="background:#474747;">
+  	  <table width="1000" border="0" cellspacing="0" cellpadding="0" class="tnb">
+  	    <tr>
+  	      <td>
+          <?
+            if(!$UnameSess || !$MemberLevel || !$MemberName)
+            {
+                if($NonMemberName && $NonMemberPass)
+                {
+                    $Logined_Member_Name = $NonMemberName;
+                    include '../inc/top_menu4.htm';
+                }
+                else
+                    include '../inc/top_menu3.htm';
+            }else{
+                $Logined_Member_Name = $UnameSess;
+                include '../inc/top_menu4.htm';
+            }
+            ?>
+          </td>
+  	      <td align="right">
+              <a href="../board/board_list.php?bbs_no=2">이용안내</a>
+              <a href="../board/board_list.php?bbs_no=4">고객게시판</a>
+              <a href="../board/board_list.php?bbs_no=5">비회원문의</a>
+          </td>
+        </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td align="center"style="padding:40px 0;"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="145"><a href="../main/index.html"><img src="../images/logo.jpg" width="145" height="40" /></a></td>
+                <td align="center" valign="middle">
+                <div class="gnb">
+                  <h2>메인메뉴</h2>
+                  <ul id="nav">
+                	<!--1차메뉴시작-->
+                    <li>
+                        <a href="../main/product_list.html?category_num=39" class="g1">케이스</a>
+                        	<!--2차메뉴시작-->
+                            <ul class="w140">
+							<?
+							$sql = "select * from category where prevno='39' and if_hide='0' order by cat_order desc";
+							$res = mysql_query($sql,$dbconn);
+							for($i=0;$row = mysql_fetch_array($res);$i++){
+							?>
+                            	<li><a href="../main/product_list.html?category_num=<?=$row[category_num]?>"><?=$row[category_name]?></a></li>
+							<?
+							}
+							?>
+                            </ul>
+                        	<!--2차메뉴끝-->
+                    </li>
+                	<!--1차메뉴끝-->
+                	<!--1차메뉴시작-->
+                    <li>
+                        <a href="../main/product_list.html?category_num=36" class="g1">디스플레이</a>
+                        	<!--2차메뉴시작-->
+                            <ul>
+							<?
+							$sql = "select * from category where prevno='36' and if_hide='0' order by cat_order desc";
+							$res = mysql_query($sql,$dbconn);
+							for($i=0;$row = mysql_fetch_array($res);$i++){
+							?>
+                            	<li><a href="../main/product_list.html?category_num=<?=$row[category_num]?>"><?=$row[category_name]?></a></li>
+							<?
+							}
+							?>
+                            </ul>
+                        	<!--2차메뉴끝-->
+                    </li>
+                	<!--1차메뉴끝-->
+					
+					             	<!--1차메뉴시작-->
+                    <li>
+                        <a href="../main/product_list.html?category_num=467" class="g1">진열패키지</a>
+                        	<!--2차메뉴시작-->
+                            <ul>
+							<?
+							$sql = "select * from category where prevno='467' and if_hide='0' order by cat_order desc";
+							$res = mysql_query($sql,$dbconn);
+							for($i=0;$row = mysql_fetch_array($res);$i++){
+							?>
+                            	<li><a href="../main/product_list.html?category_num=<?=$row[category_num]?>"><?=$row[category_name]?></a></li>
+							<?
+							}
+							?>
+                            </ul>
+                        	<!--2차메뉴끝-->
+                    </li>
+                	<!--1차메뉴끝-->
+					
+					
+                	<!--1차메뉴시작-->
+                    <li>
+                        <a href="../main/product_list.html?category_num=31" class="g1">서비스용품</a>
+                        	<!--2차메뉴시작-->
+                            <ul>
+							<?
+							$sql = "select * from category where prevno='31' and if_hide='0' order by cat_order desc";
+							$res = mysql_query($sql,$dbconn);
+							for($i=0;$row = mysql_fetch_array($res);$i++){
+							?>
+                            	<li><a href="../main/product_list.html?category_num=<?=$row[category_num]?>"><?=$row[category_name]?></a></li>
+							<?
+							}
+							?>
+                            </ul>
+                        	<!--2차메뉴끝-->
+                    </li>
+                	<!--1차메뉴끝-->
+                	<!--1차메뉴시작-->
+                    <li>
+                        <a href="../main/product_list.html?category_num=342" class="g1">세공기계/재료</a>
+                        	<!--2차메뉴시작-->
+                            <ul>
+
+							<?
+							$sql = "select * from category where prevno='0' and if_hide='0' and category_num!='39' and category_num!='36' and category_num!='31' and category_num!='342' order by cat_order desc";
+							$res = mysql_query($sql,$dbconn);
+							for($i=0;$row = mysql_fetch_array($res);$i++){
+							?>
+                            	<li><a href="../main/product_list.html?category_num=<?=$row[category_num]?>"><?=$row[category_name]?></a></li>
+							<?
+							}
+							?>
+
+							<!--
+                            	<li><a href="../main/product_list.html?category_num=333">공구셋트</a></li>
+                            	<li><a href="../main/product_list.html?category_num=334">매장용 공구/재료</a></li>
+                            	<li><a href="../main/product_list.html?category_num=345">세공 공구/재료</a></li>
+                            	<li><a href="../main/product_list.html?category_num=439">톱대/톱날/보조공구</a></li>
+                            	<li><a href="../main/product_list.html?category_num=435">책상/보조공구</a></li>
+                            	<li><a href="../main/product_list.html?category_num=428">측정/감정기자재</a></li>
+                            	<li><a href="../main/product_list.html?category_num=424">왁스카빙작업</a></li>
+                            	<li><a href="../main/product_list.html?category_num=416">땜/용해/용접</a></li>
+                            	<li><a href="../main/product_list.html?category_num=408">조각작업</a></li>
+                            	<li><a href="../main/product_list.html?category_num=400">금속재료/은/동</a></li>
+                            	<li><a href="../main/product_list.html?category_num=385">핸드피스/보조품</a></li>
+                            	<li><a href="../main/product_list.html?category_num=390">핸드피스 바(Bar)</a></li>
+                            	<li><a href="../main/product_list.html?category_num=376">광택작업/연마</a></li>
+                            	<li><a href="../main/product_list.html?category_num=369">주물작업</a></li>
+                            	<li><a href="../main/product_list.html?category_num=365">세척작업</a></li>
+							-->
+                            </ul>
+                        	<!--2차메뉴끝-->
+                    </li>
+                	<!--1차메뉴끝-->
+                </ul>
+            	</div>
+                <script>
+				//위아래
+				$(document).ready(function() {	
+					$('#nav li').hover(function() {
+						$('ul', this).slideDown(200);
+						$(this).children('a:first').addClass("hov");
+					}, function() {
+						$('ul', this).slideUp(50);
+						$(this).children('a:first').removeClass("hov");		
+					});
+				});
+                </script>
+                </td>
+                <td width="240" align="right"><? include '../inc/search_product2.htm'; ?></td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+

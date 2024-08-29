@@ -1,0 +1,130 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+$category_html = $row[category_html];
+$category_html = str_replace("<br />","",$category_html);
+$category_html = str_replace("<BODY>","<BODY><br>",$category_html);
+$category_html = str_replace("</BODY>","<br></BODY>",$category_html);
+$category_html = str_replace("&nbsp;", "", $category_html);
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td valign="top"><? include "../include/member_menu.htm"; ?></td>
+              </tr>
+              <tr>
+                <td height="50"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="font-size:27px ;color:#111111; font-weight:bold; line-height:28px;">회원가입</td>
+                    <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <span class="text_14_s2"><a href="../main/index.html">홈</a> &gt; 멤버페이지 &gt; 회원가입 </span></div></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td height="10" style="border-top:1px solid #9b9b9b;">&nbsp;</td>
+              </tr>
+                    <tr>
+                      <td align="center" style="font-size:18px ;color:#111111; font-weight:bold; line-height:2em;">이용약관</td>
+                    </tr>
+                                  <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td align="center" valign="top"><!--내용-->
+                  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><div style="width:1000px; border:1px solid #E1E1E1; border-radius:12px; padding:20px; line-height:2em; ">
+                            <iframe src="rule.html" frameborder="0" height="200" width="1000" scrolling="auto"></iframe>
+                          </div></td>
+                        </tr>
+                      </table>
+                  <!--내용--></td>
+              </tr>
+              <tr>
+                <td height="50">&nbsp;</td>
+              </tr>
+              <tr>
+                <td align="center" style="font-size:18px ;color:#111111; font-weight:bold; line-height:2em;">개인정보수집이용</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+               <tr>
+                <td><div style="width:1000px; border:1px solid #E1E1E1; border-radius:12px; padding:20px; line-height:2em; ">
+                            <p><strong>■ 개인정보의 수집&middot;이용 목적</strong> <br>
+                              서비스 제공 및 계약의 이행, 구매 및 대금결제, 물품배송 또는 청구지 발송, 회원관리 등을 위한 목적 <br>
+                              <br>
+                            <p><strong>■ 수집하려는 개인정보의 항목</strong> <br>
+                              이름, 주소, 연락처, 이메일 등 <br>
+                              <br>
+                            <p><strong>■ 개인정보의 보유 및 이용 기간</strong> <br>
+                              회사는 개인정보 수집 및 이용목적이 달성된 후에는 예외없이 해당정보를 파기합니다. <br>
+                      </div></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+               <tr>
+                <td>&nbsp;</td>
+              </tr>
+            </table></td>
+          </tr>
+                              <tr>
+                      <td height="60"><div align="center"><img src="../images2/join/btn_1.gif" style='cursor:pointer' onClick="location.href='join.html?mart_id=<?=$mart_id?>&from_order_sheet_flag=<?=$from_order_sheet_flag?>'">&nbsp;<img src="../images2/join/btn_2.gif" style='cursor:pointer' onClick="history.back();"></div></td>
+                    </tr>
+          <tr>
+            <td height="9"></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>

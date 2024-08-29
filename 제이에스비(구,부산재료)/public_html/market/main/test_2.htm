@@ -1,0 +1,56 @@
+
+<style type="text/css">
+<!--
+#Layer1 {
+	position:absolute;
+	left:250px;
+	top:220px;
+	width:421px;
+	height:300px;
+	z-index:1;
+	visibility: visible;
+}
+-->
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+<?
+$now_date = date("Y-m-d");
+if($now_date >= "2023-07-29"){
+?>
+
+
+if ( getCookie( "Notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+  noticeWindow  =  window.open('../pop/pop_chu_2022.htm','Notice1','left=0, top=10, width=435,height=600');
+  noticeWindow.opener = self;
+} 
+
+
+<?}?> 
+
+
+// -->
+</SCRIPT>

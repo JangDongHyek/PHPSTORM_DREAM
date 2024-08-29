@@ -1,0 +1,261 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+
+include "../include/getmartinfo.php";
+
+//================== 업로드 함수 불러옴 ==================================================
+include "../upload.php";
+$upload_dir = "$UploadRoot$mart_id/";
+
+if($flag == "update"){
+	$query1 = "select password from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+	$result1 = mysql_query( $query1, $dbconn );
+	$row1 = mysql_fetch_array( $result1 );
+	$real_passwd = $row1[password];
+
+	if( $old_password ){
+		if( $real_passwd != get_password_str($old_password) ){
+			echo("
+				<script>
+				window.alert('이전 비밀번호가 맞지 않습니다!')
+				history.go(-1)
+				</script>
+			");
+			exit;
+		}
+		if( $password1 != $password2 ){
+			echo ("
+				<script>
+				window.alert('새 비밀번호를 정확히 입력해주세요')
+				</script>
+				<meta http-equiv='Refresh' content='0; URL=update.html'>
+			");
+			exit;
+		}
+	}else
+	{
+		echo ("
+				<script>
+				window.alert('비밀번호를 입력해주세요')
+				</script>
+				<meta http-equiv='Refresh' content='0; URL=update.html'>
+			");
+		exit;
+	}
+
+	if( $memberimg_name ){//첨부 파일을 업로드 했으면 파일명을 수정함
+		$file = FileUploadName( "$member_img", "$upload_dir", $memberimg, $memberimg_name );
+		$sql = "update $Mart_Member_NewTable set member_img='$file' where username='$UnameSess' and mart_id='$mart_id'";
+		$res = mysql_query( $sql, $dbconn );
+
+		if( !$res ){
+			echo("
+				<script>
+				window.alert('아이콘을 수정하는데 실패했습니다!');
+				history.go(-1)
+				</script>
+			");
+			exit;
+		}
+	}
+
+	//====================================================================================
+	if( $password1 ){ //비밀번호 수정시
+		$query = "update $Mart_Member_NewTable set password=password('$password1') where username='$UnameSess' and mart_id='$mart_id'";
+		$result = mysql_query( $query, $dbconn );
+
+		if( !$result ){
+			echo("
+				<script>
+				window.alert('회원 정보를 수정하는데 실패했습니다!');
+				history.go(-1)
+				</script>
+			");
+			exit;
+		}
+	}
+
+	$SQL = "update $Mart_Member_NewTable set email='$email', tel='$tel', tel1='$tel1', zip='$zip', address='$address', address_d='$address_d', partner='$partner', msg='$msg', job='$job', com_name='$com_name', homepage='$homepage', hobby='$hobby', religion='$religion', ext1_content='$ext1_content', ext2_content='$ext2_content', ext3_content='$ext3_content', ext4_content='$ext4_content', sel_content='$sel_content', if_maillist='$if_maillist' where username='$UnameSess' and mart_id='$mart_id'";
+
+	$dbresult = mysql_query($SQL, $dbconn);
+
+	if( $dbresult ){
+		echo ("
+			<script language='JavaScript'>
+			window.alert('회원 정보 수정이 완료되었습니다');
+			</script>
+			<meta http-equiv='refresh' content='0; URL=update.html?mart_id=$mart_id'>
+		");
+	}else{
+		echo("
+			<script>
+			window.alert('회원 정보를 수정하는데 실패했습니다!');
+			history.go(-1)
+			</script>
+		");
+		exit;
+	}
+}elseif($flag == "leave"){
+	$query1 = "select * from $Mart_Member_NewTable where username='$UnameSess' and name='$name' and password=password('$password')  and mart_id='$mart_id'";
+	$result1 = mysql_query( $query1, $dbconn );
+	$total1 = mysql_num_rows( $result1 );
+
+	if( $total1 > 0 ){
+		$row1 = mysql_fetch_array( $result1 );
+		$member_img = $row1[member_img];
+
+		if( $member_img ){//아이콘이 있으면 아이콘을 삭제함
+			$desc = "{$upload_dir}{$member_img}";
+			unlink($desc);
+		}
+
+		//==================== 찜하기 정보를 삭제함 ======================================
+		$sql2 = "delete from $Pre_SelectTable where id='$UnameSess' and mart_id='$mart_id'";
+		$res2 = mysql_query( $sql2, $dbconn );
+
+		//==================== 포인트를 삭제함 ===========================================
+		$SQL = "delete from $BonusTable where id='$UnameSess' and mart_id='$mart_id'";
+		$dbresult = mysql_query($SQL, $dbconn);
+
+		//==================== 회원정보를 삭제함 =========================================
+		$SQL = "delete from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+		$dbresult = mysql_query($SQL, $dbconn);
+
+		if( $dbresult ){
+			echo ("
+			<script language='JavaScript'>
+			window.alert('탈퇴가 완료되었습니다.');
+			</script>
+			");
+
+			$etc = nl2br($etc);
+
+			$mailcontent = "
+
+
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=euc-kr'>
+<title>▒ $mart_id - 믿을수있는 쇼핑몰, 쇼핑의 즐거움을 더해드립니다 ▒</title>
+<style type='text/css'>
+<!--
+.text_18 {font-family: '돋움','굴림';font-size: 12px ;line-height: 18px;color: #333333}
+.mypage_1 {font-family: '돋움','굴림';font-size: 12px ;line-height: 16px;color: #DA6157;  font-weight: bold;}
+.mypage_2 {font-family: '돋움','굴림';font-size: 12px ;line-height: 16px;color: #A46738;  font-weight: bold;}
+.mypage_3 {font-family: '돋움','굴림';font-size: 12px ;line-height: 16px;color: #D0783A;  font-weight: bold;}
+.mypage_4 {font-family: '돋움','굴림';font-size: 12px ;line-height: 16px;color: #627C12;  font-weight: bold;}
+a:link {color:#333333; text-decoration:none; }
+a:visited {color:#333333; text-decoration:none; }
+a:active {color:#333333; text-decoration:none;}
+a:hover {color:#000000; text-decoration:none;}
+.input_03 {color:333333; font-family:'돋움','굴림'; font-size: 9pt; background-color:#F7F7F7; border:1 solid #999999;
+border-top-color: #9E9E9E; border-right-color: #EAEAEA; border-bottom-color: #EAEAEA;border-left-color: #9E9E9E;}
+-->
+</style>
+</head>
+<body>
+<table width='650' border='0' align='center' cellpadding='0' cellspacing='0'>
+	<tr>
+		<td width='20'><img src='http://$HTTP_HOST/market/image/mail/top_l.gif' width='20' height='70'></td>
+		<td align='center' background='http://$HTTP_HOST/market/image/mail/top_bg.gif'><img src='http://$HTTP_HOST/market/image/mail/top_type.gif' width='260' height='70'></td>
+		<td width='20'><img src='http://$HTTP_HOST/market/image/mail/top_r.gif' width='20' height='70'></td>
+	</tr>
+	<tr>
+		<td height='10' colspan='3'></td>
+	</tr>
+</table>
+<table width='630' border='0' align='center' cellpadding='0' cellspacing='0'>
+	<tr>
+		<td width='1' bgcolor='E4E4E4'></td>
+		<td><table width='100%'  border='0' cellspacing='0' cellpadding='20'>
+				<tr>
+					<td class='text_18'>
+						[$name]고객님께서 탈퇴신청 하였습니다.
+					</td>
+				</tr>
+				<tr>
+					<td class='text_18'>
+						아이디 : <b>[$username]</b> 
+					</td>
+				</tr>
+				<tr>
+					<td class='text_18'>
+						탈퇴사유 : $etc 
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td width='1' bgcolor='E4E4E4'></td>
+	</tr>
+	<tr>
+		<td height='20' colspan='3'></td>
+	</tr>
+</table>
+<table width='630' border='0' align='center' cellpadding='10' cellspacing='7' bgcolor='#EFEFEF'>
+	<tr>
+		<td width='638' bgColor='#FFFFFF' class='text_18'>[$shopname]쇼핑몰 고객센터 : 전화) <span class='mypage_1'>$shoptel1</span>, email : <span class='mypage_1'>$shopemail</span>
+</table>
+<table width='650' border='0' align='center' cellpadding='0' cellspacing='0'>
+	<tr>
+		<td height='20'></td>
+	</tr>
+	<tr>
+		<td width='20'><img src='http://$HTTP_HOST/market/image/mail/bottom_l.gif' width='20' height='70'></td>
+		<td align='center' background='http://$HTTP_HOST/market/image/mail/bottom_bg.gif'><a href='http://$HTTP_HOST' target='_blank'><img src='http://$HTTP_HOST/market/image/mail/bottom_type.gif' width='260' height='70' border='0'></a></td>
+		<td width='20'><img src='http://$HTTP_HOST/market/image/mail/bottom_r.gif' width='20' height='70'></td>
+	</tr>
+</table>
+</body>
+</html>
+
+		";
+
+		$result = mail($shopemail, "탈퇴신청확인.", "$mailcontent", "From: $shopname <$shopemail>\nContent-type: text/html");
+			
+			//========================== 세션 시작 =======================================
+			session_start();
+			global $HTTP_COOKIE_VARS;
+
+			$UnameSess = "";
+			$MemberLevel = "";
+			$MemberName = "";
+			$MemberEmail = "";
+
+			unset($_SESSION["UnameSess"]);
+			unset($_SESSION["MemberLevel"]);
+			unset($_SESSION["MemberName"]);
+			unset($_SESSION["MemberEmail"]);
+
+			unset($_SESSION);
+			session_destroy();
+
+			echo "
+				<script>
+				parent.location.href='../../.';
+				</script>
+			";
+
+		}else{
+			echo("
+				<script>
+				window.alert('탈퇴하는데 실패했습니다!');
+				history.go(-1)
+				</script>
+			");
+			exit;
+		}
+	}else{
+		echo("
+			<script>
+			window.alert('회원 정보가 일치하지 않습니다.');
+			history.go(-1)
+			</script>
+		");
+		exit;
+	}
+}
+?>
+<?
+mysql_close($dbconn);
+?>

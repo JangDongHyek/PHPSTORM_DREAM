@@ -1,0 +1,128 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+
+if($_SESSION["PageType"] == "ce"){
+	unset($_SESSION["PageType"]);
+
+	echo"<script>location.href='../main/session.php?pagetype=je';</script>";
+	
+}
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>JSB</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	<div class="m_banner">
+	      <div><img src="../images/shop_mobile_main_tools.jpg" width="100%"></div>
+	</div>
+ 
+       <article id="contentSubSp0">
+                <h3>신상품</h3>
+                <ul class="specialList">
+				<? include "../include/new_item2.html" ?>
+				<!--<? //include "./include/new_item.html" ?>-->
+				</ul>
+            </article>
+ 
+ 
+ 
+ 
+    <section id="content">
+            <article id="contentSubSp0">
+                <h3>인기상품</h3>
+                <ul class="specialList">
+				<? include "../include/fav_item2.html" ?>
+				<!--<? //include "./include/rec_item.html" ?>-->
+				</ul>
+            </article>
+			
+			
+  <section id="content">
+            <article id="contentSubSp0">
+                <h3>추천상품</h3>
+                <ul class="specialList">
+				<? include "../include/rec_item2.html" ?>
+				<!--<? //include "./include/fav_item.html" ?>-->
+				</ul>
+            </article>
+ 
+   
+ 
+
+
+
+
+
+
+		 <!-- <article id="mainNotice">
+                <h3><span class="ic"></span>공지사항</h3>
+
+				 <?             			
+				$today = date("Ymd");
+				$notice_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 4";
+				$notice_res = mysql_query($notice_sql, $dbconn);
+				$notice_tot = mysql_num_rows( $notice_res );
+				?>
+											<?
+				if( $notice_tot == "0" ){
+				?>
+                <ul>
+                    <li>등록된 공지사항이 없습니다.</li>
+                </ul>
+											<?
+				}
+				?>
+											<?
+				$i = 0;
+				while( $notice_row = mysql_fetch_array($notice_res) ){
+					$notice_no = $notice_row[index_no];
+					$notice_title = $notice_row[subject_new];
+					$notice_title = han_cut($notice_title,50);
+				?>
+                <ul>
+                    <li><a href='../board/board_read.html?index_no=<?=$notice_no?>&bbs_no=1&mart_id=<?=$mart_id?>'>
+												<?=$notice_title?>
+											  </a></li>
+                </ul>
+				<?
+				}
+				if( $notice_res ){
+					mysql_free_result( $notice_res );
+				}
+				?>
+
+		 </article>-->
+    </section>
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

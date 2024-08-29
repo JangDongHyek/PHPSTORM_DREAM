@@ -1,0 +1,217 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+if( !$UnameSess &&  !$NonMemberName ){
+	echo "
+		<meta http-equiv='refresh' content='0; URL=../main/login.html?url=$url'>
+	";
+	exit;
+}
+?>
+
+<?
+include "../../market/include/getmartinfo.php";
+//include "../../market/include/head_alltemplate.php";
+?>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>JSB</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+
+				var query = document.searchForm.searchTerm.value;
+
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+    
+    <script type="text/javascript">
+    </script>
+
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+
+		
+
+    <section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 마이페이지</h2>
+				</div>
+			</article>
+        <article id="productReview">
+            <h3>&nbsp;&nbsp;쇼핑정보 주문/배송 현황</h3>
+
+            <div class="basket">
+            <div class="mypageTxt">
+                <span>상품명</span>을 클릭하시면 상세정보로 이동합니다.
+            </div>
+			<table class="orderForm mt10 mb20">
+                    <tr>
+                        <th>주문일자</th>
+                        <th>상품명</th>
+                        <th>주문상태</th>
+                  </tr>
+<?
+if( $UnameSess ){
+	$sql_str = "id='$UnameSess'";
+}else{
+	//$sql_str = "order_num='$ordernum'";
+	$sql_str = "name = '$NonMemberName' and passport1='$NonMemberPassport1' and passport2='$NonMemberPassport2'";
+}
+$order_sql = "select * from $Order_BuyTable where mart_id='$mart_id' and $sql_str and status != 0 and status != 9 order by index_no desc";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+
+if($cnfPagecount == ""){
+	$cnfPagecount = 10;
+}
+if($page == ""){
+	$page = 1;
+}
+$skipNum = ($page - 1) * $cnfPagecount;
+
+$prev_page = $page - 1;
+$next_page = $page + 1;
+
+$numRows = $order_tot;
+$total_page = ($numRows - 1) / $cnfPagecount;
+$total_page = intval($total_page)+1;
+	
+if($page % 10 == 0){
+	$start_page = $page - 9;
+}else{
+	$start_page = $page - ($page % 10) + 1;
+}
+
+$end_page = $start_page + 9;
+if($end_page >= $total_page)
+$end_page = $total_page;
+$prev_start_page = $start_page - 10;
+$next_start_page = $start_page + 10;
+
+for($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++){
+	if ($i >= $order_tot) break;
+	mysql_data_seek($order_res, $i);
+	$order_row = mysql_fetch_array($order_res);
+		
+	$order_num_query = $order_row[order_num];
+	//echo $order_num_query;
+	$freight_code = $order_row[freight_code];
+	$freight_fee = $order_row[freight_fee];
+	$card_paid = $order_row[card_paid];
+	$date = str_replace("-","",$order_row[date]);
+	$date_str = substr($date,0,4)."/".substr($date,4,2)."/".substr($date,6,2);
+	//$date_str = $order_row[date];
+
+	$status = $order_row[status]; 
+
+	if($status == 1) $status_str = "주문";
+	if($status == 2) $status_str = "입금확인";
+	if($status == 3) $status_str = "배송완료";
+	if($status == 4) $status_str = "환불";
+	if($status == 5) $status_str = "주문취소";
+	if($status == 6) $status_str = "배송중";
+	if($status == 7) $status_str = "교환";
+	if($status == 8) $status_str = "<font color='red'>고객주문취소</font>";		
+	if($status == 10) $status_str = "<font color='red'>결제취소</font>";		
+
+	if($status == 1 && $card_paid == 'f')
+		$status_str = "<font color='red'>결제실패</font>";
+
+	$order_sql1 = "select * from $Order_ProTable where mart_id='$mart_id' and order_num='$order_num_query' and status > 0 order by order_pro_no desc";
+	//echo $order_sql1;
+	$order_res1 = mysql_query($order_sql1, $dbconn);
+	$order_tot1 = mysql_num_rows($order_res1);
+	$mon_tot = 0;
+	for ($j=0; $j < $order_tot1; $j++) {
+		mysql_data_seek($order_res1,$j);
+		$order_row1 = mysql_fetch_array($order_res1);
+		if($j == 0)
+			$order_item_name = $order_row1[item_name];
+
+		$order_pro_no = $order_row1[order_pro_no];
+		$z_price = $order_row1[z_price];
+		$bonus = $order_row1[bonus];
+		$use_bonus = $order_row1[use_bonus];
+		//$good_status = $order_row1[status];
+		$quantity = $order_row1[quantity];
+	
+		$opt_price = $order_row1[opt_price];
+		$opt_price2 = $order_row1[opt_price2];
+		$opt_price3 = $order_row1[opt_price3];
+		$opt_price4 = $order_row1[opt_price4];
+		$sum = ($z_price*$quantity)+(($opt_price+$opt_price2+$opt_price3+$opt_price4)*$quantity);
+	
+		
+		
+		$mon_tot += $sum; //합계금액
+	}
+
+	if($j > 1)
+		$order_item_name .= " 외 ".($j-1)." 종";
+
+	$mon_tot_str = number_format($mon_tot);
+	$mon_tot_freight_str = number_format($mon_tot + $freight_fee);
+		$cancel_str = "";
+		$modify_str = "";
+		/*if($status < 2){
+			$cancel_str = "<span class='price'><a href='order_cancel.html?flag=cancel&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html' onclick='return really()'><img src='../image/bu_cancel2.gif' border='0'></a></span>";
+			$modify_str = "<span class='price'><a href='order_update.html?order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html'><img src='../image/bu_modify.gif' border='0'></a></span>";
+		}else if( $status >= 2 && $status < 8 ){
+			$cancel_str = "";
+		}else if($status == 8){
+			$cancel_str = "";
+		}
+		else if($status == 10){
+			$cancel_str = "";
+		}*/
+?>
+                    <tr>
+                        <td><?=$date_str?></td>
+                        <td><a href='mypage_view.html?mart_id=<?=$mart_id?>&order_num_query=<?=$order_num_query?>'><?=$order_item_name?></a></td>
+						<td><?=$status_str?></td>
+                    </tr>
+<?
+}
+?>
+			</table>
+            </div>
+
+        </article>
+
+    </section>
+
+ 
+ 
+<? include("../include/bottom.html"); ?>
+	</body>
+</html>

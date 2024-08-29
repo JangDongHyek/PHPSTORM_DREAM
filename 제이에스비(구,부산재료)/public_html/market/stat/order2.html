@@ -1,0 +1,394 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+if( !$UnameSess && ( !$NonMemberName && !$NonMemberPass )){
+	echo "
+		<meta http-equiv='refresh' content='0; URL=../member/login.html?url=$url'>
+	";
+	exit;
+}
+?>
+
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script>
+function really(){
+	if(confirm("정말 주문을 취소하시겠습니까?")) return true;
+	else return false;
+}
+</script>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="950" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="250" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>        </td>
+        <td valign="top"><table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="700"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="700"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지 &gt; 주문내역 및 배송조회 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="700"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="227"><img src="../images/mypage_3.gif" width="227" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/out.html"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td><a href="../stat/order.html"></a><a href="../stat/order.html"><img src="../images/mypage_new_over.gif" width="126" height="25" border="0"></a><a href="../mypage/send.html"></a></td>
+                                    <td width="5%"><img src="../images/mypage_14.gif"></td>
+                                    <td width="5%"><a href="../mypage/point.html"><img src="../images/mypage_15.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/order_title.gif" width="680" height="46"></td>
+                </tr>
+                <tr>
+                  <td>
+                      <div align="left"><br>
+                          <table width="680"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><!---------------------- 조회하기 시작 --------------------->
+                                <!--<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                        	<tr>
+							<form name='ordersearch' method='post'>
+                        		<td height="70" align="center" bgcolor="FBEADC">
+                       				주문번호 : <input type='text' name='ordernum' class='input03' size='20'> <input type='image' src="../image/mypage/orderlist_bu_7.gif" width="50" height="20" border="0" align="absmiddle" onfocus='blur();'>
+								</td>
+							</form>
+                       		</tr>
+                       	</table>-->
+                                <!---------------------- 조회하기 끝 ----------------------->
+                                <!---------------------- 주문 조회 내용 시작 ----------------------->
+                                <table width="100%"  border="0" cellpadding="0" cellspacing="1" bgcolor="#FFFFFF">
+                                  <tr bgcolor="D0783A">
+                                    <td height="1" colspan='6'></td>
+                                  </tr>
+                                  <tr align="center" bgcolor="FCF6EE" height="30">
+								      <td width="20%" class="mypage_3">주문 번호</td>
+                                    <td width="10%" class="mypage_3">주문 일자</td>                                    
+                                    <td width="42%"class="mypage_3">상품 내역</td>
+                                    <td width="15%" class="mypage_3">구매 금액</td>
+                                    <td width="13%" class="mypage_3">주문 상태</td>
+                                  </tr>
+                                  <?
+if( $UnameSess ){
+	$sql_str = "id='$UnameSess'";
+}else{
+	//$sql_str = "order_num='$ordernum'";
+	$sql_str = "name = '$NonMemberName' and field1='$NonMemberPass'";
+}
+$order_sql = "select * from $Order_BuyTable where mart_id='$mart_id' and $sql_str and status != 0 and status != 9 order by index_no desc";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+
+if($cnfPagecount == ""){
+	$cnfPagecount = 10;
+}
+if($page == ""){
+	$page = 1;
+}
+$skipNum = ($page - 1) * $cnfPagecount;
+
+$prev_page = $page - 1;
+$next_page = $page + 1;
+
+$numRows = $order_tot;
+$total_page = ($numRows - 1) / $cnfPagecount;
+$total_page = intval($total_page)+1;
+	
+if($page % 10 == 0){
+	$start_page = $page - 9;
+}else{
+	$start_page = $page - ($page % 10) + 1;
+}
+
+$end_page = $start_page + 9;
+if($end_page >= $total_page)
+$end_page = $total_page;
+$prev_start_page = $start_page - 10;
+$next_start_page = $start_page + 10;
+
+for($i=$skipNum; $i < ($cnfPagecount+$skipNum); $i++){
+	if ($i >= $order_tot) break;
+	mysql_data_seek($order_res, $i);
+	$order_row = mysql_fetch_array($order_res);
+		
+	$order_num_query = $order_row[order_num];
+	//echo $order_num_query;
+	$freight_code = $order_row[freight_code];
+	$freight_fee = $order_row[freight_fee];
+	$card_paid = $order_row[card_paid];
+	$date = str_replace("-","",$order_row[date]);
+	$date_str = substr($date,0,4)."/".substr($date,4,2)."/".substr($date,6,2);
+	//$date_str = $order_row[date];
+
+	$status = $order_row[status]; 
+
+	if($status == 1) $status_str = "주문";
+	if($status == 2) $status_str = "입금확인";
+	if($status == 3) $status_str = "배송완료";
+	if($status == 4) $status_str = "환불";
+	if($status == 5) $status_str = "주문취소";
+	if($status == 6) $status_str = "배송중";
+	if($status == 7) $status_str = "교환";
+	if($status == 8) $status_str = "<font color='red'>고객주문취소</font>";		
+	if($status == 10) $status_str = "<font color='red'>결제취소</font>";		
+
+	if($status == 1 && $card_paid == 'f')
+		$status_str = "<font color='red'>결제실패</font>";
+
+	$order_sql1 = "select * from $Order_ProTable where mart_id='$mart_id' and order_num='$order_num_query' and status > 0 order by order_pro_no desc";
+	//echo $order_sql1;
+	$order_res1 = mysql_query($order_sql1, $dbconn);
+	$order_tot1 = mysql_num_rows($order_res1);
+	$mon_tot = 0;
+	for ($j=0; $j < $order_tot1; $j++) {
+		mysql_data_seek($order_res1,$j);
+		$order_row1 = mysql_fetch_array($order_res1);
+		if($j == 0)
+			$order_item_name = $order_row1[item_name];
+
+		$order_pro_no = $order_row1[order_pro_no];
+		$z_price = $order_row1[z_price];
+		$bonus = $order_row1[bonus];
+		$use_bonus = $order_row1[use_bonus];
+		//$good_status = $order_row1[status];
+		$quantity = $order_row1[quantity];
+		$opt = $order_row1[opt];
+		$opt2 = $order_row1[opt2];
+		$opt3 = $order_row1[opt3];
+		$opt4 = $order_row1[opt4];
+		
+		$sql="select * from $OptionTable where opt_no='$opt'";
+		$result=mysql_query($sql);
+		$rs=mysql_fetch_array($result);
+		
+		
+		$sql="select * from $OptionTable2 where opt_no='$opt2'";
+		$result=mysql_query($sql);
+		$rs2=mysql_fetch_array($result);
+		
+
+		$sql="select * from $OptionTable3 where opt_no='$opt3'";
+		$result=mysql_query($sql);
+		$rs3=mysql_fetch_array($result);
+		
+
+		$sql="select * from $OptionTable4 where opt_no='$opt4'";
+		$result=mysql_query($sql);
+		$rs4=mysql_fetch_array($result);
+		
+		$opt_name=$rs[opt_name];
+		$opt_name2=$rs2[opt_name];
+		$opt_name3=$rs3[opt_name];
+		$opt_name4=$rs4[opt_name];
+
+		$opt_price = $order_row1[opt_price];
+		$opt_price2 = $order_row1[opt_price2];
+		$opt_price3 = $order_row1[opt_price3];
+		$opt_price4 = $order_row1[opt_price4];
+		$sum = ($z_price*$quantity)+(($opt_price+$opt_price2+$opt_price3+$opt_price4)*$quantity);
+		
+		$mon_tot += $sum; //합계금액
+	}
+
+	if($j > 1)
+		$order_item_name .= " 외 ".($j-1)." 종";
+
+	$mon_tot_str = number_format($mon_tot);
+	$tax_price = $mon_tot * 0.1;
+	$mon_tot_freight_str = number_format($mon_tot + $freight_fee + $tax_price);
+		$cancel_str = "";
+		$modify_str = "";
+		/*if($status < 2){
+			$cancel_str = "<span class='price'><a href='order_cancel.html?flag=cancel&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html' onclick='return really()'><img src='../image/bu_cancel2.gif' border='0'></a></span>";
+			$modify_str = "<span class='price'><a href='order_update.html?order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html'><img src='../image/bu_modify.gif' border='0'></a></span>";
+		}else if( $status >= 2 && $status < 8 ){
+			$cancel_str = "";
+		}else if($status == 8){
+			$cancel_str = "";
+		}
+		else if($status == 10){
+			$cancel_str = "";
+		}*/
+?>
+                                  <tr height="30" align="center">                                    
+                                    <td class="mypage_3"><a href='order_view.html?mart_id=<?=$mart_id?>&order_num_query=<?=$order_num_query?>'><b>
+                                      <?=$order_num_query?>
+                                    </b></a></td>
+									  <td><?=$date_str?></td>
+                                    <td align="left" style="padding-left:4px;"><a href='order_view.html?mart_id=<?=$mart_id?>&order_num_query=<?=$order_num_query?>'><?=$order_item_name?></a></td>
+                                    <td><?=$mon_tot_freight_str?>
+                                    원</td>
+                                    <td><span class="price">
+                                      <?=$status_str?>
+                                    </span></td>
+                                  </tr>
+                                  <?          		
+	if(($i + 1) < ($cnfPagecount+$skipNum) && ($i + 1) < $numRows){
+?>
+                                  <tr>
+                                    <td colspan='6' height="1" bgcolor="E5E5E5"></td>
+                                  </tr>
+                                  <?
+	}
+}
+?>
+                                </table>
+                                <!---------------------- 주문 조회 내용 끝 ------------------>
+                                <!---------------------- 버튼 시작 ------------------->
+                                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr align="center">
+                                    <td height="40" bgcolor="F4F4F4"><?
+if($page == 1){
+?>
+                                      <img src="../image/bu_pre10.gif" border='0' align="absmiddle">
+                                      <?
+}else{
+?>
+                                      <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=1&ordernum=<?=$ordernum?>'><img src="../image/bu_pre10.gif" border='0' align="absmiddle"></a>
+                                      <?
+}
+?>
+                                      <?
+if($start_page > 1){
+?>
+                                      <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$prev_start_page?>&ordernum=<?=$ordernum?>'><img src="../image/bu_pre.gif" border='0' align="absmiddle"></a>
+                                      <?
+}else{
+?>
+                                      <img src="../image/bu_pre.gif" border='0' align="absmiddle">&nbsp;
+                                      <?
+}
+for($i=$start_page;$i<=$end_page;$i++){
+	if($i == $page){
+?>
+                    [<b>
+                    <?=$i?>
+                    </b>]
+                    <?
+	}else{
+?>
+                    <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$i?>&ordernum=<?=$ordernum?>'>
+                    <?=$i?>
+                    </a>
+                    <?
+	}
+}
+?>
+&nbsp;
+                    <?
+if($end_page < $total_page){
+?>
+                    <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$next_start_page?>&ordernum=<?=$ordernum?>'><img src="../image/bu_next.gif" border='0' align="absmiddle"></a>
+                    <?
+}else{
+?>
+                    <img src="../image/bu_next.gif" border='0' align="absmiddle">
+                    <?
+}
+if($page == $total_page){
+?>
+                    <img src="../image/bu_next10.gif" border='0' align="absmiddle">
+                    <?
+}else{
+?>
+                    <a href='<?=$PHP_SELF?>?mart_id=<?=$mart_id?>&page=<?=$total_page?>&ordernum=<?=$ordernum?>'><img src="../image/bu_next10.gif" border='0' align="absmiddle"></a>
+                    <?
+}
+?>
+                                    </td>
+                                  </tr>
+                                </table>
+  
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>&nbsp;</td>
+                            </tr>
+                          </table>
+                      </div></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

@@ -1,0 +1,143 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="950" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="250" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>        </td>
+        <td valign="top"><table width="750" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="700"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/info_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 사이트안내 &gt;회사소개</div></td>
+                            <td width="2%">&nbsp;</td>
+                          </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/info_3.gif" width="477" height="66"></td>
+                        <td width="98%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/info_4.gif" width="223" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="83%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="company.html"><img src="../images/info_over_5.gif" width="59" height="25" border="0"></a></td>
+                                    <td width="2%"><a href="send.html"><img src="../images/info_6.gif" width="79" height="25" border="0"></a></td>
+                                    <td width="27%"><a href="sitemap.html"><img src="../images/info_7.gif" width="63" height="25" border="0"></a></td>
+                                    <td><img src="../images/info_8.gif" width="22" height="25"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/info_9.gif" width="223" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td align="center"><table width="95%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><table width="95%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td><img src="../img/company4.gif" width="683" height="468" border="0" usemap="#Map">
+                                <map name="Map">
+                                  <area shape="rect" coords="14,217,124,244" href="../site/company5.html">
+                                  <area shape="rect" coords="14,190,124,217" href="../site/company4.html">
+                                  <area shape="rect" coords="14,165,124,190" href="../site/company3.html">
+                                  <area shape="rect" coords="14,141,124,165" href="../site/company2.html">
+                                  <area shape="rect" coords="13,115,123,141" href="../site/company.html">
+                                  <area shape="rect" coords="12,258,123,289" href="../site/company6.html">
+                                </map>
+                                <map name="Map">
+                                  <area shape="rect" coords="14,116,124,141" href="../site/company.html">
+                                  <area shape="rect" coords="14,141,124,164" href="../site/company2.html">
+                                  <area shape="rect" coords="14,164,124,188" href="../site/company3.html">
+                                  <area shape="rect" coords="14,188,124,214" href="../site/company4.html">
+                                  <area shape="rect" coords="14,214,124,240" href="../site/company5.html">
+                                </map></td></tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>
