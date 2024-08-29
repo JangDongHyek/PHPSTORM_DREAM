@@ -1,6 +1,5 @@
 <?php
 include_once("../jl/JlConfig.php");
-
 try {
     $model = new JlModel(array(
         "table" => "campaign",

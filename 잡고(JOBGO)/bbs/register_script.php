@@ -357,6 +357,11 @@
                 return false;
             }
 
+            if(!f.reg_mb_hp.value) {
+                swal("휴대폰 번호를 입력하십시오.");
+                return false;
+            }
+
             if($("#reg_req1").prop("checked")==false){
                 swal("이용약관 동의(필수)를 체크하십시오");
                 return false;

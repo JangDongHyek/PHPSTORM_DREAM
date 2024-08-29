@@ -187,7 +187,7 @@ class JlModel extends Jl{
 
             while($row = mysqli_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
-                $row["data_page_nor"] = $object['count'] - $index + 1;
+                $row["data_page_nor"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
@@ -206,7 +206,7 @@ class JlModel extends Jl{
 
             while($row = mysql_fetch_assoc($result)){
                 $row["data_page_no"] = ($page -1) * $limit + $index;
-                $row["data_page_nor"] = $object['count'] - $index + 1;
+                $row["data_page_nor"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);

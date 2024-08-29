@@ -28,6 +28,7 @@ if($_GET['idx']) {
         die();
     }else {
         $data = $results['data'][0];
+
     }
 }
 
@@ -89,7 +90,7 @@ include_once('./admin.head.php');
   }
 </style>
 
-<form name="fmember" id="fmember" action="./campaign_form_update.php" onsubmit="return fmember_submit(this);" method="post" enctype="multipart/form-data">
+<form name="fmember" id="fmember" action="./campaign_form_update.php" onsubmit="return campaignSubmit(this);" method="post" enctype="multipart/form-data">
 <input type="hidden" name="w" value="<?php echo $w ?>">
 <input type="hidden" name="sfl" value="<?php echo $sfl ?>">
 <input type="hidden" name="stx" value="<?php echo $stx ?>">
@@ -98,6 +99,9 @@ include_once('./admin.head.php');
 <input type="hidden" name="page" value="<?php echo $page ?>">
 <input type="hidden" name="token" value="">
 <input type="hidden" name="idx" value="<?=$_GET['idx']?>">
+<input type="hidden" id="thumb_del" name="thumb_del" value="">
+<input type="hidden" id="company_thumb_del" name="company_thumb_del" value="">
+<input type="hidden" id="basic_guide" name="basic_guide" value="">
 
 
 
@@ -163,7 +167,10 @@ include_once('./admin.head.php');
         </td>
         <th scope="row"><label for="">업체 썸네일</label></th>
         <td>
-            <input type="file" multiple="multiple" name="company_thumb[]" id="company_thumb[]">
+            <?if($data['company_thumb']) {?>
+                <span><?=$data['company_thumb']['name']?></span>
+            <?}?>
+            <input type="file" name="company_thumb" id="company_thumb">
         </td>
     </tr>
     <tr>
@@ -187,8 +194,8 @@ include_once('./admin.head.php');
         <td>
             <a class="btn_02">추가</a>
             <div style="display: flex; gap: 5px">
-                <input type="file" multiple="multiple" name="thumb[]" id="thumb[]">
-                <a class="btn_01">삭제</a>
+                <input type="file" multiple="multiple" name="thumb[]" id="thumb[]" >
+                <a class="btn_01" onclick="$('#thumb_del').val('true')">삭제</a>
             </div>
         </td>
         <th scope="row"><label for="cp_progress">진행상태</label></th>
@@ -214,7 +221,9 @@ include_once('./admin.head.php');
 
     <tr>
         <th scope="row"><label for="cp_logo_content">기본안내</label></th>
-        <td colspan="2"><!--에디터 삽입--></td>
+        <td colspan="2">
+            <textarea id="naver_content" name="naver_content" rows="10" cols="100" style="width:100%; height:300px; display:none;"></textarea>
+        </td>
     </tr>
 
     <tr>
@@ -241,8 +250,42 @@ include_once('./admin.head.php');
 
 </form>
 
+<script src="<?=$jl->URL.$jl->EDITOR_JS?>"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+    var default_content = [];
+    var sLang = "ko_KR";	// 언어 (ko_KR/ en_US/ ja_JP/ zh_CN/ zh_TW), default = ko_KR
+    var content = "<?=$data['basic_guide']?>";
+    document.addEventListener('DOMContentLoaded', function(){
+        nhn.husky.EZCreator.createInIFrame({
+            oAppRef: default_content,
+            elPlaceHolder: "naver_content",
+            sSkinURI: "<?=$jl->URL?><?=$jl->EDITOR_HTML?>",
+            htParams : {
+                bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseModeChanger : true,			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                bSkipXssFilter : true,		// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+                I18N_LOCALE : sLang,
+                fOnBeforeUnload : function(){}
+            }, //boolean
+            fOnAppLoad : function(){
+                //기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+                default_content.getById["naver_content"].exec("PASTE_HTML", [content]);
+            },
+            fCreator: "createSEditor2"
+        });
+        default_content.outputBodyHTML = function(){
+            default_content.getById["naver_content"].exec("UPDATE_CONTENTS_FIELD", []);
+        }
+    },false);
+
+    function campaignSubmit(f) {
+        $('#basic_guide').val(default_content.getById["naver_content"].getIR().replaceAll('"',"'"));
+        //return false;
+    }
+
+
     function onPostCode() {
         new daum.Postcode({
             oncomplete: function(data) {
