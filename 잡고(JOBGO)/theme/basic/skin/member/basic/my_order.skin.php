@@ -13,6 +13,7 @@ add_stylesheet('<link rel="stylesheet" href="' . $member_skin_url . '/style_pro.
 .accordionTitle{ text-align:right; position:relative}
 .accordionTitle span{ font-size:.8em; font-weight:400; opacity:.8; position:absolute; left:20px; letter-spacing:-.050em}
 #sales_list .tprice .col-md-6,#sales_list .tprice .col-sm-6{ padding:0}
+#sales_list .tprice .col-md-6.choi_quantity{ display: flex;    align-items: center;}
 #sales_list .tprice span.plus{ width:25px; height:25px; border-radius:50%; text-align:center; line-height:25px; display:inline-block; background: #7d75dc; vertical-align: middle; margin:0 5px}
 #sales_list .tprice span.minus{ width:25px; height:25px; border-radius:50%; text-align:center; line-height:25px; display:inline-block; background: #7d75dc; vertical-align: middle; margin:0 5px}
 #sales_list .tprice span.plus:after{font-family: "Font Awesome 5 Pro"; content: "\f067"; color: #fff; font-weight: 400; font-size: .5em; position: relative; bottom: 2px; opacity: .8;}
@@ -146,7 +147,7 @@ add_stylesheet('<link rel="stylesheet" href="' . $member_skin_url . '/style_pro.
                                             </table>
                                        </div>
                                        <div class="tprice clearfix">
-                                            <div class="col-md-6 col-sm-6 choi_quantity">수량선택 <span class="minus" onclick="minus_count()"></span> <input type="text" name="GoodsCnt" id="GoodsCnt" readonly style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; width: 18px; background: #f2f2f2" value="1"><span onclick="plus_count()" class="plus"></span></div>
+                                            <div class="col-md-6 col-sm-6 choi_quantity">수량선택 <span class="minus" onclick="minus_count()"></span> <input type="text" name="GoodsCnt" id="GoodsCnt" readonly style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; width: 35px; background: #f2f2f2" value="1"><span onclick="plus_count()" class="plus"></span></div>
                                             <div class="col-md-6 col-sm-6 text-right" name="total_amt_div"></div>
                                        </div>
                                 </div>

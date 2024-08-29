@@ -64,11 +64,12 @@ function imageview(id, w, h)
 </script>
 <div id="to_content"><a href="#container">본문 바로가기</a></div>
 
+<link href="<?php echo G5_THEME_CSS_URL; ?>/all.min.css" rel="stylesheet" type="text/css"><!--폰트어썸-->
 <header id="hd">
     <div id="hd_wrap">
         <h1><?php echo $config['cf_title'] ?></h1>
 
-        <div id="logo"><a href="<?php echo G5_ADMIN_URL ?>"><img src="<?php echo G5_ADMIN_URL ?>/img/logo.jpg" alt="<?php echo $config['cf_title'] ?> 관리자"></a></div>
+        <div id="logo"><a href="<?php echo G5_ADMIN_URL ?>"><img src="<?php echo G5_THEME_IMG_URL ?>/common/logo.png" alt="로고"><img src="<?php echo G5_ADMIN_URL ?>/img/logo.jpg" alt="<?php echo $config['cf_title'] ?> 관리자"></a></div>
 
         <ul id="tnb">
             <li><a href="<?php echo G5_ADMIN_URL ?>/member_form.php?w=u&amp;mb_id=<?php echo $member['mb_id'] ?>">관리자정보</a></li>

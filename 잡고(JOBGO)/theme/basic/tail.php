@@ -15,46 +15,89 @@ if (G5_IS_MOBILE) {
     <? }else if($bo_table == "" || $co_id == ""){ ?>
     <!--서브컨테이너 부분-->
     </div><!--#container-->
-	<? } ?> 
+	<? } ?>
 
+</div><!--#wrapper-->
 <!-- } 콘텐츠 끝 -->
 
 
-<?php if ($is_private){?>
-    <?php if (!$pid=='market_view'){?>
-    <!--모바일 FIX 메뉴-->
-    <div id="ft_menu">
-        <ul>
-            <li>
-                <a href="<?php echo G5_URL ?>" class="<? if(defined('_INDEX_')){ echo 'txt_color';}?>">
-                    <i class="fa-solid fa-house"></i><br />홈
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo G5_URL ?>">
-                    <i class="fa-solid fa-icons"></i><br />카테고리
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo G5_BBS_URL ?>/pro_step01.php">
-                    <i class="fa-solid fa-bell"></i><br />알림
-                </a>
-            </li>
-            <li >
-                <a href="<?php echo G5_BBS_URL ?>/message.php" class="<?php if($pid == "message"){ echo 'txt_color';}?>">
-                    <i class="fa-sharp fa-solid fa-comments"></i><br />채팅 목록
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo G5_BBS_URL ?>/mypage.php" class="<?php if($pid == "my_item"){ echo 'txt_color';}?>">
-                    <i class="fa-solid fa-user"></i><br />마이잡고
-                </a>
-            </li>
-        </ul>
-    </div>
+    <?php if ($pid=='market_view'){?>
     <?php } else  /*market_view*/{?>
+        <!--모바일 FIX 메뉴-->
+        <div id="ft_menu">
+            <ul>
+                <li>
+                    <a href="<?php echo G5_URL ?>" class="<? if(defined('_INDEX_')){ echo 'txt_color';}?>">
+                        <i class="fa-light fa-house"></i><br />홈
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php" class="<?php if($pid == "exp_list"){ echo 'txt_color';}?>">
+                        <i class="fa-light fa-calendar-star"></i><br />체험단
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo G5_BBS_URL ?>/message.php" class="<?php if($pid == "message"){ echo 'txt_color';}?>">
+                        <i class="fa-light fa-comments"></i><br />채팅 목록
+                    </a>
+                </li>
+                <li>
+                    <?php if ($is_member) {  ?>
+                    <a href="<?php echo G5_BBS_URL ?>/mypage.php" class="<?php if($pid == "my_item"||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase"||$sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry"){ echo 'txt_color';}?>">
+                    <?php } else /*$is_member*/{  ?>
+                    <a href="<?php echo G5_BBS_URL ?>/login.php" >
+                        <?php }  ?>
+                        <i class="fa-light fa-user"></i><br />마이잡고
+                    </a>
+                </li>
+                <li>
+                    <a id="categoryBtn">
+                        <i class="fa-light fa-icons"></i><br />카테고리
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 사이드 메뉴 레이어 -->
+        <div id="sideMenu" class="side-menu">
+            <div class="side-menu-content">
+                <span id="closeBtn" class="close-btn"><i class="fa-light fa-xmark"></i></span>
+                <!-- 메뉴 내용 추가 -->
+                <dl>
+                    <dt>잡고 서비스</dt>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" target="_self">SNS</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_design_list.php" target="_self">디자인</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php" target="_self">체험단</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" target="_self">재능거래</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/compete_list.php" target="_self">공모전</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/market_list.php" target="_self">마켓</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/job_list.php" target="_self">구인구직<span></span></a></dd>
+                </dl>
+                <dl>
+                    <dt>잡고 고객센터</dt>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=b_notice">공지사항</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=b_faq">자주묻는 질문</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=b_use">잡고 이용안내</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=b_qna">1:1 문의</a></dd>
+                </dl>
+                <dl>
+                    <dt>잡고 이용안내</dt>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=provision">서비스 이용약관</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=privacy">개인정보처리방침</a></dd>
+                </dl>
+            </div>
+        </div>
+        <script>
+            document.getElementById('categoryBtn').addEventListener('click', function() {
+                document.getElementById('sideMenu').classList.add('open');
+            });
+
+            document.getElementById('closeBtn').addEventListener('click', function() {
+                document.getElementById('sideMenu').classList.remove('open');
+            });
+
+        </script>
     <?php }?>
-<?php } else  /*$is_private*/{?>
+<?php /* } else {?>
     <!--모바일 FIX 메뉴-->
     <div id="ft_menu">
         <ul>
@@ -85,7 +128,7 @@ if (G5_IS_MOBILE) {
             </li>
         </ul>
     </div>
-<?php }?>
+<?php }*/?>
 
 <div id="cus">
 	<div class="in cf">
@@ -145,16 +188,16 @@ if (G5_IS_MOBILE) {
     
 	<div id="footer">
         <div class="co">
-		<h1><img src="<?php echo G5_THEME_IMG_URL ?>/common/logo.png" alt="로고"></h1> 
+		<h1><img src="<?php echo G5_THEME_IMG_URL ?>/common/logo.png" alt="로고"></h1>
             잡고는 통신판매중개자이며 통신판매 당사자가 아닙니다. 따라서 서비스 관련 문의는 해당 전문가에게 해주시기 바랍니다.
             <p>COPYRIGHT(c) 2020 <?php echo $config['cf_title']; ?> ALL RIGHTS RESERVED.</p>
         </div>
 <!-----Comodo SEAL Start---------->
 <img src="https://www.ucert.co.kr/image/trustlogo/comodo_secure_113x59_white.png" width="113" height="59" align="absmiddle" border="0" style="cursor:pointer;" Onclick="javascript:window.open('https://www.ucert.co.kr/trustlogo/sseal_comodo.html?sealnum=917eefeed4551d6a&sealid=6ae438d732d97336d7e1d64f94454efb', 'mark', 'scrollbars=no, resizable=no, width=400, height=500');">
 <!-----Comodo SEAL End---------->
-	</div><!--#footer--> 
+	</div><!--#footer-->
 
-    
+
 
     
 <!--스크롤시 나타나는 상하단버튼-->

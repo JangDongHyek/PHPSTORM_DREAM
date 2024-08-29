@@ -95,7 +95,7 @@ include_once('./_head.php');
                         <div class="in">
                             <div class="list">
                                 <?php
-                                for ($i = 0; $i < 8; $i++) {
+                                for ($i = 0; $i < 4; $i++) {
                                     ?>
                                     <div class="thm">
                                         <div class="mg">
@@ -122,6 +122,53 @@ include_once('./_head.php');
                                     </div><!--thm-->
 
                                 <?php } ?>
+
+                                <div class="thm">
+                                    <div class="mg">
+                                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php">
+                                            <div class="mg_in">
+                                                <div class="over">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                                </div>
+                                            </div><!--상품사진-->
+                                        </a>
+                                    </div><!--mg-->
+                                    <div class="info">
+                                        <div id="lecture_writer_list" class="flex jc-sb ai-c">
+                                            <p>24.01.01 신청</p>
+                                            <button type="button" class="btn btn_mini btn_gray">
+                                                미선정
+                                            </button>
+                                        </div>
+                                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php">
+                                            <div class="tit">이름</div>
+                                            <div class="txt_color">기업명</div>
+                                        </a>
+                                    </div>
+                                </div><!--thm-->
+                                <div class="thm">
+                                    <div class="mg">
+                                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php">
+                                            <div class="mg_in">
+                                                <div class="over">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                                </div>
+                                            </div><!--상품사진-->
+                                        </a>
+                                    </div><!--mg-->
+                                    <div class="info">
+                                        <div id="lecture_writer_list" class="flex jc-sb ai-c">
+                                            <p>24.01.01 신청</p>
+                                            <button type="button" class="btn btn_mini btn_line">
+                                                선정
+                                            </button>
+                                        </div>
+                                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php">
+                                            <div class="tit">이름</div>
+                                            <div class="txt_color">기업명</div>
+                                        </a>
+                                    </div>
+                                </div><!--thm-->
                             </div><!--list-->
                         </div><!--in-->
 
@@ -164,10 +211,10 @@ include_once('./_head.php');
                                         </a>
                                     </div>
                                     <div class="btn_wrap">
-                                        <button type="button" class="btn btn_gray btn_large">
+                                        <button type="button" class="btn btn_gray btn_large" data-toggle="modal" href="#campaignInfo">
                                             활동 안내
                                         </button>
-                                        <button type="button" class="btn btn_color btn_large">
+                                        <button type="button" class="btn btn_color btn_large" data-toggle="modal" href="#campaignSubmit">
                                             완료 보고
                                         </button>
                                     </div>
@@ -195,7 +242,7 @@ include_once('./_head.php');
                                         </a>
                                     </div>
                                     <div class="btn_wrap">
-                                        <button type="button" class="btn btn_gray btn_large">
+                                        <button type="button" class="btn btn_gray btn_large" data-toggle="modal" href="#campaignInfo">
                                             활동 안내
                                         </button>
                                         <button type="button" class="btn btn_gray3 btn_large">
@@ -213,6 +260,59 @@ include_once('./_head.php');
         </section>
     </article>
 
+    <!-- 활동안내 -->
+    <div class="modal fade" id="campaignInfo" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">캠페인 활동안내</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <div class="modal-body">
+                    <p>활동안내</p>
+                    <textarea readonly>활동안내</textarea>
+                </div>
+
+            </div><!--//modal-content-->
+        </div>
+
+    </div>
+    <!-- // 활동안내 모달창 -->
+    <!-- 완료보고 -->
+    <div class="modal fade" id="campaignSubmit" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">캠페인 완료 보고</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <div class="modal-body">
+                    <p>활동 링크</p>
+                        <input type="text" id="" placeholder="활동 링크를 작성해주세요">
+
+                    <p>추가 설명</p>
+                    <textarea placeholder="설명을 작성하세요."></textarea>
+
+                    <script>
+                        document.getElementById('fileInput').addEventListener('change', function() {
+                            var fileName = this.files[0].name;
+                            document.getElementById('fileName').value = fileName;
+                        });
+                    </script>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">제출하기</button>
+                </div>
+            </div><!--//modal-content-->
+        </div>
+
+    </div>
+    <!-- // 완료보고 모달창 -->
 <script>
 
     function a_tab(id) {

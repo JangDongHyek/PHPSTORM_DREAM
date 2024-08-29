@@ -69,11 +69,10 @@ if (defined('G5_IS_ADMIN')) {
 ?>
 <link rel="stylesheet" href="<?php echo G5_CSS_URL; ?>/board.css"><!--게시판공통-->
 
-    <?php if ($is_private){?>
         <link href="<?php echo G5_THEME_CSS_URL; ?>/renewal.css?ver=<?=G5_CSS_VER?>" rel="stylesheet" type="text/css"><!--메인컨텐츠-->
-    <?php } else /*$is_private*/{?>
+    <?php /*?>
         <link href="<?php echo G5_THEME_CSS_URL; ?>/main.css?ver=<?=G5_CSS_VER?>" rel="stylesheet" type="text/css"><!--메인컨텐츠-->
-    <?php }?>
+    <?php }*/?>
 
 <!--[if lte IE 8]>
 <script src="<?php echo G5_JS_URL ?>/html5.js"></script>

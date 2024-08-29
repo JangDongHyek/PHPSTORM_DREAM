@@ -12,7 +12,7 @@ include_once('./_head.php');
         <h6><b class="txt_color3">대학생에게 필요한 ○○</b></h6>
         <h6 class="txt_bold2 txt_white">용돈, 알바, 대외활동!</h6>
         <h6 class="txt_thin txt_white">잡고가 함께 해요</h6>
-        <button type="button" class="btn btn_black">새로워진 잡고 <i class="fa-solid fa-right"></i></button>
+        <button type="button" class="btn btn_black" onclick="location.href='<?php echo G5_URL ?>/new_cpn_service.php'">새로워진 잡고 <i class="fa-solid fa-right"></i></button>
     </div>
 
     <div id="goods">

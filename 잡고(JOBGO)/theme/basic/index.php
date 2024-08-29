@@ -14,9 +14,8 @@ include_once(G5_THEME_PATH.'/head.php');
 include_once(G5_LIB_PATH.'/thumbnail.lib.php');
 
 ?>
-<?php if ($is_private){?>
     <div id="idx_wrapper">
-        <div id="visual" class="wow fadeIn animated" data-wow-delay="0.2s" data-wow-duration="0.5s">
+        <div id="visual" class="main wow fadeIn animated" data-wow-delay="0.2s" data-wow-duration="0.5s">
 
             <!-- Swiper -->
             <div class="swiper mainSwiper">
@@ -94,7 +93,7 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
         <h6><b class="txt_color2">트렌디한 청년인력을 찾고있나요?</b></h6>
         <h6 class="txt_bold2 txt_color2">잡고가 소개시켜드려요!</h6>
         <h6 class="txt_thin">#체험단 #SNS #디자인</h6>
-        <button type="button" class="btn btn_gray txt_color2">협업문의 <i class="fa-solid fa-right"></i></button>
+        <button type="button" class="btn btn_white txt_color2" onclick="location.href='./new_campaign.php'">협업문의 <i class="fa-solid fa-right"></i></button>
     </div>
 
 
@@ -146,7 +145,19 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
         <h6><b class="txt_color3">대학생에게 필요한 ○○</b></h6>
         <h6 class="txt_bold2 txt_white">용돈, 알바, 대외활동!</h6>
         <h6 class="txt_thin txt_white">잡고가 함께 해요</h6>
-        <button type="button" class="btn btn_black">새로워진 잡고 <i class="fa-solid fa-right"></i></button>
+        <button type="button" class="btn btn_black" onclick="location.href='<?php echo G5_URL ?>/new_cpn_service.php'">새로워진 잡고 <i class="fa-solid fa-right"></i></button>
+    </div>
+
+    <div id="idx_wrapper" class="mb25">
+        <div id="visual">
+            <ul class="sliderbx">
+
+                <?php //관리자: 상단배너관리에서 넣은 이미지 불러오기
+                echo banner('top'); ?>
+
+
+            </ul><!--.sliderbx-->
+        </div><!-- //visual -->
     </div>
 
     <div id="goods">
@@ -186,7 +197,19 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
     </div><!--goods-->
 
 
-<?php } else  /*$is_private*/{?>
+    <div id="idx_wrapper">
+        <div id="visual" class="wow fadeIn animated" data-wow-delay="0.2s" data-wow-duration="0.5s">
+            <ul class="sliderbx">
+
+                <?php //관리자: 하단배너관리에서 넣은 이미지 불러오기
+                echo banner('btm'); ?>
+
+
+            </ul><!--.sliderbx-->
+        </div><!-- //visual -->
+    </div>
+
+<?php /*{?>
 
     <div id="idx_wrapper">
 
@@ -228,7 +251,7 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
                 </div>
             </li>
         </ul><!--.sliderbx-->
-    </div><!-- //visual --> */ ?>
+    </div><!-- //visual -->  ?>
     </div><!--  #idx_wrapper -->
 
     <!--메인 재능상품 1차 카테고리(아이콘) 영역-->
@@ -289,68 +312,12 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
                 </div>
                 <h2>공모전</h2>
             </a>
-        </div> */?>
+        </div> ?>
 
         </div><!--in-->
     </div><!--main_item-->
 
 
-
-<!--인기카테고리 추출 스크립트(pc화면용)-->
-<script>
-$('.slide-box').each(function(){
-        $(this).slick({
-            slidesToShow:5,
-            slidesToScroll: 1,
-            infinite: true,
-            dots: true, 
-            accessibility: true,
-            arrows: true,
-            prevArrow: $(this).parents('.slide-wrap').find('.btn-prev'),
-            nextArrow: $(this).parents('.slide-wrap').find('.btn-next'),
-            speed: 300,
-            autoplay: false,
-            autoplaySpeed: 1000,
-			responsive: [  // 반응형일때 원하는 사이즈에서 보여지는 갯수 조절함
-				{
-					breakpoint: 990,
-					settings: {
-						slidesToShow: 3,
-					}
-				}
-			] 
-
-        })
-})
-
-//bx메인슬라이더시작
-$(document).ready(function(){
-  $('.sliderbx').bxSlider({
-	  responsive : true,            // 반응형
-	  mode : 'fade',           // 'horizontal', 'vertical', 'fade'
-	  pager : false,                 // 페이지버튼 사용유무
-	  Controls : false,              // 좌우버튼 사용유무
-	  auto : true,                  // 자동재생
-	  pause : 5000,                  // 자동재생간격
-	  speed : 1000,                  // 이미지전환속도
-	  autoControls : false,          // 재생버튼 사용
-	  autoHover: true,
-	  autoControlsCombine : true,   // 플레이, 스탑버튼 교차
-	  });
-});
-
-
-function open_tab(f,type) {
-    // 새탭으로 띄우기 = 1
-    var link = $('#'+f.id).data('link');
-
-    if (type == 1){
-        window.open(link);
-    }else{
-        window.location = link
-    }
-}
-</script>
 
 
 
@@ -601,10 +568,66 @@ function open_tab(f,type) {
 <!--        <div class="mg"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/main/event_banner02.png" title="회원가입이벤트"></div>-->
 <!--    </div>-->
 <!--</div>-->
-*/ ?>
+ ?>
 
 
-<?php }?>
+<?php }*/?>
+
+    <!--인기카테고리 추출 스크립트(pc화면용)-->
+    <script>
+        $('.slide-box').each(function(){
+            $(this).slick({
+                slidesToShow:5,
+                slidesToScroll: 1,
+                infinite: true,
+                dots: true,
+                accessibility: true,
+                arrows: true,
+                prevArrow: $(this).parents('.slide-wrap').find('.btn-prev'),
+                nextArrow: $(this).parents('.slide-wrap').find('.btn-next'),
+                speed: 300,
+                autoplay: false,
+                autoplaySpeed: 1000,
+                responsive: [  // 반응형일때 원하는 사이즈에서 보여지는 갯수 조절함
+                    {
+                        breakpoint: 990,
+                        settings: {
+                            slidesToShow: 3,
+                        }
+                    }
+                ]
+
+            })
+        })
+
+        //bx메인슬라이더시작
+        $(document).ready(function(){
+            $('.sliderbx').bxSlider({
+                responsive : true,            // 반응형
+                mode : 'fade',           // 'horizontal', 'vertical', 'fade'
+                pager : false,                 // 페이지버튼 사용유무
+                Controls : false,              // 좌우버튼 사용유무
+                auto : true,                  // 자동재생
+                pause : 5000,                  // 자동재생간격
+                speed : 1000,                  // 이미지전환속도
+                autoControls : false,          // 재생버튼 사용
+                autoHover: true,
+                autoControlsCombine : true,   // 플레이, 스탑버튼 교차
+            });
+        });
+
+
+        function open_tab(f,type) {
+            // 새탭으로 띄우기 = 1
+            var link = $('#'+f.id).data('link');
+
+            if (type == 1){
+                window.open(link);
+            }else{
+                window.location = link
+            }
+        }
+    </script>
 
 <script>
 

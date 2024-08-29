@@ -26,6 +26,10 @@ $sql = "select count(*) cnt from new_payment where userId = '{$member['mb_id']}'
 $talent_buy_cnt = sql_fetch($sql)['cnt'];
 if ($member['mb_division'] == 2){ //재능인 일때?>
     <section id="left_view">
+        <div class="flex btn-toggle">
+            <button class="profile-toggle">내정보</button>
+            <button class="nav-toggle">메뉴</button>
+        </div>
         <!--재능인정보-->
         <section class="mem_info">
             <!--사진-->
@@ -53,7 +57,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                     </div>
                     <!--<button type="button" class="btn" style="position: absolute;bottom: 80px;border-radius: 100%;left: 80px;width: 30px;height: 30px;display: inline-block;">X</button>-->
                 </div>
-                    <p class="name"><i class="fal fa-user-tag"></i> <?= $member['mb_nick']?></p>
+                    <p class="name"><?= $member['mb_nick']?></p>
             </div>
             </form>
             <p class="text-center contact">
@@ -90,7 +94,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
             <p class="edit text-center"><a href="<?=G5_BBS_URL.'/ajax.controller.php?division=1&mode=division_change'?>" style="margin:10px 0 0 !important"><i class="fal fa-user-circle"></i>&nbsp;일반인으로 변경</a></p>
         </section>
         <section class="my_nav">
-            <ul><?php if ($is_private){?>
+            <ul>
 
                     <?php if($member["mb_no"] != "31"){ ?>
                         <li><a href="javascript:chatting_list();">문의채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
@@ -112,16 +116,16 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                     <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=b_notice">고객센터</a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_suggest_list.php" class="ico_sug2">추천가입목록</a></li>
                     <li><a href="<?php echo G5_BBS_URL ?>/my_leave.php">회원 탈퇴</a></li>
-                <?php } else /*$is_private*/{?>
+                <?php /*} else{?>
 
                     <?php if($member["mb_no"] != "31"){ ?>
                         <li><a href="javascript:chatting_list();">문의채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
                     <?php } ?>
                     <li><a href="<?=G5_BBS_URL?>/my_item.php">재능 관리 <i class="fal fa-lightbulb-on"></i></a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_contest.php">공모전 관리 <i class="fal fa-trophy-alt"></i></a></li>
-                    <!--<li><a href="<?/*=G5_BBS_URL*/?>/my_inquiry.php">문의글 보기</a></li>-->
-                    <li><a href="<?=G5_BBS_URL?>/my_service.php">서비스 관리 <!--<span class="badge">--><?/*= $view_pf_pro_ctg3[0] != "" ? count($view_pf_pro_ctg3) : 0 */?></span></a></li>
-                    <li><a href="<?=G5_BBS_URL?>/my_review.php">받은 평가<!--<span class="badge"><?/*=$review_count*/?></span>--></a></li>
+                    <!--<li><a href="<?/*=G5_BBS_URL?>/my_inquiry.php">문의글 보기</a></li>-->
+                    <li><a href="<?=G5_BBS_URL?>/my_service.php">서비스 관리 <!--<span class="badge">--><?/*= $view_pf_pro_ctg3[0] != "" ? count($view_pf_pro_ctg3) : 0 ?></span></a></li>
+                    <li><a href="<?=G5_BBS_URL?>/my_review.php">받은 평가<!--<span class="badge"><?/*=$review_count?></span>--></a></li>
                     <li class="hidden-lg hidden-md hidden-sm"><a href="javascript:swal('알림 설정 준비중입니다.')">알림 설정</a></li>
                     <?php //ios심사
                     if ($user_agent != '/ioshappy100'){ ?>
@@ -135,7 +139,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                     <!--                <li class="hidden-lg hidden-md hidden-sm"><a href="javascript:callApp_share()">친구에게 추천</a></li>-->
                     <li><a href="<?=G5_BBS_URL?>/my_suggest_list.php" class="ico_sug2">추천가입목록</a></li>
                     <li><a href="<?php echo G5_BBS_URL ?>/my_leave.php">회원 탈퇴</a></li>
-                <?php }?>
+                <?php }*/?>
             </ul>
         </section>
     </section>
@@ -143,6 +147,10 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
 <? }else{ //일반인일때?>
     <section id="left_view">
         <!--재능인정보-->
+        <div class="flex btn-toggle">
+            <button class="profile-toggle">내정보</button>
+            <button class="nav-toggle">메뉴</button>
+        </div>
         <section class="mem_info">
             <!--사진-->
             <form id = 'imgfrm'>
@@ -169,7 +177,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                         </div>
                         <!--<button type="button" class="btn" style="position: absolute;bottom: 80px;border-radius: 100%;left: 80px;width: 30px;height: 30px;display: inline-block;">X</button>-->
                     </div>
-                    <p class="name"><i class="fal fa-user-tag"></i> <?= $member['mb_nick']?></p>
+                    <p class="name"><?= $member['mb_nick']?></p>
                 </div>
             </form>
             <p class="text-center contact">
@@ -206,7 +214,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
             <?php } ?>
         </section>
         <section class="my_nav">
-            <ul><?php if ($is_private){?>
+            <ul>
                     <?php if($member["mb_no"] != "31"){ ?>
                         <li><a href="javascript:chatting_list();">잡고채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
                     <?php } ?>
@@ -220,13 +228,13 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                     <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=b_notice">고객센터</a></li>
                     <li><a href="<?php echo G5_BBS_URL ?>/my_leave.php">회원 탈퇴</a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_suggest_list.php" class="ico_sug2">추천가입목록</a></li>
-                <?php } else /*$is_private*/{?>
+                <?php /* } else?>
                     <?php if($member["mb_no"] != "31"){ ?>
                     <li><a href="javascript:chatting_list();">문의채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
                     <?php } ?>
                     <li><a href="<?=G5_BBS_URL?>/my_item.php">재능 관리 <i class="fal fa-lightbulb-on"></i></a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_contest.php">공모전 관리 <i class="fal fa-trophy-alt"></i></a></li>
-                    <!--<li><a href="<?/*=G5_BBS_URL*/?>/my_inquiry.php">나의 문의 글</a></li>-->
+                    <!--<li><a href="<?/*=G5_BBS_URL?>/my_inquiry.php">나의 문의 글</a></li>-->
                     <li class="hidden-lg hidden-md hidden-sm"><a href="javascript:swal('알림 설정 준비중입니다.')">알림 설정</a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_income.php">잡고 캐쉬</a></li>
                     <!--<li><a href="">캐쉬 충전</a></li>-->
@@ -236,7 +244,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                     <li><a href="<?php echo G5_BBS_URL ?>/my_leave.php">회원 탈퇴</a></li>
                    <!--  <li><a href="#" class="ico_sug">추천하기</a></li> -->
                     <li><a href="<?=G5_BBS_URL?>/my_suggest_list.php" class="ico_sug2">추천가입목록</a></li>
-                <?php } ?>
+                <?php } */?>
             </ul>
         </section>
 
@@ -385,4 +393,32 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
             location.href = g5_bbs_url + '/message.php';
         }
     }
+</script>
+<script>
+    document.querySelector('.nav-toggle').addEventListener('click', function() {
+        const menu = document.querySelector('.my_nav ul');
+        const toggleButton = document.querySelector('.nav-toggle');
+
+        menu.classList.toggle('open');
+
+        if (menu.classList.contains('open')) {
+            toggleButton.textContent = '메뉴 접기';
+        } else {
+            toggleButton.textContent = '메뉴';
+        }
+    });
+
+    document.querySelector('.profile-toggle').addEventListener('click', function() {
+        const menu = document.querySelector('.mem_info');
+        const toggleButton = document.querySelector('.profile-toggle');
+
+        menu.classList.toggle('open');
+
+        if (menu.classList.contains('open')) {
+            toggleButton.textContent = '내정보 닫기';
+        } else {
+            toggleButton.textContent = '내정보';
+        }
+    });
+
 </script>

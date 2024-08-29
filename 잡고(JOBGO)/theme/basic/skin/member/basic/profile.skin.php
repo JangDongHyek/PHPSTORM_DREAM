@@ -41,7 +41,7 @@ body{background: #f5f5f5;}
                                         <div class="img_rd">
                                             <img class="p_img" src='<?=G5_THEME_IMG_URL?>/sub/default.png' alt="프로필 기본이미지">
                                         </div>
-                                        <p class="name"><i class="fal fa-user-tag"></i> 태양청년</p>
+                                        <p class="name"> 태양청년</p>
                                         <!--<button type="button" class="btn" style="position: absolute;bottom: 80px;border-radius: 100%;left: 80px;width: 30px;height: 30px;display: inline-block;">X</button>-->
                                     </div>
                               </div>

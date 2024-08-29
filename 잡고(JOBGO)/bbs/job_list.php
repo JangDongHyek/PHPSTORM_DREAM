@@ -10,10 +10,10 @@ include_once('./_head.php');
 
 
     <div id="banner" class="black mt0">
-        <h6><b class="txt_color3">잡고 구직이 처음인가요?</b></h6>
-        <h6 class="txt_bold2 txt_white">1분 작성 완료!</h6>
-        <h6 class="txt_thin txt_white">간단 이력서 작성해요!</h6>
-        <button type="button" class="btn btn_black">내 이력서 관리 <i class="fa-solid fa-right"></i></button>
+        <h6><b class="txt_color3">잡고 구인구직이 처음인가요?</b></h6>
+        <h6 class="txt_bold2 txt_white">잡고 회원을 위한</h6>
+        <h6 class="txt_thin txt_white">다양한 채용의 장!</h6>
+        <button type="button" class="btn btn_black" onclick="location.href='<?php echo G5_URL ?>/new_jobs.php'">구인구직 안내 <i class="fa-solid fa-right"></i></button>
     </div>
 
 

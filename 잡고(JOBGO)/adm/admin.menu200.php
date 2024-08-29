@@ -3,6 +3,7 @@ $menu['menu200'] = array (
     array('200000', '회원관리', G5_ADMIN_URL.'/member_list.php', 'member'),
     array('200100', '회원관리', G5_ADMIN_URL.'/member_list.php', 'member'),
     array('200200', '탈퇴회원관리', G5_ADMIN_URL.'/quit_member_list.php', 'quit_member'),
+    array('200300', '협업문의', G5_ADMIN_URL.'/company_contact.php', 'company'),
  /*
 	array('200100', '회원관리', G5_ADMIN_URL.'/member_list.php', 'mb_list'),
     array('200300', '회원메일발송', G5_ADMIN_URL.'/mail_list.php', 'mb_mail'),

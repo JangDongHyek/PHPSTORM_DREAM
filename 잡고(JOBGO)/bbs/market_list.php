@@ -12,7 +12,7 @@ include_once('./_head.php');
         <h6><b class="txt_color3">소문내기에 자신 있다면?</b></h6>
         <h6 class="txt_bold2 txt_white">마음에 드는 상품을 소문내요!</h6>
         <h6 class="txt_thin txt_white">친구가 구매할 때마다 적립!</h6>
-        <button type="button" class="btn btn_black">마켓 판매 안내 <i class="fa-solid fa-right"></i></button>
+        <button type="button" class="btn btn_black" onclick="location.href='<?php echo G5_URL ?>/new_market.php'">마켓 판매 안내 <i class="fa-solid fa-right"></i></button>
     </div>
 
     <div id="goods">

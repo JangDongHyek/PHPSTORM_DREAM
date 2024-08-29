@@ -12,7 +12,7 @@ include_once('./_head.php');
         <h6><b class="txt_color3">공모전 서비스 리뉴얼!</b></h6>
         <h6 class="txt_bold2 txt_white">자신있는 공모전에 마음껏 도전해요</h6>
         <h6 class="txt_thin txt_white"><i class="fa-regular fa-award"></i> 공모전 우승시 상금 혜택</h6>
-        <button type="button" class="btn btn_black">공모전 안내 <i class="fa-solid fa-right"></i></button>
+        <button type="button" class="btn btn_black" onclick="location.href='<?php echo G5_URL ?>/new_compete.php'">공모전 안내 <i class="fa-solid fa-right"></i></button>
     </div>
 
     <div id="goods">

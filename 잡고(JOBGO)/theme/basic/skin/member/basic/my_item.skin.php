@@ -328,11 +328,11 @@ if(!$_REQUEST['tab']){
                             <!--판매관리분류-->
                             <div class="sale_item_sort">
                                 <ul>
-                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=1"><li class="op1 check">전체(<?=number_format($pay_status1)?>)</li>
-                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=2"><li class="op2">진행대기(<?=number_format($pay_status2)?>)</li>
-                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=3"><li class="op3">진행중(<?=number_format($pay_status3)?>)</li>
-                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=4"><li class="op4">완료(<?=number_format($pay_status4)?>)</li>
-                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=5"><li class="op5">취소(<?=number_format($pay_status5)?>)</li>
+                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=1"><li class="op1 check">전체(<?=number_format($pay_status1)?>)</li></a>
+                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=2"><li class="op2">진행대기(<?=number_format($pay_status2)?>)</li></a>
+                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=3"><li class="op3">진행중(<?=number_format($pay_status3)?>)</li></a>
+                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=4"><li class="op4">완료(<?=number_format($pay_status4)?>)</li></a>
+                                    <a href="<?=$_SERVER['PHP_SELF']?>?tab=3&op=5"><li class="op5">취소(<?=number_format($pay_status5)?>)</li></a>
                                 </ul>
                             </div>
                             <!--판매관리분류-->
@@ -459,16 +459,14 @@ if(!$_REQUEST['tab']){
                                     ?>
 
 
-									<script type="text/javascript">
-                                    <!--
+									<script type="text/javascript">/*
                                         function toggle_sales(id) {
                                            var e = document.getElementById(id);
                                            if(e.style.display == 'block')
                                               e.style.display = 'none';
                                            else
                                               e.style.display = 'block';
-                                        }
-                                    //-->
+                                        }*/
                                     </script>
                                     <!--//판매 리스트-->
 

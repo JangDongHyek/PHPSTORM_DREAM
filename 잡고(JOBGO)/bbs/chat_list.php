@@ -28,7 +28,7 @@ include_once(G5_PATH . '/head.php');
                             <option value="ta_title" <?php echo $sel == 'ta_title' ? 'selected' : '' ?>>재능명</option>
                         </select>
                     </div>
-                    <div >
+                    <div style="position: relative">
                         <label class="sound_only">검색</label>
                         <input type="text" name="stx" value="<?=$_GET['stx']?>" id="stx" placeholder="검색어를 입력하세요.">
                         <button>검색</button>

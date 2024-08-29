@@ -242,6 +242,9 @@ include_once('./_head.php');
                 </div>
                 <div class="op_select" id="select_list">
                     <input type="hidden" id="one_stock" value="9935">
+                    <select class="mb15 w100">
+                        <option>티뷰티 붓기차 75g (5,000mg * 15포) + 0원</option>
+                    </select>
                     <div class="op_box" id="op_box_one">
                         <div class="tit">
                             <strong>티뷰티 붓기차 75g (5,000mg * 15포)	</strong>
@@ -273,6 +276,10 @@ include_once('./_head.php');
             <div class="area_fixed" style="display: none;">
                 <a class="option_close"><i class="fa-duotone fa-chevron-down"></i></a>
                 <div class="area_option" id="prod_opt_list">
+
+                    <select class="mb15 w100">
+                        <option>티뷰티 붓기차 75g (5,000mg * 15포) + 0원</option>
+                    </select>
                     <ul class="option_list">
                         <li>
                             <div class="flex jc-sb ai-c">
