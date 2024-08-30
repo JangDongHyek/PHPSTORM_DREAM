@@ -1,4 +1,5 @@
 <?php
+include_once('./_common.php');
 include_once("../jl/JlConfig.php");
 try {
     $model = new JlModel(array(
@@ -27,22 +28,23 @@ try {
 
         foreach ($_FILES as $key => $file_data) {
             $file_result = $file->bindGate($file_data);
-
             if(!$file_result) continue;
-            //바인드의 리턴값은 encode되서 오기때문에 decode
-            $file_result = json_decode($file_result, true);
 
-            $result = array_merge($getData[$key],$file_result);
-
-            var_dump($result);
-
-
-            //문자열로 저장되어야하기떄문에 encode
-            $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
+            if(is_array($file_data['name'])) {
+                //바인드의 리턴값은 encode되서 오기때문에 decode
+                $file_result = json_decode($file_result, true);
+                $result = array_merge($getData[$key],$file_result);
+                //문자열로 저장되어야하기떄문에 encode
+                $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
+            }else {
+                $obj[$key] = $file_result;
+            }
         }
 
         $model->update($obj);
     }
+
+    goto_url($jl->URL."/adm/campaign_list.php");
 
 }catch(Exception $e){
 

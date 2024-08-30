@@ -2,6 +2,7 @@
 include_once('./_common.php');
 include_once("../class/KakaoLogin.php");
 include_once("../jl/Jl.php");
+include_once("../jl/JlModel.php");
 
 $jl = new Jl();
 
@@ -17,6 +18,7 @@ if($_GET['code']){
 
     // 프로필 정보 조회
     $result = $kakao->getUserMe($result['access_token']);
+
 
     $mb = get_member($result['kakao_account']['email']);
 
@@ -56,12 +58,55 @@ if($_GET['code']){
         goto_url(G5_URL);
 
     }else {
-        set_session('ss_check_mb_id', $result['kakao_account']['email']);
-        //set_session('chk_hp', $pr_arr['response']['mobile']);
-        //set_session('chk_birth', $pr_arr['response']['birthyear'].str_replace( '-' , '', $pr_arr['response']['birthday']));
-        set_session('ss_sns', 'kakao' );
+        $model = new JlModel(array(
+            "table" => "g5_member",
+            "primary" => "mb_no",
+            "autoincrement" => true,
+            "empty" => false
+        ));
 
-        goto_url($jl->URL . '/bbs/register_new_form.php?sns=Y');
+        $phone = $result['kakao_account']['phone_number'];
+        if(strpos($phone,"+82") !== false) {
+            $phone = str_replace('+82 ', '0', $phone);
+            $phone = str_replace(' ', '', $phone);
+        }
+
+        $obj = array(
+            "mb_id" => $result['kakao_account']['email'],
+            "mb_email" => $result['kakao_account']['email'],
+            "mb_level" => 2,
+            "mb_hp" => $phone,
+            "mb_name" => $result['kakao_account']['name'],
+            "mb_adult" => 1,
+            "mb_sns" => "kakao"
+        );
+
+        $model->insert($obj);
+
+        $mb = get_member($result['kakao_account']['email']);
+
+        // 로그인데이터 앱저장
+        if ($android == true) {
+
+            echo '
+                <script>
+                    window.Android.updateLoginInfo("'.$mb['mb_id'].'");
+                </script>';
+        }
+
+        set_session('ss_mb_id', $mb["mb_id"]);
+        set_session('ss_mb_key', md5($mb['mb_datetime'] . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']));
+        set_session('ss_mb_no', $mb["mb_no"] );
+        set_session('ss_sns', 'Y' );
+
+        $key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $mb['mb_password']);
+        set_cookie('ck_mb_id', $mb['mb_id'], 86400 * 31 * 9999);
+        set_cookie('ck_auto', $key, 86400 * 31 * 9999);
+        set_cookie_app('mb_id', $mb['mb_id'], 86400 * 31 * 9999);
+
+
+        //goto_url(G5_BBS_URL . '/register_new_form.php?sns=Y');
+        goto_url(G5_BBS_URL.'/register_result.php');
     }
 
 }else {

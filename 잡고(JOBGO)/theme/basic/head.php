@@ -352,9 +352,9 @@ $uri = $_SERVER['REQUEST_URI'];
                                     <a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" class="gnb_2da">캠페인</a>
                                     <div class="gnb_2dli_list" style="display:none">
                                         <ul class="gnb_2dul ver02">
-                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" target="_self" class="gnb_2da">SNS</a></li>
-                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_design_list.php" target="_self" class="gnb_2da">디자인</a></li>
-                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php" target="_self" class="gnb_2da">체험단</a></li>
+                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns" target="_self" class="gnb_2da">SNS</a></li>
+                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=design" target="_self" class="gnb_2da">디자인</a></li>
+                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_2da">체험단</a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -370,13 +370,13 @@ $uri = $_SERVER['REQUEST_URI'];
 						</ul>
 					</li>
                         <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" target="_self" class="gnb_1da <?php if($pid == 'sns_list'){ echo "head_on"; } ?> ">SNS<span></span></a>
+                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns" target="_self" class="gnb_1da <?php if($pid == 'sns'){ echo "head_on"; } ?> ">SNS<span></span></a>
                         </li>
                         <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/campaign_design_list.php" target="_self" class="gnb_1da <?php if($pid == 'design_list'){ echo "head_on"; } ?>">디자인<span></span></a>
+                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=design" target="_self" class="gnb_1da <?php if($pid == 'design'){ echo "head_on"; } ?>">디자인<span></span></a>
                         </li>
                         <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php" target="_self" class="gnb_1da <?php if($pid == 'exp_list'){ echo "head_on"; } ?>">체험단<span></span></a>
+                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_1da <?php if($pid == 'exp'){ echo "head_on"; } ?>">체험단<span></span></a>
                         </li>
                         <li class="gnb_1dli">
                             <a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" target="_self" class="gnb_1da <?php if(strpos( urldecode($uri), 'category='.$p_code[$i]['name']) == true){ echo "head_on"; } ?> ">재능거래<span></span></a>

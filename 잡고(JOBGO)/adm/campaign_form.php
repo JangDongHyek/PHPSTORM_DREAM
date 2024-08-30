@@ -153,7 +153,7 @@ include_once('./admin.head.php');
         </td>
         <th scope="row"><label for="">업체 대표전화</label></th>
         <td>
-            <input type="text" name="comapny_tel" value="<?= $data['comapny_tel']?>" class="frm_input" size="40">
+            <input type="text" name="company_tel" value="<?= $data['company_tel']?>" class="frm_input" size="40">
         </td>
     </tr>
     <tr>

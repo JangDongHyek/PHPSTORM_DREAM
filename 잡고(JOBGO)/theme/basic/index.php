@@ -46,19 +46,19 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
     <div id="main_item">
         <div class="in cf">
             <div class="item">
-                <a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php">
+                <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns">
                     <i class="fa-light fa-camera-polaroid"></i>
                     <h2>SNS 포스팅</h2>
                 </a>
             </div>
             <div class="item">
-                <a href="<?php echo G5_BBS_URL ?>/campaign_design_list.php">
+                <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=design">
                     <i class="fa-light fa-object-group"></i>
                     <h2>디자인</h2>
                 </a>
             </div>
             <div class="item">
-                <a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php">
+                <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp">
                     <i class="fa-light fa-calendar-star"></i>
                     <h2>체험단</h2>
                 </a>

@@ -102,6 +102,7 @@ if($status_code == 200) {
 
             $obj = array(
                 "mb_id" => $pr_arr['response']['email'],
+                "mb_email" => $pr_arr['response']['email'],
                 "mb_level" => 2,
                 "mb_birth" => $pr_arr['response']['birthyear'].str_replace( '-' , '', $pr_arr['response']['birthday']),
                 "mb_hp" => $pr_arr['response']['mobile'],

@@ -74,7 +74,10 @@ else
 
 //정기세차(매월관리) or 정기세차(월4회) complete_cnt가 4회 미만일 경우 완료일로 부터5 일 후 진행작업으로 감.
         //if (($row['car_date_type'] == 2 or $row['car_date_type'] == 1 && $row['complete_cnt'] < 4) ) {
-            if (($row['car_date_type'] == 2 or $row['car_date_type'] == 1) ) {            
+            if (($row['car_date_type'] == 2 or $row['car_date_type'] == 1) ) {
+                //24-08-30 정기세차 맛보기인데 완료횟수가 4이상이면 그냥 패스
+                if($row['car_date_type'] == 1 && (int)$row['complete_cnt'] >= 4) continue;
+                
             $sql = "update new_car_wash set cw_step = 1, rw_idx = 0 where cw_idx = {$row['cw_idx']} ";
             sql_query($sql);
 

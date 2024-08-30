@@ -91,7 +91,11 @@ class KakaoLogin{
             throw new Exception("cURL Error #:" . $err);
         } else {
             echo $response."<br><br>";
-            return json_decode($response, true);
+            $original_obj = json_decode($response, true);
+            $obj['id'] = $original_obj['id'];
+            $obj['connected_at'] = $original_obj['connected_at'];
+            $obj = array_merge($obj,$original_obj['kakao_account']);
+            return $obj;
         }
     }
 

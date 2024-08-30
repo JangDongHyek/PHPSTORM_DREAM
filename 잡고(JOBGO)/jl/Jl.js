@@ -1,31 +1,17 @@
-// Vue 인스턴스 생성
-Vue.data    = {test : Jl_base_url};
-Vue.methods = {};
-Vue.watch   = {};
-Vue.components = {};
-Vue.computed = {};
-Vue.created = [];
-Vue.mounted = [];
-
 function vueLoad(app_name) {
     Vue[app_name] = new Vue({
         el: "#" + app_name,
-        data: Vue.data,
-        methods: Vue.methods,
-        watch: Vue.watch,
-        components: Vue.components,
-        computed: Vue.computed,
+        data: {},
+        methods: {},
+        watch: {},
+        components: {},
+        computed: {},
         created: function(){
             if(!Jl_dev) return false;
             this.jl = new Jl(app_name,"#42B883");
-            for(var i=0; i<Vue.created.length; i++){
-                Vue.created[i](this);
-            }
         },
         mounted: function(){
-            for(var i=0; i<Vue.mounted.length; i++){
-                Vue.mounted[i](this);
-            }
+
         }
     });
 }
@@ -36,7 +22,7 @@ Number.prototype.format = function (n, x) {
 };
 
 class Jl {
-    constructor(name,background = "#35495e") {
+    constructor(name = "common",background = "#35495e") {
         this.name = name;
         this.root = Jl_base_url;
         this.editor = Jl_editor;

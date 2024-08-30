@@ -27,6 +27,28 @@ function insert_query($table_name,$table_idx,$arr,$add = ''){
 
 
 }
+//24-08-30 고객이 신청할떄 wr_datetime에 ,없어서 오류 매니저가 작업완료할떄 , 있어서 오류나서 insert_query 이원화
+function insert_query2($table_name,$table_idx,$arr,$add = ''){
+
+    $sql = "insert into ".$table_name." set ";
+
+    foreach ($arr as $key => $value) {
+        if ($key != "mode" && $key != $table_idx && $key != 'bf_file' ) {
+            $sql .= $key . "='" . $value . "',";
+        }
+    }
+
+    $sql .= $add;
+    $sql .= ", wr_datetime = '" . G5_TIME_YMDHIS . "'";
+
+    sql_query($sql);
+
+    $idx = sql_insert_id();
+
+    return $idx;
+
+
+}
 function update_query($table_name,$table_idx,$arr){
 
     $sql = "update ".$table_name." set ";
@@ -94,7 +116,10 @@ if ($mode == "car_wash_form"){
      */
 
     //23.04.13  && $_REQUEST['car_date_type'] != 3 , 5 (5는 실내세차) 추가 정기 있으면 신청아에안되던거 단기신청이 아닐땐 가능하게  정기 + 단기 중복신청가능 wc
-    if ($cw_cnt > 0 && (int)$_REQUEST['car_date_type'] != 3 && (int)$_REQUEST['car_date_type'] != 5){
+    //if ($cw_cnt > 0 && (int)$_REQUEST['car_date_type'] != 3 && (int)$_REQUEST['car_date_type'] != 5 ){
+
+    //24-08-30 정기세차가 있는데도 정기세차 맛보기 가능하게
+    if ($cw_cnt > 0 && (int)$_REQUEST['car_date_type'] != 3 && (int)$_REQUEST['car_date_type'] != 5 && (int)$_REQUEST['car_date_type'] != 1){
         //여기 테스트용으로 풀고 정기신청 ㄱ
         $res['type'] = "NORMAL";
         $res['idx'] = 0;
@@ -152,7 +177,7 @@ if ($mode == "car_wash_form"){
         $add .= " cw_step = '1' ";
     }
 
-    $result = insert_query($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
+    $result = insert_query2($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
 
     @mkdir(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);
     @chmod(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);

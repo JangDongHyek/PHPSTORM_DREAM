@@ -9,14 +9,15 @@ class Jl {
     public  $DB;
     public  $URL;
     public  $ROOT;
-    public static $vue_load = false;    // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $LOAD = false;    // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
         $this->INIT();
     }
 
     function error($msg) {
-        echo $msg;
+        $er = array("success"=> false,"message"=>$msg);
+        echo json_encode($er);
         throw new \Exception($msg);
     }
 
@@ -44,22 +45,26 @@ class Jl {
         return $obj;
     }
 
+    function jsLoad() {
+        echo "<script>";
+        echo "const Jl_base_url = '{$this->URL}';";
+        echo "const Jl_dev = {$this->DEV};";
+        echo "const Jl_editor = '{$this->EDITOR_HTML}';";
+        echo "</script>";
+        echo "<script src='{$this->URL}{$this->JS}'></script>";
+    }
+
     function vueLoad($app_name = "app",$plugins = array()) {
-        if(!self::$vue_load) {
-            echo "<script>";
-            echo "const Jl_base_url = '{$this->URL}';";
-            echo "const Jl_dev = {$this->DEV};";
-            echo "const Jl_editor = '{$this->EDITOR_HTML}';";
-            echo "</script>";
+        if(!self::$LOAD) {
+            $this->jsLoad();
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
             echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
-            echo "<script src='{$this->URL}{$this->JS}'></script>";
 
             if(in_array('editor',$plugins)) {
                 echo "<script src='{$this->URL}{$this->EDITOR_JS}'></script>";
             }
-            self::$vue_load = true;
+            self::$LOAD = true;
         }
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";

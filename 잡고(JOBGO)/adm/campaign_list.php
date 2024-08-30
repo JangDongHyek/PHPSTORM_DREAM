@@ -107,7 +107,7 @@ $colspan = 16;
                     <td><a href="./campaign_view.php">지원 0명 | 선정 0명</a></td>
                     <td>
                         <a href="./campaign_form.php?idx=<?=$d['idx']?>">관리</a>
-                        <a>삭제</a>
+                        <a href="" onclick="event.preventDefault(); deleteData('<?=$d['idx']?>')">삭제</a>
                     </td>
                 </tr>
             <? }
@@ -144,25 +144,22 @@ $colspan = 16;
 </form>
 
 <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?category='.$_GET['category'].'&amp;page='); ?>
+<? $jl->jsLoad(); ?>
 <script>
-    $(document).ready(function () {
+    const jl = new Jl();
 
-    })
+    async function deleteData(idx) {
+        if(!confirm("삭제하시겠습니까?")) return false;
 
-    function fmemberlist_submit(f)
-    {
-        if (!is_checked("chk[]")) {
-            alert(document.pressed+" 하실 항목을 하나 이상 선택하세요.");
-            return false;
+        let obj = {idx : idx};
+
+        try {
+            let res = await jl.ajax("delete",obj,"/api/campaign.php");
+            alert("삭제되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e)
         }
-
-        if(document.pressed == "선택삭제") {
-            if(!confirm("선택한 자료를 정말 삭제하시겠습니까?")) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     function ctg_change(type) {

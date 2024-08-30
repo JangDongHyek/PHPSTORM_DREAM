@@ -75,12 +75,14 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
-            foreach ($_FILES as $key => $file_data) {
-                $file_result = $file->bindGate($file_data);
-                $obj[$key] = $file_result;
+            $data = $model->where($obj)->get();
+
+            if($data['count']) {
+                $model->delete($data['data'][0]);
+            }else {
+                $model->insert($obj);
             }
 
-            $model->insert($obj);
             $response['success'] = true;
             break;
         }
@@ -93,17 +95,18 @@ try {
 
             foreach ($_FILES as $key => $file_data) {
                 $file_result = $file->bindGate($file_data);
-                if(!$file_result) continue;
 
-                if(is_array($file_data['name'])) {
-                    //바인드의 리턴값은 encode되서 오기때문에 decode
-                    $file_result = json_decode($file_result, true);
-                    $result = array_merge($getData[$key],$file_result);
-                    //문자열로 저장되어야하기떄문에 encode
-                    $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
-                }else {
-                    $obj[$key] = $file_result;
-                }
+                //bindGate() 리턴값은 encode되서 오기때문에 decode
+                $file_result = json_decode($file_result, true);
+
+                //데이터의 값은 encode되어있기떄문에 decode
+                //$org_data = $model->jsonDecode($getData[$key],false);
+                //$result = array_merge($org_data,$file_result);
+
+                $result = array_merge($getData[$key],$file_result);
+
+                //문자열로 저장되어야하기떄문에 encode
+                $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
             }
 
             $model->update($obj);
@@ -171,7 +174,6 @@ try {
             $response['success'] = false;
             $response['message'] = "_method가 존재하지않습니다.";
     }
-
     echo json_encode($response);
 
 } catch (Exception $e) {

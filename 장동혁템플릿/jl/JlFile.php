@@ -137,6 +137,8 @@ class JlFile extends Jl{
 
             $data = $this->bind($file,$permission,$path);
 
+            if($data == "null" || $data == null) continue;
+
             array_push($datas,json_decode($data));
         }
 

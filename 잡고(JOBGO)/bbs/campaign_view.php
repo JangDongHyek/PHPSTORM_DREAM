@@ -3,6 +3,18 @@ global $pid;
 $pid = "campagin_view";
 $sub_id = "campagin_view";
 include_once('./_common.php');
+include_once("../jl/JlConfig.php");
+
+if(!$_GET['idx']) alert("잘못된경로입니다.");
+
+//캠페인 데이터
+$model = new JlModel(array(
+    "table" => "campaign",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$data = $model->where("idx",$_GET['idx'])->get()['data'][0];
 
 $g5['title'] = '상세';
 include_once('./_head.php');
@@ -21,9 +33,9 @@ include_once('./_head.php');
                 <!-- Swiper -->
                 <div class="swiper camSwiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg"></div>
-                        <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg"></div>
-                        <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg"></div>
+                        <? foreach($data['thumb'] as $d) { ?>
+                        <div class="swiper-slide"><img src="<?=$jl->URL.$d['src']?>"></div>
+                        <?}?>
                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
@@ -42,30 +54,30 @@ include_once('./_head.php');
                     <div id="cam_count" class="flex ai-c gap10">
                         <div class="mb flex gap5 ai-c">
                             <div class="count">
-                                <b class="txt_color">0</b>/5
+                                <b class="txt_color">0</b>/<?=$data['recruitment']?>
                             </div>
-                            <p>모집중</p>
+                            <p><?=$data['status']?></p>
                         </div>
                         <div class="heart male-auto" name="">
                             <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>
                         </div>
                     </div>
                     <header>
-                        <h6 class="item_tit">캠페인 제목</h6>
-                        <p class="txt_color">업체명</p>
+                        <h6 class="item_tit"><?=$data['subject']?></h6>
+                        <p class="txt_color"><?=$data['company_name']?></p>
                     </header>
                     <div id="cam_info">
                         <p class="flex ai-c jc-sb">
                             <span>모집기간</span>
-                            <span>2024.09.01까지</span>
+                            <span><?=$data['recruitment_date']?>까지</span>
                         </p>
                         <p class="flex ai-c jc-sb">
                             <span>활동기간</span>
-                            <span>2024.10.01까지</span>
+                            <span><?=$data['activity_date']?>까지</span>
                         </p>
                         <p class="flex ai-c jc-sb">
                             <span>제공내역</span>
-                            <span>무료식사 + <b class="txt_color">잡고 캐쉬 3,000</b></span>
+                            <span><?=$data['service']?> + <b class="txt_color">잡고 캐쉬 <?=number_format($data['service_cash'])?></b></span>
                         </p>
                     </div>
                     <button type="button" class="btn btn_large btn_color" onclick="showConfirm('신청완료', '결과는 캠페인 관리에서 확인하세요.')">신청하기</button>
@@ -77,9 +89,13 @@ include_once('./_head.php');
                             <!-- 등록 이미지 있을 경우 -->
                             <div class="p_box">
                                 <div class="img_rd">
+                                    <?if($data['company_thumb']) {?>
+                                    <img class="p_img" src="<?=$jl->URL.$data['company_thumb']['src']?>">
+                                    <?}else {?>
                                     <img class="p_img" src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                    <?}?>
                                 </div>
-                                <p class="name">업체명</p>
+                                <p class="name"><?=$data['company_name']?></p>
                             </div>
                         </div>
                         <div class="profile">
@@ -87,18 +103,18 @@ include_once('./_head.php');
                                 <li>
                                     <dl>
                                         <dt>영업 시간</dt>
-                                        <dd>12:00-13:00</dd>
+                                        <dd><?=$data['company_time']?></dd>
                                     </dl>
                                 </li>
                                 <li>
                                     <dl>
                                         <dt>대표전화</dt>
-                                        <dd>070-000-000</dd>
+                                        <dd><?=$data['company_tel']?></dd>
                                     </dl>
                                 </li>
                             </ul>
                         </div>
-                        <p class="introduce"><span>매장 주소 | 주소</span>
+                        <p class="introduce"><span><?=$data['company_address1']?> | <?=$data['company_address2']?></span>
                         </p>
                     </section>
                     <button type="button" class="btn btn_large btn_gray" style="margin-bottom: 20px">캠페인에 대해 궁금한 점이 있나요?</button>
@@ -123,10 +139,7 @@ include_once('./_head.php');
                         <section class="et-slide" id="info">
                             <h3 class="title">기본안내</h3>
                             <div class="content-wrapper" id="content">
-                                <!-- 콘텐츠 -->
-                                <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
-                                <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
-                                <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                <?=str_replace("\\", " ", $data['basic_guide'])?>
                             </div>
                             <button class="more-btn btn btn_line w100" id="moreBtn">더보기</button>
                         </section>
@@ -135,7 +148,7 @@ include_once('./_head.php');
 
                         <section class="et-slide" id="service">
                             <h3 class="title">제공내역</h3>
-                            <div style="white-space: pre-wrap !important;">무료식사 + 잡고 캐쉬 3,000</div>
+                            <div style="white-space: pre-wrap !important;"><?=$data['service']?> + 잡고 캐쉬 <?=number_format($data['service_cash'])?></div>
                         </section>
 
                         <hr/>
@@ -143,24 +156,7 @@ include_once('./_head.php');
                         <section class="et-slide" id="react">
                             <h3 class="title">필수활동</h3>
                             <div style="white-space: pre-wrap !important;">
-1. 제목 작성 요청사항
-- 제목을 [필수키워드] + [서브키워드] + [제품명]으로 작성해주세요.
-
-2. 본문 작성 요청사항
-- 사진 첨부 개수 : 15장 이상
-- 영상 첨부 개수 : 1개 이상
-- 글자수 : 1,000~2,000자 내외
-- 필수키워드 및 서브키워드에서 2개 이상 선택해서 총 5회 이상 언급해주세요.
-
-3. 해시태그
-- 안내드린 키워드 전체 해시태그에 추가해주세요.
-
-
-4. 포스팅 작성 가이드
-- 가이드라인을 꼼꼼히 체크한 후, 양식에 맞게 작성 부탁드립니다.
-- 원고는 별도 제공되지 않으며, 가이드라인에 맞춰 자신만의 블로그 스타일에 맞게 작성해주세요.
-- 제품 체험 후 자연스럽게 제품 소개를 해주세요.
-- 프로필 링크에 제품 구매 링크를 첨부해주세요.
+                                <?=$data['required']?>
                             </div>
                         </section>
 
@@ -191,30 +187,30 @@ include_once('./_head.php');
                 <div id="cam_count" class="flex ai-c gap10">
                     <div class="mb flex gap5 ai-c">
                         <div class="count">
-                            <b class="txt_color">0</b>/5
+                            <b class="txt_color">0</b>/<?=$data['recruitment']?>
                         </div>
-                        <p>모집중</p>
+                        <p><?=$data['status']?></p>
                     </div>
                     <div class="heart male-auto" name="">
                         <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>
                     </div>
                 </div>
                 <header>
-                    <h6 class="item_tit">캠페인 제목</h6>
-                    <p class="txt_color">업체명</p>
+                    <h6 class="item_tit"><?=$data['subject']?></h6>
+                    <p class="txt_color"><?=$data['company_name']?></p>
                 </header>
                 <div id="cam_info">
                     <p class="flex ai-c jc-sb">
                         <span>모집기간</span>
-                        <span>2024.09.01까지</span>
+                        <span><?=$data['recruitment_date']?>까지</span>
                     </p>
                     <p class="flex ai-c jc-sb">
                         <span>활동기간</span>
-                        <span>2024.10.01까지</span>
+                        <span><?=$data['activity_date']?>까지</span>
                     </p>
                     <p class="flex ai-c jc-sb">
                         <span>제공내역</span>
-                        <span>무료식사 + <b class="txt_color">잡고 캐쉬 3,000</b></span>
+                        <span><?=$data['service']?> + <b class="txt_color">잡고 캐쉬 <?=number_format($data['service_cash'])?></b></span>
                     </p>
                 </div>
                 <button type="button" class="btn btn_large btn_color" onclick="showConfirm('신청완료', '결과는 캠페인 관리에서 확인하세요.')">신청하기</button>
@@ -226,9 +222,13 @@ include_once('./_head.php');
                         <!-- 등록 이미지 있을 경우 -->
                         <div class="p_box">
                             <div class="img_rd">
-                                <img class="p_img" src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                <?if($data['company_thumb']) {?>
+                                    <img class="p_img" src="<?=$jl->URL.$data['company_thumb']['src']?>">
+                                <?}else {?>
+                                    <img class="p_img" src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                <?}?>
                             </div>
-                            <p class="name">업체명</p>
+                            <p class="name"><?=$data['subject']?></p>
                         </div>
                     </div>
                     <div class="profile">
@@ -236,18 +236,18 @@ include_once('./_head.php');
                             <li>
                                 <dl>
                                     <dt>영업 시간</dt>
-                                    <dd>12:00-13:00</dd>
+                                    <dd><?=$data['company_time']?></dd>
                                 </dl>
                             </li>
                             <li>
                                 <dl>
                                     <dt>대표전화</dt>
-                                    <dd>070-000-000</dd>
+                                    <dd><?=$data['company_tel']?></dd>
                                 </dl>
                             </li>
                         </ul>
                     </div>
-                    <p class="introduce"><span>매장 주소 | 주소</span>
+                    <p class="introduce"><span><?=$data['company_address1']?> | <?=$data['company_address2']?></span>
                     </p>
                 </section>
                 <button type="button" class="btn btn_large btn_gray">캠페인에 대해 궁금한 점이 있나요?</button>
