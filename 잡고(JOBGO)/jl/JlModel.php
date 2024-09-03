@@ -21,6 +21,11 @@ class JlModel extends Jl{
     private $group_bool = false;
     private $group_index = 0;
 
+    private $join_sql = "";
+    private $join_table = "";
+    private $group_by_sql_front = "";
+    private $group_by_sql_back = "";
+
     function __construct($object = array()) {
         //부모 생성자
         parent::__construct();
@@ -50,46 +55,62 @@ class JlModel extends Jl{
         $this->connect = $connect;
 
         $this->schema = array(
-            "columns" => array()
+            "columns" => array(),
+            "tables" => array(),
+            "join_columns" => array()
         );
 
-        if(!$object["table"]) $this->error("JlModel construct() : 테이블명이 없습니다.");
+        if(!$object["table"]) $this->error("JlModel construct() : 테이블을 지정해주세요.");
         $this->table =$object["table"];
         $this->primary = $object["primary"] ? $object["primary"] : "idx";
         $this->autoincrement = $object["autoincrement"] ? $object["autoincrement"] : true;
         $this->empty = $object["empty"] ? $object["empty"] : false;
 
         // 테이블 확인
-        $sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{$this->database}' AND TABLE_NAME='{$this->table}'";
-        if($this->mysqli) {
-            $result = @mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect));
-
-            $result = mysqli_num_rows($result);
-        }else {
-            $result = mysql_num_rows($result);
-        }
-
-        if(!$result) $this->error("JlModel construct() : 테이블을 찾을수 없습니다.");
-
-        // 테이블 스키마 정보 조회
-        $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$this->table}' AND TABLE_SCHEMA='{$this->database}' ";
-
+        $sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{$this->database}'";
         if($this->mysqli) {
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
             while($row = mysqli_fetch_array($result)){
-                array_push($this->schema['columns'], $row['COLUMN_NAME']);
+                array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
             while($row = mysql_fetch_array($result)){
-                array_push($this->schema['columns'], $row['COLUMN_NAME']);
+                array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }
+
+
+        if(!in_array($this->table, $this->schema['tables'])) $this->error("JlModel construct() : 테이블을 찾을수 없습니다.");
+
+        // 테이블 스키마 정보 조회
+        $this->schema['columns'] = $this->getColumns($this->table);
+    }
+
+    function getColumns($table) {
+        $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$table}' AND TABLE_SCHEMA='{$this->database}' ";
+        $array = array();
+        if($this->mysqli) {
+            $result = @mysqli_query($this->connect, $sql);
+            if(!$result) $this->error(mysqli_error($this->connect));
+
+            while($row = mysqli_fetch_array($result)){
+                array_push($array, $row['COLUMN_NAME']);
+            }
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) $this->error(mysql_error());
+
+            while($row = mysql_fetch_array($result)){
+                array_push($array, $row['COLUMN_NAME']);
+            }
+        }
+
+        return $array;
     }
 
     function getSchema() {
@@ -99,6 +120,10 @@ class JlModel extends Jl{
     function reset() {
         $this->sql = "";
         $this->sql_order_by = "";
+        $this->join_sql = "";
+        $this->join_table = "";
+        $this->group_by_sql_front = "";
+        $this->group_by_sql_back = "";
 
         return $this;
     }
@@ -149,7 +174,7 @@ class JlModel extends Jl{
 
     function count(){
         // Summary Query
-        $sql = "SELECT $this->primary FROM {$this->table} WHERE 1 ".$this->sql;
+        $sql = $this->getSql("",true);
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
@@ -169,13 +194,19 @@ class JlModel extends Jl{
         return $total_count ? $total_count : 0;
     }
 
-    function get($page = 0, $limit = 0) {
+    function get($page = 0, $limit = 0,$source = "") {
+        if($source != "") {
+            if(!$this->join_sql) $this->error("JlModel get() : join() 부터 실행해주세요.");
+            if(!in_array($source, $this->schema['tables'])) $this->error("JlModel get() : join 테이블을 찾을수 없습니다.");
+        }else {
+            $source = $this->table;
+        }
+
         // 페이징
         $skip  = ($page - 1) * $limit;
 
         // Data Query
-        $sql = "SELECT * FROM {$this->table} WHERE 1 ";
-        $sql .= $this->sql_order_by ? $this->sql." ORDER BY ".$this->sql_order_by : $this->sql;
+        $sql = $this->getSql($source);
         if($limit) $sql .= " LIMIT $skip, $limit";
 
         $object["data"] = array();
@@ -303,9 +334,14 @@ class JlModel extends Jl{
         return $param[$this->primary];
     }
 
-    function getSql() {
-        $sql = "SELECT * FROM {$this->table} WHERE 1 ".$this->sql;
-        $sql .= $this->sql_order_by ? " ORDER BY ".$this->sql_order_by : "";
+    function getSql($source = "",$count = false) {
+        if($source == "") $source = $this->table;
+        $scope = "*";
+        if($count) $scope = $this->primary;
+        $sql = "SELECT $source.$scope $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
+        $sql .= $this->sql;
+        $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
+        $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : "";
         return $sql;
     }
 
@@ -339,6 +375,35 @@ class JlModel extends Jl{
         return $this;
     }
 
+    function join($table,$origin_key,$join_key) {
+        if(!in_array($table, $this->schema['tables'])) $this->error("JlModel join() : $table 테이블을 찾을수 없습니다.");
+        if(!in_array($origin_key, $this->schema['columns'])) $this->error("JlModel join() : Origin Key를 찾을 수 없습니다.");
+        $this->schema['join_columns'] = $this->getColumns($table);
+        if(!in_array($join_key, $this->schema['join_columns'])) $this->error("JlModel join() : Join Key를 찾을 수 없습니다.");
+        $this->join_table = $table;
+
+        $this->join_sql = " JOIN $table ON $this->table.$origin_key = $table.$join_key ";
+    }
+
+    function groupBy($group_key,$total_key,$as,$type = "COUNT") {
+        if(!$this->join_table) $this->error("JlModel groupBy() : join()을 먼저 해주세요.");
+        if(strpos($group_key,".") === false) $this->error("JlModel groupBy() : group_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
+        if(strpos($total_key,".") === false) $this->error("JlModel groupBy() : total_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
+        $groups = explode(".",$group_key);
+        $totals = explode(".",$total_key);
+
+        $group_columns = $groups[0] == $this->table ? $this->schema['columns'] : $this->schema['join_columns'];
+        $total_columns = $totals[0] == $this->table ? $this->schema['columns'] : $this->schema['join_columns'];
+
+        if(!in_array($groups[0], $this->schema['tables'])) $this->error("JlModel groupBy() : {$groups[0]} 테이블을 찾을수 없습니다.");
+        if(!in_array($totals[0], $this->schema['tables'])) $this->error("JlModel groupBy() : {$totals[0]} 테이블을 찾을수 없습니다.");
+        if(!in_array($groups[1], $group_columns)) $this->error("JlModel groupBy() : {$groups[0]}에서 {$groups[1]} 를 찾을 수 없습니다.");
+        if(!in_array($totals[1], $total_columns)) $this->error("JlModel groupBy() : {$totals[0]}에서 {$totals[1]} 를 찾을 수 없습니다.");
+
+        $this->group_by_sql_front = " , $type($total_key) AS $as ";
+        $this->group_by_sql_back = " GROUP BY $group_key";
+    }
+
     function groupStart($operator = "AND") {
         if($this->group_bool) return false;
 
@@ -358,7 +423,7 @@ class JlModel extends Jl{
         return $this;
     }
 
-    function between($column,$start,$end,$operator = "AND") {
+    function between($column,$start,$end,$operator = "AND",$source = "") {
         if($column == "") $this->error("JlModel between() : 컬럼명을 대입 해주새요.");
         if($start == "") $this->error("JlModel between() : 시작시간을 대입 해주새요.");
         if($end == "") $this->error("JlModel between() : 종료시간을 대입 해주새요.");
@@ -366,7 +431,15 @@ class JlModel extends Jl{
         if(strpos($start,":") === false) $start .= " 00:00:00";
         if(strpos($end,":") === false) $end .= " 23:59:59";
 
-        if(in_array($column, $this->schema['columns'])){
+        if($source == "") {
+            $columns = $this->schema['columns'];
+            $source = $this->table;
+        } else {
+            if(!$this->join_table) $this->error("JlModel between() : join()을 먼저 해주세요.");
+            $columns = $this->schema['join_columns'];
+        }
+
+        if(in_array($column, $columns)){
             if($this->group_bool) {
                 if(!$this->group_index) $this->group_index = 1;
                 else $this->sql .= " {$operator} ";
@@ -374,18 +447,26 @@ class JlModel extends Jl{
                 $this->sql .= " {$operator} ";
             }
 
-            $this->sql .= "{$column} BETWEEN '{$start}' AND '{$end}' ";
+            $this->sql .= "$source.{$column} BETWEEN '{$start}' AND '{$end}' ";
         }
 
         return $this;
     }
 
-    function in($first,$second = "",$operator = "AND") {
+    function in($first,$second = "",$operator = "AND",$source = "") {
+        if($source == "") {
+            $columns = $this->schema['columns'];
+            $source = $this->table;
+        } else {
+            if(!$this->join_table) $this->error("JlModel in() : join()을 먼저 해주세요.");
+            $columns = $this->schema['join_columns'];
+        }
+
         if(is_array($first)) {
             $param = $this->escape($first);
 
             foreach($param as $key => $value){
-                if(in_array($key, $this->schema['columns'])){
+                if(in_array($key, $columns)){
                     if(!is_array($value)) $this->error("JlModel in() : 비교값이 배열이아닙니다.");
                     if(!count($value)) continue;
 
@@ -396,7 +477,7 @@ class JlModel extends Jl{
                         $this->sql .= " $operator ";
                     }
 
-                    $this->sql .= "`{$key}` IN (";
+                    $this->sql .= "$source.`{$key}` IN (";
 
                     $bool = false;
                     foreach($value as $v) {
@@ -414,11 +495,11 @@ class JlModel extends Jl{
         }
 
         if(is_string($first)) {
-            if($first == "") $this->error("JlModel where() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
-            if(!is_array($second)) $this->error("JlModel where() : 비교값이 배열이 아닙니다.");
+            if($first == "") $this->error("JlModel in() : 컬럼명을 입력해주새요.");
+            if($second == "") $this->error("JlModel in() : 필터를 입력해주새요.");
+            if(!is_array($second)) $this->error("JlModel in() : 비교값이 배열이 아닙니다.");
 
-            if(in_array($first, $this->schema['columns']) && count($second)){
+            if(in_array($first, $columns) && count($second)){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
                     else $this->sql .= " $operator ";
@@ -426,7 +507,7 @@ class JlModel extends Jl{
                     $this->sql .= " $operator ";
                 }
 
-                $this->sql .= "`{$first}` IN (";
+                $this->sql .= "$source.`{$first}` IN (";
 
                 $bool = false;
                 foreach($second as $v) {
@@ -445,12 +526,20 @@ class JlModel extends Jl{
         return $this;
     }
 
-    function where($first,$second = "",$operator = "AND") {
+    function where($first,$second = "",$operator = "AND",$source = "") {
+        if($source == "") {
+            $columns = $this->schema['columns'];
+            $source = $this->table;
+        } else {
+            if(!$this->join_table) $this->error("JlModel where() : join()을 먼저 해주세요.");
+            $columns = $this->schema['join_columns'];
+        }
+
         if(is_array($first)) {
             $param = $this->escape($first);
 
             foreach($param as $key => $value){
-                if(in_array($key, $this->schema['columns'])){
+                if(in_array($key, $columns)){
                     if($this->empty && $value == "") continue;
 
                     if($this->group_bool) {
@@ -460,7 +549,7 @@ class JlModel extends Jl{
                         $this->sql .= " $operator ";
                     }
 
-                    $this->sql .= "`{$key}` = '{$value}'";
+                    $this->sql .= "$source.`{$key}` = '{$value}'";
                 }
             }
         }
@@ -469,7 +558,7 @@ class JlModel extends Jl{
             if($first == "") $this->error("JlModel where() : 컬럼명을 입력해주새요.");
             if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
 
-            if(in_array($first, $this->schema['columns'])){
+            if(in_array($first, $columns)){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
                     else $this->sql .= " $operator ";
@@ -477,19 +566,27 @@ class JlModel extends Jl{
                     $this->sql .= " $operator ";
                 }
 
-                $this->sql .= "`{$first}` = '{$second}'";
+                $this->sql .= "$source.`{$first}` = '{$second}'";
             }
         }
 
         return $this;
     }
 
-    function like($first,$second = "",$operator = "AND") {
+    function like($first,$second = "",$operator = "AND", $source = "") {
+        if($source == "") {
+            $columns = $this->schema['columns'];
+            $source = $this->table;
+        } else {
+            if(!$this->join_table) $this->error("JlModel like() : join()을 먼저 해주세요.");
+            $columns = $this->schema['join_columns'];
+        }
+
         if(is_array($first)) {
             $param = $this->escape($first);
 
             foreach($param as $key => $value){
-                if(in_array($key, $this->schema['columns'])){
+                if(in_array($key, $columns)){
                     if($this->empty && $value == "") continue;
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
@@ -498,7 +595,7 @@ class JlModel extends Jl{
                         $this->sql .= " $operator ";
                     }
 
-                    $this->sql .= "`{$key}` LIKE '%{$value}%'";
+                    $this->sql .= "$source.`{$key}` LIKE '%{$value}%'";
                 }
             }
         }
@@ -507,7 +604,7 @@ class JlModel extends Jl{
             if($first == "") $this->error("JlModel like() : 컬럼명을 입력해주새요.");
             if($second == "") $this->error("JlModel like() : 필터를 입력해주새요.");
 
-            if(in_array($first, $this->schema['columns'])){
+            if(in_array($first, $columns)){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
                     else $this->sql .= " $operator ";
@@ -515,7 +612,7 @@ class JlModel extends Jl{
                     $this->sql .= " $operator ";
                 }
 
-                $this->sql .= "`{$first}` LIKE '%{$second}%'";
+                $this->sql .= "$source.`{$first}` LIKE '%{$second}%'";
             }
         }
 

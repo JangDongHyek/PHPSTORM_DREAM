@@ -14,7 +14,8 @@ try {
     ));
 
     $join_table = "";
-    $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
+    $get_tables = [];
+    //array_push($get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
 
     $file_use = false;
     $file = new JlFile("/data/example");
@@ -34,34 +35,30 @@ try {
             if($obj['not_key1'] && $obj['not_value1']) $model->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
             if($obj['in_key1'] && $obj['in_value1']) $model->in($obj['in_key1'],$model->jsonDecode($obj['in_value1']));
 
+            //join
+            if ($join_table) {
+                $model->join($join_table,"origin_key","join_key");
+                // 필터링
+                //$model->where("join_column","value","AND",$join_table);
+                //$model->between("join_column","start","end","AND",$join_table);
+                //$model->in("join_column",array("value1","value2"),"AND",$join_table);
+                //$model->like("join_column","value","AND",$join_table);
+            }
+
             $object = $model->where($obj)->get($obj["page"], $obj["limit"]);
 
-            if ($join_table) {
-                $deletes = array();
+            //getKey ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져오는형식 속도는 join이랑 비슷하거나 빠름
+            foreach($get_tables as $index => $info) {
                 $joinModel = new JlModel(array(
-                    "table" => $join_table,
-                    "primary" => "idx"
+                    "table" => $info['table'],
                 ));
 
                 foreach ($object["data"] as $index => $data) {
-                    $joinModel->where($joinModel->primary, $data["example_idx"]);
+                    $joinModel->where($joinModel->primary, $data[$info['get_key']]);
                     $join_data = $joinModel->get()['data'][0];
 
-                    //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함
+                    //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 JS에 있음
                     $object["data"][$index][strtoupper($join_table)] = $join_data;
-
-                    if ($join_table_delete) {
-                        if (!$join_data) array_push($deletes, $index);
-                    }
-
-
-                }
-
-                if ($join_table_delete) {
-                    foreach ($deletes as $index) {
-                        unset($object["data"][$index]);
-                        $object["count"]--;
-                    }
                 }
             }
 

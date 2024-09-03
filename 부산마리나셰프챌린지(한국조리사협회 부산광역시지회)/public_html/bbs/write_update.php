@@ -262,7 +262,7 @@ if ($w == '' || $w == 'r') {
 	}
 
 	if($bo_table == "live02"){
-		for($wr_cnt=11;$wr_cnt<=22;$wr_cnt++){	
+		for($wr_cnt=11;$wr_cnt<=23;$wr_cnt++){
 			$wr_column .= ", wr_".$wr_cnt." = '".${"wr_".$wr_cnt}."' ";	
 		}
 	}
@@ -273,12 +273,12 @@ if ($w == '' || $w == 'r') {
 		}
 	}
 	if($bo_table == "live04"){
-		for($wr_cnt=11;$wr_cnt<=15;$wr_cnt++){	
+		for($wr_cnt=11;$wr_cnt<=15;$wr_cnt++){
 			$wr_column .= ", wr_".$wr_cnt." = '".${"wr_".$wr_cnt}."' ";	
 		}
 	}
     if($bo_table == "live05"){
-        for($wr_cnt=11;$wr_cnt<=22;$wr_cnt++){
+        for($wr_cnt=11;$wr_cnt<=23;$wr_cnt++){
             $wr_column .= ", wr_".$wr_cnt." = '".${"wr_".$wr_cnt}."' ";
         }
     }

@@ -12,6 +12,44 @@ if ($search == "")  $search = "date";
 
 include_once(G5_THEME_PATH.'/head.php');
 include_once(G5_LIB_PATH.'/thumbnail.lib.php');
+include_once(G5_PATH."/jl/JlConfig.php");
+
+//캠페인 데이터
+$model = new JlModel(array(
+    "table" => "campaign",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+
+$limit = 4;
+$page = $_GET['page'] ? $_GET['page'] : 1;
+$data = $model->get($page,$limit);
+$total_page = ceil($data['count'] / $limit);
+
+// 캠페인 좋아요
+if($member['mb_no']) {
+    $campaign_like = new JlModel(array(
+        "table" => "campaign_like",
+        "primary" => "idx",
+        "autoincrement" => true,
+        "empty" => false
+    ));
+    $getLike = $campaign_like->where("user_idx",$member['mb_no'])->get()['data'];
+
+    $likes = array();
+    foreach ($getLike as $index => $d) {
+        array_push($likes,$d['campaign_idx']);
+    }
+}
+
+// 캠페인 선장자
+$request_model = new JlModel(array(
+    "table" => "campaign_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
 
 ?>
     <div id="idx_wrapper">
@@ -104,33 +142,42 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
             <h2 class="title">함께 할 청년 <strong>여기 여기 모여라</strong></h2>
             <div class="list">
                 <?php
-                for ($i = 0; $i < 4; $i++) {
+                foreach($data['data'] as $index => $d) {
+                    $heart = "off";
+                    if(in_array($d['idx'],$likes,true)) $heart = "on";
+
+                    $request_model->where("campaign_idx",$d['idx']);
+                    $select = $request_model->where("status","선정")->get()['count'];
                 ?>
                 <div class="thm">
                     <div class="mg">
-                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php">
+                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php?idx=<?=$d['idx']?>">
                             <div class="mg_in">
                                 <div class="over">
-                                    <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                    <?if(count($d['thumb'])) {?>
+                                        <img src="<?=$jl->URL.$d['thumb'][0]['src']?>">
+                                    <?}else {?>
+                                        <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                                    <?}?>
                                 </div>
                             </div><!--상품사진-->
                         </a>
                     </div><!--mg-->
                     <div class="info">
                         <div class="heart" name="">
-                            <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>
+                            <button type="button" class="heart <?=$heart?>" onclick="postLike('<?=$d['idx']?>')"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_<?=$heart?>.png" alt="좋아요off" title="좋아요off"></button>
                         </div>
                         <div id="lecture_writer_list">
                             <div class="mb flex gap5 ai-c">
                                 <div class="count">
-                                    <b class="txt_color">0</b>/5
+                                    <b class="txt_color"><?=$select?></b>/<?=$d['recruitment']?>
                                 </div>
-                                <p>모집중</p>
+                                <p><?=$d['status']?></p>
                             </div>
                         </div>
                         <a href="<?php echo G5_BBS_URL ?>/campaign_view.php">
-                            <div class="tit">이름</div>
-                            <div class="txt_color">기업명</div>
+                            <div class="tit"><?=$d['subject']?></div>
+                            <div class="txt_color"><?=$d['company_name']?></div>
                         </a>
                     </div>
                 </div><!--thm-->
@@ -208,6 +255,25 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
             </ul><!--.sliderbx-->
         </div><!-- //visual -->
     </div>
+<? $jl->jsLoad(); ?>
+    <script>
+        const jl = new Jl();
+        const user_idx = "<?=$member['mb_no']?>";
+        async function postLike(idx) {
+            try {
+                if(!user_idx) return false;
+                let obj = {
+                    user_idx : user_idx,
+                    campaign_idx : idx
+                }
+
+                let res = await jl.ajax("insert",obj,"/api/campaign_like.php");
+                window.location.reload();
+            }catch (e) {
+                alert(e)
+            }
+        }
+    </script>
 
 <?php /*{?>
 

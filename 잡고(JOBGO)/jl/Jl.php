@@ -17,7 +17,7 @@ class Jl {
 
     function error($msg) {
         $er = array("success"=> false,"message"=>$msg);
-        echo json_encode($er);
+        echo json_encode($er,JSON_UNESCAPED_UNICODE);
         throw new \Exception($msg);
     }
 
