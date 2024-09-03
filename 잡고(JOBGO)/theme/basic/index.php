@@ -175,7 +175,7 @@ $request_model = new JlModel(array(
                                 <p><?=$d['status']?></p>
                             </div>
                         </div>
-                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php">
+                        <a href="<?php echo G5_BBS_URL ?>/campaign_view.php?idx=<?=$d['idx']?>">
                             <div class="tit"><?=$d['subject']?></div>
                             <div class="txt_color"><?=$d['company_name']?></div>
                         </a>

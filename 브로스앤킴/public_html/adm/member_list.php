@@ -41,6 +41,12 @@ if (!$sst) {
     $sod = "desc";
 }
 
+if($sst == "mb_leave_date") {
+    $sql_search .= " and mb_leave_date != ''";
+}else {
+    $sql_search .= " and mb_leave_date = ''";
+}
+
 $sql_order = " order by {$sst} {$sod} ";
 
 $sql = " select count(*) as cnt {$sql_common} {$sql_search} {$sql_order} ";
@@ -53,7 +59,7 @@ if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
 $from_record = ($page - 1) * $rows; // 시작 열을 구함
 
 // 탈퇴회원수
-$sql = " select count(*) as cnt {$sql_common} {$sql_search} and mb_leave_date <> '' {$sql_order} ";
+$sql = " select count(*) as cnt {$sql_common} where mb_id!='lets080' and mb_leave_date <> '' {$sql_order} ";
 $row = sql_fetch($sql);
 $leave_count = $row['cnt'];
 
