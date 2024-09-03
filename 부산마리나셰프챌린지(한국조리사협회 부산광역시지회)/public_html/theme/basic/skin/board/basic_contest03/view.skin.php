@@ -282,7 +282,7 @@ add_stylesheet('<link rel="stylesheet" href="' . $board_skin_url . '/style.css">
                 </tr>
                 <tr>
                     <td>CARVING</td>
-                    <td>Class 13</td>
+                    <td>Class 14</td>
                     <td>
                         <div class="checkbox">
                             <label>

@@ -68,8 +68,11 @@ add_javascript('<script type="text/javascript" src="' . $board_skin_url . '/js/u
         </div>
 
         <div class="btn_bg">
-            <a href="<?php echo G5_THEME_URL ?>/dawnload/2024 2인 라이브, 전시- 참가 신청서.hwp">
-                <div class="btn btn-info">참가신청서 다운로드</div>
+            <a href="<?php echo G5_THEME_URL ?>/dawnload/2024마리나 2인라이브, 전시 참가신청서 (워드).docx">
+                <div class="btn btn-info">참가신청서 다운로드.docx</div>
+            </a>
+            <a href="<?php echo G5_THEME_URL ?>/dawnload/2024마리나 2인 라이브, 전시 참가 신청서 (한글).hwp">
+                <div class="btn btn-info">참가신청서 다운로드.hwp</div>
             </a>
 
             <table width="100%" border="0" cellpadding="0" cellspacing="0" class="contest_table">

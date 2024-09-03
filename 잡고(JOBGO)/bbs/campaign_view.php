@@ -16,6 +16,37 @@ $model = new JlModel(array(
 ));
 $data = $model->where("idx",$_GET['idx'])->get()['data'][0];
 
+// 캠페인 좋아요
+$heart = "off";
+if($member['mb_no']) {
+    $campaign_like = new JlModel(array(
+        "table" => "campaign_like",
+        "primary" => "idx",
+        "autoincrement" => true,
+        "empty" => false
+    ));
+    $getLike = $campaign_like->where("user_idx",$member['mb_no'])->get()['data'];
+
+    $likes = array();
+    foreach ($getLike as $index => $d) {
+        array_push($likes,$d['campaign_idx']);
+    }
+
+    if(in_array((int)$_GET['idx'],$likes,true)) $heart = "on";
+}
+
+// 캠페인 선정자
+$request_model = new JlModel(array(
+    "table" => "campaign_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$request_model->where("campaign_idx",$_GET['idx']);
+$select = $request_model->where("status","선정")->get()['count'];
+
+
+
 $g5['title'] = '상세';
 include_once('./_head.php');
 ?>
@@ -54,12 +85,12 @@ include_once('./_head.php');
                     <div id="cam_count" class="flex ai-c gap10">
                         <div class="mb flex gap5 ai-c">
                             <div class="count">
-                                <b class="txt_color">0</b>/<?=$data['recruitment']?>
+                                <b class="txt_color"><?=$select?></b>/<?=$data['recruitment']?>
                             </div>
                             <p><?=$data['status']?></p>
                         </div>
                         <div class="heart male-auto" name="">
-                            <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>
+                            <button type="button" class="heart <?=$heart?>" onclick="postLike('<?=$_GET['idx']?>')"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_<?=$heart?>.png" alt="좋아요off" title="좋아요off"></button>
                         </div>
                     </div>
                     <header>
@@ -80,7 +111,7 @@ include_once('./_head.php');
                             <span><?=$data['service']?> + <b class="txt_color">잡고 캐쉬 <?=number_format($data['service_cash'])?></b></span>
                         </p>
                     </div>
-                    <button type="button" class="btn btn_large btn_color" onclick="showConfirm('신청완료', '결과는 캠페인 관리에서 확인하세요.')">신청하기</button>
+                    <button type="button" class="btn btn_large btn_color" onclick="postRequest('<?=$_GET['idx']?>')">신청하기</button>
 
                     <!--업체정보-->
                     <section class="mem_info">
@@ -187,12 +218,12 @@ include_once('./_head.php');
                 <div id="cam_count" class="flex ai-c gap10">
                     <div class="mb flex gap5 ai-c">
                         <div class="count">
-                            <b class="txt_color">0</b>/<?=$data['recruitment']?>
+                            <b class="txt_color"><?=$select?></b>/<?=$data['recruitment']?>
                         </div>
                         <p><?=$data['status']?></p>
                     </div>
                     <div class="heart male-auto" name="">
-                        <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>
+                        <button type="button" class="heart <?=$heart?>" onclick="postLike('<?=$_GET['idx']?>')"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_<?=$heart?>.png" alt="좋아요off" title="좋아요off"></button>
                     </div>
                 </div>
                 <header>
@@ -213,7 +244,7 @@ include_once('./_head.php');
                         <span><?=$data['service']?> + <b class="txt_color">잡고 캐쉬 <?=number_format($data['service_cash'])?></b></span>
                     </p>
                 </div>
-                <button type="button" class="btn btn_large btn_color" onclick="showConfirm('신청완료', '결과는 캠페인 관리에서 확인하세요.')">신청하기</button>
+                <button type="button" class="btn btn_large btn_color" onclick="postRequest('<?=$_GET['idx']?>')">신청하기</button>
 
                 <!--업체정보-->
                 <section class="mem_info">
@@ -258,6 +289,44 @@ include_once('./_head.php');
         <!--아이템 뷰-->
 
     </article>
+
+<? $jl->jsLoad(); ?>
+
+    <script>
+        const jl = new Jl();
+        const user_idx = "<?=$member['mb_no']?>";
+
+        async function postRequest(idx) {
+            try {
+                if(!user_idx) return false;
+                let obj = {
+                    user_idx : user_idx,
+                    campaign_idx : idx
+                }
+
+                let res = await jl.ajax("insert",obj,"/api/campaign_request.php");
+
+                showConfirm('신청완료', '결과는 캠페인 관리에서 확인하세요.')
+            }catch (e) {
+                alert(e.message)
+            }
+        }
+
+        async function postLike(idx) {
+            try {
+                if(!user_idx) return false;
+                let obj = {
+                    user_idx : user_idx,
+                    campaign_idx : idx
+                }
+
+                let res = await jl.ajax("insert",obj,"/api/campaign_like.php");
+                window.location.reload();
+            }catch (e) {
+                alert(e.message)
+            }
+        }
+    </script>
 
     <script>
         const content = document.getElementById('content');

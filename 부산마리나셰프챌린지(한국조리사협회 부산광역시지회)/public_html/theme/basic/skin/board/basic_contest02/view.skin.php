@@ -353,6 +353,19 @@ add_stylesheet('<link rel="stylesheet" href="' . $board_skin_url . '/style.css">
                         </td>
                     </tr>
                     <tr>
+                        <td>Class 12</td>
+                        <td>Modern Chinese Rice</td>
+                        <td>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="wr_23" id="wr_23" value="1" <? if ($write['wr_23']) {
+                                        echo "checked";
+                                    } ?> disabled>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Special</td>
                         <td>K-food</td>
                         <td>

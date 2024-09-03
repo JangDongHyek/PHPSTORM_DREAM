@@ -239,7 +239,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 		</tr>
 		<tr>
 		  <th>Food Carving</th>
-		  <td>Class 15</td>
+		  <td>Class 16</td>
 		  <td>Food CarvingF</td>
 		  <td><div class="checkbox">
 		<label>

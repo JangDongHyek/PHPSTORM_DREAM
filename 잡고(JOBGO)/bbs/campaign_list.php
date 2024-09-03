@@ -54,6 +54,14 @@ if($member['mb_no']) {
     }
 }
 
+// 캠페인 선장자
+$request_model = new JlModel(array(
+    "table" => "campaign_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+
 
 include_once('./_head.php');
 ?>
@@ -74,6 +82,9 @@ include_once('./_head.php');
                     foreach ($data['data'] as $index => $d) {
                         $heart = "off";
                         if(in_array($d['idx'],$likes,true)) $heart = "on";
+
+                        $request_model->where("campaign_idx",$d['idx']);
+                        $select = $request_model->where("status","선정")->get()['count'];
                         ?>
                         <div class="thm">
                             <div class="mg">
@@ -96,7 +107,7 @@ include_once('./_head.php');
                                 <div id="lecture_writer_list">
                                     <div class="mb flex gap5 ai-c">
                                         <div class="count">
-                                            <b class="txt_color">0</b>/<?=$d['recruitment']?>
+                                            <b class="txt_color"><?=$select?></b>/<?=$d['recruitment']?>
                                         </div>
                                         <p><?=$d['status']?></p>
                                     </div>

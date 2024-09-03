@@ -1,34 +1,37 @@
 <?php
 $sub_menu = "251000";
 include_once('./_common.php');
+include_once("../jl/JlConfig.php");
 
 auth_check($auth[$sub_menu], 'w');
 
-if ($w == '')
-{
-    $sound_only = '<strong class="sound_only">필수</strong>';
-    $html_title = '선정 및 활동';
-}
-else if ($w == 'u')
-{
-    $mb = get_member($mb_id);
-//    if (!$mb['mb_id'])
-//        alert('존재하지 않는 회원자료입니다.');
-//
-//    if ($is_admin != 'super' && $mb['mb_level'] >= $member['mb_level'])
-//        alert('자신보다 권한이 높거나 같은 회원은 수정할 수 없습니다.');
+if(!$_GET['idx']) alert("잘못된 접근입니다.");
 
-    $sql = "select * from new_competition where cp_idx = '{$_REQUEST["idx"]}'";
-    $row = sql_fetch($sql);
+//캠페인 데이터
+$campaign_model = new JlModel(array(
+    "table" => "campaign",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$campaign = $campaign_model->where("idx",$_GET['idx'])->get()['data'][0];
 
-    $mb = get_member($row["mb_id"]);
-    $readonly = 'readonly';
-    $html_title = '수정';
+//신청자
+$request_model = new JlModel(array(
+    "table" => "campaign_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$request_model->where("campaign_idx",$_GET['idx']);
+$request = $request_model->orderBy("status","ASC")->orderBy("insert_date","DESC")->get();
 
-
-}
-else
-    alert('제대로 된 값이 넘어오지 않았습니다.');
+$request_model = new JlModel(array(
+    "table" => "campaign_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
 
 $g5['title'] = '캠페인 '.$html_title;
 include_once('./admin.head.php');
@@ -62,39 +65,25 @@ include_once('./admin.head.php');
             </tr>
         </thead>
         <tbody>
-        <!--선정자는 상단으로-->
+            <? foreach ($request['data'] as $index => $d) {?>
             <tr>
-                <td>No</td>
-                <td>참여일</td>
+                <td><?=$d['data_page_no']?></td>
+                <td><?=$d['insert_date']?></td>
                 <td>참여자(아이디)</td>
                 <td>010-0000-0000</td>
-                <td><a href="https://www.instagram.com/jobgo_2020/" target="_blank">https://www.instagram.com/jobgo_2020/</a></td>
-                <td>보고일</td>
-                <td><a target="_blank"><i class="fa-solid fa-link"></i>활동링크</a></td>
-                <td><textarea style="width: 500px"></textarea></td>
+                <td><a href="<?=$d['sns_link']?>" target="_blank"><?=$d['sns_link'] ?: '-' ?></a></td>
+                <td><?=$d['report_date'] ?: '-' ?></td>
+                <td><a target="_blank" href="<?=$d['activity_link']?>"><i class="<?=$d['activity_link'] ? 'fa-solid fa-link' : ''?>"></i><?=$d['activity_link'] ? '활동링크' : '-' ?></a></td>
+                <td><textarea style="width: 500px"><?=$d['description']?></textarea></td>
                 <td>
-                    <select>
-                        <option>선정</option>
-                        <option>탈락</option>
+                    <select onchange="putRequest('<?=$d['idx']?>',event.target.value)">
+                        <option value="">대기</option>
+                        <option value="선정" <?=$d['status'] == '선정' ? 'selected' : ''?>>선정</option>
+                        <option value="탈락" <?=$d['status'] == '탈락' ? 'selected' : ''?>>탈락</option>
                     </select>
                 </td>
             </tr>
-            <tr>
-                <td>No</td>
-                <td>참여일</td>
-                <td>참여자(아이디)</td>
-                <td>010-0000-0000</td>
-                <td><a href="https://www.instagram.com/jobgo_2020/" target="_blank">https://www.instagram.com/jobgo_2020/</a></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <select>
-                        <option>선정</option>
-                        <option selected>탈락</option>
-                    </select>
-                </td>
-            </tr>
+            <?}?>
         </tbody>
     </table>
 </div>
@@ -106,7 +95,25 @@ include_once('./admin.head.php');
 
 </form>
 
+<? $jl->jsLoad(); ?>
 
+<script>
+    const jl = new Jl();
+
+    async function putRequest(idx,status) {
+        try {
+            let obj = {
+                idx : idx,
+                status : status
+            }
+
+            let res = await jl.ajax("update",obj,"/api/campaign_request.php");
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+</script>
 
 
 <?php

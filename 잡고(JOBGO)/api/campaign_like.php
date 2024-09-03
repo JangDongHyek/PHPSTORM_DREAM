@@ -73,15 +73,30 @@ try {
 
         case "insert":
         {
+            $campaign_model = new JlModel(array(
+                "table" => "campaign",
+                "primary" => "idx",
+                "autoincrement" => true,
+                "empty" => false
+            ));
+
             $obj = $model->jsonDecode($_POST['obj']);
+
+            $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
 
             $data = $model->where($obj)->get();
 
             if($data['count']) {
                 $model->delete($data['data'][0]);
+
+                $campaign['likes'] = $campaign['likes'] - 1;
             }else {
                 $model->insert($obj);
+
+                $campaign['likes'] = $campaign['likes'] + 1;
             }
+
+            $campaign_model->update($campaign);
 
             $response['success'] = true;
             break;

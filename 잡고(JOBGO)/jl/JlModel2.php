@@ -1,7 +1,7 @@
 <?php
 include_once("Jl.php");
 
-class JlModel extends Jl{
+class JlModell extends Jl{
     //Database 설정
     private $hostname;
     private $username;

@@ -1,9 +1,5 @@
-#!/usr/local/php-7.0.17/bin/php -q
-
 <?php
+include_once("./jl/JlModel2.php");
 
-echo aa;
 
 ?>
-
-//include_once('/home/jobgo/public_html/common.php');

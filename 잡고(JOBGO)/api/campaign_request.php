@@ -16,8 +16,7 @@ try {
     $join_table = "";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    $file_use = false;
-    $file = new JlFile("/data/example");
+    //$file = new JlFile("/data/example");
 
     switch (strtolower($_method)) {
         case "get":
@@ -76,12 +75,8 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
-            if($file_use) {
-                foreach ($_FILES as $key => $file_data) {
-                    $file_result = $file->bindGate($file_data);
-                    $obj[$key] = $file_result;
-                }
-            }
+            $data = $model->where($obj)->get();
+            if($data['count']) $model->error("이미 신청 되었습니다. 캠페인 관리에서 확인 해주세요.");
 
             $model->insert($obj);
             $response['success'] = true;
@@ -91,27 +86,26 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
-            if($file_use) {
-                //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
-                $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
+            //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
+            $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
 
-                foreach ($_FILES as $key => $file_data) {
-                    $file_result = $file->bindGate($file_data);
-                    if(!$file_result) continue;
+            foreach ($_FILES as $key => $file_data) {
+                $file_result = $file->bindGate($file_data);
+                if(!$file_result) continue;
 
-                    if(is_array($file_data['name'])) {
-                        //바인드의 리턴값은 encode되서 오기때문에 decode
-                        $file_result = json_decode($file_result, true);
-                        $result = array_merge($getData[$key],$file_result);
-                        //문자열로 저장되어야하기떄문에 encode
-                        $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
-                    }else {
-                        $obj[$key] = $file_result;
-                    }
+                if(is_array($file_data['name'])) {
+                    //바인드의 리턴값은 encode되서 오기때문에 decode
+                    $file_result = json_decode($file_result, true);
+                    $result = array_merge($getData[$key],$file_result);
+                    //문자열로 저장되어야하기떄문에 encode
+                    $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
+                }else {
+                    $obj[$key] = $file_result;
                 }
             }
 
             $model->update($obj);
+            $response['$obj'] = $obj;
             $response['success'] = true;
             break;
         }
@@ -119,10 +113,7 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj'],false);
 
-            if($file_use) {
-                $file->deleteDirGate($obj['data_column']);
-            }
-
+            //$file->deleteDirGate($obj['data_column']);
             $data = $model->delete($obj);
 
             $response['success'] = true;

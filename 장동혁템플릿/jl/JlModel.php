@@ -99,6 +99,8 @@ class JlModel extends Jl{
     function reset() {
         $this->sql = "";
         $this->sql_order_by = "";
+
+        return $this;
     }
 
     function insert($_param){
@@ -237,7 +239,11 @@ class JlModel extends Jl{
         foreach($param as $key => $value){
             if(in_array($key, $this->schema['columns'])){
                 if(!empty($update_sql)) $update_sql .= ", ";
-                $update_sql .= "`{$key}`='{$value}'";
+                if($value == "now()") {
+                    $update_sql .= "`{$key}`={$value}";
+                }else {
+                    $update_sql .= "`{$key}`='{$value}'";
+                }
             }
         }
 
@@ -257,7 +263,7 @@ class JlModel extends Jl{
 
         $this->reset();
 
-        return $param[$this->primary];
+        return $this;
     }
 
     function delete($_param){
@@ -280,7 +286,7 @@ class JlModel extends Jl{
 
         $this->reset();
 
-        return $param[$this->primary];
+        return $this;
     }
 
     function whereDelete(){
@@ -318,7 +324,7 @@ class JlModel extends Jl{
             foreach($param as $key => $value){
                 if(in_array($key, $this->schema['columns'])){
                     if($this->empty && $value == "") continue;
-                    if($this->sql_order_by) ",";
+                    if($this->sql_order_by) $this->sql_order_by .= ",";
                     $this->sql_order_by .= " {$key} {$value}";
                 }
             }
@@ -329,10 +335,12 @@ class JlModel extends Jl{
             if($second == "") $this->error("JlModel order_by() : 필터를 입력해주새요.");
             if(!in_array($second,array("DESC","ASC"))) $this->error("JlModel order_by() : DESC , ASC 둘중 하나만 선택가능합니다.");
             if(in_array($first, $this->schema['columns'])){
-                if($this->sql_order_by) ",";
+                if($this->sql_order_by) $this->sql_order_by .= ",";
                 $this->sql_order_by .= " {$first} {$second}";
             }
         }
+
+        return $this;
     }
 
     function groupStart($operator = "AND") {
@@ -340,6 +348,8 @@ class JlModel extends Jl{
 
         $this->group_bool = true;
         $this->sql .= " {$operator} ( ";
+
+        return $this;
     }
 
     function groupEnd() {
@@ -348,6 +358,8 @@ class JlModel extends Jl{
         $this->group_bool = false;
         $this->group_index = 0;
         $this->sql .= " ) ";
+
+        return $this;
     }
 
     function between($column,$start,$end,$operator = "AND") {

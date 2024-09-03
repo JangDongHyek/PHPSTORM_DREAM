@@ -65,7 +65,7 @@
                 try {
                     let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
                 }catch (e) {
-                    alert(e)
+                    alert(e.message)
                 }
 
             },
@@ -74,7 +74,7 @@
                     let res = await this.jl.ajax("get",this.filter,"/api/example.php");
                     this.data = res.data[0]
                 }catch (e) {
-                    alert(e)
+                    alert(e.message)
                 }
             }
         },

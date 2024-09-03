@@ -29,6 +29,12 @@ include_once('./admin.head.php');
 
 $colspan = 16;
 
+$request_model = new JlModel(array(
+    "table" => "campaign_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
 
 ?>
 
@@ -93,7 +99,11 @@ $colspan = 16;
             </tr>
             </thead>
             <tbody>
-            <? foreach ($data['data'] as $index => $d) {?>
+            <? foreach ($data['data'] as $index => $d) {
+                $request = $request_model->where("campaign_idx",$d['idx'])->get()['count'];
+                $request_model->where("campaign_idx",$d['idx']);
+                $select = $request_model->where("status","선정")->get()['count'];
+                ?>
                 <tr>
                     <td><?=$d['data_page_nor']?></td>
                     <td><?=$d['category']?></td>
@@ -104,7 +114,7 @@ $colspan = 16;
                     <td><?=$d['service_cash']?></td>
                     <td><?=$d['status']?></td>
                     <td><?=$d['insert_date']?></td>
-                    <td><a href="./campaign_view.php">지원 0명 | 선정 0명</a></td>
+                    <td><a href="./campaign_view.php?idx=<?=$d['idx']?>">지원 <?=$request?>명 | 선정 <?=$select?>명</a></td>
                     <td>
                         <a href="./campaign_form.php?idx=<?=$d['idx']?>">관리</a>
                         <a href="" onclick="event.preventDefault(); deleteData('<?=$d['idx']?>')">삭제</a>
