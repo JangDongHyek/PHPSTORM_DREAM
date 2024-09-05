@@ -9,7 +9,7 @@ try {
         "empty" => false
     ));
 
-    $file = new JlFile("/data/campaign");
+    $file = new JlFile("/jl/jl_resource/campaign");
 
     if(!$_POST["w"]) {
         $obj = $_POST;
@@ -19,7 +19,10 @@ try {
         }
 
         $model->insert($obj);
-    }else {
+
+        goto_url($jl->URL."/adm/campaign_list.php");
+
+    }elseif($_POST['w'] == "u") {
         $obj = $_POST;
 
         //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
@@ -42,9 +45,11 @@ try {
         }
 
         $model->update($obj);
+
+        goto_url($jl->URL."/adm/campaign_list.php");
+
     }
 
-    goto_url($jl->URL."/adm/campaign_list.php");
 
 }catch(Exception $e){
 

@@ -18,7 +18,7 @@ try {
     //array_push($get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
 
     $file_use = false;
-    $file = new JlFile("/data/example");
+    $file = new JlFile("/jl/jl_resource/$file_name");
 
     switch (strtolower($_method)) {
         case "get":
@@ -38,14 +38,20 @@ try {
             //join
             if ($join_table) {
                 $model->join($join_table,"origin_key","join_key");
-                // 필터링
+                // 조인 필터링
                 //$model->where("join_column","value","AND",$join_table);
                 //$model->between("join_column","start","end","AND",$join_table);
                 //$model->in("join_column",array("value1","value2"),"AND",$join_table);
                 //$model->like("join_column","value","AND",$join_table);
             }
 
-            $object = $model->where($obj)->get($obj["page"], $obj["limit"]);
+            $object = $model->where($obj)->get(array(
+                "page" => $obj['page'],
+                "limit" => $obj['limit'],
+                //"source" => "joinTable",
+                //"select" => "joinTable.SearchColumn AS alias",
+                //"sql" => "getSql String"
+            ));
 
             //getKey ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져오는형식 속도는 join이랑 비슷하거나 빠름
             foreach($get_tables as $index => $info) {
@@ -117,7 +123,8 @@ try {
             $obj = $model->jsonDecode($_POST['obj'],false);
 
             if($file_use) {
-                $file->deleteDirGate($obj['data_column']);
+                $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
+                $file->deleteDirGate($getData['data_column']);
             }
 
             $data = $model->delete($obj);

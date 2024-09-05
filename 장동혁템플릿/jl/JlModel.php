@@ -145,7 +145,10 @@ class JlModel extends Jl{
                 $columns .= "`{$key}`";
 
                 if(!empty($values)) $values .= ", ";
-                $values .= "'{$value}'";
+
+                if($value == "now()") $values .= "{$value}";
+                else $values .= "'{$value}'";
+
             }
         }
 
@@ -174,7 +177,7 @@ class JlModel extends Jl{
 
     function count(){
         // Summary Query
-        $sql = $this->getSql("",true);
+        $sql = $this->getSql(array("count" => true));
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
@@ -194,23 +197,26 @@ class JlModel extends Jl{
         return $total_count ? $total_count : 0;
     }
 
-    function get($page = 0, $limit = 0,$source = "") {
-        if($source != "") {
-            if(!$this->join_sql) $this->error("JlModel get() : join() 부터 실행해주세요.");
-            if(!in_array($source, $this->schema['tables'])) $this->error("JlModel get() : join 테이블을 찾을수 없습니다.");
-        }else {
-            $source = $this->table;
+    function get($_param = array()) {
+        $page = $_param['page'] ? : 0;
+        $limit = $_param['limit'] ? : 0;
+        $_param['source'] = $_param['source'] ? : $this->table;
+
+        if($_param['source'] != $this->table) {
+            if(!$this->join_table) $this->error("JlModel get() : join() 부터 실행해주세요.");
+            if(!in_array($_param['source'], $this->schema['tables'])) $this->error("JlModel get() : join 테이블을 찾을수 없습니다.");
         }
 
         // 페이징
         $skip  = ($page - 1) * $limit;
 
         // Data Query
-        $sql = $this->getSql($source);
+        $sql = $this->getSql($_param);
         if($limit) $sql .= " LIMIT $skip, $limit";
 
         $object["data"] = array();
         $object["count"] = $this->count();
+        if($_param['sql']) $object["sql"] = $sql;
 
         $index = 1;
 
@@ -334,11 +340,22 @@ class JlModel extends Jl{
         return $param[$this->primary];
     }
 
-    function getSql($source = "",$count = false) {
-        if($source == "") $source = $this->table;
-        $scope = "*";
-        if($count) $scope = $this->primary;
-        $sql = "SELECT $source.$scope $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
+    function getSql($_param = array()) {
+        $source = $_param['source'] ? : $this->table;
+        $scope = $_param['count'] ? $this->primary : "*";
+
+        $select = "";
+
+        if($_param['select']) {
+            if(is_string($_param['select'])) $select .= ", ".$_param['select'];
+            if(is_array($_param['select'])) {
+                foreach($_param['select'] as $d) {
+                    $select .= ", $d";
+                }
+            }
+        }
+
+        $sql = "SELECT $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
         $sql .= $this->sql;
         $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
         $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : "";

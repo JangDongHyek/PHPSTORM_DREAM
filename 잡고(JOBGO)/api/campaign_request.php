@@ -33,7 +33,10 @@ try {
             if($obj['not_key1'] && $obj['not_value1']) $model->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
             if($obj['in_key1'] && $obj['in_value1']) $model->in($obj['in_key1'],$model->jsonDecode($obj['in_value1']));
 
-            $object = $model->where($obj)->get($obj["page"], $obj["limit"]);
+            $object = $model->where($obj)->get(array(
+                "page" => $obj['page'],
+                "limit" => $obj['limit']
+            ));
 
             if ($join_table) {
                 $deletes = array();

@@ -71,8 +71,8 @@ html, body{ width:100%;height:100%;min-height:500px; background:#f5f5f5;}
         <li class="sns naver"><a href="<?=$apiURL?>"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_naver.png" class="네이버로그인"></span>네이버 로그인</a></li>
         <li class="sns kakao"><a href="<?=$kakaoURL?>"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>
         <!--<li class="sns kakao"><a onclick="alert('아직 준비중입니다.')"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>-->
-        <li class="sns google"><a href="javascript:google_login(<?if($mb_1) echo $mb_1; else echo 0;?>);"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_google.png" class="구글로그인"></span>구글 로그인</a></li>
-        <li class="sns face"><a href="javascript:fnFbCustomLogin(<?if($mb_1) echo $mb_1; else echo 0;?>);"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_face.png" class="페이스북로그인"></span>페이스북 로그인</a></li>
+        <!--<li class="sns google"><a href="javascript:google_login(--><?//if($mb_1) echo $mb_1; else echo 0;?><!--);"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_google.png" class="구글로그인"></span>구글 로그인</a></li>-->
+        <!--<li class="sns face"><a href="javascript:fnFbCustomLogin(--><?//if($mb_1) echo $mb_1; else echo 0;?><!--);"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_face.png" class="페이스북로그인"></span>페이스북 로그인</a></li>-->
     </ul><!--lg_btn-->
 
     <div class="btn_confirm">

@@ -78,7 +78,9 @@ if($_GET['code']){
             "mb_hp" => $phone,
             "mb_name" => $result['kakao_account']['name'],
             "mb_adult" => 1,
-            "mb_sns" => "kakao"
+            "mb_sns" => "kakao",
+            "mb_join_division" => 1,
+            "mb_datetime" => "now()"
         );
 
         $model->insert($obj);

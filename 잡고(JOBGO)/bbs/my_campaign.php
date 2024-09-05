@@ -4,7 +4,7 @@ $pid = "my_campaign";
 $sub_id = "my_campaign";
 include_once('./_common.php');
 
-$g5['title'] = '캠페인 관리';
+$g5['title'] = '체험단 관리';
 include_once('./_head.php');
 include_once("../jl/JlConfig.php");
 
@@ -57,18 +57,33 @@ $page = $_GET['page'] ? $_GET['page'] : 1;
 $like_model->join("campaign","campaign_idx","idx");
 $like_model->where("user_idx",$member['mb_no']);
 if($category) $like_model->where("category",$category,"AND","campaign");
-$like_data = $like_model->get($page,$limit,"campaign");
+$like_data = $like_model->get(array(
+    "page" => $page,
+    "limit" => $limit,
+    "source" => "campaign"
+));
 
 $request_model->join("campaign","campaign_idx","idx");
 $request_model->where("user_idx",$member['mb_no']);
 if($category) $request_model->where("category",$category,"AND","campaign");
-$request_data = $request_model->get($page,$limit,"campaign");
+$request_data = $request_model->get(array(
+    "page" => $page,
+    "limit" => $limit,
+    "source" => "campaign"
+));
 
 $request_model->join("campaign","campaign_idx","idx");
 $request_model->where("user_idx",$member['mb_no']);
 $request_model->where("status","선정");
 if($category) $request_model->where("category",$category,"AND","campaign");
-$ok_data = $request_model->get($page,$limit,"campaign");
+$ok_data = $request_model->get(array(
+    "page" => $page,
+    "limit" => $limit,
+    "source" => "campaign",
+    "select" => "campaign_request.update_date AS ok_date",
+    //"sql" => true
+));
+echo $ok_data['sql'];
 
 switch ($tab) {
     case 1 :
@@ -110,14 +125,14 @@ if($member['mb_no']) {
         <?php include_once($member_skin_path.'/mypage_left_menu.php'); ?>
 
         <section id="right_view">
-            <h3>캠페인 관리</h3>
+            <h3>체험단 관리</h3>
 
             <div class="wrapper">
                 <div class="tabs cf">
                 <ul>
-                    <li id="tab1"><a href="javascript:a_tab('1');">찜한 캠페인<span class="badge"><?=$like_data['count']?></span></a></li>
-                    <li id="tab2"><a href="javascript:a_tab('2');">신청 캠페인<span class="badge"><?=$request_data['count']?></span></a></li>
-                    <li id="tab3"><a href="javascript:a_tab('3');">캠페인 선정<span class="badge"><?=$ok_data['count']?></span></a></li>
+                    <li id="tab1"><a href="javascript:a_tab('1');">찜한 체험단<span class="badge"><?=$like_data['count']?></span></a></li>
+                    <li id="tab2"><a href="javascript:a_tab('2');">신청 체험단<span class="badge"><?=$request_data['count']?></span></a></li>
+                    <li id="tab3"><a href="javascript:a_tab('3');">체험단 선정<span class="badge"><?=$ok_data['count']?></span></a></li>
                 </ul>
 
                 <!--찜한 캠페인-->
@@ -176,6 +191,13 @@ if($member['mb_no']) {
                                     </div><!--thm-->
 
                                 <?php } ?>
+
+                                <?if(!$like_data['count']) {?>
+                                <div class="text-center empty">
+                                    <i class="fa-solid fa-lightbulb-exclamation"></i>
+                                    <p>찜 목록이 없습니다.</p>
+                                </div>
+                                <?}?>
                             </div><!--list-->
                         </div><!--in-->
 
@@ -248,6 +270,12 @@ if($member['mb_no']) {
 
 
                             </div><!--list-->
+                            <?if(!$request_data['count']) {?>
+                            <div class="text-center empty">
+                                <i class="fa-solid fa-lightbulb-exclamation"></i>
+                                <p>신청 목록이 없습니다.</p>
+                            </div>
+                            <?}?>
                         </div><!--in-->
 
                     </div><!--my_goods-->
@@ -288,7 +316,7 @@ if($member['mb_no']) {
                                             <span class="icon icon_color2">
                                                 선정
                                             </span>
-                                            <p><?=$d['recruitment_date']?> | 활동 종료 <?=$d['activity_date']?></p>
+                                            <p><?=explode(" ", $d['ok_date'])[0]?> | 활동 종료 <?=$d['activity_date']?></p>
                                         </div>
                                         <a href="<?php echo G5_BBS_URL ?>/campaign_view.php?idx=<?=$d['idx']?>">
                                             <div class="tit"><?=$d['subject']?></div>
@@ -307,6 +335,13 @@ if($member['mb_no']) {
                                         <!--</button>-->
                                     </div>
                                 </div><!--thm-->
+                                <?}?>
+
+                                <?if(!$ok_data['count']) {?>
+                                <div class="text-center empty">
+                                    <i class="fa-solid fa-lightbulb-exclamation"></i>
+                                    <p>선정 목록이 없습니다.</p>
+                                </div>
                                 <?}?>
 
                             </div><!--list-->

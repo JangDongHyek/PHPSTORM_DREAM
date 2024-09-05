@@ -78,6 +78,7 @@ $g5['title'] = '회원관리';
 include_once('./admin.head.php');
 
 $sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+echo $sql;
 $result = sql_query($sql);
 
 $colspan = 16;
@@ -166,6 +167,7 @@ if ($stx == '0'){
 		<th><?php echo subject_sort_link('mb_name') ?>이름</a></th>
 		<th>휴대폰</th>
 		<th>생년월일</th>
+        <th>SNS</th>
         <th>승인여부</th>
         <?php } ?>
 		<th>가입일</th>
@@ -265,6 +267,7 @@ if ($stx == '0'){
 		<td><?=get_text($row['mb_name'])?></td>
 		<td><?=$row['mb_hp']?></td>
 		<td><?=substr_replace(substr_replace($row["mb_birth"],'-',4,0),'-',7,0);?></td>
+        <td><?=$row['mb_sns']?></td>
         <td><?php
             if ($row['mb_4'] == 'Y'){
                 echo  '승인';

@@ -24,7 +24,7 @@ $model = new JlModel(array(
 
 $limit = 4;
 $page = $_GET['page'] ? $_GET['page'] : 1;
-$data = $model->get($page,$limit);
+$data = $model->get(array("page" => $page,"limit" => $limit));
 $total_page = ceil($data['count'] / $limit);
 
 // 캠페인 좋아요

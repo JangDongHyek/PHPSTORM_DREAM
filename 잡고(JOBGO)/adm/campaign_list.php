@@ -17,7 +17,10 @@ if($_GET['category']) $model->where("category",$_GET['category']);
 
 $limit = 10;
 $page = $_GET['page'] ? $_GET['page'] : 1;
-$data = $model->get($page,$limit);
+$data = $model->get(array(
+    "page" => $page,
+    "limit" => $limit
+));
 $total_page = ceil($data['count'] / $limit);
 
 $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목록</a>';

@@ -79,12 +79,29 @@ class Jl {
         foreach ($files as $file) include_once($file);
     }
 
+    function isAssociativeArray(array $array) {
+        // 배열이 비어 있는 경우, 연관 배열이 아닌 것으로 간주합니다.
+        if (empty($array)) {
+            return false;
+        }
+
+        // 모든 키를 검사하여, 하나라도 연관된 키(비연속적이거나 문자열)가 있는지 확인합니다.
+        return array_keys($array) !== range(0, count($array) - 1);
+    }
+
     function deleteDir($path) {
+        if($path == "") {
+            $this->error("Jl deleteDir() : 삭제 할려는 폴더가 빈값입니다.");
+        }
+        if($path == $this->ROOT) {
+            $this->error("Jl deleteDir() : 삭제 할려는 폴더가 루트 디렉토리입니다.");
+        }
         if(strpos($path,$this->ROOT) !== false) $dir = $path;
         else $dir = $this->ROOT.$path;
 
+
         if (!file_exists($dir)) {
-            return;
+            $this->error("Jl deleteDir() : 삭제 할려는 폴더가 존재하지 않습니다.");
         }
 
         $files = array_diff(scandir($dir), array('.', '..'));
@@ -92,14 +109,13 @@ class Jl {
         foreach ($files as $file) {
             $filePath = $dir."/".$file;
 
-            // 파일인 경우 삭제하고, 디렉토리인 경우 재귀적으로 삭제합니다.
             if (is_dir($filePath)) {
-                $this->deleteDir($filePath);
+                //$this->deleteDir($filePath); // 해당부분은 너무 위험해서 주석처리
+                $this->error("Jl deleteDir() : 삭제 할려는 폴더안에 폴더가 또 있습니다 폴더부터 지운후 진행해주세요.");
             } else {
                 unlink($filePath);
             }
         }
-
         rmdir($dir);
     }
 
@@ -126,6 +142,17 @@ class Jl {
         return $result;
     }
 
+    function getDirPermission($dir) {
+        $permissions = fileperms($this->ROOT.$dir);
+
+        if ($permissions === false) {
+            $this->error("Jl getDirPermission() : 권한을 확인할 수 없습니다. 경로가 올바른지 확인하세요.");
+        }
+
+        // 권한 비트를 추출하여 8진수 문자열로 변환
+        return substr(sprintf('%o', $permissions & 0777), -4); // 4자리 8진수 문자열 반환
+    }
+
     function INIT() {
         //ROOT 위치 찾기
         $root = __FILE__;
@@ -134,7 +161,7 @@ class Jl {
         if ($position !== false) {
             $this->ROOT = substr($root, 0, $position).$this->root_dir;
         }else {
-            $this->error("Jl : ROOT 위치를 찾을 수 없습니다.");
+            $this->error("Jl INIT() : ROOT 위치를 찾을 수 없습니다.");
         }
 
         //URL 구하기
@@ -146,7 +173,7 @@ class Jl {
         $this->URL = $http.$host.$user;
 
         //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl : JS 위치를 찾을 수 없습니다.");
+        if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl INIT() : JS 위치를 찾을 수 없습니다.");
 
         //DB 설정
         $this->DB = array(
@@ -155,6 +182,19 @@ class Jl {
             "password" => "*av%s%kk",
             "database" => "jobgo"
         );
+
+        //resource 폴더 생성
+        if(!is_dir($this->ROOT."/jl")) $this->error("Jl INIT() : jl 폴더가 없습니다.");
+        if($this->getDirPermission("/jl") != "777") {
+            if(!chmod($this->ROOT."/jl", 0777)) {
+                $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
+            }
+        }
+        $dir = $this->ROOT."/jl/jl_resource";
+        if(!is_dir($dir)) {
+            mkdir($dir, 0777);
+            chmod($dir, 0777);
+        }
     }
 }
 

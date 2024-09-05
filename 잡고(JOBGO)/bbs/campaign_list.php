@@ -31,11 +31,14 @@ $model = new JlModel(array(
     "autoincrement" => true,
     "empty" => false
 ));
-$model->where("category",$category);
+if($category) $model->where("category",$category);
 
 $limit = 10;
 $page = $_GET['page'] ? $_GET['page'] : 1;
-$data = $model->get($page,$limit);
+$data = $model->get(array(
+    "page" => $page,
+    "limit" => $limit
+));
 $total_page = ceil($data['count'] / $limit);
 
 // 캠페인 좋아요
@@ -73,6 +76,26 @@ include_once('./_head.php');
             <h6 class="txt_thin txt_white">잡고가 함께 해요</h6>
             <button type="button" class="btn btn_black" onclick="location.href='<?php echo G5_URL ?>/new_cpn_service.php'">새로워진 잡고 <i class="fa-solid fa-right"></i></button>
         </div>
+
+        <section id="cate_depth" class="cpn">
+            <div class="cateTit"><h2>체험단<br><span>전체</span></h2></div>
+            <div class="cateList">
+                <div class="sort">
+                    <ul>
+                        <li id="li_all" class="<?=$_GET['menu'] == '' ? 'check' : '' ?>"><a href="/bbs/campaign_list.php">전체</a></li>
+                        <li class="<?=$_GET['menu'] == 'sns' ? 'check' : '' ?>"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns">SNS</a></li>
+                        <li class="<?=$_GET['menu'] == 'design' ? 'check' : '' ?>"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=design">디자인</a></li>
+                        <li class="<?=$_GET['menu'] == 'exp' ? 'check' : '' ?>"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp">체험단</a></li>
+                    </ul>
+                </div>
+                <div class="depthList">
+                    <ul>
+                        <span><i class="fal fa-lightbulb-on"></i>전체 체험단 상품입니다.</span>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
 
         <div id="goods">
             <!--  캠페인  -->

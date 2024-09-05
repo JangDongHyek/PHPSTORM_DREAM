@@ -192,10 +192,18 @@ include_once('./admin.head.php');
     <tr>
         <th scope="row"><label for="thumb">썸네일</label></th>
         <td>
-            <a class="btn_02">추가</a>
+            <?foreach($data['thumb'] as $index => $t) {?>
+                <img src="<?=$jl->URL?><?=$t['src']?>" style="width: 50px; height: 50px;">
+                <a class="btn_01" onclick="deleteThumb(<?=$index?>)">삭제</a>
+            <?}?>
+            <div id="preview">
+            </div>
+            <label for="thumb">
+                <a class="btn_02">추가</a>
+            </label>
             <div style="display: flex; gap: 5px">
-                <input type="file" multiple="multiple" name="thumb[]" id="thumb[]" >
-                <a class="btn_01" onclick="$('#thumb_del').val('true')">삭제</a>
+                <input type="file" multiple="multiple" name="thumb[]" id="thumb" accept="image/*" style="display: none">
+
             </div>
         </td>
         <th scope="row"><label for="cp_progress">진행상태</label></th>
@@ -231,6 +239,11 @@ include_once('./admin.head.php');
         <td colspan="2"><textarea style="width: 200%" name="required" id="required" class="frm_input"><?php echo $data['required'] ?></textarea></td>
     </tr>
 
+    <tr>
+        <th scope="row"><label for="cp_logo_content2">활동안내</label></th>
+        <td colspan="2"><textarea style="width: 200%" name="activity_guide" id="activity_guide" class="frm_input"><?php echo $data['activity_guide'] ?></textarea></td>
+    </tr>
+
     <?php if ($w == 'u') { ?>
     <tr>
 
@@ -249,6 +262,73 @@ include_once('./admin.head.php');
 </div>
 
 </form>
+
+<?$jl->jsLoad();?>
+<script>
+    const jl = new Jl();
+    const idx = "<?=$_GET['idx']?>"
+
+    async function deleteThumb(index) {
+        try {
+            var obj = {idx : idx, thumb_idx : index}
+            let res = await jl.ajax("delete_thumb",obj,"/api/campaign.php");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+</script>
+
+<script>
+
+
+    // 파일 입력 요소와 미리보기 컨테이너 가져오기
+    const fileInput = document.getElementById('thumb');
+    const previewContainer = document.getElementById('preview');
+    let selectedFiles = Array.from(fileInput.files);
+
+    fileInput.addEventListener('change', function() {
+        //selectedFiles = Array.from(fileInput.files); // 새로운 파일 목록으로 업데이트
+        previewContainer.innerHTML = ''; // Clear previous previews
+        selectedFiles = selectedFiles.concat(Array.from(fileInput.files));
+        console.log(selectedFiles);
+
+        // 각 파일에 대해 미리보기 생성
+        selectedFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgPreview = document.createElement('div');
+                imgPreview.classList.add('image-preview');
+
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.width = 50;
+                imgElement.height = 50;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'x';
+                deleteBtn.addEventListener('click', function() {
+                    // 삭제 버튼 클릭 시 미리보기 제거
+                    previewContainer.removeChild(imgPreview);
+
+                    // 삭제된 파일을 `selectedFiles`에서 제거
+                    selectedFiles = selectedFiles.filter(f => f !== file);
+
+                    // 새로운 파일 목록으로 `fileInput` 업데이트
+                    const dataTransfer = new DataTransfer();
+                    selectedFiles.forEach(f => dataTransfer.items.add(f));
+                    fileInput.files = dataTransfer.files;
+                });
+
+                imgPreview.appendChild(imgElement);
+                imgPreview.appendChild(deleteBtn);
+                previewContainer.appendChild(imgPreview);
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 
 <script src="<?=$jl->URL.$jl->EDITOR_JS?>"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -282,6 +362,9 @@ include_once('./admin.head.php');
 
     function campaignSubmit(f) {
         $('#basic_guide').val(default_content.getById["naver_content"].getIR().replaceAll('"',"'"));
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(f => dataTransfer.items.add(f));
+        fileInput.files = dataTransfer.files;
         //return false;
     }
 
@@ -310,6 +393,7 @@ include_once('./admin.head.php');
 
 
     });
+
 
     function ctg1_change(val) {
 

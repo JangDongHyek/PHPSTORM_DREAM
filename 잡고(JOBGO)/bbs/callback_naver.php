@@ -108,7 +108,9 @@ if($status_code == 200) {
                 "mb_hp" => $pr_arr['response']['mobile'],
                 "mb_name" => $pr_arr['response']['name'],
                 "mb_adult" => 1,
-                "mb_sns" => "naver"
+                "mb_sns" => "naver",
+                "mb_join_division" => 1,
+                "mb_datetime" => "now()"
             );
 
             $model->insert($obj);

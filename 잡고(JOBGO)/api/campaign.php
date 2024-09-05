@@ -16,7 +16,7 @@ try {
     $join_table = "";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    //$file = new JlFile("/data/example");
+    $file = new JlFile("/jl/jl_resource/campaign");
 
     switch (strtolower($_method)) {
         case "get":
@@ -33,7 +33,10 @@ try {
             if($obj['not_key1'] && $obj['not_value1']) $model->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
             if($obj['in_key1'] && $obj['in_value1']) $model->in($obj['in_key1'],$model->jsonDecode($obj['in_value1']));
 
-            $object = $model->where($obj)->get($obj["page"], $obj["limit"]);
+            $object = $model->where($obj)->get(array(
+                "page" => $obj['page'],
+                "limit" => $obj['limit']
+            ));
 
             if ($join_table) {
                 $deletes = array();
@@ -111,13 +114,37 @@ try {
             $response['success'] = true;
             break;
         }
+        case "delete_thumb":
+        {
+            $obj = $model->jsonDecode($_POST['obj']);
+
+            $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
+
+            unset($getData['thumb'][$obj['thumb_idx']]);
+
+            $model->update($getData);
+            $response['success'] = true;
+            break;
+        }
+
         case "delete":
         {
             $obj = $model->jsonDecode($_POST['obj'],false);
 
-            //$file->deleteDirGate($obj['data_column']);
-            $data = $model->delete($obj);
+            $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
 
+            $aa = $file->deleteDirGate($getData['thumb']);
+            $bb = $file->deleteDirGate($getData['company_thumb']);
+            $data = $model->delete($obj);
+            $like_model = new JlModel(array("table" => "campaign_like"));
+            $like_model->where("campaign_idx",$obj['idx']);
+            $like_model->whereDelete();
+            $request_model = new JlModel(array("table" => "campaign_request"));
+            $request_model->where("campaign_idx",$obj['idx']);
+            $request_model->whereDelete();
+
+            $response['$aa'] = $aa;
+            $response['$bb'] = $bb;
             $response['success'] = true;
             break;
         }

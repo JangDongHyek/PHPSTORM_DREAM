@@ -23,8 +23,11 @@ $request_model = new JlModel(array(
     "autoincrement" => true,
     "empty" => false
 ));
+$request_model->join("g5_member","user_idx","mb_no");
 $request_model->where("campaign_idx",$_GET['idx']);
-$request = $request_model->orderBy("status","ASC")->orderBy("insert_date","DESC")->get();
+$request = $request_model->orderBy("status","ASC")->orderBy("insert_date","DESC")->get(array(
+        "select" => array("g5_member.mb_name","g5_member.mb_id","g5_member.mb_hp")
+));
 
 $request_model = new JlModel(array(
     "table" => "campaign_request",
@@ -69,8 +72,8 @@ include_once('./admin.head.php');
             <tr>
                 <td><?=$d['data_page_no']?></td>
                 <td><?=$d['insert_date']?></td>
-                <td>참여자(아이디)</td>
-                <td>010-0000-0000</td>
+                <td><?=$d['mb_name']?>(<?=$d['mb_id']?>)</td>
+                <td><?=$d['mb_hp']?></td>
                 <td><a href="<?=$d['sns_link']?>" target="_blank"><?=$d['sns_link'] ?: '-' ?></a></td>
                 <td><?=$d['report_date'] ?: '-' ?></td>
                 <td><a target="_blank" href="<?=$d['activity_link']?>"><i class="<?=$d['activity_link'] ? 'fa-solid fa-link' : ''?>"></i><?=$d['activity_link'] ? '활동링크' : '-' ?></a></td>

@@ -11,11 +11,11 @@ class JlFile extends Jl{
 
         $this->resizing = $resizing;
 
-        if(!empty($path)){
+        if(!empty($this->path)){
             $this->path = $this->ROOT.$path;
 
             if(!is_dir($path)){
-                mkdir($this->path, 0777);
+                if(!mkdir($this->path, 0777)) $this->error("JlFile __construct() : 폴더 생성오류");
                 chmod($this->path, 0777);
             }
         }
@@ -70,16 +70,17 @@ class JlFile extends Jl{
         return $dst;
     }
 
-    function deleteDirGate($file) {
-        if(is_object($file)) {
-            $this->deleteDir($file['dir']);
-        }
-        if(is_array($file)) {
-            foreach ($file as $item) {
-                $this->deleteDir($item['dir']);
+    function deleteDirGate($data) {
+        if($this->isAssociativeArray($data)) {
+            $this->deleteDir($data['dir']);
+        }else {
+            if (is_array($data)) {
+                foreach ($data as $item) {
+                    $this->deleteDir($item['dir']);
+                }
             }
         }
-        if(is_string($file)) $this->deleteDir($file);
+        //if(is_string($file))  $this->deleteDir($file);
     }
 
     function bindGate($file,$permission = "",$path = "") {

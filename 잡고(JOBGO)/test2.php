@@ -1,17 +1,42 @@
 <?php
-include_once("./jl/JlModel2.php");
+//include_once("./jl/JlModel2.php");
+include_once("./jl/JlConfig.php");
+//
+//$model = new JlModel(array(
+//    "table" => "campaign",
+//    "primary" => "idx",
+//    "autoincrement" => true,
+//    "empty" => false
+//));
 
-$model = new JlModell(array(
-    "table" => "campaign",
-    "primary" => "idx",
-    "autoincrement" => true,
-    "empty" => false
-));
+//$getData = $model->where("idx","16")->get()['data'][0];
+//
+//$file = new JlFile("/jl/jl_resource/campaign");
 
-$model->join("campaign_like","idx","campaign_idx");
-$model->groupBy("campaign.idx","campaign_like.campaign_idx", "likess");
-$model->orderBy("insert_date","DESC");
-$model->where("user_idx","31");
+//$file->deleteDirGate($getData['thumb']);
+//$file->deleteDirGate($getData['company_thumb']);
+
+//$dir = $jl->ROOT."/jl/jl_resource";
+//echo $dir;
+//if(!is_dir($dir)) {
+//    if(mkdir($dir, 0777)) {
+//        echo 1;
+//    }else {
+//        echo 2;
+//    }
+//}
+
+//$model = new JlModell(array(
+//    "table" => "campaign",
+//    "primary" => "idx",
+//    "autoincrement" => true,
+//    "empty" => false
+//));
+//
+//$model->join("campaign_like","idx","campaign_idx");
+//$model->groupBy("campaign.idx","campaign_like.campaign_idx", "likess");
+//$model->orderBy("insert_date","DESC");
+//$model->where("user_idx","31");
 //$data = $model->get(0,0,"campaign");
 
 
