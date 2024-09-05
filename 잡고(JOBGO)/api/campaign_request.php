@@ -78,10 +78,23 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
+            $campaign_model = new JlModel(array("table" => "campaign"));
+            $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
+
+            $recruitment_date = DateTime::createFromFormat('Y-m-d', $campaign['recruitment_date']);
+            $current_date = new DateTime();
+
+
+            if($campaign['status'] != "모집") $model->error("아직 모집중이 아닙니다.");
+            if($current_date > $recruitment_date) $model->error("모집 기간이 지났습니다.");
+
+
             $data = $model->where($obj)->get();
             if($data['count']) $model->error("이미 신청 되었습니다. 캠페인 관리에서 확인 해주세요.");
 
             $model->insert($obj);
+
+            $response['campaign'] = $campaign;
             $response['success'] = true;
             break;
         }
@@ -109,6 +122,21 @@ try {
 
             $model->update($obj);
             $response['$obj'] = $obj;
+            $response['success'] = true;
+            break;
+        }
+
+        case "update2":
+        {
+            $obj = $model->jsonDecode($_POST['obj']);
+            $users = $model->jsonDecode($obj['users'],false);
+
+            foreach ($users as $index => $i) {
+                $model->update($i);
+            }
+            $response['$obj'] = $obj;
+            $response['$users'] = $users;
+            $response['$_POST[obj]'] = $_POST['obj'];
             $response['success'] = true;
             break;
         }

@@ -18,8 +18,8 @@ class Jl {
     }
 
     function error($msg) {
-        $er = array("success"=> false,"message"=>$msg);
-        echo json_encode($er,JSON_UNESCAPED_UNICODE);
+        //$er = array("success"=> false,"message"=>$msg);
+        //echo json_encode($er,JSON_UNESCAPED_UNICODE);
         throw new \Exception($msg);
     }
 
@@ -48,9 +48,6 @@ class Jl {
     }
 
     function jsLoad() {
-        //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl INIT() : JS 위치를 찾을 수 없습니다.");
-
         echo "<script>";
         echo "const Jl_base_url = '{$this->URL}';";
         echo "const Jl_dev = {$this->DEV};";
@@ -177,29 +174,32 @@ class Jl {
             $host = preg_replace('/:[0-9]+$/', '', $host);
         $this->URL = $http.$host.$user;
 
-        //DB 설정
-        $this->DB = array(
-            "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => "example"
-        );
+        //js파일 찾기
+        //if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl INIT() : JS 위치를 찾을 수 없습니다.");
 
-        //resource 폴더 생성
-        if(!is_dir($this->ROOT."/jl")) $this->error("Jl INIT() : jl 폴더가 없습니다.");
-        if($this->getDirPermission("/jl") != "777") {
-            if(!chmod($this->ROOT."/jl", 0777)) {
-                $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
-            }
-        }
-        $dir = $this->ROOT."/jl/jl_resource";
-        if(!is_dir($dir)) {
-            mkdir($dir, 0777);
-            chmod($dir, 0777);
-        }
-
-        //PHP INI 설정가져오기
-        $this->PHP = ini_get_all();
+        ////DB 설정
+        //$this->DB = array(
+        //    "hostname" => "localhost",
+        //    "username" => "example",
+        //    "password" => "",
+        //    "database" => "example"
+        //);
+        //
+        ////resource 폴더 생성
+        //if(!is_dir($this->ROOT."/jl")) $this->error("Jl INIT() : jl 폴더가 없습니다.");
+        //if($this->getDirPermission("/jl") != "777") {
+        //    if(!chmod($this->ROOT."/jl", 0777)) {
+        //        $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
+        //    }
+        //}
+        //$dir = $this->ROOT."/jl/jl_resource";
+        //if(!is_dir($dir)) {
+        //    mkdir($dir, 0777);
+        //    chmod($dir, 0777);
+        //}
+        //
+        ////PHP INI 설정가져오기
+        //$this->PHP = ini_get_all();
     }
 }
 

@@ -129,7 +129,7 @@ $uri = $_SERVER['REQUEST_URI'];
                                 <span class="no_read_badge none" onclick="">0</span>
                             </li>
                             <li>|</li>
-                            <li><a href="<?php echo G5_BBS_URL ?>/mypage.php" title="마이페이지" class="line txt_color">마이페이지</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/my_campaign.php" title="마이페이지" class="line txt_color">마이페이지</a></li>
                             <li><a href="javascript:logout();" title="로그아웃" class="line">로그아웃</a></li>
                     <?php } else /*$is_member*/{  ?>
                         <li><a href="<?php echo G5_URL ?>/new_campaign.php" title="" class="join us">협업제안</a></li>
@@ -236,7 +236,7 @@ $uri = $_SERVER['REQUEST_URI'];
                                 <span class="no_read_badge none" onclick="">0</span>
                             </li>
                             <li>|</li>
-                            <li><a href="<?php echo G5_BBS_URL ?>/mypage.php" title="마이페이지" class="line txt_color">마이페이지</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/my_campaign.php" title="마이페이지" class="line txt_color">마이페이지</a></li>
                             <li><a href="javascript:logout();" title="로그아웃" class="line">로그아웃</a></li>
 
                     <?php } else /*$is_member*/{  ?>
@@ -349,7 +349,7 @@ $uri = $_SERVER['REQUEST_URI'];
 							</li>
 
                                 <li class="gnb_2dli gnb_2dlit">
-                                    <a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" class="gnb_2da">캠페인</a>
+                                    <a href="<?php echo G5_BBS_URL ?>/campaign_list.php" class="gnb_2da">체험단</a>
                                     <div class="gnb_2dli_list" style="display:none">
                                         <ul class="gnb_2dul ver02">
                                             <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns" target="_self" class="gnb_2da">SNS</a></li>
@@ -370,13 +370,12 @@ $uri = $_SERVER['REQUEST_URI'];
 						</ul>
 					</li>
                         <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns" target="_self" class="gnb_1da <?php if($pid == 'sns'){ echo "head_on"; } ?> ">SNS<span></span></a>
-                        </li>
-                        <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=design" target="_self" class="gnb_1da <?php if($pid == 'design'){ echo "head_on"; } ?>">디자인<span></span></a>
-                        </li>
-                        <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_1da <?php if($pid == 'exp'){ echo "head_on"; } ?>">체험단<span></span></a>
+                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_1da <?php if($sub_id == 'campagin_list'){ echo "head_on"; } ?>">체험단<span></span></a>
+                            <ul class="gnb_2dul" style="display: none;">
+                                <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=sns" target="_self" class="gnb_2da">SNS</a></li>
+                                <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=design" target="_self" class="gnb_2da">디자인</a></li>
+                                <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=exp" target="_self" class="gnb_2da">체험단</a></li>
+                            </ul>
                         </li>
                         <li class="gnb_1dli">
                             <a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" target="_self" class="gnb_1da <?php if(strpos( urldecode($uri), 'category='.$p_code[$i]['name']) == true){ echo "head_on"; } ?> ">재능거래<span></span></a>
@@ -515,6 +514,15 @@ $uri = $_SERVER['REQUEST_URI'];
                                     <option value="<?php echo $code[$i]['idx'] ?>"<?php echo get_selected($_GET['category2'],$code[$i]['name']) ?> ><?=$code[$i]['name']?></option>
                                 <?php } ?>
                             </select> 
+                        </li>
+                        <?php } elseif($sub_id=="campagin_list"){ //모바일 카테고리 ?>
+                        <li>
+                            <select id="cate" onchange="">
+                                <option value="">전체</option>
+                                <option value="">SNS</option>
+                                <option value="">디자인</option>
+                                <option value="">체험단</option>
+                            </select>
                         </li>
                         <?php } ?>
                     </ul>

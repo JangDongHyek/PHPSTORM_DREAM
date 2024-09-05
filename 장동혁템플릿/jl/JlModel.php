@@ -276,7 +276,9 @@ class JlModel extends Jl{
         foreach($param as $key => $value){
             if(in_array($key, $this->schema['columns'])){
                 if(!empty($update_sql)) $update_sql .= ", ";
-                $update_sql .= "`{$key}`='{$value}'";
+
+                if($value == "now()") $update_sql .= "`{$key}`={$value}";
+                else $update_sql .= "`{$key}`='{$value}'";
             }
         }
 

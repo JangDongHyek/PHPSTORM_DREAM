@@ -5,6 +5,7 @@ class Jl {
     public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
     public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
 
+    public $PHP;
     private $DEV = true;                //해당값이 false 이면 로그가 안찍힙니다.
     public  $DB;
     public  $URL;
@@ -153,6 +154,16 @@ class Jl {
         return substr(sprintf('%o', $permissions & 0777), -4); // 4자리 8진수 문자열 반환
     }
 
+    function bytesToMB($bytes) {
+        if ($bytes < 0) {
+            $this->error("Jl bytesToMB() : 파일 사이즈는 음수일 수 없습니다.");
+        }
+
+        // 1MB는 1024 * 1024 바이트
+        $result = $bytes / (1024 * 1024);
+        return round($result,2);
+    }
+
     function INIT() {
         //ROOT 위치 찾기
         $root = __FILE__;
@@ -195,6 +206,9 @@ class Jl {
             mkdir($dir, 0777);
             chmod($dir, 0777);
         }
+
+        //PHP INI 설정가져오기
+        $this->PHP = ini_get_all();
     }
 }
 

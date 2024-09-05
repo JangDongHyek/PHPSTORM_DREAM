@@ -111,7 +111,7 @@ include_once('./_head.php');
                             <span><?=$data['service']?> + <b class="txt_color">잡고 캐쉬 <?=number_format($data['service_cash'])?></b></span>
                         </p>
                     </div>
-                    <button type="button" class="btn btn_large btn_color" onclick="postRequest('<?=$_GET['idx']?>')">신청하기</button>
+                    <button type="button" class="btn btn_large btn_color"data-toggle="modal" href="#campaignJoin">신청하기</button><!-- onclick="postRequest('<?=$_GET['idx']?>')"-->
 
                     <!--업체정보-->
                     <section class="mem_info">
@@ -186,9 +186,7 @@ include_once('./_head.php');
 
                         <section class="et-slide" id="react">
                             <h3 class="title">필수활동</h3>
-                            <div style="white-space: pre-wrap !important;">
-                                <?=$data['required']?>
-                            </div>
+                            <div style="white-space: pre-wrap !important;"><?=$data['required']?></div>
                         </section>
 
                         <hr/>
@@ -244,7 +242,7 @@ include_once('./_head.php');
                         <span><?=$data['service']?> + <b class="txt_color">잡고 캐쉬 <?=number_format($data['service_cash'])?></b></span>
                     </p>
                 </div>
-                <button type="button" class="btn btn_large btn_color" onclick="postRequest('<?=$_GET['idx']?>')">신청하기</button>
+                <button type="button" class="btn btn_large btn_color" onclick="openModal()">신청하기</button><!-- onclick="postRequest('<?=$_GET['idx']?>')"-->
 
                 <!--업체정보-->
                 <section class="mem_info">
@@ -290,23 +288,81 @@ include_once('./_head.php');
 
     </article>
 
+    <!-- 신청 -->
+    <div class="modal fade" id="campaignJoin" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">체험단 신청</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="box box_gray">※ 미작성시에도 신청 가능합니다.</p>
+                    <p>활동 중인 SNS</p>
+                    <div class="select ai-c jc-sb nowrap">
+                        <input type="radio" name="sns" value="insta" id="insta">
+                        <label for="insta">인스타그램</label>
+                        <input type="radio" name="sns" value="blog" id="blog">
+                        <label for="blog">블로그</label>
+                        <input type="radio" name="sns" value="youtube" id="youtube">
+                        <label for="youtube">유튜브</label>
+                        <input type="radio" name="sns" value="tiktok" id="tiktok">
+                        <label for="tiktok">틱톡</label>
+                    </div>
+                    <p>SNS 링크</p>
+                    <input type="text" id="sns_link" placeholder="SNS 링크를 작성해주세요">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="postRequest('<?=$_GET['idx']?>')">신청하기</button>
+                </div>
+            </div><!--//modal-content-->
+        </div>
+
+    </div>
+    <!-- // 신청 모달창 -->
 <? $jl->jsLoad(); ?>
 
     <script>
         const jl = new Jl();
         const user_idx = "<?=$member['mb_no']?>";
 
+        function openModal() {
+            if(!user_idx) {
+                alert("로그인이 필요한 기능입니다.");
+                window.location.href = "/bbs/login.php";
+                return false;
+            }
+
+            $('#campaignJoin').modal('show');
+        }
+
         async function postRequest(idx) {
             try {
-                if(!user_idx) return false;
+                const selectedValue = document.querySelector('input[name="sns"]:checked');
+                if(!selectedValue) {
+                    alert("활동중인 SNS를 입력해주세요.");
+                    return false;
+                }
+
+                if(!document.getElementById("sns_link").value) {
+                    alert("SNS 링크를 입력해주세요.");
+                    return false;
+                }
+
                 let obj = {
                     user_idx : user_idx,
-                    campaign_idx : idx
+                    campaign_idx : idx,
+                    sns_type : selectedValue,
+                    sns_link : document.getElementById("sns_link").value
                 }
 
                 let res = await jl.ajax("insert",obj,"/api/campaign_request.php");
 
-                showConfirm('신청완료', '결과는 캠페인 관리에서 확인하세요.')
+                showConfirm('신청완료', '결과는 체험단 관리에서 확인하세요.')
+                $('#campaignJoin').modal('hide');
             }catch (e) {
                 alert(e.message)
             }
@@ -314,7 +370,10 @@ include_once('./_head.php');
 
         async function postLike(idx) {
             try {
-                if(!user_idx) return false;
+                if(!user_idx) {
+                    alert("로그인이 필요한 기능입니다.");
+                    window.location.href = "/bbs/login.php";
+                }
                 let obj = {
                     user_idx : user_idx,
                     campaign_idx : idx

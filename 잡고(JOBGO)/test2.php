@@ -1,6 +1,14 @@
 <?php
 //include_once("./jl/JlModel2.php");
+
+//$model->error($current_date);
 include_once("./jl/JlConfig.php");
+
+//var_dump($jl->PHP);
+
+$upload_max_filesize = (int)str_replace('M','',$jl->PHP['upload_max_filesize']['global_value']);
+$post_max_size = (int)str_replace('M','',$jl->PHP['post_max_size']['global_value']);
+echo $post_max_size;
 //
 //$model = new JlModel(array(
 //    "table" => "campaign",

@@ -51,8 +51,8 @@ include_once('./admin.head.php');
 
 
 <div class="tbl_head02 tbl_wrap">
-    <h6 class="title"><a href="<?php echo G5_BBS_URL ?>/campaign_view.php" target="_blank">캠페인명</a> <span>업체명</span></h6>
-    <p class="sub"><b>선정기간</b> ~ 24.01.01 <b>활동기간</b> ~ 24.01.01 </p>
+    <h6 class="title"><a href="<?php echo G5_BBS_URL ?>/campaign_view.php" target="_blank"><?=$campaign['subject']?></a> <span><?=$campaign['company_name']?></span></h6>
+    <p class="sub"><b>선정기간</b> ~ <?=$campaign['recruitment_date']?> <b>활동기간</b> ~ <?=$campaign['activity_date']?> </p>
     <table>
         <thead>
             <tr>
@@ -65,6 +65,7 @@ include_once('./admin.head.php');
                 <th>활동링크</th>
                 <th>설명</th>
                 <th>선정</th>
+                <th>상태</th>
             </tr>
         </thead>
         <tbody>
@@ -79,10 +80,26 @@ include_once('./admin.head.php');
                 <td><a target="_blank" href="<?=$d['activity_link']?>"><i class="<?=$d['activity_link'] ? 'fa-solid fa-link' : ''?>"></i><?=$d['activity_link'] ? '활동링크' : '-' ?></a></td>
                 <td><textarea style="width: 500px"><?=$d['description']?></textarea></td>
                 <td>
+                    <!--
                     <select onchange="putRequest('<?=$d['idx']?>',event.target.value)">
                         <option value="">대기</option>
                         <option value="선정" <?=$d['status'] == '선정' ? 'selected' : ''?>>선정</option>
                         <option value="탈락" <?=$d['status'] == '탈락' ? 'selected' : ''?>>탈락</option>
+                    </select>
+                    -->
+
+                    <select onchange="changeStatus('<?=$d['idx']?>',event.target.value)">
+                        <option value="">대기</option>
+                        <option value="선정" <?=$d['status'] == '선정' ? 'selected' : ''?>>선정</option>
+                        <option value="탈락" <?=$d['status'] == '탈락' ? 'selected' : ''?>>탈락</option>
+                    </select>
+                </td>
+                <td>
+                    <select onchange="changeStatus2('<?=$d['idx']?>',event.target.value)">
+                        <option value="">대기</option>
+                        <option value="보고" <?=$d['report_status'] == '보고' ? 'selected' : ''?>>보고</option>
+                        <option value="수정요청" <?=$d['report_status'] == '수정요청' ? 'selected' : ''?>>수정요청</option>
+                        <option value="보고완료" <?=$d['report_status'] == '보고완료' ? 'selected' : ''?>>보고완료</option>
                     </select>
                 </td>
             </tr>
@@ -92,7 +109,7 @@ include_once('./admin.head.php');
 </div>
 
 <div class="btn_confirm01 btn_confirm">
-    <input type="submit" value="저장" style="background: #0A7CC7" class="btn_submit"accesskey='s'>
+    <input type="button" value="저장" onclick="putRequest2()" style="background: #0A7CC7" class="btn_submit"accesskey='s'>
     <a href="./campaign_list.php?<?php echo $qstr ?>">목록</a>
 </div>
 
@@ -102,6 +119,50 @@ include_once('./admin.head.php');
 
 <script>
     const jl = new Jl();
+    let users = [];
+
+    async function putRequest2() {
+        try {
+            if(!users.length) {
+                alert("바뀐 데이터가 없습니다.");
+                return false;
+            }
+
+                let obj = {
+                aa : "aa",
+                users : users
+            }
+            let res = await jl.ajax("update2",obj,"/api/campaign_request.php");
+            alert("저장되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+    function changeStatus2(idx,report_status) {
+        let newObj = {idx:idx,report_status:report_status}
+        let obj = jl.findObject(users,"idx",idx)
+
+        if (obj) {
+            // 같은 idx를 가진 객체가 있으면 기존 객체를 삭제합니다.
+            obj.report_status = report_status
+        }else {
+            users.push(newObj);
+        }
+    }
+
+    function changeStatus(idx,status) {
+        let newObj = {idx:idx,status:status}
+        let obj = jl.findObject(users,"idx",idx)
+
+        if (obj) {
+            // 같은 idx를 가진 객체가 있으면 기존 객체를 삭제합니다.
+            obj.status = status
+        }else {
+            users.push(newObj);
+        }
+    }
 
     async function putRequest(idx,status) {
         try {

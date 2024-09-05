@@ -99,11 +99,17 @@ class JlFile extends Jl{
             }
             $_idx = uniqid().str_pad(rand(0, 99), 2, "0", STR_PAD_LEFT);
             $path = $path ? $path : $this->path."/$_idx";
-            if(empty($path)) throw new Exception("JlFile : 파일 경로가 설정되지 않았습니다");
+            if(empty($path)) $this->error("JlFile bind(): 파일 경로가 설정되지 않았습니다");
             $permission = $permission ? $permission : $this->getPermission();
             $ext = $this->ext($file,true);
             $ext = strtolower($ext);
-            if(!in_array($ext,$permission)) throw new Exception("JlFile : 허용된 파일이 아닙니다.");
+            if(!in_array($ext,$permission)) $this->error("JlFile bind() : 허용된 파일이 아닙니다.");
+
+            $upload_max_filesize = (int)str_replace('M','',$this->PHP['upload_max_filesize']['global_value']);
+            $post_max_size = (int)str_replace('M','',$this->PHP['post_max_size']['global_value']);
+            $size = $this->bytesToMB($file['size']);
+            if($size >= $upload_max_filesize) $this->error("JlFile bind() : 파일사이즈가 upload_max_filesize보다 큽니다.\nfile : $size\nupload_max_filesize : $upload_max_filesize");
+            if($size >= $post_max_size) $this->error("JlFile bind() : 파일사이즈가 post_max_size보다 큽니다.\nfile : $size\npost_max_size : $post_max_size");
 
             $src = $this->save($file,$path);
 

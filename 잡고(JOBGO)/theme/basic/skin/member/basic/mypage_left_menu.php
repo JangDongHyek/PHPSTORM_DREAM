@@ -100,7 +100,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                         <li><a href="javascript:chatting_list();">문의채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
                     <?php } ?>
                     <li><a href="<?=G5_BBS_URL?>/my_item.php">재능 관리</a></li>
-                    <li><a href="<?=G5_BBS_URL?>/my_campaign.php">캠페인 관리</a></li>
+                    <li><a href="<?=G5_BBS_URL?>/my_campaign.php">체험단 관리</a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_service.php">서비스 관리 <!--<span class="badge">--><?/*= $view_pf_pro_ctg3[0] != "" ? count($view_pf_pro_ctg3) : 0 */?></span></a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_review.php">받은 평가<!--<span class="badge"><?/*=$review_count*/?></span>--></a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_compete.php">공모전 관리 </a></li>
@@ -148,10 +148,10 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
     <section id="left_view">
         <!--재능인정보-->
         <div class="flex btn-toggle">
-            <button class="profile-toggle">내정보</button>
-            <button class="nav-toggle">메뉴</button>
+            <button class="profile-toggle">내정보 닫기</button>
+            <button class="nav-toggle">전체메뉴 보기</button>
         </div>
-        <section class="mem_info">
+        <section class="mem_info open">
             <!--사진-->
             <form id = 'imgfrm'>
                 <input type="hidden" name="member_type" value="pro">
@@ -188,47 +188,50 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                 <ul>
                     <li>
                         <dl>
-                            <dt>총 찜한 재능</dt>
-                            <dd><?=$my_like_cnt['cnt']?><span>건</span></dd>
+                            <dt>찜한 체험단</dt>
+                            <dd><?=$like_data['count'] ? : "-" ?><span>건</span></dd>
                         </dl>
                     </li>
                     <li>
                         <dl>
-                            <dt>총 구매한 재능</dt>
-                            <dd><?=$talent_buy_cnt?><span>건</span></dd>
+                            <dt>신청 체험단</dt>
+                            <dd><?=$request_data['count'] ? : "-" ?><span>건</span></dd>
                         </dl>
                     </li>
                     <li>
                         <dl>
-                            <dt>1:1 문의</dt>
-                            <dd><?=$comment_cnt?><span>건</span></dd>
+                            <dt>체험단 선정</dt>
+                            <dd><?=$ok_data['count'] ? : "-" ?><span>건</span></dd>
                         </dl>
                     </li>
                 </ul>
             </div>
-            <?php
-            if (empty($profile['pf_idx']) ){?>
-                <p class="edit text-center"><a href="<?=G5_BBS_URL.'/register_expert_form03.php'?>"><i class="fal fa-user-circle"></i>&nbsp;재능인 등록</a></p>
-            <?php }else{ ?>
-                <p class="edit text-center"><a href="<?=G5_BBS_URL.'/ajax.controller.php?division=2&mode=division_change'?>"><i class="fal fa-user-circle"></i>&nbsp;재능인으로 변경</a></p>
-            <?php } ?>
+            <?if($modify_request) {?>
+            <button type="button" class="btn btn_red w100" onclick="location.href='./my_campaign.php?tab=3'">체험단 수정요청이 있어요!</button>
+            <?}?>
         </section>
         <section class="my_nav">
             <ul>
-                    <?php if($member["mb_no"] != "31"){ ?>
-                        <li><a href="javascript:chatting_list();">잡고채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
-                    <?php } ?>
+                    <li><a href="my_campaign.php" <?php if($pid == 'my_campaign'){ echo "class='txt_color'"; } ?>>체험단 관리</a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_item.php" <?php if($pid == 'my_item'){ echo "class='txt_color'"; } ?>>재능 관리</a></li>
-                    <li><a href="my_campaign.php" <?php if($pid == 'my_campaign'){ echo "class='txt_color'"; } ?>>캠페인 관리</a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_compete.php" <?php if($pid == 'my_compete'){ echo "class='txt_color'"; } ?>>공모전 관리 </a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_market.php" <?php if($pid == 'my_market'){ echo "class='txt_color'"; } ?>>마켓 관리 </a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_jobs.php" <?php if($pid == 'my_jobs'){ echo "class='txt_color'"; } ?>>구인구직 관리 </a></li>
+                    <?php if($member["mb_no"] != "31"){ ?>
+                        <li><a href="javascript:chatting_list();">잡고채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
+                    <?php } ?>
                     <li><a href="<?=G5_BBS_URL?>/my_income.php" <?php if($pid == 'my_income'){ echo "class='txt_color'"; } ?>>잡고 캐쉬</a></li>
-                    <li><a href="javascript:swal('잡고 이용안내 준비중입니다.')">잡고 이용안내</a></li>
                     <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=b_notice">고객센터</a></li>
                     <li><a href="<?php echo G5_BBS_URL ?>/my_leave.php">회원 탈퇴</a></li>
                     <li><a href="<?=G5_BBS_URL?>/my_suggest_list.php" class="ico_sug2">추천가입목록</a></li>
+                <?php
+                if (empty($profile['pf_idx']) ){?>
+                    <li><a href="<?=G5_BBS_URL.'/register_expert_form03.php'?>"><i class="fal fa-user-circle"></i>&nbsp;재능인 등록</a></li>
+                <?php }else{ ?>
+                    <li><a href="<?=G5_BBS_URL.'/ajax.controller.php?division=2&mode=division_change'?>"><i class="fal fa-user-circle"></i>&nbsp;재능인으로 변경</a></li>
+                <?php } ?>
                 <?php /* } else?>
+                    <li><a href="javascript:swal('잡고 이용안내 준비중입니다.')">잡고 이용안내</a></li>
                     <?php if($member["mb_no"] != "31"){ ?>
                     <li><a href="javascript:chatting_list();">문의채팅 <span class="badge"><?=$no_read_badge?></span> </a></li>
                     <?php } ?>
@@ -402,9 +405,9 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
         menu.classList.toggle('open');
 
         if (menu.classList.contains('open')) {
-            toggleButton.textContent = '메뉴 접기';
+            toggleButton.textContent = '전체메뉴 닫기';
         } else {
-            toggleButton.textContent = '메뉴';
+            toggleButton.textContent = '전체메뉴 보기';
         }
     });
 
@@ -417,7 +420,7 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
         if (menu.classList.contains('open')) {
             toggleButton.textContent = '내정보 닫기';
         } else {
-            toggleButton.textContent = '내정보';
+            toggleButton.textContent = '내정보 보기';
         }
     });
 

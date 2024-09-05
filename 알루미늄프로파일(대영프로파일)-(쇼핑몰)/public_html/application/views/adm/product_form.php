@@ -4,6 +4,10 @@
 <section class="productupd" id="app">
     <form name="productFrm" autocomplete="off" method="post">
         <input type="hidden" name="idx" value="<?=(int)$productData['idx']?>">
+        <input type="hidden" name="file_pdf_delete" v-model="file_pdf_delete">
+        <input type="hidden" name="file_2d_delete" v-model="file_2d_delete">
+        <input type="hidden" name="file_3d_delete" v-model="file_3d_delete">
+
         <div class="panel">
             <p>
                 <label class="title">상품명</label>
@@ -58,6 +62,43 @@
 					<input type="text" name="prodPrice" placeholder="기본 할인가를 입력하세요" value="<?=empty($productData['prod_price'])?'':number_format($productData['prod_price'])?>" required>원
 				</p>
 			</div>
+
+            <?
+            $file_pdf = json_decode($productData['file_pdf'],true);
+            $file_2d = json_decode($productData['file_2d'],true);
+            $file_3d = json_decode($productData['file_3d'],true);
+            ?>
+
+            <p class="name">상품 파일</p>
+            <div class="price">
+                <p class="line">
+                    <label>PDF</label>
+                    <input type="file" name="file_pdf">
+                    <?if($file_pdf) {?>
+                        <span><?=$file_pdf['name']?></span>
+                        <button type="button" @click="deleteFile('pdf')">삭제</button>
+                        <span v-if="file_pdf_delete">저장시 삭제됩니다.</span>
+                    <?}?>
+                </p>
+                <p class="line">
+                    <label>2D</label>
+                    <input type="file" name="file_2d">
+                    <?if($file_2d) {?>
+                        <span><?=$file_2d['name']?></span>
+                        <button type="button" @click="deleteFile('2d')">삭제</button>
+                        <span v-if="file_2d_delete">저장시 삭제됩니다.</span>
+                    <?}?>
+                </p>
+                <p class="line">
+                    <label>3D</label>
+                    <input type="file" name="file_3d">
+                    <?if($file_3d) {?>
+                        <span><?=$file_3d['name']?></span>
+                        <button type="button" @click="deleteFile('3d')">삭제</button>
+                        <span v-if="file_3d_delete">저장시 삭제됩니다.</span>
+                    <?}?>
+                </p>
+            </div>
 
             <add-option-list v-if="primary" :product_idx="primary"></add-option-list>
             <essential-option-list v-if="primary" :product_idx="primary"></essential-option-list>
@@ -155,6 +196,11 @@
                 category_child : "",
                 cate1_idx : "",
                 cate2_idx : "",
+
+
+                file_pdf_delete : "",
+                file_2d_delete : "",
+                file_3d_delete : "",
             },
             created : function() {
                 this.getsData();
@@ -166,6 +212,11 @@
                 });
             },
             methods: {
+                deleteFile(type) {
+                    if("pdf") this.file_pdf_delete ? this.file_pdf_delete = '' : this.file_pdf_delete = 1;
+                    if("2d") this.file_2d_delete ? this.file_2d_delete = '' : this.file_2d_delete = 1;
+                    if("3d") this.file_3d_delete ? this.file_3d_delete = '' : this.file_3d_delete = 1;
+                },
                 changeEvent(bool) {
                     if(bool) {
                         this.cate2_idx = "";

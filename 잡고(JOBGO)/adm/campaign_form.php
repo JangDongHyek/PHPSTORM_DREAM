@@ -160,7 +160,7 @@ include_once('./admin.head.php');
         <th scope="row"><label for="">업체 주소</label></th>
         <td>
             <div style="display: flex; gap: 5px">
-            <input type="text" id="company_address1" name="company_address1" value="<?= $data['company_address1']?>" class="frm_input" size="">
+            <input type="text" id="company_address1" name="company_address1" value="<?= $data['company_address1']?>" class="frm_input" size="" onclick="onPostCode();" readonly>
                 <a class="btn_01" onclick="onPostCode()">우편번호 검색</a>
             <input type="text" id="company_address2" name="company_address2" value="<?= $data['company_address2']?>" class="frm_input" size="">
             </div>

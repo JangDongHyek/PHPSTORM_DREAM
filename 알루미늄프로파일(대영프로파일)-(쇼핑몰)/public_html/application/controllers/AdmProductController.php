@@ -1,9 +1,12 @@
 <?php
+require_once APPPATH.'libraries/Jl.php';
+require_once APPPATH.'libraries/JlFile.php';
 /**
  * 관리자 상품관리
  * @property ProductModel $ProductModel
  * @property ConfigModel $ConfigModel
  */
+
 class AdmProductController extends CI_Controller
 {
 	// 상품 목록
@@ -154,7 +157,31 @@ class AdmProductController extends CI_Controller
 		$contentCheck = strip_tags($_POST['content'], '<img>');
 		$content = ($contentCheck == '')? '' : $_POST['content'];
 
-		$productData = array(
+        try {
+            $file = new JlFile("/assets/jl_resource/product");
+            $pdf = "";
+            $f_2d = "";
+            $f_3d = "";
+            if($_FILES['file_pdf']) $pdf = $file->bindGate($_FILES['file_pdf']);
+            if($_FILES['file_2d'])  $f_2d = $file->bindGate($_FILES['file_2d']);
+            if($_FILES['file_3d'])  $f_3d = $file->bindGate($_FILES['file_3d']);
+            //$file->error("11");
+
+            //throw new Exception($pdf);
+            //$jl = new Jl();
+        }catch (Exception $e) {
+            $resultData['success'] = false;
+            $resultData['message'] = $e->getMessage();
+
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($resultData));
+
+            return ;
+        }
+
+
+        $productData = array(
 			'use_yn' => ($_POST['useYn']=='Y')? 'Y' : 'N',
 			'category' => $_POST['category'],
             'category_parent' => $_POST['category_parent'],
@@ -176,6 +203,14 @@ class AdmProductController extends CI_Controller
 			'md_rec_yn' => ($_POST['mdRecYn']=='Y')? 'Y' : 'N',
 			'idx' => (int)$_POST['idx'],
 		);
+
+        if($_POST['file_pdf_delete']) $productData["file_pdf"] = '';
+        if($_POST['file_2d_delete']) $productData["file_2d"] = '';
+        if($_POST['file_3d_delete']) $productData["file_3d"] = '';
+
+        if($pdf) $productData["file_pdf"] = $pdf;
+        if($f_2d) $productData["file_2d"] = $f_2d;
+        if($f_3d) $productData["file_3d"] = $f_3d;
 		// $resultData['상품등록'] = $productData;
 
 		$this->load->model('ProductModel');

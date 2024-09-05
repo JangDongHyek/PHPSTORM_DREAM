@@ -80,10 +80,14 @@ $ok_data = $request_model->get(array(
     "page" => $page,
     "limit" => $limit,
     "source" => "campaign",
-    "select" => "campaign_request.update_date AS ok_date",
+    "select" => "campaign_request.update_date AS ok_date, campaign_request.idx AS request_idx, campaign_request.report_status",
     //"sql" => true
 ));
-echo $ok_data['sql'];
+
+$modify_request = false;
+foreach ($ok_data['data'] as $index => $d) {
+    if($d['report_status'] == "수정요청") $modify_request = true;
+}
 
 switch ($tab) {
     case 1 :
@@ -324,15 +328,25 @@ if($member['mb_no']) {
                                         </a>
                                     </div>
                                     <div class="btn_wrap">
-                                        <button type="button" class="btn btn_gray btn_large" data-toggle="modal" href="#campaignInfo">
+                                        <button type="button" class="btn btn_gray btn_large" data-toggle="modal" href="#campaignInfo" onclick="getCampaign('<?=$d['idx']?>')">
                                             활동 안내
                                         </button>
-                                        <button type="button" class="btn btn_color btn_large" data-toggle="modal" href="#campaignSubmit">
+                                        <? if($d['report_status'] == "수정요청") {?>
+                                        <button type="button" class="btn btn_red btn_large" data-toggle="modal" href="#campaignSubmit" onclick="getRequest('<?=$d['request_idx']?>')">
+                                            수정 요청
+                                        </button>
+                                        <? }else if($d['report_status'] == "보고완료") {?>
+                                        <button type="button" class="btn btn_gray3 btn_large">
+                                            활동 완료
+                                        </button>
+                                        <? }else {?>
+                                        <button type="button" class="btn btn_color btn_large" data-toggle="modal" href="#campaignSubmit" onclick="getRequest('<?=$d['request_idx']?>')">
                                             완료 보고
                                         </button>
-                                        <!--<button type="button" class="btn btn_gray3 btn_large">-->
-                                        <!--    활동 완료-->
-                                        <!--</button>-->
+                                        <? }?>
+
+
+
                                     </div>
                                 </div><!--thm-->
                                 <?}?>
@@ -366,7 +380,7 @@ if($member['mb_no']) {
 
                 <div class="modal-body">
                     <p>활동안내</p>
-                    <textarea readonly>활동안내</textarea>
+                    <textarea readonly id="activity_guide">활동안내</textarea>
                 </div>
 
             </div><!--//modal-content-->
@@ -380,16 +394,16 @@ if($member['mb_no']) {
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">캠페인 완료 보고</h4>
+                    <h4 class="modal-title">체험단 완료 보고</h4>
                     <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
 
                 <div class="modal-body">
-                    <p>활동 링크</p>
-                        <input type="text" id="" placeholder="활동 링크를 작성해주세요">
+                    <p>활동 링크 <span class="txt_color">* 필수</span></p>
+                        <input type="text" id="activity_link" placeholder="활동 링크를 작성해주세요">
 
                     <p>추가 설명</p>
-                    <textarea placeholder="설명을 작성하세요."></textarea>
+                    <textarea placeholder="설명을 작성하세요." id="description"></textarea>
 
                     <script>
                         document.getElementById('fileInput').addEventListener('change', function() {
@@ -400,14 +414,63 @@ if($member['mb_no']) {
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">제출하기</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="putRequest()">제출하기</button>
                 </div>
             </div><!--//modal-content-->
         </div>
 
     </div>
     <!-- // 완료보고 모달창 -->
+
+<? $jl->jsLoad();?>
 <script>
+    const jl = new Jl();
+    let request_idx = ""
+    async function putRequest() {
+        let data = {
+            idx : request_idx,
+            activity_link : document.getElementById("activity_link").value,
+            description : document.getElementById("description").value,
+            report_date : "now()",
+            report_status : "보고"
+        }
+        try {
+            let res = await jl.ajax("update",data,"/api/campaign_request.php");
+            alert("보고를 완료했습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+    async function getRequest(idx) {
+        try {
+            let filter = {idx : idx}
+            let res = await jl.ajax("get",filter,"/api/campaign_request.php");
+            request_idx = res.data[0].idx;
+            document.getElementById("activity_link").value = res.data[0].activity_link;
+            document.getElementById("description").value = res.data[0].description;
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+    async function getCampaign(idx) {
+        try {
+            let filter = {idx : idx}
+            let res = await jl.ajax("get",filter,"/api/campaign.php");
+            document.getElementById("activity_guide").textContent = res.data[0].activity_guide;
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+</script>
+
+<script>
+    function putText(text) {
+        document.getElementById("activity_guide").textContent = text;
+
+    }
 
     function a_tab(id) {
         location.href = g5_bbs_url + "/my_campaign.php?tab="+id

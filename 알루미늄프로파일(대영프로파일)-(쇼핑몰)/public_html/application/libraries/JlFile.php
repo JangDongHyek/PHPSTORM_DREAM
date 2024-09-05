@@ -41,7 +41,7 @@ class JlFile extends Jl{
     function save($file, $path = ""){
 
         $path = $path ? $path : $this->path;
-        if(empty($path)) throw new Exception("JlFile : 파일 업로드 경로가 설정되지 않았습니다");
+        if(empty($path)) $this->error("JlFile : 파일 업로드 경로가 설정되지 않았습니다");
 
 
         // 업로드 디렉토리 생성
@@ -62,7 +62,7 @@ class JlFile extends Jl{
     ///////////////////////////////////////////////////
     function rename($src, $dst, $path = ""){
         $path = $path ? $path : $this->path;
-        if(empty($path)) throw new Exception("JlFile : 파일 경로가 설정되지 않았습니다");
+        if(empty($path)) $this->error("JlFile : 파일 경로가 설정되지 않았습니다");
 
 
         rename($path.'/'.$src, $path.'/'.$dst);
@@ -105,11 +105,11 @@ class JlFile extends Jl{
             $ext = strtolower($ext);
             if(!in_array($ext,$permission)) $this->error("JlFile bind() : 허용된 파일이 아닙니다.");
 
-            $upload_max_filesize = (int)str_replace('M','',$this->PHP['upload_max_filesize']['global_value']);
-            $post_max_size = (int)str_replace('M','',$this->PHP['post_max_size']['global_value']);
-            $size = $this->bytesToMB($file['size']);
-            if($size >= $upload_max_filesize) $this->error("JlFile bind() : 파일사이즈가 upload_max_filesize보다 큽니다.\nfile : $size\nupload_max_filesize : $upload_max_filesize");
-            if($size >= $post_max_size) $this->error("JlFile bind() : 파일사이즈가 post_max_size보다 큽니다.\nfile : {$size}MB\npost_max_size : {$post_max_size}MB");
+            //$upload_max_filesize = (int)str_replace('M','',$this->PHP['upload_max_filesize']['global_value']);
+            //$post_max_size = (int)str_replace('M','',$this->PHP['post_max_size']['global_value']);
+            //$size = $this->bytesToMB($file['size']);
+            //if($size >= $upload_max_filesize) $this->error("JlFile bind() : 파일사이즈가 upload_max_filesize보다 큽니다.\nfile : $size\nupload_max_filesize : $upload_max_filesize");
+            //if($size >= $post_max_size) $this->error("JlFile bind() : 파일사이즈가 post_max_size보다 큽니다.\nfile : {$size}MB\npost_max_size : {$post_max_size}MB");
 
             $src = $this->save($file,$path);
 

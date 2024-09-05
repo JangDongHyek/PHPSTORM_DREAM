@@ -81,6 +81,16 @@
                         <dd><img src="<?=ASSETS_URL?>/img/main/ico_star5.jpg"><span>평균 5.0개</span></dd>
                     </dl>
                 </div>
+                    <div class="file" v-if="data.file_pdf || data.file_2d || data.file_3d">
+                        <dl>
+                            <dt>파일 다운로드</dt>
+                            <dd>
+                                <a v-if="data.file_pdf" :href="'<?=PROJECT_URL?>'+JSON.parse(data.file_pdf).src" :download="JSON.parse(data.file_pdf).name"><img src="<?=ASSETS_URL?>/img/common/file_pdf.svg"> PDF</a>
+                                <a v-if="data.file_2d" :href="'<?=PROJECT_URL?>'+JSON.parse(data.file_2d).src" :download="JSON.parse(data.file_2d).name"><img src="<?=ASSETS_URL?>/img/common/file_2d.svg"> 2D</a>
+                                <a v-if="data.file_3d" :href="'<?=PROJECT_URL?>'+JSON.parse(data.file_3d).src" :download="JSON.parse(data.file_3d).name"><img src="<?=ASSETS_URL?>/img/common/file_3d.svg"> 3D</a>
+                            </dd>
+                        </dl>
+                    </div>
                 <div class="delivery">
                     <dl>
                         <dt>배송방법</dt>
