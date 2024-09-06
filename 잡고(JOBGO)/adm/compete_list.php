@@ -1,61 +1,30 @@
 <?php
 $sub_menu = "251000";
 include_once('./_common.php');
+include_once("../jl/JlConfig.php");
 
 auth_check($auth[$sub_menu], 'r');
 
-$sql_common = " from new_competition ";
+$model = new JlModel(array(
+    "table" => "compete",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
 
+$limit = 10;
+$page = $_GET['page'] ? $_GET['page'] : 1;
+$data = $model->get(array(
+    "page" => $page,
+    "limit" => $limit
+));
+$total_page = ceil($data['count'] / $limit);
 
-$sql_search = " where 1=1 ";
-
-
-if ($stx) {
-    $sql_search .= " and ( ";
-    switch ($sfl) {
-        case 'mb_point' :
-            $sql_search .= " ({$sfl} >= '{$stx}') ";
-            break;
-        case 'mb_work' :
-            $sql_search .= " ({$sfl} = '{$stx}') ";
-            break;
-        default :
-            $sql_search .= " ({$sfl} like '%{$stx}%') ";
-            break;
-    }
-    $sql_search .= " ) ";
-}
-
-if ($big_ctg) {
-    $sql_search .= " and cp_category1 = ".$big_ctg ;
-}
-if ($small_ctg) {
-    $sql_search .= " and cp_category2 = ".$small_ctg ;
-}
-
-if (!$sst) {
-    $sst = "wr_datetime";
-    $sod = "desc";
-}
-
-$sql_order = " order by {$sst} {$sod} ";
-
-$sql = " select count(*) as cnt {$sql_common} {$sql_search} {$sql_order} ";
-$row = sql_fetch($sql);
-$total_count = $row['cnt'];
-
-$rows = $config['cf_page_rows'];
-$total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
-if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
-$from_record = ($page - 1) * $rows; // 시작 열을 구함
 
 $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목록</a>';
 
 $g5['title'] = '공모전관리';
 include_once('./admin.head.php');
-
-$sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
-$result = sql_query($sql);
 
 $colspan = 16;
 
@@ -69,69 +38,12 @@ $colspan = 16;
 
 <div class="local_ov01 local_ov">
     <?php echo $listall ?>
-    총게시글 <?php echo number_format($total_count) ?> 개
+    총게시글 <?php echo number_format($data['count']) ?> 개
     <a href="?sst=mb_leave_date&amp;sod=desc&amp;sfl=<?php echo $sfl ?>&amp;stx=<?php echo $stx ?>"></a>
 </div>
 
-<form id="fsearch" name="fsearch" class="local_sch01 local_sch" method="get">
-    <input type="hidden" name="big_ctg" value="<?php echo $big_ctg ?>">
-    <input type="hidden" name="small_ctg" value="<?php echo $small_ctg ?>">
-    <label for="sfl" class="sound_only">검색대상</label>
-    <select name="sfl" id="sfl">
-        <option value="mb_id"<?php echo get_selected($_GET['sfl'], "mb_id"); ?>>아이디</option>
-        <option value="cp_title"<?php echo get_selected($_GET['sfl'], "cp_title"); ?>>제목</option>
-        <? /*
-        <option value="mb_nick"<?php echo get_selected($_GET['sfl'], "mb_nick"); ?>>닉네임</option>
-        <option value="mb_name"<?php echo get_selected($_GET['sfl'], "mb_name"); ?>>이름</option>
-        <option value="mb_level"<?php echo get_selected($_GET['sfl'], "mb_level"); ?>>권한</option>
-        <option value="mb_email"<?php echo get_selected($_GET['sfl'], "mb_email"); ?>>E-MAIL</option>
-        <option value="mb_tel"<?php echo get_selected($_GET['sfl'], "mb_tel"); ?>>전화번호</option>
-        <option value="mb_hp"<?php echo get_selected($_GET['sfl'], "mb_hp"); ?>>휴대폰번호</option>
-        <option value="mb_point"<?php echo get_selected($_GET['sfl'], "mb_point"); ?>>포인트</option>
-        <option value="mb_datetime"<?php echo get_selected($_GET['sfl'], "mb_datetime"); ?>>가입일시</option>
-        <option value="mb_ip"<?php echo get_selected($_GET['sfl'], "mb_ip"); ?>>IP</option>
-        <option value="mb_recommend"<?php echo get_selected($_GET['sfl'], "mb_recommend"); ?>>추천인</option>
-        */ ?>
-    </select>
 
-    <label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
-    <span id="stx_span" style="display: inline"><input type="text" name="stx" value="<?php echo $stx ?>" id="stx" class=" frm_input"></span>
-    <input type="submit" class="btn_submit" value="검색">
-</form>
-<form id="fsearch2" name="fsearch2" class="local_sch01 local_sch" method="get">
-    <label for="big_ctg" class="sound_only">검색대상</label>
-    <select name="big_ctg" id="big_ctg" onchange="ctg_change('big');">
-        <option value="">상위카테고리</option>
-        <?php
-        $code = common_code('competition_ctg','code_ctg','json');
-        for ($i = 0; $i < count($code); $i++){ ?>
-            <option value="<?php echo $code[$i]['idx'] ?>"<?php echo get_selected($_GET['big_ctg'],$code[$i]['idx']) ?> ><?=$code[$i]['name']?></option>
-        <?php } ?>
-        <? /*
-        <option value="mb_nick"<?php echo get_selected($_GET['sfl'], "mb_nick"); ?>>닉네임</option>
-        <option value="mb_name"<?php echo get_selected($_GET['sfl'], "mb_name"); ?>>이름</option>
-        <option value="mb_level"<?php echo get_selected($_GET['sfl'], "mb_level"); ?>>권한</option>
-        <option value="mb_email"<?php echo get_selected($_GET['sfl'], "mb_email"); ?>>E-MAIL</option>
-        <option value="mb_tel"<?php echo get_selected($_GET['sfl'], "mb_tel"); ?>>전화번호</option>
-        <option value="mb_hp"<?php echo get_selected($_GET['sfl'], "mb_hp"); ?>>휴대폰번호</option>
-        <option value="mb_point"<?php echo get_selected($_GET['sfl'], "mb_point"); ?>>포인트</option>
-        <option value="mb_datetime"<?php echo get_selected($_GET['sfl'], "mb_datetime"); ?>>가입일시</option>
-        <option value="mb_ip"<?php echo get_selected($_GET['sfl'], "mb_ip"); ?>>IP</option>
-        <option value="mb_recommend"<?php echo get_selected($_GET['sfl'], "mb_recommend"); ?>>추천인</option>
-        */ ?>
-    </select>
-    <select name="small_ctg" id="small_ctg" onchange="ctg_change('small');">
-        <option value="">하위카테고리</option>
 
-        <?php
-        if ($big_ctg != "") {
-        $code = common_code($big_ctg,'code_p_idx','json');
-        for ($i = 0; $i < count($code); $i++){ ?>
-            <option value="<?php echo $code[$i]['idx'] ?>"<?php echo get_selected($_GET['small_ctg'],$code[$i]['idx']) ?> ><?=$code[$i]['name']?></option>
-        <?php }
-        }?>
-    </select>
-</form>
 <div class="btn_add01 btn_add">
     <a href="./compete_form.php" id="member_add">공모전 추가</a>
 </div>
@@ -154,8 +66,6 @@ $colspan = 16;
             <thead>
             <tr>
                 <th>No</th>
-                <th>상위카테고리</th>
-                <th>하위카테고리</th>
                 <th>업체명</th>
                 <th>제목</th>
                 <th>기간</th>
@@ -167,43 +77,32 @@ $colspan = 16;
             </tr>
             </thead>
             <tbody>
+            <? foreach($data['data'] as $index => $d) {?>
                 <tr>
-                    <td>no</td>
-                    <td>상위카테고리</td>
-                    <td>하위카테고리</td>
-                    <td>업체이름</td>
-                    <td>제목</td>
-                    <td>기간</td>
-                    <td>상금</td>
-                    <td>진행</td>
-                    <td>작성일</td>
+                    <td><?=$d['data_page_no']?></td>
+                    <td><?=$d['company_name']?></td>
+                    <td><?=$d['subject']?></td>
+                    <td><?=explode(" ",$d['start_date'])[0]?> ~ <?=explode(" ",$d['end_date'])[0]?></td>
+                    <td>
+                        <? foreach($d['prize'] as $index2 => $i) {?>
+                            <?=$i['rank']?> 등수 <?=$i['people']?> 명 <?=$i['money']?> 만원 <br>
+                        <?}?>
+                        <? if(!count($d['prize'])) echo "상금이 존재하지않습니다."?>
+                    </td>
+                    <td><?=$d['status']?></td>
+                    <td><?=$d['insert_date']?></td>
                     <td><a href="./compete_view.php">0건</a></td>
                     <td>
-                        <a href="./compete_form.php">관리</a>
-                        <a>삭제</a>
+                        <a href="./compete_form.php?idx=<?=$d['idx']?>">관리</a>
+                        <a href="" onclick="event.preventDefault(); deleteData('<?=$d['idx']?>')">삭제</a>
                     </td>
                 </tr>
+            <? } ?>
 
-            <?/*php
-            $list_rows = 15;
-            $list_no = $total_count - ($list_rows * ($page - 1));
-            for ($i=0; $row=sql_fetch_array($result); $i++) {
+            <? if(!$data['count']) {?>
+                <tr><td colspan=\"".$colspan."\" class=\"empty_table\">자료가 없습니다.</td></tr>
+            <?}?>
 
-                $s_mod = '<a href="./compete_form.php?'.$qstr.'&amp;w=u&amp;idx='.$row['cp_idx'].'">보기/수정</a>';
-
-                $bg = 'bg'.($i%2);
-                $mb = get_member($row['mb_id']);
-                ?>
-                <tr class="<?php echo $bg; ?>">
-
-                </tr>
-
-                <?php
-                $list_no--;
-            }
-            if ($i == 0)
-                echo "<tr><td colspan=\"".$colspan."\" class=\"empty_table\">자료가 없습니다.</td></tr>";
-            */?>
             </tbody>
         </table>
     </div>
@@ -212,6 +111,25 @@ $colspan = 16;
 </form>
 
 <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); ?>
+
+<? $jl->jsLoad(); ?>
+<script>
+    const jl = new Jl();
+
+    async function deleteData(idx) {
+        if(!confirm("삭제하시겠습니까?")) return false;
+
+        let obj = {idx : idx};
+
+        try {
+            let res = await jl.ajax("delete",obj,"/api/compete.php");
+            alert("삭제되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e)
+        }
+    }
+</script>
 
 <script>
     $(document).ready(function () {

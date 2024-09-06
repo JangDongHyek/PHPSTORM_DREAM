@@ -25,8 +25,10 @@ class Jl {
     function jsonDecode($json,$encode = true) {
         // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
         $json = addslashes($json);
-        $obj = str_replace('\\', '', $json);
+        $obj = str_replace('\\n', '###NEWLINE###', $json);
+        $obj = str_replace('\\', '', $obj);
         $obj = str_replace('\\\\', '', $obj);
+        $obj = str_replace('###NEWLINE###', '\\n', $obj);
 
         $obj = json_decode($obj, true);
 

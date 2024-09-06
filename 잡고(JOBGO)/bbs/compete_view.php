@@ -3,6 +3,39 @@ global $pid;
 $pid = "compete_view";
 $sub_id = "compete_view";
 include_once('./_common.php');
+include_once("../jl/JlConfig.php");
+
+if(!$_GET['idx']) alert("잘못된경로입니다.");
+
+//캠페인 데이터
+$model = new JlModel(array(
+    "table" => "compete",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$data = $model->where("idx",$_GET['idx'])->get()['data'][0];
+
+// 캠페인 좋아요
+$heart = "off";
+if($member['mb_no']) {
+    $compete_like = new JlModel(array(
+        "table" => "compete_like",
+        "primary" => "idx",
+        "autoincrement" => true,
+        "empty" => false
+    ));
+    $getLike = $compete_like->where("user_idx",$member['mb_no'])->get()['data'];
+
+    $likes = array();
+    foreach ($getLike as $index => $d) {
+        array_push($likes,$d['compete_idx']);
+    }
+
+    if(in_array((int)$_GET['idx'],$likes,true)) $heart = "on";
+}
+
+
 
 $g5['title'] = '공모전 상세';
 include_once('./_head.php');
@@ -17,9 +50,9 @@ include_once('./_head.php');
             <!-- Swiper -->
             <div class="swiper comSwiper">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg"></div>
-                    <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg"></div>
-                    <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg"></div>
+                    <? foreach($data['thumb'] as $d) { ?>
+                        <div class="swiper-slide"><img src="<?=$jl->URL.$d['src']?>"></div>
+                    <?}?>
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
@@ -37,27 +70,27 @@ include_once('./_head.php');
                 <div id="cam_count" class="flex ai-c gap10">
                     <div class="mb flex gap5 ai-c">
                         <div class="count">
-                            <b class="">접수중</b>
+                            <b class=""><?=$data['status']?></b>
                         </div>
-                        <p>카테고리 · 조회수 0</p>
+                        <p>조회수 0</p>
                     </div>
                     <div class="heart male-auto" name="">
-                        <button type="button" class="heart off"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_off.png" alt="좋아요off" title="좋아요off"></button>
+                        <button type="button" class="heart <?=$heart?>" onclick="postLike('<?=$_GET['idx']?>')"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_<?=$heart?>.png" alt="좋아요off" title="좋아요off"></button>
                     </div>
                 </div>
                 <header>
-                    <h6 class="item_tit">공모전 제목</h6>
-                    <p class="txt_color">업체명</p>
+                    <h6 class="item_tit"><?=$data['subject']?></h6>
+                    <p class="txt_color"><?=$data['company_name']?></p>
                 </header>
                 <div id="cam_info"class="flex ai-c gap10">
                     <span>
                         <p class="flex ai-c jc-sb">
                             <span>접수기간</span>
-                            <span>2024.09.01까지</span>
+                            <span><?=explode(" ",$data['start_date'])[0]?>까지</span>
                         </p>
                         <p class="flex ai-c jc-sb">
                             <span>심사기간</span>
-                            <span>2024.10.01까지</span>
+                            <span><?=explode(" ",$data['end_date'])[0]?>까지</span>
                         </p>
                     </span>
                     <span>
@@ -65,8 +98,10 @@ include_once('./_head.php');
                             <span class="txt_mini">0명의 참가자</span>
                         </p>
                         <p class="text-right">
-                            <span class="txt_mini">1등 * 1명</span>
-                            총상금 <b class="txt_color">0원</b>
+                            <? foreach($data['prize'] as $index => $d){?>
+                            <span class="txt_mini"><?=$d['rank']?>등 * <?=$d['people']?>명</span>
+                            총상금 <b class="txt_color"><?=$d['money']?>만원</b><br>
+                            <?}?>
                         </p>
                     </span>
                 </div>
@@ -82,19 +117,19 @@ include_once('./_head.php');
                 <div class="contest_cont">
                     <section>
                         <h3 class="title">상세내용</h3>
-                        <div class="cont" style="white-space: pre-wrap;"></div>
+                        <div class="cont" style="white-space: pre-wrap;"><?=$data['content']?></div>
                     </section>
                     <section>
                         <h3 class="title">선호하는 디자인</h3>
                         <div class="flex ai-s gap10 sample">
-                            <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
-                            <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
-                            <img src="<?php echo G5_THEME_IMG_URL ?>/main/no_img.jpg">
+                            <? foreach($data['thumb'] as $d) { ?>
+                                <img src="<?=$jl->URL.$d['src']?>">
+                            <?}?>
                         </div>
                     </section>
                     <section>
                         <h3 class="title">참고자료</h3>
-                        <div class="cont"></div>
+                        <div class="cont"><?=$data['reference']?></div>
                     </section>
                 </div><!--//contest_cont-->
             </div>
@@ -139,7 +174,69 @@ include_once('./_head.php');
 
     </div>
     <!-- // 공모전 참여  모달창 -->
+<? $jl->jsLoad(); ?>
 
+    <script>
+        const jl = new Jl();
+        const user_idx = "<?=$member['mb_no']?>";
+
+        function openModal() {
+            if(!user_idx) {
+                alert("로그인이 필요한 기능입니다.");
+                window.location.href = "/bbs/login.php";
+                return false;
+            }
+
+            $('#campaignJoin').modal('show');
+        }
+
+        async function postRequest(idx) {
+            try {
+                const selectedValue = document.querySelector('input[name="sns"]:checked');
+                //if(!selectedValue) {
+                //    alert("활동중인 SNS를 입력해주세요.");
+                //    return false;
+                //}
+                //
+                //if(!document.getElementById("sns_link").value) {
+                //    alert("SNS 링크를 입력해주세요.");
+                //    return false;
+                //}
+
+                let obj = {
+                    user_idx : user_idx,
+                    campaign_idx : idx,
+                    sns_type : selectedValue,
+                    sns_link : document.getElementById("sns_link").value
+                }
+
+                let res = await jl.ajax("insert",obj,"/api/campaign_request.php");
+
+                showConfirm('신청완료', '결과는 체험단 관리에서 확인하세요.')
+                $('#campaignJoin').modal('hide');
+            }catch (e) {
+                alert(e.message)
+            }
+        }
+
+        async function postLike(idx) {
+            try {
+                if(!user_idx) {
+                    alert("로그인이 필요한 기능입니다.");
+                    window.location.href = "/bbs/login.php";
+                }
+                let obj = {
+                    user_idx : user_idx,
+                    compete_idx : idx
+                }
+
+                let res = await jl.ajax("insert",obj,"/api/compete_like.php");
+                window.location.reload();
+            }catch (e) {
+                alert(e.message)
+            }
+        }
+    </script>
 <?php
 include_once('./_tail.php');
 ?>

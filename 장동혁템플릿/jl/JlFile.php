@@ -105,6 +105,7 @@ class JlFile extends Jl{
             $ext = strtolower($ext);
             if(!in_array($ext,$permission)) $this->error("JlFile bind() : 허용된 파일이 아닙니다.");
 
+            if(!$this->PHP) $this->error("JlFile bind() : PHP 설정을 읽을수가없습니다.");
             $upload_max_filesize = (int)str_replace('M','',$this->PHP['upload_max_filesize']['global_value']);
             $post_max_size = (int)str_replace('M','',$this->PHP['post_max_size']['global_value']);
             $size = $this->bytesToMB($file['size']);

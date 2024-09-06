@@ -72,7 +72,7 @@ $register_action_url = G5_BBS_URL.'/register_form_update.php';
                         <dd class="col-xs-1 req">*</dd>
                         <dd class="col-xs-12">
                             <label for="reg_mb_id_new">아이디</label>
-                            <input type="text" name="mb_email" id="mb_email" class="regist-input <?php echo $required ?>" <?=$_SESSION['ss_check_mb_id'] ? "value='".$_SESSION['ss_check_mb_id']."'"." readonly"  : ''?> placeholder="아이디">
+                            <input type="text" name="mb_email" id="mb_email" value="<?=$_REQUEST['mb_email']  ? : ''?>" class="regist-input <?php echo $required ?>"  placeholder="아이디">
                         </dd>
                     </dl>
                     <?php if($w == "u" && $member['mb_sns'] == ''){ ?>
@@ -86,7 +86,7 @@ $register_action_url = G5_BBS_URL.'/register_form_update.php';
                              <?php } */ ?>
                                 <?php if($w == "" && $sns != 'Y'){ ?><span id="button_span"><button type="button" id = "btn_send" class="phone" onclick="certi_mail_send();" >인증하기</button></span> <?php } ?>
                                 <label for="reg_mb_id">이메일 입력</label>
-                                <input type="text" name="mb_e3mail" value="<?php if ($w == 'u'){  echo $member['mb_email']; }else if ($sns == "Y"){ echo $_SESSION['ss_check_mb_id']; }else{ echo $_REQUEST['mb_email'];}?>" id="reg_mb_email" class="<?=$email_class?> regist-input <?php echo $required ?> <?php if($w=="u" || $sns == 'Y') echo "readonly";?>" minlength="4" maxlength="50" placeholder="이메일 입력" <?php if($w=="u"  || $sns == 'Y') echo "readonly";?>>
+                                <input type="text" name="mb_e3mail" value="<?php if ($w == 'u'){  echo $member['mb_email']; }else{ echo $_REQUEST['mb_email'];}?>" id="reg_mb_email" class="<?=$email_class?> regist-input <?php echo $required ?> <?php if($w=="u" || $sns == 'Y') echo "readonly";?>" minlength="4" maxlength="50" placeholder="이메일 입력" <?php if($w=="u"  || $sns == 'Y') echo "readonly";?>>
                             </dd>
                             <dd class="error col-xs-12" id="email_msg"></dd>
                         </dl>
@@ -149,7 +149,7 @@ $register_action_url = G5_BBS_URL.'/register_form_update.php';
                             <dd class="col-xs-1 req">*</dd>
                             <dd class="col-xs-12">
                                 <label for="reg_mb_nick">이름 입력</label>
-                                <input type="text" name="mb_name" value="<?= $w == 'u' ?  $member['mb_name'] : $_SESSION['sns_name'];?>" id="reg_mb_name" class="regist-input <?php echo $required ?>" placeholder="이름 입력" maxlength="8">
+                                <input type="text" name="mb_name" value="<?php if ($w == 'u'){  echo $member['mb_name']; }else{ echo $_REQUEST['mb_name'];}?>" id="mb_name" class="regist-input <?php echo $required ?>" placeholder="이름 입력" maxlength="8">
                             </dd>
                             <dd class="status_ico"><i class="fas fa-check"></i></dd>
                             <dd class="error col-xs-12"></dd>

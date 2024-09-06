@@ -342,15 +342,15 @@ include_once('./_head.php');
         async function postRequest(idx) {
             try {
                 const selectedValue = document.querySelector('input[name="sns"]:checked');
-                if(!selectedValue) {
-                    alert("활동중인 SNS를 입력해주세요.");
-                    return false;
-                }
-
-                if(!document.getElementById("sns_link").value) {
-                    alert("SNS 링크를 입력해주세요.");
-                    return false;
-                }
+                //if(!selectedValue) {
+                //    alert("활동중인 SNS를 입력해주세요.");
+                //    return false;
+                //}
+                //
+                //if(!document.getElementById("sns_link").value) {
+                //    alert("SNS 링크를 입력해주세요.");
+                //    return false;
+                //}
 
                 let obj = {
                     user_idx : user_idx,

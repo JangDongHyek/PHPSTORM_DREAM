@@ -1,34 +1,31 @@
 <?php
 $sub_menu = "251000";
 include_once('./_common.php');
+include_once("../jl/JlConfig.php");
 
 auth_check($auth[$sub_menu], 'w');
 
-if ($w == '')
-{
-    $sound_only = '<strong class="sound_only">필수</strong>';
-    $html_title = '추가';
+$model = new JlModel(array(
+    "table" => "compete",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+
+if($_GET['idx']) {
+    $w = 'u';
+    $model->where("idx",$_GET['idx']);
+    $results = $model->get();
+
+    if(!$results['count']) {
+        echo "해당 idx가 존재하지않는 잘못된접근입니다.";
+        die();
+    }else {
+        $row = $results['data'][0];
+
+    }
 }
-else if ($w == 'u')
-{
-    $mb = get_member($mb_id);
-//    if (!$mb['mb_id'])
-//        alert('존재하지 않는 회원자료입니다.');
-//
-//    if ($is_admin != 'super' && $mb['mb_level'] >= $member['mb_level'])
-//        alert('자신보다 권한이 높거나 같은 회원은 수정할 수 없습니다.');
 
-    $sql = "select * from new_competition where cp_idx = '{$_REQUEST["idx"]}'";
-    $row = sql_fetch($sql);
-
-    $mb = get_member($row["mb_id"]);
-    $readonly = 'readonly';
-    $html_title = '수정';
-
-
-}
-else
-    alert('제대로 된 값이 넘어오지 않았습니다.');
 
 $g5['title'] = '공모전 '.$html_title;
 include_once('./admin.head.php');
@@ -88,7 +85,7 @@ include_once('./admin.head.php');
   }
 </style>
 
-<form name="fmember" id="fmember" action="./compete_form_update.php" onsubmit="return fmember_submit(this);" method="post" enctype="multipart/form-data">
+<form name="fmember" id="fmember" action="./compete_form_update.php" onsubmit="return competeSubmit(this);" method="post" enctype="multipart/form-data">
 <input type="hidden" name="w" value="<?php echo $w ?>">
 <input type="hidden" name="sfl" value="<?php echo $sfl ?>">
 <input type="hidden" name="stx" value="<?php echo $stx ?>">
@@ -96,7 +93,8 @@ include_once('./admin.head.php');
 <input type="hidden" name="sod" value="<?php echo $sod ?>">
 <input type="hidden" name="page" value="<?php echo $page ?>">
 <input type="hidden" name="token" value="">
-<input type="hidden" name="idx" value="<?php echo $row['cp_idx'] ?>">
+<input type="hidden" name="idx" value="<?php echo $_GET['idx'] ?>">
+<input type="hidden" name="prize" id="prize" value="">
 
 
 
@@ -117,103 +115,94 @@ include_once('./admin.head.php');
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row"><label for="cp_category1">상위카테고리<strong class="sound_only">필수</strong></label></th>
-        <td>
-            <select id="cp_category1" name="cp_category1" class="frm_input" onchange="ctg1_change(this.value)">
-                <?php echo common_code('competition_ctg','code_ctg','html')?>
-            </select>
-        </td>
-        <th scope="row"><label for="cp_category2">하위카테고리<strong class="sound_only">필수</strong></label></th>
-        <td>
-            <select id="cp_category2" name="cp_category2" class="frm_input">
-                <?php echo common_code($row['cp_category1'],'code_p_idx','html')?>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <th scope="row"><label for="mb_id">업체 아이디</label></th>
+        <th scope="row"><label for="company_id">업체 아이디</label></th>
         <td style="width: 30%">
-            <input <?=$readonly?> type="text" name="mb_id" value="<?= $row['mb_id']?>" class="frm_input" size="40">
+            <input <?=$readonly?> type="text" name="company_id" value="<?= $row['company_id']?>" class="frm_input" size="40">
         </td>
-        <th scope="row"><label for="cp_company_name">업체명</label></th>
+        <th scope="row"><label for="company_name">업체명</label></th>
         <td>
-            <input type="text" name="cp_company_name" value="<?=$row['cp_company_name'] ?>" class="frm_input" size="40">
+            <input type="text" name="company_name" value="<?=$row['company_name'] ?>" class="frm_input" size="40">
         </td>
     </tr>
     <tr>
-        <th scope="row"><label for="cp_title">제목</label></th>
-        <td colspan="3"><input type="text" name="cp_title" value="<?php echo $row['cp_title'] ?>" required id="cp_title" class="frm_input required" size="180" maxlength="200"></td>
+        <th scope="row"><label for="subject">제목</label></th>
+        <td colspan="3"><input type="text" name="subject" value="<?php echo $row['subject'] ?>" required id="cp_title" class="frm_input required" size="180" maxlength="200"></td>
     </tr>
     <tr>
-        <th scope="row"><label for="cp_logo_content">상세내용</label></th>
-        <td colspan="2"><textarea style="width: 200%" name="cp_logo_content" id="cp_logo_content" class="frm_input"><?php echo $row['cp_logo_content'] ?></textarea></td>
+        <th scope="row"><label for="content">상세내용</label></th>
+        <td colspan="2"><textarea style="width: 200%" name="content" id="content" class="frm_input"><?php echo $row['content'] ?></textarea></td>
     </tr>
 
     <tr>
-        <th scope="row"><label for="cp_startdate">시작기간</label></th>
+        <th scope="row"><label for="start_date">시작기간</label></th>
         <td>
-            <input type="date" name="cp_startdate" value="<?= date('Y-m-d',strtotime($row['cp_startdate'])) ?>" class="frm_input" size="40">
+            <input type="date" name="start_date" value="<?=explode(" ",$row['start_date'])[0] ? : ''?>" class="frm_input" size="40">
         </td>
-        <th scope="row"><label for="cp_datetime">마감기간</label></th>
+        <th scope="row"><label for="end_date">마감기간</label></th>
         <td>
-            <input type="date" name="cp_datetime" value="<?= date('Y-m-d',strtotime($row['cp_datetime'])) ?>" class="frm_input" size="40">
+            <input type="date" name="end_date" value="<?=explode(" ",$row['end_date'])[0] ? : ''?>" class="frm_input" size="40">
         </td>
     </tr>
 
     <tr>
         <th scope="row"><label for="image">썸네일</label></th>
         <td>
-            <a class="btn_02">추가</a>
+            <?foreach($row['thumb'] as $index => $t) {?>
+                <img src="<?=$jl->URL?><?=$t['src']?>" style="width: 50px; height: 50px;">
+                <a class="btn_01" onclick="deleteThumb(<?=$index?>)">삭제</a>
+            <?}?>
+            <div id="preview">
+            </div>
+            <label for="thumb">
+                <a class="btn_02">추가</a>
+            </label>
             <div style="display: flex; gap: 5px">
-                <input type="file" multiple="multiple" name="bf_file[]" id="bf_file[]">
-                <a class="btn_01">삭제</a>
+                <input type="file" multiple="multiple" name="thumb[]" id="thumb" accept="image/*" style="display: none">
+
             </div>
         </td>
         <th scope="row"><label for="cp_progress">진행상태</label></th>
         <td>
-            <select name="cp_progress">
-                <?php for ($i = 1; $i <= count($progress_list); $i++){ ?>
-                    <option value="<?=$i?>"><?=$progress_list[$i]?></option>
-                <?php } ?>
+            <select name="status">
+                <option value="진행중">진행중</option>
+                <option value="심사중">심사중</option>
+                <option value="종료">종료</option>
+                <option value="지급완료">지급완료</option>
             </select>
         </td>
     </tr>
     <tr>
         <th scope="row"><label for="cp_reward">상금</label></th>
         <td>
-            <a class="btn_02">추가</a>
-            <div style="display: flex; gap: 5px">
-                <input type="text" name="cp_reward_th" value="<?=$row['cp_reward_th']?>" class="frm_input" size="5">  등수 *
-                <input type="text" name="cp_reward_count" value="<?=$row['cp_reward_count']?>" class="frm_input" size="5">  명 *
-                <input type="text" name="cp_reward" value="<?=$row['cp_reward']?>" class="frm_input" size="20">  만원
-                <a class="btn_01">삭제</a>
+            <a class="btn_02" onclick="addPrize()">추가</a>
+            <div id="container2">
+
             </div>
+
         </td>
         <th scope="row"><label for="image">선호하는 디자인</label></th>
         <td>
-            <div>
+            <?foreach($row['design'] as $index => $t) {?>
+                <img src="<?=$jl->URL?><?=$t['src']?>" style="width: 50px; height: 50px;">
+                <a class="btn_01" onclick="deleteDesign(<?=$index?>)">삭제</a>
+            <?}?>
+            <div id="preview2">
+            </div>
+            <label for="design">
                 <a class="btn_02">추가</a>
-                <div style="display: flex; gap: 5px">
-                    <input type="file" multiple="multiple" name="bf_file[]" id="bf_file[]">
-                    <a class="btn_01">삭제</a>
-                </div>
+            </label>
+            <div style="display: flex; gap: 5px">
+                <input type="file" multiple="multiple" name="design[]" id="design" accept="image/*" style="display: none">
+
             </div>
         </td>
     </tr>
 
     <tr>
-        <th scope="row"><label for="cp_logo_content2">참고자료</label></th>
-        <td colspan="2"><textarea style="width: 200%" name="cp_logo_content2" id="cp_logo_content2" class="frm_input"><?php echo $row['cp_logo_content2'] ?></textarea></td>
+        <th scope="row"><label for="reference">참고자료</label></th>
+        <td colspan="2"><textarea style="width: 200%" name="reference" id="reference" class="frm_input"><?php echo $row['reference'] ?></textarea></td>
     </tr>
 
-    <?php if ($w == 'u') { ?>
-    <tr>
-
-        <th scope="row">작성일</th>
-        <td colspan="3"><?php echo $row['wr_datetime'] ?></td>
-
-    </tr>
-    <?php } ?>
     </tbody>
     </table>
 </div>
@@ -225,38 +214,222 @@ include_once('./admin.head.php');
 
 </form>
 
-
-
+<? $jl->jsLoad();?>
 <script>
-    $(document).ready(function() {
-        $("[name='cp_category1']").val(<?= $row['cp_category1']?>);
-        $("[name='cp_category2']").val(<?= $row['cp_category2']?>);
-        $("[name='cp_progress']").val(<?= $row['cp_progress']?>);
+    const jl = new Jl();
+    const idx = "<?=$_GET['idx']?>";
+    let prize = <?=$row['prize'] ? json_encode($row['prize'],JSON_UNESCAPED_UNICODE) : "[]"?>;
 
-
-
-    });
-
-    function ctg1_change(val) {
-
-
-        $.ajax({
-            url: g5_bbs_url+"/ajax.controller.php",
-            type: "POST",
-            data: {
-                "pro_ctg1": val,
-                "mode": "pro_ctg2_common"
-            },
-            dataType: "html",
-            success: function(data) {
-                $('#cp_category2').html('<option value="">상세분야 선택</option>' + data);
-            }
-        });
-
+    async function deleteThumb(index) {
+        try {
+            var obj = {idx : idx, thumb_idx : index}
+            let res = await jl.ajax("delete_thumb",obj,"/api/compete.php");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
     }
 
+    async function deleteDesign(index) {
+        try {
+            var obj = {idx : idx, design_idx : index}
+            let res = await jl.ajax("delete_design",obj,"/api/compete.php");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        if(prize.length) setPrize();
+    });
+
+    function addPrize() {
+        event.preventDefault();
+        setPrizeValue();
+        prize.push({rank : "",people : "",money : ""});
+        setPrize();
+    }
+
+    function setPrizeValue() {
+        prize.forEach((item,index) => {
+            prize[index].rank = document.getElementById(`rank${index}`).value;
+            prize[index].people = document.getElementById(`people${index}`).value;
+            prize[index].money = document.getElementById(`money${index}`).value;
+        });
+    }
+
+    function setPrize() {
+        const container = document.getElementById('container2');
+
+        container.innerHTML = "";
+
+
+        prize.forEach((item,index) => {
+            const div = document.createElement('div');
+            div.style.display = "flex";
+            div.style.gap = "5px";
+
+            const input1 = document.createElement('input');
+            input1.classList.add("frm_input");
+            input1.type = "text";
+            input1.name = `rank${index}`;
+            input1.id = `rank${index}`;
+            input1.value = item.rank;
+            input1.size = 5;
+
+            const rank_text = document.createTextNode('등수 *');
+
+            const input2 = document.createElement('input');
+            input2.classList.add("frm_input");
+            input2.type = "text";
+            input2.name = `people${index}`;
+            input2.id = `people${index}`;
+            input2.value = item.people;
+            input2.size = 5;
+
+            const people_text = document.createTextNode('명 *');
+
+            const input3 = document.createElement('input');
+            input3.classList.add("frm_input");
+            input3.type = "text";
+            input3.name = `money${index}`;
+            input3.id = `money${index}`;
+            input3.value = item.money;
+
+            const money_text = document.createTextNode('만원');
+
+            const a = document.createElement('a');
+            a.classList.add("btn_01")
+            a.innerText = "삭제"
+
+            a.addEventListener('click',(event) => {
+                event.preventDefault();
+                setPrizeValue();
+
+                prize.splice(index,1);
+                setPrize();
+            })
+
+
+            div.appendChild(input1);
+            div.appendChild(rank_text);
+            div.appendChild(input2);
+            div.appendChild(people_text);
+            div.appendChild(input3);
+            div.appendChild(money_text);
+            div.appendChild(a);
+
+            container.appendChild(div);
+
+        });
+    }
+
+    function competeSubmit(f) {
+        setPrizeValue();
+        document.getElementById("prize").value = JSON.stringify(prize);
+        //return false;
+    }
 </script>
+
+<script>
+
+
+    // 파일 입력 요소와 미리보기 컨테이너 가져오기
+    const fileInput = document.getElementById('thumb');
+    const previewContainer = document.getElementById('preview');
+    let selectedFiles = Array.from(fileInput.files);
+
+    fileInput.addEventListener('change', function() {
+        //selectedFiles = Array.from(fileInput.files); // 새로운 파일 목록으로 업데이트
+        previewContainer.innerHTML = ''; // Clear previous previews
+        selectedFiles = selectedFiles.concat(Array.from(fileInput.files));
+        console.log(selectedFiles);
+
+        // 각 파일에 대해 미리보기 생성
+        selectedFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgPreview = document.createElement('div');
+                imgPreview.classList.add('image-preview');
+
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.width = 50;
+                imgElement.height = 50;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'x';
+                deleteBtn.addEventListener('click', function() {
+                    // 삭제 버튼 클릭 시 미리보기 제거
+                    previewContainer.removeChild(imgPreview);
+
+                    // 삭제된 파일을 `selectedFiles`에서 제거
+                    selectedFiles = selectedFiles.filter(f => f !== file);
+
+                    // 새로운 파일 목록으로 `fileInput` 업데이트
+                    const dataTransfer = new DataTransfer();
+                    selectedFiles.forEach(f => dataTransfer.items.add(f));
+                    fileInput.files = dataTransfer.files;
+                });
+
+                imgPreview.appendChild(imgElement);
+                imgPreview.appendChild(deleteBtn);
+                previewContainer.appendChild(imgPreview);
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+
+    // 파일 입력 요소와 미리보기 컨테이너 가져오기
+    const fileInput2 = document.getElementById('design');
+    const previewContainer2 = document.getElementById('preview2');
+    let selectedFiles2 = Array.from(fileInput2.files);
+
+    fileInput2.addEventListener('change', function() {
+        //selectedFiles2 = Array.from(fileInput2.files); // 새로운 파일 목록으로 업데이트
+        previewContainer2.innerHTML = ''; // Clear previous previews
+        selectedFiles2 = selectedFiles2.concat(Array.from(fileInput2.files));
+        console.log(selectedFiles2);
+
+        // 각 파일에 대해 미리보기 생성
+        selectedFiles2.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgPreview = document.createElement('div');
+                imgPreview.classList.add('image-preview');
+
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.width = 50;
+                imgElement.height = 50;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'x';
+                deleteBtn.addEventListener('click', function() {
+                    // 삭제 버튼 클릭 시 미리보기 제거
+                    previewContainer2.removeChild(imgPreview);
+
+                    // 삭제된 파일을 `selectedFiles2`에서 제거
+                    selectedFiles2 = selectedFiles2.filter(f => f !== file);
+
+                    // 새로운 파일 목록으로 `fileInput2` 업데이트
+                    const dataTransfer = new DataTransfer();
+                    selectedFiles2.forEach(f => dataTransfer.items.add(f));
+                    fileInput.files = dataTransfer.files;
+                });
+
+                imgPreview.appendChild(imgElement);
+                imgPreview.appendChild(deleteBtn);
+                previewContainer2.appendChild(imgPreview);
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
+
 
 <?php
 include_once('./admin.tail.php');

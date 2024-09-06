@@ -269,7 +269,7 @@ class JlModel extends Jl{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) $this->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
+        if(!isset($param[$this->primary])) $this->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
@@ -305,7 +305,7 @@ class JlModel extends Jl{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) $this->error("JlModel delete() : 고유 키 값이 존재하지 않습니다.");
+        if(!isset($param[$this->primary])) $this->error("JlModel delete() : 고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
@@ -382,13 +382,13 @@ class JlModel extends Jl{
         }
 
         if(is_string($first)) {
-            if($first == "") $this->error("JlModel order_by() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel order_by() : 필터를 입력해주새요.");
-            if(!in_array($second,array("DESC","ASC"))) $this->error("JlModel order_by() : DESC , ASC 둘중 하나만 선택가능합니다.");
-            if(in_array($first, $this->schema['columns'])){
-                if($this->sql_order_by) $this->sql_order_by .= ",";
-                $this->sql_order_by .= " {$first} {$second}";
-            }
+            if($first == "") $this->error("JlModel orderBy() : 컬럼명을 입력해주새요.");
+            if($second == "") $this->error("JlModel orderBy() : 필터를 입력해주새요.");
+            if(!in_array($first, $this->schema['columns'])) $this->error("JlModel orderBy() : 존재하지않는 컬럼입니다..");
+            if(!in_array($second,array("DESC","ASC"))) $this->error("JlModel orderBy() : DESC , ASC 둘중 하나만 선택가능합니다.");
+
+            if($this->sql_order_by) $this->sql_order_by .= ",";
+            $this->sql_order_by .= " {$first} {$second}";
         }
 
         return $this;

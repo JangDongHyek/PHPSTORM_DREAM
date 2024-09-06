@@ -76,25 +76,31 @@ try {
 
         case "insert":
         {
+            $compete_model = new JlModel(array(
+                "table" => "compete",
+                "primary" => "idx",
+                "autoincrement" => true,
+                "empty" => false
+            ));
+
             $obj = $model->jsonDecode($_POST['obj']);
 
-            $campaign_model = new JlModel(array("table" => "campaign"));
-            $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
-
-            $recruitment_date = DateTime::createFromFormat('Y-m-d', $campaign['recruitment_date']);
-            $current_date = new DateTime();
-
-
-            if($campaign['status'] != "모집") $model->error("아직 모집중이 아닙니다.");
-            if($current_date > $recruitment_date) $model->error("모집 기간이 지났습니다.");
-
+            $compete = $compete_model->where("idx",$obj['compete_idx'])->get()['data'][0];
 
             $data = $model->where($obj)->get();
-            if($data['count']) $model->error("이미 신청 되었습니다. 캠페인 관리에서 확인 해주세요.");
 
-            $model->insert($obj);
+            if($data['count']) {
+                $model->delete($data['data'][0]);
 
-            $response['campaign'] = $campaign;
+                $compete['likes'] = $compete['likes'] - 1;
+            }else {
+                $model->insert($obj);
+
+                $compete['likes'] = $compete['likes'] + 1;
+            }
+
+            $compete_model->update($compete);
+
             $response['success'] = true;
             break;
         }
@@ -107,55 +113,21 @@ try {
 
             foreach ($_FILES as $key => $file_data) {
                 $file_result = $file->bindGate($file_data);
-                if(!$file_result) continue;
 
-                if(is_array($file_data['name'])) {
-                    //바인드의 리턴값은 encode되서 오기때문에 decode
-                    $file_result = json_decode($file_result, true);
-                    $result = array_merge($getData[$key],$file_result);
-                    //문자열로 저장되어야하기떄문에 encode
-                    $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
-                }else {
-                    $obj[$key] = $file_result;
-                }
+                //bindGate() 리턴값은 encode되서 오기때문에 decode
+                $file_result = json_decode($file_result, true);
+
+                //데이터의 값은 encode되어있기떄문에 decode
+                //$org_data = $model->jsonDecode($getData[$key],false);
+                //$result = array_merge($org_data,$file_result);
+
+                $result = array_merge($getData[$key],$file_result);
+
+                //문자열로 저장되어야하기떄문에 encode
+                $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
             }
 
             $model->update($obj);
-            $response['$obj'] = $obj;
-            $response['success'] = true;
-            break;
-        }
-
-        case "update2":
-        {
-            $obj = $model->jsonDecode($_POST['obj']);
-            $users = $model->jsonDecode($obj['users'],false);
-
-            $campaign_model = new JlModel(array("table" => "campaign"));
-            $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
-            $campaign_recruitment = (int)$campaign['recruitment'];
-
-            $model->where("campaign_idx",$obj['campaign_idx']);
-            $model->where("status","선정");
-            $campaign_count = $model->get()['count'];
-
-            $count = 0;
-            foreach ($users as $index => $i) {
-                if($i['status'] == "선정") $count += 1;
-            }
-
-            $campaign_count += $count;
-
-            if($campaign_recruitment < $campaign_count) $model->error("캠페인 선정인원보다 선정되는 인원이 많습니다.");
-
-            foreach ($users as $index => $i) {
-                $model->update($i);
-            }
-
-            $response['$campaign_count'] = $campaign_count;
-            $response['$obj'] = $obj;
-            $response['$users'] = $users;
-            $response['$_POST[obj]'] = $_POST['obj'];
             $response['success'] = true;
             break;
         }
@@ -220,7 +192,6 @@ try {
             $response['success'] = false;
             $response['message'] = "_method가 존재하지않습니다.";
     }
-
     echo json_encode($response);
 
 } catch (Exception $e) {

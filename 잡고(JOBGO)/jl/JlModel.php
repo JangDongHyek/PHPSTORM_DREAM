@@ -269,7 +269,7 @@ class JlModel extends Jl{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) $this->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
+        if(!isset($param[$this->primary])) $this->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
@@ -308,7 +308,7 @@ class JlModel extends Jl{
 
         $param = $this->escape($_param);
 
-        if(!$param[$this->primary]) $this->error("JlModel delete() : 고유 키 값이 존재하지 않습니다.");
+        if(!isset($param[$this->primary])) $this->error("JlModel delete() : 고유 키 값이 존재하지 않습니다.");
 
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 

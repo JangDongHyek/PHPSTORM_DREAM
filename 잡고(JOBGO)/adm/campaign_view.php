@@ -129,6 +129,7 @@ include_once('./admin.head.php');
             }
 
                 let obj = {
+                campaign_idx : "<?=$_GET['idx']?>",
                 aa : "aa",
                 users : users
             }

@@ -3,6 +3,7 @@ include_once('./_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 include_once(G5_LIB_PATH.'/register.lib.php');
 include_once(G5_LIB_PATH.'/mailer.lib.php');
+include_once(G5_PATH.'/jl/JlConfig.php');
 
 // 리퍼러 체크
 referer_check();
@@ -62,7 +63,7 @@ $mb_10          = isset($_POST['mb_10'])            ? trim($_POST['mb_10'])     
 $simple          = isset($_POST['simple'])            ? trim($_POST['simple'])          : "";
 //$mb_birthday          = trim($_POST['mb_year'])."-".trim($_POST['mb_month'])."-".trim($_POST['mb_day']);
 $mb_division          = isset($_POST['mb_division'])            ? trim($_POST['mb_division'])          : "";
-$mb_join_division          = isset($_POST['mb_join_division'])            ? trim($_POST['mb_join_division'])          : "";
+$mb_join_division          = isset($_POST['mb_join_division'])            ? trim($_POST['mb_join_division'])          : "1";
 $mb_sub_path = "";
 for ($i = 0; $i < count($_POST['mb_sub_path']); $i++) {
     $mb_sub_path .= "," . $_POST['mb_sub_path'][$i];
@@ -154,6 +155,17 @@ if ($w == '' || $w == 'u') {
             }
         }
 
+        $model = new JlModel(array(
+            "table" => "g5_member",
+            "primary" => "mb_no",
+        ));
+
+        $model_data = $model->where("mb_hp",hyphen_hp_number($mb_hp))->get();
+
+        if($model_data['count']) {
+            alert("이미 가입된 회원 번호입니다.");
+        }
+
         // 본인확인 체크
         if($config['cf_cert_use'] && $config['cf_cert_req']) {
             if(trim($_POST['cert_no']) != $_SESSION['ss_cert_no'] || !$_SESSION['ss_cert_no'])
@@ -184,6 +196,7 @@ if ($w == '' || $w == 'u') {
     }
     if ($w == "") {
         if ($msg = exist_mb_email($mb_email, $mb_id)) alert($msg, "", true, true);
+
     }
 }
 

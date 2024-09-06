@@ -98,9 +98,12 @@ if ($returnMsg != "") {
         //alert("이미 가입된 휴대폰번호입니다. 로그인 페이지로 이동합니다.", G5_BBS_URL."/login.php");
         ?>
         <script>
+            let using = true;
             document.addEventListener("DOMContentLoaded", function(){
                 //getNoti(1, '이미 가입된 휴대폰번호입니다.');
                 alert("이미 가입된 휴대폰번호 입니다.");
+
+
 
                 if (!mobilecheck()  && '<?=$user_agent?>' != '/ioshappy100') {
                     // 1) PC화면이면 팝업닫고 부모창 이동
@@ -154,6 +157,7 @@ if ($returnMsg != "") {
             f.mb_addr1.value = mb_addr1;
             f.mb_addr2.value = mb_addr2;
             f.r_code.value = r_code;
+            f.mb_name.value = "<?=urldecode($name)?>"
 
             // 회원구분세션 초기화
             sessionStorage.removeItem("mb_email");
@@ -166,7 +170,11 @@ if ($returnMsg != "") {
 
 
             if(type == 1){
-                var url = "<?= G5_BBS_URL.'/register_new_form.php' ?>";
+                if(using) {
+                    var url = "<?= G5_BBS_URL.'/login.php' ?>";
+                }else {
+                    var url = "<?= G5_BBS_URL.'/register_new_form.php' ?>";
+                }
             }else{
                 var url = "<?= G5_BBS_URL.'/register_expert_form02.php' ?>";
 

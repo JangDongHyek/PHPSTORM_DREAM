@@ -236,50 +236,50 @@ if($page_rows > 0) {
     }
 }
 
-$write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, './board.php?bo_table='.$bo_table.$qstr.'&amp;page=');
+$write_pages = get_paging(5, $page, $total_page, './board.php?bo_table='.$bo_table.$qstr.'&amp;page=');
 
 
 // 페이징 코드
-$write_pages = '
-<div class="d-flex justify-content-center pt-2 pt-lg-4">
-    <div aria-label="Page navigation example">
-        <ul class="pagination">
-';
-
-if ($page > 1) {
-    $write_pages .= '
-            <li class="page-item">
-                <a class="page-link" href="' . $prev_part_href . '" aria-label="Previous">
-                    <span aria-hidden="true">«</span>
-                </a>
-            </li>
-    ';
-}
-
-for ($i = 1; $i <= $total_page; $i++) {
-    $active_class = ($page == $i) ? 'active' : '';
-    $write_pages .= '
-            <li class="page-item ' . $active_class . '">
-                <a class="page-link" href="?bo_table=' . $bo_table . '&page=' . $i . '">' . $i . '</a>
-            </li>
-    ';
-}
-
-if ($page < $total_page) {
-    $write_pages .= '
-            <li class="page-item">
-                <a class="page-link" href="' . $next_part_href . '" aria-label="Next">
-                    <span aria-hidden="true">»</span>
-                </a>
-            </li>
-    ';
-}
-
-$write_pages .= '
-        </ul>
-    </div>
-</div>
-';
+//$write_pages = '
+//<div class="d-flex justify-content-center pt-2 pt-lg-4">
+//    <div aria-label="Page navigation example">
+//        <ul class="pagination">
+//';
+//
+//if ($page > 1) {
+//    $write_pages .= '
+//            <li class="page-item">
+//                <a class="page-link" href="' . $prev_part_href . '" aria-label="Previous">
+//                    <span aria-hidden="true">«</span>
+//                </a>
+//            </li>
+//    ';
+//}
+//
+//for ($i = 1; $i <= $total_page; $i++) {
+//    $active_class = ($page == $i) ? 'active' : '';
+//    $write_pages .= '
+//            <li class="page-item ' . $active_class . '">
+//                <a class="page-link" href="?bo_table=' . $bo_table . '&page=' . $i . '">' . $i . '</a>
+//            </li>
+//    ';
+//}
+//
+//if ($page < $total_page) {
+//    $write_pages .= '
+//            <li class="page-item">
+//                <a class="page-link" href="' . $next_part_href . '" aria-label="Next">
+//                    <span aria-hidden="true">»</span>
+//                </a>
+//            </li>
+//    ';
+//}
+//
+//$write_pages .= '
+//        </ul>
+//    </div>
+//</div>
+//';
 
 
 $list_href = '';

@@ -69,7 +69,8 @@ if($category) $request_model->where("category",$category,"AND","campaign");
 $request_data = $request_model->get(array(
     "page" => $page,
     "limit" => $limit,
-    "source" => "campaign"
+    "source" => "campaign",
+    "select" => "campaign_request.status AS request_status",
 ));
 
 $request_model->join("campaign","campaign_idx","idx");
@@ -224,7 +225,7 @@ if($member['mb_no']) {
                             <div class="list">
                                 <?php
                                 foreach ($request_data['data'] as $index => $d) {
-                                    switch ($d['status']) {
+                                    switch ($d['request_status']) {
                                         case "선정" :
                                             $class = "btn_line";
                                             $message = "선정";
@@ -240,6 +241,7 @@ if($member['mb_no']) {
                                         default :
                                             $class = " btn_gray3";
                                             $message = "대기";
+                                            break;
                                     }
                                     ?>
                                     <div class="thm">

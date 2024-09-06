@@ -44,7 +44,7 @@
     })
     function nice_certify(type) {
 
-        sessionStorage.setItem("mb_email", $('#reg_mb_email').val() );
+        sessionStorage.setItem("mb_email", $('#mb_email').val() );
         sessionStorage.setItem("mb_password",  $('#reg_mb_password').val());
         sessionStorage.setItem("mb_password_re",  $('#reg_mb_password_re').val());
         sessionStorage.setItem("mb_nick",  $('#reg_mb_nick').val());
@@ -296,6 +296,8 @@
         // 필수 체크박스
         // 조건들 확인
 
+
+
         if (f.w.value == 'u') {
             var msg = reg_mb_now_pw_check();
             if (msg) {
@@ -341,6 +343,7 @@
             }
         }
 
+
         if(f.simple.value) {
             if(!f.mb_email.value) {
                 swal("아이디를 입력하십시오.");
@@ -352,12 +355,12 @@
                 return false;
             }
 
-            if(!f.reg_mb_name.value) {
+            if(!f.mb_name.value) {
                 swal("이름을 입력하십시오.");
                 return false;
             }
 
-            if(!f.reg_mb_hp.value) {
+            if(!f.mb_hp.value) {
                 swal("휴대폰 번호를 입력하십시오.");
                 return false;
             }

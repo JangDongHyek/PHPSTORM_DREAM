@@ -2,7 +2,7 @@
 include_once("../jl/JlConfig.php");
 global $pid;
 $pid = $_GET['menu'];
-$sub_id = "campagin_list";
+$sub_id = "campaign_list";
 include_once('./_common.php');
 
 switch ($_GET['menu']) {

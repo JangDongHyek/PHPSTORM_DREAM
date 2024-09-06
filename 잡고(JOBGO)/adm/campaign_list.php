@@ -25,7 +25,7 @@ $total_page = ceil($data['count'] / $limit);
 
 $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목록</a>';
 
-$g5['title'] = '캠페인관리';
+$g5['title'] = '체험단관리';
 include_once('./admin.head.php');
 
 

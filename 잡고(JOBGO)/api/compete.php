@@ -16,7 +16,7 @@ try {
     $join_table = "";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    //$file = new JlFile("/data/example");
+    $file = new JlFile("/jl/jl_resource/$file_name");
 
     switch (strtolower($_method)) {
         case "get":
@@ -78,23 +78,12 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
-            $campaign_model = new JlModel(array("table" => "campaign"));
-            $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
-
-            $recruitment_date = DateTime::createFromFormat('Y-m-d', $campaign['recruitment_date']);
-            $current_date = new DateTime();
-
-
-            if($campaign['status'] != "모집") $model->error("아직 모집중이 아닙니다.");
-            if($current_date > $recruitment_date) $model->error("모집 기간이 지났습니다.");
-
-
-            $data = $model->where($obj)->get();
-            if($data['count']) $model->error("이미 신청 되었습니다. 캠페인 관리에서 확인 해주세요.");
+            foreach ($_FILES as $key => $file_data) {
+                $file_result = $file->bindGate($file_data);
+                $obj[$key] = $file_result;
+            }
 
             $model->insert($obj);
-
-            $response['campaign'] = $campaign;
             $response['success'] = true;
             break;
         }
@@ -107,63 +96,58 @@ try {
 
             foreach ($_FILES as $key => $file_data) {
                 $file_result = $file->bindGate($file_data);
-                if(!$file_result) continue;
 
-                if(is_array($file_data['name'])) {
-                    //바인드의 리턴값은 encode되서 오기때문에 decode
-                    $file_result = json_decode($file_result, true);
-                    $result = array_merge($getData[$key],$file_result);
-                    //문자열로 저장되어야하기떄문에 encode
-                    $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
-                }else {
-                    $obj[$key] = $file_result;
-                }
+                //bindGate() 리턴값은 encode되서 오기때문에 decode
+                $file_result = json_decode($file_result, true);
+
+                //데이터의 값은 encode되어있기떄문에 decode
+                //$org_data = $model->jsonDecode($getData[$key],false);
+                //$result = array_merge($org_data,$file_result);
+
+                $result = array_merge($getData[$key],$file_result);
+
+                //문자열로 저장되어야하기떄문에 encode
+                $obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
             }
 
             $model->update($obj);
-            $response['$obj'] = $obj;
             $response['success'] = true;
             break;
         }
-
-        case "update2":
+        case "delete_thumb":
         {
             $obj = $model->jsonDecode($_POST['obj']);
-            $users = $model->jsonDecode($obj['users'],false);
 
-            $campaign_model = new JlModel(array("table" => "campaign"));
-            $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
-            $campaign_recruitment = (int)$campaign['recruitment'];
+            $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
 
-            $model->where("campaign_idx",$obj['campaign_idx']);
-            $model->where("status","선정");
-            $campaign_count = $model->get()['count'];
+            unset($getData['thumb'][$obj['thumb_idx']]);
 
-            $count = 0;
-            foreach ($users as $index => $i) {
-                if($i['status'] == "선정") $count += 1;
-            }
-
-            $campaign_count += $count;
-
-            if($campaign_recruitment < $campaign_count) $model->error("캠페인 선정인원보다 선정되는 인원이 많습니다.");
-
-            foreach ($users as $index => $i) {
-                $model->update($i);
-            }
-
-            $response['$campaign_count'] = $campaign_count;
-            $response['$obj'] = $obj;
-            $response['$users'] = $users;
-            $response['$_POST[obj]'] = $_POST['obj'];
+            $model->update($getData);
             $response['success'] = true;
             break;
         }
+
+        case "delete_design":
+        {
+            $obj = $model->jsonDecode($_POST['obj']);
+
+            $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
+
+            unset($getData['design'][$obj['design_idx']]);
+
+            $model->update($getData);
+            $response['success'] = true;
+            break;
+        }
+
         case "delete":
         {
             $obj = $model->jsonDecode($_POST['obj'],false);
 
-            //$file->deleteDirGate($obj['data_column']);
+            $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
+
+            $file->deleteDirGate($getData['thumb']);
+            $file->deleteDirGate($getData['design']);
             $data = $model->delete($obj);
 
             $response['success'] = true;
@@ -220,11 +204,9 @@ try {
             $response['success'] = false;
             $response['message'] = "_method가 존재하지않습니다.";
     }
-
     echo json_encode($response);
 
 } catch (Exception $e) {
-
 }
 
 

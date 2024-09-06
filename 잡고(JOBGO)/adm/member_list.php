@@ -78,7 +78,6 @@ $g5['title'] = '회원관리';
 include_once('./admin.head.php');
 
 $sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
-echo $sql;
 $result = sql_query($sql);
 
 $colspan = 16;
