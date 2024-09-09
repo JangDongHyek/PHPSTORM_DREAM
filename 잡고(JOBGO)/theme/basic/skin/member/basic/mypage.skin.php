@@ -6,7 +6,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/epggea.css">', 0);
 add_javascript('<script type="text/javascript" src="'.$member_skin_url.'/js/epggea.js"></script>', 100);
 
-header('Location: '.G5_BBS_URL.'/my_item.php?tab=1',true,301);
+header('Location: '.G5_BBS_URL.'/my_campaign.php?tab=1',true,301);
 ?>
 <style>
 .box-article .box-body .row{ background:#fff}

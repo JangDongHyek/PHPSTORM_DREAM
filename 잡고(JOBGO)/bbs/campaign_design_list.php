@@ -1,7 +1,7 @@
 <?php
 global $pid;
 $pid = "design_list";
-$sub_id = "campagin_list";
+$sub_id = "campaign_list";
 include_once('./_common.php');
 
 $g5['title'] = '디자인';

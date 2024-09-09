@@ -62,6 +62,7 @@ function matchSubmit(f) {
     var match_coupon_cnt = 0;   // 쿠폰소개 숫자
     var match_heart_cnt = 0;    // 포인트소개 숫자
     $.each($('select.valid_type'), function(index, elem) {
+        console.log("ss : " + elem);
         if (elem.value == "쿠폰소개") match_coupon_cnt++;
         else if (elem.value == "포인트소개") match_heart_cnt++;
     });
@@ -79,8 +80,8 @@ function matchSubmit(f) {
             var _submit = true;
             $.each($('select.valid_type'), function(index, elem) {
                 if (elem.value == "쿠폰소개") {
-                    //var _num = $(elem).data("num");
-                    var _num = 1;
+                    var _num = $(elem).data("num");
+                    //var _num = 1;
                     console.log(_num)
                     var _target_coupon = $("[name='target_coupon[" + _num + "]']").val();
                     console.log(_target_coupon);
@@ -108,8 +109,8 @@ function matchSubmit(f) {
             var _submit = true;
             $.each($('select.valid_type'), function(index, elem) {
                 if (elem.value == "포인트소개") {
-                    //var _num = $(elem).data("num");
-                    var _num = 1;
+                    var _num = $(elem).data("num");
+                    //var _num = 1;
                     var _target_heart = $("[name='target_heart[" + _num + "]']").val();
 
                     if (parseInt(_target_heart) < 10000) {

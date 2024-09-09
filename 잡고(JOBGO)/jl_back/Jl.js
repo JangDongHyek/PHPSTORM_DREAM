@@ -22,7 +22,7 @@ Number.prototype.format = function (n, x) {
 };
 
 class Jl {
-    constructor(name,background = "#35495e") {
+    constructor(name = "common",background = "#35495e") {
         this.name = name;
         this.root = Jl_base_url;
         this.editor = Jl_editor;
@@ -105,13 +105,8 @@ class Jl {
             xhr.send(form);
 
             // 로그 부분
-            try {
-                // IOS 같은경우 에러를 일으켜 함수명 추적이 불가능해 js 에러가 발생해 그뒤 로직이 꼬임 에러 발생시 문제없이 넘어가게 try catch 추가
-                const parsedStack = this.parseStackTrace(new Error().stack);
-                var function_name = parsedStack[1].function.replace('a.','');
-            }catch (e) {
-
-            }
+            const parsedStack = this.parseStackTrace(new Error().stack);
+            var function_name = parsedStack[1].function.replace('a.','');
         });
     }
 

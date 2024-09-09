@@ -105,8 +105,12 @@ class Jl {
             xhr.send(form);
 
             // 로그 부분
-            const parsedStack = this.parseStackTrace(new Error().stack);
-            var function_name = parsedStack[1].function.replace('a.','');
+            try {
+                const parsedStack = this.parseStackTrace(new Error().stack);
+                var function_name = parsedStack[1].function.replace('a.','');
+            }catch (e) {
+
+            }
         });
     }
 

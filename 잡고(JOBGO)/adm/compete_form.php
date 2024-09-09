@@ -164,10 +164,10 @@ include_once('./admin.head.php');
         <th scope="row"><label for="cp_progress">진행상태</label></th>
         <td>
             <select name="status">
-                <option value="진행중">진행중</option>
-                <option value="심사중">심사중</option>
-                <option value="종료">종료</option>
-                <option value="지급완료">지급완료</option>
+                <option value="진행중" <?=$row['status'] == '진행중' ? 'selected' : '' ?>>진행중</option>
+                <option value="심사중" <?=$row['status'] == '심사중' ? 'selected' : '' ?>>심사중</option>
+                <option value="종료" <?=$row['status'] == '종료' ? 'selected' : '' ?>>종료</option>
+                <option value="지급완료" <?=$row['status'] == '지급완료' ? 'selected' : '' ?>>지급완료</option>
             </select>
         </td>
     </tr>

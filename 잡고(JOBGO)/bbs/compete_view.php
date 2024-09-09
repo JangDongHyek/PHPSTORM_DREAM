@@ -7,7 +7,9 @@ include_once("../jl/JlConfig.php");
 
 if(!$_GET['idx']) alert("잘못된경로입니다.");
 
-//캠페인 데이터
+
+
+//공모전 데이터
 $model = new JlModel(array(
     "table" => "compete",
     "primary" => "idx",
@@ -16,7 +18,19 @@ $model = new JlModel(array(
 ));
 $data = $model->where("idx",$_GET['idx'])->get()['data'][0];
 
-// 캠페인 좋아요
+//공모전 조회수
+if($member['mb_no']) {
+    if(!isset($_SESSION['compete_views'])) {
+        $_SESSION['compete_views'] = array();
+    }
+    if(!in_array($_GET['idx'],$_SESSION['compete_views'])) {
+        array_push($_SESSION['compete_views'],$_GET['idx']);
+        $data['views'] = (int)$data['views'] + 1;
+        $model->update($data);
+    }
+}
+
+// 공모전  좋아요
 $heart = "off";
 if($member['mb_no']) {
     $compete_like = new JlModel(array(
@@ -34,6 +48,14 @@ if($member['mb_no']) {
 
     if(in_array((int)$_GET['idx'],$likes,true)) $heart = "on";
 }
+
+$compete_request_model = new JlModel(array(
+    "table" => "compete_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$compete_request = $compete_request_model->where("compete_idx",$_GET['idx'])->count();
 
 
 
@@ -72,7 +94,7 @@ include_once('./_head.php');
                         <div class="count">
                             <b class=""><?=$data['status']?></b>
                         </div>
-                        <p>조회수 0</p>
+                        <p>조회수 <?=number_format($data['views'])?></p>
                     </div>
                     <div class="heart male-auto" name="">
                         <button type="button" class="heart <?=$heart?>" onclick="postLike('<?=$_GET['idx']?>')"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_<?=$heart?>.png" alt="좋아요off" title="좋아요off"></button>
@@ -89,13 +111,13 @@ include_once('./_head.php');
                             <span><?=explode(" ",$data['start_date'])[0]?>까지</span>
                         </p>
                         <p class="flex ai-c jc-sb">
-                            <span>심사기간</span>
+                            <span>마감기간</span>
                             <span><?=explode(" ",$data['end_date'])[0]?>까지</span>
                         </p>
                     </span>
                     <span>
                         <p class="txt_mini text-right">
-                            <span class="txt_mini">0명의 참가자</span>
+                            <span class="txt_mini"><?=number_format($compete_request)?>명의 참가자</span>
                         </p>
                         <p class="text-right">
                             <? foreach($data['prize'] as $index => $d){?>
@@ -105,7 +127,7 @@ include_once('./_head.php');
                         </p>
                     </span>
                 </div>
-                <button type="button" class="btn btn_large btn_color" data-toggle="modal" href="#competeSubmit">참여하기 </button>
+                <button type="button" class="btn btn_large btn_color" onclick="openModal()">참여하기 </button>
             </div>
         </div>
         <div class="tabs">
@@ -156,7 +178,7 @@ include_once('./_head.php');
                     </div>
 
                     <p>추가 설명</p>
-                    <textarea placeholder="설명을 작성하세요."></textarea>
+                    <textarea placeholder="설명을 작성하세요." id="compete_description"></textarea>
 
                     <script>
                         document.getElementById('fileInput').addEventListener('change', function() {
@@ -167,7 +189,7 @@ include_once('./_head.php');
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">제출하기</button>
+                    <button type="button" class="btn btn-primary" onclick="postRequest('<?=$data['idx']?>')">제출하기</button>
                 </div>
             </div><!--//modal-content-->
         </div>
@@ -179,6 +201,7 @@ include_once('./_head.php');
     <script>
         const jl = new Jl();
         const user_idx = "<?=$member['mb_no']?>";
+        const fileInput = document.getElementById('fileInput');
 
         function openModal() {
             if(!user_idx) {
@@ -187,33 +210,30 @@ include_once('./_head.php');
                 return false;
             }
 
-            $('#campaignJoin').modal('show');
+            $('#competeSubmit').modal('show');
         }
 
         async function postRequest(idx) {
             try {
-                const selectedValue = document.querySelector('input[name="sns"]:checked');
-                //if(!selectedValue) {
-                //    alert("활동중인 SNS를 입력해주세요.");
-                //    return false;
-                //}
-                //
-                //if(!document.getElementById("sns_link").value) {
-                //    alert("SNS 링크를 입력해주세요.");
-                //    return false;
-                //}
+                let selectedFiles = Array.from(fileInput.files);
+
+                if(selectedFiles.length <= 0) {
+                    alert("제출할 파일을 올려주세요.");
+                    return false;
+                }
 
                 let obj = {
                     user_idx : user_idx,
-                    campaign_idx : idx,
-                    sns_type : selectedValue,
-                    sns_link : document.getElementById("sns_link").value
+                    compete_idx : idx,
+                    compete_file : selectedFiles,
+                    description : $('#compete_description').val(),
+                    status : ""
                 }
 
-                let res = await jl.ajax("insert",obj,"/api/campaign_request.php");
+                let res = await jl.ajax("insert",obj,"/api/compete_request.php");
 
-                showConfirm('신청완료', '결과는 체험단 관리에서 확인하세요.')
-                $('#campaignJoin').modal('hide');
+                showConfirm('신청완료', '결과는 공모전 관리에서 확인하세요.')
+                $('#competeSubmit').modal('hide');
             }catch (e) {
                 alert(e.message)
             }

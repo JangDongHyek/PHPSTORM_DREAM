@@ -34,7 +34,8 @@ if($mb['mb_division'] == '1') { // 일반인
     if($tab == 1) {
         $sql_add .= " and ph_bo_table = '@pay_minus' ";
     } else {
-        $sql_add .= " and ph_content = '캐쉬 충전' ";
+        //$sql_add .= " and ph_content = '캐쉬 충전' ";
+        $sql_add .= " and ph_bo_table = '@pay_plus' ";
     }
 
     $count = sql_fetch(" select count(*) as count from new_payment_history where mb_id = '{$_SESSION['ss_mb_id']}' {$sql_add} ")['count'];
@@ -48,6 +49,7 @@ if($mb['mb_division'] == '1') { // 일반인
     $result = sql_query($sql);
 
     $sql = " select * from new_payment_history where mb_id = '{$_SESSION['ss_mb_id']}' {$sql_add} order by wr_datetime desc limit {$from_record}, {$rows} ";
+
     $result2 = sql_query($sql);
 }
 else { // 전문인

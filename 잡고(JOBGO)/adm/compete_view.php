@@ -1,34 +1,40 @@
 <?php
 $sub_menu = "251000";
 include_once('./_common.php');
+include_once("../jl/JlConfig.php");
 
 auth_check($auth[$sub_menu], 'w');
 
-if ($w == '')
-{
-    $sound_only = '<strong class="sound_only">필수</strong>';
-    $html_title = '선정';
-}
-else if ($w == 'u')
-{
-    $mb = get_member($mb_id);
-//    if (!$mb['mb_id'])
-//        alert('존재하지 않는 회원자료입니다.');
-//
-//    if ($is_admin != 'super' && $mb['mb_level'] >= $member['mb_level'])
-//        alert('자신보다 권한이 높거나 같은 회원은 수정할 수 없습니다.');
+if(!$_GET['idx']) alert("잘못된 접근입니다.");
 
-    $sql = "select * from new_competition where cp_idx = '{$_REQUEST["idx"]}'";
-    $row = sql_fetch($sql);
+//캠페인 데이터
+$compete_model = new JlModel(array(
+    "table" => "compete",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$compete = $compete_model->where("idx",$_GET['idx'])->get()['data'][0];
 
-    $mb = get_member($row["mb_id"]);
-    $readonly = 'readonly';
-    $html_title = '수정';
+//신청자
+$request_model = new JlModel(array(
+    "table" => "compete_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+$request_model->join("g5_member","user_idx","mb_no");
+$request_model->where("compete_idx",$_GET['idx']);
+$request = $request_model->orderBy("status","ASC")->orderBy("insert_date","DESC")->get(array(
+    "select" => array("g5_member.mb_name","g5_member.mb_id","g5_member.mb_hp")
+));
 
-
-}
-else
-    alert('제대로 된 값이 넘어오지 않았습니다.');
+$request_model = new JlModel(array(
+    "table" => "compete_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
 
 $g5['title'] = '공모전 '.$html_title;
 include_once('./admin.head.php');
@@ -46,7 +52,10 @@ include_once('./admin.head.php');
 
 <div class="tbl_head02 tbl_wrap">
     <h6 class="title"><a href="<?php echo G5_BBS_URL ?>/compete_view.php" target="_blank">공모전명</a> <span>업체명</span></h6>
-    <p class="sub"><b>기간</b> 24.01.01-24.01.01 (진행중) <b>상금</b> 1등 * 3명 * 30,000원</p>
+    <p class="sub"><b>기간</b> <?=explode(" ",$compete['start_date'])[0]?>-<?=explode(" ",$compete['end_date'])[0]?> (<?=$compete['status']?>)</p>
+    <?foreach($compete['prize'] as $c) {?>
+        <p><b>상금</b> <?=$c['rank']?>등 * <?=$c['people']?>명 * <?=number_format($c['money'])?>원</p>
+    <?}?>
     <table>
         <thead>
             <tr>
@@ -60,33 +69,75 @@ include_once('./admin.head.php');
             </tr>
         </thead>
         <tbody>
+            <?foreach($request['data'] as $index => $d){?>
             <tr>
-                <td>No</td>
-                <td>참여일</td>
-                <td>참여자(아이디)</td>
-                <td>010-0000-0000</td>
-                <td><a target="_blank"><i class="fa-regular fa-paperclip"></i> 제출파일</a></td>
-                <td><textarea style="width: 800px"></textarea></td>
+                <td><?=$d['data_page_no']?></td>
+                <td><?=$d['insert_date']?></td>
+                <td><?=$d['mb_name']?>(<?=$d['mb_id']?>)</td>
+                <td><?=$d['mb_hp']?></td>
+                <td><a href="<?=G5_URL."/".$d['compete_file'][0]['src']?>" download="<?=$d['compete_file'][0]['name']?>"><i class="fa-regular fa-paperclip"></i> 제출파일</a></td>
+                <td><textarea style="width: 800px"><?=$d['description']?></textarea></td>
                 <td>
-                    <select>
-                        <option>1등 * 1</option>
-                        <option>1등 * 2</option>
-                        <option>1등 * 3</option>
+                    <select onchange="changeStatus('<?=$d['idx']?>',event.target.value)">
+                        <option value="" <?=$d['status'] == '' ? 'selected' : ''?>>대기</option>
+                        <?foreach ($compete['prize'] as $p) {?>
+                            <option value="<?=$p['rank']?>" <?=$d['status'] == $p['rank'] ? 'selected' : ''?>><?=$p['rank']?>등 * <?=$p['people']?></option>
+                        <?}?>
+                        <option value="탈락" <?=$d['status'] == '탈락' ? 'selected' : ''?>>탈락</option>
                     </select>
                 </td>
             </tr>
+            <?}?>
         </tbody>
     </table>
 </div>
 
 <div class="btn_confirm01 btn_confirm">
-    <input type="submit" value="저장" style="background: #0A7CC7" class="btn_submit"accesskey='s'>
+    <input type="button" value="저장" style="background: #0A7CC7" class="btn_submit" accesskey='s' onclick="putRequest2()">
     <a href="./compete_list.php?<?php echo $qstr ?>">목록</a>
 </div>
 
 </form>
 
+<? $jl->jsLoad(); ?>
 
+<script>
+    const jl = new Jl();
+    let users = [];
+
+    async function putRequest2() {
+        try {
+            if(!users.length) {
+                alert("바뀐 데이터가 없습니다.");
+                return false;
+            }
+
+            let obj = {
+                compete_idx : "<?=$_GET['idx']?>",
+                aa : "aa",
+                users : users
+            }
+
+            let res = await jl.ajax("update2",obj,"/api/compete_request.php");
+            alert("저장되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+    function changeStatus(idx,status) {
+        let newObj = {idx:idx,status:status}
+        let obj = jl.findObject(users,"idx",idx)
+
+        if (obj) {
+            // 같은 idx를 가진 객체가 있으면 기존 객체를 삭제합니다.
+            obj.status = status
+        }else {
+            users.push(newObj);
+        }
+    }
+</script>
 
 
 <?php

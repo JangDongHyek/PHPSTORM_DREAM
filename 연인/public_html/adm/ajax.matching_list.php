@@ -66,7 +66,7 @@ if ($member['mb_status'] == "관리자") {
 	</td>
 	<th>소개종류</th>
 	<td>
-		<select name="match_type[<?=$list_no?>]" class="valid_type">
+		<select name="match_type[<?=$list_no?>]" class="valid_type" data-num="<?=$list_no?>">
 			<option value="">--선택--</option>
 			<? foreach ($match_type_arr as $key=>$val) { ?>
 			<option value="<?=$val?>"><?=$val?></option>

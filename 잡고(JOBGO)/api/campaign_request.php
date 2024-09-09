@@ -13,6 +13,9 @@ try {
         "empty" => false
     ));
 
+    $campaign_model = new JlModel(array("table" => "campaign"));
+    $campaign_request_history_model = new JlModel(array("table" => "campaign_request_history"));
+
     $join_table = "";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
@@ -78,7 +81,6 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj']);
 
-            $campaign_model = new JlModel(array("table" => "campaign"));
             $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
 
             $recruitment_date = DateTime::createFromFormat('Y-m-d', $campaign['recruitment_date']);
@@ -121,6 +123,13 @@ try {
             }
 
             $model->update($obj);
+
+            $request = $model->where("idx",$obj['idx'])->get()['data'][0];
+            $request['request_idx'] = $request['idx'];
+            unset($request['idx']);
+            unset($request['insert_date']);
+            $campaign_request_history_model->insert($request);
+
             $response['$obj'] = $obj;
             $response['success'] = true;
             break;
@@ -131,7 +140,7 @@ try {
             $obj = $model->jsonDecode($_POST['obj']);
             $users = $model->jsonDecode($obj['users'],false);
 
-            $campaign_model = new JlModel(array("table" => "campaign"));
+
             $campaign = $campaign_model->where("idx",$obj['campaign_idx'])->get()['data'][0];
             $campaign_recruitment = (int)$campaign['recruitment'];
 
@@ -148,8 +157,54 @@ try {
 
             if($campaign_recruitment < $campaign_count) $model->error("캠페인 선정인원보다 선정되는 인원이 많습니다.");
 
+            $new_payment_history_model = new JlModel(array(
+                "table" => "new_payment_history",
+                "primary" => "ph_idx"
+            ));
+            $g5_member_model = new JlModel(array(
+                "table" => "g5_member",
+                "primary" => "mb_no"
+            ));
+
+
             foreach ($users as $index => $i) {
                 $model->update($i);
+
+                $request = $model->where("idx",$i['idx'])->get()['data'][0];
+                $campaign = $campaign_model->where("idx",$request['campaign_idx'])->get()['data'][0];
+                $user = $g5_member_model->where("mb_no",$request['user_idx'])->get()['data'][0];
+                $new_payment_history = $new_payment_history_model->where("mb_id",$user['mb_id'])->orderBy("ph_idx","DESC")->get()['data'][0];
+
+                $request['request_idx'] = $request['idx'];
+                unset($request['idx']);
+                unset($request['insert_date']);
+                $campaign_request_history_model->insert($request);
+
+
+                //완료보고 캐쉬 중복지급 방지
+                $new_payment_history_model->where("mb_id",$user['mb_id']);
+                $new_payment_history_model->where("ph_bo_idx_table","campaign");
+                $is_history = $new_payment_history_model->where("ph_bo_idx",$campaign['idx'])->get()['count'];
+
+                if($i['report_status'] == "보고완료" && !$is_history) {
+
+                    // 충전금액 히스토리 로그
+                    $new_payment_history_model->insert(array(
+                        "mb_id" => $user['mb_id'],
+                        "ph_content_idx" => $request['idx'],
+                        "ph_content" => $campaign['subject']." 체험 보고완료",
+                        "ph_amt" => (int)$campaign['service_cash'],
+                        "ph_total_amt" => (int)$new_payment_history['ph_total_amt'] + (int)$campaign['service_cash'],
+                        "ph_bo_table" => "@pay_plus",
+                        "wr_datetime" => "now()",
+                        "ph_bo_idx" => $campaign['idx'],
+                        "ph_bo_idx_table" => "campaign",
+                    ));
+
+                    // 유저 테이블 출금가능금액 업데이트
+                    $user['mb_6'] = (int)$user['mb_6'] + (int)$campaign['service_cash'];
+                    $g5_member_model->update($user);
+                }
             }
 
             $response['$campaign_count'] = $campaign_count;

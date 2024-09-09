@@ -109,6 +109,7 @@ if($status_code == 200) {
                 "mb_name" => $pr_arr['response']['name'],
                 "mb_adult" => 1,
                 "mb_sns" => "naver",
+                "mb_division" => 1,
                 "mb_join_division" => 1,
                 "mb_datetime" => "now()"
             );

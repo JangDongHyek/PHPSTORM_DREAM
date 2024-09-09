@@ -7,7 +7,7 @@ include_once("../jl/JlModel.php");
 $jl = new Jl();
 
 $kakao = new kakaoLogin(array(
-    "redirect_uri" => $jl->URL."/bbs/callback_kakao.php",
+    "redirect_uri" => "https://www.jobgo.ac/bbs/callback_kakao.php",
     "client_id" => "93bb7b776fef8ab69a652712a974e09b",
 ));
 
@@ -79,6 +79,7 @@ if($_GET['code']){
             "mb_name" => $result['kakao_account']['name'],
             "mb_adult" => 1,
             "mb_sns" => "kakao",
+            "mb_division" => 1,
             "mb_join_division" => 1,
             "mb_datetime" => "now()"
         );

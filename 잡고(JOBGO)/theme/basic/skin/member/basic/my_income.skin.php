@@ -291,7 +291,6 @@ add_javascript('<script type="text/javascript" src="' . $member_skin_url . '/js/
                             <?php
                             $k = $count-($rows*($page-1)); // 글번호
                             for($i=0; $row=sql_fetch_array($result2); $i++) {
-                                if($row['ph_content'] == '캐쉬 충전') {
                                 ?>
                                 <ul class="lt_box">
                                     <li class="fl tc w5 lt lt_line ordernum"><?=$k?></li>
@@ -300,13 +299,13 @@ add_javascript('<script type="text/javascript" src="' . $member_skin_url . '/js/
                                     <li class="fl tc w11 lt lt_line status"><span class="comp">완료</span></li>
                                     <li class="fl tl w45 lt lt_line text-left">
                                         <p class="date">신청 : <?= substr($row['wr_datetime'], 0, 10) ?> / 지급 : <?= substr($row['wr_datetime'], 0, 10) ?></p>
-                                        캐쉬 <?=number_format($row['ph_amt'])?>원 충전되었습니다.
+                                        <!--캐쉬 --><?//=number_format($row['ph_amt'])?><!--원 충전되었습니다.-->
+                                        <?=$row['ph_content']?>
                                         <p class="fee"><span class="comp">완료</span> <?= number_format($row['ph_amt']) ?>원</p>
                                     </li>
                                     <li class="fl tc w11 lt lt_line fee"><?=number_format($row['ph_amt'])?>원</li>
                                 </ul>
                                 <?php
-                                }
                             ?>
                             <?php
                                 $k--;

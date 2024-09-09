@@ -69,7 +69,8 @@ html, body{ width:100%;height:100%;min-height:500px; background:#f5f5f5;}
     </aside>
     <ul id="sns_login">
         <li class="sns naver"><a href="<?=$apiURL?>"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_naver.png" class="네이버로그인"></span>네이버 로그인</a></li>
-        <li class="sns kakao"><a href="<?=$kakaoURL?>"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>
+        <li class="sns kakao"><a href="javascript:loginWithKakao()"><span class="ico"><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>
+        <!--<li class="sns kakao"><a href="--><?//=$kakaoURL?><!--"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>-->
         <!--<li class="sns kakao"><a onclick="alert('아직 준비중입니다.')"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_kakao.png" class="카카오로그인"></span>카카오 로그인</a></li>-->
         <!--<li class="sns google"><a href="javascript:google_login(--><?//if($mb_1) echo $mb_1; else echo 0;?><!--);"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_google.png" class="구글로그인"></span>구글 로그인</a></li>-->
         <!--<li class="sns face"><a href="javascript:fnFbCustomLogin(--><?//if($mb_1) echo $mb_1; else echo 0;?><!--);"><span class="ico"><img src="--><?php //echo G5_THEME_IMG_URL ?><!--/common/sns_face.png" class="페이스북로그인"></span>페이스북 로그인</a></li>-->
@@ -96,7 +97,18 @@ html, body{ width:100%;height:100%;min-height:500px; background:#f5f5f5;}
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
 <!--카카오 로그인-->
-<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<!--<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>-->
+
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
+<script>
+    Kakao.init('96a511046378c14ac3c364aa27ee520c'); // 사용하려는 앱의 JavaScript 키 입력
+    function loginWithKakao() {
+        Kakao.Auth.authorize({
+            redirectUri: 'https://www.jobgo.ac/bbs/callback_kakao.php',
+        });
+    }
+</script>
+
 
 <!--구글로그인-->
 <script src="https://apis.google.com/js/platform.js?onload=init" async defer ></script>
@@ -191,11 +203,11 @@ $(document).ready(function() {
     Kakao.init('<?= $config['cf_kakao_js_apikey']?>');
    Kakao.isInitialized();
 });
-function loginWithKakao(){
-   Kakao.Auth.authorize({
-       redirectUri: g5_bbs_url + '/register_form.php'
-   });
-}
+//function loginWithKakao(){
+//   Kakao.Auth.authorize({
+//       redirectUri: g5_bbs_url + '/register_form.php'
+//   });
+//}
 
 
 

@@ -401,6 +401,9 @@ if($member['mb_no']) {
                 </div>
 
                 <div class="modal-body">
+                    <div class="box box_red">
+                        <textarea id="update_comment" readonly></textarea>
+                    </div>
                     <p>활동 링크 <span class="txt_color">* 필수</span></p>
                         <input type="text" id="activity_link" placeholder="활동 링크를 작성해주세요">
 
@@ -452,6 +455,7 @@ if($member['mb_no']) {
             request_idx = res.data[0].idx;
             document.getElementById("activity_link").value = res.data[0].activity_link;
             document.getElementById("description").value = res.data[0].description;
+            document.getElementById("update_comment").textContent = res.data[0].update_comment;
         }catch (e) {
             alert(e.message)
         }

@@ -32,7 +32,7 @@ if (G5_IS_MOBILE) {
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php" class="<?php if($pid == "exp_list"){ echo 'txt_color';}?>">
+                    <a href="<?php echo G5_BBS_URL ?>/campaign_list.php" class="<?php if($sub_id == 'campaign_list'){ echo 'txt_color';}?>">
                         <i class="fa-light fa-calendar-star"></i><br />체험단
                     </a>
                 </li>
@@ -43,7 +43,7 @@ if (G5_IS_MOBILE) {
                 </li>
                 <li>
                     <?php if ($is_member) {  ?>
-                    <a href="<?php echo G5_BBS_URL ?>/mypage.php" class="<?php if($pid == "my_item"||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase"||$sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry"){ echo 'txt_color';}?>">
+                    <a href="<?php echo G5_BBS_URL ?>/my_campaign.php" class="<?php if($pid == "my_item"||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase"||$sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry"){ echo 'txt_color';}?>">
                     <?php } else /*$is_member*/{  ?>
                     <a href="<?php echo G5_BBS_URL ?>/login.php" >
                         <?php }  ?>
@@ -64,9 +64,9 @@ if (G5_IS_MOBILE) {
                 <!-- 메뉴 내용 추가 -->
                 <dl>
                     <dt>잡고 서비스</dt>
-                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_sns_list.php" target="_self">SNS</a></dd>
-                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_design_list.php" target="_self">디자인</a></dd>
-                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_exp_list.php" target="_self">체험단</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=exp" target="_self">체험단</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=sns" target="_self">SNS</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=design" target="_self">디자인</a></dd>
                     <dd><a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" target="_self">재능거래</a></dd>
                     <dd><a href="<?php echo G5_BBS_URL ?>/compete_list.php" target="_self">공모전</a></dd>
                     <dd><a href="<?php echo G5_BBS_URL ?>/market_list.php" target="_self">마켓</a></dd>

@@ -280,6 +280,16 @@ $uri = $_SERVER['REQUEST_URI'];
 						<a href="#Link" class="gnb_1da">전체메뉴</a>
 						<ul class="gnb_2dul">
 
+                            <li class="gnb_2dli gnb_2dlit">
+                                <a href="<?php echo G5_BBS_URL ?>/campaign_list.php" class="gnb_2da">체험단</a>
+                                <div class="gnb_2dli_list" style="display:none">
+                                    <ul class="gnb_2dul ver02">
+                                        <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns" target="_self" class="gnb_2da">SNS</a></li>
+                                        <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=design" target="_self" class="gnb_2da">디자인</a></li>
+                                        <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_2da">체험단</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                             <li class="gnb_2dlit">
                                 <a class="gnb_2da">재능거래</a>
                             </li>
@@ -348,29 +358,19 @@ $uri = $_SERVER['REQUEST_URI'];
 								</div>
 							</li>
 
-                                <li class="gnb_2dli gnb_2dlit">
-                                    <a href="<?php echo G5_BBS_URL ?>/campaign_list.php" class="gnb_2da">체험단</a>
-                                    <div class="gnb_2dli_list" style="display:none">
-                                        <ul class="gnb_2dul ver02">
-                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=sns" target="_self" class="gnb_2da">SNS</a></li>
-                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=design" target="_self" class="gnb_2da">디자인</a></li>
-                                            <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_2da">체험단</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="gnb_2dlit">
-                                    <a href="<?php echo G5_BBS_URL ?>/compete_list.php" class="gnb_2da">공모전</a>
-                                </li>
-                                <li class="gnb_2dlit">
-                                    <a href="<?php echo G5_BBS_URL ?>/market_list.php" class="gnb_2da">마켓</a>
-                                </li>
-                                <li class="gnb_2dlit">
-                                    <a href="<?php echo G5_BBS_URL ?>/job_list.php" class="gnb_2da">구인구직</a>
-                                </li>
+                            <li class="gnb_2dlit">
+                                <a href="<?php echo G5_BBS_URL ?>/compete_list.php" class="gnb_2da">공모전</a>
+                            </li>
+                            <li class="gnb_2dlit">
+                                <a href="<?php echo G5_BBS_URL ?>/market_list.php" class="gnb_2da">마켓</a>
+                            </li>
+                            <li class="gnb_2dlit">
+                                <a href="<?php echo G5_BBS_URL ?>/job_list.php" class="gnb_2da">구인구직</a>
+                            </li>
 						</ul>
 					</li>
                         <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_1da <?php if($sub_id == 'campagin_list'){ echo "head_on"; } ?>">체험단<span></span></a>
+                            <a href="<?php echo G5_BBS_URL ?>/campaign_list.php?menu=exp" target="_self" class="gnb_1da <?php if($sub_id == 'campaign_list'){ echo "head_on"; } ?>">체험단<span></span></a>
                             <ul class="gnb_2dul" style="display: none;">
                                 <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=sns" target="_self" class="gnb_2da">SNS</a></li>
                                 <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/campaign_list.php?category=design" target="_self" class="gnb_2da">디자인</a></li>
@@ -378,7 +378,7 @@ $uri = $_SERVER['REQUEST_URI'];
                             </ul>
                         </li>
                         <li class="gnb_1dli">
-                            <a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" target="_self" class="gnb_1da <?php if(strpos( urldecode($uri), 'category='.$p_code[$i]['name']) == true){ echo "head_on"; } ?> ">재능거래<span></span></a>
+                            <a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" target="_self" class="gnb_1da <?php if(strpos( urldecode($uri), 'category_list.php?category='.$p_code[$i]['name']) == true){ echo "head_on"; } ?> ">재능거래<span></span></a>
                             <ul class="gnb_2dul" style="display: none;">
                                 <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/category_list.php?category=디자인" target="_self" class="gnb_2da">디자인</a></li>
                                 <li class="gnb_2dli"><a href="<?php echo G5_BBS_URL ?>/category_list.php?category=IT/프로그램" target="_self" class="gnb_2da">IT/프로그램</a></li>
@@ -443,7 +443,7 @@ $uri = $_SERVER['REQUEST_URI'];
     <?php } ?>
 
     <!--서브 상단, contest_list는 2차 카테고리만 있어서 뺐음-->
-    <?php if($sub_id=="category_list"||$sub_id == "campagin_list"||$sub_id == "market_list"||$sub_id == "compete_list"||$sub_id == "job_list"){ //아이템 리스트/뷰 ?>
+    <?php if($sub_id=="category_list"||$sub_id == "campaign_list"||$sub_id == "market_list"||$sub_id == "compete_list"||$sub_id == "job_list"){ //아이템 리스트/뷰 ?>
         <?php
         // 1차 카테고리별 2차 카테고리 선택박스
         $category_key = '1';
@@ -474,7 +474,7 @@ $uri = $_SERVER['REQUEST_URI'];
                 $category2 = "전체";
             }
         }
-        if ($sub_id == "campagin_list"){
+        if ($sub_id == "campaign_list"){
             $category = "캠페인";
             $category2 = $g5['title'];
         }
@@ -515,7 +515,7 @@ $uri = $_SERVER['REQUEST_URI'];
                                 <?php } ?>
                             </select> 
                         </li>
-                        <?php } elseif($sub_id=="campagin_list"){ //모바일 카테고리 ?>
+                        <?php } elseif($sub_id=="campaign_list"){ //모바일 카테고리 ?>
                         <li>
                             <select id="cate" onchange="">
                                 <option value="">전체</option>
@@ -616,7 +616,7 @@ $uri = $_SERVER['REQUEST_URI'];
 
                     <div id="scont">
                         <?php if($pid=="new_service" ||$sub_id=="category_list" || $sub_id=="item_view"  || $sub_id=="register_form" || $sub_id=="search_page" || $sub_id=="market_cart" || $sub_id=="my_item" ||$sub_id=="my_campaign" ||$sub_id=="my_market" ||$sub_id=="my_compete" ||$sub_id=="my_jobs" ||
-                            $sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase" || $sub_id=="my_ad_request" || $sub_id=="my_ad_list" || $sub_id=="my_leave" || $sub_id=="search_result" || $sub_id=="contest_list" || $sub_id=="contest" || $sub_id=="register_contest" || $sub_id=="mypage" || $sub_id=="contest" || $bo_table=="video_lecture" || $sub_id=="campagin_list" || $sub_id=="campagin_view"|| $sub_id=="compete_list" || $sub_id=="compete_view"|| $sub_id=="market_list" || $sub_id=="market_view"|| $sub_id=="job_list" || $sub_id=="job_view"){ //아이템 리스트?>
+                            $sub_id=="my_withdraw" || $sub_id=="my_income" || $sub_id=="my_cash" || $sub_id=="my_order" || $sub_id=="my_inquiry" || $sub_id=="my_service" || $sub_id=="my_contest" || $sub_id=="my_review" || $sub_id=="my_mileage" || $sub_id=="my_purchase" || $sub_id=="my_ad_request" || $sub_id=="my_ad_list" || $sub_id=="my_leave" || $sub_id=="search_result" || $sub_id=="contest_list" || $sub_id=="contest" || $sub_id=="register_contest" || $sub_id=="mypage" || $sub_id=="contest" || $bo_table=="video_lecture" || $sub_id=="campaign_list" || $sub_id=="campagin_view"|| $sub_id=="compete_list" || $sub_id=="compete_view"|| $sub_id=="market_list" || $sub_id=="market_view"|| $sub_id=="job_list" || $sub_id=="job_view"){ //아이템 리스트?>
                         <? } else { //일반페이지 일때?>
                             <!--서브타이틀-->
                             <div id="sub_title">

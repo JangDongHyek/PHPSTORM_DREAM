@@ -89,6 +89,10 @@ include_once('./_head.php');
                                             </button>
                                         </div>
                                     </div><!--thm-->
+                                    <div class="text-center empty">
+                                        <i class="fa-solid fa-lightbulb-exclamation"></i>
+                                        <p>목록이 없습니다.</p>
+                                    </div>
                                 </div><!--list-->
                             </div><!--in-->
                         </div>
@@ -117,6 +121,10 @@ include_once('./_head.php');
                                     </div><!--thm-->
 
                                 <?php } ?>
+                                <div class="text-center empty">
+                                    <i class="fa-solid fa-lightbulb-exclamation"></i>
+                                    <p>목록이 없습니다.</p>
+                                </div>
                             </div><!--list-->
                         </div><!--my_jobs-->
                     </div>
@@ -185,7 +193,11 @@ include_once('./_head.php');
                                             </button>
                                         </div>
                                     </div><!--thm-->
-                                </div>
+                                    <div class="text-center empty">
+                                        <i class="fa-solid fa-lightbulb-exclamation"></i>
+                                        <p>목록이 없습니다.</p>
+                                    </div>
+                                </div><!--list-->
                             </div>
                         </div>
                     </div>
@@ -220,6 +232,10 @@ include_once('./_head.php');
                                         </p>
                                     </div>
                                 </div><!--thm-->
+                                <div class="text-center empty">
+                                    <i class="fa-solid fa-lightbulb-exclamation"></i>
+                                    <p>목록이 없습니다.</p>
+                                </div>
                             </div><!--list-->
                         </div>
                     </div>

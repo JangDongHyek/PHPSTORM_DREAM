@@ -28,6 +28,12 @@ include_once('./admin.head.php');
 
 $colspan = 16;
 
+$request_model = new JlModel(array(
+    "table" => "compete_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
 
 ?>
 
@@ -77,7 +83,9 @@ $colspan = 16;
             </tr>
             </thead>
             <tbody>
-            <? foreach($data['data'] as $index => $d) {?>
+            <? foreach($data['data'] as $index => $d) {
+                $request = $request_model->where("compete_idx",$d['idx'])->get()['count'];
+                ?>
                 <tr>
                     <td><?=$d['data_page_no']?></td>
                     <td><?=$d['company_name']?></td>
@@ -91,7 +99,7 @@ $colspan = 16;
                     </td>
                     <td><?=$d['status']?></td>
                     <td><?=$d['insert_date']?></td>
-                    <td><a href="./compete_view.php">0건</a></td>
+                    <td><a href="./compete_view.php?idx=<?=$d['idx']?>"><?=number_format($request)?>건</a></td>
                     <td>
                         <a href="./compete_form.php?idx=<?=$d['idx']?>">관리</a>
                         <a href="" onclick="event.preventDefault(); deleteData('<?=$d['idx']?>')">삭제</a>
