@@ -20,7 +20,7 @@ if ($member["mb_level"] <= 2){
 
 $now_date = time();
 if ($_SERVER['REMOTE_ADDR'] == "121.140.204.65") {
-    $now_date = strtotime('+11 day', $now_date); // 1주일 후 타임스탬프
+    $now_date = strtotime('+9 day', $now_date); // 1주일 후 타임스탬프
     //$now_date = strtotime('-2 hours', $now_date);
 
 }
