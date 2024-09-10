@@ -40,28 +40,29 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <dl>
             <dt><label for="wr_name"><span class="color_red">*</span>이름</label></dt>
             <dd>
-                <?php echo $view['name'] ?>
                 <!--익명일때-->
+                <?if($view['wr_1']) {?>
                 <p>익명접수</p>
+                <?}else {echo $view['name'];}?>
             </dd>
         </dl>
         <dl>
             <dt><label for="contact">연락처</label></dt>
             <dd>
-                010-1234-5678
+                <?=$view['wr_2']?>
             </dd>
         </dl>
         <dl>
             <dt><label for="wr_email">이메일</label></dt>
             <dd>
-                example@seco.com
+                <?=$view['wr_email']?>
             </dd>
         </dl>
         <h3>제보 내용</h3>
         <dl>
             <dt><label for="wr_subject"><span class="color_red">*</span>제목</label></dt>
             <dd>
-                제보 제목
+                <?=$view['wr_subject']?>
             </dd>
         </dl>
         <dl style="align-items: baseline;">
@@ -70,14 +71,16 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 <?php echo get_view_thumbnail($view['content']); ?>
             </dd>
         </dl>
+        <?if($view['file']['count']) {?>
         <dl>
             <dt><label for="attachment">첨부파일</label></dt>
             <dd>
-                <input type="text" id="fileName" name="fileName" value="첨부파일.pdf" readonly required>
+                <input type="text" id="fileName" name="fileName" value="<?=$view['file'][0]['source']?>" readonly required>
                 <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.png,.doc,.docx" style="display:none" onchange="document.getElementById('fileName').value = this.files[0].name;">
-                <button class="btn" type="button">다운로드</button>
+                <a class="btn" type="button" href="<?=$view['file'][0]['href']?>">다운로드</a>
             </dd>
         </dl>
+        <?}?>
 
 
     </div>

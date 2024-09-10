@@ -110,7 +110,7 @@ class Jl {
                 const parsedStack = this.parseStackTrace(new Error().stack);
                 var function_name = parsedStack[1].function.replace('a.','');
             }catch (e) {
-
+                var function_name = "IOS Error";
             }
         });
     }

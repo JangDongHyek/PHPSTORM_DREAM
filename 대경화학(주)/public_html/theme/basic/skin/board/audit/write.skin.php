@@ -66,19 +66,19 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                 <dt><label for="wr_name"><span class="color_red">*</span>이름</label></dt>
                 <dd>
                     <input type="text" id="wr_name" name="wr_name" placeholder="이름을 입력해 주세요" required>
-                    <p><input type="checkbox" id="anonymous" name="anonymous"><label for="anonymous">익명접수</label></p>
+                    <p><input type="checkbox" id="wr_1" name="wr_1" onchange="changeWr()"><label for="wr_1">익명접수</label></p>
                 </dd>
             </dl>
             <dl>
-                <dt><label for="contact">연락처</label></dt>
+                <dt><label for="contact"><span class="color_red">*</span>연락처</label></dt>
                 <dd>
-                    <input type="text" id="contact" name="contact" placeholder="예) 010-1234-5678">
+                    <input type="text" id="contact" name="wr_2" placeholder="예) 010-1234-5678" required>
                 </dd>
             </dl>
             <dl>
-                <dt><label for="wr_email">이메일</label></dt>
+                <dt><label for="wr_email"><span class="color_red">*</span>이메일</label></dt>
                 <dd>
-                    <input type="text" id="wr_email" name="wr_email" placeholder="예) example@seco.com">
+                    <input type="text" id="wr_email" name="wr_email" placeholder="예) example@seco.com" required>
                 </dd>
             </dl>
             <h3>제보 내용</h3>
@@ -98,7 +98,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                 <dt><label for="attachment">첨부파일</label></dt>
                 <dd>
                     <input type="text" id="fileName" name="fileName" placeholder="파일을 첨부해 주세요 (최대 20M)" readonly required>
-                    <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.png,.doc,.docx" style="display:none" onchange="document.getElementById('fileName').value = this.files[0].name;">
+                    <input type="file" id="attachment" name="bf_file[]" accept=".pdf,.jpg,.png,.doc,.docx" style="display:none" onchange="document.getElementById('fileName').value = this.files[0].name;">
                     <button class="btn" type="button" onclick="document.getElementById('attachment').click();">파일 선택</button>
                 </dd>
             </dl>
@@ -342,9 +342,19 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
             obj.value = "";
     }
 
+    function changeWr() {
+        let checked = $("#wr_1").is(":checked")
+
+        if(checked) {
+            $("#wr_name").val("익명접수")
+        }else {
+            $("#wr_name").val("")
+        }
+    }
+
     function fwrite_submit(f)
     {
-        <?php echo $editor_js; // 에디터 사용시 자바스크립트에서 내용을 폼필드로 넣어주며 내용이 입력되었는지 검사함   ?>
+
 
         var subject = "";
         var content = "";

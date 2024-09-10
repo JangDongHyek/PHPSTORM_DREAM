@@ -89,7 +89,9 @@ $request_model = new JlModel(array(
                 <tr>
                     <td><?=$d['data_page_no']?></td>
                     <td><?=$d['company_name']?></td>
-                    <td><?=$d['subject']?></td>
+                    <td>
+                        <a href="<?=G5_URL."/bbs/compete_view.php?idx=".$d['idx']?>" target="_blank"><?=$d['subject']?></a>
+                    </td>
                     <td><?=explode(" ",$d['start_date'])[0]?> ~ <?=explode(" ",$d['end_date'])[0]?></td>
                     <td>
                         <? foreach($d['prize'] as $index2 => $i) {?>

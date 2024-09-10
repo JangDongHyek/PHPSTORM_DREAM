@@ -173,7 +173,9 @@ if ($w == '' || $w == 'u') {
 }
 
 if ($is_guest && !chk_captcha()) {
-    alert('자동등록방지 숫자가 틀렸습니다.');
+    if($bo_table != "audit") {
+        alert('자동등록방지 숫자가 틀렸습니다.');
+    }
 }
 
 if ($w == '' || $w == 'r') {
@@ -191,11 +193,13 @@ if (!isset($_POST['wr_subject']) || !trim($_POST['wr_subject']))
 if ($w == '' || $w == 'r') {
 
     if ($member['mb_id']) {
-        $mb_id = $member['mb_id'];
-        $wr_name = addslashes(clean_xss_tags($board['bo_use_name'] ? $member['mb_name'] : $member['mb_nick']));
-        $wr_password = $member['mb_password'];
-        $wr_email = addslashes($member['mb_email']);
-        $wr_homepage = addslashes(clean_xss_tags($member['mb_homepage']));
+        if($bo_table != "audit") {
+            $mb_id = $member['mb_id'];
+            $wr_name = addslashes(clean_xss_tags($board['bo_use_name'] ? $member['mb_name'] : $member['mb_nick']));
+            $wr_password = $member['mb_password'];
+            $wr_email = addslashes($member['mb_email']);
+            $wr_homepage = addslashes(clean_xss_tags($member['mb_homepage']));
+        }
     } else {
         $mb_id = '';
         // 비회원의 경우 이름이 누락되는 경우가 있음

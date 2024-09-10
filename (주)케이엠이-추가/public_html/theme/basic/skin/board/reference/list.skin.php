@@ -164,7 +164,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                     </ul>
                 </li>
             <?php } ?>
-            <?php if (count($list) == 0) { echo "<li class=\"empty_list\">게시물이 없습니다.</li>"; } ?>
+            <?php if (count($list) == 0) { echo "<li class=\"empty_list\">There are no posts.</li>"; } ?>
         </ul>
 
         <?php if ($list_href || $is_checkbox || $write_href) { ?>

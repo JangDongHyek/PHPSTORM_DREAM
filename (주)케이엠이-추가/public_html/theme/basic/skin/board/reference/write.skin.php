@@ -125,33 +125,33 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         </tr>
 
         <tr>
-            <th scope="row"><label for="">SHIPYARD<strong class="sound_only">필수</strong></label></th>
+            <th scope="row"><label for="">SHIPYARD</label></th>
             <td>
-                <input type="text" name="wr_1" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_1" value="" id="" class="frm_input" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="">SHIP TYPE<strong class="sound_only">필수</strong></label></th>
+            <th scope="row"><label for="">SHIP TYPE</label></th>
             <td>
-                <input type="text" name="wr_2" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_2" value="" id="" class="frm_input" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="">PROJ.NO.<strong class="sound_only">필수</strong></label></th>
+            <th scope="row"><label for="">PROJ.NO.</label></th>
             <td>
-                <input type="text" name="wr_3" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_3" value="" id="" class="frm_input" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="">PAPPLICATION ITEM<strong class="sound_only">필수</strong></label></th>
+            <th scope="row"><label for="">PAPPLICATION ITEM</label></th>
             <td>
-                <input type="text" name="wr_4" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_4" value="" id="" class="frm_input" size="50" maxlength="255">
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="">DELIVERY<strong class="sound_only">필수</strong></label></th>
+            <th scope="row"><label for="">DELIVERY</label></th>
             <td>
-                <input type="text" name="wr_5" value="" id="" required class="frm_input required" size="50" maxlength="255">
+                <input type="text" name="wr_5" value="" id="" class="frm_input" size="50" maxlength="255">
             </td>
         </tr>
 

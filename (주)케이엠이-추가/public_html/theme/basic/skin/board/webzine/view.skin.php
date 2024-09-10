@@ -68,7 +68,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
             <div class="mx-3 text-secondary">|</div>
             <div class="d-flex">
                 <i class="bi bi-calendar-check me-2"></i>
-                <div><?php echo date("y-m-d H:i", strtotime($view['wr_datetime'])) ?></div>
+                <div><?php echo date("y.m.d", strtotime($view['wr_datetime'])) ?></div>
             </div>
             <div class="mx-3 text-secondary">|</div>
             <div class="d-flex">
@@ -217,8 +217,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <div class="text-center" style="width: 100px;">Back</div>
         <div class="mx-lg-5 mx-2">|</div>
         <div class="w-100 text-break-1">
-            <a class="" href="<?php echo $prev_href ?>" target="_self">Korea Industrial Human Resources Corporation signs a parallel
-                work-study system agreement</a>
+            <a class="" href="<?php echo $prev_href ?>" target="_self"><?=$prev_wr_subject?></a>
         </div>
     </div>
     <?php } ?>
@@ -227,8 +226,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <div class="text-center" style="width: 100px;">Next</div>
         <div class="mx-lg-5 mx-2">|</div>
         <div class="w-100 text-break-1">
-            <a class="" href="<?php echo $next_href ?>" target="_self">Busan Industrial High School's industry-academic cooperation
-                agreement was signed</a>
+            <a class="" href="<?php echo $next_href ?>" target="_self"><?=$next_wr_subject?></a>
         </div>
     </div>
     <?php } ?>

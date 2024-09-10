@@ -127,7 +127,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                             <div class="mx-1 text-secondary">|</div>
                             <div class="d-flex">
                                 <i class="bi bi-eye me-2"></i>
-                                <div><?php echo number_format($view['wr_hit']) ?></div>
+                                <div><?php echo number_format($list[$i]['wr_hit']) ?></div>
                             </div>
                         </div>
                     </div>
@@ -138,7 +138,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 	<?php
 	}
 	?>
-    <?php if (count($list) == 0) { echo '<div class="empty_table">게시물이 없습니다.</div>'; } ?>
+    <?php if (count($list) == 0) { echo '<div class="empty_table">There are no posts.</div>'; } ?>
 	</ul>
 	</div>
 

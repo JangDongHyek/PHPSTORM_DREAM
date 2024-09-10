@@ -401,7 +401,7 @@ if($member['mb_no']) {
                 </div>
 
                 <div class="modal-body">
-                    <div class="box box_red">
+                    <div class="box box_red" id="comment_box">
                         <textarea id="update_comment" readonly></textarea>
                     </div>
                     <p>활동 링크 <span class="txt_color">* 필수</span></p>
@@ -439,6 +439,7 @@ if($member['mb_no']) {
             report_date : "now()",
             report_status : "보고"
         }
+
         try {
             let res = await jl.ajax("update",data,"/api/campaign_request.php");
             alert("보고를 완료했습니다.");
@@ -451,11 +452,18 @@ if($member['mb_no']) {
     async function getRequest(idx) {
         try {
             let filter = {idx : idx}
+
             let res = await jl.ajax("get",filter,"/api/campaign_request.php");
+
             request_idx = res.data[0].idx;
             document.getElementById("activity_link").value = res.data[0].activity_link;
             document.getElementById("description").value = res.data[0].description;
             document.getElementById("update_comment").textContent = res.data[0].update_comment;
+            if(res.data[0].report_status == "수정요청") {
+                $("#comment_box").show();
+            }else {
+                $("#comment_box").hide();
+            }
         }catch (e) {
             alert(e.message)
         }

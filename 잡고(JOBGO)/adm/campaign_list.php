@@ -111,7 +111,9 @@ $request_model = new JlModel(array(
                     <td><?=$d['data_page_nor']?></td>
                     <td><?=$d['category']?></td>
                     <td><?=$d['company_name']?></td>
-                    <td><?=$d['subject']?></td>
+                    <td>
+                        <a href="<?=G5_URL."/bbs/campaign_view.php?idx=".$d['idx']?>" target="_blank"><?=$d['subject']?></a>
+                    </td>
                     <td><?=$d['recruitment_date']?></td>
                     <td><?=$d['activity_date']?></td>
                     <td><?=$d['service_cash']?></td>
