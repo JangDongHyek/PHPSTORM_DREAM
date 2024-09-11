@@ -17,8 +17,18 @@ class Jl {
     }
 
     function error($msg) {
-        $er = array("success"=> false,"message"=>$msg);
-        echo json_encode($er,JSON_UNESCAPED_UNICODE);
+        $trace = debug_backtrace();
+        $trace = array_reverse($trace);
+        $er = array(
+            "success" => false,
+            "message" => $msg
+        );
+
+        foreach($trace as $index => $t) {
+            $er['file_'.$index] = $t['file'];
+            $er['line_'.$index] = $t['line'];
+        }
+        echo json_encode($er,JSON_UNESCAPED_UNICODE,JSON_UNESCAPED_SLASHES);
         throw new \Exception($msg);
     }
 
@@ -106,6 +116,7 @@ class Jl {
         if (!file_exists($dir)) {
             $this->error("Jl deleteDir() : 삭제 할려는 폴더가 존재하지 않습니다.");
         }
+
 
         $files = array_diff(scandir($dir), array('.', '..'));
 

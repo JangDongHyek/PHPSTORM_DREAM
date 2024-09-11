@@ -87,7 +87,22 @@ class Jl {
                         // 메모리 해제를 위해 URL 객체를 폐기
                         window.URL.revokeObjectURL(link.href);
                     }else {
-                        if (!res.success) reject(new Error(res.message));
+                        if (!res.success) {
+                            let message = res.message + "\n";
+
+                            if(Jl_dev) {
+                                if(res.file_0) {
+                                    message += `${res.file_0} : ${res.line_0} Line\n`;
+                                }
+                                if(res.file_1) {
+                                    message += `${res.file_1} : ${res.line_1} Line\n`;
+                                }
+                                if(res.file_2) {
+                                    message += `${res.file_2} : ${res.line_2} Line\n`;
+                                }
+                            }
+                            reject(new Error(message));
+                        }
                     }
                     jl.log(res,function_name);
                     resolve(res);

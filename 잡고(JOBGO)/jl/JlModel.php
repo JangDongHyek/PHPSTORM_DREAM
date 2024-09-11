@@ -23,6 +23,7 @@ class JlModel extends Jl{
 
     private $join_sql = "";
     private $join_table = "";
+    private $join_primary = "";
     private $group_by_sql_front = "";
     private $group_by_sql_back = "";
 
@@ -122,6 +123,7 @@ class JlModel extends Jl{
         $this->sql_order_by = "";
         $this->join_sql = "";
         $this->join_table = "";
+        $this->join_primary = "";
         $this->group_by_sql_front = "";
         $this->group_by_sql_back = "";
 
@@ -175,7 +177,8 @@ class JlModel extends Jl{
             return mysql_insert_id($this->connect);
     }
 
-    function count(){
+    function count($_param = array()){
+        $reset = isset($_param['reset']) ? $_param['reset'] : true;
         // Summary Query
         $sql = $this->getSql(array("count" => true));
 
@@ -193,6 +196,9 @@ class JlModel extends Jl{
 
         }
 
+        if($reset) {
+            $this->reset();
+        }
 
         return $total_count ? $total_count : 0;
     }
@@ -200,6 +206,7 @@ class JlModel extends Jl{
     function get($_param = array()) {
         $page = $_param['page'] ? : 0;
         $limit = $_param['limit'] ? : 0;
+        $reset = isset($_param['reset']) ? $_param['reset'] : true;
         $_param['source'] = $_param['source'] ? : $this->table;
 
         if($_param['source'] != $this->table) {
@@ -215,7 +222,7 @@ class JlModel extends Jl{
         if($limit) $sql .= " LIMIT $skip, $limit";
 
         $object["data"] = array();
-        $object["count"] = $this->count();
+        $object["count"] = $this->count($_param);
         if($_param['sql']) $object["sql"] = $sql;
 
         $index = 1;
@@ -260,7 +267,9 @@ class JlModel extends Jl{
             }
         }
 
-        $this->reset();
+        if($reset) {
+            $this->reset();
+        }
 
         return $object;
     }
@@ -279,9 +288,6 @@ class JlModel extends Jl{
 
                 if($value == "now()") $update_sql .= "`{$key}`={$value}";
                 else $update_sql .= "`{$key}`='{$value}'";
-
-
-
             }
         }
 
@@ -347,15 +353,23 @@ class JlModel extends Jl{
 
     function getSql($_param = array()) {
         $source = $_param['source'] ? : $this->table;
-        $scope = $_param['count'] ? $this->primary : "*";
+        $other = $source == $this->table ? $this->join_table : $this->table;
+        $scope = $_param['count'] ? $source == $this->table ? $this->primary : $this->join_primary : "*";
 
         $select = "";
 
         if($_param['select']) {
-            if(is_string($_param['select'])) $select .= ", ".$_param['select'];
-            if(is_array($_param['select'])) {
-                foreach($_param['select'] as $d) {
-                    $select .= ", $d";
+            if($_param['select'] == "*") {
+                $columns = $source == $this->table ? $this->schema['join_columns'] : $this->schema['columns'];
+                foreach($columns as $column) {
+                    $select .= ", {$other}.{$column} AS join_{$other}_{$column}";
+                }
+            }else {
+                if(is_string($_param['select'])) $select .= ", ".$_param['select'];
+                if(is_array($_param['select'])) {
+                    foreach($_param['select'] as $d) {
+                        $select .= ", $d";
+                    }
                 }
             }
         }
@@ -371,7 +385,8 @@ class JlModel extends Jl{
         $this->sql .= "$query";
     }
 
-    function orderBy($first,$second = "") {
+    function orderBy($first,$second = "",$source="") {
+        $source = $source ? : $this->table;
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -379,30 +394,31 @@ class JlModel extends Jl{
                 if(in_array($key, $this->schema['columns'])){
                     if($this->empty && $value == "") continue;
                     if($this->sql_order_by) $this->sql_order_by .= ",";
-                    $this->sql_order_by .= " {$key} {$value}";
+                    $this->sql_order_by .= " {$source}.{$key} {$value}";
                 }
             }
         }
 
         if(is_string($first)) {
-            if($first == "") $this->error("JlModel order_by() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel order_by() : 필터를 입력해주새요.");
-            if(!in_array($second,array("DESC","ASC"))) $this->error("JlModel order_by() : DESC , ASC 둘중 하나만 선택가능합니다.");
-            if(in_array($first, $this->schema['columns'])){
-                if($this->sql_order_by) $this->sql_order_by .= ",";
-                $this->sql_order_by .= " {$first} {$second}";
-            }
+            if($first == "") $this->error("JlModel orderBy() : 컬럼명을 입력해주새요.");
+            if($second == "") $this->error("JlModel orderBy() : 필터를 입력해주새요.");
+            if(!in_array($first, $this->schema['columns'])) $this->error("JlModel orderBy() : 존재하지않는 컬럼입니다..");
+            if(!in_array($second,array("DESC","ASC"))) $this->error("JlModel orderBy() : DESC , ASC 둘중 하나만 선택가능합니다.");
+
+            if($this->sql_order_by) $this->sql_order_by .= ",";
+            $this->sql_order_by .= " {$source}.{$first} {$second}";
         }
 
         return $this;
     }
 
-    function join($table,$origin_key,$join_key) {
+    function join($table,$origin_key,$join_key,$join_primary = "idx") {
         if(!in_array($table, $this->schema['tables'])) $this->error("JlModel join() : $table 테이블을 찾을수 없습니다.");
         if(!in_array($origin_key, $this->schema['columns'])) $this->error("JlModel join() : Origin Key를 찾을 수 없습니다.");
         $this->schema['join_columns'] = $this->getColumns($table);
         if(!in_array($join_key, $this->schema['join_columns'])) $this->error("JlModel join() : Join Key를 찾을 수 없습니다.");
         $this->join_table = $table;
+        $this->join_primary = $join_primary;
 
         $this->join_sql = " JOIN $table ON $this->table.$origin_key = $table.$join_key ";
     }

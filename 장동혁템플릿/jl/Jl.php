@@ -18,15 +18,25 @@ class Jl {
     }
 
     function error($msg) {
-        $er = array("success"=> false,"message"=>$msg);
-        echo json_encode($er,JSON_UNESCAPED_UNICODE);
+        $trace = debug_backtrace();
+        $trace = array_reverse($trace);
+        $er = array(
+            "success" => false,
+            "message" => $msg
+        );
+
+        foreach($trace as $index => $t) {
+            $er['file_'.$index] = $t['file'];
+            $er['line_'.$index] = $t['line'];
+        }
+        echo json_encode($er,JSON_UNESCAPED_UNICODE,JSON_UNESCAPED_SLASHES);
         throw new \Exception($msg);
     }
 
     function jsonDecode($json,$encode = true) {
         // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
         $json = addslashes($json);
-        $obj = str_replace('\\n', '###NEWLINE###', $json);
+        $obj = str_replace('\\n', '###NEWLINE###', $json); // textarea 값 그대로 저장하기위한 변경
         $obj = str_replace('\\', '', $obj);
         $obj = str_replace('\\\\', '', $obj);
         $obj = str_replace('###NEWLINE###', '\\n', $obj);

@@ -6,9 +6,26 @@ include_once("./jl/JlConfig.php");
 
 //var_dump($jl->PHP);
 
-$upload_max_filesize = (int)str_replace('M','',$jl->PHP['upload_max_filesize']['global_value']);
-$post_max_size = (int)str_replace('M','',$jl->PHP['post_max_size']['global_value']);
-echo $post_max_size;
+// 캠페인 선장자
+$request_model = new JlModel(array(
+    "table" => "compete_request",
+    "primary" => "idx",
+    "autoincrement" => true,
+    "empty" => false
+));
+
+
+//신청데이터
+$request_model->join("compete","compete_idx","idx");
+$request_model->where("user_idx",$member['mb_no']);
+$request_data = $request_model->get(array(
+    "source" => "compete",
+    "select" => "*",
+    "sql" => true
+));
+
+//echo $request_data['sql'];
+
 //
 //$model = new JlModel(array(
 //    "table" => "campaign",

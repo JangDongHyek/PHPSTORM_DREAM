@@ -2,6 +2,7 @@
 
 use App\Libraries\JL;
 use App\Libraries\Model;
+use App\Libraries\JlModel;
 use App\Models\AdminModel;
 
 class AdminController extends BaseController {
@@ -186,12 +187,18 @@ class AdminController extends BaseController {
             "autoincrement" => true,
             "empty" => false
         );
-        $model = new Model($model_config);
+        $model = new JlModel($model_config);
+        $today_end = date('Y-m-d') . ' 23:59:59';
+
+
+        $model->join("order_settle_list","OrderNo","ContrNo");
 
         // 기본 조건문
-        if($this->data['member']['mb_id'] != "lets080") $model->where("mb_id",$this->data['member']['mb_id']);
+        if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
+        $model->where("CancelStatus","0");
 
         $model->between("OrderDate",date('Y')."-01-01",date('Y')."-12-31");
+        $model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
         // 모든 데이터
         $this->data['all_orders'] = $model->get();
 
@@ -202,8 +209,10 @@ class AdminController extends BaseController {
         if(empty($this->data['page'])) $this->data['page'] = 1;
         if(empty($this->data['limit'])) $this->data['limit'] = 10;
 
+        $model->join("order_settle_list","OrderNo","ContrNo");
         //일자 조건문
-        if($this->data['member']['mb_id'] != "lets080") $model->where("mb_id",$this->data['member']['mb_id']);
+        if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
+        $model->where("CancelStatus","0");
         if($this->data['start_day'] && $this->data['end_day']) {
             $start_day = $this->data['start_day'];
             $end_day = $this->data['end_day'];
@@ -212,16 +221,26 @@ class AdminController extends BaseController {
             $end_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'] + 1, 0, $this->data['year']));
         }
         $model->between("OrderDate",$start_day,$end_day);
+        $model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
+        //$model->between("SettleExpectDate","2020-01-01 00:00:00",$today_end,"AND","order_settle_list");
 
         //검색 조건문
         if($this->data['search_key'] && $this->data['search_value']) {
             $model->like($this->data['search_key'],$this->data['search_value']);
         }
 
-        $model->order_by("OrderDate","DESC");
+        $model->orderBy("OrderDate","DESC");
 
-        $this->data['orders'] = $model->get($this->data['page'],$this->data['limit']);
-        $this->data['search_all_orders'] = $model->get();
+        $this->data['orders'] = $model->get(array(
+            "page" => $this->data['page'],
+            "limit" =>$this->data['limit'],
+            "reset" => false,
+            "sql" => true
+        ));
+
+        $this->data['search_all_orders'] = $model->get(array(
+            "sql" => true
+        ));
 
         $this->data['last'] = ceil($this->data['orders']['count'] / $this->data['limit']);
 

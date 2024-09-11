@@ -8,6 +8,8 @@ $g5['title'] = '체험단 관리';
 include_once('./_head.php');
 include_once("../jl/JlConfig.php");
 
+$menu_name = "체험단";
+
 switch ($_GET['menu']) {
     case "sns" :
         $category = "SNS";

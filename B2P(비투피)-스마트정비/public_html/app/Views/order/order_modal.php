@@ -18,7 +18,23 @@
         </div>
     </div>
 </div> */ ?>
+<?php
+    //택배사 배송코드가져오기
+    $delivery_company_list = get_delivery_company_list();
+    $delivery_company_list_AC = get_delivery_company_list_AC();
+?>
 <script>
+
+    var delivery_company_list = '<option value="">선택</option>';
+    <? foreach ($delivery_company_list as $index => $data): ?>
+    delivery_company_list += '<option value="<?= $data['code'] ?>" data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>';
+    <? endforeach; ?>
+
+    var delivery_company_list_AC = '<option value="">선택</option>';
+    <? foreach ($delivery_company_list_AC as $index => $data): ?>
+    delivery_company_list_AC += '<option value="<?= $data['code'] ?>" data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>';
+    <? endforeach; ?>
+
     let selectedValues = [];
 
     // all_check 체크박스를 클릭하면 나머지 체크박스를 모두 선택 또는 해제
@@ -148,6 +164,7 @@
 
         var OrderAmount_total = 0;
         var ServiceFee_total = 0;
+        var KCPServiceFee_total = 0;
         var CostPrice_total = 0;
         var SellerDiscountPrice_total = 0;
         var SettlementPrice_total = 0;
@@ -165,6 +182,7 @@
             //console.log(response2)
 
             var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
+            var KCPServiceFee = calc_data ? (parseInt(calc_data['SellOrderPrice']*0.023)) : parseInt((response['result']['OrderAmount']*0.023))
             var ServiceFee = calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
             var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
             var SellerDiscountPrice = calc_data ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice']
@@ -173,10 +191,11 @@
             //부가적인 설정
             SellerDiscountPrice = SellerDiscountPrice * -1;     // 음수화
             if (ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
+            if (KCPServiceFee > 0) KCPServiceFee = KCPServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             var b2p_commission = OrderAmount * 0.05;            // b2p 자체 수수료 (판매금액의 5퍼센트)
 
             ServiceFee = ServiceFee - b2p_commission;
-            SettlementPrice = SettlementPrice - b2p_commission;
+            SettlementPrice = SettlementPrice - b2p_commission + KCPServiceFee;
 
 
             code_html += '<tr>';
@@ -184,6 +203,7 @@
             code_html += '<td>' + response['result']['GoodsName'] + '</td>';
             code_html += '<td>' + AddComma(OrderAmount) + '</td>';
             code_html += '<td>' + AddComma(ServiceFee) + '</td>';
+            code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';
             code_html += '<td>' + AddComma(CostPrice) + '</td>';
             code_html += '<td>' + AddComma(SellerDiscountPrice) + '</td>';
             code_html += '<td>' + AddComma(SettlementPrice) + '</td>';
@@ -192,6 +212,7 @@
 
             OrderAmount_total += (OrderAmount) * 1;
             ServiceFee_total += (ServiceFee) * 1;
+            KCPServiceFee_total += (KCPServiceFee) * 1;
             CostPrice_total += (CostPrice) * 1;
             SellerDiscountPrice_total += (SellerDiscountPrice) * 1;
             SettlementPrice_total += (SettlementPrice) * 1;
@@ -223,6 +244,7 @@
         $('#orderAmountModal_list').html(code_html);
         $('#modal_OrderAmount_total').html(AddComma(OrderAmount_total));
         $('#modal_ServiceFee_total').html(AddComma(ServiceFee_total));
+        $('#modal_KCPServiceFee_total').html(AddComma(KCPServiceFee_total));
         $('#modal_CostPrice_total').html(AddComma(CostPrice_total));
         $('#modal_SellerDiscountPrice_total').html(AddComma(SellerDiscountPrice_total));
         $('#modal_SettlementPrice_total').html(AddComma(SettlementPrice_total));
@@ -350,6 +372,7 @@
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
             $('#companyNo' + idx).val($('#companyNo').val());
+            $('#companyNo_AC' + idx).val($('#companyNo_AC').val());
         }
 
     }
@@ -507,6 +530,12 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }
+        var idx = listData[0]['idx'];
+        if($('#SiteType'+idx).val() == 1){
+            $('#OrderClaimRelease_DeliveryCompCode').html(delivery_company_list_AC);
+        }else{
+            $('#OrderClaimRelease_DeliveryCompCode').html(delivery_company_list);
         }
 
         if ($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 1) {
@@ -811,11 +840,39 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "반품처리",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
         }
 
         if (check) {
             var idx = listData[0].idx;
-            var response = await fetchData(`/order/GetOrder`, {idx});
+            var data_arr =
+                {
+                    idx: idx,
+                    join_table: 'order_return_list',
+
+                };
+            var response = await fetchData(`/order/GetJoinOrder`, {data_arr});
+
             console.log(response);
             if (response.result) {
                 var data = response.result;
@@ -855,6 +912,29 @@
                 $('#returnModal_TakbaeName').html(data.TakbaeName);
                 $('#returnModal_NoSongjang').html(data.NoSongjang);
 
+                var return_ReasonCode = {
+                    0: '[기타] : 선택없음',
+                    1: '[구매자귀책] : 단순변심',
+                    2: '[구매자귀책] : 사이즈/색상 등 옵션 변경',
+                    3: '[판매자귀책] : 오배송',
+                    4: '[판매자귀책] : 상품불량',
+                    5: '[판매자귀책] : 판매자요청',
+                };
+                $('#returnModal_return_ReasonDetail').html(return_ReasonCode[data.return_ReasonCode]+'<br>'+data.return_ReasonDetail);
+
+                $('#returnModal_return_ReturnShippingFee').html(AddComma(data.return_ReturnShippingFee));
+                var return_ReturnShippingFeeWay = {
+                    0: '없음',
+                    1: '지금결제함(카드결제, 핸드폰결제등)',
+                    2: '환불금 차감 대기',
+                    3: '판매자 직접 결제',
+                    4: '상품에 동봉함',
+                    5: '스마일캐시 결제',
+                    6: '기타'
+                };
+                $('#returnModal_return_AddReturnShippingFeeWay').html(return_ReturnShippingFeeWay[data.return_ReturnShippingFeeWay]);
+
+
 
                 /*
                 $('#modal_FreeGift').html(data.FreeGift);
@@ -874,6 +954,29 @@
                  */
                 defModal.modal();
             }
+            return false;
+        }
+
+        if(!$('#returnModal_return_radoi1_1').is(':checked')){
+            Swal.fire({
+                title: "반품처리",
+                html: `
+            <div class="text_form">
+                <p>반품상품을 받으셔야 진행가능합니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            }).then(result => {
+                $('#returnModal_return_radoi1_1').focus();
+            });
             return false;
         }
 
@@ -1003,7 +1106,13 @@
 
         if (check) {
             var idx = listData[0].idx;
-            var response = await fetchData(`/order/GetOrder`, {idx});
+            var data_arr =
+                {
+                    idx: idx,
+                    join_table: 'order_exchange_list',
+
+                };
+            var response = await fetchData(`/order/GetJoinOrder`, {data_arr});
             //console.log(response);
             if (response.result) {
                 var data = response.result;
@@ -1110,7 +1219,7 @@
         }
 
 
-        if (!$('#returnSelfModal_InvoiceNo').val()) {
+        if (!$('#returnSelfModal_InvoiceNo').val() && !$('#returnSelfModal_deliNone').is(":checked")) {
             Swal.fire({
                 title: "판매자 직접반품신청",
                 html: `
@@ -1133,6 +1242,7 @@
         }
 
 
+
         //for문
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
@@ -1143,10 +1253,12 @@
                     reason: $('#returnSelfModal_ReasonCode').val(),
                     itemStatus: $('#returnSelfModal_GoodsStatus').val(),
                     alreadySent: $("input[name='returnSelfModal_PickupInfoStatus']:checked").val(),
-                    pickupCompCode: $('#returnSelfModal_DeliveryCompName').val(),
-                    invoiceNo: $('#returnSelfModal_InvoiceNo').val(),
                     returnSelfModal_OrderReturnCheck: returnSelfModal_OrderReturnCheck
                 };
+
+                data_arr['pickupCompCode'] = $('#returnSelfModal_DeliveryCompName').val();
+                data_arr['invoiceNo'] = $('#returnSelfModal_InvoiceNo').val();
+
             var response = await fetchData(`/order/OrderReturnSelf`, {data_arr});
             //console.log(response);
             code_html += '[' + response['api_data']['orderNo'] + ']';
@@ -1166,6 +1278,79 @@
             html: `
             <div class="text_form">
                 <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 판매자 직접반품신청 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+    
+    //옥션 거래완료 후 환불처리
+    const orderAfterRemittanceBySeller_modal = async () => {
+
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+        //for문
+        var code_html = '';
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var response = await fetchData(`/order/OrderAfterRemittanceBySeller`, {idx});
+            //console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+
+            if (response['body']['Message'] == 'Success') {
+                code_html += '거래완료 후 환불 성공<br>';
+            } else if (response['body']['Message'] == null) {
+                code_html += '결과값이 없습니다.' + '<br>';
+            } else {
+                code_html += response['body']['Message'] + '<br>';
+            }
+        }
+
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "거래완료 후 환불",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+        Swal.fire({
+            title: "거래완료 후 환불",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 취소처리 되었습니다.</p>
             </div>
             <div class="text_form">
                    ` + code_html + `
@@ -1217,6 +1402,27 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "반품건 교환전환",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
         }
 
         if (check) {
@@ -1228,8 +1434,14 @@
 
                 };
 
+            if($('#SiteType'+idx).val() == 1){
+                $('#ReturnExchange_ResendInfo_DeliveryCompName').html(delivery_company_list_AC);
+            }else{
+                $('#ReturnExchange_ResendInfo_DeliveryCompName').html(delivery_company_list);
+            }
+
             var response = await fetchData(`/order/GetJoinOrder`, {data_arr});
-            //console.log(response);
+            console.log(response);
             if (response.result) {
                 var data = response.result;
                 $('#ReturnExchange_SiteGoodsNo').html(data.SiteGoodsNo);
@@ -1240,7 +1452,17 @@
                 $('#ReturnExchange_SalePrice').html(data.SalePrice);
                 $('#ReturnExchange_ContrAmount').html(data.ContrAmount);
                 $('#ReturnExchange_BuyerName').html(data.BuyerName);
-                $('#ReturnExchange_return_ReasonDetail').html(data.return_ReasonDetail);
+                $('#ReturnExchange_return_ReturnShippingFee').html(AddComma(data.return_ReturnShippingFee));
+
+                var return_ReasonCode = {
+                    0: '[기타] : 선택없음',
+                    1: '[구매자귀책] : 단순변심',
+                    2: '[구매자귀책] : 사이즈/색상 등 옵션 변경',
+                    3: '[판매자귀책] : 오배송',
+                    4: '[판매자귀책] : 상품불량',
+                    5: '[판매자귀책] : 판매자요청',
+                };
+                $('#ReturnExchange_return_ReasonDetail').html(return_ReasonCode[data.return_ReasonCode]+'<br>'+data.return_ReasonDetail);
 
                 var return_AddReturnShippingFeeWay = {
                     0: '없음',
@@ -1251,7 +1473,7 @@
                     5: '스마일캐시 결제',
                     6: '기타'
                 };
-                $('#ReturnExchange_return_AddReturnShippingFeeWay').html(return_AddReturnShippingFeeWay[data.return_AddReturnShippingFeeWay]);
+                $('#ReturnExchange_return_AddReturnShippingFeeWay').html(return_AddReturnShippingFeeWay[data.return_ReturnShippingFeeWay]);
                 defModal.modal();
             }
             return false;
@@ -1338,10 +1560,36 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "교환건 반품전환",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
         }
 
         if (check) {
             var idx = listData[0].idx;
+            if($('#SiteType'+idx).val() == 1){
+                $('#ExchangeReturn_ResendInfo_DeliveryCompName').html(delivery_company_list_AC);
+            }else{
+                $('#ExchangeReturn_ResendInfo_DeliveryCompName').html(delivery_company_list);
+            }
             var data_arr =
                 {
                     idx: idx,
@@ -1361,7 +1609,16 @@
                 $('#ExchangeReturn_SalePrice').html(data.SalePrice);
                 $('#ExchangeReturn_ContrAmount').html(data.ContrAmount);
                 $('#ExchangeReturn_BuyerName').html(data.BuyerName);
-                $('#ExchangeReturn_return_ReasonDetail').html(data.exchange_ResonDetail);
+
+                var exchange_ReasonCode = {
+                    0: '[기타] : 선택없음',
+                    1: '[구매자귀책] : 단순변심',
+                    2: '[구매자귀책] : 사이즈/색상 등 옵션 변경',
+                    3: '[판매자귀책] : 오배송',
+                    4: '[판매자귀책] : 상품불량',
+                    5: '[판매자귀책] : 판매자요청',
+                };
+                $('#ExchangeReturn_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode]+'<br>'+data.exchange_ResonDetail);
 
                 var exchange_ExchangeShippingFeeWay = {
                     0: '없음',
@@ -1372,7 +1629,8 @@
                     5: '스마일캐시 결제',
                     6: '기타'
                 };
-                $('#ExchangeReturn_return_AddReturnShippingFeeWay').html(exchange_ExchangeShippingFeeWay[data.exchange_ExchangeShippingFeeWay]);
+                $('#ExchangeReturn_exchange_ExchangeShippingFeeWay').html(exchange_ExchangeShippingFeeWay[data.exchange_ExchangeShippingFeeWay]);
+                $('#ExchangeReturn_exchange_ExchangeShippingFee').html(AddComma(data.exchange_ExchangeShippingFee));
                 defModal.modal();
             }
             return false;
@@ -1447,7 +1705,12 @@
             var data = response.result;
             $('#modal_SiteGoodsNo').html(data.SiteGoodsNo);
             $('#modal_OrderNo').html(data.OrderNo);
-            $('#modal_GoodsName').html(data.GoodsName);
+
+            if(data.order_b2pAutoCar){
+                $('#modal_GoodsName').html('(' + data.order_b2pAutoCarYear + ')'+ data.order_b2pAutoCar +'<br>'+data.GoodsName);
+            }else{
+                $('#modal_GoodsName').html(data.GoodsName);
+            }
             $('#modal_ContrAmount').html(data.ContrAmount);
 
             var option = JSON.parse(data.ItemOptionSelectList);
@@ -1479,7 +1742,112 @@
             $('#modal_ReceiverName').html(data.ReceiverName);
             $('#modal_HpNo').html(data.HpNo);
             $('#modal_TelNo').html(data.TelNo);
-            $('#modal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
+
+            if(data.order_b2pAutoDelFullAddress){
+                $('#modal_DelFullAddress').html('(' + data.order_b2pZip + ')' + data.order_b2pAutoDelFullAddress);
+            }else{
+                $('#modal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
+            }
+
+            $('#modal_DelMemo').html(data.DelMemo);
+            defModal.modal();
+        }
+
+        if (response2.body.Data) {
+
+            var progress_data = response2.body.Data;
+            var progress_html = '';
+            for (var k = 0; k < progress_data.length; k++) {
+
+                progress_html += '<tr name="SiteGoodsNo">';
+                progress_html += '<td>';
+                progress_html += progress_data[k]['EscrowType'];
+                progress_html += '</td>';
+                progress_html += '<td>';
+                var date = formatDateTime(new Date(progress_data[k]['EscrowDt']));
+                progress_html += date;
+                progress_html += '</td>';
+
+                progress_html += '<td>';
+                if (progress_data[k]['TrackingUrl'] != null) {
+                    //progress_html += progress_data[k]['TrackingUrl'];
+                    progress_html += '<button type="button" class="btn btn-white btn-mini" onclick="window.open(\'' + progress_data[k]['TrackingUrl'] + '\')">상품위치확인</button>';
+                }
+                progress_html += '</td>';
+
+                progress_html += '</tr>';
+            }
+
+            //console.log(progress_data);
+            $('#deli_progress').html(progress_html);
+        }
+    }
+
+    // 주문번호 상세 모달
+    const orderNo2_modal = async (OrderNo) => {
+
+        const defModal = $('#orderSheetModal');
+
+        if (!OrderNo) {
+            Swal.fire({
+                text: "주문 코드가 없습니다.",
+            });
+            return false;
+        }
+
+        var response = await fetchData(`/order/GetOrder2`, {OrderNo});
+        //console.log(response);
+        var idx = response.idx;
+        var response2 = await fetchData(`/order/OrderDeliProgress`, {idx});
+        //console.log(response2);
+        if (response.result) {
+            var data = response.result;
+            $('#modal_SiteGoodsNo').html(data.SiteGoodsNo);
+            $('#modal_OrderNo').html(data.OrderNo);
+
+            if(data.order_b2pAutoCar){
+                $('#modal_GoodsName').html('(' + data.order_b2pAutoCarYear + ')'+ data.order_b2pAutoCar +'<br>'+data.GoodsName);
+            }else{
+                $('#modal_GoodsName').html(data.GoodsName);
+            }
+            $('#modal_ContrAmount').html(data.ContrAmount);
+
+            var option = JSON.parse(data.ItemOptionSelectList);
+            var option_html = '';
+            //console.log(option);
+            for (var i = 0; i < option.length; i++) {
+                option_html += option[i]['ItemOptionValue'] + ' ' + option[i]['ItemOptionOrderCnt'] + ' ' + option[i]['ItemOptionCode'];
+                option_html += '</br>';
+            }
+            $('#modal_ItemOptionSelectList').html(option_html);
+
+            var Addition = JSON.parse(data.ItemOptionAdditionList);
+            var Addition_html = '';
+            for (var j = 0; j < Addition.length; j++) {
+                Addition_html += Addition[j]['ItemOptionValue'] + ' ' + Addition[j]['ItemOptionOrderCnt'] + ' ' + Addition[j]['ItemOptionCode'];
+                Addition_html += '</br>';
+            }
+            $('#modal_ItemOptionAdditionList').html(Addition_html);
+            $('#modal_FreeGift').html(data.FreeGift);
+            data.OrderAmount = AddComma(data.OrderAmount);
+            $('#modal_OrderAmount').html(data.OrderAmount);
+            data.ShippingFee = AddComma(data.ShippingFee);
+            $('#modal_ShippingFee').html(data.ShippingFee);
+            //$('#modal_TransType').html(data.TransType);
+            $('#modal_BuyerId').html(data.BuyerId);
+            $('#modal_BuyerName').html(data.BuyerName);
+            $('#modal_BuyerMobileTel').html(data.BuyerMobileTel);
+            $('#modal_BuyerTel').html(data.BuyerTel);
+            $('#modal_ReceiverName').html(data.ReceiverName);
+            $('#modal_HpNo').html(data.HpNo);
+            $('#modal_TelNo').html(data.TelNo);
+
+            if(data.order_b2pAutoDelFullAddress){
+                $('#modal_DelFullAddress').html('(' + data.order_b2pZip + ')' + data.order_b2pAutoDelFullAddress);
+            }else{
+                $('#modal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
+            }
+
             $('#modal_DelMemo').html(data.DelMemo);
             defModal.modal();
         }
@@ -1660,14 +2028,42 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "배송정보수정",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
         }
 
         var idx = listData[0]['idx'];
         var response_order = await fetchData(`/order/GetOrder`, {idx});
 
+        if($('#SiteType'+idx).val() == 1){
+            $('#orderDeliEdit_companyNo').html(delivery_company_list_AC);
+        }else{
+            $('#orderDeliEdit_companyNo').html(delivery_company_list);
+        }
+
         if (response_order.result) {
             var data = response_order.result;
             //console.log(data);
+
             $('#orderDeliEdit_TakbaeName').html(data.TakbaeName);
             $('#orderDeliEdit_NoSongjang').html(data.NoSongjang);
             defModal.modal();
@@ -1837,6 +2233,7 @@
         });
     }
 
+    //반품관리 수거택배 정보수정
     const orderReturnDeliEdit_modal = async () => {
 
         const defModal = $('#orderReturnDeliEditModal');
@@ -1869,9 +2266,36 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "반품 수거택배 정보수정",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
         }
 
         var idx = listData[0]['idx'];
+        if($('#SiteType'+idx).val() == 1){
+            $('#orderReturnDeliEdit_companyNo').html(delivery_company_list_AC);
+        }else{
+            $('#orderReturnDeliEdit_companyNo').html(delivery_company_list);
+        }
+
         var response_order = await fetchData(`/order/GetOrder`, {idx});
 
         if (response_order.result) {
@@ -2102,9 +2526,35 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "교환 수거택배 정보수정",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
         }
 
         var idx = listData[0]['idx'];
+        if($('#SiteType'+idx).val() == 1){
+            $('#orderExchangeDeliEdit_companyNo').html(delivery_company_list_AC);
+        }else{
+            $('#orderExchangeDeliEdit_companyNo').html(delivery_company_list);
+        }
         var response_order = await fetchData(`/order/GetOrder`, {idx});
 
         if (response_order.result) {
@@ -2211,11 +2661,43 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "교환처리",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
         }
 
         if (check) {
             var idx = listData[0].idx;
-            var response = await fetchData(`/order/GetOrder`, {idx});
+            if($('#SiteType'+idx).val() == 1){
+                $('#exchangeModal_ResendInfo_DeliveryCompName').html(delivery_company_list_AC);
+            }else{
+                $('#exchangeModal_ResendInfo_DeliveryCompName').html(delivery_company_list);
+            }
+            var data_arr =
+                {
+                    idx: idx,
+                    join_table: 'order_exchange_list',
+
+                };
+            var response = await fetchData(`/order/GetJoinOrder`, {data_arr});
             console.log(response);
             if (response.result) {
                 var data = response.result;
@@ -2255,6 +2737,28 @@
                 $('#exchangeModal_TakbaeName').html(data.TakbaeName);
                 $('#exchangeModal_NoSongjang').html(data.NoSongjang);
 
+                var exchange_ReasonCode = {
+                    0: '[기타] : 선택없음',
+                    1: '[구매자귀책] : 단순변심',
+                    2: '[구매자귀책] : 사이즈/색상 등 옵션 변경',
+                    3: '[판매자귀책] : 오배송',
+                    4: '[판매자귀책] : 상품불량',
+                    5: '[판매자귀책] : 판매자요청',
+                };
+                $('#exchangeModal_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode]+'<br>'+data.exchange_ReasonDetail);
+
+                var exchange_ExchangeShippingFeeWay = {
+                    0: '없음',
+                    1: '지금결제함(카드결제, 핸드폰결제등)',
+                    2: '환불금 차감 대기',
+                    3: '판매자 직접 결제',
+                    4: '상품에 동봉함',
+                    5: '스마일캐시 결제',
+                    6: '기타'
+                };
+                $('#exchangeModal_exchange_ExchangeShippingFeeWay').html(exchange_ExchangeShippingFeeWay[data.exchange_ExchangeShippingFeeWay]);
+                $('#exchangeModal_exchange_ExchangeShippingFee').html(AddComma(data.exchange_ExchangeShippingFee));
+
 
                 /*
                 $('#modal_FreeGift').html(data.FreeGift);
@@ -2277,12 +2781,35 @@
             return false;
         }
 
+        if(!$('#exchangeModal_return_radoi1_1').is(':checked')){
+            Swal.fire({
+                title: "교환처리",
+                html: `
+            <div class="text_form">
+                <p>교환상품을 받으셔야 진행가능합니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            }).then(result => {
+                $('#exchangeModal_return_radoi1_1').focus();
+            });
+            return false;
+        }
+
         if ($('#exchangeModal_return_radoi2_1').is(":checked") && ( !$('#exchangeModal_ResendInfo_InvoiceNo').val() || !$('#exchangeModal_ResendInfo_DeliveryCompName').val())) {
             Swal.fire({
                 title: "교환처리",
                 html: `
             <div class="text_form">
-                <p>운송장번호를 입력해주세요.</p>
+                <p>택배사 선택 및 운송장번호를 입력해주세요.</p>
             </div>
 
 
@@ -2338,9 +2865,9 @@
 
                 var response = await fetchData(`/order/OrderExchangeDeliComplete`, {idx});
                 console.log(response);
-                code_html += '[' + response['api_data']['OrderNo'] + ' 교환 수거완료 ]';
+                code_html += '[' + response['api_data']['OrderNo'] + ' 교환 수거 ]';
                 if (response['body']['Message'] == 'Success') {
-                    code_html += '교환 수거완료 성공<br>';
+                    code_html += '교환 수거 성공<br>';
                 } else if (response['body']['Message'] == null) {
                     code_html += '결과값이 없습니다.' + '<br>';
                 } else {
@@ -2402,6 +2929,250 @@
             </div>
             <div class="text_form">
                    ` + code_html + ` ` + code_html2 + ` ` + code_html3 + `
+             </div>
+
+              `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: `확인`,
+            //        cancelButtonText: ``,
+
+            closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+        }).then(result => {
+            history.go(0);
+        });
+    }
+
+    //교환처리 보류해제 + 재발송처리
+    const orderExchange2_modal = async (check) => {
+
+        const defModal = $('#orderExchangeModal');
+        const ids = document.querySelectorAll('input[name="idx[]"]:checked');
+        const listData = [];
+        ids.forEach(input => {
+            const idx = input.value;
+            listData.push({
+                idx: idx,
+            });
+        });
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "교환처리",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }else if(listData.length > 1){
+            Swal.fire({
+                title: "교환처리",
+                html: `
+            <div class="text_form">
+                <p>하나의 주문만 선택해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            $("input:checkbox[name='idx[]']").prop("checked", false);
+            $("input:checkbox[name='all_check']").prop("checked", false);
+            return false;
+        }
+
+        if (check) {
+            var idx = listData[0].idx;
+            var data_arr =
+                {
+                    idx: idx,
+                    join_table: 'order_exchange_list',
+
+                };
+            var response = await fetchData(`/order/GetJoinOrder`, {data_arr});
+            console.log(response);
+            if (response.result) {
+                var data = response.result;
+                $('#exchangeModal_SiteGoodsNo').html(data.SiteGoodsNo);
+                $('#exchangeModal_OrderNo').html(data.OrderNo);
+                $('#exchangeModal_GoodsName').attr('onclick', ' openSiteGoodsNo(' + data.SiteType + ',\'' + data.SiteGoodsNo + '\')');
+                $('#exchangeModal_GoodsName').html(data.GoodsName);
+                data.SalePrice = AddComma(data.SalePrice);
+                $('#exchangeModal_SalePrice').html(data.SalePrice);
+                $('#exchangeModal_ContrAmount').html(data.ContrAmount);
+
+                var option = JSON.parse(data.ItemOptionSelectList);
+                var option_html = '';
+                //console.log(option);
+                option_html += '<ul>';
+                for (var i = 0; i < option.length; i++) {
+                    option_html += option[i]['ItemOptionValue'] + ' ' + option[i]['ItemOptionOrderCnt'] + ' ' + option[i]['ItemOptionCode'];
+                    option_html += '</br>';
+                }
+                option_html += '</ul>';
+                $('#exchangeModal_ItemOptionSelectList').html(option_html);
+
+                var Addition = JSON.parse(data.ItemOptionAdditionList);
+                var Addition_html = '';
+                Addition_html += '<ul>';
+                for (var j = 0; j < Addition.length; j++) {
+                    Addition_html += Addition[j]['ItemOptionValue'] + ' ' + Addition[j]['ItemOptionOrderCnt'] + ' ' + Addition[j]['ItemOptionCode'];
+                    Addition_html += '</br>';
+                }
+                Addition_html += '</ul>';
+                $('#exchangeModal_ItemOptionAdditionList').html(Addition_html);
+                $('#exchangeModal_BuyerName').html(data.BuyerName);
+                $('#exchangeModal_ReceiverName').html(data.ReceiverName);
+                $('#exchangeModal_BuyerMobileTel').html(data.BuyerMobileTel);
+                $('#exchangeModal_HpNo').html(data.HpNo);
+                $('#exchangeModal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
+                $('#exchangeModal_TakbaeName').html(data.TakbaeName);
+                $('#exchangeModal_NoSongjang').html(data.NoSongjang);
+
+                var exchange_ReasonCode = {
+                    0: '[기타] : 선택없음',
+                    1: '[구매자귀책] : 단순변심',
+                    2: '[구매자귀책] : 사이즈/색상 등 옵션 변경',
+                    3: '[판매자귀책] : 오배송',
+                    4: '[판매자귀책] : 상품불량',
+                    5: '[판매자귀책] : 판매자요청',
+                };
+                $('#exchangeModal_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode]+'<br>'+data.exchange_ReasonDetail);
+
+                var exchange_ExchangeShippingFeeWay = {
+                    0: '없음',
+                    1: '지금결제함(카드결제, 핸드폰결제등)',
+                    2: '환불금 차감 대기',
+                    3: '판매자 직접 결제',
+                    4: '상품에 동봉함',
+                    5: '스마일캐시 결제',
+                    6: '기타'
+                };
+                $('#exchangeModal_exchange_ExchangeShippingFeeWay').html(exchange_ExchangeShippingFeeWay[data.exchange_ExchangeShippingFeeWay]);
+                $('#exchangeModal_exchange_ExchangeShippingFee').html(AddComma(data.exchange_ExchangeShippingFee));
+
+
+                /*
+                $('#modal_FreeGift').html(data.FreeGift);
+                data.OrderAmount = AddComma(data.OrderAmount);
+                $('#modal_OrderAmount').html(data.OrderAmount);
+                data.ShippingFee = AddComma(data.ShippingFee);
+                $('#modal_ShippingFee').html(data.ShippingFee);
+                //$('#modal_TransType').html(data.TransType);
+                $('#modal_BuyerId').html(data.BuyerId);
+
+
+                $('#modal_BuyerTel').html(data.BuyerTel);
+
+                $('#modal_TelNo').html(data.TelNo);
+
+                $('#modal_DelMemo').html(data.DelMemo);
+                 */
+                defModal.modal();
+            }
+            return false;
+        }
+
+
+        if ( ( !$('#exchangeModal_ResendInfo_InvoiceNo').val() || !$('#exchangeModal_ResendInfo_DeliveryCompName').val())) {
+            Swal.fire({
+                title: "교환처리",
+                html: `
+            <div class="text_form">
+                <p>택배사 선택 및 운송장번호를 입력해주세요.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            }).then(result => {
+                $('#exchangeModal_ResendInfo_InvoiceNo').focus();
+            });
+            return false;
+        }
+
+
+
+        //for문
+        var code_html = '';
+        var code_html2 = '';
+        var code_html3 = '';
+
+        for (var i = 0; i < listData.length; i++) {
+            var idx = listData[i]['idx'];
+            var data_arr = '';
+
+
+            //교환보류 해제
+            if (1) {
+                var response3 = await fetchData(`/order/OrderExchangeHoldRelease`, {idx});
+                console.log(response3);
+                code_html3 += '[' + response3['api_data']['OrderNo'] + ' 교환 보류 ]';
+                if (response3['body']['Message'] == 'Success') {
+                    code_html3 += '교환보류해제 성공<br>';
+                } else if (response3['body']['Message'] == null) {
+                    code_html3 += '결과값이 없습니다.' + '<br>';
+                } else {
+                    code_html3 += response3['body']['Message'] + '<br>';
+                }
+            }
+
+            //교환 재발송
+            if (1) {
+                var data_arr =
+                    {
+                        idx: idx,
+                        companyNo: $('#exchangeModal_ResendInfo_DeliveryCompName').val(),
+                        NoSongjang: $('#exchangeModal_ResendInfo_InvoiceNo').val(),
+                    };
+                var response2 = await fetchData(`/order/OrderExchangeReDeliEdit`, {data_arr});
+                console.log(response2);
+                code_html2 += '[' + response2['api_data']['OrderNo'] + ' 교환 재발송 ]';
+                if (response2['body']['Message'] == 'Success') {
+                    code_html2 += '교환 재발송 성공<br>';
+                } else if (response2['body']['Message'] == null) {
+                    code_html2 += '결과값이 없습니다.' + '<br>';
+                } else {
+                    code_html2 += response2['body']['Message'] + '<br>';
+                }
+            }
+
+
+        }
+
+
+        Swal.fire({
+            title: "교환처리",
+            html: `
+            <div class="text_form">
+                <p>선택 <span class="txt-blue">` + listData.length + `</span>건이 교환처리 되었습니다.</p>
+            </div>
+            <div class="text_form">
+                   ` + code_html + ` ` + code_html2 + `
              </div>
 
               `,
@@ -2546,7 +3317,11 @@
                                                     data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>
                                         <? endforeach; ?>
                                     </select>
-
+                                    <!--
+                                    <br><span>
+                                        <input type="checkbox" id="returnSelfModal_deliNone" ><label for="returnSelfModal_deliNone">송장번호 기재하지 않습니다.</label>
+                                    </span>
+                                    -->
                                 </td>
                                 <th>운송장 번호</th>
                                 <td>
@@ -3395,6 +4170,7 @@
                             <th>상품명</th>
                             <th>판매금액</th>
                             <th>수수료</th>
+                            <th>KCP수수료</th>
                             <th>공급원가</th>
                             <th>판매자할인</th>
                             <th>정산예정금액</th>
@@ -3406,6 +4182,7 @@
                             <td>상품명</td>
                             <td>판매금액</td>
                             <td>수수료</td>
+                            <td>KCP수수료</td>
                             <td>공급원가</td>
                             <td>판매자할인</td>
                             <td>정산예정금액</td>
@@ -3420,6 +4197,7 @@
                     </h2>
                     <p>판매금액 <br><span class="color-blue" id="modal_OrderAmount_total">0</span>원</p>
                     <p>수수료 <br><span class="color-blue" id="modal_ServiceFee_total">0</span>원</p>
+                    <p>KCP수수료 <br><span class="color-blue" id="modal_KCPServiceFee_total">0</span>원</p>
                     <p>공급원가 <br><span class="color-blue" id="modal_CostPrice_total">0</span>원</p>
                     <p>판매자할인 <br><span class="color-blue" id="modal_SellerDiscountPrice_total">0</span>원</p>
                     <p>정산예정금액 <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
@@ -3761,7 +4539,7 @@
                             <td><span id="returnModal_return_ReturnShippingFee">0</span>원</td>
                         </tr>
                         <tr>
-                            <td>결제여부 | <span id="returnModal_return_AddReturnShippingFeeWay"></span></td>
+                            <td>결제여부 | <span id="returnModal_return_AddReturnShippingFeeWay">없음</span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -3776,8 +4554,8 @@
                                onclick="$('#returnModal_return_radoi2').show();$('#returnModal_return_radoi2_hide').focus()">
                         <label for="returnModal_return_radoi1_1">예</label>
                         <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_2"
-                               checked="checked" value="x"
-                               onclick="$('#returnModal_return_radoi2').hide();$('#returnModal_return_radoi2_2').click()">
+                               value="x"
+                               onclick="$('#returnModal_return_radoi2').hide();$('#returnModal_return_radoi3').hide();$('input[name=\'returnModal_return_radoi2\']').prop('checked', false);">
                         <label for="returnModal_return_radoi1_2">아니요</label>
                     </div>
                 </div>
@@ -3790,7 +4568,7 @@
                                onclick="$('#returnModal_return_radoi3').show();$('#returnModal_ResendInfo_HoldReasonDetail').focus()">
                         <label for="returnModal_return_radoi2_1">예</label>
                         <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_2"
-                               checked="checked" value="x"
+                               value="x"
                                onclick="$('#returnModal_return_radoi3').hide();$('#returnModal_ResendInfo_HoldReasonDetail').val('');$('#returnModal_ReturnShippingFee').val('')">
                         <label for="returnModal_return_radoi2_2">아니요</label>
                         <input type="text" id="returnModal_return_radoi2_hide" readonly
@@ -4169,44 +4947,32 @@
                         </tr>
                         <tr>
                             <th>교환사유</th>
-                            <td id="exchangeModal_return_ReasonDetail"></td>
+                            <td id="exchangeModal_exchange_ReasonDetail"></td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">교환배송비</th>
+                            <td><span id="exchangeModal_exchange_ExchangeShippingFee">0</span>원</td>
+                        </tr>
+                        <tr>
+                            <td>결제여부 | <span id="exchangeModal_exchange_ExchangeShippingFeeWay">없음</span></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
 
-                <div class="box_white2">
-                    <p><strong>교환상품을 받으셨습니까?</strong></p>
-                    <div class="select">
-                        <input type="radio" class="" name="exchangeModal_return_radoi1"
-                               id="exchangeModal_return_radoi1_1" value="o"
-                               onclick="$('#exchangeModal_return_radoi2').show();$('#exchangeModal_return_radoi2_hide').focus()">
-                        <label for="exchangeModal_return_radoi1_1">예</label>
-                        <input type="radio" class="" name="exchangeModal_return_radoi1"
-                               id="exchangeModal_return_radoi1_2" checked="checked" value="x"
-                               onclick="$('#exchangeModal_return_radoi2').hide();$('#exchangeModal_return_radoi2_2').click()">
-                        <label for="exchangeModal_return_radoi1_2">아니요</label>
-                    </div>
-                </div>
-                <br>
-                <div class="box_white2" id="exchangeModal_return_radoi2" style="display: none">
-                    <p><strong>교환 재발송 하시겠습니까?</strong></p>
+                <?php if($_GET['list_sql'] == 'exchange_hold_count'){ ?>
+
+                <div class="box_white2" id="exchangeModal_return_radoi2">
+                    <p><strong>보류를 해제하고 바로 재발송 하겠습니다.</strong></p>
                     <div class="select">
                         <input type="radio" class="" name="exchangeModal_return_radoi2"
-                               id="exchangeModal_return_radoi2_1" value="o"
-                               onclick="$('#exchangeModal_return_radoi3').show();$('#exchangeModal_ResendInfo_InvoiceNo').focus()">
+                               id="exchangeModal_return_radoi2_1" value="o" checked="checked">
                         <label for="exchangeModal_return_radoi2_1">예</label>
-                        <input type="radio" class="" name="exchangeModal_return_radoi2"
-                               id="exchangeModal_return_radoi2_2" checked="checked" value="x"
-                               onclick="$('#exchangeModal_return_radoi3').hide();$('#exchangeModal_ResendInfo_InvoiceNo').val('')">
-                        <label for="exchangeModal_return_radoi2_2">아니요</label>
-                        <input type="text" id="exchangeModal_return_radoi2_hide" readonly
-                               style="width: 0px;height: 0px;border: none">
                     </div>
                 </div>
 
-                <div class="box_white table" id="exchangeModal_return_radoi3" style="display: none">
+                <div class="box_white table" id="exchangeModal_return_radoi3">
                     <p>교환재발송 처리 위해서는 교환발송 정보를 입력하여주시기 바랍니다.</p>
                     <table>
                         <tbody>
@@ -4235,12 +5001,79 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" onclick="orderExchange2_modal()">확인</button>
+            </div>
 
-                <div class="box_white2">
+            <?php }else{ ?>
+            <div class="box_white2">
+                <p><strong>교환상품을 받으셨습니까?</strong></p>
+                <div class="select">
+                    <input type="radio" class="" name="exchangeModal_return_radoi1"
+                           id="exchangeModal_return_radoi1_1" value="o"
+                           onclick="$('#exchangeModal_return_radoi2').show();$('#exchangeModal_return_radoi2_hide').focus();$('#exchangeModal_return_radoi4_box').hide();$('input[name=exchangeModal_return_radoi2]').prop('checked',false)">
+                    <label for="exchangeModal_return_radoi1_1">예</label>
+                    <input type="radio" class="" name="exchangeModal_return_radoi1"
+                           id="exchangeModal_return_radoi1_2" value="x"
+                           onclick="$('#exchangeModal_return_radoi2').hide();$('#exchangeModal_return_radoi4_box').show();$('input[name=exchangeModal_return_radoi2]').prop('checked',false);$('#exchangeModal_return_radoi2_2').click();$('#exchangeModal_return_radoi4_2').click();$('input[name=exchangeModal_return_radoi4]').prop('checked',false)">
+                    <label for="exchangeModal_return_radoi1_2">아니요</label>
+                </div>
+            </div>
+            <br>
+            <div class="box_white2" id="exchangeModal_return_radoi2" style="display: none">
+                <p><strong>교환 재발송 하시겠습니까?</strong></p>
+                <div class="select">
+                    <input type="radio" class="" name="exchangeModal_return_radoi2"
+                           id="exchangeModal_return_radoi2_1" value="o"
+                           onclick="$('#exchangeModal_return_radoi3').show();$('#exchangeModal_ResendInfo_InvoiceNo').focus();$('#exchangeModal_return_radoi4_box').hide();$('input[name=exchangeModal_return_radoi4]').prop('checked',false)">
+                    <label for="exchangeModal_return_radoi2_1">예</label>
+                    <input type="radio" class="" name="exchangeModal_return_radoi2"
+                           id="exchangeModal_return_radoi2_2"  value="x"
+                           onclick="$('#exchangeModal_return_radoi3').hide();$('#exchangeModal_ResendInfo_InvoiceNo').val('');$('#exchangeModal_return_radoi4_2').click();$('#exchangeModal_return_radoi4_box').show();$('input[name=exchangeModal_return_radoi4]').prop('checked',false)">
+                    <label for="exchangeModal_return_radoi2_2">아니요</label>
+                    <input type="text" id="exchangeModal_return_radoi2_hide" readonly
+                           style="width: 0px;height: 0px;border: none">
+                </div>
+            </div>
+
+            <div class="box_white table" id="exchangeModal_return_radoi3" style="display: none">
+                <p>교환재발송 처리 위해서는 교환발송 정보를 입력하여주시기 바랍니다.</p>
+                <table>
+                    <tbody>
+                    <!-- 날짜 보내는 api없음
+                    <tr>
+                        <td>재발송일자</td>
+                        <td><input type="date" class="border_gray" id="ReturnExchange_ResendInfo_ResendDate"/></td>
+                    </tr>
+                    -->
+                    <tr>
+                        <td>택배사명</td>
+                        <td>
+                            <select id="exchangeModal_ResendInfo_DeliveryCompName">
+                                <option value="">선택</option>
+                                <? foreach ($delivery_company_list as $index => $data): ?>
+                                    <option value="<?= $data['code'] ?>"
+                                            data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>
+                                <? endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>운송장 번호</td>
+                        <td><input type="text" class="border_gray" id="exchangeModal_ResendInfo_InvoiceNo"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="exchangeModal_return_radoi4_box" style="display: none">
+                <div class="box_white2" >
                     <p><strong>교환보류 설정하시겠습니까?</strong></p>
                     <div class="select">
                         <input type="radio" class="" name="exchangeModal_return_radoi4" id="exchangeModal_return_radoi4_1" value="o" onclick="$('#exchangeModal_return_radoi4').show();$('#exchangeModal_ResendExpectDate').focus()"> <label for="exchangeModal_return_radoi4_1">예</label>
-                        <input type="radio" class="" name="exchangeModal_return_radoi4" id="exchangeModal_return_radoi4_2" checked="checked" value="x" onclick="$('#exchangeModal_return_radoi4').hide()"> <label for="exchangeModal_return_radoi4_2">아니요</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi4" id="exchangeModal_return_radoi4_2"  value="x" onclick="$('#exchangeModal_return_radoi4').hide()"> <label for="exchangeModal_return_radoi4_2">아니요</label>
                     </div>
                 </div>
                 <!-- 보류 시-->
@@ -4255,15 +5088,17 @@
                     <input type="date" name="exchangeModal_ResendExpectDate" id="exchangeModal_ResendExpectDate" class="border_gray">
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">확인</button>
-            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            <button type="button" class="btn btn-primary" onclick="orderExchange_modal()">확인</button>
+        </div>
+            <?php } ?>
         </div>
     </div>
 </div>
 <!-- 교환건 반품처리 -->
-<!-- 반품건 교환처리 -->
 <div class="modal fade" id="orderExReturnModal" tabindex="-1" aria-labelledby="orderExReturnModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-middle">
@@ -4299,14 +5134,14 @@
                         </tr>
                         <tr>
                             <th>교환사유</th>
-                            <td id="ExchangeReturn_return_ReasonDetail"></td>
+                            <td id="ExchangeReturn_exchange_ReasonDetail"></td>
                         </tr>
                         <tr>
                             <th rowspan="2">교환배송비</th>
-                            <td><span id="ExchangeReturn_return_ReturnShippingFee">0</span>원</td>
+                            <td><span id="ExchangeReturn_exchange_ExchangeShippingFee">0</span>원</td>
                         </tr>
                         <tr>
-                            <td>결제여부 | <span id="ExchangeReturn_return_AddReturnShippingFeeWay"></span></td>
+                            <td>결제여부 | <span id="ExchangeReturn_exchange_ExchangeShippingFeeWay"></span></td>
                         </tr>
                         </tbody>
                     </table>

@@ -68,6 +68,7 @@ $routes->group('excel', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
 // 제품관리
 $routes->group('goods', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function ($routes) {
     $routes->get('upload', 'GoodsController::goodsUpload');
+    $routes->get('download', 'GoodsController::goodsDownload');
     $routes->get('/', 'GoodsController::goodsList');
     $routes->get('goods_form', 'GoodsController::goodsForm');
     $routes->get('goods_form2', 'GoodsController::goodsForm2');
@@ -197,22 +198,46 @@ $routes->group('order', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     $routes->get('waiting', 'AdminController::waiting_list');
     // 신규주문
     $routes->get('new', 'OrderController::Newlist');
-    // 발송처리
+    $routes->get('newExcelDown', 'OrderController::NewlistExcelDown');
+
+    // 발송관리
     $routes->get('send', 'OrderController::Sendlist');
+    $routes->get('sendExcelDown', 'OrderController::SendExcelDown');
+    
     // 배송중완료
     $routes->get('deliver', 'OrderController::Deliverlist');
+    $routes->get('deliverExcelDown', 'OrderController::DeliverExcelDown');
+
     // 구매결정완료
     $routes->get('confirm', 'OrderController::Confirmlist');
+    $routes->get('confirmExcelDown', 'OrderController::ConfirmExcelDown');
+
     // 발송처리현황
     $routes->get('state', 'AdminController::state_list');
 
+
     $routes->get('cancel', 'OrderController::Cancellist');
+    $routes->get('cancelExcelDown', 'OrderController::CancelExcelDown');
     // 발주서출력
     //$routes->get('order_print', 'AdminController::order_print');
+
+    // 반품관리
+    $routes->get('return', 'OrderController::Returnlist');
+    $routes->get('returnExcelDown', 'OrderController::ReturnExcelDown');
+
+    // 교환관리
+    $routes->get('exchange', 'OrderController::Exchangelist');
+    $routes->get('exchangeExcelDown', 'OrderController::ExchangeExcelDown');
+
+    // 주문통합검색
+    $routes->get('search', 'AdminController::order_search');
     
     //주문가져오기
     $routes->post('GetOrder', 'OrderController::GetOrderByIdx');
     $routes->get('GetOrder/(:num)', 'OrderController::GetOrderByIdx/$1');
+    $routes->post('GetOrder2', 'OrderController::GetOrderByOrderNo');
+    $routes->get('GetOrder2/(:num)', 'OrderController::GetOrderByOrderNo/$1');
+
     //정산 API 가져오기
     //$routes->get('GetCalc/(:num)', 'CalculateAPIController::checkAPI/$1');
     $routes->post('GetCalc/(:num)', 'OrderController::getCalc/$1');
@@ -224,12 +249,7 @@ $routes->group('order', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     $routes->post('OrderDeliProgress', 'OrderController::OrderDeliProgress');
     $routes->get('OrderDeliProgress/(:num)', 'OrderController::OrderDeliProgress/$1');
 
-    // 반품관리
-    $routes->get('return', 'OrderController::Returnlist');
-    // 교환관리
-    $routes->get('exchange', 'OrderController::Exchangelist');
-    // 주문통합검색
-    $routes->get('search', 'AdminController::order_search');
+
 });
 
 // 정산관리
@@ -282,13 +302,19 @@ $routes->group('jejo', ['namespace' => '\App\Controllers' , 'filter' => 'auth::b
 });
 
 // 정비업체
-$routes->group('jungbi', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function ($routes) {
+$routes->group('jungbi', ['namespace' => '\App\Controllers'], static function ($routes) {
     // 정보관리
     $routes->get('member_list', 'JungbiController::member_list');
     $routes->get('member_write', 'JungbiController::member_write');
 
     // 예약관리
     $routes->get('reserv_list', 'JungbiController::reserv_list');
+    // 예약관리
+    $routes->get('login', 'JungbiController::jungbi_login');
+    $routes->get('logout', 'JungbiController::jungbi_logout');
+
+    // 로그인체크
+    $routes->post('login_check', 'JungbiController::login_check');
 
     // qna
     $routes->get('qna_list', 'JungbiController::qna_list');
@@ -319,45 +345,108 @@ $routes->group('user', ['namespace' => '\App\Controllers'], static function ($ro
 
 // 관리자
 $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($routes) {
+    //주문 목록 가져오기
     $routes->get('GetOrder/(:segment)/(:segment)', 'OrderController::GetOrder/$1/$2');
+
+    //정산 목록 가져오기
     $routes->get('GetSettleOrder/(:segment)', 'OrderController::GetSettleOrder/$1');
+
+    //주문취소 목록 가져오기
     $routes->get('GetOrderCancel/(:segment)', 'OrderController::GetOrderCancel/$1');
+
+    //주문반품 목록 가져오기
     $routes->get('GetOrderReturn/(:segment)/(:segment)', 'OrderController::GetOrderReturn/$1/$2');
+
+    //주문교환 목록 가져오기
     $routes->get('GetOrderExchange/(:segment)/(:segment)', 'OrderController::GetOrderExchange/$1/$2');
-    $routes->get('test', 'OrderController::Test');
+
+    //주문확인
     $routes->get('OrderCheck/(:segment)', 'OrderController::OrderCheck/$1');
     $routes->post('OrderCheck', 'OrderController::OrderCheck');
+
+    //취소처리
     $routes->get('OrderCancelCheck/(:segment)', 'OrderController::OrderCancelCheck/$1');
     $routes->post('OrderCancelCheck', 'OrderController::OrderCancelCheck');
+
+    //판매취소
     $routes->get('OrderCancelSoldOut', 'OrderController::OrderCancelSoldOut');
     $routes->post('OrderCancelSoldOut', 'OrderController::OrderCancelSoldOut');
+
+    //반품처리
     $routes->get('OrderReturnCheck/(:segment)', 'OrderController::OrderReturnCheck/$1');
     $routes->post('OrderReturnCheck', 'OrderController::OrderReturnCheck');
+
+    //반품보류
     $routes->get('OrderReturnHold', 'OrderController::OrderReturnHold');
     $routes->post('OrderReturnHold', 'OrderController::OrderReturnHold');
+
+    //판매자 직접 반품 신청
     $routes->get('OrderReturnSelf/(:segment)', 'OrderController::OrderReturnSelf/$1');
     $routes->post('OrderReturnSelf', 'OrderController::OrderReturnSelf');
+
+    //옥션 거래완료 후 환불처리
+    $routes->get('OrderAfterRemittanceBySeller/(:segment)', 'OrderController::OrderAfterRemittanceBySeller/$1');
+    $routes->post('OrderAfterRemittanceBySeller', 'OrderController::OrderAfterRemittanceBySeller');
+
+    //미수령신고조회
     $routes->get('GetClaimList/(:segment)', 'OrderController::GetClaimList/$1');
+
+    //미수령신고 철회요청
     $routes->get('OrderClaimRelease/(:segment)', 'OrderController::OrderClaimRelease/$1');
     $routes->post('OrderClaimRelease', 'OrderController::OrderClaimRelease');
+
+    //미수령신고조회 크론버전
     $routes->get('GetClaimList_cron', 'OrderController::GetClaimList_cron');
+
+    //반품건 교환전환
     $routes->post('OrderReturnExchange', 'OrderController::OrderReturnExchange');
     $routes->get('OrderReturnExchange', 'OrderController::OrderReturnExchange');
-    $routes->post('OrderExchangeReturn', 'OrderController::OrderExchangeReturn');
-    $routes->get('OrderExchangeReturn', 'OrderController::OrderExchangeReturn');
 
+    //반품처리
+    $routes->get('OrderReturnCheck/(:segment)', 'OrderController::OrderReturnCheck/$1');
+    $routes->post('OrderReturnCheck', 'OrderController::OrderReturnCheck');
+
+    //배송예정일 등록
     $routes->post('OrderShippingExpectedDate', 'OrderController::OrderShippingExpectedDate');
+
+    //발송처리
     $routes->post('OrderSend', 'OrderController::OrderSend');
+
     // 발주서출력
     $routes->post('OrderPrint', 'OrderController::OrderPrint');
+
     // 라벨인쇄
     $routes->get('OrderLabelPrint', 'OrderController::OrderLabelPrint');
+
     //발송정보일괄등록
     $routes->post('OrderSendExcelUpload', 'OrderController::OrderSendExcelUpload');
+
     //배송정보수정
     $routes->post('OrderDeliEdit', 'OrderController::OrderDeliEdit');
+
+    //교환수거 송장등록
     $routes->post('OrderReturnDeliEdit', 'OrderController::OrderReturnDeliEdit');
     $routes->post('OrderExchangeDeliEdit', 'OrderController::OrderExchangeDeliEdit');
+
+    //교환 수거완료 처리
+    $routes->post('OrderExchangeDeliComplete', 'OrderController::OrderExchangeDeliComplete');
+    $routes->get('OrderExchangeDeliComplete/(:segment)', 'OrderController::OrderExchangeDeliComplete/$1');
+
+    //교환재발송 송장등록
+    $routes->post('OrderExchangeReDeliEdit', 'OrderController::OrderExchangeReDeliEdit');
+    $routes->get('OrderExchangeReDeliEdit', 'OrderController::OrderExchangeReDeliEdit');
+
+    //교환재발송 배송완료
+    $routes->post('OrderExchangeReDeliComplete', 'OrderController::OrderExchangeReDeliComplete');
+    $routes->get('OrderExchangeReDeliComplete/(:segment)', 'OrderController::OrderExchangeReDeliComplete/$1');
+
+    //교환보류
+    $routes->post('OrderExchangeHold', 'OrderController::OrderExchangeHold');
+    $routes->get('OrderExchangeHold', 'OrderController::OrderExchangeHold');
+
+    //교환보류해제
+    $routes->post('OrderExchangeHoldRelease', 'OrderController::OrderExchangeHoldRelease');
+    $routes->get('OrderExchangeHoldRelease/(:segment)', 'OrderController::OrderExchangeHoldRelease/$1');
 
     //배송진행정보
     $routes->post('OrderDeliProgress', 'OrderController::OrderDeliProgress');
@@ -373,6 +462,9 @@ $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($
 
 // 결제관련
 $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($routes) {
+
+    // 결제리스트
+    $routes->get('OrderPayList', 'PayController::OrderPayList');
 
     $routes->get('', 'PayController::PayHub');
     $routes->get('test', 'PayController::Test');
@@ -425,11 +517,30 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
 
     //매입요청 하는 곳
     $routes->get('OrderPerchase/(:segment)', 'PayController::OrderPerchase/$1');
+    $routes->get('OrderPerchase', 'PayController::OrderPerchase');
     $routes->post('OrderPerchase', 'PayController::OrderPerchase');
     $routes->get('OrderPerchaseRequest', 'PayController::OrderPerchaseRequest');
     $routes->post('OrderPerchaseRequest', 'PayController::OrderPerchaseRequest');
+
+    //kcp파일 업로드 하는곳
     $routes->get('OrderPerchaseUp/(:segment)', 'PayController::OrderPerchaseUp/$1');
-    $routes->post('OrderPerchaseUp', 'PayController::OrderPerchaseUp');
+    $routes->get('OrderPerchaseUp', 'PayController::OrderPerchaseUp');
+
+    //kcp파일 다운로드 하는곳
+    $routes->get('OrderPerchaseDown/(:segment)', 'PayController::OrderPerchaseDown/$1');
+    $routes->get('OrderPerchaseDown', 'PayController::OrderPerchaseDown');
+    
+    //kcp파일 매입결과
+    $routes->get('OrderPerchaseResult/(:segment)', 'PayController::OrderPerchaseResult/$1');
+    $routes->get('OrderPerchaseResult', 'PayController::OrderPerchaseResult');
+
+    //kcp파일리스트 보는곳
+    $routes->get('OrderPerchaseKcpList/(:segment)', 'PayController::OrderPerchaseKcpList/$1');
+    $routes->get('OrderPerchaseKcpList', 'PayController::OrderPerchaseKcpList');
+    
+    //주문 결제하는곳
+    $routes->get('OrderPayAuto/(:segment)', 'PayController::OrderPayAuto/$1');
+
 });
 
 

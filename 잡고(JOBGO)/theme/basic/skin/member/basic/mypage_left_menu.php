@@ -188,19 +188,19 @@ if ($member['mb_division'] == 2){ //재능인 일때?>
                 <ul>
                     <li>
                         <dl>
-                            <dt>찜한 체험단</dt>
+                            <dt>찜한 <?=$menu_name?></dt>
                             <dd><?=$like_data['count'] ? : "-" ?><span>건</span></dd>
                         </dl>
                     </li>
                     <li>
                         <dl>
-                            <dt>신청 체험단</dt>
+                            <dt>신청 <?=$menu_name?></dt>
                             <dd><?=$request_data['count'] ? : "-" ?><span>건</span></dd>
                         </dl>
                     </li>
                     <li>
                         <dl>
-                            <dt>체험단 선정</dt>
+                            <dt><?=$menu_name?> 선정</dt>
                             <dd><?=$ok_data['count'] ? : "-" ?><span>건</span></dd>
                         </dl>
                     </li>

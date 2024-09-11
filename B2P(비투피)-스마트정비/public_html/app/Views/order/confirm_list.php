@@ -22,6 +22,7 @@ $header_name = "주문 관리";
             <p class="tit">검색조건
                 <a class="btn btn-gray btn-md male-auto" href="<?= current_url() ?>" >조건초기화</a>
                 <button class="btn btn-blue btn-md" onclick="">검색하기</button>
+                <button class="btn btn-black btn-md" type="button" onclick="location.href='<?=base_url('/order/confirmExcelDown').'?'.$_SERVER['QUERY_STRING']?>'">엑셀 다운로드</button>
             </p>
             <div class="box flexwrap">
                 <div>
@@ -102,11 +103,13 @@ $header_name = "주문 관리";
 
                 <div class="wrap w100 flex">
                     <button type="button" class="btn btn-white btn-mini" onclick="orderAmount_modal()">정산예정금액보기</button>
-                    <button type="button" class="btn btn-white btn-mini" onclick="orderReturnSelf_modal(true)">판매자 직접반품신청
+                    <button type="button" class="btn btn-white btn-mini" onclick="orderReturnSelf_modal(true)"><b class="color-green">G </b> 판매자 직접반품신청
                     </button>
+                    <!--
                     <button type="button" class="btn btn-white btn-mini" data-toggle="modal" data-target="#orderDeliChangeModal">판매자 직접교환신청
                     </button>
-                    <button type="button" class="btn btn-white btn-mini">거래완료 후 환불처리</button>
+                    -->
+                    <button type="button" class="btn btn-white btn-mini" onclick="orderAfterRemittanceBySeller_modal()"><b class="color-red">A </b> 거래완료 후 환불처리</button>
 
 
                 </div>
@@ -144,31 +147,7 @@ $header_name = "주문 관리";
                                 <?php else: ?>
                                     <div class="box__flag box__flag--gmarket"><span class="for-a11y">G마켓</span></div>
                                 <?php endif ?>
-                                <!-- 주문옵션, 추가구성에 맞춰서 br해주는곳 -->
-                                <?php
-                                $data_br = 0;
-                                $data_br2 = 0;
-                                $data_br_result = 0;
-                                ?>
-                                <?php if ($row['ItemOptionSelectList']): ?>
-                                    <?php
-                                    $data_length = json_decode($row['ItemOptionSelectList']);
-                                    $data_br = count($data_length);
-                                    ?>
-                                <?php endif ?>
-
-                                <?php if ($row['ItemOptionAdditionList']): ?>
-                                    <?php
-                                    $data_length2 = json_decode($row['ItemOptionAdditionList']);
-                                    $data_br2 = count($data_length2);
-                                    ?>
-                                <?php endif ?>
-                                <?php
-                                $data_br > $data_br2 ? $data_br_result = $data_br : $data_br_result = $data_br2;
-                                for ($i = 0; $i < $data_br_result; $i++) {
-                                    echo '</br>';
-                                }
-                                ?>
+                                <input type="hidden" id="SiteType<?=$row['idx']?>" value="<?=$row['SiteType']?>">
                             </td>
                             <td alt="구분상태">
                                 <?php
@@ -176,12 +155,24 @@ $header_name = "주문 관리";
                                 ?>
                                 <?= $OrderStatus[$row['OrderStatus']] ?>
                             </td>
-                            <td alt="구매결정일자"><?= $row['BuyDecisionDate'] ?></td>
+                            <td alt="구매결정일자"><?= get_dateformat($row['BuyDecisionDate']) ?></td>
                             <td alt="정산상태"><?= $row[''] ?></td>
-                            <td alt="주문번호"><a onclick="orderNo_modal('<?= $row['idx'] ?>')"><?= $row['OrderNo'] ?></a></td>
+                            <td alt="주문번호">
+                                <?php if($row['order_b2pAutoT'] == 'T' || $row['order_b2pAutoDelFullAddress']): ?>
+                                    <span class="icon icon_blue w100"><i class="fa-solid fa-sparkle"></i> 오아시스</span><br>
+                                <?php endif; ?>
+                                <a onclick="orderNo_modal('<?= $row['idx'] ?>')"><?= $row['OrderNo'] ?></a>
+                            </td>
                             <td alt="구매자명"><?= $row['BuyerName'] ?></td>
                         </tr>
                     <?php endforeach ?>
+                    <?php if(!$this->data['order_data']['list']): ?>
+                        <tr>
+                            <td colspan="99" class="empty">
+                                데이터가 없습니다.
+                            </td>
+                        </tr>
+                    <?php endif ?>
                     </tbody>
                 </table>
                 <table>
@@ -226,17 +217,26 @@ $header_name = "주문 관리";
                         <th>발송일자</th>
                         <th>배송완료일자</th>
                         <th>정산완료일자</th>
+                        <th>kcp결제완료여부</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php foreach ($this->data['order_data']['list'] as $row) { ?>
+                        <?php
+                        $b2p_cost = (int)$row['OrderAmount'] * 0.05;
+                        ?>
                         <tr>
                             <td alt="구매자ID"><?= $row['BuyerId'] ?></td>
                             <td alt="수령인명"><?= $row['ReceiverName'] ?></td>
                             <td alt="상품번호"><a
                                         onclick="openSiteGoodsNo('<?= $row['SiteType'] ?>','<?= $row['SiteGoodsNo'] ?>');"><?= $row['SiteGoodsNo'] ?></a>
                             </td>
-                            <td alt="상품명"><?= $row['GoodsName'] ?></td>
+                            <td alt="상품명">
+                                <?php if($row['order_b2pAutoCar']): ?>
+                                    (<?=$row['order_b2pAutoCarYear']?>)<?=$row['order_b2pAutoCar']?> <br>
+                                <?php endif; ?>
+                                <?= $row['GoodsName'] ?>
+                            </td>
                             <td alt="수량"><?= $row['ContrAmount'] ?></td>
                             <td alt="주문옵션">
                                 <?php if ($row['ItemOptionSelectList']): ?>
@@ -271,13 +271,13 @@ $header_name = "주문 관리";
                             <td alt="판매단가"><?= number_format((int)$row['SalePrice']) ?></td>
                             <td alt="판매금액"><?= number_format((int)$row['OrderAmount']) ?></td>
                             <td alt="판매자 관리코드"><?= $row['OutGoodsNo'] ?></td>
-                            <td alt="정산예정금액"><?= number_format((int)$row['SettlementPrice']) ?></td>
-                            <td alt="서비스이용료"><?= number_format((int)$row['ServiceFee']) ?></td>
+                            <td alt="정산예정금액"><?= number_format((int)$row['SettlementPrice'] - $b2p_cost) ?></td>
+                            <td alt="서비스이용료"><?= number_format((int)$row['ServiceFee'] + $b2p_cost) ?></td>
                             <td alt="판매자쿠폰할인"><?= number_format((int)$row['SellerDiscountPrice']) ?></td>
                             <td alt="구매쿠폰적용금액"><?= number_format((int)$row['DirectDiscountPrice']) ?></td>
                             <td alt="(옥션)우수회원할인"><?= number_format((int)$row['GreatMembDcAmnt']) ?></td>
                             <td alt="복수구매할인"><?= number_format((int)$row['MultiBuyDcAmnt']) ?></td>
-                            <td alt="스마일캐시적립"><?= number_format((int)$row['SellerCashBackMoney']) ?></td>
+                            <td alt="스마일캐시적립"><?=number_format((int)$row['SellerCashbackMoney'])?></td>
                             <td alt="판매자북캐시적립">-</td>
                             <td alt="제휴사명">-</td>
                             <td alt="구매자 휴대폰"><?= $row['BuyerMobileTel'] ?></td>
@@ -297,12 +297,13 @@ $header_name = "주문 관리";
                             <td alt="배송번호"><?= $row['GroupNo'] ?></td>
                             <td alt="SKU번호 및 수량"><?= $row['SKUNo'] ?></td>
                             <td alt="장바구니번호(결제번호)"><?= $row['PayNo'] ?></td>
-                            <td alt="주문일자(결제확인전)"><?= $row['OrderDate'] ?></td>
-                            <td alt="주문확인일자"><?= $row['OrderConfirmDate'] ?></td>
-                            <td alt="결제완료일"><?= $row['PayDate'] ?></td>
-                            <td alt="발송일자"><?= $row['TransDate'] ?></td>
-                            <td alt="배송완료일자"><?= $row['TransCompleteDate'] ?></td>
+                            <td alt="주문일자(결제확인전)"><?= get_dateformat($row['OrderDate']) ?></td>
+                            <td alt="주문확인일자"><?= get_dateformat($row['OrderConfirmDate']) ?></td>
+                            <td alt="결제완료일"><?= get_dateformat($row['PayDate']) ?></td>
+                            <td alt="발송일자"><?= get_dateformat($row['TransDate']) ?></td>
+                            <td alt="배송완료일자"><?= get_dateformat($row['TransCompleteDate']) ?></td>
                             <td alt="정산완료일자">-</td>
+                            <td alt="kcp결제완료여부"><?=$row['KcpPayStatus']?></td>
                         </tr>
                     <?php } ?>
                     </tbody>

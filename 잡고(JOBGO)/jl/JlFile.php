@@ -71,15 +71,19 @@ class JlFile extends Jl{
     }
 
     function deleteDirGate($data) {
+        if(!$data) return;
         if($this->isAssociativeArray($data)) {
+
             $this->deleteDir($data['dir']);
         }else {
+
             if (is_array($data)) {
                 foreach ($data as $item) {
                     $this->deleteDir($item['dir']);
                 }
             }
         }
+
         //if(is_string($file))  $this->deleteDir($file);
     }
 

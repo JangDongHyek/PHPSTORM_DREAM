@@ -5,6 +5,8 @@ $sub_id = "my_compete";
 include_once('./_common.php');
 include_once("../jl/JlConfig.php");
 
+$menu_name = "공모전";
+
 $compete_model = new JlModel(array(
     "table" => "compete",
     "primary" => "idx",
@@ -46,12 +48,13 @@ $request_data = $request_model->get(array(
     "page" => $page,
     "limit" => $limit,
     "source" => "compete",
-    //"select" => "compete_request.status AS request_status",
+    "select" => "compete_request.idx AS request_idx",
 ));
 
 $request_model->join("compete","compete_idx","idx");
 $request_model->where("user_idx",$member['mb_no']);
 $request_model->where("status","","AND NOT");
+$request_model->where("status","탈락","AND NOT");
 $ok_data = $request_model->get(array(
     "page" => $page,
     "limit" => $limit,
@@ -70,6 +73,7 @@ if($member['mb_no']) {
         array_push($likes,$d['compete_idx']);
     }
 }
+
 
 $g5['title'] = '공모전 관리';
 include_once('./_head.php');
@@ -166,10 +170,10 @@ include_once('./_head.php');
                                                 <a>
                                                     <div class="tit"><?=$d['subject']?></div>
                                                     <div class="flex jc-sb ai-c">
-                                                        <button type="button" class="btn btn_mini w100 btn_color2"  data-toggle="modal" href="#competeSubmit">
+                                                        <button type="button" class="btn btn_mini w100 btn_color2" onclick="getRequest('<?=$d['request_idx']?>')">
                                                             접수 내용
                                                         </button>
-                                                        <button type="button" class="btn btn_mini w100 btn_line">
+                                                        <button type="button" class="btn btn_mini w100 btn_line" onclick="deleteRequest('<?=$d['request_idx']?>')">
                                                             접수 취소
                                                         </button>
                                                     </div>
@@ -198,6 +202,10 @@ include_once('./_head.php');
                                 <div class="list">
                                     <?php
                                     foreach ($ok_data['data'] as $index => $d) {
+                                        $compete = $compete_model->where("idx",$d['idx'])->get()['data'][0];
+                                        foreach($compete['prize'] as $index2 => $pp) {
+                                            if($pp['rank'] == $d['request_status']) $prize = $pp;
+                                        }
                                     ?>
                                     <div class="thm">
                                         <div class="mg">
@@ -219,11 +227,11 @@ include_once('./_head.php');
                                             </div>
                                             <a href="<?php echo G5_BBS_URL ?>/compete_view.php?idx=<?=$d['idx']?>">
                                                 <div class="tit"><?=$d['subject']?></div>
-                                                <div class="txt_color">선정 상금 30,000원</div>
+                                                <div class="txt_color">선정 상금 <?=number_format($prize['money'])?>원</div>
                                             </a>
                                         </div>
                                         <div class="btn_wrap">
-                                            <button type="button" class="btn btn_gray btn_large" data-toggle="modal" href="#competeSubmit">
+                                            <button type="button" class="btn btn_gray btn_large" onclick="getRequest('<?=$d['request_idx']?>')">
                                                 나의 작품
                                             </button>
                                             <button type="button" class="btn btn_color btn_large">
@@ -275,7 +283,7 @@ include_once('./_head.php');
                     </div>
 
                     <p>추가 설명</p>
-                    <textarea placeholder="설명을 작성하세요." readonly></textarea>
+                    <textarea placeholder="설명을 작성하세요." readonly id="description"></textarea>
 
                 </div>
 
@@ -284,7 +292,52 @@ include_once('./_head.php');
 
     </div>
     <!-- // 접수 내용 모달창 -->
+<? $jl->jsLoad();?>
+    <script>
+        const jl = new Jl();
+        let request_idx = ""
+        async function deleteRequest(idx) {
+            if(!confirm("정말 접수를 삭제하시겠습니까?")) return false;
 
+            let data = {
+                idx : idx
+            }
+
+            try {
+                let res = await jl.ajax("delete",data,"/api/compete_request.php");
+                alert("삭제를 완료했습니다.");
+                window.location.reload();
+            }catch (e) {
+                alert(e.message)
+            }
+        }
+
+        async function getRequest(idx) {
+            try {
+                let filter = {idx : idx}
+
+                let res = await jl.ajax("get",filter,"/api/compete_request.php");
+
+                request_idx = res.data[0].idx;
+                document.getElementById("description").value = res.data[0].description;
+                document.getElementById("fileName").value = res.data[0].compete_file[0].name;
+
+                $("#competeSubmit").modal('show');
+            }catch (e) {
+                alert(e.message)
+            }
+        }
+
+        async function getCampaign(idx) {
+            try {
+                let filter = {idx : idx}
+                let res = await jl.ajax("get",filter,"/api/campaign.php");
+                document.getElementById("activity_guide").textContent = res.data[0].activity_guide;
+            }catch (e) {
+                alert(e.message)
+            }
+        }
+    </script>
 <?php
 
 include_once('./_tail.php');

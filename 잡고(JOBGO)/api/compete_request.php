@@ -95,7 +95,7 @@ try {
             if($end_date < $current_date) $model->error("모집 기간이 지났습니다.");
 
             $model->where("user_idx",$obj['user_idx']);
-            $data = $model->where("compete_idx",$obj['compete_idx'])->getSql();
+            $data = $model->where("compete_idx",$obj['compete_idx'])->get();
 
             if($data['count']) $model->error("이미 신청 되었습니다. 공모전 관리에서 확인 해주세요.");
 
@@ -148,11 +148,22 @@ try {
 
             $compete = $compete_model->where("idx",$obj['compete_idx'])->get()['data'][0];
 
-            //$ranks = array();
-            //foreach($compete['prize'] as $p) {
-            //
-            //}
+            $msg = "";
+            foreach($compete['prize'] as $p) {
+                $count = $model->where("status",$p['rank'])->count();
+                //$count = $model->where("status",$p['rank'])->getSql(array("count" => true));
+                //$msg .= $p['rank']."/".$count."\n";
+                //$msg .= $count."\n";
+                foreach ($users as $index => $u) {
+                    if($p['rank'] == $u['status']) {
+                        $count += 1;
+                    }
+                }
 
+                if($p['people'] < $count) $model->error("{$p['rank']}등은 {$p['people']}명까지 가능합니다.");
+            }
+
+            //$model->error($msg);
             foreach ($users as $index => $i) {
                 $model->update($i);
             }
@@ -168,7 +179,7 @@ try {
 
             if($file_use) {
                 $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
-                $file->deleteDirGate($getData['data_column']);
+                $file->deleteDirGate($getData['compete_file']);
             }
 
             $data = $model->delete($obj);
