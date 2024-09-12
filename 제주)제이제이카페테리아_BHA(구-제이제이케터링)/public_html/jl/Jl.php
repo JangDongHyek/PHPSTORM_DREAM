@@ -243,9 +243,9 @@ class Jl {
         //DB 설정
         $this->DB = array(
             "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => ""
+            "username" => "jjcatering",
+            "password" => "sbtpsxja!@#",
+            "database" => "jjcatering"
         );
 
         //resource 폴더 생성

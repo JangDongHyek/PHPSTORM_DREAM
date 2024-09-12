@@ -6,12 +6,7 @@ $_method = $_POST["_method"];
 $file_name = str_replace(".php","",basename(__FILE__));
 
 try {
-    $model = new JlModel(array(
-        "table" => $file_name,
-        "primary" => "idx",
-        "autoincrement" => true,
-        "empty" => false
-    ));
+    $model = new JlModel(array("table" => $file_name));
 
     $join_table = "";
     $get_tables = [];
@@ -50,7 +45,7 @@ try {
                 "limit" => $obj['limit'],
                 //"source" => "joinTable",
                 //"select" => "joinTable.SearchColumn AS alias",
-                //"sql" => "getSql String"
+                "sql" => true
             ));
 
             //getKey ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져오는형식 속도는 join이랑 비슷하거나 빠름

@@ -13,8 +13,8 @@ class JlModel extends Jl{
     private $connect;
     private $mysqli = false;
     public  $primary;
-    private $autoincrement;
-    private $empty;                         //true 일시 빈값은 그냥 건너뛴다
+    public  $primary_type;
+    public $autoincrement;
 
     private $sql = "";
     private $sql_order_by = "";
@@ -63,9 +63,6 @@ class JlModel extends Jl{
 
         if(!$object["table"]) $this->error("JlModel construct() : 테이블을 지정해주세요.");
         $this->table =$object["table"];
-        $this->primary = $object["primary"] ? $object["primary"] : "idx";
-        $this->autoincrement = $object["autoincrement"] ? $object["autoincrement"] : true;
-        $this->empty = $object["empty"] ? $object["empty"] : false;
 
         // 테이블 확인
         $sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{$this->database}'";
@@ -88,8 +85,34 @@ class JlModel extends Jl{
 
         if(!in_array($this->table, $this->schema['tables'])) $this->error("JlModel construct() : 테이블을 찾을수 없습니다.");
 
+        // Primary Key 확인
+        $primary = $this->getPrimary($this->table);
+        $this->primary = $primary['COLUMN_NAME'];
+        $this->primary_type = $primary['DATA_TYPE'];
+        $this->autoincrement = $primary["EXTRA"] ? true : false;
+
+        if(!$this->primary) $this->error("해당 테이블에 Primary 값이 존재하지않습니다.");
+        if($this->primary_type == "int" && !$this->autoincrement) $this->error("Primary 타입이 int인데 autoincrement가 설정되어있지않습니다..");
+
         // 테이블 스키마 정보 조회
         $this->schema['columns'] = $this->getColumns($this->table);
+    }
+
+    function getPrimary($table) {
+        $sql = "SELECT COLUMN_NAME, EXTRA,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{$this->database}' AND TABLE_NAME = '{$table}' AND COLUMN_KEY = 'PRI';";
+        if($this->mysqli) {
+            $result = @mysqli_query($this->connect, $sql);
+            if(!$result) $this->error(mysqli_error($this->connect));
+
+            if(!$row = mysqli_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) $this->error(mysql_error());
+
+            if(!$row = mysql_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+        }
+
+        return $row;
     }
 
     function getColumns($table) {
@@ -392,7 +415,7 @@ class JlModel extends Jl{
 
             foreach($param as $key => $value){
                 if(in_array($key, $this->schema['columns'])){
-                    if($this->empty && $value == "") continue;
+                    if(!in_array($value,array("DESC","ASC"))) $this->error("JlModel orderBy() : DESC , ASC 둘중 하나만 선택가능합니다.");
                     if($this->sql_order_by) $this->sql_order_by .= ",";
                     $this->sql_order_by .= " {$source}.{$key} {$value}";
                 }
@@ -412,13 +435,14 @@ class JlModel extends Jl{
         return $this;
     }
 
-    function join($table,$origin_key,$join_key,$join_primary = "idx") {
+    function join($table,$origin_key,$join_key) {
         if(!in_array($table, $this->schema['tables'])) $this->error("JlModel join() : $table 테이블을 찾을수 없습니다.");
         if(!in_array($origin_key, $this->schema['columns'])) $this->error("JlModel join() : Origin Key를 찾을 수 없습니다.");
         $this->schema['join_columns'] = $this->getColumns($table);
         if(!in_array($join_key, $this->schema['join_columns'])) $this->error("JlModel join() : Join Key를 찾을 수 없습니다.");
         $this->join_table = $table;
-        $this->join_primary = $join_primary;
+        $primary = $this->getPrimary($table);
+        $this->join_primary = $primary['COLUMN_NAME'];
 
         $this->join_sql = " JOIN $table ON $this->table.$origin_key = $table.$join_key ";
     }
@@ -578,7 +602,9 @@ class JlModel extends Jl{
 
             foreach($param as $key => $value){
                 if(in_array($key, $columns)){
-                    if($this->empty && $value == "") continue;
+                    if($value == "") continue;
+
+                    if($value == "jl_null") $value = "";
 
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
@@ -595,6 +621,7 @@ class JlModel extends Jl{
         if(is_string($first)) {
             if($first == "") $this->error("JlModel where() : 컬럼명을 입력해주새요.");
             //if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
+            if($second == "jl_null") $second = "";
 
             if(in_array($first, $columns)){
                 if($this->group_bool) {
@@ -625,7 +652,10 @@ class JlModel extends Jl{
 
             foreach($param as $key => $value){
                 if(in_array($key, $columns)){
-                    if($this->empty && $value == "") continue;
+                    if($value == "") continue;
+
+                    if($value == "jl_null") $value = "";
+
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
                         else $this->sql .= " $operator ";
@@ -641,6 +671,7 @@ class JlModel extends Jl{
         if(is_string($first)) {
             if($first == "") $this->error("JlModel like() : 컬럼명을 입력해주새요.");
             if($second == "") $this->error("JlModel like() : 필터를 입력해주새요.");
+            if($second == "jl_null") $second = "";
 
             if(in_array($first, $columns)){
                 if($this->group_bool) {

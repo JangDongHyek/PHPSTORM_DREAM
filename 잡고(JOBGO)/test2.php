@@ -4,35 +4,21 @@
 //$model->error($current_date);
 include_once("./jl/JlConfig.php");
 
-//var_dump($jl->PHP);
-
+//echo $jl->getClientIP();
 // 캠페인 선장자
-$request_model = new JlModel(array(
-    "table" => "compete_request",
-    "primary" => "idx",
-    "autoincrement" => true,
-    "empty" => false
-));
 
-
-//신청데이터
-$request_model->join("compete","compete_idx","idx");
-$request_model->where("user_idx",$member['mb_no']);
-$request_data = $request_model->get(array(
-    "source" => "compete",
-    "select" => "*",
-    "sql" => true
-));
 
 //echo $request_data['sql'];
 
 //
-//$model = new JlModel(array(
-//    "table" => "campaign",
-//    "primary" => "idx",
-//    "autoincrement" => true,
-//    "empty" => false
-//));
+$model = new JlModel(array(
+    "table" => "g5_member",
+    "empty" => false
+));
+
+echo $model->primary."<br>";
+echo $model->primary_type."<br>";
+echo $model->autoincrement."<br>";
 
 //$getData = $model->where("idx","16")->get()['data'][0];
 //

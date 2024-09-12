@@ -2,15 +2,17 @@
 class Jl {
     private $root_dir = "public_html";
     private $JS = "/jl/Jl.js";
-    public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
-    public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
+    private $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
+    private $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
 
-    public $PHP;
-    private $DEV = true;                //해당값이 false 이면 로그가 안찍힙니다.
+
+    protected $PHP;
+    private $DEV = false;                //해당값이 false 이면 로그가 안찍힙니다.
+    private $DEV_IP = ["121.140.204.65"];
+    public  $ROOT;
     public  $DB;
     public  $URL;
-    public  $ROOT;
-    public static $vue_load = false;    // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $LOAD = false;    // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
         $this->INIT();
@@ -24,10 +26,13 @@ class Jl {
             "message" => $msg
         );
 
-        foreach($trace as $index => $t) {
-            $er['file_'.$index] = $t['file'];
-            $er['line_'.$index] = $t['line'];
+        if($this->DEV) {
+            foreach($trace as $index => $t) {
+                $er['file_'.$index] = $t['file'];
+                $er['line_'.$index] = $t['line'];
+            }
         }
+
         echo json_encode($er,JSON_UNESCAPED_UNICODE,JSON_UNESCAPED_SLASHES);
         throw new \Exception($msg);
     }
@@ -35,7 +40,7 @@ class Jl {
     function jsonDecode($json,$encode = true) {
         // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
         $json = addslashes($json);
-        $obj = str_replace('\\n', '###NEWLINE###', $json);
+        $obj = str_replace('\\n', '###NEWLINE###', $json); // textarea 값 그대로 저장하기위한 변경
         $obj = str_replace('\\', '', $obj);
         $obj = str_replace('\\\\', '', $obj);
         $obj = str_replace('###NEWLINE###', '\\n', $obj);
@@ -59,6 +64,9 @@ class Jl {
     }
 
     function jsLoad() {
+        //js파일 찾기
+        if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl INIT() : JS 위치를 찾을 수 없습니다.");
+
         echo "<script>";
         echo "const Jl_base_url = '{$this->URL}';";
         echo "const Jl_dev = {$this->DEV};";
@@ -68,8 +76,8 @@ class Jl {
     }
 
     function vueLoad($app_name = "app",$plugins = array()) {
-        if(!self::$vue_load) {
-
+        if(!self::$LOAD) {
+            $this->jsLoad();
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
             echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
@@ -77,7 +85,7 @@ class Jl {
             if(in_array('editor',$plugins)) {
                 echo "<script src='{$this->URL}{$this->EDITOR_JS}'></script>";
             }
-            self::$vue_load = true;
+            self::$LOAD = true;
         }
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
@@ -117,7 +125,6 @@ class Jl {
             $this->error("Jl deleteDir() : 삭제 할려는 폴더가 존재하지 않습니다.");
         }
 
-
         $files = array_diff(scandir($dir), array('.', '..'));
 
         foreach ($files as $file) {
@@ -131,6 +138,17 @@ class Jl {
             }
         }
         rmdir($dir);
+    }
+
+    function getDirPermission($dir) {
+        $permissions = fileperms($this->ROOT.$dir);
+
+        if ($permissions === false) {
+            $this->error("Jl getDirPermission() : 권한을 확인할 수 없습니다. 경로가 올바른지 확인하세요.");
+        }
+
+        // 권한 비트를 추출하여 8진수 문자열로 변환
+        return substr(sprintf('%o', $permissions & 0777), -4); // 4자리 8진수 문자열 반환
     }
 
     function getDir($dir_name, $dirs = false, $root_path = true)
@@ -156,17 +174,6 @@ class Jl {
         return $result;
     }
 
-    function getDirPermission($dir) {
-        $permissions = fileperms($this->ROOT.$dir);
-
-        if ($permissions === false) {
-            $this->error("Jl getDirPermission() : 권한을 확인할 수 없습니다. 경로가 올바른지 확인하세요.");
-        }
-
-        // 권한 비트를 추출하여 8진수 문자열로 변환
-        return substr(sprintf('%o', $permissions & 0777), -4); // 4자리 8진수 문자열 반환
-    }
-
     function bytesToMB($bytes) {
         if ($bytes < 0) {
             $this->error("Jl bytesToMB() : 파일 사이즈는 음수일 수 없습니다.");
@@ -175,6 +182,16 @@ class Jl {
         // 1MB는 1024 * 1024 바이트
         $result = $bytes / (1024 * 1024);
         return round($result,2);
+    }
+
+    function getClientIP() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
     }
 
     function INIT() {
@@ -196,9 +213,6 @@ class Jl {
             $host = preg_replace('/:[0-9]+$/', '', $host);
         $this->URL = $http.$host.$user;
 
-        //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl INIT() : JS 위치를 찾을 수 없습니다.");
-
         //DB 설정
         $this->DB = array(
             "hostname" => "localhost",
@@ -207,13 +221,14 @@ class Jl {
             "database" => "jobgo"
         );
 
-        //resource 폴더 생성
+        // 폴더를 생성하기위한 권한체크
         if(!is_dir($this->ROOT."/jl")) $this->error("Jl INIT() : jl 폴더가 없습니다.");
         if($this->getDirPermission("/jl") != "777") {
             if(!chmod($this->ROOT."/jl", 0777)) {
                 $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
             }
         }
+        //resource 폴더 생성
         $dir = $this->ROOT."/jl/jl_resource";
         if(!is_dir($dir)) {
             mkdir($dir, 0777);
@@ -222,6 +237,9 @@ class Jl {
 
         //PHP INI 설정가져오기
         $this->PHP = ini_get_all();
+
+        // 개발 허용 IP 확인
+        if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
     }
 }
 

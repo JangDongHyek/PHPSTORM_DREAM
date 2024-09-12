@@ -22,15 +22,22 @@ Number.prototype.format = function (n, x) {
 };
 
 class Jl {
-    constructor(name = "common",background = "#35495e") {
+    constructor(name = "Jl.js",background = "#35495e") {
         this.name = name;
         this.root = Jl_base_url;
         this.editor = Jl_editor;
 
+        let textColor = "white"
+
+        if(name == "Jl.js") {
+            background = "#f0db4f"; // JavaScript 로고의 노란색
+            textColor = "#323330"; // 어두운 색으로 글자 색상 지정
+        }
+
         if(!Jl_dev) return false;
         console.log(
             '%c' + name,
-            `background: ${background}; color: white; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
+            `background: ${background}; color: ${textColor}; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
         );
     }
 
