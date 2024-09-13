@@ -81,7 +81,7 @@ include_once('./admin.head.php');
                     <select onchange="changeStatus('<?=$d['idx']?>',event.target.value)">
                         <option value="" <?=$d['status'] == '' ? 'selected' : ''?>>대기</option>
                         <?foreach ($compete['prize'] as $p) {?>
-                            <option value="<?=$p['rank']?>" <?=$d['status'] == $p['rank'] ? 'selected' : ''?>><?=$p['rank']?>등 * <?=$p['people']?></option>
+                            <option value="<?=$p['rank']?>" <?=$d['status'] == $p['rank'] ? 'selected' : ''?>><?=$p['rank']?> * <?=$p['people']?></option>
                         <?}?>
                         <option value="탈락" <?=$d['status'] == '탈락' ? 'selected' : ''?>>탈락</option>
                     </select>

@@ -59,6 +59,11 @@ class Jl {
             var objects = {_method : method};
             objects = this.processObject(objects,object);
 
+            if("test" in options) {
+                console.log(objects);
+                return false;
+            }
+
             //form 으로 데이터가공
             var form = new FormData();
             for (let i in objects) {
@@ -227,12 +232,13 @@ class Jl {
                 if(this.isUpperCase(key)) delete obj[key]; //대문자인경우 조인데이터이기때문에 삭제
                 const value = obj[key];
                 if (value instanceof File) {
+                    console.log(1)
                     objs[key] = value;
                     delete obj[key];
                 }else if(Array.isArray(value)) {
                     value.forEach(function(item) {
                         if(item instanceof File) {
-                            objs[key] = obj[key]
+                            objs[key] = value
                             delete obj[key];
                         }
                     });

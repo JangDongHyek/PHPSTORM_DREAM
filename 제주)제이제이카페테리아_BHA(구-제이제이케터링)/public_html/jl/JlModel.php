@@ -137,6 +137,28 @@ class JlModel extends Jl{
         return $array;
     }
 
+    function query($sql) {
+        $array = array();
+
+        if($this->mysqli) {
+            $result = @mysqli_query($this->connect, $sql);
+            if(!$result) $this->error(mysqli_error($this->connect));
+
+            while($row = mysqli_fetch_array($result)){
+                array_push($array, $row);
+            }
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) $this->error(mysql_error());
+
+            while($row = mysql_fetch_array($result)){
+                array_push($array, $row);
+            }
+        }
+
+        return $array;
+    }
+
     function getSchema() {
         return $this->schema;
     }

@@ -92,10 +92,13 @@ $request_model = new JlModel(array(
                     <td>
                         <a href="<?=G5_URL."/bbs/compete_view.php?idx=".$d['idx']?>" target="_blank"><?=$d['subject']?></a>
                     </td>
-                    <td><?=explode(" ",$d['start_date'])[0]?> ~ <?=explode(" ",$d['end_date'])[0]?></td>
+                    <td>
+                        신청 <?=explode(" ",$d['start_date'])[0]?> <br>
+                        심사 <?=explode(" ",$d['end_date'])[0]?>
+                    </td>
                     <td>
                         <? foreach($d['prize'] as $index2 => $i) {?>
-                            <?=$i['rank']?> 등수 <?=$i['people']?> 명 <?=$i['money']?> 만원 <br>
+                            <?=$i['rank']?> <?=$i['people']?> 명 <?=$i['money']?> <br>
                         <?}?>
                         <? if(!count($d['prize'])) echo "상금이 존재하지않습니다."?>
                     </td>

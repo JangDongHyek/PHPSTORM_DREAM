@@ -134,11 +134,11 @@ include_once('./admin.head.php');
     </tr>
 
     <tr>
-        <th scope="row"><label for="start_date">시작기간</label></th>
+        <th scope="row"><label for="start_date">신청기간</label></th>
         <td>
             <input type="date" name="start_date" value="<?=explode(" ",$row['start_date'])[0] ? : ''?>" class="frm_input" size="40">
         </td>
-        <th scope="row"><label for="end_date">마감기간</label></th>
+        <th scope="row"><label for="end_date">심사기간</label></th>
         <td>
             <input type="date" name="end_date" value="<?=explode(" ",$row['end_date'])[0] ? : ''?>" class="frm_input" size="40">
         </td>
@@ -201,6 +201,13 @@ include_once('./admin.head.php');
     <tr>
         <th scope="row"><label for="reference">참고자료</label></th>
         <td colspan="2"><textarea style="width: 200%" name="reference" id="reference" class="frm_input"><?php echo $row['reference'] ?></textarea></td>
+    </tr>
+
+    <tr>
+        <th scope="row"><label for="reference">신청서</label></th>
+        <td colspan="2">
+            <?=$row['upfile'] ? $row['upfile']['name'] : '' ?><input type="file" name="upfile">
+        </td>
     </tr>
 
     </tbody>
@@ -278,7 +285,7 @@ include_once('./admin.head.php');
             input1.value = item.rank;
             input1.size = 5;
 
-            const rank_text = document.createTextNode('등수 *');
+            const rank_text = document.createTextNode(' *');
 
             const input2 = document.createElement('input');
             input2.classList.add("frm_input");
@@ -297,7 +304,7 @@ include_once('./admin.head.php');
             input3.id = `money${index}`;
             input3.value = item.money;
 
-            const money_text = document.createTextNode('만원');
+            const money_text = document.createTextNode('');
 
             const a = document.createElement('a');
             a.classList.add("btn_01")

@@ -227,7 +227,7 @@ include_once('./_head.php');
                                             </div>
                                             <a href="<?php echo G5_BBS_URL ?>/compete_view.php?idx=<?=$d['idx']?>">
                                                 <div class="tit"><?=$d['subject']?></div>
-                                                <div class="txt_color">선정 상금 <?=number_format($prize['money'])?>원</div>
+                                                <div class="txt_color">선정 상품 <?=$prize['money']?></div>
                                             </a>
                                         </div>
                                         <div class="btn_wrap">
@@ -235,7 +235,7 @@ include_once('./_head.php');
                                                 나의 작품
                                             </button>
                                             <button type="button" class="btn btn_color btn_large">
-                                                <?=$d['request_status']?>등 선정
+                                                <?=$d['request_status']?> 선정
                                             </button>
                                         </div>
                                     </div><!--thm-->

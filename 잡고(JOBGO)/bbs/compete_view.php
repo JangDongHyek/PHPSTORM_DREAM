@@ -63,6 +63,31 @@ $g5['title'] = '공모전 상세';
 include_once('./_head.php');
 ?>
 
+<style>
+    .download-btn {
+        padding: 10px 20px;
+        background-color: #7d75db;
+        color: white !important;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        width : 100%;
+        margin-top : 10px;
+    }
+
+    .download-btn:hover {
+        background-color: #3700b3;
+    }
+
+    .download-btn:active {
+        background-color: #03dac6;
+    }
+</style>
+
     <div class="wrapper" id="com_view">
 
     <!--아이템정보 왼쪽-->
@@ -95,6 +120,8 @@ include_once('./_head.php');
                             <b class=""><?=$data['status']?></b>
                         </div>
                         <p>조회수 <?=number_format($data['views'])?></p>
+
+
                     </div>
                     <div class="heart male-auto" name="">
                         <button type="button" class="heart <?=$heart?>" onclick="postLike('<?=$_GET['idx']?>')"><img src="<?php echo G5_THEME_IMG_URL ?>/main/heart_<?=$heart?>.png" alt="좋아요off" title="좋아요off"></button>
@@ -111,9 +138,15 @@ include_once('./_head.php');
                             <span><?=explode(" ",$data['start_date'])[0]?>까지</span>
                         </p>
                         <p class="flex ai-c jc-sb">
-                            <span>마감기간</span>
+                            <span>심사기간</span>
                             <span><?=explode(" ",$data['end_date'])[0]?>까지</span>
                         </p>
+
+                        <?if($data['upfile']) {?>
+                        <p class="flex ai-c jc-sb">
+                            <a class="download-btn" href="<?=$jl->URL?><?=$data['upfile']['src']?>" download="<?=$data['upfile']['name']?>">신청서 다운로드</a>
+                        </p>
+                        <?}?>
                     </span>
                     <span>
                         <p class="txt_mini text-right">
@@ -121,8 +154,8 @@ include_once('./_head.php');
                         </p>
                         <p class="text-right">
                             <? foreach($data['prize'] as $index => $d){?>
-                            <span class="txt_mini"><?=$d['rank']?>등 * <?=$d['people']?>명</span>
-                            총상금 <b class="txt_color"><?=$d['money']?>만원</b><br>
+                            <span class="txt_mini"><?=$d['rank']?> * <?=$d['people']?>명</span>
+                            상품 <b class="txt_color"><?=$d['money']?></b><br>
                             <?}?>
                         </p>
                     </span>
@@ -144,9 +177,13 @@ include_once('./_head.php');
                     <section>
                         <h3 class="title">선호하는 디자인</h3>
                         <div class="flex ai-s gap10 sample">
+                            <?if(count($data['design'])) {
+                                foreach($data['design'] as $d) {?>
+                                    <img src="<?=$jl->URL.$d['src']?>">
+                            <?}}else {?>
                             <? foreach($data['thumb'] as $d) { ?>
-                                <img src="<?=$jl->URL.$d['src']?>">
-                            <?}?>
+                                    <img src="<?=$jl->URL.$d['src']?>">
+                            <?}}?>
                         </div>
                     </section>
                     <section>
@@ -169,21 +206,88 @@ include_once('./_head.php');
                     <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
 
+                <style>
+                    .image-preview {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 10px;
+                    }
+
+                    .image-preview p {
+                        margin: 0;
+                        margin-right: 10px;
+                    }
+
+                    .delete-btn {
+                        background-color: red;
+                        color: white;
+                        border: none;
+                        padding: 5px 10px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+
+                    .delete-btn:hover {
+                        background-color: darkred;
+                    }
+                </style>
+
                 <div class="modal-body">
                     <p>제출 파일</p>
+                    <div id="preview"></div>
+
                     <div class="file-input-container">
                         <input type="text" id="fileName" placeholder="파일을 선택해주세요" readonly>
-                        <input type="file" id="fileInput" accept="*/*">
-                        <button type="button" class="btn btn_color btn_h40" onclick="document.getElementById('fileInput').click();">파일 선택</button>
+                        <input type="file"  multiple="multiple" name="compete_file[]" id="company_file" accept="*/*" style="display: block">
+                        <!--<button type="button" class="btn btn_color btn_h40" onclick="document.getElementById('fileInput').click();">파일 선택</button>-->
                     </div>
 
                     <p>추가 설명</p>
                     <textarea placeholder="설명을 작성하세요." id="compete_description"></textarea>
 
                     <script>
-                        document.getElementById('fileInput').addEventListener('change', function() {
-                            var fileName = this.files[0].name;
-                            document.getElementById('fileName').value = fileName;
+                        // 파일 입력 요소와 미리보기 컨테이너 가져오기
+                        const fileInput = document.getElementById('company_file');
+                        const previewContainer = document.getElementById('preview');
+                        let selectedFiles = Array.from(fileInput.files);
+
+                        fileInput.addEventListener('change', function() {
+                            //selectedFiles = Array.from(fileInput.files); // 새로운 파일 목록으로 업데이트
+                            previewContainer.innerHTML = ''; // Clear previous previews
+                            selectedFiles = selectedFiles.concat(Array.from(fileInput.files));
+
+                            // 각 파일에 대해 미리보기 생성
+                            selectedFiles.forEach(file => {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const imgPreview = document.createElement('div');
+                                    imgPreview.classList.add('image-preview');
+
+                                    const imgElement = document.createElement('p');
+                                    imgElement.textContent = file.name; // 파일 이름 추가
+
+                                    const deleteBtn = document.createElement('button');
+                                    deleteBtn.classList.add('delete-btn');
+                                    deleteBtn.textContent = 'x';
+                                    deleteBtn.addEventListener('click', function() {
+                                        // 삭제 버튼 클릭 시 미리보기 제거
+                                        previewContainer.removeChild(imgPreview);
+
+                                        // 삭제된 파일을 `selectedFiles`에서 제거
+                                        selectedFiles = selectedFiles.filter(f => f !== file);
+
+                                        // 새로운 파일 목록으로 `fileInput` 업데이트
+                                        const dataTransfer = new DataTransfer();
+                                        selectedFiles.forEach(f => dataTransfer.items.add(f));
+                                        fileInput.files = dataTransfer.files;
+                                    });
+
+                                    imgPreview.appendChild(imgElement);
+                                    imgPreview.appendChild(deleteBtn);
+                                    previewContainer.appendChild(imgPreview);
+                                }
+                                reader.readAsDataURL(file);
+                            });
                         });
                     </script>
                 </div>
@@ -201,7 +305,6 @@ include_once('./_head.php');
     <script>
         const jl = new Jl();
         const user_idx = "<?=$member['mb_no']?>";
-        const fileInput = document.getElementById('fileInput');
 
         function openModal() {
             if(!user_idx) {
@@ -215,7 +318,6 @@ include_once('./_head.php');
 
         async function postRequest(idx) {
             try {
-                let selectedFiles = Array.from(fileInput.files);
 
                 if(selectedFiles.length <= 0) {
                     alert("제출할 파일을 올려주세요.");
@@ -229,6 +331,7 @@ include_once('./_head.php');
                     description : $('#compete_description').val(),
                     status : ""
                 }
+
 
                 let res = await jl.ajax("insert",obj,"/api/compete_request.php");
 

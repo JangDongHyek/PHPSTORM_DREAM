@@ -94,8 +94,8 @@ include_once('./_head.php');
                             </div>
                             <a href="<?php echo G5_BBS_URL ?>/compete_view.php?idx=<?=$d['idx']?>">
                                 <div class="tit"><?=$d['subject']?></div>
-                                <div class="txt_color">최대 <?=$peoples?>인 상금</div>
-                                <div class="price"><?=number_format($low_money)?>만원 ~ <?=number_format($high_money)?>만원</div>
+                                <div class="txt_color">최대 <?=$peoples?>인 상품</div>
+                                <div class="price"><?=$d['prize'][0]['money'] ? : "상품이없습니다." ?></div>
                             </a>
                         </div>
                     </div><!--thm-->

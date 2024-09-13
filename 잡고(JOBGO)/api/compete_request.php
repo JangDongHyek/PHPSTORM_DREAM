@@ -86,13 +86,13 @@ try {
             $start_date = DateTime::createFromFormat('Y-m-d', explode(" ",$compete['start_date'])[0]);
             $end_date = DateTime::createFromFormat('Y-m-d', explode(" ",$compete['end_date'])[0]);
 
-            $current_date = new DateTime();
+            $current_date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
 
 
 
             if($compete['status'] != "진행중") $model->error("아직 진행중이 아닙니다.");
             if($current_date < $start_date) $model->error("아직 모집 기간 전입니다.");
-            if($end_date < $current_date) $model->error("모집 기간이 지났습니다.");
+            if($start_date < $current_date) $model->error("모집 기간이 지났습니다.");
 
             $model->where("user_idx",$obj['user_idx']);
             $data = $model->where("compete_idx",$obj['compete_idx'])->get();
