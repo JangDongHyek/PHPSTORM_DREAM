@@ -1,6 +1,13 @@
 <?php
 include_once('./_common.php');
 
+if($is_member){
+    $zip = $member['mb_zip1'].$member['mb_zip2'];
+    if(!preg_match('/^\d{5}$/', $zip)) {
+        alert('주문하기 전에 회원정보 주소를  최신 우편번호정보(5자리)로 업데이트 해주세요.', G5_URL.'/bbs/register_form.php?w=u');
+    }
+}
+
 // add_javascript('js 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 

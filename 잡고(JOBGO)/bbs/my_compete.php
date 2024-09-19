@@ -48,7 +48,7 @@ $request_data = $request_model->get(array(
     "page" => $page,
     "limit" => $limit,
     "source" => "compete",
-    "select" => "compete_request.idx AS request_idx",
+    "select" => "compete_request.idx AS request_idx, compete_request.insert_date AS request_insert_date",
 ));
 
 $request_model->join("compete","compete_idx","idx");
@@ -165,7 +165,7 @@ include_once('./_head.php');
                                             </div><!--mg-->
                                             <div class="info">
                                                 <div id="lecture_writer_list">
-                                                    <p><?=explode(" ",$d['insert_date'])[0]?> 접수</p>
+                                                    <p><?=explode(" ",$d['request_insert_date'])[0]?> 접수</p>
                                                 </div>
                                                 <a>
                                                     <div class="tit"><?=$d['subject']?></div>
@@ -277,8 +277,8 @@ include_once('./_head.php');
 
                 <div class="modal-body">
                     <p>제출 파일</p>
-                    <div class="file-input-container">
-                        <input type="text" id="fileName" placeholder="파일을 선택해주세요" readonly>
+                    <div class="file-input-container" id="file_container">
+                        <!--<input type="text" id="fileName" placeholder="파일을 선택해주세요" readonly>-->
                         <input type="file" id="fileInput" accept="*/*">
                     </div>
 
@@ -296,6 +296,9 @@ include_once('./_head.php');
     <script>
         const jl = new Jl();
         let request_idx = ""
+
+        const file_container = document.getElementById('file_container');
+
         async function deleteRequest(idx) {
             if(!confirm("정말 접수를 삭제하시겠습니까?")) return false;
 
@@ -320,7 +323,14 @@ include_once('./_head.php');
 
                 request_idx = res.data[0].idx;
                 document.getElementById("description").value = res.data[0].description;
-                document.getElementById("fileName").value = res.data[0].compete_file[0].name;
+
+                res.data[0].compete_file.forEach(function(item) {
+                    var inputElement = document.createElement('input');
+                    inputElement.type = 'text';
+                    inputElement.value = item.name;
+                    file_container.appendChild(inputElement);
+                });
+                //document.getElementById("fileName").value = res.data[0].compete_file[0].name;
 
                 $("#competeSubmit").modal('show');
             }catch (e) {

@@ -1,4 +1,9 @@
 <?php
+/*
+    해당 모듈은 5.4부터 최적화 되어있습니다.
+    4.* 은 사용이 아예 불가능하고 5.2는 부분적으로 사용가능하나 바꿔줘야할 부분이 꽤 있습니다.
+
+ */
 class Jl {
     private $root_dir = "public_html";
     private $JS = "/jl/Jl.js";
@@ -15,7 +20,7 @@ class Jl {
     public static $LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
-        array_push($this->DEV_IP,"121.140.204.65");
+        array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
         $this->INIT();
     }
 

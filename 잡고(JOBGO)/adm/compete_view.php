@@ -75,7 +75,11 @@ include_once('./admin.head.php');
                 <td><?=$d['insert_date']?></td>
                 <td><?=$d['mb_name']?>(<?=$d['mb_id']?>)</td>
                 <td><?=$d['mb_hp']?></td>
-                <td><a href="<?=G5_URL."/".$d['compete_file'][0]['src']?>" download="<?=$d['compete_file'][0]['name']?>"><i class="fa-regular fa-paperclip"></i> 제출파일</a></td>
+                <td>
+                    <? foreach($d['compete_file'] as $f)  {?>
+                        <a href="<?=G5_URL."/".$f['src']?>" download="<?=$f['name']?>"><i class="fa-regular fa-paperclip"></i> 제출파일 : <?=$f['name']?></a> <br>
+                    <?}?>
+                </td>
                 <td><textarea style="width: 800px"><?=$d['description']?></textarea></td>
                 <td>
                     <select onchange="changeStatus('<?=$d['idx']?>',event.target.value)">

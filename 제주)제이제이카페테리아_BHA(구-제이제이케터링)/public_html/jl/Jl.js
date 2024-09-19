@@ -233,7 +233,7 @@ class Jl {
                 }else if(Array.isArray(value)) {
                     value.forEach(function(item) {
                         if(item instanceof File) {
-                            objs[key] = obj[key]
+                            objs[key] = value;
                             delete obj[key];
                         }
                     });

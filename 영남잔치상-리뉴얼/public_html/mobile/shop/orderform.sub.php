@@ -29,6 +29,7 @@ ob_start();
 
     <ul class="sod_list">
         <?php
+        $is_product = false; // 제사음식 및 시제음식의 실속상일시 true가 됌
 		$is_visit = false;//방문수령인지 아닌지 파악하기 배송비에 필요
         $tot_point = 0;
         $tot_sell_price = 0;
@@ -72,6 +73,7 @@ ob_start();
 		$firstCaId="";
         for ($i=0; $row=sql_fetch_array($result); $i++)
         {
+            if($row['it_id'] == "16533786883749" || $row['it_id'] == "1691111911") $is_product = true;
 			//제사음식/명절차례상/시제음식/추가맞춤음식만 배열담기
 			if(strval(array_search(substr($row[ca_id],0,2),$firstCaIds))!=""){
 				array_push($ca_ids,$row[ca_id]);
@@ -203,6 +205,7 @@ ob_start();
 
                 if($sendcost == 0)
                     $ct_send_cost = '무료';
+
             }
         ?>
 
@@ -244,6 +247,8 @@ ob_start();
         } else {
             // 배송비 계산
             $send_cost = get_sendcost($s_cart_id);
+            if($is_product && $is_visit) $send_cost = 0;
+
         }
 
         // 복합과세처리
@@ -518,14 +523,14 @@ if($is_kakaopay_use) {
                         */
 
                         $cDate=strtotime(date("Y-m-d"));
-                        $plusDate= -2 <= (($cDate-strtotime("2024-02-01"))/86400)?(($cDate-strtotime("2024-02-01"))/86400)+2:0;
+                        $plusDate= -2 <= (($cDate-strtotime("2024-09-08"))/86400)?(($cDate-strtotime("2024-09-08"))/86400)+2:0;
 
-                        $currentSec=strtotime("2024-02-01 +".$plusDate." day");
-                        $currentDate=date("Y-m-d",strtotime("2024-02-01"));
+                        $currentSec=strtotime("2024-09-08 +".$plusDate." day");
+                        $currentDate=date("Y-m-d",strtotime("2024-09-08"));
 
-                        $lastDate=date("2024-02-09");
-                        $lastSec=strtotime("2024-02-09");
-                        $default[no_delivery_date]="2024-02-08";
+                        $lastDate=date("2024-09-16");
+                        $lastSec=strtotime("2024-09-16");
+                        $default[no_delivery_date]="2024-09-15";
                     }
                     //제사음식 희망배송일 제외하기
                     if($firstCaId=="10"||$firstCaId=="60"){
@@ -537,8 +542,8 @@ if($is_kakaopay_use) {
                         }
                         */
 
-                        $fDate=strtotime("2024-02-01");
-                        $lDate=strtotime("2024-02-12");
+                        $fDate=strtotime("2024-09-08");
+                        $lDate=strtotime("2024-09-19");
                         for($j=$fDate;$j<=$lDate;$j=$j+86400){
                             $default[no_delivery_date].=",".date("Y-m-d",$j);
                         }
@@ -1656,6 +1661,17 @@ function orderfield_check(f)
         alert('올바른 우편번호를 입력해주세요.');
         return false;
     }
+
+    if (f.od_zip.value.length !== 5 || isNaN(f.od_zip.value)) {
+        alert("우편번호는 5자리 숫자여야 합니다. 주소검색으로 올바르게 입력해주세요.");
+        return false;
+    }
+
+    if (f.od_b_zip.value.length !== 5 || isNaN(f.od_b_zip.value)) {
+        alert("우편번호는 5자리 숫자여야 합니다. 주소검색으로 올바르게 입력해주세요.");
+        return false;
+    }
+
 	check_field(f.od_delivery_date,"받는 날짜를 선택하세요");
 
     var od_settle_bank = document.getElementById("od_settle_bank");

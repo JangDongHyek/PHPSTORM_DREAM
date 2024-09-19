@@ -131,7 +131,7 @@ class JlFile extends Jl{
                 $this->resize_image($file[src],$file[resize_src],200,100);
             }
 
-            return json_encode($file,JSON_UNESCAPED_UNICODE);
+            return json_encode($file);
         }
     }
 
@@ -152,7 +152,7 @@ class JlFile extends Jl{
             array_push($datas,json_decode($data));
         }
 
-        return json_encode($datas,JSON_UNESCAPED_UNICODE);
+        return json_encode($datas);
     }
 
     function resize_image($file, $newfile, $w, $h) {

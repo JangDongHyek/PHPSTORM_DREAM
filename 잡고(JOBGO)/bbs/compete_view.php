@@ -238,8 +238,8 @@ include_once('./_head.php');
 
                     <div class="file-input-container">
                         <input type="text" id="fileName" placeholder="파일을 선택해주세요" readonly>
-                        <input type="file"  multiple="multiple" name="compete_file[]" id="company_file" accept="*/*" style="display: block">
-                        <!--<button type="button" class="btn btn_color btn_h40" onclick="document.getElementById('fileInput').click();">파일 선택</button>-->
+                        <input type="file"  multiple="multiple" name="compete_file[]" id="company_file" accept="*/*">
+                        <button type="button" class="btn btn_color btn_h40" onclick="document.getElementById('company_file').click();">파일 선택</button>
                     </div>
 
                     <p>추가 설명</p>
@@ -321,6 +321,11 @@ include_once('./_head.php');
 
                 if(selectedFiles.length <= 0) {
                     alert("제출할 파일을 올려주세요.");
+                    return false;
+                }
+
+                if(selectedFiles.length < 2) {
+                    alert("제출해야할 파일은 최소 두개이상입니다.");
                     return false;
                 }
 

@@ -33,67 +33,135 @@ function cellConfirm($cell) {
     }
 }
 
-// 첫 번째 시트 가져오기
-$sheet = $objPHPExcel->getSheet(0);
-$sheetName = $sheet->getTitle();
-$page = 0;
-for ($i = 1; $i <= 6; $i++) {
-    $date   = $page + 2;     //요일
+$first_test = false;
+if($first_test) {
+    // 첫 번째 시트 가져오기
+    $sheet = $objPHPExcel->getSheet(0);
+    $sheetName = $sheet->getTitle();
+    $page = 0;
+    $page_roop = 35;
+    for ($i = 1; $i <= 6; $i++) {
+        $date   = $page + 2;     //요일
 
-    $page_start = 3;
-    $page_end = 35;
+        $page_start = 3;
+        $page_end = 35;
 
 
 
-    $range = "E{$date}:J{$date}"; // 요일 가져오는 특이성이 강한 일요일은 제외
-    $dates = $sheet->rangeToArray($range, NULL, TRUE, TRUE, TRUE);
-    $arrays = array();
-    //요일만큼 반복
-    foreach ($dates as $index => $date) {
-        //데이터의 구조가 2중이라 한번더 파고들기
-        foreach ($date as $position => $d) {
-            $dd = $jl->stringDateToDate($d);
-            if($dd) $dd = $dd->format('Y-m-d');
+        $range = "E{$date}:J{$date}"; // 요일 가져오는 특이성이 강한 일요일은 제외
+        $dates = $sheet->rangeToArray($range, NULL, TRUE, TRUE, TRUE);
+        $arrays = array();
+        //요일만큼 반복
+        foreach ($dates as $index => $date) {
+            //데이터의 구조가 2중이라 한번더 파고들기
+            foreach ($date as $position => $d) {
+                $dd = $jl->stringDateToDate($d);
+                if($dd) $dd = $dd->format('Y-m-d');
 
-            for($j = $page_start; $j <= $page_end; $j++) {
-                $target = $page + $j;
-                $times = getMergedCellValue($sheet,"B{$target}");
-                $category = getMergedCellValue($sheet,"C{$target}");
-                $type = getMergedCellValue($sheet,"D{$target}");
-                $name = getMergedCellValue($sheet,"$position{$target}");
-                $obj = array(
-                    "sheet" => $sheetName,
-                    "times" => $times,
-                    "category" => $category,
-                    "type" => $type,
-                    "name" => $name,
-                    "day" => $dd
-                );
-
-                if($name) {
-                    //시트명,제공시간,요리카레고리,요리타입,날짜 가 있는경우 요리명만 바뀌어서 업데이트
-                    $where_obj = array(
+                for($j = $page_start; $j <= $page_end; $j++) {
+                    $target = $page + $j;
+                    $times = getMergedCellValue($sheet,"B{$target}"); // 조식,중식,석식
+                    $category = getMergedCellValue($sheet,"C{$target}"); // 한식,디저트,중식
+                    $type = getMergedCellValue($sheet,"D{$target}"); // 밥,메인,김치,
+                    $name = getMergedCellValue($sheet,"$position{$target}"); // 메뉴명
+                    $obj = array(
                         "sheet" => $sheetName,
                         "times" => $times,
                         "category" => $category,
                         "type" => $type,
+                        "name" => $name,
                         "day" => $dd
                     );
-                    $data = $model->where($where_obj)->get();
-                    $data = $data['data'][0];
-                    if($data) {
-                        $model->update($data);
-                    }else {
-                        $model->insert($obj);
+
+                    if($name) {
+                        //시트명,제공시간,요리카레고리,요리타입,날짜 가 있는경우 요리명만 바뀌어서 업데이트
+                        $where_obj = array(
+                            "sheet" => $sheetName,
+                            "times" => $times,
+                            "category" => $category,
+                            "type" => $type,
+                            "day" => $dd
+                        );
+                        $data = $model->where($where_obj)->get();
+                        $data = $data['data'][0];
+                        if($data) {
+                            $model->update($data);
+                        }else {
+                            $model->insert($obj);
+                        }
                     }
                 }
             }
         }
+
+        $page += $page_roop;
     }
-
-    $page += 35;
+// 첫 번째 시트 종료
 }
-$cellValue = $sheet->getCell('E2')->getValue();
 
-var_dump($cellValue);
+$second_test = false;
+if($second_test) {
+// 두 번째 시트 가져오기
+    $sheet = $objPHPExcel->getSheet(1);
+    $sheetName = $sheet->getTitle();
+    $page = 0;
+    $page_roop = 18;
+    for ($i = 1; $i <= 5; $i++) {
+        $date = $page + 2;     //요일
+
+        $page_start = 3;
+        $page_end = 18;
+
+
+        $range = "D{$date}:H{$date}"; // 요일 가져오는 특이성이 강한 일요일은 제외
+        $dates = $sheet->rangeToArray($range, NULL, TRUE, TRUE, TRUE);
+        $arrays = array();
+        //요일만큼 반복
+        foreach ($dates as $index => $date) {
+            //데이터의 구조가 2중이라 한번더 파고들기
+            foreach ($date as $position => $d) {
+                $dd = $jl->stringDateToDate($d);
+                if ($dd) $dd = $dd->format('Y-m-d');
+
+                for ($j = $page_start; $j <= $page_end; $j++) {
+                    $target = $page + $j;
+                    $times = getMergedCellValue($sheet, "A{$target}"); // 조식,중식,석식
+                    $category = getMergedCellValue($sheet, "B{$target}"); // 한식,디저트,중식
+                    $type = getMergedCellValue($sheet, "C{$target}"); // 밥,메인,김치,
+                    $name = getMergedCellValue($sheet, "$position{$target}"); // 메뉴명
+                    $obj = array(
+                        "sheet" => $sheetName,
+                        "times" => $times,
+                        "category" => $category,
+                        "type" => $type,
+                        "name" => $name,
+                        "day" => $dd
+                    );
+
+                    if ($name) {
+                        //시트명,제공시간,요리카레고리,요리타입,날짜 가 있는경우 요리명만 바뀌어서 업데이트
+                        $where_obj = array(
+                            "sheet" => $sheetName,
+                            "times" => $times,
+                            "category" => $category,
+                            "type" => $type,
+                            "day" => $dd
+                        );
+                        $data = $model->where($where_obj)->get();
+                        $data = $data['data'][0];
+                        if ($data) {
+                            $model->update($data);
+                        } else {
+                            $model->insert($obj);
+                        }
+                    }
+                }
+            }
+        }
+
+        $page += $page_roop;
+    }
+// 두 번째 시트 종료
+}
+
 ?>

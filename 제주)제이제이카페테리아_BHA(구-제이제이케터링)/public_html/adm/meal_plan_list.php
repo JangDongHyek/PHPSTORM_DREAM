@@ -4,8 +4,7 @@ include_once("../jl/JlConfig.php");
 $sub_menu = "400000";   // 게시판이 나타나야 하는 기본 메뉴
 auth_check($auth[$sub_menu], 'r');	// 권한체크
 $token = get_token();
-if ($is_admin != 'super')
-    alert('최고관리자만 접근 가능합니다.');    // 관리자만 볼 수 있습니다.
+if ($is_admin != 'super') alert('최고관리자만 접근 가능합니다.');    // 관리자만 볼 수 있습니다.
 
 function getDateRange($startDate, $endDate) {
     // 날짜 포맷을 'Y-m-d'로 강제 변환
@@ -37,7 +36,7 @@ $dates = getDateRange($monday,$sunday);
 
 $model = new JlModel(array("table" => "meal_plan"));
 
-
+$sheet = $_GET['sheet'] ? $_GET['sheet'] : 'Senior';
 
 include_once ('./admin.head.php');
 ?>
@@ -120,7 +119,8 @@ include_once ('./admin.head.php');
                             break;
                     }
 
-                    $sql = "SELECT DISTINCT times AS times_list FROM meal_plan where day = '$date'";
+                    // 조식,석식 그날의 데이터 시간타임을 가져오는 쿼리
+                    $sql = "SELECT DISTINCT times AS times_list FROM meal_plan where day = '$date' and sheet = '$sheet'";
                     $time_list = $model->query($sql);
 
 
@@ -131,7 +131,7 @@ include_once ('./admin.head.php');
                     foreach($time_list as $time) {
                         $time = $time[0];
                     //그날의 조식의 메뉴의 카테고리를 가져오는 쿼리
-                    $sql = "SELECT times, GROUP_CONCAT(DISTINCT category) AS lists FROM meal_plan where day = '$date' and times = '$time' GROUP BY times";
+                    $sql = "SELECT times, GROUP_CONCAT(DISTINCT category) AS lists FROM meal_plan where day = '$date' and times = '$time' and sheet = '$sheet' GROUP BY times";
                     $data = $model->query($sql);
                     $categories = explode(",",$data[0]['lists']);
                     if(count($categories)) {
@@ -141,6 +141,7 @@ include_once ('./admin.head.php');
                         <?foreach($categories as $category) {
                         $model->where("day",$date);
                         $model->where("category",$category);
+                        $model->where("sheet",$sheet);
                         $menus = $model->where("times",$time)->get();
                         ?>
                         <div class="box_line">
@@ -226,6 +227,7 @@ include_once ('./admin.head.php');
 
 <script>
     let currentDate = new Date('<?=$desiredDate?>');
+    const sheet = "<?=$sheet?>";
 
     // 주의 시작일(월요일)과 종료일(일요일)을 계산하는 함수
     function getWeekRange(date) {
@@ -271,7 +273,7 @@ include_once ('./admin.head.php');
         let day = currentDate.getDate().toString().padStart(2, '0');
         let date = `${year}-${month}-${day}`;
         //console.log(date);
-        window.location.href = `?today=${date}`
+        window.location.href = `?today=${date}&sheet=${sheet}`
         //displayWeekInfo();
     }
 
@@ -285,7 +287,7 @@ include_once ('./admin.head.php');
         let day = currentDate.getDate().toString().padStart(2, '0');
         let date = `${year}-${month}-${day}`;
         //console.log(date);
-        window.location.href = `?today=${date}`
+        window.location.href = `?today=${date}&sheet=${sheet}`
     }
 
     // 초기 주 정보 표시

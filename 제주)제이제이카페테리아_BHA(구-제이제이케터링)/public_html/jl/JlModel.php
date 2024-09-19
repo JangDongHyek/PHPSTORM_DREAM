@@ -46,7 +46,7 @@ class JlModel extends Jl{
 
         //DB Connection
         if($this->mysqli) {
-            $connect = new \mysqli($this->hostname, $this->username, $this->password, $this->database);
+            $connect = new mysqli($this->hostname, $this->username, $this->password, $this->database);
             if ($connect->connect_errno) $this->error(mysqli_error($this->connect));
         }else {
             $connect = mysql_connect($this->hostname, $this->username, $this->password);
@@ -713,8 +713,8 @@ class JlModel extends Jl{
     function escape($_param) {
         $param = array();
         foreach($_param as $key => $value){
-            if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-            if (is_object($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            if (is_array($value)) $value = json_encode($value);
+            if (is_object($value)) $value = json_encode($value);
 
             if($this->mysqli) {
                 $param[$key] = mysqli_real_escape_string($this->connect, $value);

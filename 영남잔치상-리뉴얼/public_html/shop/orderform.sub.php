@@ -1419,6 +1419,17 @@ if( $default['de_inicis_lpay_use'] ){   //이니시스 L.pay 사용시
             alert('올바른 우편번호를 입력해주세요.');
             return false;
         }
+
+        if (f.od_zip.value.length !== 5 || isNaN(f.od_zip.value)) {
+            alert("우편번호는 5자리 숫자여야 합니다. 주소검색으로 올바르게 입력해주세요.");
+            return false;
+        }
+
+        if (f.od_b_zip.value.length !== 5 || isNaN(f.od_b_zip.value)) {
+            alert("우편번호는 5자리 숫자여야 합니다. 주소검색으로 올바르게 입력해주세요.");
+            return false;
+        }
+
         check_field(f.od_delivery_date,"받는 날짜를 선택하세요");
 
         var od_settle_bank = document.getElementById("od_settle_bank");
