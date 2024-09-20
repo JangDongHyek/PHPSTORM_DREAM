@@ -2,8 +2,8 @@
 class Jl {
     private $root_dir = "public_html";
     private $JS = "/jl/Jl.js";
-    private $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
-    private $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
+    public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
+    public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
 
 
     protected $PHP;

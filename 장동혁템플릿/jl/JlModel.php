@@ -422,7 +422,7 @@ class JlModel extends Jl{
         $sql = "SELECT $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
         $sql .= $this->sql;
         $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
-        $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : "";
+        $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : " ORDER BY $this->primary DESC";
         return $sql;
     }
 

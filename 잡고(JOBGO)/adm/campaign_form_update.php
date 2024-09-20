@@ -14,6 +14,7 @@ try {
 
     if(!$_POST["w"]) {
         $obj = $_POST;
+        $obj['basic_guide'] = str_replace('\\', '', $obj['basic_guide']);
         foreach ($_FILES as $key => $file_data) {
             $file_result = $file->bindGate($file_data);
             $obj[$key] = $file_result;
@@ -25,7 +26,7 @@ try {
 
     }elseif($_POST['w'] == "u") {
         $obj = $_POST;
-
+        $obj['basic_guide'] = str_replace('\\', '', $obj['basic_guide']);
         //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
         $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
 

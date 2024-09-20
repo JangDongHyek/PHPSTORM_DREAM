@@ -76,7 +76,7 @@ $request_model = new JlModel(array(
                 <th>제목</th>
                 <th>기간</th>
                 <th>상금</th>
-                <th>진행상태</th>
+                <!--<th>진행상태</th>-->
                 <th>작성일</th>
                 <th>접수작품</th>
                 <th>관리</th>
@@ -102,11 +102,12 @@ $request_model = new JlModel(array(
                         <?}?>
                         <? if(!count($d['prize'])) echo "상금이 존재하지않습니다."?>
                     </td>
-                    <td><?=$d['status']?></td>
+                    <!--<td>--><?//=$d['status']?><!--</td>-->
                     <td><?=$d['insert_date']?></td>
                     <td><a href="./compete_view.php?idx=<?=$d['idx']?>"><?=number_format($request)?>건</a></td>
                     <td>
                         <a href="./compete_form.php?idx=<?=$d['idx']?>">관리</a>
+                        <a href="" onclick="event.preventDefault(); putData('<?=$d['idx']?>')">종료</a>
                         <a href="" onclick="event.preventDefault(); deleteData('<?=$d['idx']?>')">삭제</a>
                     </td>
                 </tr>
@@ -128,6 +129,20 @@ $request_model = new JlModel(array(
 <? $jl->jsLoad(); ?>
 <script>
     const jl = new Jl();
+
+    async function putData(idx) {
+        if(!confirm("종료 처리 하시겠습니까?")) return false;
+
+        let obj = {idx : idx,status : "종료"};
+
+        try {
+            let res = await jl.ajax("update",obj,"/api/compete.php");
+            alert("종료되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e)
+        }
+    }
 
     async function deleteData(idx) {
         if(!confirm("삭제하시겠습니까?")) return false;

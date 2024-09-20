@@ -15,6 +15,8 @@ try{
     if(!$_POST["w"]) {
         $obj = $_POST;
         $obj['prize'] = $model->jsonDecode($obj['prize'],false);
+        $obj['content'] = str_replace('\\', '', $obj['content']);
+        $obj['reference'] = str_replace('\\', '', $obj['reference']);
 
         $obj['prize'] = json_encode($obj['prize'], JSON_UNESCAPED_UNICODE);
         foreach ($_FILES as $key => $file_data) {
@@ -30,6 +32,8 @@ try{
         $obj = $_POST;
         $obj['prize'] = $model->jsonDecode($obj['prize'],false);
         $obj['prize'] = json_encode($obj['prize'], JSON_UNESCAPED_UNICODE);
+        $obj['content'] = str_replace('\\', '', $obj['content']);
+        $obj['reference'] = str_replace('\\', '', $obj['reference']);
 
         $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
 

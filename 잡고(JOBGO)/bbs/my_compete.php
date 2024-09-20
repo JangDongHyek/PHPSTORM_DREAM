@@ -323,6 +323,7 @@ include_once('./_head.php');
 
                 request_idx = res.data[0].idx;
                 document.getElementById("description").value = res.data[0].description;
+                file_container.innerText = "";
 
                 res.data[0].compete_file.forEach(function(item) {
                     var inputElement = document.createElement('input');

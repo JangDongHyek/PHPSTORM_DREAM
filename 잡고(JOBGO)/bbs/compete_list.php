@@ -15,9 +15,10 @@ $model = new JlModel(array(
 
 $limit = 10;
 $page = $_GET['page'] ? $_GET['page'] : 1;
+$model->orderBy("insert_date","DESC");
 $data = $model->get(array(
     "page" => $page,
-    "limit" => $limit
+    "limit" => $limit,
 ));
 $total_page = ceil($data['count'] / $limit);
 
@@ -52,21 +53,24 @@ include_once('./_head.php');
                     $heart = "off";
                     if(in_array($d['idx'],$likes,true)) $heart = "on";
 
+
+
                     $low_money = 0;
                     $high_money = 0;
                     $peoples = 0;
 
                     foreach($d['prize'] as $index2 => $p) {
-                        if(!$index2) {
-                            $low_money = $p['money'];
-                            $high_money = $p['money'];
-                            $peoples = $p['people'];
-                            continue;
-                        }
-
-                        if($low_money > $p['money']) $low_money = $p['money'];
-                        if($high_money < $p['money']) $high_money = $p['money'];
-                        if($peoples < $p['people']) $peoples = $p['people'];
+                        $peoples += $p['people'];
+                        //if(!$index2) {
+                        //    $low_money = $p['money'];
+                        //    $high_money = $p['money'];
+                        //    $peoples = $p['people'];
+                        //    continue;
+                        //}
+                        //
+                        //if($low_money > $p['money']) $low_money = $p['money'];
+                        //if($high_money < $p['money']) $high_money = $p['money'];
+                        //if($peoples < $p['people']) $peoples = $p['people'];
                     }
                     ?>
                     <div class="thm">
@@ -94,8 +98,8 @@ include_once('./_head.php');
                             </div>
                             <a href="<?php echo G5_BBS_URL ?>/compete_view.php?idx=<?=$d['idx']?>">
                                 <div class="tit"><?=$d['subject']?></div>
-                                <div class="txt_color">최대 <?=$peoples?>인 상품</div>
-                                <div class="price"><?=$d['prize'][0]['money'] ? : "상품이없습니다." ?></div>
+                                <div class="txt_color">최대 <?=$peoples?>인 상품 증정</div>
+                                <div class="price"><?=$d['prize'][0]['money'] ? $d['prize'][0]['rank']." : ".$d['prize'][0]['money'] : "상품이없습니다." ?></div>
                             </a>
                         </div>
                     </div><!--thm-->

@@ -51,10 +51,11 @@ include_once('./admin.head.php');
 
 
 <div class="tbl_head02 tbl_wrap">
-    <h6 class="title"><a href="<?php echo G5_BBS_URL ?>/compete_view.php" target="_blank">공모전명</a> <span>업체명</span></h6>
-    <p class="sub"><b>기간</b> <?=explode(" ",$compete['start_date'])[0]?>-<?=explode(" ",$compete['end_date'])[0]?> (<?=$compete['status']?>)</p>
+    <h6 class="title"><a href="<?php echo G5_BBS_URL ?>/compete_view.php?idx=<?=$compete['idx']?>" target="_blank"><?=$compete['subject']?></a> <span><?=$compete['company_name']?></span></h6>
+    <p class="sub"><b>모집 기간</b> <?=explode(" ",$compete['start_date'])[0]?></p>
+    <p class="sub"><b>심사 기간</b> <?=explode(" ",$compete['end_date'])[0]?></p>
     <?foreach($compete['prize'] as $c) {?>
-        <p><b>상금</b> <?=$c['rank']?>등 * <?=$c['people']?>명 * <?=number_format($c['money'])?>원</p>
+        <p><b>상품</b> <?=$c['rank']?> * <?=$c['people']?>명 * <?=$c['money']?></p>
     <?}?>
     <table>
         <thead>

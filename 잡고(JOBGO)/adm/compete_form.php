@@ -95,7 +95,8 @@ include_once('./admin.head.php');
 <input type="hidden" name="token" value="">
 <input type="hidden" name="idx" value="<?php echo $_GET['idx'] ?>">
 <input type="hidden" name="prize" id="prize" value="">
-
+<input type="hidden" id="content" name="content" value="">
+<input type="hidden" id="reference" name="reference" value="">
 
 
 <!--<input type="hidden" name="mb_level" value="--><?//=$mb['mb_level']?><!--">-->
@@ -130,7 +131,9 @@ include_once('./admin.head.php');
     </tr>
     <tr>
         <th scope="row"><label for="content">상세내용</label></th>
-        <td colspan="2"><textarea style="width: 200%" name="content" id="content" class="frm_input"><?php echo $row['content'] ?></textarea></td>
+        <td colspan="2">
+            <textarea id="naver_content" name="naver_content" rows="10" cols="100" style="width:100%; height:300px; display:none;"></textarea>
+        </td>
     </tr>
 
     <tr>
@@ -161,6 +164,7 @@ include_once('./admin.head.php');
 
             </div>
         </td>
+            <!--
         <th scope="row"><label for="cp_progress">진행상태</label></th>
         <td>
             <select name="status">
@@ -171,9 +175,11 @@ include_once('./admin.head.php');
             </select>
         </td>
     </tr>
+            -->
     <tr>
         <th scope="row"><label for="cp_reward">상금</label></th>
         <td>
+            <span>맨 위에 상금이 리스트에 노출됩니다.</span>
             <a class="btn_02" onclick="addPrize()">추가</a>
             <div id="container2">
 
@@ -200,7 +206,9 @@ include_once('./admin.head.php');
 
     <tr>
         <th scope="row"><label for="reference">참고자료</label></th>
-        <td colspan="2"><textarea style="width: 200%" name="reference" id="reference" class="frm_input"><?php echo $row['reference'] ?></textarea></td>
+        <td colspan="2">
+            <textarea id="naver_content2" name="naver_content2" rows="10" cols="100" style="width:100%; height:300px; display:none;"></textarea>
+        </td>
     </tr>
 
     <tr>
@@ -283,6 +291,7 @@ include_once('./admin.head.php');
             input1.name = `rank${index}`;
             input1.id = `rank${index}`;
             input1.value = item.rank;
+            input1.placeholder = "상이름";
             input1.size = 5;
 
             const rank_text = document.createTextNode(' *');
@@ -293,6 +302,7 @@ include_once('./admin.head.php');
             input2.name = `people${index}`;
             input2.id = `people${index}`;
             input2.value = item.people;
+            input2.placeholder = "인원수"
             input2.size = 5;
 
             const people_text = document.createTextNode('명 *');
@@ -302,6 +312,7 @@ include_once('./admin.head.php');
             input3.type = "text";
             input3.name = `money${index}`;
             input3.id = `money${index}`;
+            input3.placeholder = "상품명"
             input3.value = item.money;
 
             const money_text = document.createTextNode('');
@@ -335,6 +346,8 @@ include_once('./admin.head.php');
     function competeSubmit(f) {
         setPrizeValue();
         document.getElementById("prize").value = JSON.stringify(prize);
+        $('#content').val(default_content.getById["naver_content"].getIR().replaceAll('"',"'"));
+        $('#reference').val(default_content2.getById["naver_content2"].getIR().replaceAll('"',"'"));
         //return false;
     }
 </script>
@@ -435,6 +448,75 @@ include_once('./admin.head.php');
             reader.readAsDataURL(file);
         });
     });
+</script>
+
+<script src="<?=$jl->URL.$jl->EDITOR_JS?>"></script>
+<script>
+    var default_content = [];
+    var default_content2 = [];
+    var sLang = "ko_KR";	// 언어 (ko_KR/ en_US/ ja_JP/ zh_CN/ zh_TW), default = ko_KR
+    var content = "<?=$row['content']?>";
+    var content2 = "<?=$row['reference']?>";
+    document.addEventListener('DOMContentLoaded', function(){
+        nhn.husky.EZCreator.createInIFrame({
+            oAppRef: default_content,
+            elPlaceHolder: "naver_content",
+            sSkinURI: "<?=$jl->URL?><?=$jl->EDITOR_HTML?>",
+            htParams : {
+                bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseModeChanger : true,			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                bSkipXssFilter : true,		// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+                I18N_LOCALE : sLang,
+                fOnBeforeUnload : function(){}
+            }, //boolean
+            fOnAppLoad : function(){
+                //기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+                default_content.getById["naver_content"].exec("PASTE_HTML", [content]);
+            },
+            fCreator: "createSEditor2"
+        });
+        default_content.outputBodyHTML = function(){
+            default_content.getById["naver_content"].exec("UPDATE_CONTENTS_FIELD", []);
+        }
+
+        nhn.husky.EZCreator.createInIFrame({
+            oAppRef: default_content2,
+            elPlaceHolder: "naver_content2",
+            sSkinURI: "<?=$jl->URL?><?=$jl->EDITOR_HTML?>",
+            htParams : {
+                bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseModeChanger : true,			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                bSkipXssFilter : true,		// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+                I18N_LOCALE : sLang,
+                fOnBeforeUnload : function(){}
+            }, //boolean
+            fOnAppLoad : function(){
+                //기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+                default_content2.getById["naver_content2"].exec("PASTE_HTML", [content2]);
+            },
+            fCreator: "createSEditor2"
+        });
+        default_content2.outputBodyHTML = function(){
+            default_content2.getById["naver_content2"].exec("UPDATE_CONTENTS_FIELD", []);
+        }
+    },false);
+
+
+    function onPostCode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+                // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+                var post = data.zonecode;
+                var address = data.roadAddress || data.jibunAddress;
+
+                $('#company_address1').val(post + " " + address);
+
+            }
+        }).open();
+    }
 </script>
 
 

@@ -92,11 +92,7 @@ include_once('./admin.head.php');
 
 <form name="fmember" id="fmember" action="./campaign_form_update.php" onsubmit="return campaignSubmit(this);" method="post" enctype="multipart/form-data">
 <input type="hidden" name="w" value="<?php echo $w ?>">
-<input type="hidden" name="sfl" value="<?php echo $sfl ?>">
-<input type="hidden" name="stx" value="<?php echo $stx ?>">
-<input type="hidden" name="sst" value="<?php echo $sst ?>">
-<input type="hidden" name="sod" value="<?php echo $sod ?>">
-<input type="hidden" name="page" value="<?php echo $page ?>">
+
 <input type="hidden" name="token" value="">
 <input type="hidden" name="idx" value="<?=$_GET['idx']?>">
 <input type="hidden" id="thumb_del" name="thumb_del" value="">
@@ -139,7 +135,7 @@ include_once('./admin.head.php');
     <tr>
         <th scope="row"><label for="mb_id">업체 아이디</label></th>
         <td style="width: 30%">
-            <input <?=$readonly?> type="text" name="company_id" value="<?= $data['company_id']?>" class="frm_input" size="40">
+            <input  type="text" name="company_id" value="<?= $data['company_id']?>" class="frm_input" size="40">
         </td>
         <th scope="row"><label for="cp_company_name">업체명</label></th>
         <td>
@@ -330,8 +326,8 @@ include_once('./admin.head.php');
     });
 </script>
 
-<script src="<?=$jl->URL.$jl->EDITOR_JS?>"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="<?=$jl->URL.$jl->EDITOR_JS?>"></script>
 <script>
     var default_content = [];
     var sLang = "ko_KR";	// 언어 (ko_KR/ en_US/ ja_JP/ zh_CN/ zh_TW), default = ko_KR

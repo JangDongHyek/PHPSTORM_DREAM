@@ -18,6 +18,19 @@ $model = new JlModel(array(
 ));
 $data = $model->where("idx",$_GET['idx'])->get()['data'][0];
 
+$start_date = DateTime::createFromFormat('Y-m-d', explode(" ",$data['start_date'])[0]);
+$end_date = DateTime::createFromFormat('Y-m-d', explode(" ",$data['end_date'])[0]);
+
+$current_date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+
+$status = $data['status'];
+if(!$status) {
+    if($current_date < $start_date) $status = "모집 전";
+    if($current_date == $start_date) $status = "모집 중";
+    if($start_date < $current_date && $current_date < $end_date) $status = "모집 종료";
+    if($end_date <= $current_date) $status = "심사중";
+}
+
 //공모전 조회수
 if($member['mb_no']) {
     if(!isset($_SESSION['compete_views'])) {
@@ -117,7 +130,7 @@ include_once('./_head.php');
                 <div id="cam_count" class="flex ai-c gap10">
                     <div class="mb flex gap5 ai-c">
                         <div class="count">
-                            <b class=""><?=$data['status']?></b>
+                            <b class=""><?=$status?></b>
                         </div>
                         <p>조회수 <?=number_format($data['views'])?></p>
 
@@ -305,11 +318,32 @@ include_once('./_head.php');
     <script>
         const jl = new Jl();
         const user_idx = "<?=$member['mb_no']?>";
+        const status = "<?=$status?>";
 
         function openModal() {
             if(!user_idx) {
                 alert("로그인이 필요한 기능입니다.");
                 window.location.href = "/bbs/login.php";
+                return false;
+            }
+
+            if(status == "종료") {
+                alert("종료된 공모전입니다.");
+                return false;
+            }
+
+            if(status == "모집 전") {
+                alert("모집 전입니다.");
+                return false;
+            }
+
+            if(status == "모집 종료") {
+                alert("모집이 종료된 공모전입니다.");
+                return false;
+            }
+
+            if(status == "심사중") {
+                alert("심사중인 공모전입니다.");
                 return false;
             }
 

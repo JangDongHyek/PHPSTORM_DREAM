@@ -18,9 +18,14 @@
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
+            let jl = this.jl;
+
+            this.jl.loadJS(Jl_editor_js);
+
+
             /*
             JL.php 에 editor 경로를 입력해줘야합니다.
-            그누보드일경우 photo_uploader/popup/php/index.php 파일의 해쉬검증부분 삭제후 사용해야합니다
+            ** 그누보드일경우 photo_uploader/popup/php/index.php 파일의 해쉬검증부분 삭제후 사용해야합니다
             ex) $is_editor_upload = true
              */
         },
@@ -29,7 +34,7 @@
 
         },
         methods: {
-            connect : function() {
+            getContent : function() {
                 return this.default_content.getById[this.name].getIR().replaceAll('"',"'")
             },
             init : function() {

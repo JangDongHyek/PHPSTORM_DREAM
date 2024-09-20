@@ -7,8 +7,8 @@
 class Jl {
     private $root_dir = "public_html";
     private $JS = "/jl/Jl.js";
-    private $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
-    private $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
+    public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
+    public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
 
 
     protected $PHP;                         // Jl.File에서 사용
@@ -21,6 +21,7 @@ class Jl {
 
     function __construct() {
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
+        array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
         $this->INIT();
     }
 
@@ -77,6 +78,7 @@ class Jl {
         echo "const Jl_base_url = '{$this->URL}';";
         echo "const Jl_dev = {$this->DEV};";
         echo "const Jl_editor = '{$this->EDITOR_HTML}';";
+        echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
         echo "</script>";
         echo "<script src='{$this->URL}{$this->JS}'></script>";
     }

@@ -153,6 +153,28 @@ class JlModel extends Jl{
         return $this;
     }
 
+    function query($sql) {
+        $array = array();
+
+        if($this->mysqli) {
+            $result = @mysqli_query($this->connect, $sql);
+            if(!$result) $this->error(mysqli_error($this->connect));
+
+            while($row = mysqli_fetch_array($result)){
+                array_push($array, $row);
+            }
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) $this->error(mysql_error());
+
+            while($row = mysql_fetch_array($result)){
+                array_push($array, $row);
+            }
+        }
+
+        return $array;
+    }
+
     function insert($_param){
 
         $param = $this->escape($_param);
@@ -227,10 +249,10 @@ class JlModel extends Jl{
     }
 
     function get($_param = array()) {
-        $page = $_param['page'] ? : 0;
-        $limit = $_param['limit'] ? : 0;
+        $page = $_param['page'] ? $_param['page'] : 0;
+        $limit = $_param['limit'] ? $_param['limit'] : 0;
         $reset = isset($_param['reset']) ? $_param['reset'] : true;
-        $_param['source'] = $_param['source'] ? : $this->table;
+        $_param['source'] = $_param['source'] ? $_param['source'] : $this->table;
 
         if($_param['source'] != $this->table) {
             if(!$this->join_table) $this->error("JlModel get() : join() 부터 실행해주세요.");
@@ -262,7 +284,7 @@ class JlModel extends Jl{
                     $decoded_value = json_decode($value, true);
 
                     // JSON 디코딩이 성공했다면 값을 디코딩된 데이터로 변경
-                    if (json_last_error() === JSON_ERROR_NONE) {
+                    if (!is_null($decoded_value)) {
                         $row[$key] = $decoded_value;
                     }
                 }
@@ -375,7 +397,7 @@ class JlModel extends Jl{
     }
 
     function getSql($_param = array()) {
-        $source = $_param['source'] ? : $this->table;
+        $source = $_param['source'] ? $_param['source'] : $this->table;
         $other = $source == $this->table ? $this->join_table : $this->table;
         $scope = $_param['count'] ? $source == $this->table ? $this->primary : $this->join_primary : "*";
 
@@ -400,7 +422,7 @@ class JlModel extends Jl{
         $sql = "SELECT $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
         $sql .= $this->sql;
         $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
-        $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : "";
+        $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : " ORDER BY $this->primary DESC";
         return $sql;
     }
 
@@ -409,7 +431,7 @@ class JlModel extends Jl{
     }
 
     function orderBy($first,$second = "",$source="") {
-        $source = $source ? : $this->table;
+        $source = $source ? $source : $this->table;
         if(is_array($first)) {
             $param = $this->escape($first);
 
@@ -620,7 +642,7 @@ class JlModel extends Jl{
 
         if(is_string($first)) {
             if($first == "") $this->error("JlModel where() : 컬럼명을 입력해주새요.");
-            //if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
+            if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
             if($second == "jl_null") $second = "";
 
             if(in_array($first, $columns)){

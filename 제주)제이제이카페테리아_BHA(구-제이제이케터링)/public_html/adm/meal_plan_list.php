@@ -36,7 +36,7 @@ $dates = getDateRange($monday,$sunday);
 
 $model = new JlModel(array("table" => "meal_plan"));
 
-$sheet = $_GET['sheet'] ? $_GET['sheet'] : 'Senior';
+$sheet = $_GET['sheet'] ? $_GET['sheet'] : 'MS,SS';
 
 include_once ('./admin.head.php');
 ?>
@@ -53,9 +53,9 @@ include_once ('./admin.head.php');
     <div style="padding:10px;">
         <div><div id="bo_tbtn">
 
-                <a href="?bo_table=carte&amp;mktime=1725289200&amp;now_sheet=0">UJ</a>
-                <a href="?bo_table=carte&amp;mktime=1725289200&amp;now_sheet=1">LJ</a>
-                <a href="?bo_table=carte&amp;mktime=1725289200&amp;now_sheet=2">MS,SS</a>
+                <a href="?today=<?=$desiredDate?>&sheet=MS,SS">MS,SS</a>
+                <a href="?today=<?=$desiredDate?>&sheet=UJ">UJ</a>
+                <a href="?today=<?=$desiredDate?>&sheet=LJ">LJ</a>
             </div>
 
             <div id="bo_list">
@@ -114,7 +114,7 @@ include_once ('./admin.head.php');
                         case "6" :
                             $day = "토";
                             break;
-                        case "7" :
+                        case "0" :
                             $day = "일";
                             break;
                     }
@@ -165,9 +165,9 @@ include_once ('./admin.head.php');
 
 
 
+                <? } ?>
+                <? } ?>
                 </div>
-                <? } ?>
-                <? } ?>
 
                 <div id="bo_div" class="tbl_head01 tbl_wrap">
 

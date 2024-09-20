@@ -74,6 +74,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 <a href="?bo_table=carte&is_day=1&mktime=<?=$mktime?>&sme=<?=$sme?>&now_sheet=0">UJ</a>
 <a href="?bo_table=carte&is_day=1&mktime=<?=$mktime?>&sme=<?=$sme?>&now_sheet=1">LJ</a>
 <a href="?bo_table=carte&is_day=1&mktime=<?=$mktime?>&sme=<?=$sme?>&now_sheet=2">MS,SS</a>
+<!--<a href="?bo_table=carte&is_day=1&mktime=<?/*=$mktime*/?>&sme=<?/*=$sme*/?>&now_sheet=3">간식</a>-->
 </div>
 <?
 			$today = $year.'-'.$month.'-'.$day;		
@@ -123,6 +124,40 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
 	<div id="info">
 	</div>
+
+    <?php if($_SERVER['REMOTE_ADDR'] == "59.19.201.109" || $_SERVER['REMOTE_ADDR'] == "121.140.204.65"){ ?>
+        <!--간식 추가-->
+        <div class="tbl_head01 tbl_wrap" style="margin-top:20px;">
+            <table>
+                <colgroup>
+                    <col style="width:12%" />
+                    <col style="width:auto" />
+                </colgroup>
+                <tr>
+                    <th>기숙사 간식</th>
+                    <td>고구마, 우유</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="tbl_head01 tbl_wrap" style="margin-top:20px;">
+            <table>
+                <colgroup>
+                    <col style="width:12%" />
+                    <col style="width:auto" />
+                </colgroup>
+                <tr>
+                    <th rowspan="3">기숙사 간식</th>
+                    <td>고구마</td>
+                </tr>
+                <tr>
+                    <td>우유</td>
+                </tr>
+            </table>
+        </div>
+        <!--//간식 추가-->
+    <?php }?>
+
 </div>
 
 <script src="<?=G5_URL?>/theme/basic2/js/jquery-1.9.1.min.js"></script>
@@ -298,3 +333,5 @@ function getInfo(mktime, sme){
 
 }
 </script>
+
+

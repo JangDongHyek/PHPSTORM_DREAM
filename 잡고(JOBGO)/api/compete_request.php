@@ -90,7 +90,6 @@ try {
 
 
 
-            if($compete['status'] != "진행중") $model->error("아직 진행중이 아닙니다.");
             if($current_date < $start_date) $model->error("아직 모집 기간 전입니다.");
             if($start_date < $current_date) $model->error("모집 기간이 지났습니다.");
 
@@ -150,7 +149,7 @@ try {
 
             $msg = "";
             foreach($compete['prize'] as $p) {
-                $count = $model->where("status",$p['rank'])->count();
+                $count = $model->where("status",$p['rank'])->where("compete_idx",$compete['idx'])->count();
                 //$count = $model->where("status",$p['rank'])->getSql(array("count" => true));
                 //$msg .= $p['rank']."/".$count."\n";
                 //$msg .= $count."\n";
@@ -159,8 +158,7 @@ try {
                         $count += 1;
                     }
                 }
-
-                if($p['people'] < $count) $model->error("{$p['rank']}등은 {$p['people']}명까지 가능합니다.");
+                if((int)$p['people'] < $count) $model->error("{$p['rank']}등은 {$p['people']}명까지 가능합니다.");
             }
 
             //$model->error($msg);
