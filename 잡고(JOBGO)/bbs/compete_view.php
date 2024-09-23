@@ -193,9 +193,6 @@ include_once('./_head.php');
                             <?if(count($data['design'])) {
                                 foreach($data['design'] as $d) {?>
                                     <img src="<?=$jl->URL.$d['src']?>">
-                            <?}}else {?>
-                            <? foreach($data['thumb'] as $d) { ?>
-                                    <img src="<?=$jl->URL.$d['src']?>">
                             <?}}?>
                         </div>
                     </section>

@@ -202,8 +202,9 @@ include_once ('./admin.head.php');
                                 <!-- body -->
                                 <div class="modal-body">
                                     <p>엑셀양식에 맞게 입력하셔야 식단이 정상적으로 등록됩니다.</p>
-                                    <p>데이터 수정은 요일,제공시간,음식종류,타입이 같아야지 음식명이 바뀝니다.</p>
+                                    <p>데이터 수정은 요일,제공시간,음식종류,타입이 같아야지 음식명이 바뀝니다. 나머지는 수정이 안됩니다</p>
                                     <p>10월1일 조식 한식 메인 돈사태조림 -> 10월1일 조식 한식 메인 오리훈제</p>
+                                    <p>데이터의 삭제 같은경우 업체에 요청 부탁드립니다.</p>
                                     <dl><input type="file" placeholder="엑셀파일등록" id="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></dl>
                                     <dl id="excel_loading"></dl>
                                 </div>
