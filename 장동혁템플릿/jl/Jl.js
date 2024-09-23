@@ -7,7 +7,6 @@ function vueLoad(app_name) {
         components: {},
         computed: {},
         created: function(){
-            if(!Jl_dev) return false;
             this.jl = new Jl(app_name,"#42B883");
         },
         mounted: function(){

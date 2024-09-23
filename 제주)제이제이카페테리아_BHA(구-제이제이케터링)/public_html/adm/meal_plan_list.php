@@ -56,6 +56,7 @@ include_once ('./admin.head.php');
                 <a href="?today=<?=$desiredDate?>&sheet=MS,SS">MS,SS</a>
                 <a href="?today=<?=$desiredDate?>&sheet=UJ">UJ</a>
                 <a href="?today=<?=$desiredDate?>&sheet=LJ">LJ</a>
+                <a href="?today=<?=$desiredDate?>&sheet=간식">간식</a>
             </div>
 
             <div id="bo_list">
@@ -201,17 +202,23 @@ include_once ('./admin.head.php');
                                 <!-- body -->
                                 <div class="modal-body">
                                     <p>엑셀양식에 맞게 입력하셔야 식단이 정상적으로 등록됩니다.</p>
+                                    <p>데이터 수정은 요일,제공시간,음식종류,타입이 같아야지 음식명이 바뀝니다.</p>
+                                    <p>10월1일 조식 한식 메인 돈사태조림 -> 10월1일 조식 한식 메인 오리훈제</p>
                                     <dl><input type="file" placeholder="엑셀파일등록" id="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></dl>
                                     <dl id="excel_loading"></dl>
                                 </div>
                                 <!-- Footer -->
                                 <div class="modal-footer">
                                     <a href="https://www.dreamforone.com:443/~jjcatering/data/sample2.xlsx" class="btn btn-info" style="float:left; color: #FFF !important;" target="_blank">엑셀양식다운</a>
-                                    <button type="button" onclick="chk_upload_excel()" class="btn btn-primary">등록</button>
+                                    <button type="button" onclick="uploadExcel()" class="btn btn-primary">등록</button>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div id="loadingModal" class="modal-overlay" style="display: none;">
+                        <div class="loader"></div>
                     </div>
 
                 </div>
@@ -223,7 +230,78 @@ include_once ('./admin.head.php');
             <div id="result"></div>
 
 
+
 </div>
+<Style>
+    /* 전체 화면을 덮는 반투명한 배경 */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5); /* 반투명한 배경 */
+        z-index: 1100; /* 최상위로 설정 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* 로딩 애니메이션을 감싸는 컨테이너 */
+    .loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* 화면 전체 높이 */
+    }
+
+    /* 동그라미 애니메이션 */
+    .loader {
+        border: 8px solid #f3f3f3; /* 동그라미 테두리 색상 */
+        border-radius: 50%;
+        border-top: 8px solid #3498db; /* 동그라미 상단 색상 */
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite; /* 애니메이션 효과 */
+    }
+
+    /* 동그라미 회전 애니메이션 */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</Style>
+
+<?$jl->jsLoad();?>
+
+<script>
+    const jl = new Jl();
+
+    async function uploadExcel() {
+        const fileInput = document.getElementById('excel_file');
+        let selectedFiles = Array.from(fileInput.files);
+
+        if(selectedFiles.length == 0) {
+            alert("파일을 올려주세요.");
+            return false;
+        }
+
+        let obj = {
+            info : selectedFiles
+        }
+        document.getElementById('loadingModal').style.display = 'flex';
+
+        let res = await jl.ajax("ss",obj,"/adm/excel_upload.php");
+
+        alert("등록되었습니다.");
+
+        window.location.reload();
+    }
+
+    function upload_modal() {
+        $("#myModal").modal();
+    }
+</script>
 
 <script>
     let currentDate = new Date('<?=$desiredDate?>');

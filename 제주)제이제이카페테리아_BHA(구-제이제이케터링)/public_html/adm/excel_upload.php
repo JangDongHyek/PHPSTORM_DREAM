@@ -3,11 +3,29 @@ include_once("./_common.php");
 include_once("../jl/JlConfig.php");
 include_once('../lib/PHPExcel/Classes/PHPExcel/IOFactory.php');
 
+$response = array("message" => "");
+
 $model = new JlModel(array("table" => "meal_plan"));
+$log = new JlModel(array("table" => "excel_upload_log"));
+
+$obj = $model->jsonDecode($_POST['obj']);
 
 $file = new JlFile("/jl/jl_resource/excel");
 
-$objPHPExcel = PHPExcel_IOFactory::load($jl->ROOT."/jl/jl_resource/test2.xlsx");
+if(!count($_FILES)) $model->error("파일이 존재하지않습니다.");
+
+foreach ($_FILES as $key => $file_data) {
+    $file_result = $file->bindGate($file_data);
+    $obj[$key] = $file_result;
+}
+
+$obj['ip'] = $model->getClientIP();
+$log->insert($obj);
+
+$file = json_decode($file_result,true);
+$file = $file[0];
+
+$objPHPExcel = PHPExcel_IOFactory::load($jl->ROOT.$file['src']);
 $sheetCount = $objPHPExcel->getSheetCount();
 
 //셀값이 병합인지 단일인지 확인후 병합일경우 병합의 값을 가져오게 하는 함수
@@ -294,5 +312,9 @@ if($test) {
     }
 // 네 번째 시트 종료
 }
+
+$response['success'] = true;
+
+echo json_encode($response);
 
 ?>

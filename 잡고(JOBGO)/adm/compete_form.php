@@ -23,6 +23,7 @@ if($_GET['idx']) {
     }else {
         $row = $results['data'][0];
 
+        if($row['prize'] == "null") $row['prize'] = "";
     }
 }
 
