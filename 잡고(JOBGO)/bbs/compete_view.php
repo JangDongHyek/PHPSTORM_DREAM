@@ -20,15 +20,16 @@ $data = $model->where("idx",$_GET['idx'])->get()['data'][0];
 
 $start_date = DateTime::createFromFormat('Y-m-d', explode(" ",$data['start_date'])[0]);
 $end_date = DateTime::createFromFormat('Y-m-d', explode(" ",$data['end_date'])[0]);
+$examination_date = DateTime::createFromFormat('Y-m-d', explode(" ",$data['examination_date'])[0]);
 
 $current_date = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
 
 $status = $data['status'];
 if(!$status) {
     if($current_date < $start_date) $status = "모집 전";
-    if($current_date == $start_date) $status = "모집 중";
-    if($start_date < $current_date && $current_date < $end_date) $status = "모집 종료";
-    if($end_date <= $current_date) $status = "심사중";
+    if($start_date <= $current_date && $current_date <= $end_date) $status = "모집 중";
+    if($end_date < $current_date) $status = "모집 종료";
+    if($examination_date <= $current_date) $status = "심사중";
 }
 
 //공모전 조회수
@@ -148,16 +149,16 @@ include_once('./_head.php');
                     <span>
                         <p class="flex ai-c jc-sb">
                             <span>접수기간</span>
-                            <span><?=explode(" ",$data['start_date'])[0]?>까지</span>
+                            <span><?=explode(" ",$data['start_date'])[0]?> ~ <?=explode(" ",$data['end_date'])[0]?> </span>
                         </p>
                         <p class="flex ai-c jc-sb">
                             <span>심사기간</span>
-                            <span><?=explode(" ",$data['end_date'])[0]?>까지</span>
+                            <span><?=explode(" ",$data['examination_date'])[0]?>까지</span>
                         </p>
 
                         <?if($data['upfile']) {?>
                         <p class="flex ai-c jc-sb">
-                            <a class="download-btn" href="<?=$jl->URL?><?=$data['upfile']['src']?>" download="<?=$data['upfile']['name']?>">신청서 다운로드</a>
+                            <a class="download-btn" href="<?=$jl->URL?><?=$data['upfile']['src']?>" download="<?=$data['upfile']['name']?>" target="_blank">신청서 다운로드</a>
                         </p>
                         <?}?>
                     </span>
@@ -316,6 +317,22 @@ include_once('./_head.php');
         const jl = new Jl();
         const user_idx = "<?=$member['mb_no']?>";
         const status = "<?=$status?>";
+
+        function downloadFile(url, fileName) {
+            fetch(url)
+                .then(response => response.blob())
+                .then(blob => {
+                    const link = document.createElement('a');
+                    const url = window.URL.createObjectURL(blob);
+                    link.href = url;
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(err => console.error('파일을 다운로드할 수 없습니다.', err));
+        }
 
         function openModal() {
             if(!user_idx) {

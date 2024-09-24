@@ -7,7 +7,6 @@ function vueLoad(app_name) {
         components: {},
         computed: {},
         created: function(){
-            if(!Jl_dev) return false;
             this.jl = new Jl(app_name,"#42B883");
         },
         mounted: function(){
@@ -58,11 +57,6 @@ class Jl {
 
             var objects = {_method : method};
             objects = this.processObject(objects,object);
-
-            if("test" in options) {
-                console.log(objects);
-                return false;
-            }
 
             //form 으로 데이터가공
             var form = new FormData();
@@ -133,12 +127,28 @@ class Jl {
 
             // 로그 부분
             try {
+                // IOS 같은경우 에러를 일으켜 함수명 추적이 불가능해 js 에러가 발생해 그뒤 로직이 꼬임 에러 발생시 문제없이 넘어가게 try catch 추가
                 const parsedStack = this.parseStackTrace(new Error().stack);
                 var function_name = parsedStack[1].function.replace('a.','');
             }catch (e) {
                 var function_name = "IOS Error";
             }
         });
+    }
+
+    loadJS(path) {
+        var scriptElement = document.createElement('script');
+        scriptElement.src = this.root + path;
+
+        scriptElement.onload = function() {
+            jl.log(`${path} Script Load`,"","#66cdaa");
+        };
+
+        scriptElement.onerror = function() {
+            jl.log("Editor Script Error","","#de0618");
+        };
+
+        document.head.appendChild(scriptElement);
     }
 
     commonFile(files,obj,key,permission) {
@@ -232,13 +242,12 @@ class Jl {
                 if(this.isUpperCase(key)) delete obj[key]; //대문자인경우 조인데이터이기때문에 삭제
                 const value = obj[key];
                 if (value instanceof File) {
-                    console.log(1)
                     objs[key] = value;
                     delete obj[key];
                 }else if(Array.isArray(value)) {
                     value.forEach(function(item) {
                         if(item instanceof File) {
-                            objs[key] = value
+                            objs[key] = value;
                             delete obj[key];
                         }
                     });
@@ -367,5 +376,98 @@ class Jl {
         }).filter(frame => frame !== null);
 
         return frames;
+    }
+
+
+    // 밑에 부분은 Vue를 사용하지 못했을때 응요하기 좋은 함수들이다
+
+    getEditorContent(textarea_id,default_content) {
+        return default_content.getById[textarea_id].getIR().replaceAll('"',"'")
+    }
+
+    loadEditor(textarea_id,default_content,content) {
+        let jl = this;
+        document.addEventListener('DOMContentLoaded', function(){
+            nhn.husky.EZCreator.createInIFrame({
+                oAppRef: default_content,
+                elPlaceHolder: textarea_id,
+                sSkinURI: jl.root + jl.editor,
+                htParams : {
+                    bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                    bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                    bUseModeChanger : true,			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                    bSkipXssFilter : true,		// client-side xss filter 무시 여부 (true:사용하지 않음 / 그외:사용)
+                    I18N_LOCALE : "ko_KR",
+                    fOnBeforeUnload : function(){}
+                }, //boolean
+                fOnAppLoad : function(){
+                    //기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+                    default_content.getById[textarea_id].exec("PASTE_HTML", [content]);
+                },
+                fCreator: "createSEditor2"
+            });
+            default_content.outputBodyHTML = function(){
+                default_content.getById[textarea_id].exec("UPDATE_CONTENTS_FIELD", []);
+            }
+
+        },false);
+    }
+
+    hookFileEvent(input_file,preview = '') {
+        // 파일 입력 요소와 미리보기 컨테이너 가져오기
+        let fileInput = document.getElementById(input_file);
+        if(!fileInput) {
+            alert(input_file + "  태그를 찾을수 없습니다.");
+            return false;
+        }
+        let previewContainer = document.getElementById(preview);
+        let selectedFiles = Array.from(fileInput.files);
+
+        fileInput.addEventListener('change', function() {
+            selectedFiles = selectedFiles.concat(Array.from(fileInput.files));
+            //console.log(selectedFiles);
+
+            if(previewContainer) {
+                previewContainer.innerHTML = ''; // Clear previous previews
+
+                // 각 파일에 대해 미리보기 생성
+                selectedFiles.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imgPreview = document.createElement('div');
+                        imgPreview.classList.add('image-preview');
+
+                        const imgElement = document.createElement('img');
+                        imgElement.src = e.target.result;
+                        imgElement.width = 50;
+                        imgElement.height = 50;
+
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.classList.add('delete-btn');
+                        deleteBtn.textContent = 'x';
+                        deleteBtn.addEventListener('click', function() {
+                            // 삭제 버튼 클릭 시 미리보기 제거
+                            previewContainer.removeChild(imgPreview);
+
+                            // 삭제된 파일을 `selectedFiles`에서 제거
+                            selectedFiles = selectedFiles.filter(f => f !== file);
+
+                            // 새로운 파일 목록으로 `fileInput` 업데이트
+                            const dataTransfer = new DataTransfer();
+                            selectedFiles.forEach(f => dataTransfer.items.add(f));
+                            fileInput.files = dataTransfer.files;
+                        });
+
+                        imgPreview.appendChild(imgElement);
+                        imgPreview.appendChild(deleteBtn);
+                        previewContainer.appendChild(imgPreview);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+
+        });
+
+        return fileInput;
     }
 }

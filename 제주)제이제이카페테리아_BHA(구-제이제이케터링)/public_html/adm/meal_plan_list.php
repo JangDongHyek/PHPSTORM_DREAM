@@ -35,6 +35,7 @@ $sunday = date('Y-m-d', strtotime($monday . ' +6 days'));
 $dates = getDateRange($monday,$sunday);
 
 $model = new JlModel(array("table" => "meal_plan"));
+$info = new JlModel(array("table" => "meal_plan_info"));
 
 $sheet = $_GET['sheet'] ? $_GET['sheet'] : 'MS,SS';
 
@@ -121,7 +122,7 @@ include_once ('./admin.head.php');
                     }
 
                     // 조식,석식 그날의 데이터 시간타임을 가져오는 쿼리
-                    $sql = "SELECT DISTINCT times AS times_list FROM meal_plan where day = '$date' and sheet = '$sheet'";
+                    $sql = "SELECT DISTINCT times AS times_list , times_en FROM meal_plan where day = '$date' and sheet = '$sheet'";
                     $time_list = $model->query($sql);
 
 
@@ -130,16 +131,22 @@ include_once ('./admin.head.php');
 
                     <?
                     foreach($time_list as $time) {
+
+                        $time_en = $time[1];
                         $time = $time[0];
                     //그날의 조식의 메뉴의 카테고리를 가져오는 쿼리
                     $sql = "SELECT times, GROUP_CONCAT(DISTINCT category) AS lists FROM meal_plan where day = '$date' and times = '$time' and sheet = '$sheet' GROUP BY times";
                     $data = $model->query($sql);
                     $categories = explode(",",$data[0]['lists']);
+
+                    $sql = "SELECT times, GROUP_CONCAT(DISTINCT category_en) AS lists FROM meal_plan where day = '$date' and times = '$time' and sheet = '$sheet' GROUP BY times";
+                    $data = $model->query($sql);
+                    $categories_en = explode(",",$data[0]['lists']);
                     if(count($categories)) {
                     ?>
 
-                        <div class="ftime"><?=$time?> <span><?=$date?>(<?=$day?> | <?=$eng_day?>)</span></div><!--아침/점심/저녁 , 날짜표시-->
-                        <?foreach($categories as $category) {
+                        <div class="ftime"><?=$time?>(<?=$time_en?>) <span><?=$date?>(<?=$day?> | <?=$eng_day?>)</span></div><!--아침/점심/저녁 , 날짜표시-->
+                        <?foreach($categories as $index => $category) {
                         $model->where("day",$date);
                         $model->where("category",$category);
                         $model->where("sheet",$sheet);
@@ -148,13 +155,13 @@ include_once ('./admin.head.php');
                         <div class="box_line">
 
                             <div class="box_in">
-                                <div class="fs"><span><?=$category?>(영문종류)</span></div><!--음식종류-->
+                                <div class="fs"><span><?=$category?>(<?=$categories_en[$index]?>)</span></div><!--음식종류-->
                                 <div class="fc"><!--식단-->
                                     <ul>
                                         <? foreach($menus['data'] as $d) {?>
                                         <li>
                                             <?=$d['name']?><br>
-                                            메뉴영문명<br>
+                                            <?=$d['name_en']?><br>
                                         </li>
                                         <? } ?>
                                     </ul>
@@ -173,15 +180,15 @@ include_once ('./admin.head.php');
                 <div id="bo_div" class="tbl_head01 tbl_wrap">
 
                     <table>
-                        <tbody><tr><th>Note</th><td>•알러지 식품 표기는 각 메뉴당 ‘알러지 음식 표기’란의 번호와 대조하여 확인하시기 바랍니다.                        •위 메뉴는 당일 식자재 수급 상황에 따라 변동될 수 있습니다.
-                                •Please look for the numbers on the listed menu if you have a food allergy.                                            • We may have to make sm</td></tr>
-                        <tr><th>Food Allergens</th><td>1.계란  2.우유  3.돼지고기  4.메밀 5.땅콩  6.콩  7.밀가루  8.게  9.새우  10.고등어  11.토마토  12.복숭아  13.아황산염  14.호두  15.닭고기  16.소고기  17.오징어  18.조개
-                                1.Egg  2.Milk  3.Pork  4.Buck wheat  5.Peanut  6.Soybean  7.Wheat  8.Crab  9.Shrimp  10.Mackerel  11.Tomato  12.Peach  13.Sulphite </td></tr>
-                        <tr><th>Food Origins</th><td>(쌀: 국내산) (돼지고기: 국내산) (소고기: 호주산) (닭고기: 국내산) (배추, 고춧가루: 국내산)                   ※그 외: 카페테리아 게시판의 안내문을 확인하여 주십시오.
-                                (Rice: Korea) (Pork: Korea) (Beef: Australia) (Chicken: Korea) (Cabbage, Chili Powder: Korea)                 ※ Others: Please refer to the daily</td></tr>
-                        <tr><th>Salad Bar</th><td>샐러드, 샐러드드레싱, 샐러드 토핑, 식빵, 샌드위치스프레드, 야채스틱, 과일, 버터 등
-                                Salads, Salad Dressings, Toppings, Sandwich Bread, Spread, Veggie sticks, Fruit, Butter and etc.
-                                沙拉, 三明治, 黄油, 饮料, 水果</td></tr>
+                        <tbody>
+                        <tr>
+                            <th>Note</th>
+                            <td>
+                                •알러지 식품 표기는 각 메뉴당 ‘알러지 음식 표기’란의 번호와 대조하여 확인하시기 바랍니다.                        •위 메뉴는 당일 식자재 수급 상황에 따라 변동될 수 있습니다.
+                                •Please look for the numbers on the listed menu if you have a food allergy.                                            • We may have to make sm
+                            </td>
+                        </tr>
+
                         </tbody>
                     </table>
 
@@ -210,7 +217,7 @@ include_once ('./admin.head.php');
                                 </div>
                                 <!-- Footer -->
                                 <div class="modal-footer">
-                                    <a href="https://www.dreamforone.com:443/~jjcatering/data/sample2.xlsx" class="btn btn-info" style="float:left; color: #FFF !important;" target="_blank">엑셀양식다운</a>
+                                    <a href="https://www.dreamforone.com:443/~jjcatering/jl/jl_resource/sample.xlsx" class="btn btn-info" style="float:left; color: #FFF !important;" target="_blank">엑셀양식다운</a>
                                     <button type="button" onclick="uploadExcel()" class="btn btn-primary">등록</button>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
                                 </div>

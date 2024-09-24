@@ -94,7 +94,8 @@ $request_model = new JlModel(array(
                     </td>
                     <td>
                         신청 <?=explode(" ",$d['start_date'])[0]?> <br>
-                        심사 <?=explode(" ",$d['end_date'])[0]?>
+                        마감 <?=explode(" ",$d['end_date'])[0]?> <br>
+                        심사 <?=explode(" ",$d['examination_date'])[0]?>
                     </td>
                     <td>
                         <? foreach($d['prize'] as $index2 => $i) {?>

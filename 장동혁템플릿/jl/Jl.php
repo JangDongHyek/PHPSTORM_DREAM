@@ -76,7 +76,7 @@ class Jl {
 
         echo "<script>";
         echo "const Jl_base_url = '{$this->URL}';";
-        echo "const Jl_dev = {$this->DEV};";
+        echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
         echo "const Jl_editor = '{$this->EDITOR_HTML}';";
         echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
         echo "</script>";
@@ -87,11 +87,10 @@ class Jl {
         if(!self::$LOAD) {
             $this->jsLoad();
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
-            echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
-            echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
 
-            if(in_array('editor',$plugins)) {
-                echo "<script src='{$this->URL}{$this->EDITOR_JS}'></script>";
+            if(in_array('drag',$plugins)) {
+                echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
+                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             }
             self::$LOAD = true;
         }
@@ -252,7 +251,7 @@ class Jl {
             "hostname" => "localhost",
             "username" => "example",
             "password" => "",
-            "database" => ""
+            "database" => "example"
         );
 
         //resource 폴더 생성

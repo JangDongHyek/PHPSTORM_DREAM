@@ -12,22 +12,22 @@ $log = new JlModel(array("table" => "excel_upload_log"));
 
 $file = new JlFile("/jl/jl_resource/excel");
 
-//$obj = $model->jsonDecode($_POST['obj']);
-//if(!count($_FILES)) $model->error("파일이 존재하지않습니다.");
-//
-//foreach ($_FILES as $key => $file_data) {
-//    $file_result = $file->bindGate($file_data);
-//    $obj[$key] = $file_result;
-//}
-//
-//$obj['ip'] = $model->getClientIP();
-//$log->insert($obj);
-//
-//$file = json_decode($file_result,true);
-//$file = $file[0];
+$obj = $model->jsonDecode($_POST['obj']);
+if(!count($_FILES)) $model->error("파일이 존재하지않습니다.");
 
-//$objPHPExcel = PHPExcel_IOFactory::load($jl->ROOT.$file['src']);
-$objPHPExcel = PHPExcel_IOFactory::load($jl->ROOT."/jl/jl_resource/test2.xlsx");
+foreach ($_FILES as $key => $file_data) {
+    $file_result = $file->bindGate($file_data);
+    $obj[$key] = $file_result;
+}
+
+$obj['ip'] = $model->getClientIP();
+$log->insert($obj);
+
+$file = json_decode($file_result,true);
+$file = $file[0];
+
+$objPHPExcel = PHPExcel_IOFactory::load($jl->ROOT.$file['src']);
+//$objPHPExcel = PHPExcel_IOFactory::load($jl->ROOT."/jl/jl_resource/test2.xlsx");
 $sheetCount = $objPHPExcel->getSheetCount();
 
 //셀값이 병합인지 단일인지 확인후 병합일경우 병합의 값을 가져오게 하는 함수
@@ -39,9 +39,13 @@ function getMergedCellValue($sheet, $cellAddress) {
         $rangeArray = explode(':', $mergeRange); // 배열로 분리
         $firstCellAddress = $rangeArray[0]; // 첫 번째 셀 주소 가져오기
         $firstCell = $sheet->getCell($firstCellAddress); // 첫 번째 셀 가져오기
-        return cellConfirm($firstCell->getValue());
+        $data = cellConfirm($firstCell->getValue());
+    }else {
+        $data = cellConfirm($cell->getValue()); // 병합되지 않은 경우 원래 값 반환
     }
-    return cellConfirm($cell->getValue()); // 병합되지 않은 경우 원래 값 반환
+
+    $data = str_replace(array("\r\n", "\r", "\n"), '', $data);
+    return $data;
 }
 
 //셀값이 객체일때 텍스트값만 가져오는 함수
@@ -57,6 +61,7 @@ $test = true;
 if($test) {
     // 첫 번째 시트 가져오기
     $sheet = $objPHPExcel->getSheet(0);
+    $en_sheet = $objPHPExcel->getSheet(4);
     $sheetName = $sheet->getTitle();
     $sheetName = str_replace('&', ',', $sheetName);
     $page = 0;
@@ -93,19 +98,28 @@ if($test) {
                     $category = getMergedCellValue($sheet,"C{$target}"); // 한식,디저트,중식
                     $type = getMergedCellValue($sheet,"D{$target}"); // 밥,메인,김치,
                     $name = getMergedCellValue($sheet,"$position{$target}"); // 메뉴명
+                    $times_en = getMergedCellValue($en_sheet,"B{$target}"); // 조식,중식,석식 en
+                    $category_en = getMergedCellValue($en_sheet,"C{$target}"); // 한식,디저트,중식 en
+                    $type_en = getMergedCellValue($en_sheet,"D{$target}"); // 밥,메인,김치, en
+                    $name_en = getMergedCellValue($en_sheet,"$position{$target}"); // 메뉴명 en
 
                     // 특이성이 강한 일요일 특식 조건문
                     if($position == "K" && $times == "중식") {
                         $category = getMergedCellValue($sheet,"K{$k_target}"); // 특식 카테고리
                         $type = "$target";
+                        if($category == $name) continue; // 카테고리일경우 패스
                     }
 
                     $obj = array(
                         "sheet" => $sheetName,
                         "times" => $times,
+                        "times_en" => $times_en,
                         "category" => $category,
+                        "category_en" => $category_en,
                         "type" => $type,
+                        "type_en" => $type_en,
                         "name" => $name,
+                        "name_en" => $name_en,
                         "day" => $dd
                     );
 
@@ -122,6 +136,7 @@ if($test) {
                         $data = $data['data'][0];
                         if($data) {
                             $data['name'] = $name;
+                            $data['name_en'] = $name_en;
                             $model->update($data);
                         }else {
                             $model->insert($obj);
@@ -137,22 +152,36 @@ if($test) {
     //첫번째 시트 인포 내용
     for ($i = $page+1; $i <= $page+6; $i++) {
         $title = getMergedCellValue($sheet,"A{$i}");
+        $title_en = getMergedCellValue($en_sheet,"A{$i}");
         $content = getMergedCellValue($sheet,"E{$i}");
+        $content_en = getMergedCellValue($en_sheet,"E{$i}");
 
         if($title) {
             $obj = array(
                 "month" => $info_date,
                 "sheet" => $sheetName,
                 "title" => $title,
-                "content" => $content
+                "content" => $content,
+                "title_en" => $title_en,
+                "content_en" => $content_en,
             );
 
-            $data = $info->where($obj)->get();
+            $search_obj = array(
+                "month" => $info_date,
+                "sheet" => $sheetName,
+                "title" => $title,
+            );
+
+            $data = $info->where($search_obj)->get();
             $data = $data['data'][0];
-            if(!$data) {
+
+            if ($data) {
+                $data['content'] = $content;
+                $data['content_en'] = $content_en;
+                $info->update($data);
+            } else {
                 $info->insert($obj);
             }
-
         }
     }
 
@@ -163,10 +192,11 @@ $test = true;
 if($test) {
 // 두 번째 시트 가져오기
     $sheet = $objPHPExcel->getSheet(1);
+    $en_sheet = $objPHPExcel->getSheet(5);
     $sheetName = $sheet->getTitle();
     $page = 0;
     $page_roop = 18;
-    for ($i = 1; $i <= 5; $i++) {
+    for ($i = 1; $i <= 6; $i++) {
         $date = $page + 2;     //요일
 
         $page_start = 3;
@@ -189,12 +219,22 @@ if($test) {
                     $category = getMergedCellValue($sheet, "B{$target}"); // 한식,디저트,중식
                     $type = getMergedCellValue($sheet, "C{$target}"); // 밥,메인,김치,
                     $name = getMergedCellValue($sheet, "$position{$target}"); // 메뉴명
+
+                    $times_en = getMergedCellValue($en_sheet, "A{$target}"); // 조식,중식,석식
+                    $category_en = getMergedCellValue($en_sheet, "B{$target}"); // 한식,디저트,중식
+                    $type_en = getMergedCellValue($en_sheet, "C{$target}"); // 밥,메인,김치,
+                    $name_en = getMergedCellValue($en_sheet, "$position{$target}"); // 메뉴명
+
                     $obj = array(
                         "sheet" => $sheetName,
                         "times" => $times,
                         "category" => $category,
                         "type" => $type,
                         "name" => $name,
+                        "times_en" => $times_en,
+                        "category_en" => $category_en,
+                        "type_en" => $type_en,
+                        "name_en" => $name_en,
                         "day" => $dd
                     );
 
@@ -210,6 +250,8 @@ if($test) {
                         $data = $model->where($where_obj)->get();
                         $data = $data['data'][0];
                         if ($data) {
+                            $data['name'] = $name;
+                            $data['name_en'] = $name_en;
                             $model->update($data);
                         } else {
                             $model->insert($obj);
@@ -226,19 +268,33 @@ if($test) {
     for ($i = $page+1; $i <= $page+6; $i++) {
         $title = getMergedCellValue($sheet,"A{$i}");
         $content = getMergedCellValue($sheet,"D{$i}");
+        $title_en = getMergedCellValue($en_sheet,"A{$i}");
+        $content_en = getMergedCellValue($en_sheet,"D{$i}");
 
         if($title) {
             $obj = array(
                 "month" => $info_date,
                 "sheet" => $sheetName,
                 "title" => $title,
-                "content" => $content
+                "content" => $content,
+                "title_en" => $title_en,
+                "content_en" => $content_en,
             );
 
-            $data = $info->where($obj)->get();
+            $search_obj = array(
+                "month" => $info_date,
+                "sheet" => $sheetName,
+                "title" => $title,
+            );
+
+            $data = $info->where($search_obj)->get();
             $data = $data['data'][0];
 
-            if(!$data) {
+            if ($data) {
+                $data['content'] = $content;
+                $data['content_en'] = $content_en;
+                $info->update($data);
+            } else {
                 $info->insert($obj);
             }
         }
@@ -251,10 +307,11 @@ $test = true;
 if($test) {
 // 세 번째 시트 가져오기
     $sheet = $objPHPExcel->getSheet(2);
+    $en_sheet = $objPHPExcel->getSheet(6);
     $sheetName = $sheet->getTitle();
     $page = 0;
     $page_roop = 10;
-    for ($i = 1; $i <= 5; $i++) {
+    for ($i = 1; $i <= 6; $i++) {
         $date = $page + 2;     //요일
 
         $page_start = 3;
@@ -277,12 +334,21 @@ if($test) {
                     $category = getMergedCellValue($sheet, "A{$target}"); // 한식,디저트,중식
                     $type = getMergedCellValue($sheet, "A{$target}"); // 밥,메인,김치,
                     $name = getMergedCellValue($sheet, "$position{$target}"); // 메뉴명
+
+                    $times_en = "LUNCH";
+                    $category_en = getMergedCellValue($en_sheet, "A{$target}"); // 한식,디저트,중식
+                    $type_en = getMergedCellValue($en_sheet, "A{$target}"); // 밥,메인,김치,
+                    $name_en = getMergedCellValue($en_sheet, "$position{$target}"); // 메뉴명
                     $obj = array(
                         "sheet" => $sheetName,
                         "times" => $times,
                         "category" => $category,
                         "type" => $type,
                         "name" => $name,
+                        "times_en" => $times_en,
+                        "category_en" => $category_en,
+                        "type_en" => $type_en,
+                        "name_en" => $name_en,
                         "day" => $dd
                     );
 
@@ -298,6 +364,8 @@ if($test) {
                         $data = $model->where($where_obj)->get();
                         $data = $data['data'][0];
                         if ($data) {
+                            $data['name'] = $name;
+                            $data['name_en'] = $name_en;
                             $model->update($data);
                         } else {
                             $model->insert($obj);
@@ -314,13 +382,54 @@ if($test) {
     for ($i = $page+1; $i <= $page+6; $i++) {
         $title = getMergedCellValue($sheet,"A{$i}");
         $content = getMergedCellValue($sheet,"B{$i}");
+        $title_en = getMergedCellValue($en_sheet,"A{$i}");
+        $content_en = getMergedCellValue($en_sheet,"B{$i}");
 
         if($title) {
             $obj = array(
                 "month" => $info_date,
                 "sheet" => $sheetName,
                 "title" => $title,
-                "content" => $content
+                "content" => $content,
+                "title_en" => $title_en,
+                "content_en" => $content_en,
+            );
+
+            $search_obj = array(
+                "month" => $info_date,
+                "sheet" => $sheetName,
+                "title" => $title,
+            );
+
+            $data = $info->where($search_obj)->get();
+            $data = $data['data'][0];
+
+            if ($data) {
+                $data['content'] = $content;
+                $data['content_en'] = $content_en;
+                $info->update($data);
+            } else {
+                $info->insert($obj);
+            }
+        }
+
+    }
+
+    //세번째 시트 인포 내용
+    for ($i = $page+1; $i <= $page+6; $i++) {
+        $title = getMergedCellValue($sheet,"A{$i}");
+        $content = getMergedCellValue($sheet,"B{$i}");
+        $title_en = getMergedCellValue($en_sheet,"A{$i}");
+        $content_en = getMergedCellValue($en_sheet,"B{$i}");
+
+        if($title) {
+            $obj = array(
+                "month" => $info_date,
+                "sheet" => $sheetName,
+                "title" => $title,
+                "content" => $content,
+                "title_en" => $title_en,
+                "content_en" => $content_en,
             );
 
             $data = $info->where($obj)->get();
@@ -339,10 +448,11 @@ $test = true;
 if($test) {
 // 네 번째 시트 가져오기
     $sheet = $objPHPExcel->getSheet(3);
+    $en_sheet = $objPHPExcel->getSheet(7);
     $sheetName = $sheet->getTitle();
     $page = 0;
     $page_roop = 4;
-    for ($i = 1; $i <= 5; $i++) {
+    for ($i = 1; $i <= 6; $i++) {
         $date = $page + 4;     //요일
 
         $page_start = 5;
@@ -365,12 +475,22 @@ if($test) {
                 $category = "간식"; // 한식,디저트,중식
                 $type = "간식"; // 밥,메인,김치,
                 $name = getMergedCellValue($sheet, "$cell{$target}"); // 메뉴명
+
+                $times_en = "snacks";
+                $category_en = "snacks"; // 한식,디저트,중식
+                $type_en = "snacks"; // 밥,메인,김치,
+                $name_en = getMergedCellValue($en_sheet, "$cell{$target}"); // 메뉴명
+
                 $obj = array(
                     "sheet" => $sheetName,
                     "times" => $times,
                     "category" => $category,
                     "type" => $type,
                     "name" => $name,
+                    "times_en" => $times_en,
+                    "category_en" => $category_en,
+                    "type_en" => $type_en,
+                    "name_en" => $name_en,
                     "day" => $dd
                 );
 
@@ -387,6 +507,8 @@ if($test) {
                     $data = $model->where($where_obj)->get();
                     $data = $data['data'][0];
                     if ($data) {
+                        $data['name'] = $name;
+                        $data['name_en'] = $name_en;
                         $model->update($data);
                     } else {
                         $model->insert($obj);

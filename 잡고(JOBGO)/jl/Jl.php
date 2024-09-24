@@ -1,4 +1,9 @@
 <?php
+/*
+    해당 모듈은 5.4부터 최적화 되어있습니다.
+    4.* 은 사용이 아예 불가능하고 5.2는 부분적으로 사용가능하나 바꿔줘야할 부분이 꽤 있습니다.
+
+ */
 class Jl {
     private $root_dir = "public_html";
     private $JS = "/jl/Jl.js";
@@ -6,15 +11,17 @@ class Jl {
     public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
 
 
-    protected $PHP;
-    private $DEV = false;                //해당값이 false 이면 로그가 안찍힙니다.
-    private $DEV_IP = ["121.140.204.65"];
+    protected $PHP;                         // Jl.File에서 사용
+    private $DEV = false;                   //해당값이 false 이면 로그가 안찍힙니다.
+    private $DEV_IP = array();
     public  $ROOT;
     public  $DB;
     public  $URL;
-    public static $LOAD = false;    // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
+        array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
+        array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
         $this->INIT();
     }
 
@@ -69,8 +76,9 @@ class Jl {
 
         echo "<script>";
         echo "const Jl_base_url = '{$this->URL}';";
-        echo "const Jl_dev = {$this->DEV};";
+        echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
         echo "const Jl_editor = '{$this->EDITOR_HTML}';";
+        echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
         echo "</script>";
         echo "<script src='{$this->URL}{$this->JS}'></script>";
     }
@@ -79,11 +87,13 @@ class Jl {
         if(!self::$LOAD) {
             $this->jsLoad();
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
-            echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
-            echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
 
             if(in_array('editor',$plugins)) {
                 echo "<script src='{$this->URL}{$this->EDITOR_JS}'></script>";
+            }
+            if(in_array('drag',$plugins)) {
+                echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
+                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             }
             self::$LOAD = true;
         }
@@ -174,6 +184,29 @@ class Jl {
         return $result;
     }
 
+    function stringDateToDate($dateString) {
+        // 월과 일을 추출
+        preg_match('/(\d+)월 (\d+)일/', $dateString, $matches);
+
+        if (isset($matches[1]) && isset($matches[2])) {
+            $month = $matches[1];
+            $day = $matches[2];
+
+            // 현재 연도를 가져옵니다. 필요에 따라 수정할 수 있습니다.
+            $year = date('Y');
+
+            // 변환된 날짜 문자열 생성
+            $formattedDate = sprintf('%04d-%02d-%02d', $year, $month, $day);
+
+            // DateTime 객체 생성
+            $date = new DateTime($formattedDate);
+
+            return $date;
+        } else {
+            return "";
+        }
+    }
+
     function bytesToMB($bytes) {
         if ($bytes < 0) {
             $this->error("Jl bytesToMB() : 파일 사이즈는 음수일 수 없습니다.");
@@ -195,6 +228,9 @@ class Jl {
     }
 
     function INIT() {
+        // 개발 허용 IP 확인
+        if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
+
         //ROOT 위치 찾기
         $root = __FILE__;
         $position = strpos($root, $this->root_dir);
@@ -221,14 +257,13 @@ class Jl {
             "database" => "jobgo"
         );
 
-        // 폴더를 생성하기위한 권한체크
+        //resource 폴더 생성
         if(!is_dir($this->ROOT."/jl")) $this->error("Jl INIT() : jl 폴더가 없습니다.");
         if($this->getDirPermission("/jl") != "777") {
             if(!chmod($this->ROOT."/jl", 0777)) {
                 $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
             }
         }
-        //resource 폴더 생성
         $dir = $this->ROOT."/jl/jl_resource";
         if(!is_dir($dir)) {
             mkdir($dir, 0777);
@@ -238,8 +273,7 @@ class Jl {
         //PHP INI 설정가져오기
         $this->PHP = ini_get_all();
 
-        // 개발 허용 IP 확인
-        if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
+
     }
 }
 

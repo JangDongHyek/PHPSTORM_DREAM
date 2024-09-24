@@ -91,7 +91,7 @@ try {
 
 
             if($current_date < $start_date) $model->error("아직 모집 기간 전입니다.");
-            if($start_date < $current_date) $model->error("모집 기간이 지났습니다.");
+            if($end_date < $current_date) $model->error("모집 기간이 지났습니다.");
 
             $model->where("user_idx",$obj['user_idx']);
             $data = $model->where("compete_idx",$obj['compete_idx'])->get();

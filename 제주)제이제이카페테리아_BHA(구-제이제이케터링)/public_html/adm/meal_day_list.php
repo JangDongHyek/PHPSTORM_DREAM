@@ -6,6 +6,8 @@ auth_check($auth[$sub_menu], 'r');	// 권한체크
 $token = get_token();
 if ($is_admin != 'super') alert('최고관리자만 접근 가능합니다.');    // 관리자만 볼 수 있습니다.
 
+include_once ('./admin.head.php');
+
 function getDateRange($startDate, $endDate) {
     // 날짜 포맷을 'Y-m-d'로 강제 변환
     $startDate = strtotime($startDate);
@@ -69,7 +71,7 @@ switch ($dayOfWeek) {
 }
 
 // 조식,석식 그날의 데이터 시간타임을 가져오는 쿼리
-$sql = "SELECT DISTINCT times AS times_list FROM meal_plan where day = '$date' and sheet = '$sheet'";
+$sql = "SELECT DISTINCT times AS times_list,times_en FROM meal_plan where day = '$date' and sheet = '$sheet'";
 $time_list = $model->query($sql);
 
 if(!$time && count($time_list)) {
@@ -88,8 +90,6 @@ if($time) {
 
 $mode = $files ? "update" : "insert";
 $idx = $files ? $files['idx'] : "";
-
-include_once ('./admin.head.php');
 ?>
 
 <link rel="stylesheet" href="<?=G5_URL?>/mobile/skin/board/carte/style.css">
@@ -108,6 +108,7 @@ include_once ('./admin.head.php');
                 <a href="?today=<?=$desiredDate?>&sheet=MS,SS">MS,SS</a>
                 <a href="?today=<?=$desiredDate?>&sheet=UJ">UJ</a>
                 <a href="?today=<?=$desiredDate?>&sheet=LJ">LJ</a>
+                <a href="?today=<?=$desiredDate?>&sheet=간식">간식</a>
             </div>
             <div class="swiper-container swiper-initialized swiper-horizontal swiper-backface-hidden" style="">
                 <!-- Additional required wrapper -->
@@ -137,9 +138,10 @@ include_once ('./admin.head.php');
                 </div>
                 <div id="menu">
                     <? foreach($time_list as $t) {
+                        $t_en = $t[1];
                         $t = $t[0];
                         ?>
-                        <input type="button" name="menu[]" value="<?=$t?> (영문 타임)" class="<?=$t == $time ? 'btn_submit' : 'btn_cancel'?>">
+                        <input type="button" name="menu[]" value="<?=$t?> (<?=$t_en?>)" class="<?=$t == $time ? 'btn_submit' : 'btn_cancel'?>" onclick="changeTime('<?=$t?>')">
                     <?}?>
                 </div>
 
@@ -150,6 +152,9 @@ include_once ('./admin.head.php');
                     $data = $model->query($sql);
                     $categories = explode(",",$data[0]['lists']);
 
+                    $sql = "SELECT times, GROUP_CONCAT(DISTINCT category_en) AS lists FROM meal_plan where day = '$date' and times = '$time' and sheet = '$sheet' GROUP BY times";
+                    $data = $model->query($sql);
+                    $categories_en = explode(",",$data[0]['lists']);
                 ?>
                 <div id="info">
                     <div class="tbl_head01 tbl_wrap" style="margin-top:20px;">
@@ -160,15 +165,15 @@ include_once ('./admin.head.php');
                             </colgroup>
                             <tbody>
                             <tr></tr>
-                            <? foreach($categories as $category) {
+                            <? foreach($categories as $index => $category) {
                                 $model->where("day",$date);
                                 $model->where("category",$category);
                                 $model->where("sheet",$sheet);
                                 $menus = $model->where("times",$time)->get();
                             ?>
-                                <tr><th rowspan="<?=$menus['count'] + 1?>"><?=$category?> (영문 카테고리)</th></tr>
+                                <tr><th rowspan="<?=$menus['count'] + 1?>"><?=$category?> (<?=$categories_en[$index]?>)</th></tr>
                                 <? foreach($menus['data'] as $menu) {?>
-                                <tr><td><?=$menu['name']?><br>메뉴영문명</td></tr>
+                                <tr><td><?=$menu['name']?><br><?=$menu['name_en']?></td></tr>
                             <?}}?>
                             </tbody>
                         </table>
@@ -224,7 +229,9 @@ include_once ('./admin.head.php');
             <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
             <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
             <br>
+            <?if($member['mb_level'] >= 10) {?>
             <a href="javascript:void(0);" class="btn_cancel" onclick="upload_modal()">식단 이미지 등록</a>
+            <?}?>
             <!--<a href="javascript:void(0);" class="btn_cancel" onclick="delete_imgs()">식단 이미지 삭제</a>-->
 
         </div>
@@ -343,6 +350,10 @@ include_once ('./admin.head.php');
     let     currentDate = new Date('<?=$desiredDate?>');
     const   sheet = "<?=$sheet?>";
     const   time = "<?=$time?>";
+
+    function changeTime(tt) {
+        window.location.href = `?today=${day}&sheet=${sheet}&time=${tt}`
+    }
 
     // 이전 주로 이동
     function prevWeek() {

@@ -141,10 +141,12 @@ include_once('./admin.head.php');
         <th scope="row"><label for="start_date">신청기간</label></th>
         <td>
             <input type="date" name="start_date" value="<?=explode(" ",$row['start_date'])[0] ? : ''?>" class="frm_input" size="40">
+            ~
+            <input type="date" name="end_date" value="<?=explode(" ",$row['end_date'])[0] ? : ''?>" class="frm_input" size="40">
         </td>
         <th scope="row"><label for="end_date">심사기간</label></th>
         <td>
-            <input type="date" name="end_date" value="<?=explode(" ",$row['end_date'])[0] ? : ''?>" class="frm_input" size="40">
+            <input type="date" name="examination_date" value="<?=explode(" ",$row['examination_date'])[0] ? : ''?>" class="frm_input" size="40">
         </td>
     </tr>
 

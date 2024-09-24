@@ -145,7 +145,7 @@ class Jl {
         };
 
         scriptElement.onerror = function() {
-            jl.log("Editor Script Error","","#de0618");
+            jl.log(`${path} Script Error`,"","#66cdaa");
         };
 
         document.head.appendChild(scriptElement);
