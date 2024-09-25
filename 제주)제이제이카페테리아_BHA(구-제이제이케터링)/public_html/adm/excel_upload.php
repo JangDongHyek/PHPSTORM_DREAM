@@ -88,7 +88,10 @@ if($test) {
                 $dd = $jl->stringDateToDate($d);
                 if($dd) {
                     $dd = $dd->format('Y-m-d');
-                    if(!$info_date) $info_date = $dd;
+                    if(!$info_date) {
+                        $info_date = $dd;
+                        $info_date = substr($info_date, 0, 7);
+                    }
                 }
 
 

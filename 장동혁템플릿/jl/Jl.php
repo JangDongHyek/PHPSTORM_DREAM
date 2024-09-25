@@ -6,7 +6,7 @@
  */
 class Jl {
     private $root_dir = "public_html";
-    private $JS = "/jl/Jl.js";
+    private $JS = "/jl";
     public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
     public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
 
@@ -72,7 +72,9 @@ class Jl {
 
     function jsLoad() {
         //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS)) $this->error("Jl INIT() : JS 위치를 찾을 수 없습니다.");
+        if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
+        if(!file_exists($this->ROOT.$this->JS."/JlJavascript.js")) $this->error("Jl INIT() : JlJavascript.js 위치를 찾을 수 없습니다.");
+        if(!file_exists($this->ROOT.$this->JS."/JlVue.js")) $this->error("Jl INIT() : JlVue.js 위치를 찾을 수 없습니다.");
 
         echo "<script>";
         echo "const Jl_base_url = '{$this->URL}';";
@@ -80,7 +82,9 @@ class Jl {
         echo "const Jl_editor = '{$this->EDITOR_HTML}';";
         echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
         echo "</script>";
-        echo "<script src='{$this->URL}{$this->JS}'></script>";
+        echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
+        echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
+        echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
     }
 
     function vueLoad($app_name = "app",$plugins = array()) {
