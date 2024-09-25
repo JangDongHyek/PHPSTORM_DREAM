@@ -47,5 +47,6 @@ $routes->group('/', static function ($routes) {
     // 파일함
     $routes->get('filebox', 'app\PublishController::filebox');
 
-
+    //테스트
+    $routes->get('test', 'app\TestController::test');
 });

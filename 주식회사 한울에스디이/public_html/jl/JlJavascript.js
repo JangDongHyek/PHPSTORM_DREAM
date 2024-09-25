@@ -1,9 +1,9 @@
 class JlJavascript extends Jl{
-    
+
     /*
-    textarea_id = textarea 태그 아이디 
+    textarea_id = textarea 태그 아이디
     default_content = 기본값 배열 변수값을 []로 선언후 파라미터 삽입
-    content = 기본텍스트값 데이터 저장된값을 js변수에 담아준후 파라미터 삽입    
+    content = 기본텍스트값 데이터 저장된값을 js변수에 담아준후 파라미터 삽입
      */
     loadEditor(textarea_id,default_content,content) {
         let jl = this;
@@ -36,7 +36,7 @@ class JlJavascript extends Jl{
     }
 
     /*
-    textarea_id = textarea 태그 아이디 
+    textarea_id = textarea 태그 아이디
     default_content = 위에 선언한 변수값을 삽입
      */
     getEditorContent(textarea_id,default_content) {

@@ -280,9 +280,9 @@ class Jl {
         //DB 설정
         $this->DB = array(
             "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => "example"
+            "username" => "hanwool",
+            "password" => "z7!s1qd!",
+            "database" => "hanwool"
         );
 
         //resource 폴더 생성
