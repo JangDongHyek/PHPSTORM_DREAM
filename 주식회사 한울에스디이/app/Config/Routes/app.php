@@ -1,0 +1,51 @@
+<?php
+/**
+ * 일반 라우터
+ */
+/** @var $routes */
+
+// 로그인
+$routes->get("login", "app\PublishController::login");
+// 회원가입
+$routes->get("signUp", "app\PublishController::signUp");
+// 회원가입
+$routes->get("findPw", "app\PublishController::findPw");
+
+$routes->group('/', static function ($routes) {
+    // 메인
+    $routes->get('', 'app\PublishController::index');
+    // 내정보 관리
+    $routes->get('mypage', 'app\PublishController::mypage');
+    // 프로젝트 관리
+    $routes->get('project', 'app\PublishController::project');
+    // 회사 공개 프로젝트
+    $routes->get('publicProject', 'app\PublishController::publicProject');
+    // 직원 관리
+    $routes->get('employee', 'app\PublishController::employee');
+
+
+    // 종합공정
+    $routes->get('overall', 'app\PublishController::overall');
+    // 작업관리 > 계획공정표
+    $routes->get('schedule', 'app\PublishController::schedule');
+    // 작업관리 > 계획공정표
+    $routes->get('scheduleTest', 'app\PublishController::scheduleTest');
+    // 작업관리 > 주간공정표
+    $routes->get('scheduleWeekly', 'app\PublishController::scheduleWeekly');
+    // 작업관리 > 금주작업
+    $routes->get('weekTask', 'app\PublishController::weekTask');
+    // 기성관리
+    $routes->get('payment', 'app\PublishController::payment');
+    // 내역관리 > 수량산출서
+    $routes->get('record', 'app\PublishController::record');
+    // 내역관리 > 내역서
+    $routes->get('invoice', 'app\PublishController::invoice');
+    // 내역관리 > 단가목록표
+    $routes->get('priceList', 'app\PublishController::priceList');
+    // 계정관리
+    $routes->get('account', 'app\PublishController::account');
+    // 파일함
+    $routes->get('filebox', 'app\PublishController::filebox');
+
+
+});
