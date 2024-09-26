@@ -46,7 +46,8 @@ class Jl {
         }
 
         echo json_encode($er,JSON_UNESCAPED_UNICODE,JSON_UNESCAPED_SLASHES);
-        throw new \Exception($msg);
+        die();
+        //throw new \Exception($msg);
     }
 
     function jsonDecode($json,$encode = true) {

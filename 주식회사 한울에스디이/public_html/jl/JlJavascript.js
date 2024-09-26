@@ -1,12 +1,73 @@
-class JlJavascript extends Jl{
+class JlJavascript {
+    constructor(jl) {
+        this.jl = jl;
+    }
+
+    /*
+    input = input 아이디 문자열이나 배열로 가능하다
+     */
+    getInputById(input) {
+        const result = {};
+
+        if (typeof input === 'string') {
+            // 문자열이면 해당 ID의 input 값을 객체로 반환
+            const element = document.getElementById(input);
+            if (element) {
+                result[input] = element.value;
+            } else {
+                alert(`${input} 아이디를 가진 input을 찾을수없습니다.`);
+                return false;
+            }
+        } else if (Array.isArray(input)) {
+            // 배열이면 배열의 각 요소를 순환하여 객체로 반환
+            input.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    result[id] = element.value;
+                } else {
+                    alert(`${input} 아이디를 가진 input을 찾을수없습니다.`);
+                    return false;
+                }
+            });
+        } else {
+            console.error("이 함수는 string, array 형태로만 가능합니다.");
+        }
+
+        return result;
+    }
+
+    /*
+    form_id = form 태그 아이디
+    폼 태그 아이디 기반으로 폼 에있는 모든 데이터를 아이디 기반으로 객체 생성후 반환
+     */
+    getFormById(form_id) {
+        const form = document.getElementById(form_id);
+        if (!form) {
+            alert(`${form_id} 아이디를 가진 Form 을 찾을수없습니다.`)
+            return false;
+        }
+
+        const formData = {};
+        const inputs = form.querySelectorAll('input, textarea');
+
+        inputs.forEach((input) => {
+            const id = input.id;
+            if (id) {
+                formData[id] = input.value;
+            }
+        });
+
+        return formData;
+    }
 
     /*
     textarea_id = textarea 태그 아이디
     default_content = 기본값 배열 변수값을 []로 선언후 파라미터 삽입
     content = 기본텍스트값 데이터 저장된값을 js변수에 담아준후 파라미터 삽입
+    에디터를 불러들이는 함수
      */
     loadEditor(textarea_id,default_content,content) {
-        let jl = this;
+        let jl = this.jl;
         jl.loadJS(Jl_editor_js);
 
         document.addEventListener('DOMContentLoaded', function(){
@@ -38,6 +99,7 @@ class JlJavascript extends Jl{
     /*
     textarea_id = textarea 태그 아이디
     default_content = 위에 선언한 변수값을 삽입
+    불러들인 에디터의 값을 가져오는 함수
      */
     getEditorContent(textarea_id,default_content) {
         return default_content.getById[textarea_id].getIR().replaceAll('"',"'")

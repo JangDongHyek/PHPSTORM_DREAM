@@ -7,6 +7,7 @@ $file_name = str_replace(".php","",basename(__FILE__));
 
 try {
     $model = new JlModel(array("table" => $file_name));
+    $log = new JlModel(array("table" => "g5_member_log"));
 
     $join_table = "";
     $get_tables = [];
@@ -117,12 +118,18 @@ try {
         {
             $obj = $model->jsonDecode($_POST['obj'],false);
 
+            $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
             if($file_use) {
-                $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
                 $file->deleteDirGate($getData['data_column']);
             }
 
+            if(!$getData) $model->error("회원 데이터 조회 실패 업체에 문의해주세요.");
+
+            $getData['leave_reason'] = $obj['leave_reason'];
+            $log->insert($getData);
+
             $data = $model->delete($obj);
+
 
             $response['success'] = true;
             break;
@@ -182,7 +189,7 @@ try {
     echo json_encode($response);
 
 } catch (Exception $e) {
-    echo $e->getMessage();
+
 }
 
 

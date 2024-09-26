@@ -1,3 +1,5 @@
-class JlVue extends Jl{
-
+class JlVue {
+    constructor(jl) {
+        this.jl = jl;
+    }
 }

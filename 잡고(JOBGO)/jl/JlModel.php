@@ -642,7 +642,7 @@ class JlModel extends Jl{
 
         if(is_string($first)) {
             if($first == "") $this->error("JlModel where() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
+            //if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
             if($second == "jl_null") $second = "";
 
             if(in_array($first, $columns)){

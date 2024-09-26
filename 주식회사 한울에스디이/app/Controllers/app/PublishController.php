@@ -1,15 +1,23 @@
 <?php
-
+namespace App\Libraries;
 namespace App\Controllers\app;
 
 use App\Controllers\BaseController;
 
+use App\Libraries\Jl;
+use App\Libraries\JlModel;
 class PublishController extends BaseController
 {
     /**
      * 퍼블리싱 컨트롤러
      *
      */
+
+    public $jl;
+
+    public function __construct() {
+        $this->jl = new Jl();
+    }
 
     // 메인
     public function index(): string
@@ -26,6 +34,7 @@ class PublishController extends BaseController
     {
         $data = [
             'pid' => 'login',
+            "jl" => $this->jl,
         ];
 
         return render('/login', $data);
@@ -36,6 +45,7 @@ class PublishController extends BaseController
     {
         $data = [
             'pid' => 'sign_up',
+            "jl" => $this->jl,
         ];
 
         return render('app/sign_up', $data);
@@ -54,8 +64,13 @@ class PublishController extends BaseController
     // 내정보 관리
     public function mypage(): string
     {
+        $session = session();
+        $user = $session->get('user');
+
         $data = [
             'pid' => 'mypage',
+            "jl" => $this->jl,
+            "user" => $user,
         ];
 
         return render('app/mypage', $data);

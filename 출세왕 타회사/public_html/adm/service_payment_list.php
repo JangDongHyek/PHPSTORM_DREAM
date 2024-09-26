@@ -279,7 +279,7 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                     // 23.04.21 실내세차 있을떄만 + 적어줌
                     //if($row["car_in_yn"] == 'Y'){
                     // 23.05.19 실내세차쪽 없애기
-                    if($row['car_date_type'] == '2' || $row['car_date_type'] == '1'){
+                    if($row['car_date_type'] == '2'){
                           $s_mod = '<input class="frm_input" type = "number" id="amt_' . $row["cw_idx"] . '" > 
                             <a style ="border:1px solid black; padding:2px" href="javascript:payment_click(\'' . $row["cw_idx"] . '\',\'' . $card["moid"] . '\',\'' . $customer['billKey'] . '\',\'' . $row['mb_id'] . '\',\'' . $customer['mb_hp'] . '\',\'' . $row['mb_name'] . '\',' . $add_price . ')">결제하기</a>';
                     }
@@ -303,13 +303,18 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                     <td><a href="./member_form.php?<?=$qstr?>&amp;w=u&amp;mb_id=<?=$row['mb_id']?>"><?=$row['mb_id']?></a></td>
                     <td><?=$row['mb_name']?></td>
                     <td><?=$card_list[$customer["cardCode"]]?></td>
-                    <td><?=$row['car_date_type'] == '2' || $row['car_date_type'] == '1' ? substr($card["finalDate"],2,8) : substr($row['wr_datetime'],2,8).$row['is_payment']?> </td>
+                    <td><?=$row['car_date_type'] == '2' ? substr($card["finalDate"],2,8) : substr($row['wr_datetime'],2,8).$row['is_payment']?> </td>
                     <td><?=$row["mb_point"] ?></td>
                     <td><?=number_format($row["cp_price"]) ?> <a style ="border:1px solid black; padding:2px" href="javascript:point_click(<?=$row['cw_idx']?>,'<?=$row['mb_id']?>');">POINT+</a></td>
-                    <td><?=$row['car_date_type'] == '2' || $row['car_date_type'] == '1' ? number_format($total_price) : number_format($row['final_pay'])?></td>
+                    <td><?=$row['car_date_type'] == '2' ? number_format($total_price) : number_format($row['final_pay'])?></td>
 
+                    <?if($row['car_date_type'] == '2') {?>
                     <td><?=number_format($complete_cnt*12375)?>(<?=$complete_cnt?>)</td>
                     <td><?=number_format(($complete_cnt*12375) - $total_price- $row['cp_price'])?></td>
+                    <?}else {?>
+                    <td>0(<?=$complete_cnt?>)</td>
+                    <td><?=number_format($total_price- $row['cp_price'])?></td>
+                    <?}?>
                     <td><?=$s_mod?></td>
                     <td><?=$s_mod2?></td>
                 </tr>

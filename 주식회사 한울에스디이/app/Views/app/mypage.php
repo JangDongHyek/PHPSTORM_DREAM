@@ -1,13 +1,13 @@
 <!-- 내 정보 관리-->
 </div>
-
+<?php if($user) {?>
 <section class="">
     <button type="button" class="btn btn_blue">수정 완료</button>
     <div class="box_gray">
         <div class="form_wrap grid grid2">
             <div>
                 <label for="">아이디</label>
-                <input type="text" name="" id="" placeholder="아이디"/>
+                <input type="text" value="<?=$user['user_id']?>" placeholder="아이디" readonly/>
                 <label for="">비밀번호</label>
                 <input type="password" name="" id="" placeholder="비밀번호"/>
                 <label for="">비밀번호 확인</label>
@@ -30,4 +30,6 @@
         </div>
     </div>
 </section>
-
+<?}else {?>
+  <h1>잘못된 접근입니다 로그인을 진행해주세요.</h1>
+<?}?>

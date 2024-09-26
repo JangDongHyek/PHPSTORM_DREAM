@@ -46,7 +46,8 @@ class Jl {
         }
 
         echo json_encode($er,JSON_UNESCAPED_UNICODE,JSON_UNESCAPED_SLASHES);
-        throw new \Exception($msg);
+        die();
+        //throw new \Exception($msg);
     }
 
     function jsonDecode($json,$encode = true) {
@@ -280,9 +281,9 @@ class Jl {
         //DB 설정
         $this->DB = array(
             "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => "example"
+            "username" => "hanwool",
+            "password" => "z7!s1qd!",
+            "database" => "hanwool"
         );
 
         //resource 폴더 생성

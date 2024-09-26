@@ -29,7 +29,7 @@ class App extends BaseConfig
      *
      * @var list<string>
      */
-    public array $allowedHostnames = [];
+    public array $allowedHostnames = ['b2p.co.kr', 'www.b2p.co.kr'];
 
     /**
      * --------------------------------------------------------------------------

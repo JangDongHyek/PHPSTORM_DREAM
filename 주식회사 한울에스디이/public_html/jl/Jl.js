@@ -27,8 +27,9 @@ class Jl {
         this.editor = Jl_editor;
 
         // 컴포지션 패턴
-        this.js = new JlJavascript();
-        this.vue = new JlVue();
+        this.js = new JlJavascript(this);
+        this.vue = new JlVue(this);
+
 
         let textColor = "white"
 

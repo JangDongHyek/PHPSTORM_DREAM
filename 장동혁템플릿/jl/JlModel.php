@@ -1,5 +1,5 @@
 <?php
-//namespace App\Libraries;
+namespace App\Libraries;
 include_once("Jl.php");
 
 class JlModel extends Jl{
@@ -189,6 +189,7 @@ class JlModel extends Jl{
 
         foreach($param as $key => $value){
             if(in_array($key, $this->schema['columns'])){
+                if($key == $this->primary && $value == '') continue; // 10.2부터 int에 빈값이 허용안되기때문에 빈값일경우 패스
                 if(!empty($columns)) $columns .= ", ";
                 $columns .= "`{$key}`";
 

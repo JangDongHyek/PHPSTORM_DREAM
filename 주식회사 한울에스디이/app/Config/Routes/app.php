@@ -49,4 +49,7 @@ $routes->group('/', static function ($routes) {
 
     //테스트
     $routes->get('test', 'app\TestController::test');
+
+    //로그아웃
+    $routes->get("logout", "app\UserController::logout");
 });

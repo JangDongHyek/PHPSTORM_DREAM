@@ -13,6 +13,8 @@ if ($_REQUEST['leave_chk'] == 'Y'){
     sql_query($sql);
     alert('탈퇴 신청이 완료되었습니다.',G5_BBS_URL.'/logout.php');
 }
+
+include_once(G5_PATH."/jl/JlConfig.php");
 ?>
 <style>
     .box-article .box-body .row{ background:#fff}
@@ -42,24 +44,57 @@ if ($_REQUEST['leave_chk'] == 'Y'){
                 <li>탈퇴신청 후 관리자가 탈퇴처리한 이후부터 탈퇴가 완료됩니다.</li>
                 <li>탈퇴한 회원님이 등록하신 게시물(재능/공모전/게시판에 등록된 게시물)들은 열람하실 수 없습니다.</li>
             </ol>
-            <form action="<?=$_SERVER['PHP_SELF']?>" method="post" onsubmit="return form_submit()">
-                <div class="cont">
-                    <label for="reg_mb_leave">탈퇴 사유</label>
-                    <textarea placeholder="탈퇴 사유를 입력해주세요." id="mb_quit_reason" name="mb_quit_reason" maxlength="200" rows="6" style="height:100px;"></textarea>
-                </div>
+            <div class="cont">
+                <label for="reg_mb_leave">탈퇴 사유</label>
+                <textarea placeholder="탈퇴 사유를 입력해주세요." id="mb_quit_reason" name="mb_quit_reason" maxlength="200" rows="6" style="height:100px;"></textarea>
+            </div>
 
-                <div class="leave_agree">
-                    <input type="checkbox" id="leave" name="leave_chk" value="Y"><label for="leave">해당 내용을 모두 확인했으며, 회원탈퇴에 동의합니다. [필수]</label>
-                </div>
-                <button type="submit">회원 탈퇴신청</button>
-            </form>
+            <div class="leave_agree">
+                <input type="checkbox" id="leave" name="leave_chk" value="Y"><label for="leave">해당 내용을 모두 확인했으며, 회원탈퇴에 동의합니다. [필수]</label>
+            </div>
+            <button type="button" onclick="deleteData()">회원 탈퇴신청</button>
 
         </div>
     </section>
 
 </article>
 
+<?$jl->jsLoad();?>
+
 <script>
+    const jl = new Jl();
+    const mb_no = "<?=$member['mb_no']?>";
+    async function deleteData() {
+
+        var chk = $('input[name="leave_chk"]:checked').val();
+        if ($('#mb_quit_reason').val() == "" ){
+            swal("탈퇴 사유를 입력해주세요.");
+            return false;
+        }
+
+        if (chk != 'Y'){
+            swal("회원탈퇴에 동의하지 않으시면 탈퇴가 불가능합니다.");
+            return false;
+        }
+
+        if(!confirm("정말 탈퇴하시겠습니까?")) return false;
+
+        let leave_reason = $('#mb_quit_reason').val();
+
+        let data = {
+            mb_no : mb_no,
+            leave_reason : leave_reason
+        }
+
+        try {
+            let res = await jl.ajax("delete",data,"/api/g5_member.php");
+            alert("탈퇴되었습니다.");
+            logout();
+        }catch (e) {
+            alert(e.message)
+        }
+
+    }
     function form_submit() {
 
         var chk = $('input[name="leave_chk"]:checked').val();
