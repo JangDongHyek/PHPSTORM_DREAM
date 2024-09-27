@@ -23,6 +23,8 @@ class MemberController extends BaseController {
     public function member_form(){
         $this->data['pid'] = "member_form";
 
+
+
         $session = session();
 
         // 접근 가능한지 체크
@@ -53,17 +55,33 @@ class MemberController extends BaseController {
             $this->data['readonly'] = "readonly";
             $this->data['w'] = "u";
 
+            $this->data['is_staff'] = true;
+            $this->data['adm_readonly'] = "";
+            if($this->data['member']['mb_level'] < 9){
+                $this->data['adm_readonly'] = "readonly";
+                $this->data['is_staff'] = false;
+            }
+
             $memberModel = new MemberModel();
             $this->data['mb'] = $memberModel->getMemberNo($this->data['mb_no']);
 
             // 기본 타이틀 설정
             $this->data['title'] = "B2P 직원";
             $this->data['member_type'] = "b2p";
-            if($this->data['mb']['mb_level'] == '2'){
+
+            if($this->data['mb']['mb_type'] != '직원'){
                 $this->data['title'] = "개인정보";
                 $this->data['member_type'] = "other";
+
             }
 
+            if(!empty($session->get('auth_di'))){
+                $this->data['mb']['mb_name'] = $session->get('auth_name');
+                $this->data['mb']['mb_birth'] = $session->get('auth_birthdate');
+                $this->data['mb']['mb_hp'] = $session->get('auth_hp');
+            }
+
+            set_cookie("isAuth", "T",300);
             $session->set("edit_mb_id", $this->data['mb']['mb_id']);
         }
 
@@ -92,5 +110,14 @@ class MemberController extends BaseController {
             'code' => '200',
             'msg' => '정상적으로 처리되었습니다.'
         ]);
+    }
+
+    public function member_seller(){
+        $this->data['pid'] = 'member_seller';
+        return view('member/member_seller',$this->data);
+    }
+    public function member_seller_view(){
+        $this->data['pid'] = 'member_seller';
+        return view('member/member_seller_view',$this->data);
     }
 }

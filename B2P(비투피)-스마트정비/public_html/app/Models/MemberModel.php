@@ -140,6 +140,10 @@ class MemberModel extends Model {
             $sql = "insert into `member_list` set $sql_c";
             sql_query($sql);
         } else if ($w == "u") {
+            $sql = "select * from `member_list` where `mb_id` = '{$mb_id}'";
+            $mb_row = sql_fetch($sql);
+
+
             $session = session();
             $edit_mb_id = $session->get("edit_mb_id");
             if($edit_mb_id != $mb_id){
@@ -152,6 +156,12 @@ class MemberModel extends Model {
             }
             $sql = "update `member_list` set $sql_c where `mb_id` = '{$mb_id}'";
             sql_query($sql);
+
+            if (isset($is_sign)) {
+                if($mb_row['is_sign'] == "N" && $is_sign == "Y"){
+                    goSms($mb_row['mb_hp'],"안녕하십니까 스마트유통마켓솔루션 솔루션 센터입니다.\n\n스마트유통마켓솔루션 솔루션 판매회원 가입해주셔서 감사합니다.\n가입승인이 완료되었습니다.\n지금부터 상품등록이 가능하니, 상품등록 진행을 부탁드립니다.\n\n※ 체크사항\nKCP가맹점 가입진행을 안하셨다면, KCP가맹점 가입진행을 완료해주시길 바랍니다.\n\n감사합니다.");
+                }
+            }
         }
 
         $session = session();
@@ -236,17 +246,51 @@ class MemberModel extends Model {
     }
 
     public function checkAccountForm($data){
-        if(empty($data['bank_owner'])){
-            return ['code' => 400, 'msg' => '예금주명을 확인해주세요.', 'err_id'=>'bank_owner'];
+
+        $session = session();
+        $member = $data['member'];
+
+        if ($data['w'] == ""){
+            if(empty($data['bank_owner'])){
+                return ['code' => 400, 'msg' => '예금주명을 확인해주세요.', 'err_id'=>'bank_owner'];
+            }
+
+            if(empty($data['bank_num'])){
+                return ['code' => 400, 'msg' => '계좌번호를 확인해주세요.', 'err_id'=>'bank_num'];
+            }
+
+            if(empty($data['bank_code'])){
+                return ['code' => 400, 'msg' => '은행을 선택해주세요.', 'err_id'=>'bank_code'];
+            }
+        } else {
+            if($member['mb_level'] < 9){
+                $bank_owner = $session->get("auth_bank_owner");
+                $bank_num = $session->get("auth_bank_num");
+                $bank_code = $session->get("auth_bank_code");
+
+                if($member['bank_owner'] != $data['bank_owner'] || $member['bank_num'] != $data['bank_num'] || $member['bank_code'] != $data['bank_code']){
+                    if(empty($bank_owner) || empty($bank_num) || empty($bank_code)){
+                        return ['code' => 400, 'msg' => '계좌번호 인증을 해주세요.', 'err_id'=>'bank_owner'];
+                    }
+                }
+
+                if(empty($data['bank_owner']) && (!empty($bank_owner) && $bank_owner != $data['bank_owner'])){
+                    return ['code' => 400, 'msg' => '예금주명을 확인해주세요.', 'err_id'=>'bank_owner'];
+                }
+
+                if(empty($data['bank_num']) && (!empty($bank_num) && $bank_num != $data['bank_num'])){
+                    return ['code' => 400, 'msg' => '계좌번호를 확인해주세요.', 'err_id'=>'bank_num'];
+                }
+
+                if(empty($data['bank_code']) && (!empty($bank_code) && $bank_code != $data['bank_code'])){
+                    return ['code' => 400, 'msg' => '은행을 선택해주세요.', 'err_id'=>'bank_code'];
+                }
+            }
         }
 
-        if(empty($data['bank_num'])){
-            return ['code' => 400, 'msg' => '계좌번호를 확인해주세요.', 'err_id'=>'bank_num'];
-        }
 
-        if(empty($data['bank_code'])){
-            return ['code' => 400, 'msg' => '은행을 선택해주세요.', 'err_id'=>'bank_code'];
-        }
+
+
 
         if($data['w'] == ""){
             $session = session();
@@ -270,8 +314,8 @@ class MemberModel extends Model {
             }
         }
 
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $data['mb_id'])) {
-            return ['code' => 400, 'msg' => '아이디는 알파벳, 숫자, 밑줄만 포함할 수 있습니다.', 'err_id'=>'mb_id'];
+        if (!preg_match('/^[a-z0-9]+$/', $data['mb_id'])) {
+            return ['code' => 400, 'msg' => '아이디는 소문자 알파벳, 숫자만 포함할 수 있습니다.', 'err_id'=>'mb_id'];
         }
 
         // 비밀번호 체크
@@ -303,7 +347,7 @@ class MemberModel extends Model {
 
         // 회사 휴대폰 및 일반 전화번호 검증
         if (!preg_match('/^(?:(?:010|011|016|017|018|019|02|0[3-9]{1}\d{1})-(?:\d{3,4})-\d{4})$/', $data['cp_hp'])) {
-            return ['code' => 400, 'msg' => '회사 연락처를 확인해주세요.', 'err_id'=>'cp_hp'];
+            //return ['code' => 400, 'msg' => '회사 연락처를 확인해주세요.', 'err_id'=>'cp_hp'];
         }
 
         // 실무자 이름 체크
@@ -312,9 +356,18 @@ class MemberModel extends Model {
         }
 
         $mb_name = $session->get("auth_name");
-
-        if($data['mb_name'] != $mb_name){
-            return ['code' => 400, 'msg' => '실무자 이름이 다릅니다..', 'err_id'=>'mb_name'];
+        if ($data['w'] == ""){
+            if($data['mb_name'] != $mb_name){
+                return ['code' => 400, 'msg' => '실무자 이름이 다릅니다.', 'err_id'=>'mb_name'];
+            }
+        } else {
+            if($data['member']['mb_level'] < 9){
+                if($data['member']['mb_name'] != $data['mb_name']){
+                    if($data['mb_name'] != $mb_name){
+                        return ['code' => 400, 'msg' => '실무자 이름이 다릅니다.', 'err_id'=>'mb_name'];
+                    }
+                }
+            }
         }
 
         // 실무자 메일 체크
@@ -337,9 +390,20 @@ class MemberModel extends Model {
         }
 
         $mb_hp = $session->get("auth_hp");
-        if ($data['mb_hp'] != $mb_hp) {
-            return ['code' => 400, 'msg' => '실무자 연락처를 확인해주세요.', 'err_id'=>'mb_hp'];
+        if ($data['w'] == ""){
+            if ($data['mb_hp'] != $mb_hp) {
+                return ['code' => 400, 'msg' => '실무자 연락처를 확인해주세요.', 'err_id'=>'mb_hp'];
+            }
+        } else {
+            if($data['member']['mb_level'] < 9){
+                if($data['member']['mb_hp'] != $data['mb_hp']){
+                    if ($data['mb_hp'] != $mb_hp) {
+                        return ['code' => 400, 'msg' => '실무자 연락처를 확인해주세요.', 'err_id'=>'mb_hp'];
+                    }
+                }
+            }
         }
+
 
         if($data['w'] == ""){
             $session->set("cp_email",$cp_email);
@@ -382,8 +446,8 @@ class MemberModel extends Model {
     public function checkDuplicateMbId($data){
         $data['mb_id'] = trim($data['mb_id']);
 
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $data['mb_id'])) {
-            return ['code' => 400, 'msg' => '아이디는 알파벳, 숫자, 밑줄만 포함할 수 있습니다.', 'err_id'=>'mb_id'];
+        if (!preg_match('/^[a-z0-9]+$/', $data['mb_id'])) {
+            return ['code' => 400, 'msg' => '아이디는 소문자 알파벳, 숫자만 포함할 수 있습니다.', 'err_id'=>'mb_id'];
         }
 
         if(empty($data['mb_id'])){
@@ -469,7 +533,7 @@ class MemberModel extends Model {
 
         // 페이지 번호와 페이지당 아이템 수 설정
         $page = isset($data['page']) ? (int) $data['page'] : 1;
-        $items_per_page = 15;
+        $items_per_page = empty($data['items_per_page']) ? 15 : (int) $data['items_per_page'];
         $return_data['items_per_page'] = $items_per_page;
 
         // 시작 위치 계산 (0 기반 인덱스)

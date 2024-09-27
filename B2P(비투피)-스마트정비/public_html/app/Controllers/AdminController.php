@@ -196,6 +196,7 @@ class AdminController extends BaseController {
         // 기본 조건문
         if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
         $model->where("CancelStatus","0");
+        $model->where("ReturnStatus","0");
 
         $model->between("OrderDate",date('Y')."-01-01",date('Y')."-12-31");
         $model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
@@ -213,6 +214,7 @@ class AdminController extends BaseController {
         //일자 조건문
         if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
         $model->where("CancelStatus","0");
+        $model->where("ReturnStatus","0");
         if($this->data['start_day'] && $this->data['end_day']) {
             $start_day = $this->data['start_day'];
             $end_day = $this->data['end_day'];

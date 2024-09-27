@@ -6,14 +6,23 @@
 
 // 로그인
 $routes->get("login", "app\PublishController::login");
+$routes->get("/" ,function() {
+    return redirect()->to('app/index');
+});
+
+$routes->get("logout", "app\UserController::logout");
+
 // 회원가입
 $routes->get("signUp", "app\PublishController::signUp");
 // 회원가입
 $routes->get("findPw", "app\PublishController::findPw");
 
-$routes->group('/', static function ($routes) {
+$routes->group('app', static function ($routes) {
     // 메인
-    $routes->get('', 'app\PublishController::index');
+    $routes->get('',function() {
+        return redirect()->to('app/index');
+    });
+    $routes->get('index', 'app\PublishController::index');
     // 내정보 관리
     $routes->get('mypage', 'app\PublishController::mypage');
     // 프로젝트 관리

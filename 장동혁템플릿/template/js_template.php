@@ -1,8 +1,6 @@
 <?php $jl->jsLoad()?>
 
 <script>
-    const jl = new Jl();
-
     async function getUser() {
         //let obj = jl.js.getInputById(['user_id','user_pw']);
         let obj = jl.js.getFormById("form_id");

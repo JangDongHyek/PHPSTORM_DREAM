@@ -5,13 +5,17 @@
         <h2>서비스 가입</h2>
         <div class="sign_form">
             <form id="user_form" name="signin" method="post" autocomplete="off">
+                <input type="hidden" id="level" value="5">
+                <input type="hidden" id="allow" value="">
+                <input type="hidden" id="parent" value="">
+
                 <h3>사용자 정보</h3>
                 <div class="box_gray grid grid2">
                     <dl class="form_wrap">
                         <dt>구분</dt>
                         <dd>
-                            <input type="radio" name="user_type" id="user_type" checked value="시행사"/><label for="user_type_company">시행사</label>
-                            <input type="radio" name="user_type" id="user_type" value="시공사"/><label for="user_type_contractor">시공사</label>
+                            <input type="radio" name="user_type" id="user_type" name="user_type" checked value="시행사"/><label for="user_type_company">시행사</label>
+                            <input type="radio" name="user_type" id="user_type" name="user_type"  value="시공사"/><label for="user_type_contractor">시공사</label>
                         </dd>
                         <label for="company_name">회사명</label>
                         <input type="text" name="company_name" id="company_name" placeholder="회사명"/>
@@ -43,8 +47,6 @@
 <?$jl->jsLoad();?>
 
 <script>
-    const jl = new Jl();
-
     async function postUser() {
         let obj = jl.js.getFormById("user_form");
 

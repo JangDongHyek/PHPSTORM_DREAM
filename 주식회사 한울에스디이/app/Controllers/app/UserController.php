@@ -14,17 +14,17 @@ use App\Libraries\JlModel;
 
 class UserController extends BaseController
 {
-    public $model;
+    public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
 
     public function __construct() {
-        $this->model = new JlModel(array("table" => "user"));
+        $this->models['user'] = new JlModel(array("table" => "user"));
     }
 
     public function test(){
         $_method = $this->request->getPost('_method');
 
-        $this->model->insert(array(
+        $this->models['user']->insert(array(
             "user_type" => "ss",
             "user_id" => "ss",
             "user_pw" => "",
@@ -57,6 +57,12 @@ class UserController extends BaseController
                 $this->delete();
                 break;
             }
+
+            case "login" : {
+                $this->login();
+                break;
+            }
+
             case "logout" : {
                 $this->logout();
                 break;
@@ -65,34 +71,29 @@ class UserController extends BaseController
     }
 
     public function get() {
-        $obj = $this->model->jsonDecode($this->request->getPost('obj'));
+        $obj = $this->models['user']->jsonDecode($this->request->getPost('obj'));
 
-        $obj['user_pw'] = md5($obj['user_pw']);
-
-        $user = $this->model->where($obj)->get()['data'][0];
-
-        if(!$user) $this->model->error("맞는 회원 정보가 없습니다.");
-
-        $session = session();
-        $session->set(array(
-            "user" => $user
-        ));
-
-
-        $this->jl_response['success'] = true;
-        echo json_encode($this->jl_response);
+        //필터링
+        if($obj['primary']) $obj[$this->models['user']->primary] = $obj['primary'];
+        if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2'] == "") $this->models['user']->where($obj['search_key1'],$obj['search_value1_1']);
+        if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2']) $this->models['user']->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
+        if($obj['search_like_key1'] && $obj['search_like_value1']) $this->models['user']->like($obj['search_like_key1'],$obj['search_like_value1']);
+        if($obj['order_by_desc']) $this->models['user']->orderBy($obj['order_by_desc'],"DESC");
+        if($obj['order_by_asc']) $this->models['user']->orderBy($obj['order_by_asc'],"ASC");
+        if($obj['not_key1'] && $obj['not_value1']) $this->models['user']->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
+        if($obj['in_key1'] && $obj['in_value1']) $this->models['user']->in($obj['in_key1'],$this->models['user']->jsonDecode($obj['in_value1']));
     }
 
     public function insert() {
-        $obj = $this->model->jsonDecode($this->request->getPost('obj'));
+        $obj = $this->models['user']->jsonDecode($this->request->getPost('obj'));
 
-        $data = $this->model->where("user_id",$obj['user_id'])->get()['data'][0];
+        $data = $this->models['user']->where("user_id",$obj['user_id'])->get()['data'][0];
 
-        if($data) $this->model->error("이미 사용하고있는 아이디입니다.");
+        if($data) $this->models['user']->error("이미 사용하고있는 아이디입니다.");
 
-        $obj['user_pw'] = md5($obj['user_pw']);
+        $obj['user_pw'] = password_hash($obj['user_pw'],PASSWORD_DEFAULT);
 
-        $this->model->insert($obj);
+        $this->models['user']->insert($obj);
         $this->jl_response['obj'] = $obj;
         $this->jl_response['success'] = true;
         echo json_encode($this->jl_response);
@@ -102,17 +103,56 @@ class UserController extends BaseController
     }
 
     public function update() {
+        $obj = $this->models['user']->jsonDecode($this->request->getPost('obj'));
 
+        $this->models['user']->update($obj);
+        $this->jl_response['success'] = true;
+        echo json_encode($this->jl_response);
     }
 
     public function delete() {
 
     }
 
+    public function login() {
+        $obj = $this->models['user']->jsonDecode($this->request->getPost('obj'));
+
+        //$obj['user_pw'] = password_hash($obj['user_pw'],PASSWORD_DEFAULT);
+
+        $user = $this->models['user']->where('user_id',$obj['user_id'])->get()['data'][0];
+
+        if(!$user) $this->models['user']->error("일치하는 회원 정보가 없습니다.");
+        else {
+            if (!password_verify($obj['user_pw'], $user['user_pw'])) $this->models['user']->error("일치하는 회원 정보가 없습니다.");
+        }
+
+        if(!$user['allow']) $this->models['user']->error("승인 대기중인 회원입니다.");
+
+        //유저 세션 생성
+        $session = session();
+        $session->set(array(
+            "user" => $user
+        ));
+        $this->jl_response['admin'] = false;
+
+        //관리자 세션 생성
+        if($user['level'] <= 0) {
+            $session->set(array(
+                "admin" => $user
+            ));
+            $this->jl_response['admin'] = true;
+        }
+
+
+        $this->jl_response['success'] = true;
+        echo json_encode($this->jl_response);
+    }
+
     public function logout() {
         $session = session();
 
         $session->remove('user');
+        $session->remove('admin');
 
         return redirect()->to('login');
     }

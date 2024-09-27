@@ -14,7 +14,7 @@
                     <label for="">아이디</label>
                     <input type="text" name="id" id="user_id" placeholder="아이디"/>
                     <label for="">비밀번호</label>
-                    <input type="password" name="password" id="user_pw" placeholder="비밀번호"/>
+                    <input type="password" name="password" id="user_pw" placeholder="비밀번호" onkeydown="if(event.key == 'Enter')getUser()"/>
                     <button type="button" class="btn btn_large btn_darkblue" onclick="getUser()">로그인</button>
                 </form>
                 <a href="./signUp" class="btn btn_wide btn_gray">서비스 가입</a>
@@ -29,8 +29,6 @@
 <?php $jl->jsLoad()?>
 
 <script>
-    const jl = new Jl();
-
     async function getUser() {
         let obj = jl.js.getInputById(['user_id','user_pw']);
         //let obj = jl.js.getFormById("form_id");
@@ -39,9 +37,11 @@
             if(obj.user_id == "") throw new Error("아이디를 입력해주세요.")
             if(obj.user_pw == "") throw new Error("비밀번호를 입력해주세요.")
 
-            let res = await jl.ajax("get",obj,"/api/user");
+            let res = await jl.ajax("login",obj,"/api/user");
 
-            window.location.href = jl.root
+            if(res.admin) window.location.href = jl.root + "adm";
+            else window.location.href = jl.root + "app"
+
         }catch (e) {
             alert(e.message)
         }

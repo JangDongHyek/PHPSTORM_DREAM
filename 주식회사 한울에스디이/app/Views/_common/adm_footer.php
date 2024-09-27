@@ -21,5 +21,6 @@
     </div>
 <?php } ?>
 <?php include_once APPPATH."Views/_common/adm_modal.php" // 모달 ?>
+<?php include_once APPPATH."Views/_common/common_script.php" // 모달 ?>
 </body>
 </html>

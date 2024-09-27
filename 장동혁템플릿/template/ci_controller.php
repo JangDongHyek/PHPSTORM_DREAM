@@ -65,22 +65,7 @@ class UserController extends BaseController
     }
 
     public function get() {
-        $obj = $this->model->jsonDecode($this->request->getPost('obj'));
-
-        $obj['user_pw'] = md5($obj['user_pw']);
-
-        $user = $this->model->where($obj)->get()['data'][0];
-
-        if(!$user) $this->model->error("맞는 회원 정보가 없습니다.");
-
-        $session = session();
-        $session->set(array(
-            "user" => $user
-        ));
-
-
-        $this->jl_response['success'] = true;
-        echo json_encode($this->jl_response);
+        $this->request->getGet();
     }
 
     public function insert() {

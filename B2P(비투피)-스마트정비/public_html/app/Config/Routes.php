@@ -57,12 +57,16 @@ $routes->group('member', ['namespace' => '\App\Controllers' , 'filter' => 'auth:
     $routes->get('list', 'MemberController::index');
     $routes->get('member_form', 'MemberController::member_form');
     $routes->post('member_form_update', 'MemberController::member_form_update');
+    $routes->get('seller', 'MemberController::member_seller');
+    $routes->get('sellerView', 'MemberController::member_seller_view');
 });
 
 $routes->group('excel', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function($routes){
     $routes->get('download/(:any)', 'ExcelController::download/$1');
     $routes->post('upload', 'ExcelController::upload');
     $routes->post('upload2', 'ExcelController::upload2');
+
+    $routes->get('exportMemberListToExcel', 'ExcelController::exportMemberListToExcel');
 });
 
 // 제품관리
@@ -257,9 +261,9 @@ $routes->group('calculate', ['namespace' => '\App\Controllers' , 'filter' => 'au
 
     /*24.07.01*/
     // 옥션판매
-    $routes->get('auction', 'AdminController::auction_list');
+    $routes->get('auction', 'CalculateController::auction_list');
     // 지마켓판매
-    $routes->get('gmarket', 'AdminController::gmarket_list');
+    $routes->get('gmarket', 'CalculateController::gmarket_list');
     // 정산관리
     $routes->get('/', 'AdminController::calculate_view');
     // 정산관리 뷰페이지 관련 API
@@ -307,8 +311,12 @@ $routes->group('jungbi', ['namespace' => '\App\Controllers'], static function ($
     $routes->get('member_list', 'JungbiController::member_list');
     $routes->get('member_write', 'JungbiController::member_write');
 
+    // 정산관리
+    $routes->get('calcu_list', 'JungbiController::calcu_list');
     // 예약관리
     $routes->get('reserv_list', 'JungbiController::reserv_list');
+    $routes->get('reserv_view', 'JungbiController::reserv_view');
+    $routes->get('damaged_list', 'JungbiController::damaged_list');
     // 예약관리
     $routes->get('login', 'JungbiController::jungbi_login');
     $routes->get('logout', 'JungbiController::jungbi_logout');

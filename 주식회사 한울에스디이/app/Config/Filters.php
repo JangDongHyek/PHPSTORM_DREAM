@@ -9,6 +9,9 @@ use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 
+use App\Filters\AdminCheckFilter;
+use App\Filters\AppCheckFilter;
+
 class Filters extends BaseConfig
 {
     /**
@@ -24,6 +27,9 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+
+        'adminCheck'    => AdminCheckFilter::class,
+        'appCheck'    => AppCheckFilter::class,
     ];
 
     /**
@@ -69,5 +75,18 @@ class Filters extends BaseConfig
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'adminCheck' => [
+            'before' => [
+                "adm",
+                'adm/*'
+            ]
+        ],
+        'appCheck' => [
+            'before' => [
+                "app",
+                'app/*'
+            ]
+        ]
+    ];
 }

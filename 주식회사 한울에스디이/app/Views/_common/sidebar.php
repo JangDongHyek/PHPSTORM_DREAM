@@ -64,7 +64,7 @@
                         </div>
                     </li>-->
                     <li class="sidebar-dropdown">
-                        <a href="./" <?php if($pid == "index") { echo "class='active'"; }?>>
+                        <a href="./index" <?php if($pid == "index") { echo "class='active'"; }?>>
                             <i class="fa-sharp fa-light fa-house-window"></i>
                             <span>대시보드</span>
                         </a>

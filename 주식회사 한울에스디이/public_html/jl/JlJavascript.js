@@ -3,6 +3,102 @@ class JlJavascript {
         this.jl = jl;
     }
 
+    INIT() {
+        let t = this;
+        document.addEventListener('DOMContentLoaded', function(){
+            t.keyEvent();
+            t.setElement();
+        },false)
+    }
+
+    getCurrentUrl() {
+        return window.location.protocol + "//" + window.location.host + window.location.pathname;
+    }
+
+    /*
+    엘리먼트에 keyEvent.key='함수명' 이렇게있는애들에게 해당 키를 누를시 이벤트를 추가해주는 함수
+    */
+    keyEvent() {
+        // 모든 input 태그를 순회하여 커스텀 속성을 추적
+        document.querySelectorAll('input[keyEvent\\.esc]').forEach(function(inputElement) {
+            inputElement.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+
+                    // 해당 input 태그의 keyEvent.esc 속성 값으로 함수를 찾고 실행
+                    const functionName = inputElement.getAttribute('keyEvent.esc');
+                    if (typeof window[functionName] === 'function') {
+
+                        window[functionName](); // 해당하는 함수 호출
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('input[keyEvent\\.enter]').forEach(function(inputElement) {
+            inputElement.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+
+                    // 해당 input 태그의 keyEvent.esc 속성 값으로 함수를 찾고 실행
+                    const functionName = inputElement.getAttribute('keyEvent.enter');
+                    if (typeof window[functionName] === 'function') {
+                        window[functionName](); // 해당하는 함수 호출
+                    }
+                }
+            });
+        });
+    }
+    
+    /*
+    겟 파라미터의 키값 기준으로 엘리먼트를 찾아 벨류를 변경하는 함수
+     */
+    setElement() {
+        // 1. URL의 GET 파라미터를 가져옴
+        const params = new URLSearchParams(window.location.search);
+
+        // 2. 각 파라미터를 순환하며 동일한 ID 또는 name을 가진 엘리먼트를 찾아 값 변경
+        params.forEach((value, key) => {
+            // ID로 엘리먼트 찾기
+            const element = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+
+            if (element) {
+                if (element.tagName === 'SELECT') {
+                    // select 요소의 값 변경
+                    element.value = value;
+                } else if (element.type === 'checkbox' || element.type === 'radio') {
+                    // 체크박스 또는 라디오 버튼의 경우 값이 일치하면 체크
+                    element.checked = element.value === value;
+                } else {
+                    // 그 외 input, textarea 등의 값 변경
+                    element.value = value;
+                }
+            }
+        });
+    }
+    
+    /*
+    obj = 객체
+    키값 기준으로 get 파라미터 형식으로 url을 반환
+     */
+    getUrlQuery(obj) {
+        return Object.keys(obj)
+            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`)
+            .join('&');
+    }
+    
+    /*
+    checkbox_name = checkbox 의 name
+    같은 네임의 체크박스중 체크된 값만 배열로 반환
+     */
+    getCheckboxName(checkbox_name) {
+        // 모든 체크된 체크박스 가져오기
+        const checkedBoxes = document.querySelectorAll(`input[name=${checkbox_name}]:checked`);
+
+        // 체크된 체크박스의 값을 배열로 변환
+        return Array.from(checkedBoxes).map(checkbox => checkbox.value);
+    }
+
     /*
     input = input 아이디 문자열이나 배열로 가능하다
      */
@@ -10,12 +106,23 @@ class JlJavascript {
         const result = {};
 
         if (typeof input === 'string') {
-            // 문자열이면 해당 ID의 input 값을 객체로 반환
+            // 문자열이면 해당 ID의 input, select, radio 값을 객체로 반환
             const element = document.getElementById(input);
             if (element) {
-                result[input] = element.value;
+                // select 요소일 경우 선택된 값을 가져옴
+                if (element.tagName === 'SELECT') {
+                    result[input] = element.options[element.selectedIndex].value;
+                } else if (element.type === 'radio') {
+                    // radio 그룹 중 체크된 값을 가져옴
+                    const radioGroup = document.querySelector(`input[name="${element.name}"]:checked`);
+                    if (radioGroup) {
+                        result[element.name] = radioGroup.value;
+                    }
+                } else {
+                    result[input] = element.value;
+                }
             } else {
-                alert(`${input} 아이디를 가진 input을 찾을수없습니다.`);
+                alert(`${input} 아이디를 가진 input, select 또는 radio를 찾을 수 없습니다.`);
                 return false;
             }
         } else if (Array.isArray(input)) {
@@ -23,9 +130,20 @@ class JlJavascript {
             input.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
-                    result[id] = element.value;
+                    // select 요소일 경우 선택된 값을 가져옴
+                    if (element.tagName === 'SELECT') {
+                        result[id] = element.options[element.selectedIndex].value;
+                    } else if (element.type === 'radio') {
+                        // radio 그룹 중 체크된 값을 가져옴
+                        const radioGroup = document.querySelector(`input[name="${element.name}"]:checked`);
+                        if (radioGroup) {
+                            result[element.name] = radioGroup.value;
+                        }
+                    } else {
+                        result[id] = element.value;
+                    }
                 } else {
-                    alert(`${input} 아이디를 가진 input을 찾을수없습니다.`);
+                    alert(`${id} 아이디를 가진 input, select 또는 radio를 찾을 수 없습니다.`);
                     return false;
                 }
             });
@@ -43,17 +161,32 @@ class JlJavascript {
     getFormById(form_id) {
         const form = document.getElementById(form_id);
         if (!form) {
-            alert(`${form_id} 아이디를 가진 Form 을 찾을수없습니다.`)
+            alert(`${form_id} 아이디를 가진 Form 을 찾을 수 없습니다.`);
             return false;
         }
 
         const formData = {};
-        const inputs = form.querySelectorAll('input, textarea');
+        // input, textarea, select 요소를 모두 가져옴
+        const inputs = form.querySelectorAll('input, textarea, select');
 
         inputs.forEach((input) => {
             const id = input.id;
             if (id) {
-                formData[id] = input.value;
+                if (input.type === 'radio') {
+                    // radio 그룹 중 체크된 값만 가져옴
+                    if (input.checked) {
+                        formData[id] = input.value;
+                    }
+                } else if (input.type === 'checkbox') {
+                    // checkbox는 체크된 경우만 가져옴
+                    formData[id] = input.checked ? input.value : null;
+                } else if (input.tagName === 'SELECT') {
+                    // select 요소는 선택된 값을 가져옴
+                    formData[id] = input.options[input.selectedIndex].value;
+                } else {
+                    // 그 외 input, textarea 요소 처리
+                    formData[id] = input.value;
+                }
             }
         });
 

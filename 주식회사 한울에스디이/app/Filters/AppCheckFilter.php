@@ -1,6 +1,6 @@
 <?php
 /**
- * 관리자 로그인 검증 미들웨어
+ * 유저 로그인 검증 미들웨어
  */
 
 namespace App\Filters;
@@ -9,15 +9,15 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class AdminCheckFilter implements FilterInterface
+class AppCheckFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
         $session = session();
 
-        $admin = $session->get("admin");
+        $user = $session->get("user");
 
-        if(!$admin) {
+        if(!$user) {
             $session->setFlashdata('warning', '로그인을 진행 해주세요.');
             return redirect()->to("login");
         }
