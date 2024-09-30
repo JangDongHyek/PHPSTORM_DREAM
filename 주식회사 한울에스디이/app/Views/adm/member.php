@@ -75,7 +75,7 @@
                 <td class="text-center"><strong class="icon icon_sky">미승인</strong></td>
                 <?}?>
                 <td class="text-center"><?=explode(' ',$data['insert_date'])[0] ?></td>
-                <td class="text-center"><button class="btn btn_mini btn_black" onclick="location.href='./memberForm'">수정</button></td>
+                <td class="text-center"><button class="btn btn_mini btn_black" onclick="location.href='./memberForm?idx=<?=$data['idx']?>'">수정</button></td>
             </tr>
             <?}?>
 
@@ -86,12 +86,12 @@
     <div class="paging" id="pagination">
         <div class="pagingWrap">
             <a class="first" first><i class="fa-light fa-chevrons-left"></i></a>
-            <a class="prev disabled" prev><i class="fa-light fa-chevron-left"></i></a>
-            <span page="onSearch">
-                <a></a>
+            <a class="prev" prev><i class="fa-light fa-chevron-left"></i></a>
+            <span pageEvent="onSearch">
+                <a class="active">1</a>
             </span>
-            <a class="next disabled" next><i class="fa-light fa-chevron-right"></i></a>
-            <a class="last disabled" last><i class="fa-light fa-chevrons-right"></i></a>
+            <a class="next" next><i class="fa-light fa-chevron-right"></i></a>
+            <a class="last" last><i class="fa-light fa-chevrons-right"></i></a>
         </div>
     </div>
 
@@ -100,81 +100,29 @@
 
 <? $jl->jsLoad();?>
 <script>
-    jl.js.INIT();
+    const page = <?=$page?>;
+    const total_page = <?=$users['total_page']?>;
 
-    setPage("pagination",1,10)
+    jl.INIT({
+        page_id : 'pagination',
+        page : page,
+        total_page : total_page
+    });
 
-    function setPage(div_id,page,total_page,active_class='active' ,page_el = 'a') {
-        const paginationElement = document.getElementById(div_id);
-
-        if (!paginationElement) {
-            jl.log('페이지 div 가 없습니다');
-            return;
-        }
-
-        const firstElement = paginationElement.querySelector('[first]');
-        const prevElement = paginationElement.querySelector('[prev]');
-        const nextElement = paginationElement.querySelector('[next]');
-        const lastElement = paginationElement.querySelector('[last]');
-
-        if(page == 1 && firstElement) firstElement.remove();
-        if(page == total_page && lastElement) lastElement.remove();
-
-        const pageSpanElement = paginationElement.querySelector('[page]');
-        if (!paginationElement) {
-            jl.log('pageSpan 엘리먼트가 없습니다.');
-            return false;
-        }
-
-        const functionName = pageSpanElement.getAttribute('page');
-        if (typeof window[functionName] !== 'function') {
-            console.log("함수없음");
-        }
-
-        // 첫 번째 태그를 복사
-        const pageElement = pageSpanElement.querySelector(page_el);
-        if (!pageElement) {
-            jl.log('pageSpan에 첫번째 태그가 없습니다');
-            return false;
-        }
-
-
-        //span 태그 초기화
-        pageSpanElement.innerHTML = "";
-
-        let start_page = page - 3
-        let end_page = page + 4
-
-        if(start_page < 1) start_page = 1
-        if(end_page > total_page) end_page = total_page;
-
-        for (let i = start_page; i <= end_page; i++) {
-            let el = pageElement.cloneNode(true);
-            if(i == page) el.classList.add(active_class)
-            el.textContent = i;
-
-            //function으로 안감싸주면 호출되는 버그생김
-            el.addEventListener('click',function() {
-                window[functionName](i);
-            });
-
-            pageSpanElement.appendChild(el)
-        }
-    }
 
     function onSearch(page = 1) {
 
-        let obj = jl.js.getFormById('search_form');
+        let obj = jl.getFormById('search_form');
         obj['search_key1'] = 'user_type';
         obj['page'] = page;
 
-        let query = jl.js.getUrlQuery(obj);
+        let query = jl.getUrlQuery(obj);
 
-        window.location.href = jl.js.getCurrentUrl() + "?" + query;
+        window.location.href = jl.getCurrentUrl() + "?" + query;
     }
 
     async function putUser(mode) {
-        let checks = jl.js.getCheckboxName("checks");
+        let checks = jl.getCheckboxName("checks");
 
         for (let user of checks) {
             let obj = {

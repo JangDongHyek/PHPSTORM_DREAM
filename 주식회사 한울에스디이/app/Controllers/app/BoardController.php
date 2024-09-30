@@ -20,8 +20,8 @@ class BoardController extends BaseController
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "";
-    public $file_use = false;
+    public $table = "board";
+    public $file_use = true;
     public $file;
 
     public function __construct() {
@@ -111,6 +111,12 @@ class BoardController extends BaseController
 
     public function insert() {
         $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
+
+        $session = session();
+        $user = $session->get("user");
+        if(!$user) $this->models[$this->table]->error('로그인이 필요한 기능입니다.');
+
+        $obj['user_idx'] = $user['idx'];
 
         if($this->file_use) {
             foreach ($_FILES as $key => $file_data) {

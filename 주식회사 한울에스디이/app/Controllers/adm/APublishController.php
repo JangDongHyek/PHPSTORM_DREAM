@@ -22,6 +22,7 @@ class APublishController extends BaseController
     public function __construct() {
         $this->jl = new Jl();
         $this->models['user'] = new JlModel(array("table" => "user"));
+        $this->models['board'] = new JlModel(array("table" => "board"));
     }
 
     // 관리자 인덱스
@@ -54,17 +55,23 @@ class APublishController extends BaseController
 
 
         $obj = $this->request->getGet();
+        $page = $obj['page'] ? $obj['page'] : 1;
+        $limit = 10;
         $this->models['user']->where('level','0',"AND NOT");
         if($obj['search_key1'] && $obj['search_value1']) $this->models['user']->where($obj['search_key1'],$obj['search_value1']);
         if($obj['search_key2'] && $obj['search_value2']) $this->models['user']->like($obj['search_key2'],$obj['search_value2']);
-        $users = $this->models['user']->get();
+        $users = $this->models['user']->get(array(
+            "page" => $page,
+            "limit" => $limit
+        ));
 
         $data = [
             'pid' => 'adm_member',
             'isAdmPage' => true,
             'jl' => $this->jl,
             "all_users" => $all_users,
-            "users" => $users
+            "users" => $users,
+            "page" => $page
         ];
 
         return render('adm/member', $data);
@@ -72,10 +79,15 @@ class APublishController extends BaseController
 
     // 서비스 이용자 관리
     public function memberForm() {
+        //관리자를 제외한 모든 유저 카운트 조회
+        $this->models['user']->where('level','0',"AND NOT");
+        $all_users = $this->models['user']->count();
 
         $data = [
             'pid' => 'adm_member_form',
             'isAdmPage' => true,
+            "all_users" => $all_users,
+            "jl" => $this->jl,
         ];
 
         return render('adm/member_form', $data);
@@ -87,6 +99,7 @@ class APublishController extends BaseController
         $data = [
             'pid' => 'adm_faq',
             'isAdmPage' => true,
+            "jl" => $this->jl
         ];
 
         return render('adm/faq', $data);
@@ -98,6 +111,7 @@ class APublishController extends BaseController
         $data = [
             'pid' => 'adm_faq_form',
             'isAdmPage' => true,
+            "jl" => $this->jl
         ];
 
         return render('adm/faq_form', $data);

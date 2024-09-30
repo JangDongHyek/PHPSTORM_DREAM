@@ -91,6 +91,9 @@ class Jl {
         echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
         echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
         echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
+        echo "<script>";
+        echo "const jl = new Jl();";
+        echo "</script>";
     }
 
     function vueLoad($app_name = "app",$plugins = array()) {

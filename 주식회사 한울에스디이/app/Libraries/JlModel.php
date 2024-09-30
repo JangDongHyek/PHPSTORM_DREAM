@@ -97,6 +97,7 @@ class JlModel extends Jl{
 
         // 테이블 스키마 정보 조회
         $this->schema['columns'] = $this->getColumns($this->table);
+        $this->schema['columns_info'] = $this->getColumnsInfo($this->table);
     }
 
     function getPrimary($table) {
@@ -114,6 +115,28 @@ class JlModel extends Jl{
         }
 
         return $row;
+    }
+
+    function getColumnsInfo($table) {
+        $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$table}' AND TABLE_SCHEMA='{$this->database}' ";
+        $array = array();
+        if($this->mysqli) {
+            $result = @mysqli_query($this->connect, $sql);
+            if(!$result) $this->error(mysqli_error($this->connect));
+
+            while($row = mysqli_fetch_array($result)){
+                $array[$row['COLUMN_NAME']] = $row;
+            }
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) $this->error(mysql_error());
+
+            while($row = mysql_fetch_array($result)){
+                $array[$row['COLUMN_NAME']] = $row;
+            }
+        }
+
+        return $array;
     }
 
     function getColumns($table) {
@@ -187,24 +210,27 @@ class JlModel extends Jl{
             $param[$this->primary] = empty($param[$this->primary]) ? uniqid().str_pad(rand(0, 99), 2, "0", STR_PAD_LEFT) : $param[$this->primary];
         }
 
-        foreach($param as $key => $value){
-            if(in_array($key, $this->schema['columns'])){
-                if($key == $this->primary && $value == '') continue; // 10.2부터 int에 빈값이 허용안되기때문에 빈값일경우 패스
-                if(!empty($columns)) $columns .= ", ";
-                $columns .= "`{$key}`";
+        foreach($this->schema['columns'] as $column) {
+            $info = $this->schema['columns_info'][$column];
+            $value = $param[$column];
+            if($column == $this->primary && $value == '') continue; // 10.2부터 int에 빈값이 허용안되기때문에 빈값일경우 패스
 
-                if(!empty($values)) $values .= ", ";
-
-                if($value == "now()") $values .= "{$value}";
-                else $values .= "'{$value}'";
-
+            // 컬럼의 데이터타입이 datetime 인데 널값이 허용이면 넘기고 아니면 기본값을 넣어서 쿼리작성
+            if($info['DATA_TYPE'] == "datetime") {
+                if($value == '') {
+                    if($info['IS_NULLABLE'] == "NO") $value = '0000-00-00 00:00:00';
+                    else continue;
+                }
             }
-        }
+            if($column == 'insert_date') $value = 'now()';
 
-        // 생성일이 있는경우
-        if(in_array("insert_date", $this->schema['columns'])){
-            $columns .= ", `insert_date`";
-            $values .= ", now()";
+            if(!empty($columns)) $columns .= ", ";
+            $columns .= "`{$column}`";
+
+            if(!empty($values)) $values .= ", ";
+
+            if($value == "now()") $values .= "{$value}";
+            else $values .= "'{$value}'";
         }
 
         $sql = "INSERT INTO {$this->table} ($columns) VALUES ($values)";
@@ -270,6 +296,7 @@ class JlModel extends Jl{
 
         $object["data"] = array();
         $object["count"] = $this->count($_param);
+        $object['total_page'] = $limit ? ceil($object["count"] / $limit) : 0;
         if($_param['sql']) $object["sql"] = $sql;
 
         $index = 1;

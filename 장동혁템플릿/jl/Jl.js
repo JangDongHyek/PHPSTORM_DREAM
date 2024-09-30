@@ -26,10 +26,9 @@ class Jl {
         this.root = Jl_base_url;
         this.editor = Jl_editor;
 
-        // 컴포지션 패턴
+        // 의존성주입 패턴
         this.js = new JlJavascript(this);
         this.vue = new JlVue(this);
-
 
         let textColor = "white"
 
@@ -38,11 +37,34 @@ class Jl {
             textColor = "#323330"; // 어두운 색으로 글자 색상 지정
         }
 
-        if(!Jl_dev) return false;
-        console.log(
-            '%c' + name,
-            `background: ${background}; color: ${textColor}; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
-        );
+        if(Jl_dev) {
+            console.log(
+                '%c' + name,
+                `background: ${background}; color: ${textColor}; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
+            );
+        }
+
+        // Proxy를 사용해  의존성으로 사용하고있는 함수 jl 인스턴스에서 불러오기
+        return new Proxy(this, {
+            get: (target, prop) => {
+                if (prop in target) {
+                    return target[prop];
+                } else if (prop in target.js) {
+                    return target.js[prop].bind(target.js);
+                } else if (prop in target.vue) {
+                    return target.vue[prop].bind(target.vue);
+                } else {
+                    return undefined;
+                }
+            }
+        });
+
+
+
+    }
+
+    INIT(object = {}) {
+        this.js.JS_INIT(object);
     }
 
     ajax(method,obj,url,options = {}) {
@@ -301,6 +323,9 @@ class Jl {
         return obj;
     }
 
+    /*
+    object 의 키값을 빈값으로 만들어 반환
+     */
     initObject(obj) {
         var result = this.copyObject(obj)
         for (let key in result) {

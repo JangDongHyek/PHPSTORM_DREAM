@@ -26,12 +26,12 @@ for ($i=0; $row=sql_fetch_array($result); $i++) {
 
 
 <div id="main">
-    <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=carte&is_day=1">
+    <a href="<?php echo G5_BBS_URL; ?>/meal_day_list.php">
         <img src="<?php echo G5_THEME_IMG_URL ?>/icon01.png" alt="">
         <br />오늘의 메뉴
     </a>
 
-    <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=carte" class="color">
+    <a href="<?php echo G5_BBS_URL; ?>/meal_plan_list.php" class="color">
         <img src="<?php echo G5_THEME_IMG_URL ?>/icon02.png" alt="">
         <br />주간식단표
     </a>

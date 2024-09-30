@@ -3,12 +3,112 @@ class JlJavascript {
         this.jl = jl;
     }
 
-    INIT() {
+    JS_INIT(object = {}) {
         let t = this;
         document.addEventListener('DOMContentLoaded', function(){
             t.keyEvent();
             t.setElement();
+
+            // 페이징 설정 option {page_id : 'pagination',page : page, total_page : total_page}
+            if('page_id' in object) t.setPage(object.page_id,object.page,object.total_page);
         },false)
+    }
+
+    /*
+    샘플 페이지 div
+    <div class="paging" id="pagination">
+        <div class="pagingWrap">
+            <a class="first" first><i class="fa-light fa-chevrons-left"></i></a>
+            <a class="prev" prev><i class="fa-light fa-chevron-left"></i></a>
+            <span pageEvent="onSearch">
+                <a class="active">1</a>
+            </span>
+            <a class="next" next><i class="fa-light fa-chevron-right"></i></a>
+            <a class="last" last><i class="fa-light fa-chevrons-right"></i></a>
+        </div>
+    </div>
+     */
+    setPage(div_id,page,total_page) {
+        if(!div_id) {
+            jl.log("page_id 를 찾을수없음");
+            return false;
+        }
+        const paginationElement = document.getElementById(div_id);
+
+        if(!total_page) {
+            paginationElement.innerHTML = '';
+            return false;
+        }
+        
+        //page가 없거나 0일때 처리
+        page = page ? page : 1;
+
+
+        if (!paginationElement) {
+            jl.log('페이지 div 가 없습니다');
+            return;
+        }
+
+        const firstElement = paginationElement.querySelector('[first]');
+        const prevElement = paginationElement.querySelector('[prev]');
+        const nextElement = paginationElement.querySelector('[next]');
+        const lastElement = paginationElement.querySelector('[last]');
+
+        if(page == 1 && firstElement) {
+            firstElement.remove();
+            prevElement.remove();
+        }
+        if(page == total_page && lastElement) {
+            lastElement.remove();
+            nextElement.remove();
+        }
+
+        const pageSpanElement = paginationElement.querySelector('[pageEvent]');
+        if (!paginationElement) {
+            jl.log('pageSpan 엘리먼트가 없습니다.');
+            return false;
+        }
+
+        const functionName = pageSpanElement.getAttribute('pageEvent');
+        if (typeof window[functionName] !== 'function') {
+            console.log("함수없음");
+        }
+
+        // 첫 번째 태그를 복사
+        const pageElement = paginationElement.querySelector('[pageEvent] *');
+        if (!pageElement) {
+            jl.log('pageSpan에 첫번째 태그가 없습니다');
+            return false;
+        }
+
+
+        //span 태그 초기화
+        pageSpanElement.innerHTML = "";
+
+        let start_page = page - 3
+        let end_page = page + 4
+
+        if(start_page < 1) start_page = 1
+        if(end_page > total_page) end_page = total_page;
+
+        for (let i = start_page; i <= end_page; i++) {
+            let el = pageElement.cloneNode(true);
+            if(i != page) el.className = '';
+            el.textContent = i;
+
+            //function으로 안감싸주면 함수가 실행이 됌
+            el.addEventListener('click',function() {
+                window[functionName](i);
+            });
+
+            pageSpanElement.appendChild(el)
+        }
+
+        //first,prev,next,last 버튼 이벤트추가
+        if(firstElement) firstElement.addEventListener('click',function() {window[functionName](1);});
+        if(prevElement) prevElement.addEventListener('click',function() {window[functionName](page - 1);});
+        if(nextElement) nextElement.addEventListener('click',function() {window[functionName](page +1);});
+        if(lastElement) lastElement.addEventListener('click',function() {window[functionName](total_page);});
     }
 
     getCurrentUrl() {
@@ -17,6 +117,8 @@ class JlJavascript {
 
     /*
     엘리먼트에 keyEvent.key='함수명' 이렇게있는애들에게 해당 키를 누를시 이벤트를 추가해주는 함수
+    샘플
+    <input type="search" id="search_value2" placeholder="검색어 입력" value="" keyEvent.enter="onSearch">
     */
     keyEvent() {
         // 모든 input 태그를 순회하여 커스텀 속성을 추적
@@ -52,23 +154,40 @@ class JlJavascript {
     
     /*
     겟 파라미터의 키값 기준으로 엘리먼트를 찾아 벨류를 변경하는 함수
+    data 틑 넣어주면 해당 객체값으로 엘리먼트를 찾아 벨류를 변경한다
      */
-    setElement() {
-        // 1. URL의 GET 파라미터를 가져옴
-        const params = new URLSearchParams(window.location.search);
+    setElement(data) {
+        // 1. URL의 GET 파라미터 또는 전달된 data 객체를 가져옴
+        let params;
+
+        if (data) {
+            params = data;
+        } else {
+            params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
+        }
 
         // 2. 각 파라미터를 순환하며 동일한 ID 또는 name을 가진 엘리먼트를 찾아 값 변경
-        params.forEach((value, key) => {
+        Object.keys(params).forEach((key) => {
+            const value = params[key];
+
             // ID로 엘리먼트 찾기
-            const element = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+            let element = document.getElementById(key);
+
+            // 라디오나 체크박스의 경우 name으로 접근해야 하므로 ID가 없으면 name으로 찾기
+            if (!element) {
+                element = document.querySelector(`[name="${key}"]`);
+            }
 
             if (element) {
                 if (element.tagName === 'SELECT') {
                     // select 요소의 값 변경
                     element.value = value;
                 } else if (element.type === 'checkbox' || element.type === 'radio') {
-                    // 체크박스 또는 라디오 버튼의 경우 값이 일치하면 체크
-                    element.checked = element.value === value;
+                    // 체크박스 또는 라디오 버튼의 경우, 동일한 name을 가진 요소들 전부 처리
+                    const elements = document.getElementsByName(key);
+                    elements.forEach((el) => {
+                        el.checked = el.value === value;
+                    });
                 } else {
                     // 그 외 input, textarea 등의 값 변경
                     element.value = value;
@@ -88,6 +207,22 @@ class JlJavascript {
     }
     
     /*
+    현재 url get파라미터 값을 객체로 반환하는 함수
+     */
+    getUrlParams() {
+        // URLSearchParams를 사용하여 쿼리 스트링을 처리
+        const params = new URLSearchParams(window.location.search);
+        const paramsObject = {};
+
+        // URLSearchParams의 모든 키-값 쌍을 객체에 추가
+        params.forEach((value, key) => {
+            paramsObject[key] = value;
+        });
+
+        return paramsObject;
+    }
+    
+    /*
     checkbox_name = checkbox 의 name
     같은 네임의 체크박스중 체크된 값만 배열로 반환
      */
@@ -101,6 +236,7 @@ class JlJavascript {
 
     /*
     input = input 아이디 문자열이나 배열로 가능하다
+    파라미터로 넣은 값을 object 형태로 반환
      */
     getInputById(input) {
         const result = {};
@@ -152,6 +288,31 @@ class JlJavascript {
         }
 
         return result;
+    }
+
+    /*
+    태그 아이디 기반으로 아이디 기반의 태그 안에 required 값을 가져와 ajax 데이터에 넣을 옵션값을 반환하는 함수
+    샘플
+    <input type="text" id="title" required="아이디를 입력해주세요." placeholder="질문을 입력해주세요"/>
+     */
+    getFormRequired(formId) {
+        const formElement = document.getElementById(formId);
+        const requiredElements = formElement.querySelectorAll('[required]');
+        const requiredArray = [];
+
+        requiredElements.forEach((element) => {
+            const id = element.id;
+            const requiredMessage = element.getAttribute('required');
+
+            if (id) {
+                requiredArray.push({
+                    name: id,
+                    message: requiredMessage
+                });
+            }
+        });
+
+        return requiredArray;
     }
 
     /*

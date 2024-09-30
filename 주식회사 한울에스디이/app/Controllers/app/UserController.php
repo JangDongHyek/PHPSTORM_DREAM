@@ -16,9 +16,12 @@ class UserController extends BaseController
 {
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
+    public $join_table = '';
+    public $get_tables = [];
 
     public function __construct() {
         $this->models['user'] = new JlModel(array("table" => "user"));
+        //array_push($this->get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
     }
 
     public function test(){
@@ -82,6 +85,45 @@ class UserController extends BaseController
         if($obj['order_by_asc']) $this->models['user']->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key1'] && $obj['not_value1']) $this->models['user']->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
         if($obj['in_key1'] && $obj['in_value1']) $this->models['user']->in($obj['in_key1'],$this->models['user']->jsonDecode($obj['in_value1']));
+
+        //join
+        if ($this->join_table) {
+            $this->models['user']->join($this->join_table,"origin_key","join_key");
+            // 조인 필터링
+            //$model->where("join_column","value","AND",$join_table);
+            //$model->between("join_column","start","end","AND",$join_table);
+            //$model->in("join_column",array("value1","value2"),"AND",$join_table);
+            //$model->like("join_column","value","AND",$join_table);
+        }
+
+        $object = $this->models['user']->where($obj)->get(array(
+            "page" => $obj['page'],
+            "limit" => $obj['limit'],
+            //"source" => "joinTable",
+            //"select" => "joinTable.SearchColumn AS alias",
+            "sql" => true
+        ));
+
+        //getKey ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져오는형식 속도는 join이랑 비슷하거나 빠름
+        foreach($this->get_tables as $index => $info) {
+            $joinModel = new JlModel(array(
+                "table" => $info['table'],
+            ));
+
+            foreach ($object["data"] as $index => $data) {
+                $joinModel->where($joinModel->primary, $data[$info['get_key']]);
+                $join_data = $joinModel->get()['data'][0];
+
+                //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 JS에 있음
+                $object["data"][$index][strtoupper($info['table'])] = $join_data;
+            }
+        }
+
+        $this->jl_response['data'] = $object['data'];
+        $this->jl_response['count'] = $object['count'];
+        $this->jl_response['filter'] = $object['filter'];
+        $this->jl_response['success'] = true;
+        echo json_encode($this->jl_response);
     }
 
     public function insert() {
@@ -104,6 +146,8 @@ class UserController extends BaseController
 
     public function update() {
         $obj = $this->models['user']->jsonDecode($this->request->getPost('obj'));
+
+        if($obj['change_user_pw']) $obj['user_pw'] = password_hash($obj['change_user_pw'],PASSWORD_DEFAULT);
 
         $this->models['user']->update($obj);
         $this->jl_response['success'] = true;

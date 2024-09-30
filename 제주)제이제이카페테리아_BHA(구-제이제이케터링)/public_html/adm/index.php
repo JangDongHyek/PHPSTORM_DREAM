@@ -1,7 +1,7 @@
 <?php
 include_once('./_common.php');
 
-goto_url(G5_ADMIN_URL."/bbs/board.php?bo_table=carte");
+goto_url(G5_ADMIN_URL."/meal_plan_list.php");
 
 $g5['title'] = '관리자메인';
 include_once ('./admin.head.php');
