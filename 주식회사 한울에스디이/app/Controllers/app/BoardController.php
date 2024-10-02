@@ -49,7 +49,7 @@ class BoardController extends BaseController
                 $this->update();
                 break;
             }
-            case "delete" : {
+            case "remove" : {
                 $this->delete();
                 break;
             }
@@ -164,7 +164,19 @@ class BoardController extends BaseController
     }
 
     public function delete() {
+        $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
 
+        if($obj['primary']) $obj[$this->models[$this->table]->primary] = $obj['primary'];
+
+        if($this->file_use) {
+            $getData = $this->models[$this->table]->where($this->models[$this->table]->primary,$obj[$this->models[$this->table]->primary])->get()['data'][0];
+            $this->file->deleteDirGate($getData['data_column']);
+        }
+
+        $this->models[$this->table]->delete($obj);
+
+        $this->jl_response['success'] = true;
+        echo json_encode($this->jl_response);
     }
 
 }

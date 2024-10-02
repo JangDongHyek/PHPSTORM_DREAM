@@ -38,10 +38,14 @@ class APublishController extends BaseController
 
     // 관리자정보
     public function admInfo() {
+        $session = session();
+        $admin = $session->get("admin");
 
         $data = [
             'pid' => 'adm_info',
             'isAdmPage' => true,
+            'jl' => $this->jl,
+            'admin' => $admin,
         ];
 
         return render('adm/adm_info', $data);
@@ -99,6 +103,8 @@ class APublishController extends BaseController
 
         $page = $obj['page'] ? $obj['page'] : 1;
         $limit = 10;
+
+        $this->models['board']->where("code","faq");
 
         if($obj['search_key1'] && $obj['search_value1']) $this->models['board']->where($obj['search_key1'],$obj['search_value1']);
         if($obj['search_value2']) {

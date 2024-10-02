@@ -7,7 +7,7 @@ $file_name = str_replace(".php","",basename(__FILE__));
 
 try {
     $models = array();
-    $table = $file_name;
+    $table = "g5_member";
     $models[$table] = new JlModel(array("table" => $table));
 
     $join_table = "";
@@ -15,7 +15,6 @@ try {
     //array_push($get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
 
     $file_use = false;
-    $file = new JlFile("/jl/jl_resource/$table");
 
     switch (strtolower($_method)) {
         case "get":
@@ -148,6 +147,13 @@ try {
             }
 
             $response['arrays'] = $arrays;
+            $response['success'] = true;
+            break;
+        }
+
+        case "session":
+        {
+            $_SESSION['popups'] = true;
             $response['success'] = true;
             break;
         }

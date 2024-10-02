@@ -79,8 +79,6 @@ class Jl {
     function jsLoad() {
         //js파일 찾기
         if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
-        if(!file_exists($this->ROOT.$this->JS."/JlJavascript.js")) $this->error("Jl INIT() : JlJavascript.js 위치를 찾을 수 없습니다.");
-        if(!file_exists($this->ROOT.$this->JS."/JlVue.js")) $this->error("Jl INIT() : JlVue.js 위치를 찾을 수 없습니다.");
 
         echo "<script>";
         echo "const Jl_base_url = '{$this->URL}';";
@@ -89,8 +87,8 @@ class Jl {
         echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
         echo "</script>";
         echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
-        echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
-        echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
+        if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
+        if(file_exists($this->ROOT.$this->JS."/JlVue.js")) echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
         echo "<script>";
         echo "const jl = new Jl();";
         echo "</script>";
@@ -278,10 +276,16 @@ class Jl {
             $this->URL = $http.$host.$user;
 
             //resource 경로 지정
-            $resource_path = $this->ROOT."jl";
+            $resource_path = $this->ROOT."/jl";
         }
 
         //DB 설정
+        $this->DB = array(
+            "hostname" => "localhost",
+            "username" => "example",
+            "password" => "",
+            "database" => "example"
+        );
         $this->DB = array(
             "hostname" => "localhost",
             "username" => "hanwool",

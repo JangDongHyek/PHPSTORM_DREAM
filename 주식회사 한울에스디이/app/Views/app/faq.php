@@ -16,35 +16,28 @@
                 <button type="submit" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
-        <div>
-            <button type="button" class="btn btn_blue" onclick="location.href='./faqForm'">등록</button>
-        </div>
     </div>
-    
+
     <div class="faq_list">
         <? foreach($board['data'] as $d) { ?>
-        <details>
-            <summary>
-                <div>
-                    <div class="flex ai-c">
-                        <p class="p_cate"><span class="txt_blue txt_bold"><?=$d['category']?></span></p>
-                        <p class="p_date"><?=explode(' ',$d['insert_date'])[0]?></p>
-                        <div class="btn_wrap">
-                            <a class="btn btn_mini btn_line" href="faqForm?idx=<?=$d['idx']?>">수정</a>
-                            <a class="btn btn_mini btn_line" onclick="deleteUser('<?=$d['idx']?>')">삭제</a>
+            <details>
+                <summary>
+                    <div>
+                        <div class="flex ai-c">
+                            <p class="p_cate"><span class="txt_blue txt_bold"><?=$d['category']?></span></p>
+                            <p class="p_date"><?=explode(' ',$d['insert_date'])[0]?></p>
                         </div>
+                        <p class="p_title">Q. <?=$d['title']?></p>
                     </div>
-                    <p class="p_title">Q. <?=$d['title']?></p>
+                </summary>
+                <div class="details">
+                    <?=$d['content']?>
                 </div>
-            </summary>
-            <div class="details">
-                <?=$d['content']?>
-            </div>
-        </details>
+            </details>
         <? } ?>
 
     </div>
-    
+
     <div class="paging" id="pagination">
         <div class="pagingWrap">
             <a class="first disabled" first><i class="fa-light fa-chevrons-left"></i></a>

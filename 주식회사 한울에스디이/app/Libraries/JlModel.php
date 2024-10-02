@@ -541,9 +541,6 @@ class JlModel extends Jl{
         if($start == "") $this->error("JlModel between() : 시작시간을 대입 해주새요.");
         if($end == "") $this->error("JlModel between() : 종료시간을 대입 해주새요.");
 
-        if(strpos($start,":") === false) $start .= " 00:00:00";
-        if(strpos($end,":") === false) $end .= " 23:59:59";
-
         if($source == "") {
             $columns = $this->schema['columns'];
             $source = $this->table;
@@ -552,7 +549,9 @@ class JlModel extends Jl{
             $columns = $this->schema['join_columns'];
         }
 
-        if(in_array($column, $columns)){
+        if(strtolower($column) == "curdate()" || strtolower($column) == "now()") {
+            if(!in_array($start, $columns)) $this->error("JlModel between() : start 컬럼이 존재하지않습니다.");
+            if(!in_array($end, $columns)) $this->error("JlModel between() : end 컬럼이 존재하지않습니다.");
             if($this->group_bool) {
                 if(!$this->group_index) $this->group_index = 1;
                 else $this->sql .= " {$operator} ";
@@ -560,8 +559,26 @@ class JlModel extends Jl{
                 $this->sql .= " {$operator} ";
             }
 
-            $this->sql .= "$source.{$column} BETWEEN '{$start}' AND '{$end}' ";
+            $this->sql .= "$column BETWEEN $source.{$start} AND $source.{$end} ";
+        }else {
+            if(in_array($column, $columns)){
+                if(strpos($start,":") === false) $start .= " 00:00:00";
+                if(strpos($end,":") === false) $end .= " 23:59:59";
+
+                if($this->group_bool) {
+                    if(!$this->group_index) $this->group_index = 1;
+                    else $this->sql .= " {$operator} ";
+                }else {
+                    $this->sql .= " {$operator} ";
+                }
+
+                $this->sql .= "$source.{$column} BETWEEN '{$start}' AND '{$end}' ";
+            }else {
+                $this->error("JlModel between() : 유효하지않는 컬럼입니다.");
+            }
         }
+
+
 
         return $this;
     }

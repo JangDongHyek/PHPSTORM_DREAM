@@ -7,7 +7,7 @@
     CI4 에 적용시킬려면 밑에 namespace 를 지정해주면 됩니다.
     JlModel, JlFile 모두 namespace 를 추가해주셔야 합니다.
  */
-namespace App\Libraries;
+//namespace App\Libraries;
 class Jl {
     private $root_dir = "public_html";
     private $JS = "/jl";
@@ -282,15 +282,9 @@ class Jl {
         //DB 설정
         $this->DB = array(
             "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => "example"
-        );
-        $this->DB = array(
-            "hostname" => "localhost",
-            "username" => "hanwool",
-            "password" => "z7!s1qd!",
-            "database" => "hanwool"
+            "username" => "thewdoctor",
+            "password" => "&%#pyb!k",
+            "database" => "thewdoctor"
         );
 
         //resource 폴더 생성

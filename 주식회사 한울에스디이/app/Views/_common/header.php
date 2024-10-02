@@ -22,7 +22,9 @@ $sub_type = $headerData['sub_type'];            //  상단메뉴명 디자인
             <a href=""><i class="fa-light fa-list-check"></i> 프로젝트 관리</a>
             -->
             <a href="./mypage"><i class="fa-light fa-gear"></i> 내 정보 관리</a>
-            <a href=""><i class="fa-light fa-circle-info"></i> 이용가이드</a>
+            <!--<a href=""><i class="fa-light fa-circle-info"></i> 이용가이드</a>-->
+            <a href="./faq"><i class="fa-light fa-circle-info"></i> 자주 묻는 질문</a>
+            <a href="./qna"><i class="fa-light fa-comments"></i> 1:1문의</a>
             <a href="./logout"><i class="fa-light fa-arrow-right-from-bracket"></i> 로그아웃</a>
         </div>
     </header>

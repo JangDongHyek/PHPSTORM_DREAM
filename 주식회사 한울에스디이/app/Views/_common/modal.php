@@ -117,12 +117,14 @@
                     <label for="">비밀번호 확인</label>
                     <input type="password" name="" id="" placeholder="비밀번호 확인"/>
                     <p class="flex ai-c">
-                        <select>
+                        <input type="text" name="" id="" placeholder="소속부서"/>
+                        <input type="text" name="" id="" placeholder="직급"/>
+                        <!--<select>
                             <option>소속부서</option>
                         </select>
                         <select>
                             <option>직급</option>
-                        </select>
+                        </select>-->
                     </p>
                     <label for="">이름</label>
                     <input type="text" name="" id="" placeholder="이름"/>

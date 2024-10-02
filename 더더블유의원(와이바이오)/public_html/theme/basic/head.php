@@ -89,6 +89,10 @@ if(defined('_INDEX_')) { // index에서만 실행
 }
 ?>
 
+<?php if($_SERVER['REMOTE_ADDR']=="59.19.201.109"||$_SERVER['REMOTE_ADDR']=="121.140.204.65"){ ?>
+    <?php if(!$_SESSION['popups']){?>
+    <? include G5_BBS_PATH.'/newwin2.inc.php'; ?>
+<?php }}?>
 <!-- 상단 시작 { -->
 <div id="hd" class="wow fadeIn animated" data-wow-delay="0.1s" data-wow-duration="0.8s">
     <h1 id="hd_h1"><?php echo $g5['title'] ?></h1>

@@ -27,8 +27,12 @@ class Jl {
         this.editor = Jl_editor;
 
         // 의존성주입 패턴
-        this.js = new JlJavascript(this);
-        this.vue = new JlVue(this);
+        if (typeof JlJavascript !== 'undefined') {
+            this.js = new JlJavascript(this);
+        }
+        if (typeof JlVue !== 'undefined') {
+            this.vue = new JlVue(this);
+        }
 
         let textColor = "white"
 
@@ -49,9 +53,9 @@ class Jl {
             get: (target, prop) => {
                 if (prop in target) {
                     return target[prop];
-                } else if (prop in target.js) {
+                } else if (target.js && prop in target.js) {
                     return target.js[prop].bind(target.js);
-                } else if (prop in target.vue) {
+                } else if (target.vue && prop in target.vue) {
                     return target.vue[prop].bind(target.vue);
                 } else {
                     return undefined;

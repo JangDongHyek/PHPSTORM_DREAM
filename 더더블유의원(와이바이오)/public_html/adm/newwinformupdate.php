@@ -22,6 +22,7 @@ $sql_common = " nw_device = '{$_POST['nw_device']}',
                 nw_width = '{$_POST['nw_width']}',
                 nw_subject = '{$_POST['nw_subject']}',
                 nw_content = '{$_POST['nw_content']}',
+                link = '{$_POST['link']}',
                 nw_content_html = '{$_POST['nw_content_html']}' ";
 
 if($w == "")

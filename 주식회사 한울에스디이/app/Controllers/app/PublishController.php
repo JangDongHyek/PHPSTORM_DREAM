@@ -13,10 +13,13 @@ class PublishController extends BaseController
      *
      */
 
+    public $models = [];
     public $jl;
+    public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
 
     public function __construct() {
         $this->jl = new Jl();
+        $this->models['board'] = new JlModel(array("table" => "board"));
     }
 
     // 메인
@@ -75,6 +78,94 @@ class PublishController extends BaseController
 
         return render('app/mypage', $data);
     }
+
+    // FAQ
+    public function faq(): string
+    {
+        $obj = $this->request->getGet();
+
+        $page = $obj['page'] ? $obj['page'] : 1;
+        $limit = 10;
+
+        $this->models['board']->where("code","faq");
+
+        if($obj['search_key1'] && $obj['search_value1']) $this->models['board']->where($obj['search_key1'],$obj['search_value1']);
+        if($obj['search_value2']) {
+            $this->models['board']->groupStart();
+            $this->models['board']->like('title',$obj['search_value2']);
+            $this->models['board']->like('content',$obj['search_value2'],"OR");
+            $this->models['board']->groupEnd();
+        }
+
+        $board = $this->models['board']->get(array(
+            "page" => $page,
+            "limit" => $limit,
+            "sql" => true,
+        ));
+
+        $data = [
+            'pid' => 'faq',
+            "jl" => $this->jl,
+            "board" => $board,
+            "page" => $page,
+        ];
+
+        return render('app/faq', $data);
+    }
+
+    // 1:1문의
+    public function qna(): string
+    {
+        $session = session();
+        $user = $session->get('user');
+
+        $obj = $this->request->getGet();
+
+        $page = $obj['page'] ? $obj['page'] : 1;
+        $limit = 10;
+
+        $this->models['board']->where("code","qna");
+        $this->models['board']->where("user_idx",$user['idx']);
+
+        $board = $this->models['board']->get(array(
+            "page" => $page,
+            "limit" => $limit,
+            "sql" => true,
+        ));
+
+        $data = [
+            'pid' => 'qna',
+            "jl" => $this->jl,
+            "board" => $board,
+            "page" => $page,
+        ];
+
+        return render('app/qna', $data);
+    }
+
+    // 1:1문의 > 상세
+    public function qnaView(): string
+    {
+        $data = [
+            'pid' => 'qna_view',
+            "jl" => $this->jl,
+        ];
+
+        return render('app/qna_view', $data);
+    }
+
+    // 1:1문의 > 등록
+    public function qnaForm(): string
+    {
+        $data = [
+            'pid' => 'qna_form',
+            "jl" => $this->jl,
+        ];
+
+        return render('app/qna_form', $data);
+    }
+
+
 
     // 프로젝트 관리
     public function project(): string

@@ -114,6 +114,12 @@ include_once (G5_ADMIN_PATH.'/admin.head.php');
         <th scope="row"><label for="nw_content">내용</label></th>
         <td><?php echo editor_html('nw_content', get_text($nw['nw_content'], 0)); ?></td>
     </tr>
+    <!--<tr>-->
+    <!--    <th scope="row"><label for="nw_subject">링크<strong class="sound_only"> 필수</strong></label></th>-->
+    <!--    <td>-->
+    <!--        <input type="text" name="link" value="--><?php //echo stripslashes($nw['link']) ?><!--" id="link" required class="frm_input required" size="80">-->
+    <!--    </td>-->
+    <!--</tr>-->
     </tbody>
     </table>
 </div>

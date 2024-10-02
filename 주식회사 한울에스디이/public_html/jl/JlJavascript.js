@@ -406,61 +406,93 @@ class JlJavascript {
     preview = div 태그 아이디
     리턴값은 인풋파일태그 obj[file_key] 부분에 리턴값넣어주면 ajax 쪽에서 알아서 가공
     */
-    hookFileEvent(input_file,preview = '') {
+    hookFileEvent(input_file, preview = '') {
         // 파일 입력 요소와 미리보기 컨테이너 가져오기
         let fileInput = document.getElementById(input_file);
-        if(!fileInput) {
+        if (!fileInput) {
             alert(input_file + "  태그를 찾을수 없습니다.");
             return false;
         }
+
+        // 이미 이벤트가 등록되어 있는지 확인
+        if (fileInput.hookInitialized) {
+            // 기존의 파일 목록 반환
+            return Array.from(fileInput.files);
+        }
+
         let previewContainer = document.getElementById(preview);
         let selectedFiles = Array.from(fileInput.files);
 
-        fileInput.addEventListener('change', function() {
-            selectedFiles = selectedFiles.concat(Array.from(fileInput.files));
-            //console.log(selectedFiles);
+        fileInput.hookInitialized = true;
 
-            if(previewContainer) {
-                previewContainer.innerHTML = ''; // Clear previous previews
+        fileInput.addEventListener('change', function () {
+            // 새로운 파일들을 기존 파일 목록에 추가
+            selectedFiles = selectedFiles.concat(Array.from(fileInput.files));
+
+            // 새로운 파일 목록으로 `fileInput` 업데이트
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(f => dataTransfer.items.add(f));
+            fileInput.files = dataTransfer.files;
+
+            if (previewContainer) {
+                previewContainer.innerHTML = ''; // 이전 미리보기 삭제
 
                 // 각 파일에 대해 미리보기 생성
                 selectedFiles.forEach(file => {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const imgPreview = document.createElement('div');
-                        imgPreview.classList.add('image-preview');
 
-                        const imgElement = document.createElement('img');
-                        imgElement.src = e.target.result;
-                        imgElement.width = 50;
-                        imgElement.height = 50;
+                    reader.onload = function (e) {
+                        const filePreview = document.createElement('div');
+                        filePreview.classList.add('file-preview');
 
+                        // 이미지 파일인지 확인
+                        if (file.type.startsWith('image/')) {
+                            // 이미지 파일일 경우 이미지 미리보기 생성
+                            const imgElement = document.createElement('img');
+                            imgElement.src = e.target.result;
+                            imgElement.width = 50;
+                            imgElement.height = 50;
+                            filePreview.appendChild(imgElement);
+                        } else {
+                            // 이미지 파일이 아닐 경우 파일명 추가
+                            const fileName = document.createElement('span');
+                            fileName.textContent = file.name;
+                            filePreview.appendChild(fileName);
+                        }
+
+                        // 삭제 버튼 생성
                         const deleteBtn = document.createElement('button');
                         deleteBtn.classList.add('delete-btn');
                         deleteBtn.textContent = 'x';
-                        deleteBtn.addEventListener('click', function() {
+                        deleteBtn.addEventListener('click', function () {
                             // 삭제 버튼 클릭 시 미리보기 제거
-                            previewContainer.removeChild(imgPreview);
+                            previewContainer.removeChild(filePreview);
 
                             // 삭제된 파일을 `selectedFiles`에서 제거
                             selectedFiles = selectedFiles.filter(f => f !== file);
 
                             // 새로운 파일 목록으로 `fileInput` 업데이트
-                            const dataTransfer = new DataTransfer();
-                            selectedFiles.forEach(f => dataTransfer.items.add(f));
-                            fileInput.files = dataTransfer.files;
+                            const newDataTransfer = new DataTransfer();
+                            selectedFiles.forEach(f => newDataTransfer.items.add(f));
+                            fileInput.files = newDataTransfer.files;
                         });
 
-                        imgPreview.appendChild(imgElement);
-                        imgPreview.appendChild(deleteBtn);
-                        previewContainer.appendChild(imgPreview);
+                        filePreview.appendChild(deleteBtn);
+                        previewContainer.appendChild(filePreview);
                     }
-                    reader.readAsDataURL(file);
+
+                    // 이미지 파일일 경우에만 readAsDataURL 호출
+                    if (file.type.startsWith('image/')) {
+                        reader.readAsDataURL(file);
+                    } else {
+                        // 이미지 파일이 아닌 경우 바로 처리
+                        reader.onload();
+                    }
                 });
             }
 
         });
 
-        return fileInput;
+        return selectedFiles;
     }
 }

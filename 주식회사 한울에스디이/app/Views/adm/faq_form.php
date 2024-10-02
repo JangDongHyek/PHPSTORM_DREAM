@@ -8,6 +8,7 @@
     </div>
     <div class="box_gray grid grid2" id="board_form">
         <input type="hidden" id="code" value="faq">
+        <input type="hidden" id="idx" value="">
         <dl class="form_wrap">
             <dt>구분</dt>
             <dd>
@@ -26,16 +27,30 @@
 
 <? $jl->jsLoad(); ?>
 <script>
+    getUser()
+
+    async function getUser() {
+        let obj = jl.js.getUrlParams();
+        if(!obj['idx']) return false;
+        try {
+            let res = await jl.ajax("get",obj,"/api/board");
+            jl.js.setElement(res['data'][0]);
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
     async function postBoard() {
         //let obj = jl.js.getInputById(['user_id','user_pw']);
         let obj = jl.js.getFormById("board_form");
+        let method = obj['idx'] ? 'update' : 'insert';
         //let obj = jl.js.getUrlParams();
         let required = jl.js.getFormRequired("board_form")
         let options = {required : required};
 
         try {
 
-            let res = await jl.ajax("insert",obj,"/api/board",options);
+            let res = await jl.ajax(method,obj,"/api/board",options);
             alert("완료되었습니다.");
             window.location.href = "./faq"
         }catch (e) {

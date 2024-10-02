@@ -25,6 +25,15 @@ $routes->group('app', static function ($routes) {
     $routes->get('index', 'app\PublishController::index');
     // 내정보 관리
     $routes->get('mypage', 'app\PublishController::mypage');
+    // FAQ
+    $routes->get('faq', 'app\PublishController::faq');
+    // 1:1문의
+    $routes->get('qna', 'app\PublishController::qna');
+    // 1:1문의 > 상세
+    $routes->get('qnaView', 'app\PublishController::qnaView');
+    // 1:1문의 > 등록
+    $routes->get('qnaForm', 'app\PublishController::qnaForm');
+    
     // 프로젝트 관리
     $routes->get('project', 'app\PublishController::project');
     // 회사 공개 프로젝트

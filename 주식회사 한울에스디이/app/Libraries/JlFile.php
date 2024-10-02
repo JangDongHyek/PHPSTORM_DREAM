@@ -123,13 +123,13 @@ class JlFile extends Jl{
             $src = $dst;
 
             $image_path = str_replace($this->ROOT,"",$path);
-            $file[status] = "read";
-            $file[dir] = $image_path;
-            $file[src] = $image_path."/".$src;
+            $file['status'] = "read";
+            $file['dir'] = $image_path;
+            $file['src'] = $image_path."/".$src;
 
             if($this->resizing) {
-                $file[resize_src] = $image_path."/resize_".$src;
-                $this->resize_image($file[src],$file[resize_src],200,100);
+                $file['resize_src'] = $image_path."/resize_".$src;
+                $this->resize_image($file['src'],$file['resize_src'],200,100);
             }
 
             return json_encode($file,JSON_UNESCAPED_UNICODE);
