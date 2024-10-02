@@ -1,0 +1,197 @@
+<html>
+<head>
+    <title>더더블유클리닉</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+	<meta name="naver-site-verification" content="f93f88255b96af9a9416fb98f4cfca49af5935d9">
+    <meta name="viewport" content="width=1280">
+    <meta name="description" content="유방외과, 가슴성형, 가슴재수술, 코젤, 모티바, 물방울, 유두성형, 유방재건, 맘모톰, 유방센터, 김재홍원장, 더더블유의원, 더더블유김재홍">
+	<!-- og start -->
+	<meta property="og:type" content="website">
+    <meta property="og:title" content="더더블유클리닉">
+    <meta property="og:description" content="유방외과, 가슴성형, 가슴재수술, 코젤, 모티바, 물방울, 유두성형, 유방재건, 맘모톰, 유방센터, 김재홍원장, 더더블유의원, 더더블유김재홍">
+    <meta property="og:image" content="http://mysite.com/myimage.jpg">
+
+   	<!-- og end-->
+
+	<link rel="stylesheet" media="all" href="http://thewclinic.co.kr/css/common.css">
+    <script src="http://thewclinic.co.kr/js/jquery-1.11.3.min.js"></script>
+    <script src="http://thewclinic.co.kr/js/jquery.placeholder.enhanced-1.5.js"></script>
+    <script src="http://thewclinic.co.kr/js/jquery.easing.1.3.js"></script>
+    <script src="http://thewclinic.co.kr/js/jquery.bxslider.min.js"></script>
+    <script src="http://thewclinic.co.kr/js/jquery.mousewheel.min.js"></script>
+    <script src="http://thewclinic.co.kr/js/common.js"></script>
+
+	<!-- mobile start -->
+	<meta name="viewport" content="width=1140">
+	<!-- mobile end -->
+
+	<!--[if lt IE 9]>
+        <link rel="stylesheet" media="all" href="http://thewclinic.co.kr/css/ie.css">
+    <![endif]-->
+<script>
+// 자바스크립트에서 사용하는 전역변수 선언
+var g5_url       = "http://thewclinic.co.kr";
+var g5_bbs_url   = "http://thewclinic.co.kr/bbs";
+var g5_is_member = "";
+var g5_is_admin  = "";
+var g5_is_mobile = "";
+var g5_bo_table  = "";
+var g5_sca       = "";
+var g5_editor    = "";
+var g5_cookie_domain = "";
+</script></head>
+
+<body>	
+	
+	
+	
+	<style>
+  #header-wrap{		
+	width:100%;
+	height:127px;    /*상단 메뉴 높이*/
+	background-color:1b212f;
+	top:0;     /*맨 상단에 위치*/
+	position:fixed;    /*위치 fixed*/
+  }
+  #contents{
+	width:1200px;
+	height:1500px;
+	background-color:gray;
+	margin:0 auto;    /*컨텐츠 중앙 정렬*/
+	margin-top:101px;    /*상단 메뉴 높이만큼을 띄워주고 컨텐츠 시작*/
+	 
+	}
+		
+   #btn_box{
+	display:block;
+	position:absolute;
+	left:980;
+	top:80px;
+	width:100px;
+	height:50px;
+	text-align:center;
+	font-size:15px;
+	color:#fff;
+	font-weight:700;
+	border:0;background:#B649FF
+		}
+		
+   #btn_box2{
+	display:block;
+	position:absolute;
+	left:1100;
+	top:80px;
+	width:100px;
+	height:50px;
+	text-align:center;
+	font-size:15px;
+	color:#fff;
+	font-weight:700;
+	border:0;background:#FF68A0
+		}		
+		
+		
+		
+		#label_box{
+	text
+	{float:left;
+	padding:0 10px;
+	width:180px;
+	height:50px;
+	font-size:18px;
+	color:#333;
+	border:0;
+	background:#fff;
+	*line-height:50px;
+	line-height:50px\9}
+	input,button,textarea,fieldset,legend,td,th{margin:0px;padding:0px;font-weight:normal;word-break:keep-all}
+			
+}	
+	
+		
+		
+</style>
+
+<div id="header-wrap">
+	
+
+	    <div class="footer_counsel bg_cover" style="background-image:url(http://thewclinic.co.kr/landing/img/landing_top.jpg)">
+        <div class="contains">
+            <p class="title" align="center">&nbsp;</p>
+
+            <div class="form_box" align="center">
+												<img src="http://thewclinic.co.kr/img/common/logo.png"><span class="title">
+				<img src="http://thewclinic.co.kr/landing/img/the_call.png"></span>
+                <form method="post" action="http://thewclinic.co.kr/sms_send.php" id="form_sms" name="sms" align="center">
+					<center>
+                  <label class="label_box"><span class="label"><img src="http://thewclinic.co.kr/landing/m/img/name.png"></span>
+					  <input size=10 type="text" name="data[]" title="이름" class="text"></label>
+                    <label size=10 class="label_box phone_box">
+					  <span class="label" id="phone1"><img src="http://thewclinic.co.kr/landing/m/img/number.png"></span>
+                        <select class="select" name="phone[]">
+							<option value="010">010</option>
+							<option value="011">011</option>
+							<option value="016">016</option>
+							<option value="017">017</option>
+							<option value="018">018</option>
+							<option value="019">019</option>
+
+                        </select>
+                        <span class="unit">-</span>
+                        <input size=10 type="tel" id="phone2" name="phone[]" class="number" maxlength="4">
+                        <span class="unit">-</span>
+                        <input size=10 type="tel" id="phone3" name="phone[]" class="number" maxlength="4">
+                    </label>
+                    <label class="label_box">
+					  <span class="label"><img src="http://thewclinic.co.kr/landing/m/img/category.png"></span>
+                        <select class="select" name="data[]">
+                            <option>가슴재수술499</option>
+                            <option>마이크로텍스쳐290</option>
+                            <option>벨라젤가슴499</option>
+                            <option>앨러간390</option>
+                            <option>기타가슴성형상담문의</option>
+                        </select>
+                    </label>
+					</center>
+					<br><br>
+					  <button id="btn_box">상담신청</button>
+              </form>
+				                  
+					<button id="btn_box2" onclick="location.href='/'">홈페이지<br>바로가기</button>
+            </div>
+        </div>
+    </div>	
+	</div>
+	
+	
+	
+<DIV class="cnt" align="center">
+	<img src="http://thewclinic.co.kr/landing/img/landing_top.jpg">	
+	<img src="http://thewclinic.co.kr/landing/img/event_landing_02.jpg">	
+<img src="http://thewclinic.co.kr/landing/img/event_landing_03.jpg">
+<img src="http://thewclinic.co.kr/landing/img/event_landing_04.jpg">	
+<img src="http://thewclinic.co.kr/landing/img/event_landing_05.jpg">
+<img src="http://thewclinic.co.kr/landing/img/event_landing_06.jpg">	
+<img src="http://thewclinic.co.kr/landing/img/event_landing_07.jpg">
+<img src="http://thewclinic.co.kr/landing/img/event_landing_08.jpg">	
+<img src="http://thewclinic.co.kr/landing/img/event_landing_09.jpg">
+<img src="http://thewclinic.co.kr/landing/img/event_landing_10.jpg">	
+<img src="http://thewclinic.co.kr/landing/img/event_landing_11.jpg">
+<img src="http://thewclinic.co.kr/landing/img/event_landing_12.jpg">	
+<img src="http://thewclinic.co.kr/landing/img/event_landing_13.jpg" usemap="#Map" border="0">
+<map name="Map">
+  <area shape="rect" coords="1310,27,1460,93" href="https://www.facebook.com/thewclinicw" target="_blank" alt="더더블유 페이스북">
+  <area shape="rect" coords="1309,104,1459,162" href="https://blog.naver.com/thewclinic/" target="_blank" alt="더더블유 대표 블로그">
+  <area shape="rect" coords="1308,169,1466,241" href="https://www.instagram.com/thewclinicw/" target="_blank" alt="더더블유 인스타그램">
+  <area shape="rect" coords="792,57,931,103" href="http://thewclinic.co.kr/bbs/board.php?bo_table=qna" target="_blank" alt="온라인상담">
+  <area shape="rect" coords="793,106,931,152" href="http://thewclinic.co.kr/bbs/content.php?co_id=01_05" target="_blank" alt="더더블유 둘러보기">
+  <area shape="rect" coords="793,157,931,203" href="http://thewclinic.co.kr/bbs/content.php?co_id=01_06" target="_blank" alt="오시는길">
+</map>
+
+</DIV>
+</body>
+</html>
