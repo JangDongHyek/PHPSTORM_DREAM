@@ -1,5 +1,5 @@
 <?php
-namespace App\Libraries;
+//namespace App\Libraries;
 include_once("Jl.php");
 
 class JlModel extends Jl{

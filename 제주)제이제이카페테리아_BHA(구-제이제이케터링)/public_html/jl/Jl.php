@@ -70,7 +70,7 @@ class Jl {
 
         echo "<script>";
         echo "const Jl_base_url = '{$this->URL}';";
-        echo "const Jl_dev = {$this->DEV};";
+        echo "const Jl_dev = ".json_encode($this->DEV).";";
         echo "const Jl_editor = '{$this->EDITOR_HTML}';";
         echo "</script>";
         echo "<script src='{$this->URL}{$this->JS}'></script>";

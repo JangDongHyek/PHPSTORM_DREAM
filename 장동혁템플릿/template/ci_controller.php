@@ -20,8 +20,8 @@ class BoardController extends BaseController
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "";
-    public $file_use = false;
+    public $table = "board";
+    public $file_use = true;
     public $file;
 
     public function __construct() {
@@ -61,9 +61,9 @@ class BoardController extends BaseController
 
         //필터링
         if($obj['primary']) $obj[$this->models[$this->table]->primary] = $obj['primary'];
-        if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2'] == "") $this->models[$this->table]->where($obj['search_key1'],$obj['search_value1_1']);
-        if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2']) $this->models[$this->table]->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
-        if($obj['search_like_key1'] && $obj['search_like_value1']) $this->models[$this->table]->like($obj['search_like_key1'],$obj['search_like_value1']);
+        if($obj['search_key1'] && $obj['search_value1']) $this->models[$this->table]->where($obj['search_key1'],$obj['search_value1']);
+        if($obj['between_key1'] && $obj['between_value1'] && $obj['between_value2']) $this->models[$this->table]->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
+        if($obj['like_key1'] && $obj['like_value1']) $this->models[$this->table]->like($obj['search_like_key1'],$obj['search_like_value1']);
         if($obj['order_by_desc']) $this->models[$this->table]->orderBy($obj['order_by_desc'],"DESC");
         if($obj['order_by_asc']) $this->models[$this->table]->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key1'] && $obj['not_value1']) $this->models[$this->table]->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
@@ -111,6 +111,12 @@ class BoardController extends BaseController
 
     public function insert() {
         $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
+
+        $session = session();
+        $user = $session->get("user");
+        if(!$user) $this->models[$this->table]->error('로그인이 필요한 기능입니다.');
+
+        $obj['user_idx'] = $user['idx'];
 
         if($this->file_use) {
             foreach ($_FILES as $key => $file_data) {

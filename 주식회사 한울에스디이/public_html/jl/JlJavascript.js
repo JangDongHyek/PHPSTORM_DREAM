@@ -9,7 +9,7 @@ class JlJavascript {
             t.keyEvent();
             t.setElement();
 
-            // 페이징 설정 option {page_id : 'pagination',page : page, total_page : total_page}
+            // 페이징 설정 option = {page_id : 'pagination',page : page, total_page : total_page}
             if('page_id' in object) t.setPage(object.page_id,object.page,object.total_page);
         },false)
     }
@@ -27,6 +27,8 @@ class JlJavascript {
             <a class="last" last><i class="fa-light fa-chevrons-right"></i></a>
         </div>
     </div>
+
+    추가설명 페이지부분에 span 태그를 추가해줘서 page변경 이벤트 삽입 해줘야합니다.
      */
     setPage(div_id,page,total_page) {
         if(!div_id) {

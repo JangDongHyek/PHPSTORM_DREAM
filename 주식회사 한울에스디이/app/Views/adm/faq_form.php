@@ -7,7 +7,7 @@
         <button type="button" class="btn btn_blue" onclick="postBoard()">등록 완료</button>
     </div>
     <div class="box_gray grid grid2" id="board_form">
-
+        <input type="hidden" id="code" value="faq">
         <dl class="form_wrap">
             <dt>구분</dt>
             <dd>

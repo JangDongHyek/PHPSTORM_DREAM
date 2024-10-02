@@ -7,7 +7,7 @@
     CI4 에 적용시킬려면 밑에 namespace 를 지정해주면 됩니다.
     JlModel, JlFile 모두 namespace 를 추가해주셔야 합니다.
  */
-namespace App\Libraries;
+//namespace App\Libraries;
 class Jl {
     private $root_dir = "public_html";
     private $JS = "/jl";

@@ -95,11 +95,31 @@ class APublishController extends BaseController
 
     // 자주 묻는 질문
     public function faq() {
+        $obj = $this->request->getGet();
+
+        $page = $obj['page'] ? $obj['page'] : 1;
+        $limit = 10;
+
+        if($obj['search_key1'] && $obj['search_value1']) $this->models['board']->where($obj['search_key1'],$obj['search_value1']);
+        if($obj['search_value2']) {
+            $this->models['board']->groupStart();
+            $this->models['board']->like('title',$obj['search_value2']);
+            $this->models['board']->like('content',$obj['search_value2'],"OR");
+            $this->models['board']->groupEnd();
+        }
+
+        $board = $this->models['board']->get(array(
+            "page" => $page,
+            "limit" => $limit,
+            "sql" => true,
+        ));
 
         $data = [
             'pid' => 'adm_faq',
             'isAdmPage' => true,
-            "jl" => $this->jl
+            "jl" => $this->jl,
+            "board" => $board,
+            "page" => $page,
         ];
 
         return render('adm/faq', $data);

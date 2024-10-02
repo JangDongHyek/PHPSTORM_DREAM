@@ -6,41 +6,43 @@ $_method = $_POST["_method"];
 $file_name = str_replace(".php","",basename(__FILE__));
 
 try {
-    $model = new JlModel(array("table" => $file_name));
+    $models = array();
+    $table = $file_name;
+    $models[$table] = new JlModel(array("table" => $table));
 
     $join_table = "";
     $get_tables = [];
     //array_push($get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
 
     $file_use = false;
-    $file = new JlFile("/jl/jl_resource/$file_name");
+    $file = new JlFile("/jl/jl_resource/$table");
 
     switch (strtolower($_method)) {
         case "get":
         {
-            $obj = $model->jsonDecode($_POST['obj']);
+            $obj = $models[$table]->jsonDecode($_POST['obj']);
 
             //필터링
-            if($obj['primary']) $obj[$model->primary] = $obj['primary'];
-            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2'] == "") $model->where($obj['search_key1'],$obj['search_value1_1']);
-            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2']) $model->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
-            if($obj['search_like_key1'] && $obj['search_like_value1']) $model->like($obj['search_like_key1'],$obj['search_like_value1']);
-            if($obj['order_by_desc']) $model->orderBy($obj['order_by_desc'],"DESC");
-            if($obj['order_by_asc']) $model->orderBy($obj['order_by_asc'],"ASC");
-            if($obj['not_key1'] && $obj['not_value1']) $model->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
-            if($obj['in_key1'] && $obj['in_value1']) $model->in($obj['in_key1'],$model->jsonDecode($obj['in_value1']));
+            if($obj['primary']) $obj[$models[$table]->primary] = $obj['primary'];
+            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2'] == "") $models[$table]->where($obj['search_key1'],$obj['search_value1_1']);
+            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2']) $models[$table]->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
+            if($obj['search_like_key1'] && $obj['search_like_value1']) $models[$table]->like($obj['search_like_key1'],$obj['search_like_value1']);
+            if($obj['order_by_desc']) $models[$table]->orderBy($obj['order_by_desc'],"DESC");
+            if($obj['order_by_asc']) $models[$table]->orderBy($obj['order_by_asc'],"ASC");
+            if($obj['not_key1'] && $obj['not_value1']) $models[$table]->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
+            if($obj['in_key1'] && $obj['in_value1']) $models[$table]->in($obj['in_key1'],$models[$table]->jsonDecode($obj['in_value1']));
 
             //join
             if ($join_table) {
-                $model->join($join_table,"origin_key","join_key");
+                $models[$table]->join($join_table,"origin_key","join_key");
                 // 조인 필터링
-                //$model->where("join_column","value","AND",$join_table);
-                //$model->between("join_column","start","end","AND",$join_table);
-                //$model->in("join_column",array("value1","value2"),"AND",$join_table);
-                //$model->like("join_column","value","AND",$join_table);
+                //$models[$table]->where("join_column","value","AND",$join_table);
+                //$models[$table]->between("join_column","start","end","AND",$join_table);
+                //$models[$table]->in("join_column",array("value1","value2"),"AND",$join_table);
+                //$models[$table]->like("join_column","value","AND",$join_table);
             }
 
-            $object = $model->where($obj)->get(array(
+            $object = $models[$table]->where($obj)->get(array(
                 "page" => $obj['page'],
                 "limit" => $obj['limit'],
                 //"source" => "joinTable",
@@ -58,7 +60,7 @@ try {
                     $joinModel->where($joinModel->primary, $data[$info['get_key']]);
                     $join_data = $joinModel->get()['data'][0];
 
-                    //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 JS에 있음
+                    //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 jl.js에 있음
                     $object["data"][$index][strtoupper($info['table'])] = $join_data;
                 }
             }
@@ -72,7 +74,7 @@ try {
 
         case "insert":
         {
-            $obj = $model->jsonDecode($_POST['obj']);
+            $obj = $models[$table]->jsonDecode($_POST['obj']);
 
             if($file_use) {
                 foreach ($_FILES as $key => $file_data) {
@@ -81,17 +83,17 @@ try {
                 }
             }
 
-            $model->insert($obj);
+            $models[$table]->insert($obj);
             $response['success'] = true;
             break;
         }
         case "update":
         {
-            $obj = $model->jsonDecode($_POST['obj']);
+            $obj = $models[$table]->jsonDecode($_POST['obj']);
 
             if($file_use) {
                 //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
-                $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
+                $getData = $models[$table]->where($models[$table]->primary,$obj[$models[$table]->primary])->get()['data'][0];
 
                 foreach ($_FILES as $key => $file_data) {
                     $file_result = $file->bindGate($file_data);
@@ -109,38 +111,38 @@ try {
                 }
             }
 
-            $model->update($obj);
+            $models[$table]->update($obj);
             $response['success'] = true;
             break;
         }
         case "delete":
         {
-            $obj = $model->jsonDecode($_POST['obj'],false);
+            $obj = $models[$table]->jsonDecode($_POST['obj'],false);
 
             if($file_use) {
-                $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
+                $getData = $models[$table]->where($models[$table]->primary,$obj[$models[$table]->primary])->get()['data'][0];
                 $file->deleteDirGate($getData['data_column']);
             }
 
-            $data = $model->delete($obj);
+            $data = $models[$table]->delete($obj);
 
             $response['success'] = true;
             break;
         }
 
         case "where_delete" :
-            $obj = $model->jsonDecode($_POST['obj'],false);
+            $obj = $models[$table]->jsonDecode($_POST['obj'],false);
 
-            $model->where($obj)->whereDelete();
+            $models[$table]->where($obj)->whereDelete();
             break;
 
         case "deletes":
         {
-            $arrays = $model->jsonDecode($_POST['arrays']);
+            $arrays = $models[$table]->jsonDecode($_POST['arrays']);
 
             foreach ($arrays as $primary) {
-                $model->delete(array(
-                    $model->primary => $primary
+                $models[$table]->delete(array(
+                    $models[$table]->primary => $primary
                 ));
             }
 
@@ -151,17 +153,17 @@ try {
 
         //csv 파일 만들고 다운받는 처리
         case "csv" :
-            $obj = $model->jsonDecode($_POST['obj']);
+            $obj = $models[$table]->jsonDecode($_POST['obj']);
 
             //필터 가공
             foreach ($obj as $key => $value) {
-                if(strpos($key,"primary") !== false) $obj[$model->primary] = $value;
-                if(strpos($key,"order_by_desc") !== false) $model->order_by($obj['order_by_desc'],"DESC");
-                if(strpos($key,"order_by_asc") !== false) $model->order_by($obj['order_by_desc'],"ASC");
+                if(strpos($key,"primary") !== false) $obj[$models[$table]->primary] = $value;
+                if(strpos($key,"order_by_desc") !== false) $models[$table]->order_by($obj['order_by_desc'],"DESC");
+                if(strpos($key,"order_by_asc") !== false) $models[$table]->order_by($obj['order_by_desc'],"ASC");
             }
-            if($obj['search_key'] && $obj['search_value']) $model->like($obj['search_key'],$obj['search_value']);
+            if($obj['search_key'] && $obj['search_value']) $models[$table]->like($obj['search_key'],$obj['search_value']);
 
-            $object = $model->where($obj)->get();
+            $object = $models[$table]->where($obj)->get();
 
             $header = [
                 ['구분', '캐쉬백 신청일시', '신청인 성명',"신청인 휴대폰","신청인 고객사명","해피라이프 이용일자","이용인 성명"]
