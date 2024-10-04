@@ -20,6 +20,8 @@ class PublishController extends BaseController
     public function __construct() {
         $this->jl = new Jl();
         $this->models['board'] = new JlModel(array("table" => "board"));
+        $this->models['board_reply'] = new JlModel(array("table" => "board_reply"));
+        $this->models['user'] = new JlModel(array("table" => "user"));
     }
 
     // 메인
@@ -146,9 +148,34 @@ class PublishController extends BaseController
     // 1:1문의 > 상세
     public function qnaView(): string
     {
+        $session = session();
+        $user = $session->get("user");
+
+        $obj = $this->request->getGet();
+        $this->models['board']->where($obj);
+        $board = $this->models['board']->get()['data'][0];
+
+
+        if($board) {
+            $board['USER'] = $this->models['user']->where('idx',$board['user_idx'])->get()['data'][0];
+            $board['REPLY'] = $this->models['board_reply']->where('board_idx',$board['idx'])->get();
+
+            foreach ($board['REPLY']['data'] as $index => $data) {
+                $this->models['user']->where($this->models['user']->primary, $data['user_idx']);
+                $join_data = $this->models['user']->get()['data'][0];
+
+                //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 JS에 있음
+                $board['REPLY']["data"][$index][strtoupper("user")] = $join_data;
+            }
+        }else {
+            $this->jl->error("잘못된 접근입니다.");
+        }
+
         $data = [
             'pid' => 'qna_view',
             "jl" => $this->jl,
+            "board" => $board,
+            "user" => $user
         ];
 
         return render('app/qna_view', $data);
@@ -190,8 +217,27 @@ class PublishController extends BaseController
     // 직원관리
     public function employee(): string
     {
+        $session = session();
+        $user = $session->get("user");
+
+        $obj = $this->request->getGet();
+
+        $page = $obj['page'] ? $obj['page'] : 1;
+        $limit = 10;
+
+        if($obj['search_key1'] && $obj['search_value1']) $this->models['user']->like($obj['search_key1'],$obj['search_value1']);
+
+        $staff = $this->models['user']->where("parent",$user['idx'])->get(array(
+            "page" => $page,
+            "limit" => $limit
+        ));
+
         $data = [
             'pid' => 'employee',
+            "jl" => $this->jl,
+            "user" => $user,
+            "staff" => $staff,
+            "page" => $page,
         ];
 
         return render('app/employee', $data);

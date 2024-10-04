@@ -1,3 +1,7 @@
+<?php
+$session = session();
+$user = $session->get("user");
+?>
 <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
     <i class="fa-light fa-bars"></i>
 </a>
@@ -17,8 +21,8 @@
 
         <div class="sidebar-header">
             <div class="user-info">
-                <p class="user-name">한울시행사</p>
-                <p class="user-role">한울 시행사 김드림(dream87)</p>
+                <p class="user-name"><?=$user['company_name']?></p>
+                <p class="user-role"><?=$user['company_name']?> <?=$user['company_person']?>(<?=$user['user_id']?>)</p>
                 <!--시행사(직원)-->
                 <p class="user-point flex jc-sb" onclick="location.href=''">
                     <span>참여 프로젝트</span><strong>2건</strong>

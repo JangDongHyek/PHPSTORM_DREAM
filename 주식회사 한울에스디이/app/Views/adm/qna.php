@@ -2,22 +2,22 @@
 </div>
 
 <section class="list_table">
-    <div class="area_filter flex ai-c jc-sb">
+    <div class="area_filter flex ai-c jc-sb" id="search_form">
         <div class="flex ai-c">
-            <strong class="total">총 7건</strong>
-            <select name="sfl">
+            <strong class="total">총 <?=$board['count']?>건</strong>
+            <select id="search_value1">
                 <option value="">구분</option>
-                <option value="">미답변</option>
-                <option value="">답변완료</option>
+                <option value="jl_null">미답변</option>
+                <option value="true">답변완료</option>
             </select>
 
             <div class="search">
-                <select name="sfl">
-                    <option value="">아이디</option>
-                    <option value="">제목</option>
+                <select id="search_key2">
+                    <option value="user_id">아이디</option>
+                    <option value="title">제목</option>
                 </select>
-                <input type="search" name="stx" placeholder="검색어 입력" value="">
-                <button type="submit" class="btn_search"><i class="fa-regular fa-magnifying-glass"></i></button>
+                <input type="search" id="search_value2" placeholder="검색어 입력" value="" keyEvent.enter="onSearch">
+                <button type="button" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
                 <col width="auto">
                 <col width="200px">
                 <col width="200px">
-                <col width="100px">
+                <col width="120px">
                 <col width="100px">
             </colgroup>
             <thead>
@@ -42,40 +42,58 @@
             </tr>
             </thead>
             <tbody>
+            <? foreach($board['data'] as $d) {?>
             <tr>
-                <th>2</th>
-                <td><a href="./qnaView">계정 추가 확인 부탁드립니다.</a></td>
-                <td class="text-center">김혁수(qwer1234)</td>
-                <td class="text-center"><strong class="icon icon_gray">미답변</strong></td>
-                <td class="text-center">2018-06.18</td>
-                <td class="text-center"><button class="btn btn_mini btn_black" onclick="location.href='qnaView'">상세</button></td>
+                <th><?=$d['data_page_no']?></th>
+                <td><a href="./qnaView?idx=<?=$d['idx']?>"><?=$d['title']?></a></td>
+                <td class="text-center"><?=$d['USER']['company_person']?>(<?=$d['USER']['user_id']?>)</td>
+                <?if($d['reply_status']) {?>
+                    <td class="text-center"><strong class="icon icon_sky">답변완료</strong></td>
+                <?}else{?>
+                    <td class="text-center"><strong class="icon icon_gray">미답변</strong></td>
+                <?}?>
+                <td class="text-center"><?=explode(" ",$d['insert_date'])[0]?></td>
+                <td class="text-center"><button class="btn btn_mini btn_black" onclick="location.href='qnaView?idx=<?=$d['idx']?>'">상세</button></td>
             </tr>
-            <tr>
-                <th>1</th>
-                <td><a href="./qnaView">자동 결제가 오류가 납니다.</a></td>
-                <td class="text-center">주지현(abcd33)</td>
-                <td class="text-center"><strong class="icon icon_sky">답변완료</strong></td>
-                <td class="text-center">2018-06.18</td>
-                <td class="text-center"><button class="btn btn_mini btn_black" onclick="location.href='qnaView'">상세</button></td>
-            </tr>
+            <?}?>
+
             </tbody>
         </table>
     </div>
-    <div class="paging">
+    <div class="paging" id="pagination">
         <div class="pagingWrap">
-            <a class="first disabled"><i class="fa-light fa-chevrons-left"></i></a>
-            <a class="prev disabled"><i class="fa-light fa-chevron-left"></i></a>
-            <a class="active">1</a>
-            <a>2</a>
-            <a>3</a>
-            <a>4</a>
-            <a>5</a>
-            <a>6</a>
-            <a>7</a>
-            <a class="next disabled"><i class="fa-light fa-chevron-right"></i></a>
-            <a class="last disabled"><i class="fa-light fa-chevrons-right"></i></a>
+            <a class="first disabled" first><i class="fa-light fa-chevrons-left"></i></a>
+            <a class="prev disabled" prev><i class="fa-light fa-chevron-left"></i></a>
+            <span pageEvent="onSearch">
+                <a class="active">1</a>
+            </span>
+            <a class="next disabled" next><i class="fa-light fa-chevron-right"></i></a>
+            <a class="last disabled" last><i class="fa-light fa-chevrons-right"></i></a>
         </div>
     </div>
-
-
 </section>
+
+<?php $jl->jsLoad();?>
+
+<script>
+    const page = <?=$page?>;
+    const total_page = <?=$board['total_page']?>;
+
+    jl.INIT({
+        page_id : 'pagination',
+        page : page,
+        total_page : total_page
+    });
+
+
+    function onSearch(page = 1) {
+
+        let obj = jl.getFormById('search_form');
+        obj['search_key1'] = 'reply_status'
+        obj['page'] = page;
+
+        let query = jl.getUrlQuery(obj);
+
+        window.location.href = jl.getCurrentUrl() + "?" + query;
+    }
+</script>

@@ -45,7 +45,7 @@ class Jl {
             }
         }
 
-        echo json_encode($er,JSON_UNESCAPED_UNICODE,JSON_UNESCAPED_SLASHES);
+        echo json_encode($er,JSON_UNESCAPED_UNICODE);
         die();
         //throw new \Exception($msg);
     }

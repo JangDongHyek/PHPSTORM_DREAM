@@ -30,7 +30,7 @@ class BoardController extends BaseController
             $this->file = new JlFile("/jl/jl_resource/{$this->table}");
         }
 
-        //array_push($this->get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
+        //array_push($this->get_tables,array("table"=> "user", "get_key" => "user_idx" ));
     }
 
     public function method() {
@@ -49,7 +49,7 @@ class BoardController extends BaseController
                 $this->update();
                 break;
             }
-            case "delete" : {
+            case "remove" : {
                 $this->delete();
                 break;
             }
@@ -112,12 +112,6 @@ class BoardController extends BaseController
     public function insert() {
         $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
 
-        $session = session();
-        $user = $session->get("user");
-        if(!$user) $this->models[$this->table]->error('로그인이 필요한 기능입니다.');
-
-        $obj['user_idx'] = $user['idx'];
-
         if($this->file_use) {
             foreach ($_FILES as $key => $file_data) {
                 $file_result = $this->file->bindGate($file_data);
@@ -172,6 +166,8 @@ class BoardController extends BaseController
             $getData = $this->models[$this->table]->where($this->models[$this->table]->primary,$obj[$this->models[$this->table]->primary])->get()['data'][0];
             $this->file->deleteDirGate($getData['data_column']);
         }
+
+        $this->models[$this->table]->delete($obj);
 
         $this->jl_response['success'] = true;
         echo json_encode($this->jl_response);

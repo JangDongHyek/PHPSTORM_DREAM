@@ -13,24 +13,26 @@ use App\Libraries\JlFile;
  use Exception 을 하는순간 try catch 문 작동 안합니다.
  */
 
-class BoardController extends BaseController
+class BoardReplyController extends BaseController
 {
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "board";
-    public $file_use = true;
+    public $table = "board_reply";
+    public $file_use = false;
     public $file;
 
     public function __construct() {
         $this->models[$this->table] = new JlModel(array("table" => $this->table));
+        $this->models["board"] = new JlModel(array("table" => "board"));
+
         if($this->file_use) {
             $this->file = new JlFile("/jl/jl_resource/{$this->table}");
         }
 
-        array_push($this->get_tables,array("table"=> "user", "get_key" => "user_idx" ));
+        //array_push($this->get_tables,array("table"=> "user", "get_key" => "user_idx" ));
     }
 
     public function method() {
@@ -117,6 +119,12 @@ class BoardController extends BaseController
         if(!$user) $this->models[$this->table]->error('로그인이 필요한 기능입니다.');
 
         $obj['user_idx'] = $user['idx'];
+
+        if($user['level'] <= 1) {
+            $board = $this->models['board']->where('idx',$obj['board_idx'])->get()['data'][0];
+            $new_board = array("idx"=>$board['idx'],"reply_status" => "true");
+            $this->models['board']->update($new_board);
+        }
 
         if($this->file_use) {
             foreach ($_FILES as $key => $file_data) {

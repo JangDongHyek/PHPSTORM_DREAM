@@ -20,8 +20,8 @@ if ($member["mb_level"] <= 2){
 
 $now_date = time();
 if ($_SERVER['REMOTE_ADDR'] == "121.140.204.65") {
-    $now_date = strtotime('+9 day', $now_date); // 1주일 후 타임스탬프
-    //$now_date = strtotime('-2 hours', $now_date);
+    //$now_date = strtotime('+9 day', $now_date); // 1주일 후 타임스탬프
+    $now_date = strtotime('-2 day', $now_date);
 
 }
 $today = date("Y-m-d", $now_date);
@@ -433,7 +433,7 @@ while($row = sql_fetch_array($re)){
 						if(formattedDate4 == holiday) is_ho4 = true;
 
 						if(is_ho1 && is_ho2) {
-							if(mb_level == 5){
+							if(mb_level >= 5){
 								ten_num = 9;
 							}
 						}
@@ -461,7 +461,7 @@ while($row = sql_fetch_array($re)){
 						if(formattedDate4 == holiday) is_ho4 = true;
 
 						if(is_ho1) {
-							if(mb_level == 5){
+							if(mb_level >= 5){
 								ten_num = 8;
 							}
 						}
@@ -480,7 +480,7 @@ while($row = sql_fetch_array($re)){
 							
 					}
 				} else if(today.toString().indexOf("Wed") == 0 ) {
-					if(mb_level == 5){
+					if(mb_level >= 5){
 						ten_num = 7;
 					} else if(mb_level == 4){
 						ten_num = 2;
@@ -510,7 +510,7 @@ while($row = sql_fetch_array($re)){
 					}
 
 				} else if(today.toString().indexOf("Thu") == 0 ) {
-					if(mb_level == 5){
+					if(mb_level >= 5){
 						ten_num = 6;
 					} else if(mb_level == 4){
 						ten_num = 6;

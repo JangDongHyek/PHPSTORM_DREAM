@@ -100,51 +100,6 @@
     </div>
 </div>
 
-<!-- 직원계정 생성 -->
-<div class="modal fade" id="employeeFormModal" tabindex="-1" aria-labelledby="employeeFormModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
-                <h5 class="modal-title" id="employeeFormModalLabel">직원계정 등록</h5>
-            </div>
-            <div class="modal-body">
-                <div class="form_wrap">
-                    <label for="">아이디</label>
-                    <input type="text" name="" id="" placeholder="아이디"/>
-                    <label for="">비밀번호</label>
-                    <input type="password" name="" id="" placeholder="비밀번호"/>
-                    <label for="">비밀번호 확인</label>
-                    <input type="password" name="" id="" placeholder="비밀번호 확인"/>
-                    <p class="flex ai-c">
-                        <input type="text" name="" id="" placeholder="소속부서"/>
-                        <input type="text" name="" id="" placeholder="직급"/>
-                        <!--<select>
-                            <option>소속부서</option>
-                        </select>
-                        <select>
-                            <option>직급</option>
-                        </select>-->
-                    </p>
-                    <label for="">이름</label>
-                    <input type="text" name="" id="" placeholder="이름"/>
-                    <label for="">연락처</label>
-                    <input type="tel" name="" id="" placeholder="연락처"/>
-                    <select>
-                        <option>권한을 선택해주세요</option>
-                        <option>직원</option>
-                        <option>관리자</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
-                <button type="button" class="btn btn-primary">등록 완료</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- 담당자 계정 생성 -->
 <div class="modal fade" id="accountFormModal" tabindex="-1" aria-labelledby="accountFormModalLabel" aria-hidden="true">
     <div class="modal-dialog">

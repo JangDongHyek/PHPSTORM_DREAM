@@ -134,6 +134,8 @@ class UserController extends BaseController
         if($data) $this->models['user']->error("이미 사용하고있는 아이디입니다.");
 
         $obj['user_pw'] = password_hash($obj['user_pw'],PASSWORD_DEFAULT);
+        if($obj['change_user_pw']) $obj['user_pw'] = password_hash($obj['change_user_pw'],PASSWORD_DEFAULT);
+
 
         $this->models['user']->insert($obj);
         $this->jl_response['obj'] = $obj;

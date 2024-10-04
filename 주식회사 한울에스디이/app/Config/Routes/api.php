@@ -6,5 +6,5 @@ $routes->group('api', static function ($routes) {
     $routes->get('test', 'app\UserController::test');
     $routes->post('user', 'app\UserController::method');
     $routes->post('board', 'app\BoardController::method');
-
+    $routes->post('board_reply', 'app\BoardReplyController::method');
 });

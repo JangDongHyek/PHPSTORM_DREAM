@@ -34,6 +34,18 @@ if (!function_exists('getMallPageSettings')) {
             case "mypage" :
                 $header_name = "내 정보 관리";
                 break;
+            case "faq" :
+                $header_name = "FAQ";
+                break;
+            case "qna" :
+                $header_name = "1:1문의";
+                break;
+            case "qna_view" :
+                $header_name = "1:1문의";
+                break;
+            case "qna_form" :
+                $header_name = "1:1문의";
+                break;
             case "project" :
                 $header_name = "프로젝트 관리";
                 break;

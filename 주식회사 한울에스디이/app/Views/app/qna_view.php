@@ -12,39 +12,47 @@
     </div>
     <div class="box_gray">
         <div class="title">
-            <strong>자동결제가 오류가납니다</strong>
+            <strong><?=$board['title']?></strong>
             <div class="info">
-                작성자 <p>주지현(abcd33)</p>
-                작성일 <p>2023.05.06</p>
+                작성자 <p><?=$board['USER']['company_person']?>(<?=$board['USER']['user_id']?>)</p>
+                작성일 <p><?=$board['insert_date']?></p>
             </div>
         </div>
         <div class="view">
-            안녕하세요<br>
-
-            자동결제 신청을 했는데, 자꾸 결제 오류가 납니다.<br><br>
-
-            이미지 사진 첨부합니다. <br>
-            빠른 처리 부탁드려요
+            <?=nl2br(htmlspecialchars($board['content']))?>
         </div>
 
         <div class="download">
             <label>첨부 파일</label>
             <p>
-                <a href=""><i class="fas fa-folder-download"></i> 결제오류이미지1.PNG</a><br>
-                <a href=""><i class="fas fa-folder-download"></i> 결제오류이미지2.PNG</a><br>
+                <? foreach($board['upfiles'] as $f) {?>
+                <a href="<?=$jl->URL.$f['src']?>" download="<?=$f['name']?>"><i class="fas fa-folder-download"></i><?=$f['name']?></a><br>
+                <?}?>
             </p>
         </div>
 
         <div class="answer">
+            <? foreach($board['REPLY']['data'] as $r) {?>
+                <?
+                if($r['USER']['level'] < 1) $name = "관리자";
+                else $name = $r['USER']['company_person']."({$r['USER']['user_id']})";
+                ?>
             <dl>
-                <dt><i class="fa-light fa-arrow-turn-down-right"></i> 작성자 <strong>관리자</strong> 답변일 <strong>2023.05.07</strong><a class="btn btn_mini btn_gray">수정</a><a class="btn btn_mini btn_gray">삭제</a></dt>
-                <dd>확인후 답변드리겠습니다.</dd>
+                <dt><i class="fa-light fa-arrow-turn-down-right"></i> 작성자 <strong><?=$name?></strong> 답변일 <strong><?=$r['insert_date']?></strong>
+                    <!--<a class="btn btn_mini btn_gray">수정</a>-->
+                    <?if($user['idx'] == $r['user_idx']) {?>
+                    <a class="btn btn_mini btn_gray" onclick="deleteReply('<?=$r['idx']?>')">삭제</a>
+                    <?}?>
+                </dt>
+                <dd><?=nl2br(htmlspecialchars($r['content']))?></dd>
             </dl>
+            <?}?>
             <!--<div class="answer_write">
                 <textarea placeholder="답변을 등록해 주세요"></textarea>
                 <a class="btn btn_blueline2">답변등록</a>
             </div>-->
         </div>
+
         <!--<div class="rqselect">
             <label><i class="fa-solid fa-message-check"></i> 진행 상태</label>
             <select name="csStatus" onchange="changeStatus()">
@@ -54,14 +62,15 @@
                 <option value="2">처리완료</option>
             </select>
         </div>-->
-        <div class="editor answer_write">
+        <div class="editor answer_write" id="reply_form">
+            <input type="hidden" id="board_idx" value="<?=$board['idx']?>">
             <div class="flex ai-c">
                 <label>답변 작성</label>
             </div>
             <div class="editor">
-                <textarea placeholder="답변내용을 작성해주세요"></textarea>
+                <textarea id="content" placeholder="답변내용을 작성해주세요" required="답변내용을 작성해주세요"></textarea>
             </div>
-            <button type="submit" class="btn btn_blue" id="btnSave">등록하기</button>
+            <button type="button" class="btn btn_blue" onclick="postReply()">등록하기</button>
         </div>
 
 
@@ -70,5 +79,38 @@
 
 </section>
 
+<?php $jl->jsLoad();?>
 
+<script>
+    async function deleteReply(idx) {
+        if(!confirm("정말 삭제하시겠습니까?")) return false;
+        let obj = {idx : idx}
 
+        try {
+            let res = await jl.ajax("remove",obj,"/api/board_reply");
+            alert("삭제되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+    async function postReply() {
+        //let obj = jl.js.getInputById(['user_id','user_pw']);
+        let obj = jl.js.getFormById("reply_form");
+        //let obj = jl.js.getUrlParams();
+
+        let required = jl.js.getFormRequired("reply_form")
+        let options = {required : required};
+
+        try {
+            //if(obj.user_id == "") throw new Error("아이디를 입력해주세요.")
+
+            let res = await jl.ajax("insert",obj,"/api/board_reply",options);
+            alert("작성되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+</script>

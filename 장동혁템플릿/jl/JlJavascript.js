@@ -155,10 +155,32 @@ class JlJavascript {
     }
 
     /*
+    프로퍼티 엘리먼트 안에있는 input 값들을 초기화 시켜주는 함수
+     */
+    resetElement(elementId) {
+        // 특정 ID를 가진 요소 가져오기
+        const container = document.getElementById(elementId);
+
+        if (container) {
+            // 요소 안에 있는 모든 input 요소 가져오기
+            const inputs = container.querySelectorAll('input');
+
+            // 각 input 요소를 순회하며 기본값으로 초기화
+            inputs.forEach((input) => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = input.defaultChecked;
+                } else {
+                    input.value = input.defaultValue;
+                }
+            });
+        }
+    }
+
+    /*
     겟 파라미터의 키값 기준으로 엘리먼트를 찾아 벨류를 변경하는 함수
     data 틑 넣어주면 해당 객체값으로 엘리먼트를 찾아 벨류를 변경한다
      */
-    setElement(data) {
+    setElement(data,join_table = "") {
         // 1. URL의 GET 파라미터 또는 전달된 data 객체를 가져옴
         let params;
 
@@ -170,10 +192,29 @@ class JlJavascript {
 
         // 2. 각 파라미터를 순환하며 동일한 ID 또는 name을 가진 엘리먼트를 찾아 값 변경
         Object.keys(params).forEach((key) => {
-            const value = params[key];
+            let value;
 
-            // ID로 엘리먼트 찾기
+            // 대문자 키 일경우 joinTable로 인식 setElement 재귀
+            if (this.jl.isUpperCase(key)) {
+                this.setElement(params[key],key);
+            } else {
+                value = params[key];
+            }
+
+            if(join_table) key = `${join_table}.${key}`;
+
+
+            // 값이 undefined인 경우 다음으로 건너뜀
+            if (value === undefined) {
+                return;
+            }
+
+            // ID로 엘리먼트 찾기 (점이 포함된 경우 escape 처리)
             let element = document.getElementById(key);
+
+            //if (!element && key.includes('.')) {
+            //    element = document.querySelector(`[id="${CSS.escape(key)}"]`);
+            //}
 
             // 라디오나 체크박스의 경우 name으로 접근해야 하므로 ID가 없으면 name으로 찾기
             if (!element) {
@@ -190,9 +231,12 @@ class JlJavascript {
                     elements.forEach((el) => {
                         el.checked = el.value === value;
                     });
-                } else {
-                    // 그 외 input, textarea 등의 값 변경
+                } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    // input 또는 textarea 요소의 값 변경
                     element.value = value;
+                } else {
+                    // 그 외 모든 요소의 텍스트 설정 (div, span, p, a 등)
+                    element.innerText = value;
                 }
             }
         });
