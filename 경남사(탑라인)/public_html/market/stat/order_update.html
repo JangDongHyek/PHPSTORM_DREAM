@@ -1,0 +1,1214 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$order_sql = "select * from $Order_BuyTable where order_num='$order_num_query' and mart_id='$mart_id'";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+
+$order_row = mysql_fetch_array($order_res);
+$name = $order_row[name];
+$passport1 = $order_row[passport1];
+$passport2 = $order_row[passport2];
+$tel1 = $order_row[tel1];
+$tel2 = $order_row[tel2];
+$email = $order_row[email];
+$buyer_zip = $order_row[buyer_zip];
+$buyer_address = $order_row[buyer_address];
+$buyer_address_d = $order_row[buyer_address_d ];
+$receiver = $order_row[receiver];
+$rev_tel = $order_row[rev_tel];
+$rev_tel1 = $order_row[rev_tel1];
+$zip = $order_row[zip];
+$address = $order_row[address];
+$address_d = $order_row[address_d];
+$message = $order_row[message];
+$paymethod = $order_row[paymethod];
+$account_no = $order_row[account_no];
+$status = $order_row[status];
+$date = $order_row[date];
+$pay_day = $order_row[pay_day];
+$money_sender = $order_row[money_sender];
+$date_str = substr($date,0,4)."년 ".substr($date,5,2)."월 ".substr($date,8,2)."일 ".substr($date,11,2)."시 ".substr($date,14,2)."분 ".substr($date,17,2)."초 ";
+$if_use_bonus = $order_row[if_use_bonus];
+$use_bonus_tot = $order_row[use_bonus_tot];
+$freight_fee = $order_row[freight_fee];
+$keeper_message = $order_row[keeper_message];
+$app_no = $order_row[authnumber];
+$tno = $order_row[field1];
+$quota = $order_row[field2];
+$card_name = $order_row[field3];
+$noinf = $order_row[field4];
+$bank_name = $order_row[field3];
+$card_paid = $order_row[card_paid];
+
+//====================== 결제방법 정보 ===================================================
+if($paymethod== 'byonline' || $paymethod== 'byonline_point'){
+	$pay_sql = "select * from $BankTable where mart_id='$mart_id' and account_no='$account_no'";
+	$pay_res = mysql_query($pay_sql, $dbconn);
+	$pay_row = mysql_fetch_array($pay_res);
+	$account_no = $pay_row[account_no];
+	$bank_name = $pay_row[bank_name];
+	$bank_number = $pay_row[bank_number];
+	$owner_name = $pay_row[owner_name];
+}
+
+if($paymethod== 'bycard'){
+	$paystr = "카드결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'bycard_point'){
+	$paystr = "카드결제 + 포인트결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'byaccount'){
+	$paystr = "계좌이체";
+	$totpaystr = "계좌이체 금액";
+}
+if($paymethod== 'byaccount_point'){
+	$paystr = "계좌이체 + 포인트결제";
+	$totpaystr = "계좌이체 금액";
+}
+
+if($card_paid == 'f' && eregi("bycard", $paymethod))
+	$paystr = "<b>카드 결제 실패</b>";
+if($card_paid == 'f' && eregi("byaccount", $paymethod))
+	$paystr = "<b>계좌이체 실패</b>";
+
+//====================== 온라인 입금시 계좌 정보 =========================================
+if($paymethod== 'byonline'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'byonline_point'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금 + 포인트결제";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'bypoint'){
+	$paystr = "포인트결제";
+	$totpaystr = "결제 금액";
+}
+
+if($status == 1) $status_str = "주문";
+if($status == 2) $status_str = "입금확인";
+if($status == 3) $status_str = "배송완료";
+if($status == 4) $status_str = "환불";
+if($status == 5) $status_str = "주문취소";
+if($status == 6) $status_str = "배송중";
+if($status == 7) $status_str = "교환";
+if($status == 8) $status_str = "<font color='red'>고객주문취소</font>";	
+if($status == 10) $status_str = "<font color='red'>결제취소</font>";	
+
+?>
+
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script>
+function really(){
+	if(confirm("정말 주문을 취소하시겠습니까?")) return true;
+	else return false;
+}
+</script>
+<script>
+function receipt_win(mart_id,order_num){
+	var url = "../receipt/receipt.php?mart_id="+mart_id+"&order_num="+order_num
+	var uploadwin = window.open(url,"receipt","width=600,height=550,scrollbars=yes,toolbar=no,navationbar=no,resizable=yes");
+}
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top">&nbsp;</td>
+        <td width="888" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top" background="../images/menu_bg.gif">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td>
+                    <td height="100%" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="D4CFC3">
+                                  <tr>
+                                    <td height="25" bgcolor="EAE6E2"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td><img src="../images/proudct/product_info_title_icon.gif" width="13" height="13" align="absmiddle" /> <span class="category_title2">마이페이지</span></td>
+                                          <td><div align="right">페이지 경로 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5" valign="top"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" background="../images/table_bg/table_bg.gif">
+                                    <tr>
+                                      <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                          <tr>
+                                            <td width="220"><img src="../images/mypage/mypage_img1.jpg" width="169" height="66" /></td>
+                                            <td><div align="right">
+                                                <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                  <tr>
+                                                    <td background="../images/mypage/mypage_menu_bg.gif"><textarea name="textarea" cols="0" rows="0" id="txtResource id #1" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="460" height="66">
+              <param name="movie" value="../swf/mypage_menu.swf?pageNum=4">
+              <param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="menu" value="false" />
+              <embed src="../swf/mypage_menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="460" height="66"></embed>
+            </object>
+                    </textarea>
+                                                        <script>printEmbed("txtResource id #1")</script>                                                    </td>
+                                                  </tr>
+                                                </table>
+                                            </div></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="57"><img src="../images/mypage/order_title.gif" width="440" height="30" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5"></td>
+                              </tr>
+                              <tr>
+                                <td align="center">
+
+  
+
+
+<table width="97%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding: 5px; "><br>
+				  <!---------------------- 상세주문내역 시작 --------------------->
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="10">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">
+                              <?=$name?> 님이 구매하신 상품의 상세내역입니다</td>
+                          <td align="right" bgcolor="FBEADC"></td>
+                        </tr>
+                      </table>
+                      <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td width="130"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문번호</td>
+                          <td width="420"><span class="price">
+                            <?=$order_num_query?>
+                          </span></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문일시</td>
+                          <td><?=$date_str?></td>
+                        </tr>
+                        <tr>
+                        		<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문상태</td>
+                        		<td><?=$status_str?></td>
+                   		  </tr> 
+                        <tr>
+                          <td colspan="2" bgcolor="#F7F7F7" class="text_14_s2"><table width="100%"  border="0" cellpadding="0" cellspacing="1" bgcolor="E5E5E5">
+                              <tr height="25" align="center" bgcolor="#F9FCEF" >
+                                <td width='30%' class="mypage_4">상품명 </td>
+                                <td width='10%' class="mypage_4">단 가</td>
+                                <td width='8%' class="mypage_4">수 량</td>
+                                <td width='12%' class="mypage_4">소 계</td>
+                                <td width='15%' class="mypage_4">송장번호</td>
+                                <td width='15%' class="mypage_4">택배회사</td>
+                                <td width='10%' class="mypage_4">상 태</td>
+                              </tr>
+                              <?
+$order_sql1 = "select * from $Order_ProTable where mart_id='$mart_id' and order_num = '$order_num_query' and status > 0 order by order_pro_no desc";
+$order_res1 = mysql_query($order_sql1, $dbconn);
+$order_tot1 = mysql_num_rows($order_res1);
+$mon_tot = 0;
+for ($i=0; $i<$order_tot1; $i++) {
+	mysql_data_seek($order_res1,$i);
+	$order_row1 = mysql_fetch_array($order_res1);
+
+	$order_pro_no = $order_row1[order_pro_no];
+	$mart_id = $order_row1[mart_id];
+	$item_name = $order_row1[item_name];
+	$opt = $order_row1[opt];
+	$z_price = $order_row1[z_price];
+	$bonus = $order_row1[bonus];
+	$good_status = $order_row1[status];
+	$pro_freight_code = $order_row1[pro_freight_code];
+	$pro_delivery = $order_row1[pro_delivery];
+	$item_no_forcash = $order_row1[item_no];
+	$z_price_str = number_format($z_price);
+	$bonus_str = number_format($bonus);
+	
+	$use_bonus = $order_row1[use_bonus];
+	$quantity = $order_row1[quantity];
+	$sum = $z_price*$quantity;
+	$sum_str = number_format($sum);
+	$mon_tot += $sum;
+	
+	$if_cash_str = '';
+	$cart_sql1 = "select * from $ItemTable where item_no='$item_no_forcash'";
+	$cart_res1 = mysql_query($cart_sql1, $dbconn);
+	$cart_row1 = mysql_fetch_array($cart_res1);
+
+	$prevno = $cart_row1[prevno];
+	$cate_num = $cart_row1[category_num];
+	$if_cash = $cart_row1[if_cash];
+	$mart_id_tmp = $cart_row1[mart_id];
+	
+	if($mart_id == $mart_id_tmp){
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}else{
+		$SQL_T = "select if_cash from gnt_item where seller_id='$mart_id' and item_no='$item_no_forcash'";
+		$dbresult_T = mysql_query($SQL_T, $dbconn);
+		$numRows_T = mysql_num_rows($dbresult_T);
+		if($numRows_T > 0)
+		$if_cash = mysql_result($dbresult_T,0,0);
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}
+
+	if($good_status == 1){
+		$good_status_str = "주문";
+	}else if($good_status == 2){
+		$good_status_str = "입금확인";
+	}else if($good_status == 3){
+		$good_status_str = "배송완료";
+	}else if($good_status == 4){
+		$good_status_str = "환불";
+	}else if($good_status == 5){
+		$good_status_str = "주문취소";
+	}else if($good_status == 6){
+		$good_status_str = "배송중";
+	}else if($good_status == 7){
+		$good_status_str = "교환";
+	}else if($good_status == 10)
+		$good_status_str = "결제취소";	
+?>
+                              <tr bgcolor="#FFFFFF" height="30" align="center">
+                                <td width='30%'><table width="100%"  border="0" cellspacing="0" cellpadding="5">
+                                    <tr>
+                                      <td><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no_forcash?>'>
+                                        <?=$item_name?>
+                                        </a>
+                                          <?=$if_cash_str?>
+                                          <?
+	if(isset($opt)&&$opt!=""&&$opt!="!!"){
+?>
+                                          <br>
+                                          옵션:
+                                          <?
+		$opts = explode("!", $opt);
+
+		if(strstr($opts[0],'^'))
+			$opts_1 = explode("^", $opts[0]);
+		else $opts_1[0] = $opts[0];
+		
+		if($opts_1[0] != "")
+			echo "$opts_1[0]";
+		if($opts_1[1] != "")
+			echo "($opts_1[1] 원)&nbsp;";
+		if($opts[1] != "")
+			echo "$opts[1]&nbsp;";
+		if($opts[2] != "")
+			echo "$opts[2]";
+	}
+?>
+                                      </td>
+                                    </tr>
+                                </table></td>
+                                <td width='10%'><?=$z_price_str?>
+                                  원</td>
+                                <td width='8%'><?=$quantity?></td>
+                                <td width='12%'><span class="price">
+                                  <?=$sum_str?>
+                                  원</span></td>
+                                <td width='15%'><?=$pro_freight_code?></td>
+                                <td width='15%'><?=$pro_delivery?></td>
+                                <td width='10%'><?=$good_status_str?></td>
+                              </tr>
+                              <?
+}
+if($freight_fee == ''){
+	if($mon_tot >= $freight_limit){
+		$freight_fee = 0;
+	}else{
+		$freight_fee = $freight_cost;
+	}
+}
+$mon_tot_freight = $mon_tot + $freight_fee;
+?>
+                              <tr bgcolor="F4F4F4">
+                                <td height="30" colspan="7" align="center">총합계:
+                                    <span class="product"> <?=number_format($mon_tot_freight)?></span> 원 
+                                    <!-- <span class="text_red">[ 소계:<?=number_format($mon_tot)?>원 ] -->
+<? if($freight_fee){ ?>
+									<span class="text_red">[ 배송료 <?=number_format($freight_fee)?>원 ]</span>
+<? } ?>
+                                </td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                      </table>
+<?
+$SQL1 = "select * from $BonusTable where mart_id ='$mart_id' and id = '$UnameSess'";
+$dbresult1 = mysql_query($SQL1, $dbconn);
+$numRows1 = mysql_num_rows($dbresult1);
+$point_sum = 0;
+for ($j=0; $j<$numRows1; $j++) {
+	mysql_data_seek($dbresult1,$j);
+	$ary1 = mysql_fetch_array($dbresult1);
+	$bonus = $ary1[bonus];
+	$point_sum = $point_sum + $bonus;
+}
+$point_sum_str = number_format($point_sum);
+$bonus_limit_str = number_format($bonus_limit);
+
+if( $MemberName ){
+	$mem_name = "$MemberName";
+}else{
+	$mem_name = "비회원";
+}
+?>
+<script language='JavaScript'>
+
+function isNumber() {
+	if ((event.keyCode<48)||(event.keyCode>57)) {
+		alert("숫자만  입력 가능합니다.\n\n다시 입력하여 주시기 바랍니다!!!");
+		event.returnValue=false;
+	}
+}
+
+function Svalue(sarray){ 
+	return sarray.options[sarray.selectedIndex].value 
+}
+var MSIE, VERSION;
+	
+MSIE = navigator.userAgent.indexOf('MSIE') == -1;
+VERSION = navigator.userAgent.substring(8,12);
+
+function Tcheck(target, cmt, astr, lmin, lmax){
+	var i
+	var t = target.value
+
+	if(t.length < lmin || t.length > lmax){
+		if (lmin == lmax) alert(cmt + '는 ' + lmin + ' 자 이어야 합니다.');
+			else alert(cmt + '는 ' + lmin + ' ~ ' + lmax + ' 자 이내의 영문 및 숫자로 입력하세요.');
+		target.focus()
+		return true
+	}
+	if (astr.length > 1) {
+		for (i=0; i<t.length; i++)
+				if(astr.indexOf(t.substring(i,i+1))<0) {
+			alert(cmt + '에 허용할 수 없는 문자가 입력되었습니다');
+			target.focus()
+			return true
+		}
+	}
+	return false
+}
+
+function Jumin_chk(it){
+	IDtot = 0;
+	IDAdd = "234567892345";
+
+	for(i=0; i<12; i++) IDtot = IDtot + parseInt(it.substring(i, i+1)) * parseInt(IDAdd.substring(i, i+1));
+	IDtot = 11 - (IDtot%11);
+	if (IDtot == 10) IDtot = 0;
+	else if (IDtot == 11) IDtot = 1;
+
+	if(parseInt(it.substring(12, 13)) != IDtot){
+		return true;
+	}else{
+		return false;
+	}
+}
+	
+function Eaddcheck(target, cmt){
+	var i
+	var t = target.value
+
+	if (t.length > 1) {
+		for (i=0; i<t.length; i++)
+				if(t.substring(i,i+1) == '@') {
+			return false;
+		}
+	}
+	alert(cmt + '를 정확히 입력하여 주십시오.');
+	target.focus()
+	return true	
+}
+
+function checkform(form){
+
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+	var Digit = '1234567890'
+ 
+<?
+if($buyer_name_use == 0){
+?>	
+	if (form.name.value==""){
+		alert("\n주문자의 이름을 입력하세요.");
+		form.name.focus();
+		return false;
+	}
+<?
+}
+?>	
+<?
+if($buyer_passport_use == 0){
+?>
+							
+	/**if (form.passport1.value==""){
+		alert("주문자의 주민등록번호 앞자리를 입력하세요.");
+		form.passport1.focus();  
+		return false;
+	}else{
+		var len =form.passport1.value.length;
+		var ret;
+		ret =false;  
+		for(var i=0;i<len;i++){  
+				var ch = form.passport1.value.substring(i,i+1);
+		
+				for (var k=0;k<=Digit.length;k++){    
+				if(Digit.substring(k,k+1) == ch)
+				{     
+					ret = true;
+					break;     
+				}
+			} 
+	
+				if (!ret){
+				alert("숫자만 입력 하세요");
+				form.passport1.focus();
+				return false;
+				} 
+				ret = false;
+		}
+	}
+	
+	if (form.passport2.value==""){
+		alert("\n주문자의 주민등록번호 뒷자리를 입력하세요.");
+		form.passport2.focus();  
+		return false;
+	}else{
+		var len =form.passport2.value.length;
+		var ret;
+		ret =false;  
+  
+		for(var i=0;i<len;i++){  
+				var ch = form.passport2.value.substring(i,i+1);
+				
+				for (var k=0;k<=Digit.length;k++){     		
+				if(Digit.substring(k,k+1) == ch){
+					ret = true
+					break;
+				}
+				} 
+				if (!ret){     
+				alert("숫자만 입력 하세요");
+				form.passport2.focus();
+				return false;
+				} 
+				ret = false;
+		}
+	}
+	
+	if (form.passport1.value.length != 6 || form.passport2.value.length != 7){
+		alert("유효한 주민번호를 입력 하세요");
+		form.passport2.focus();
+		return false;
+	}
+
+	var jumin;
+	jumin = form.passport1.value + form.passport2.value;
+
+	if(Jumin_chk(jumin)){
+		alert("주민등록번호가 틀립니다.");	
+		return false;	
+	} **/
+<?
+}
+?>
+<?
+if($buyer_email_use == 0){
+?>
+	if (form.email.value==""){
+		alert("\n주문자의 이메일주소를 입력하세요.");
+		form.email.focus();
+		return false;
+	}
+	var emailchk;
+	emailchk = 0;
+
+	if(form.email.value !=""){
+		for (var j=0; j < form.email.value.length ; j++ ) {
+			var ch= form.email.value.substring(j,j+1)
+				if (ch == "@" | ch== "." ){
+				emailchk = emailchk + 1;
+				}
+		}
+		if (emailchk < 2 ){
+				alert("유효한 전자우편를 입력하세요!");
+			form.email.focus(); 
+			return false;
+		}
+	} 
+<?
+}
+?>
+<?
+if($buyer_zip_use == 0){
+?>
+	if (form.buyer_zip.value==""){
+		alert("\n주문자의 우편번호를 입력하세요.");
+		form.buyer_zip.focus();
+		return false;
+	}
+<?
+}
+?>
+<?
+if($buyer_address_use == 0){
+?>
+	if (form.buyer_address.value==""){
+		alert("\n주문자의 주소를 입력하세요.");
+		form.buyer_address.focus();
+		return false;
+	}
+<?
+}
+?>
+<?
+if($buyer_tel_use == 0){
+?>	
+	if (form.buyer_tel.value==""){
+		alert("\n주문자의 연락처를 입력하세요.");
+		form.buyer_tel.focus();
+		return false;
+	}
+<?
+}
+?>
+<?
+if($buyer_tel1_use == 0){
+?>	
+	if (form.buyer_tel1.value==""){
+		alert("\n주문자의 휴대폰번호를 입력하세요.");
+		form.buyer_tel1.focus();
+		return false;
+	}
+<?
+}
+?>
+
+<?
+if($receiver_use == 0){
+?>
+	if (form.receiver.value==""){
+		alert("\n받을분 이름을 입력하세요.");
+		form.receiver.focus();
+		return false;
+	}
+<?
+}
+?>
+<?
+if($zip_use == 0){
+?>
+	if (form.zip.value==""){
+		alert("\n배송하실 곳의 우편번호를 입력하세요.\n\n'우편번호 검색'으로 쉽게 찾을 수 있습니다.");
+		form.zip.focus();
+		return false;
+	}
+<?
+}	
+?>	
+<?
+if($address_use == 0){
+?>
+	if (form.address.value==""){
+		alert("\n배송하실 곳의 주소를 입력하세요.");
+		form.address.focus();
+		return false;
+	}
+<?
+}
+?>
+<?
+if($rev_tel_use == 0){
+?>
+	if (form.rev_tel.value==""){
+		alert("\n배송하실 곳의 연락처를 입력하세요.");
+		form.rev_tel.focus();
+		return false;
+	}
+<?
+}	
+?>
+<?
+if($rev_tel1_use == 0){
+?>
+	if (form.rev_tel1.value==""){
+		alert("\n배송하실 곳의 기타 연락처를 입력하세요.");
+		form.rev_tel1.focus();
+		return false;
+	}
+<?
+}
+?>
+
+<?
+if(!empty($field1_text) && $field1_use == 0){
+?>
+	if (form.field1.value==""){
+	alert("\n<?echo $field1_text?>을/를 입력하세요.");
+	form.field1.focus();
+	return false;
+	}
+<?
+}
+?>
+	
+<?
+if(!empty($field2_text) && $field2_use == 0){
+?>
+	if (form.field2.value==""){
+	alert("\n<?echo $field2_text?>을/를 입력하세요.");
+	form.field2.focus();
+	return false;
+	}
+<?
+}
+?>
+			
+<?
+if(!empty($field3_text) && $field3_use == 0){
+?>
+	if (form.field3.value==""){
+	alert("\n<?echo $field3_text?>을/를 입력하세요.");
+	form.field3.focus();
+	return false;
+	}
+<?
+}
+?>
+			
+<?
+if(!empty($field4_text) && $field4_use == 0){
+?>
+	if (form.field4.value==""){
+	alert("\n<?echo $field4_text?>을/를 입력하세요.");
+	form.field4.focus();
+	return false;
+	}
+<?
+}
+?>
+	
+<?
+if(!empty($field5_text) && $field5_use == 0){
+?>
+	if (form.field5.value==""){
+	alert("\n<?echo $field5_text?>을/를 입력하세요.");
+	form.field5.focus();
+	return false;
+	}
+<?
+}
+?>
+	return true;
+}
+
+function find_zip(){
+		var Sel = CenterWin ( '../member/find_zip.php', 'Zip', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=400,height=270' );
+}
+function buyer_find_zip(){
+		var Sel = CenterWin ( '../member/find_zip.php?flag=buyer', 'Zip', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=400,height=270' );
+}
+
+function check(){
+	var str = document.f.passport1.value.length;
+	if(str == 6) {
+		document.f.passport2.focus();
+	}
+	
+} 
+	
+function check1(){
+	var str = document.f.passport2.value.length;
+	if(str == 7) {
+		document.f.email.focus();
+	}
+}
+
+function val_sel(f){
+<?
+if($buyer_name_use < 2 && $receiver_use < 2){
+?>
+	f.receiver.value = f.name.value;
+<?
+}
+?>
+<?
+if($buyer_address_use < 2 && $address_use < 2){
+?>
+	f.address.value= f.buyer_address.value;
+	f.address_d.value= f.buyer_address_d.value;
+<?
+}
+?>
+<?
+if($buyer_tel_use < 2 && $rev_tel_use < 2){
+?>
+	f.rev_tel.value=f.buyer_tel.value;
+<?
+}
+?>
+<?
+if($buyer_tel1_use < 2 && $rev_tel1_use < 2){
+?>
+	f.rev_tel1.value=f.buyer_tel1.value;
+<?
+}
+?>
+<?
+if($buyer_zip_use < 2 && $zip_use < 2){
+?>
+	f.zip.value=f.buyer_zip.value;
+<?
+}
+?>
+}
+                  </script>
+                  <script>
+function pastadr_win(){
+	window.open ( './pastadr.php?id=<?=$UnameSess?>&mart_id=<?=$mart_id?>', 'pastadr', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=582,height=300');
+}
+
+function point_check(form , obj , id ) {
+	if ( obj != "" && Number(obj) > 0 ){
+		if ( Number(form.mon_tot_freight.value) < Number(obj) ){
+			alert("기재하신 포인트 금액이 실제 구매금액보다 큽니다.\n\n확인하시고 다시 기재해 주십시오.");
+			form.obj_name[id].select();
+			return;
+		}else if ( Number(form.user_bonus.value) < Number(obj) ){
+			alert("포인트 잔고가 부족합니다.\n\n포인트를 " + form.user_bonus_str.value + "점 이하로 다시 기재해 주십시오.");
+			form.obj_name[id].select();
+			return;
+		}else if ( obj != "" && Number(form.bonus_limit.value) > Number(obj) ){
+			alert("포인트는 " + form.bonus_limit_str.value +"점 이상만 사용 가능 합니다.\n확인하시고 다시 기재해 주십시오.");
+			form.obj_name[id].select();
+			return;
+		}
+	}
+}
+                  </script>
+                      <!---------------------- 주문자정보 시작 --------------------->
+                      <form action='order_modify.php?order_num_query=<?=$order_num_query?>&flag=<?=$flag?>' id='form1' name='f' onSubmit="return checkform(this)" method='post'>
+                        <input type='hidden' name='mode' value='addinfo'>
+                        <input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+                        <input type='hidden' name='partner' value='<?=$partner?>'>
+                        <input type='hidden' name='mon_tot_freight' value='<?=$mon_tot_freight?>'>
+                        <input type='hidden' name='freight_fee' value='<?=$freight_fee?>'>
+                        <input type='hidden' name='item_name' value='<?=$item_name?>'>
+						<input type='hidden' name='paymethod' value='<?=$paymethod?>'>
+						<input type="hidden" name="passport1" value='<?=$passport1?>'>
+						<input type='hidden' name="passport2" value='<?=$passport2?>'>
+                        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr bgcolor="D2A12E">
+                            <td height="2" colspan="2"></td>
+                          </tr>
+                          <tr>
+                            <td height="2" colspan="2"></td>
+                          </tr>
+                          <tr>
+                            <td width="140" valign="top" bgcolor="F6E6BF"><img src="../image/mypage/cart_title_1.gif" width="140" height="40"></td>
+                            <td><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#FFFFFF">
+                                <?
+if($buyer_name_use < 2 || $buyer_passport_use < 2){
+?>
+                                <?
+	if($buyer_name_use < 2){
+?>
+                                <tr>
+                                  <td width="80" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문자이름</td>
+                                  <td><input type="text" name="name" value='<?=$name?>' class="input_03" size="20" style='ime-mode:active'></td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+	}
+?>
+                                <?
+	if($buyer_passport_use < 2){
+?>
+                                <!-- <tr>
+                                  <td width="80" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주민등록번호</td>
+                                  <td><input type="text" class="input_03" name="passport1" value='<?=$passport1?>' size="8" maxlength='6' onkeyup='check();'> - <input type='password' class="input_03" name="passport2" value='<?=$passport2?>' size="10" maxlength='7' onkeyup='check1();'></td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr> -->
+                                <?
+	}
+?>
+                                <?
+}
+?>
+                                <?
+if($buyer_email_use < 2){
+?>
+                                <tr>
+                                  <td width="80" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">이메일</td>
+                                  <td><input type="text" name="email" value='<?=$email?>' class="input_03" size="50" style='ime-mode:inactive'>
+                                      <br>
+              (* 한메일/다음 이외에 메일 주소를 적어주시길 바랍니다.)</td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+}
+?>
+                                <?
+if($buyer_zip_use < 2){
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">우편번호</td>
+                                  <td><input type="text" class="input_03" name="buyer_zip" value='<?=$buyer_zip?>' size="8">
+                                      <img src="../image/bu_zipcode.gif" width="80" height="20" border="0" align="absmiddle" style='cursor:hand' onClick="buyer_find_zip();"> </td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+}
+?>
+                                <?
+//if($buyer_address_use < 2){
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주소 </td>
+                                  <td><input type="text" class="input_03" size="50" name="buyer_address" value='<?=$buyer_address?>' style='ime-mode:active'></td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">나머지주소</td>
+                                  <td><input type="text" class="input_03" size="50" name="buyer_address_d" value='<?=$buyer_address_d?>' style='ime-mode:active'></td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+//}
+?>
+                                <?
+if($buyer_tel_use < 2 || $buyer_tel1_use < 2){
+?>
+                                <?
+	if($buyer_tel_use < 2){
+?>
+                                <tr>
+                                  <td height="26" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">전화번호</td>
+                                  <td><input type="text" class="input_03" name="buyer_tel" value='<?=$tel1?>' size='20'>
+              (예 : 02-123-4567) </td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+	}
+?>
+                                <?
+	if($buyer_tel1_use < 2){
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">휴대폰번호 </td>
+                                  <td><input type="text" class="input_03" name="buyer_tel1" value='<?=$tel2?>' size='20'>
+              (예 : 010-1234-5678) </td>
+                                </tr>
+                                <?
+	}
+?>
+                                <?
+}
+?>
+                            </table></td>
+                          </tr>
+                          <tr>
+                            <td height="20" colspan="2"></td>
+                          </tr>
+                        </table>
+                        <!---------------------- 주문자정보 끝--------------------------->
+                        <!---------------------- 배송지정보 시작------------------------->
+                        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr bgcolor="D2A12E">
+                            <td height="2" colspan="2"></td>
+                          </tr>
+                          <tr>
+                            <td height="2" colspan="2"></td>
+                          </tr>
+                          <tr>
+                            <td width="140" valign="top" bgcolor="F6E6BF"><img src="../image/mypage/cart_title_2.gif" width="140" height="40"></td>
+                            <td><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#FFFFFF">
+                                <tr bgcolor="F8F8F8">
+                                  <td height="30" colspan="2" class="text_14_s2"><span class="text_orange">
+                                    <input name="C1" onClick="val_sel(this.form)" type="checkbox">
+              주문자정보와 동일합니다.</span> </td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                </tr>
+                                <?
+if($receiver_use < 2){
+?>
+                                <tr>
+                                  <td width="80" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">받는사람</td>
+                                  <td><input type="text" class="input_03" size="20" name="receiver" style='ime-mode:active' value="<?=$receiver?>"></td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+}	
+?>
+                                <?
+if($zip_use < 2){
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">우편번호</td>
+                                  <td><input type="text" class="input_03" name="zip" size="8" value="<?=$zip?>">
+                                      <a onClick="find_zip();" style='cursor:hand'><img src="../image/bu_zipcode.gif" width="80" height="20" border="0" align="absmiddle"></a> </td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+}
+?>
+                                <?
+if($address_use < 2){
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">배송지주소 </td>
+                                  <td><input type="text" name="address" class="input_03" size="50" style='ime-mode:active' value="<?=$address?>"></td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">나머지주소</td>
+                                  <td><input type="text" name="address_d" class="input_03" size="50" style='ime-mode:active' value="<?=$address_d?>"></td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+}
+?>
+                                <?
+if($rev_tel_use < 2 || $rev_tel1_use < 2){
+?>
+                                <?
+	if($rev_tel_use < 2){
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">전화번호</td>
+                                  <td><input type="text" name="rev_tel" class="input_03" size="20" value="<?=$rev_tel?>">
+              (예 : 02-123-4567)</td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+	}
+?>
+                                <?
+	if($rev_tel1_use < 2){
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">휴대폰번호 </td>
+                                  <td><input type="text" class="input_03" name="rev_tel1" size="20" value="<?=$rev_tel1?>">
+              (예 : 010-1234-5678)</td>
+                                </tr>
+                                <tr>
+                                  <td height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+	}
+?>
+                                <?
+}
+?>
+                                <tr>
+                                  <td height="100" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">기타요청사항</td>
+                                  <td><textarea name="message" cols="60" rows="5" class="input_03" style='ime-mode:active'><?=nl2br($message)?></textarea></td>
+                                </tr>
+                            </table></td>
+                          </tr>
+                          <tr>
+							<td width="80" height="1" bgcolor="#FFFFFF"></td>
+                            <td height="1" bgcolor="E5E5E5"></td>
+                          </tr>
+						  <tr>
+                            <td height="20" colspan="2"></td>
+                          </tr>
+                        </table>
+                        <!---------------------- 배송지정보 끝 -------------------->                        
+                        <!---------------------- 버튼 시작 --------------------->
+                        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td height="70" align="center"><input type="image" src="../image/bu_infomodify.gif">
+                                <img src="../image/bu_cancel.gif" width="100" height="50" border="0" onClick="history.back();" style="cursor:hand;"></a> </td>
+                          </tr>
+                        </table>
+                      </form>
+                      <p>&nbsp;</p></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table>
+
+
+
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>&nbsp;</td>
+                            </tr>
+                          </table>								
+								</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="10"></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

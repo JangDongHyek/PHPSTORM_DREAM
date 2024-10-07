@@ -1,0 +1,1366 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$order_sql = "select * from $Order_BuyTable where order_num='$order_num_query' and mart_id='$mart_id'";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+
+$order_row = mysql_fetch_array($order_res);
+$name = $order_row[name];
+$passport1 = $order_row[passport1];
+$passport2 = $order_row[passport2];
+$tel1 = $order_row[tel1];
+$tel2 = $order_row[tel2];
+$email = $order_row[email];
+$buyer_zip = $order_row[buyer_zip];
+$buyer_address = $order_row[buyer_address];
+$buyer_address_d = $order_row[buyer_address_d ];
+$receiver = $order_row[receiver];
+$rev_tel = $order_row[rev_tel];
+$rev_tel1 = $order_row[rev_tel1];
+$zip = $order_row[zip];
+$address = $order_row[address];
+$address_d = $order_row[address_d];
+$message = $order_row[message];
+$paymethod = $order_row[paymethod];
+$account_no = $order_row[account_no];
+$status = $order_row[status];
+$date = $order_row[date];
+$pay_day = $order_row[pay_day];
+$money_sender = $order_row[money_sender];
+$date_str = substr($date,0,4)."년 ".substr($date,5,2)."월 ".substr($date,8,2)."일 ".substr($date,11,2)."시 ".substr($date,14,2)."분 ".substr($date,17,2)."초 ";
+$if_use_bonus = $order_row[if_use_bonus];
+$use_bonus_tot = $order_row[use_bonus_tot];
+$freight_fee = $order_row[freight_fee];
+$keeper_message = $order_row[keeper_message];
+$app_no = $order_row[authnumber];
+$tno = $order_row[field1];
+$quota = $order_row[field2];
+$card_name = $order_row[field3];
+$noinf = $order_row[field4];
+$bank_name = $order_row[field3];
+$card_paid = $order_row[card_paid];
+
+//====================== 결제방법 정보 ===================================================
+if($paymethod== 'byonline' || $paymethod== 'byonline_point'){
+	$pay_sql = "select * from $BankTable where mart_id='$mart_id' and account_no='$account_no'";
+	$pay_res = mysql_query($pay_sql, $dbconn);
+	$pay_row = mysql_fetch_array($pay_res);
+	$account_no = $pay_row[account_no];
+	$bank_name = $pay_row[bank_name];
+	$bank_number = $pay_row[bank_number];
+	$owner_name = $pay_row[owner_name];
+}
+
+if($paymethod== 'bycard'){
+	$paystr = "카드결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'bycard_point'){
+	$paystr = "카드결제 + 포인트결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'byaccount'){
+	$paystr = "계좌이체";
+	$totpaystr = "계좌이체 금액";
+}
+if($paymethod== 'byaccount_point'){
+	$paystr = "계좌이체 + 포인트결제";
+	$totpaystr = "계좌이체 금액";
+}
+
+if($card_paid == 'f' && eregi("bycard", $paymethod))
+	$paystr = "<b>카드 결제 실패</b>";
+if($card_paid == 'f' && eregi("byaccount", $paymethod))
+	$paystr = "<b>계좌이체 실패</b>";
+
+//====================== 온라인 입금시 계좌 정보 =========================================
+if($paymethod== 'byonline'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'byonline_point'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금 + 포인트결제";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'bypoint'){
+	$paystr = "포인트결제";
+	$totpaystr = "결제 금액";
+}
+
+if($status == 1) $status_str = "주문";
+if($status == 2) $status_str = "입금확인";
+if($status == 3) $status_str = "배송완료";
+if($status == 4) $status_str = "환불";
+if($status == 5) $status_str = "주문취소";
+if($status == 6) $status_str = "배송중";
+if($status == 7) $status_str = "교환";
+if($status == 8) $status_str = "<font color='red'>고객주문취소</font>";	
+if($status == 10) $status_str = "<font color='red'>결제취소</font>";	
+
+?>
+
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script>
+function really(){
+	if(confirm("정말 주문을 취소하시겠습니까?")) return true;
+	else return false;
+}
+</script>
+<script>
+function receipt_win(mart_id,order_num){
+	var url = "../receipt/receipt.php?mart_id="+mart_id+"&order_num="+order_num
+	var uploadwin = window.open(url,"receipt","width=600,height=550,scrollbars=yes,toolbar=no,navationbar=no,resizable=yes");
+}
+</script>
+
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+	</td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="960" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="238" valign="top">
+		  <!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+        </td>
+        <td valign="top"><table width="700" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="12%"><img src="../images/mypage_1.gif" width="170" height="44"></td>
+                        <td width="88%" background="../images/join_2.gif"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> 홈 &gt; 마이페이지 &gt; 주문내역 </div></td>
+                              <td width="2%">&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="2%"><img src="../images/mypage_3.gif" width="227" height="66"></td>
+                        <td width="98%" valign="top"><table width="74%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><img src="../images/mypage_4.gif" width="473" height="15"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="15%"><a href="../mypage/out.html"><img src="../images/mypage_5.gif" width="73" height="25" border="0"></a></td>
+                                    <td width="2%"><img src="../images/mypage_6.gif" width="4" height="25"></td>
+                                    <td width="27%"><a href="../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>"><img src="../images/mypage_7.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_8.gif" width="2" height="25"></td>
+                                    <td width="5%"><a href="../mypage/wish.html"><img src="../images/mypage_9.gif" width="62" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_10.gif"></td>
+                                    <td><a href="../stat/order.html"><img src="../images/mypage_new_over.gif" width="126" height="25" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_14.gif"></td>
+                                    <td width="5%"><a href="../mypage/point.html"><img src="../images/mypage_15.gif" border="0"></a></td>
+                                    <td width="5%"><img src="../images/mypage_16.gif"></td>
+                                    <td width="5%"><a href="../mypage/out.html"><img src="../images/mypage_17.gif" border="0"></a></td>
+                                    <td width="6%"><img src="../images/mypage_18.gif"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td><img src="../images/mypage_19.gif" width="473" height="26"></td>
+                            </tr>
+                        </table></td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td><img src="../images/order_title1.gif" width="700" height="46"></td>
+                </tr>
+                <tr>
+                  <td style="padding: 5px; "><br>
+				  <!---------------------- 상세주문내역 시작 --------------------->
+                      <table width="680"  border="0" cellspacing="0" cellpadding="10">
+                        <tr>
+                          <td bgcolor="FBEADC" class="mypage_3"><img src="../image/icon_2.gif" width="15" height="9">
+                              <?=$name?> 님이 구매하신 상품의 상세내역입니다</td>
+                          <td align="right" bgcolor="FBEADC"></td>
+                        </tr>
+                      </table>
+                      <table width="680" border="1" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+                        <tr>
+                          <td bgcolor="D0783A" height="4" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td width="130"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문번호</td>
+                          <td width="420"><span class="price">
+                            <?=$order_num_query?>
+                          </span></td>
+                        </tr>
+                        <tr>
+                          <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문일시</td>
+                          <td><?=$date_str?></td>
+                        </tr>
+                        <tr>
+                        		<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">주문상태</td>
+                        		<td><?=$status_str?></td>
+                   		  </tr> 
+                        <tr>
+                          <td colspan="2" bgcolor="#F7F7F7" class="text_14_s2"><table width="100%"  border="0" cellpadding="0" cellspacing="1" bgcolor="E5E5E5">
+                              <tr height="25" align="center" bgcolor="#F9FCEF" >
+                                <td width='30%' class="mypage_4">상품명 </td>
+                                <td width='10%' class="mypage_4">단 가</td>
+                                <td width='8%' class="mypage_4">수 량</td>
+                                <td width='12%' class="mypage_4">소 계</td>
+                                <td width='15%' class="mypage_4">송장번호</td>
+                                <td width='15%' class="mypage_4">택배회사</td>
+                                <td width='10%' class="mypage_4">상 태</td>
+                              </tr>
+                              <?
+$order_sql1 = "select * from $Order_ProTable where mart_id='$mart_id' and order_num = '$order_num_query' and status > 0 order by order_pro_no desc";
+$order_res1 = mysql_query($order_sql1, $dbconn);
+$order_tot1 = mysql_num_rows($order_res1);
+$mon_tot = 0;
+for ($i=0; $i<$order_tot1; $i++) {
+	mysql_data_seek($order_res1,$i);
+	$order_row1 = mysql_fetch_array($order_res1);
+
+	$order_pro_no = $order_row1[order_pro_no];
+	$mart_id = $order_row1[mart_id];
+	$item_name = $order_row1[item_name];
+	if($i==0)
+		$top_item_name = $item_name;
+	$opt = $order_row1[opt];
+	$z_price = $order_row1[z_price];
+	$bonus = $order_row1[bonus];
+	$good_status = $order_row1[status];
+	$pro_freight_code = $order_row1[pro_freight_code];
+	$pro_delivery = $order_row1[pro_delivery];
+	$item_no_forcash = $order_row1[item_no];
+	$z_price_str = number_format($z_price);
+	$bonus_str = number_format($bonus);
+	
+	$use_bonus = $order_row1[use_bonus];
+	$quantity = $order_row1[quantity];
+	$sum = $z_price*$quantity;
+	$sum_str = number_format($sum);
+	$mon_tot += $sum;
+	
+	$if_cash_str = '';
+	$cart_sql1 = "select * from $ItemTable where item_no='$item_no_forcash'";
+	$cart_res1 = mysql_query($cart_sql1, $dbconn);
+	$cart_row1 = mysql_fetch_array($cart_res1);
+
+	$prevno = $cart_row1[prevno];
+	$cate_num = $cart_row1[category_num];
+	$if_cash = $cart_row1[if_cash];
+	$mart_id_tmp = $cart_row1[mart_id];
+	
+	if($mart_id == $mart_id_tmp){
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}else{
+		$SQL_T = "select if_cash from gnt_item where seller_id='$mart_id' and item_no='$item_no_forcash'";
+		$dbresult_T = mysql_query($SQL_T, $dbconn);
+		$numRows_T = mysql_num_rows($dbresult_T);
+		if($numRows_T > 0)
+		$if_cash = mysql_result($dbresult_T,0,0);
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}
+
+	if($good_status == 1){
+		$good_status_str = "주문";
+	}else if($good_status == 2){
+		$good_status_str = "입금확인";
+	}else if($good_status == 3){
+		$good_status_str = "배송완료";
+	}else if($good_status == 4){
+		$good_status_str = "환불";
+	}else if($good_status == 5){
+		$good_status_str = "주문취소";
+	}else if($good_status == 6){
+		$good_status_str = "배송중";
+	}else if($good_status == 7){
+		$good_status_str = "교환";
+	}else if($good_status == 10)
+		$good_status_str = "결제취소";	
+?>
+                              <tr bgcolor="#FFFFFF" height="30" align="center">
+                                <td width='30%'><table width="100%"  border="0" cellspacing="0" cellpadding="5">
+                                    <tr>
+                                      <td><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no_forcash?>'>
+                                        <?=$item_name?>
+                                        </a>
+                                          <?=$if_cash_str?>
+                                          <?
+	if(isset($opt)&&$opt!=""&&$opt!="!!"){
+?>
+                                          <br>
+                                          옵션:
+                                          <?
+		$opts = explode("!", $opt);
+
+		if(strstr($opts[0],'^'))
+			$opts_1 = explode("^", $opts[0]);
+		else $opts_1[0] = $opts[0];
+		
+		if($opts_1[0] != "")
+			echo "$opts_1[0]";
+		if($opts_1[1] != "")
+			echo "($opts_1[1] 원)&nbsp;";
+		if($opts[1] != "")
+			echo "$opts[1]&nbsp;";
+		if($opts[2] != "")
+			echo "$opts[2]";
+	}
+?>
+                                      </td>
+                                    </tr>
+                                </table></td>
+                                <td width='10%'><?=$z_price_str?>
+                                  원</td>
+                                <td width='8%'><?=$quantity?></td>
+                                <td width='12%'><span class="price">
+                                  <?=$sum_str?>
+                                  원</span></td>
+                                <td width='15%'><?=$pro_freight_code?></td>
+                                <td width='15%'><?=$pro_delivery?></td>
+                                <td width='10%'><?=$good_status_str?></td>
+                              </tr>
+                              <?
+}
+if($freight_fee == ''){
+	if($mon_tot >= $freight_limit){
+		$freight_fee = 0;
+	}else{
+		$freight_fee = $freight_cost;
+	}
+}
+$mon_tot_freight = $mon_tot + $freight_fee;
+?>
+                              <tr bgcolor="F4F4F4">
+                                <td height="30" colspan="7" align="center">총합계:
+                                    <span class="product"> <?=number_format($mon_tot_freight)?></span> 원 
+                                    <!-- <span class="text_red">[ 소계:<?=number_format($mon_tot)?>원 ] -->
+<? if($freight_fee){ ?>
+									<span class="text_red">[ 배송료 <?=number_format($freight_fee)?>원 ]</span>
+<? } ?>
+                                </td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                      </table>
+<?
+$SQL1 = "select * from $BonusTable where mart_id ='$mart_id' and id = '$UnameSess'";
+$dbresult1 = mysql_query($SQL1, $dbconn);
+$numRows1 = mysql_num_rows($dbresult1);
+$point_sum = 0;
+for ($j=0; $j<$numRows1; $j++) {
+	mysql_data_seek($dbresult1,$j);
+	$ary1 = mysql_fetch_array($dbresult1);
+	$bonus = $ary1[bonus];
+	$point_sum = $point_sum + $bonus;
+}
+$point_sum_str = number_format($point_sum);
+$bonus_limit_str = number_format($bonus_limit);
+
+if( $MemberName ){
+	$mem_name = "$MemberName";
+}else{
+	$mem_name = "비회원";
+}
+?>
+<script language='JavaScript'>
+
+function isNumber() {
+	if ((event.keyCode<48)||(event.keyCode>57)) {
+		alert("숫자만  입력 가능합니다.\n\n다시 입력하여 주시기 바랍니다!!!");
+		event.returnValue=false;
+	}
+}
+
+function Svalue(sarray){ 
+	return sarray.options[sarray.selectedIndex].value 
+}
+var MSIE, VERSION;
+	
+MSIE = navigator.userAgent.indexOf('MSIE') == -1;
+VERSION = navigator.userAgent.substring(8,12);
+
+function Tcheck(target, cmt, astr, lmin, lmax){
+	var i
+	var t = target.value
+
+	if(t.length < lmin || t.length > lmax){
+		if (lmin == lmax) alert(cmt + '는 ' + lmin + ' 자 이어야 합니다.');
+			else alert(cmt + '는 ' + lmin + ' ~ ' + lmax + ' 자 이내의 영문 및 숫자로 입력하세요.');
+		target.focus()
+		return true
+	}
+	if (astr.length > 1) {
+		for (i=0; i<t.length; i++)
+				if(astr.indexOf(t.substring(i,i+1))<0) {
+			alert(cmt + '에 허용할 수 없는 문자가 입력되었습니다');
+			target.focus()
+			return true
+		}
+	}
+	return false
+}
+
+function Jumin_chk(it){
+	IDtot = 0;
+	IDAdd = "234567892345";
+
+	for(i=0; i<12; i++) IDtot = IDtot + parseInt(it.substring(i, i+1)) * parseInt(IDAdd.substring(i, i+1));
+	IDtot = 11 - (IDtot%11);
+	if (IDtot == 10) IDtot = 0;
+	else if (IDtot == 11) IDtot = 1;
+
+	if(parseInt(it.substring(12, 13)) != IDtot){
+		return true;
+	}else{
+		return false;
+	}
+}
+	
+function Eaddcheck(target, cmt){
+	var i
+	var t = target.value
+
+	if (t.length > 1) {
+		for (i=0; i<t.length; i++)
+				if(t.substring(i,i+1) == '@') {
+			return false;
+		}
+	}
+	alert(cmt + '를 정확히 입력하여 주십시오.');
+	target.focus()
+	return true	
+}
+
+function checkform(form){
+
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+	var Digit = '1234567890'
+ 
+///////////////////// 결재방법 선택 관련 스크립트  //////////
+	flag=0;
+	for( i=0; i < form.paymethod.length; i++ ){
+		if(form.paymethod[i].checked) flag=1;
+	}
+	if( flag == 0){
+		alert("결제 방법을 선택해 주세요!!!");
+		form.paymethod[0].focus();
+		return false;
+	}
+
+	if(document.getElementById("byonline") != null && document.getElementById("byonline").checked == true){
+		if(form.account_no.value=="") {
+			alert("\n온라인 결제를 선택하셨습니다.\n\n반드시 입금은행을 선택하세요.");
+			form.account_no.focus();
+			return false;
+		}
+		if(form.account_no.value=="nobank") {
+			alert("\n고객여러분 죄송합니다.\n\n온라인 결제가 준비되지 않았습니다.\n\n빠른 시간내에 준비하겠습니다.");
+			// form.bank.focus();
+			return false;
+		}
+
+		<?
+		if($money_sender_use == 0){
+		?>
+			if (form.money_sender.value==""){
+				alert("\n입금자명을 입력하세요.");
+				form.money_sender.focus();
+				return false;
+			}
+		<?
+		}
+		?>
+
+		<?
+		if($pay_day_use == 0){
+		?>
+			if (form.pay_day.value==""){
+				alert("\n입금예정일을 입력하세요.");
+				form.pay_day.focus();
+				return false;
+			}
+		<?
+		}
+		?>
+		//alert("온라인");
+		return true;
+	}
+	else if(document.getElementById("bycard") != null && document.getElementById("bycard").checked == true){
+		//alert("카드");
+		return true;
+	}
+	else if(document.getElementById("byaccount") != null && document.getElementById("byaccount").checked == true){
+		//alert("계좌이체");
+		return true;
+	}
+
+<?
+if( $MemberName && $bonus_ok == 't' ){   // 보유 포인트가 사용가능 포인트 보다 많을때, 회원 구매시만 포인트 사용 가능
+?>
+
+	else if(document.getElementById("byonline_point") != null && document.getElementById("byonline_point").checked == true){
+
+// 포인트 체크
+		if ( form.use_bonus_tot.value == '' ){
+			alert("사용하실 포인트양을 입력해 주세요.");
+			form.use_bonus_tot.focus();
+			return false;
+		}else{
+			var len =form.use_bonus_tot.value.length;
+			var ret;
+			ret =false;
+		}
+
+		if( parseInt(form.use_bonus_tot.value) > parseInt(form.user_bonus.value) ){
+			alert("사용할 수 있는 포인트 이상을 입력하셨습니다.");
+			form.use_bonus_tot.select();
+			return false;
+		}
+		if( parseInt(form.use_bonus_tot.value) + parseInt(form.old_use_bonus_tot.value) > parseInt(form.mon_tot_freight.value)){
+			alert("결제 금액 이상으로 포인트를 입력하셨습니다.");
+			form.use_bonus_tot.select();
+			return false;
+		}
+		if(parseInt(form.use_bonus_tot.value) + parseInt(form.old_use_bonus_tot.value) == parseInt(form.mon_tot_freight.value)){
+			alert("결제 금액 모두를 포인트로 사용하실경우\n\n포인트 결재를 선택하세요!!");
+			form.use_bonus_tot.select();
+			return false;
+		}
+// 포인트 체크
+
+		if(form.account_no1.value=="") {
+			alert("\n온라인 결제를 선택하셨습니다.\n\n반드시 입금은행을 선택하세요.");
+			form.account_no1.focus();
+			return false;
+		}
+		if(form.account_no1.value=="nobank") {
+			alert("\n고객여러분 죄송합니다.\n\n온라인 결제가 준비되지 않았습니다.\n\n빠른 시간내에 준비하겠습니다.");
+			// form.bank.focus();
+			return false;
+		}
+
+		<?
+		if($money_sender_use == 0){
+		?>
+			if (form.money_sender1.value==""){
+				alert("\n입금자명을 입력하세요.");
+				form.money_sender1.focus();
+				return false;
+			}
+		<?
+		}
+		?>
+
+		<?
+		if($pay_day_use1 == 0){
+		?>
+			if (form.pay_day1.value==""){
+				alert("\n입금예정일을 입력하세요.");
+				form.pay_day1.focus();
+				return false;
+			}
+		<?
+		}
+		?>
+		//alert("온라인+포인트");
+		return true;
+	}
+	else if(document.getElementById("bycard_point") != null && document.getElementById("bycard_point").checked == true){
+
+// 포인트 체크
+		var len =form.use_bonus_tot1.value.length;
+		var ret;
+		ret =false;
+
+		if( parseInt(form.use_bonus_tot1.value) + parseInt(form.old_use_bonus_tot.value) > parseInt(form.user_bonus.value) ){
+			alert("사용할 수 있는 포인트 이상을 입력하셨습니다.");
+			form.use_bonus_tot1.select();
+			return false;
+		}
+		if( parseInt(form.use_bonus_tot1.value) + parseInt(form.old_use_bonus_tot.value) > parseInt(form.mon_tot_freight.value)){
+			alert("결제 금액 이상으로 포인트를 입력하셨습니다.");
+			form.use_bonus_tot1.select();
+			return false;
+		}
+		if(parseInt(form.use_bonus_tot1.value) + parseInt(form.old_use_bonus_tot.value) == parseInt(form.mon_tot_freight.value)){
+			alert("결제 금액 모두를 포인트로 사용하실경우\n\n포인트 결재를 선택하세요!!");
+			form.use_bonus_tot1.select();
+			return false;
+		}
+		if(parseInt(form.use_bonus_tot1.value) + parseInt(form.old_use_bonus_tot.value) == parseInt(form.mon_tot_freight.value) || parseInt(form.mon_tot_freight.value) - parseInt(form.use_bonus_tot1.value) < <?=$card_limit?> ){
+			alert("신용카드 결재 금액은 <?=number_format($card_limit)?>원 이상만 가능합니다.");
+			form.use_bonus_tot1.select();
+			return false;
+		}
+// 포인트 체크
+
+		//alert("카드+포인트");
+		return true;
+	}
+	else if(document.getElementById("byaccount_point") != null && document.getElementById("byaccount_point").checked == true){
+
+// 포인트 체크
+		var len =form.use_bonus_tot2.value.length;
+		var ret;
+		ret =false;
+
+		if( parseInt(form.use_bonus_tot2.value) + parseInt(form.old_use_bonus_tot.value) > parseInt(form.user_bonus.value) ){
+			alert("사용할 수 있는 포인트 이상을 입력하셨습니다.");
+			form.use_bonus_tot2.select();
+			return false;
+		}
+		if( parseInt(form.use_bonus_tot2.value) + parseInt(form.old_use_bonus_tot.value) > parseInt(form.mon_tot_freight.value)){
+			alert("결제 금액 이상으로 포인트를 입력하셨습니다.");
+			form.use_bonus_tot2.select();
+			return false;
+		}
+		if(parseInt(form.use_bonus_tot2.value) + parseInt(form.old_use_bonus_tot.value) == parseInt(form.mon_tot_freight.value)){
+			alert("결제 금액 모두를 포인트로 사용하실경우\n\n포인트 결재를 선택하세요!!");
+			form.use_bonus_tot2.select();
+			return false;
+		}
+		if(parseInt(form.use_bonus_tot1.value) + parseInt(form.old_use_bonus_tot.value) == parseInt(form.mon_tot_freight.value) || parseInt(form.mon_tot_freight.value) - parseInt(form.use_bonus_tot1.value) < <?=$card_limit?> ){
+			alert("계좌이체 결재 금액은 <?=number_format($card_limit)?>원 이상만 가능합니다.");
+			form.use_bonus_tot2.select();
+			return false;
+		}
+// 포인트 체크
+
+		//alert("계좌이체+포인트");
+		return true;
+	}
+
+<?
+if( $MemberName && $bonus_ok == 't' ){   // 보유 포인트가 총결제금액 보다 많을때, 회원 구매시만 포인트결재 사용 가능
+?>
+	else if(document.getElementById("bypoint") != null && document.getElementById("bypoint").checked == true){
+
+// 포인트 체크
+		if(parseInt(form.use_bonus_tot3.value) + parseInt(form.old_use_bonus_tot.value) != parseInt(form.mon_tot_freight.value)){
+			alert("포인트 금액과 결제 금액이 틀립니다.\n\n다시 확인해 주세요.");
+			form.use_bonus_tot3.select();
+			return false;
+		}
+// 포인트 체크
+
+		//alert("only 포인트");
+		return true;
+	}
+<?
+}
+?>
+
+<?
+}
+?>
+	else{
+		alert("결제 방법을 선택해 주세요!!!");
+		form.paymethod[0].focus();
+		return false;
+	}
+}
+                  </script>
+                  <script>
+function pastadr_win(){
+	window.open ( './pastadr.php?id=<?=$UnameSess?>&mart_id=<?=$mart_id?>', 'pastadr', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=582,height=300');
+}
+
+function point_check(form , obj , id ) {
+	if ( obj != "" && Number(obj) > 0 ){
+		if ( Number(form.mon_tot_freight.value) < Number(obj) ){
+			alert("기재하신 포인트 금액이 실제 구매금액보다 큽니다.\n\n확인하시고 다시 기재해 주십시오.");
+			form.obj_name[id].select();
+			return;
+		}else if ( Number(form.user_bonus.value) < Number(obj) ){
+			alert("포인트 잔고가 부족합니다.\n\n포인트를 " + form.user_bonus_str.value + "점 이하로 다시 기재해 주십시오.");
+			form.obj_name[id].select();
+			return;
+		}else if ( obj != "" && Number(form.bonus_limit.value) > Number(obj) ){
+			alert("포인트는 " + form.bonus_limit_str.value +"점 이상만 사용 가능 합니다.\n확인하시고 다시 기재해 주십시오.");
+			form.obj_name[id].select();
+			return;
+		}
+	}
+}
+                  </script>
+                      <!---------------------- 주문자정보 시작 --------------------->
+                      <form action='payment_sheet_ok.php?order_num_query=<?=$order_num_query?>&flag=<?=$flag?>' id='form1' name='f' onsubmit="return checkform(this)" method='post'>
+						<input type='hidden' name='mon_tot_freight' value='<?=$mon_tot_freight?>'>
+                        <input type='hidden' name='mode' value='addinfo'>
+						<input type='hidden' name='old_use_bonus_tot' value='<?=$use_bonus_tot?>'>
+						<input type='hidden' name='item_name' value='<?=$top_item_name?>'>
+                        <input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+                        <input type='hidden' name='partner' value='<?=$partner?>'>
+						<input type='hidden' name='old_paymethod' value='<?=$paymethod?>'>
+                        <SCRIPT LANGUAGE="JavaScript">
+<!--
+function toggle(iobject){
+<?
+//if($paymethod != "byonline_point")
+//{
+?>
+	if(document.getElementById("bank") != null && document.getElementById("bank").style.display != "none"){
+		document.getElementById("bank").style.display = "none"
+	}
+<?
+	if($card_yes == "t")
+	{
+?>
+	if(document.getElementById("bank") != null && document.getElementById("card").style.display != "none"){
+		document.getElementById("card").style.display = "none"
+	}
+<?
+	}
+?>
+<?
+	if($account_yes == "t")
+	{
+?>
+	if(document.getElementById("account") && document.getElementById("account").style.display != "none"){
+		document.getElementById("account").style.display = "none"
+	}
+<?
+	}
+?>
+<?
+//}
+?>
+
+<?
+if( ($point_sum >= $bonus_limit) && $MemberName && $bonus_ok == 't' ){   // 보유 포인트가 사용가능 포인트 보다 많을때, 회원 구매시만 포인트 사용 가능
+?>
+
+	if(document.getElementById("bank_point") != null && document.getElementById("bank_point").style.display != "none"){
+		document.getElementById("bank_point").style.display = "none"
+	}
+	if(document.getElementById("card_point") != null && document.getElementById("card_point").style.display != "none"){
+		document.getElementById("card_point").style.display = "none"
+	}
+	if(document.getElementById("account_point") != null && document.getElementById("account_point").style.display != "none"){
+		document.getElementById("account_point").style.display = "none"
+	}
+	<?
+	if( ($point_sum >= $mon_tot_freight) && $MemberName && $bonus_ok == 't' ){   // 보유 포인트가 총결제금액 보다 많을때, 회원 구매시만 포인트결재 사용 가능
+	?>
+			if(document.getElementById("only_point") != null && document.getElementById("only_point").style.display != "none"){
+				document.getElementById("only_point").style.display = "none"
+			}
+	<?
+	}
+	?>
+<?
+}
+?>
+	iobject.style.display=""
+}
+//-->
+                      </SCRIPT> 
+<?
+	$card_limit_str = number_format($card_limit);
+	if($mon_tot_freight < $card_limit){//결제액이 카드 결제금액 가능액보다 작을때
+		$pay_how_name = "카드결제";
+		$card_str = "<input type='radio' name='paymethod' value='' disabled>$card_limit_str 원 미만의 금액은 카드결제를 할 수 없습니다.";
+		$card_str_point = "<input type='radio' name='paymethod' value='' disabled>$card_limit_str 원 미만의 금액은 카드결제를 할 수 없습니다.";
+	}else{//결제액이 카드 결제금액 가능액보다 클때 카드 결제창과 연결
+		if($if_cash_flag == 0){
+			if($card_yes=='t' && $card_module != ""){
+				$pay_how = "bycard";
+				$pay_how_point = "bycard_point";
+				$pay_how_name = "카드결제";
+			}else{
+				$pay_how = "";
+				$pay_how_point = "";
+				$pay_how_name = "카드결제 서비스를 준비중";
+			}
+			$card_str = "<input type='radio' name='paymethod' id='bycard' value='$pay_how' onclick='toggle(document.all.card)'>$pay_how_name";
+			$card_str_point = "<input type='radio' name='paymethod' id='bycard_point' value='$pay_how_point' onclick='toggle(document.all.card_point)'>$pay_how_name + 포인트 결제";
+		}
+	}
+
+	if($mon_tot_freight < $card_limit){
+		$pay1_how_name = "계좌이체";
+		$pay1_str = "<input type='radio' name='paymethod' value='' disabled>$card_limit_str 원 미만의 금액은 계좌이체를 할 수 없습니다.";
+		$pay1_str_point = "<input type='radio' name='paymethod' value='' disabled>$card_limit_str 원 미만의 금액은 계좌이체를 할 수 없습니다.";
+	}else{
+		if($if_cash_flag == 0){//결제액이 계좌이체 결제금액 가능액보다 클때 카드 결제창과 연결
+			if($card_module){
+				$pay1_how = "byaccount";
+				$pay1_how_point = "byaccount_point";
+				$pay1_how_name = "계좌이체";
+			}else{
+				$pay1_how = "";
+				$pay1_how_point = "";
+				$pay1_how_name = "계좌이체 서비스를 준비중";
+			}
+			$pay1_str = "<input type='radio' name='paymethod' id='byaccount' value='$pay1_how' onclick='toggle(document.all.account)'>$pay1_how_name";
+			$pay1_str_point = "<input type='radio' name='paymethod' id='byaccount_point' value='$pay1_how_point' onclick='toggle(document.all.account_point)'>$pay1_how_name  + 포인트 결제";
+		}
+	}
+
+if($status <= 2){ ?>
+                        <!-- 결제정보2 -->
+                        <input type='hidden' name='user_bonus' value='<?=$point_sum?>'>
+                        <input type='hidden' name='user_bonus_str' value='<?=number_format($point_sum)?>'>
+                        <input type='hidden' name='bonus_limit' value='<?=$bonus_limit?>'>
+                        <input type='hidden' name='bonus_limit_str' value='<?=$bonus_limit_str?>'>
+                        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr bgcolor="D2A12E">
+                            <td height="2" colspan="2"></td>
+                          </tr>
+                          <tr>
+                            <td height="2" colspan="2"></td>
+                          </tr>
+                          <tr>
+                            <td width="140" valign="top" bgcolor="F6E6BF"><img src="../image/mypage/cart_title_3.gif" width="140" height="40"></td>
+                            <td><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#FFFFFF">
+                                <!-- 결제금액 -->
+                                <tr>
+                                  <td width="130" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">남은 결제금액</td>
+                                  <td width="420" class="price"><?=number_format($mon_tot_freight-$use_bonus_tot)?> 원</td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+<? if($use_bonus_tot > 0){ ?>
+								<tr>
+                                  <td width="130" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">포인트 사용</td>
+                                  <td><span class="text_orange"> <?=number_format($use_bonus_tot)?> </span>원</td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+<? } ?>
+                                <!-- 결제금액 -->
+                                <?
+if($bonus_ok == 't'){ //관리자가 포인트 사용가능하게 세팅했을 때
+?>
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">포인트</td>
+                                  <td><?=$mem_name?> 님께서 보유한 포인트는 <span class="text_orange"> <?=$point_sum_str?> </span>원 입니다.
+<?
+	if($point_sum >= $bonus_limit)
+	{
+?>
+              <br>
+              사용가능 포인트는 <span class="text_orange">
+              <?=$point_sum_str?>
+              </span>원 입니다.
+              <?
+	}else
+	{
+?>
+              <br>
+              포인트는 <span class="text_orange">
+              <?=$bonus_limit_str?>
+              </span>원 이상 부터 사용가능합니다.
+              <?
+	}
+?>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+}
+
+?>
+                                <!-- 온라인 입금 -->
+                                <tr <? if($paymethod == "byonline_point"||$paymethod == "bycard_point"||$paymethod == "byaccount_point") echo "style='display:none'";?>>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle" colspan="2">온라인입금</td>
+                                  <td><input type='radio' name='paymethod' id="byonline" value='byonline' onclick="toggle(document.all.bank)">온라인입금</td>
+                                </tr>
+                                <tr <? if($paymethod == "byonline_point"||$paymethod == "bycard_point"||$paymethod == "byaccount_point") echo "style='display:none'";?>>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr id="bank" style="display:none">
+                                  <td colspan="2"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#F8F8F8">
+                                      <tr>
+                                        <td width="130" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금계좌</td>
+                                        <td width="420"><select class="input_03" name="account_no">
+                                            <?
+	$bank_sql = "select * from $BankTable where mart_id='$mart_id' and bank_name != '' and bank_number != '' and owner_name != ''";
+	$bank_res = mysql_query($bank_sql, $dbconn);
+	$bank_tot = mysql_num_rows($bank_res);
+	if($bank_tot > 0){
+		echo "<option value='' selected>입금하실 은행</option>";
+		echo "<option value=''>==================</option>";
+		for ($bi=0; $bi<$bank_tot; $bi++){
+			$bank_row = mysql_fetch_array($bank_res);
+			//$account_no = $bank_row[account_no];
+			$bank_name = $bank_row[bank_name];
+			$bank_number = $bank_row[bank_number];
+			$owner_name = $bank_row[owner_name];
+			
+			echo ("<option value='$bank_row[account_no]'>$bank_name $bank_number 예금주 : $owner_name</option>");
+		}
+	}else{
+		echo ("
+			<option value='nobank'>준비중입니다.</option>
+		");
+	}
+?>
+                                          </select>
+                                        </td>
+                                      </tr>
+                                      <?
+	if($money_sender_use < 2){
+?>
+                                      <tr>
+                                        <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금자명</td>
+                                        <td><input type="text" name="money_sender" id="money_sender" class="input_03" size="20" style='ime-mode:active'></td>
+                                      </tr>
+                                      <?
+	}
+?>
+                                      <?
+	if($pay_day_use < 2){
+?>
+                                      <tr>
+                                        <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금 예정일</td>
+                                        <td><input type="text" name="pay_day" id="pay_day" class="input_03" size="20">
+                                            <br>
+                                            (온라인입금시 필수입력, 입력예: 2006-09-01)</td>
+                                      </tr>
+                                      <?
+	}
+?>
+                                  </table></td>
+                                </tr>
+
+                                <!-- 온라인 입금 -->                                
+<?
+	if($card_yes == "t")
+	{
+?>
+                                <!-- 신용카드 -->
+                                <tr <? if($paymethod == "byonline_point"||$paymethod == "bycard_point"||$paymethod == "byaccount_point") echo "style='display:none'";?>>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle" colspan="2"><?=$pay_how_name?></td>
+                                  <td><?=$card_str?></td>
+                                </tr>
+                                <tr <? if($paymethod == "byonline_point"||$paymethod == "bycard_point"||$paymethod == "byaccount_point") echo "style='display:none'";?>>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr id="card" style="display:none">
+                                  <td colspan="2"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#F8F8F8">
+                                      <tr>
+                                        <td width="215"  height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">신용카드</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                  </table></td>
+                                </tr>
+                                <!-- 신용카드 -->
+                                <?
+	}
+?>
+                                <?
+	if($account_yes == "t")
+	{
+?>
+                                <!-- 계좌이체 -->
+                                <tr <? if($paymethod == "byonline_point"||$paymethod == "bycard_point"||$paymethod == "byaccount_point") echo "style='display:none'";?>>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle" colspan="2"><?=$pay1_how_name?></td>
+                                  <td><?=$pay1_str?></td>
+                                </tr>
+                                <tr <? if($paymethod == "byonline_point"||$paymethod == "bycard_point"||$paymethod == "byaccount_point") echo "style='display:none'";?>>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr id="account" style="display:none">
+                                  <td colspan="2"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#F8F8F8">
+                                      <tr>
+                                        <td width="215" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">계좌이체</td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                  </table></td>
+                                </tr>
+                                <!-- 계좌이체 -->
+                                <?
+	}
+?>
+<?
+//}
+?>
+                                <?
+	if( $MemberName && $bonus_ok == 't' && $point_sum > 0){   // 보유 포인트가 사용가능 포인트 보다 많을때, 회원 구매시만 포인트 사용 가능
+?>
+                                <!-- 온라인입금 + 포인트결제 -->
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle" colspan="2">온라인입금 + 포인트결제</td>
+                                  <td><input type='radio' name='paymethod' id="byonline_point" value='byonline_point' onclick="toggle(document.all.bank_point)">온라인입금 + 포인트결제</td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr id="bank_point" style="display:none">
+                                  <td colspan="2"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#F8F8F8">
+                                      <?
+	if($bonus_ok == 't'){ //관리자가 포인트 사용가능하게 세팅했을 때
+?>
+                                      <tr>
+                                        <td width="130" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">포인트사용</td>
+                                        <td width="420">사용가능한 포인트 <span class="text_orange">
+                                          <?=$point_sum_str?>
+                                          </span>원중
+                                          <input type="text" name='use_bonus_tot' id="use_bonus_tot" class="input_03" value="" size="8" onkeypress="isNumber();"> 원을 사용합니다.</td>
+                                      </tr>
+                                      <?
+}
+?>
+                                      <tr>
+                                        <td width="135" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금계좌</td>
+                                        <td><select class="input_03" name="account_no1">
+                                            <?
+	$bank_sql = "select * from $BankTable where mart_id='$mart_id' and bank_name != '' and bank_number != '' and owner_name != ''";
+	$bank_res = mysql_query($bank_sql, $dbconn);
+	$bank_tot = mysql_num_rows($bank_res);
+	if($bank_tot > 0){
+		echo "<option value='' selected>입금하실 은행</option>";
+		echo "<option value=''>==================</option>";
+		for ($bi=0; $bi<$bank_tot; $bi++){
+			$bank_row = mysql_fetch_array($bank_res);
+			//$account_no = $bank_row[account_no];
+			$bank_name = $bank_row[bank_name];
+			$bank_number = $bank_row[bank_number];
+			$owner_name = $bank_row[owner_name];
+			
+			echo ("<option value='$bank_row[account_no]'>$bank_name $bank_number 예금주 : $owner_name</option>");
+		}
+	}else{
+		echo ("
+			<option value='nobank'>준비중입니다.</option>
+		");
+	}
+?>
+                                          </select>
+                                        </td>
+                                      </tr>
+                                      <?
+	if($money_sender_use < 2){
+?>
+                                      <tr>
+                                        <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금자명</td>
+                                        <td><input type="text" name="money_sender1" class="input_03" size="20" style='ime-mode:active'></td>
+                                      </tr>
+                                      <?
+	}
+?>
+                                      <?
+	if($pay_day_use < 2){
+?>
+                                      <tr>
+                                        <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">입금 예정일</td>
+                                        <td><input type="text" name="pay_day1" class="input_03" size="20">
+                                            <br>
+                                            (온라인입금시 필수입력, 입력예: 2006-09-01)</td>
+                                      </tr>
+                                      <?
+	}
+?>
+                                  </table></td>
+                                </tr>
+<?
+//}
+?>
+                                <!-- 온라인입금 + 포인트결제 -->
+                                <?
+if($bonus_ok == 't' && $card_yes == 't'){ //관리자가 포인트 사용가능하게 세팅했을 때
+?>
+                                <!-- 신용카드 + 포인트결제 -->
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle" colspan="2"><?=$pay_how_name?> + 포인트 결제</td>
+                                  <td><?=$card_str_point?></td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr id="card_point" style="display:none">
+                                  <td colspan="2"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#F8F8F8">
+                                      <tr>
+                                        <td width="130" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">포인트사용</td>
+                                        <td width="420">사용가능한 포인트 <span class="text_orange">
+                                          <?=$point_sum_str?>
+                                          </span>원중
+                                          <input type="text" name='use_bonus_tot1' class="input_03" value="" size="8" onkeypress="isNumber();" id="obj_name"> 원을 사용합니다.</td>
+                                      </tr>
+                                  </table></td>
+                                </tr>
+                                <!-- 신용카드 + 포인트결제 -->
+                                <?
+}
+?>
+                                <?
+if($bonus_ok == 't' && $account_yes == 't'){ //관리자가 포인트 사용가능하게 세팅했을 때
+?>
+                                <!-- 계좌이체 + 포인트결제 -->
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle" colspan="2"><?=$pay1_how_name?> + 포인트 결제</td>
+                                  <td><?=$pay1_str_point?></td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr id="account_point" style="display:none">
+                                  <td colspan="2"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#F8F8F8">
+                                      <tr>
+                                        <td width="130" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">포인트사용</td>
+                                        <td width="420">사용가능한 포인트 <span class="text_orange">
+                                          <?=$point_sum_str?>
+                                          </span>원중
+                                          <input type="text" name='use_bonus_tot2' id="use_bonus_tot2" class="input_03" value="" size="8" onkeypress="isNumber();"> 원을 사용합니다.</td>
+                                      </tr>
+                                  </table></td>
+                                </tr>
+                                <!-- 계좌이체 + 포인트결제 -->
+                                <?
+}
+?>
+                                <?
+if( ($point_sum >= $mon_tot_freight) && $MemberName && $bonus_ok == 't' ){   // 보유 포인트가 총결제금액 보다 많을때, 회원 구매시만 포인트결재 사용 가능
+?>
+                                <!-- only 포인트결제 -->
+                                <tr>
+                                  <td height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle" colspan="2">포인트결제</td>
+                                  <td><input type='radio' name='paymethod' id="bypoint" value='bypoint' onclick="toggle(document.all.only_point)">포인트결제</td>
+                                </tr>
+                                <tr>
+                                  <td width="80" height="1" bgcolor="#FFFFFF"></td>
+                                  <td height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <tr id="only_point" style="display:none">
+                                  <td colspan="2"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bgcolor="#F8F8F8">
+                                      <tr>
+                                        <td width="130" height="30" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">포인트사용</td>
+                                        <td width="420">사용가능한 포인트 <span class="text_orange">
+                                          <?=$point_sum_str?>
+                                          </span>원중
+                                          <input type="text" name='use_bonus_tot3' id="use_bonus_tot3" class="input_03" value="" size="8" onkeypress="isNumber();"> 원을 사용합니다.</td>
+                                      </tr>
+                                  </table></td>
+                                </tr>
+<?
+}
+?>
+                                <!-- only 포인트결제 -->
+<?
+}  // 보유 포인트가 사용가능 포인트 보다 많을때, 회원 구매시만 포인트 사용 가능
+?>
+                            </table></td>
+                          </tr>
+                        </table>
+                        <!---------------------- 쇼핑가이드 시작 ----------------------->
+                        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td height="10"></td>
+                          </tr>
+                          <tr>
+                            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td width="10" height="10"><img src="../image/table1_1.gif" width="10" height="9"></td>
+                                  <td bgcolor="F4F4F4"></td>
+                                  <td width="10"><img src="../image/table1_2.gif" width="9" height="10"></td>
+                                </tr>
+                                <tr bgcolor="F4F4F4">
+                                  <td></td>
+                                  <td><table width="100%"  border="0" cellspacing="10" cellpadding="0">
+                                      <tr>
+                                        <td width="110" valign="top"><img src="../image/guide.gif" width="110" height="90"></td>
+                                        <td bgcolor="#FFFFFF"><table width="98%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                              <td width="100" height="23" class="text_blue_s">안심클릭카드결제</td>
+                                              <td class="search_type">삼성,LG,외환,현대(다이너스). 신한, 하나, 롯데(아멕스), 한미, 수협, 전북, 제주, 시티 </td>
+                                            </tr>
+                                            <tr>
+                                              <td height="23" class="text_blue_s">ISP카드결제</td>
+                                              <td class="search_type">국민, BC, 우리</td>
+                                            </tr>
+                                            <tr>
+                                              <td height="23" class="text_blue_s">기타카드결제</td>
+                                              <td class="search_type">기타신용카드 (광주, 평화 등) </td>
+                                            </tr>
+                                            <!-- 계좌이체 
+											<tr>
+                                              <td height="23" class="text_blue_s">계좌이체</td>
+                                              <td class="search_type">인터넷상에서 실시간으로 계좌이체하는 것입니다.</td>
+                                            </tr>
+											계좌이체 -->
+                                            <tr>
+                                              <td height="23" colspan="2" class="text_orange">안심클릭카드, ISP카드외에 다른카드는 무이자할부가 되지않습니다.</td>
+                                            </tr>
+                                            <!-- 계좌이체 
+											<tr>
+                                              <td height="23" colspan="2" class="text_orange">계좌이체는 최소금액이 10,000원 이상부터 가능합니다.</td>
+                                            </tr>
+											계좌이체 -->
+                                        </table></td>
+                                      </tr>
+                                  </table></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <td height="10"><img src="../image/table1_4.gif" width="9" height="10"></td>
+                                  <td bgcolor="F4F4F4"></td>
+                                  <td><img src="../image/table1_3.gif" width="10" height="9"></td>
+                                </tr>
+                            </table></td>
+                          </tr>
+                          <tr>
+                            <td height="10"></td>
+                          </tr>
+                        </table>
+                        <!---------------------- 쇼핑가이드 끝 ---------------------->
+<? 
+	} 
+?>
+						<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td height="70" align="center"><input type="image" src="../image/bu_infomodify.gif" width="140" height="50">
+                                <img src="../image/bu_cancel.gif" width="100" height="50" border="0" onClick="history.back();" style="cursor:hand;"></a> </td>
+                          </tr>
+                        </table>
+                      </form>
+                      <p>&nbsp;</p></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+	if($paymethod == "byonline")
+	{
+?>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+	document.all.byonline.checked = true;
+	document.all.byonline.fireEvent("onclick");
+	document.all.account_no.value = "<?=$account_no?>";
+	document.all.money_sender.value = "<?=$money_sender?>";
+	document.all.pay_day.value = "<?=$pay_day?>";
+<?
+	if($UnameSess)
+	{
+?>
+	document.all.account_no1.value = "<?=$account_no?>";
+	document.all.money_sender1.value = "<?=$money_sender?>";
+	document.all.pay_day1.value = "<?=$pay_day?>";
+<?
+	}
+?>
+//-->
+</SCRIPT>
+<?
+	}else if($paymethod == "byonline_point"){
+?>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+	if(document.getElementById("byonline_point") != null)
+	{
+		document.all.byonline_point.checked = true;
+		document.all.byonline_point.fireEvent("onclick");
+		document.all.account_no1.value = "<?=$account_no?>";
+		document.all.money_sender1.value = "<?=$money_sender?>";
+		document.all.pay_day1.value = "<?=$pay_day?>";
+	}
+//-->
+</SCRIPT>
+<?
+	}else if($paymethod == "bycard"){
+?>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+	if(document.getElementById("bycard") != null)
+	{
+		document.all.bycard.checked = true;
+		document.all.bycard.fireEvent("onclick");
+	}
+//-->
+</SCRIPT>
+<?
+	}else if($paymethod == "bycard_point"){
+?>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+	if(document.getElementById("bycard_point") != null)
+	{
+		document.all.bycard_point.checked = true;
+		document.all.bycard_point.fireEvent("onclick");
+	}
+//-->
+</SCRIPT>
+<?
+	}
+?>
+<?
+mysql_close($dbconn);
+?>

@@ -1,0 +1,297 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$m_sql = "select * from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+$m_res = mysql_query($m_sql, $dbconn);
+$m_tot = mysql_num_rows($m_res);
+if($m_tot < 1){
+	echo ("		
+		<script>
+		window.alert('회원전용 공간입니다.');
+		parent.location.href='../member/login.html?url=$url';
+		</script>
+	");
+	exit;
+}
+?>
+<?
+//========================= 지급될 쿠폰이 있으면 정보를 불러옴 ===========================
+$sql = "select * from $TicketTable where t_title='$t_title'";
+$res = mysql_query( $sql, $dbconn );
+$tot = mysql_num_rows( $res );
+if( $tot > 0 ){
+	$row = mysql_fetch_array($res);
+	$t_money = number_format($row[t_money]);
+	if( $res ){
+		mysql_free_result( $res );
+	}
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<body>
+<a name="top"></a>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+<?
+include "../include/top2.htm";
+?>
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="30" height="70" valign="top" background="../../image/left_bg.gif">
+<!---------------------- Left Banner 시작 ----------------------------------------------->
+<?
+include "../include/banner_left.htm";
+?>
+<!---------------------- Left Banner 끝 ------------------------------------------------->
+		</td>
+		<td width="180" valign="top">
+<!---------------------- 2차 카테고리 시작 ---------------------------------------------->
+			<table width="180"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+        			<td><img src="../../image/product/category_title.gif" width="180" height="55"></td>
+        		</tr>
+        		<tr>
+        			<td height="25" align="center" valign="top" background="../../image/product/category_bg.gif">
+<?
+include "../include/menuselect.htm";
+?>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="160" border="0" align="center" cellpadding="0" cellspacing="0">
+							<tr>
+								<td height="10" ></td>
+							</tr>
+<?
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+if( !$category_num ){
+	$category_num = "6";
+}
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='$category_num' and if_hide='0' order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+$total_cate = mysql_num_rows($res_cate);
+$i = "0";
+while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	$i++;
+?>
+							<tr>
+								<td class="category_2"><img src="../../image/product/category_icon.gif" width="20" height="24" align="absmiddle"><a href="../main/product_list2.html?category_num=<?=$category_num?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a></td>
+							</tr>
+<?
+	if( $i < $total_cate ){
+?>
+							<tr>
+								<td height="1" bgcolor="E5E5E5"></td>
+							</tr>
+<?
+	}
+?>
+<?
+}
+?>
+						</table>
+					</td>
+        		</tr>
+        	</table>
+<!---------------------- 2차 카테고리 끝 ------------------------------------------------>
+<!---------------------- 공지사항 시작 -------------------------------------------------->
+ 		    <table width="160"  border="0" align="center" cellpadding="0" cellspacing="0">
+            	<tr>
+            		<td height="10" ></td>
+           		</tr>
+            	<tr>
+            		<td height="1" bgcolor="DEDEDE"></td>
+           		</tr>
+            	<tr>
+            		<td height="30"><img src="../../image/notice_title.gif" width="80" height="20"></td>
+            	</tr>
+            	<tr>
+            		<td height="1" bgcolor="DEDEDE"></td>
+           		</tr>
+            	<tr>
+            		<td height="3" bgcolor="F0F0F0"></td>
+           		</tr>
+            	<tr>
+            		<td height="5"></td>
+           		</tr>
+<?
+//================== 공지사항 ============================================================
+$today = date("Ymd");
+$notice_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 4";
+$notice_res = mysql_query($notice_sql, $dbconn);
+$notice_tot = mysql_num_rows( $notice_res );
+?>
+<?
+if( $total4 == "0" ){
+?>
+            	<tr>
+            		<td height='30' align='center'>등록된 공지사항이 없습니다.</td>
+           		</tr>
+<?
+}
+?>
+<?
+while( $notice_row = mysql_fetch_array($notice_res) ){
+	$notice_no = $notice_row[index_no];
+	$notice_title = $notice_row[subject_new];
+	$notice_title = han_cut($notice_title,28);
+?>
+            	<tr>
+            		<td height="20" class="notice"><img src="../../image/icon_1.gif" width="15" height="9" align="absmiddle"><a href='../board/board_read.php?index_no=<?=$notice_no?>&bbs_no=1&mart_id=<?=$mart_id?>'><?=$notice_title?></a></td>
+           		</tr>
+<?
+}
+if( $notice_res ){
+	mysql_free_result( $notice_res );
+}
+?>
+            </table>
+<!---------------------- 공지사항 끝 ---------------------------------------------------->	<!---------------------- 퀵아이콘 시작 -------------------------------------------------->
+<?
+include "../include/quick.htm";
+?>
+<!---------------------- 퀵아이콘 끝 ---------------------------------------------------->	<!---------------------- 배너 시작 ------------------------------------------------------>
+<?
+include "../include/left_banner.htm";
+?>
+<!---------------------- 배너 끝 -------------------------------------------------------->
+		</td>
+		<td valign="top" >
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+        			<td background="../../image/body_bg.gif">
+<!---------------------- 검색 시작 ------------------------------------------------------>
+<?
+include "../include/search.htm";
+?>
+<!---------------------- 검색 끝 -------------------------------------------------------->
+<!---------------------- 현재위치 시작 -------------------------------------------------->
+                        <table width="750" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td height="10" colspan="3"></td>
+                          </tr>
+                          <tr>
+                            <td width="10"></td>
+                            <td width="120" ><img src="../image/mypage/title.gif" width="120" height="30"></td>
+                            <td background="../image/title_bg.gif" valign="bottom" align="right"class="navi"><img src="../image/icon_2.gif" width="15" height="9"><a href="../../.">매장</a> &gt; <a href='../mypage/.'>마이페이지</a> &gt; <a href="<?=$PHP_SELF?>">포인트받기</a> </td>
+                            <td width="10"><img src="../image/title_right.gif" width="10" height="30"></td>
+                            <td align="right"  width="85"> <img src="../image/prepage.gif" width="80" height="20" align="absmiddle" style="cursor:hand;" onclick="javascript:history.go(-1)"></td>
+                          </tr>
+                        </table>                      
+<!---------------------- 현재위치 끝 ---------------------------------------------------->
+<!---------------------- 메뉴 시작 ------------------------------------------------------>
+						<table width="750" border="0" cellspacing="0" cellpadding="0"> 
+							<tr> 
+								<td width="10"></td> 
+								<td width="130"><img src="../image/mypage/title_img.gif" width="130" height="60"></td> 
+								<td align="right" background="../image/mypage/title_bg.gif">
+									<table  border="0" cellspacing="0" cellpadding="0"> 
+										<tr> 
+											<td><a href='../mypage/update.html?mart_id=<?=$mart_id?>'><img src="../image/mypage/bu_01.gif" width="80" height="30" border="0"></a></td> 
+											<td><a href='../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>'><img src="../image/mypage/bu_02.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/wish.html"><img src="../image/mypage/bu_03.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../stat/order.html"><img src="../image/mypage/bu_04.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/send.html"><img src="../image/mypage/bu_05.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/point.html"><img src="../image/mypage/bu_06.gif" width="70" height="30" border="0"></a></td> 
+											<td><a href="../mypage/out.html"><img src="../image/mypage/bu_07.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/coupon.html"><img src="../image/mypage/bu_08_on.gif" width="60" height="30" border="0"></a></td> 
+										</tr> 
+									</table>
+								</td> 
+								<td width="10"><img src="../image/mypage/title_end.gif" width="10" height="60"></td> 
+							</tr> 
+						</table> 
+<!---------------------- 메뉴 끝 -------------------------------------------------------->							</td> 
+				</tr> 
+				<tr> 
+					<td bgcolor="#409FD0"><img src="../image/mosuri.gif" width="10" height="10"></td> 
+				</tr> 
+			</table> 
+<!---------------------- 쿠폰받기 시작 -------------------------------------------------->
+			<table width="750"  border="0" cellspacing="0" cellpadding="0"> 
+				<tr> 
+					<td height="2"></td> 
+					<td></td> 
+				</tr> 
+				<tr> 
+					<td width="10"></td> 
+					<td width="740" height="90"><img src="../image/mypage/subtitle_8.gif" width="450" height="70"></td> 
+				</tr> 
+				<tr> 
+					<td></td> 
+					<td>
+<!---------------------- 쿠폰 내용 시작 ------------------------------------------------->
+						<br> 
+						<table width="95%"  border="0" align="center" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="180"><img src="../image/mypage/point.jpg" width="170" height="220"></td>
+								<td>
+									<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="20">저희 <span class="sitemap1"><?=$mart_id?></span>을(를) 이용 해주셔서 감사합니다. </td>
+										</tr>
+										<tr>
+											<td height="20"><?=$MemberName?>님 고객께서 전환하신 포인트 금액은 <span class="price"><?=$t_money?>원</span>입니다. </td>
+										</tr>
+										<tr>
+											<td height="20">필요하시고 마음에 드시는 제품으로 구매하세요. 즐거운 쇼핑 되시길 바랍니다.</td>
+										</tr>
+										<tr>
+											<td height="15"></td>
+										</tr>
+										<tr>
+											<td height="5" bgcolor="E9E9E9"></td>
+										</tr>
+										<tr>
+											<td height="15"></td>
+										</tr>
+										<tr>
+											<td>불편한 점이나 문의사항은 <span class="sitemap1"><?=$mart_id?></span> 고객센터로 전화를 주시거나 게시판에 글을 남겨주십시오. </td>
+										</tr>
+										<tr>
+											<td height="20">빠른 시간 안에 처리해 들리겠습니다.</td>
+										</tr>
+										<tr>
+											<td>(단, 고객께서 전환하신 포인트 금액은 6개월 안에 사용하셔야 하며, 그 시간이 경과하면 포인트 금액은 소진되어 사용 할 수가 없으니 이점을 꼭 인지 하시고 <br>저희 <span class="sitemap1"><?=$mart_id?></span> 을 이용 하실 때 불편한 점이 없도록 하시길 바랍니다.) </td>
+										</tr>
+										<tr>
+											<td height="20">즐거운 쇼핑 되시길 바랍니다. 감사합니다.</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+                        </table>
+<!---------------------- 쿠폰 끝 -------------------------------------------------------->
+<!---------------------- 버튼 시작 ------------------------------------------------------>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0"> 
+							<tr> 
+								<td height="70" align="center"><img src="../image/bu_ok.gif" width="100" height="50" border="0" onfocus='blur();' style='cursor:hand' onclick="location.href='../mypage/point.html'"></td> 
+							</tr> 
+					  </table> 
+<!---------------------- 버튼 끝 --------------------------------------------------------> 
+					</td> 
+				</tr>
+			</table> 
+<!---------------------- 쿠폰받기 끝 ----------------------------------------------------> 
+		</td>
+	</tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

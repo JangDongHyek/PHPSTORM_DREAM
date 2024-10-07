@@ -1,0 +1,75 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+if( !$UnameSess ){
+	echo("
+		<script>
+		window.alert('찜하기는 회원 전용공간입니다. \\n로그인을 하셔야 합니다.');
+		</script>
+	");
+	exit;
+}
+
+//============= 이미 등록되었는지 검사함 =================================================
+$sql1 = "select * from $Pre_SelectTable where mart_id='$mart_id' and id='$UnameSess' and item_no='$item_no'";
+$res1 = mysql_query($sql1, $dbconn);
+$tot1 = mysql_num_rows($res1);
+
+if( $tot1 != 0 ){
+	echo("
+		<script>
+		window.alert('이미 찜되어 있습니다');
+		self.close();
+		</script>
+	");
+	exit;
+}
+//============= 최고 pre_no 값에 1을 더함 ================================================
+$sql2 = "select max(pre_no), count(*) from $Pre_SelectTable";
+$res2 = mysql_query($sql2, $dbconn);
+if (mysql_result($res2,0,1) > 0){ 
+	$maxPre_no = mysql_result($res2, 0, 0);
+	$maxPre_no = $maxPre_no + 1;
+}else{
+	$maxPre_no = 0;
+}
+$write_date = date("Ymd H:i:s");
+
+$sql = "insert into $Pre_SelectTable (pre_no, mart_id, id, write_date, item_no, provider_id) ".
+"values ($maxPre_no, '$mart_id', '$UnameSess', '$write_date', '$item_no', '$provider_id')";
+$result = mysql_query($sql, $dbconn);
+
+if( $result ){
+	echo("
+		<script>
+		window.alert('찜한 상품은 마이페이지 WishList에서 확인할 수 있습니다.');
+		self.close();
+		</script>
+	");
+	exit;
+}else{
+	echo("
+		<script>
+		window.alert('찜하기에 실패했습니다.');
+		self.close();
+		</script>
+	");
+	exit;
+}
+
+echo "<meta http-equiv='refresh' content='0; URL=../mypage/mypage3.php?mart_id=$mart_id'>";
+exit;
+
+if( $result1 ){
+	mysql_free_result( $result1 );
+}
+if( $result3 ){
+	mysql_free_result( $result3 );
+}
+mysql_close( $dbconn );
+
+?>

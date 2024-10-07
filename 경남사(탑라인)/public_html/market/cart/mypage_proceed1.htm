@@ -1,0 +1,664 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<script language="javascript">
+function CouponWin(pid){ // 쿠폰사용 할 수 있는 창을 오픈함 
+	var url = "http://www.mocoupon.co.kr/onlineShop/useCoupon.php?_PID="+pid+"&_SHOPID=<?=$mart_id?>&_SHOPGROUP=bluecart&url=<?=$url?>";
+	window.open(url,'Coupon','scrollbars=no,toolbar=no,location=no,directories=no,width=280,height=180,resizable=no,mebar=no,left=250,top=65');
+}
+
+function UseCoupon(pid,cpntype,rate){  // 쿠폰 사용창에서 결과를 호출할 때 사용
+	//alert("PID:"+pid+", CPNTYPE:"+cpntype+", RATE:"+rate); // 예시 : 제대로 쿠폰사용정보를 받는지 보기위한 것임. Cpntype 1:정율 2:정액 3:사은품, rate : 할인율/할인금액/사은품내역
+
+	// 받은 정보를 가공하여 상품가격을 변경시키는 루틴삽입, 각 사이트마다
+	// 자신의 사이트에 맞는 방법을 사용
+	//window.location.href='cart_in.php?mart_id=<?=$mart_id?>&flag=coupon_update&item_no='+pid+'&cpntype='+cpntype+'&rate='+rate;
+}
+</script>
+<script>
+function next_send(f){
+	var f = document.form1
+	f.submit();
+}
+
+function go_order_sheet(){
+	var f = document.form1
+	f.submit();	//window.location.href='order.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>'
+}
+function really(){
+	if(confirm("삭제하시겠습니까?")) return true;
+	else return false;
+}
+
+function re_count(f){
+	var f = document.form1
+	var Digit = '1234567890'
+	
+	if(f.quantityid.length == null){
+		if (f.quantityid.value==""){
+			alert("수량을 입력하세요");
+			f.quantityid.focus();
+			return;
+		}
+		else{
+			var len =f.quantityid.value.length;
+			var ret;
+			ret =false;		
+			for(var i=0;i<len;i++){
+				var ch = f.quantityid.value.substring(i,i+1);
+				
+				for (var k=0;k<=Digit.length;k++){				
+					if(Digit.substring(k,k+1) == ch)
+					{					
+						ret = true;
+						break;					
+					}
+				}	
+				
+				if (!ret){
+						alert("숫자만 입력 하세요");
+						f.quantityid.focus();
+						return false;
+				}
+				ret = false;
+			}	
+		}
+		
+		if(f.quantityid.value <= 0){
+			f.quantityid.focus();
+    	alert("1이상의 값을 입력하세요.");
+    	return;
+    }	
+	}
+	else{
+		for(i=0;i<f.quantityid.length;i++){
+	  	
+	  	if (f.quantityid[i].value==""){
+				alert("수량을 입력하세요");
+				f.quantityid[i].focus();
+				return;
+			}
+			else{
+				var len =f.quantityid[i].value.length;
+				var ret;
+				ret =false;		
+				for(var j=0;j<len;j++){
+					var ch = f.quantityid[j].value.substring(j,j+1);
+					
+					for (var k=0;k<=Digit.length;k++){				
+						if(Digit.substring(k,k+1) == ch)
+						{					
+							ret = true;
+							break;					
+						}
+					}	
+					
+					if (!ret){
+							alert("숫자만 입력 하세요");
+							f.quantityid[i].focus();
+							return false;
+					}
+					ret = false;
+				}	
+			}
+			
+	  	
+	  	if(f.quantityid[i].value <= 0){
+	    	f.quantityid[i].focus();
+	    	alert("1이상의 값을 입력하세요.");
+	      return;
+	    }
+	 	}
+	}
+	f.action = "cart_in.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>";
+	f.mode.value="update";
+	f.submit();
+}
+
+function cart_del(f){
+	var f = document.form1;
+	var msg = "장바구니를 비우시겠습니까?";
+	if (confirm(msg)==false){
+		return;
+	}else{
+		window.location.href='cart_in.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>&mode=cart_del';
+	}
+
+}
+function pur_limit_warn(t){
+	alert(t+"원 이하는 주문접수가 되지 않습니다.");
+	return;	
+}
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top">&nbsp;</td>
+        <td width="888" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top" background="../images/menu_bg.gif">	
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------> </td>
+                    <td height="100%" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="D4CFC3">
+                                  <tr>
+                                    <td height="25" bgcolor="EAE6E2"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td><img src="../images/proudct/product_info_title_icon.gif" width="13" height="13" align="absmiddle" /> <span class="category_title2">마이페이지</span></td>
+                                          <td><div align="right">페이지 경로 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5" valign="top"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" background="../images/table_bg/table_bg.gif">
+                                    <tr>
+                                      <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                          <tr>
+                                            <td width="220"><img src="../images/mypage/mypage_img1.jpg" width="169" height="66" /></td>
+                                            <td><div align="right">
+                                                <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                  <tr>
+                                                    <td background="../images/mypage/mypage_menu_bg.gif"><textarea name="textarea" cols="0" rows="0" id="txtResource id #1" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="460" height="66">
+              <param name="movie" value="../swf/mypage_menu.swf?pageNum=2">
+              <param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="menu" value="false" />
+              <embed src="../swf/mypage_menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="460" height="66"></embed>
+            </object>
+                    </textarea>
+                                                        <script>printEmbed("txtResource id #1")</script>                                                    </td>
+                                                  </tr>
+                                                </table>
+                                            </div></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="8"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td width="7"><img src="../images/mypage/order_view_1.gif" width="7" height="58" /></td>
+                                            <td background="../images/mypage/order_view_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title1_over.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title2.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title3.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title4.gif" width="101" height="18" /></div></td>
+                                                </tr>
+                                            </table></td>
+                                            <td width="7"><img src="../images/mypage/order_view_2.gif" width="7" height="58" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="57"><img src="../images/mypage/baguni_title1.gif" width="504" height="30" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><div align="center">
+
+
+
+
+
+
+
+
+
+
+<table width="680"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="680">
+                            <!---------------------- 장바구니 테이블 시작 ------------>
+                            <?
+if($order_num){
+	$cart_sql = "select * from $Order_ProTable where mart_id='$mart_id' and order_num='$order_num' and status = '0' order by order_pro_no desc";
+	$cart_res = mysql_query($cart_sql, $dbconn);
+	$cart_tot = mysql_num_rows($cart_res);
+}else{
+	$cart_tot = 0;
+}
+if($cart_tot > 0){
+?>
+                            <form id='form1' action='order.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>' name='form1'>
+                              <input type='hidden' name='mode'>
+                              <input type='hidden' name='item_no' value='<?=$item_no?>'>
+                              <table width="100%"  border="0" cellpadding="0" cellspacing="1" bgcolor="#FFFFFF">
+                                <tr bgcolor="E38E87">
+                                  <td height="1" colspan="6"></td>
+                                </tr>
+                                <tr align="center" bgcolor="FBEFEE">
+                                  <td class="mypage_1" height="30">상품</td>
+                                  <td width="80" class="mypage_1">가격</td>
+                                  <td width="50" class="mypage_1">수량</td>
+                                  <td width="80" class="mypage_1">합계</td>
+                                  <td width="" class="mypage_1">배송정보</td>
+                                  <td width="50" class="mypage_1">삭제</td>
+                                </tr>
+                                <?
+	$mon_tot = 0;
+	$i = 0;
+	while($cart_row = mysql_fetch_array($cart_res)){
+		$i++;
+		$order_pro_no = $cart_row[order_pro_no];
+		$mart_id = $cart_row[mart_id];
+		$item_no_coupon = $cart_row[item_no];
+		if($i == 0){
+			$item_no_tmp = $cart_row[item_no]; //제일 나중 구매한 상품
+		}
+
+		$item_name = $cart_row[item_name];
+		$opt = $cart_row[opt];
+		$z_price = $cart_row[z_price];
+		$bonus = $cart_row[bonus];
+		$coupon_used = $cart_row[coupon_used];
+		$item_no_forcash = $cart_row[item_no];
+	
+		$z_price_str = number_format($z_price);
+		$bonus_str = number_format($bonus);
+		
+		$use_bonus = $cart_row[use_bonus];
+		$status = $cart_row[status];
+		$quantity = $cart_row[quantity];
+		$sum = $z_price*$quantity;
+		
+		$sum_str = number_format($sum);	
+		$mon_tot += $sum;
+		
+		$cart_sql1 = "select * from $ItemTable where item_no='$item_no_coupon'";
+		$cart_res1 = mysql_query($cart_sql1, $dbconn);
+		$cart_row1 = mysql_fetch_array($cart_res1);
+
+		$prevno = $cart_row1[prevno];
+		$cate_num = $cart_row1[category_num];
+		$use_coupon = $cart_row1[use_coupon];
+		$provider_id = $cart_row1[provider_id];
+		$img_sml = $cart_row1[img_sml];
+		$img = $cart_row1[img];
+		$img_big = $cart_row1[img_big];
+		$img_high = $cart_row1[img_high];
+		$fee = $cart_row1[fee];
+		if($fee == "무료배송" || $fee == "착불")
+			$freight_free = true;
+			
+		$short_explain = $cart_row1[short_explain];
+		$short_explain = han_cut($short_explain,28);
+
+		//============================== 상점명을 가져옴 =====================================
+		$me_sql = "select * from $MemberTable where mart_id='$mart_id'";
+		$me_res = mysql_query($me_sql, $dbconn);
+		$me_row = mysql_fetch_array($me_res);
+		$in_name = $me_row[name];
+		$me_delivery = $me_row[me_delivery];
+		$me_delivery_price = number_format($me_row[me_delivery_price]);
+		if( $fee == "착불" ){
+			$me_delivery_str = "$fee (배송업체 : $me_delivery / 비용 : $me_delivery_price)";
+		}else{
+			$me_delivery_str = "$fee";
+		}
+		
+		if($use_coupon == '1' && $coupon_used=='0'){ 
+			$coupon_str = "<a href=\"javascript:CouponWin('$item_no_coupon')\"><img src='http://www.mocoupon.co.kr/onlineShop/img/button-u8.gif' border='0'></a>";	
+		}else{
+			$coupon_str = '';
+		}
+	  
+		$if_cash_str = '';
+		$SQL_T = "select if_cash,mart_id from item where item_no='$item_no_forcash'";
+		$dbresult_T = mysql_query($SQL_T, $dbconn);
+		$if_cash = mysql_result($dbresult_T,0,0);
+		$mart_id_tmp = mysql_result($dbresult_T,0,1);
+		
+		if($mart_id == $mart_id_tmp){
+			if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' width='46' height='15' absalign='middle'>";
+		}
+		else{
+			$SQL_T = "select if_cash from gnt_item where seller_id='$mart_id' and item_no='$item_no_forcash'";
+			$dbresult_T = mysql_query($SQL_T, $dbconn);
+			$numRows_T = mysql_num_rows($dbresult_T);
+			if($numRows_T > 0)
+			$if_cash = mysql_result($dbresult_T,0,0);
+			if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' width='46' height='15' absalign='middle'>";
+		}
+
+		//============================ 상품 이미지 =======================================
+		if($img_sml != "" && file_exists("$Co_img_UP$mart_id/$img_sml")){
+			if (strstr(strtolower(substr($img_sml,-4)),'.jpg') || strstr(strtolower(substr($img_sml,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_sml' border='0' width='50' height='50' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_sml,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_sml' width='50' height='50'></embed>";
+			}
+		}else if($img != "" && file_exists("$Co_img_UP$mart_id/$img")){
+			if (strstr(strtolower(substr($img,-4)),'.jpg') || strstr(strtolower(substr($img,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img' border='0' width='50' height='50' border='0'>";
+			}
+			if (strstr(strtolower(substr($img,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img' width='50' height='50'></embed>";
+			}
+		}else if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+			if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_big' border='0' width='50' height='50' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_big,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_big' width='50' height='50'></embed>";
+			}
+		}else{
+			$img_str = "<img src='../image/noimage_ss.gif' border='0' width='50' height='50' border='0'>";
+		}
+?>
+                                <input type='hidden' name='order_pro_no[]' value='<?=$order_pro_no?>'>
+                                <tr>
+                                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="5">
+                                      <tr>
+                                        <td width="70" valign="top"><table width="60" height="60" border="0" align="center" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                              <td align="center" background="../image/product/product_back.gif"><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no_forcash?>'>
+                                                <?=$img_str?>
+                                              </a></td>
+                                            </tr>
+                                        </table></td>
+                                        <td><span class="text_red"><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no_forcash?>'>[
+                                                <?=$item_name?>
+                                                ]</a></span>
+                                            <?=$if_cash_str?>
+                                            <?=$coupon_str?>
+                                            <br>
+                                            <span class="text_14_s2">
+                                            <?=$short_explain?>
+                                            </span>
+                                            <?
+	if(isset($opt)&&$opt!=""&&$opt!="!!"){
+?>
+                                            <br>
+                                            옵션:
+                                            <?
+		$opts = explode("!", $opt);
+
+		if(strstr($opts[0],'^'))
+			$opts_1 = explode("^", $opts[0]);
+		else $opts_1[0] = $opts[0];
+		
+		if($opts_1[0] != "")
+			echo "$opts_1[0]";
+		if($opts_1[1] != "")
+			echo "($opts_1[1] 원)&nbsp;";
+		if($opts[1] != "")
+			echo "$opts[1]&nbsp;";
+		if($opts[2] != "")
+			echo "$opts[2]";
+		}
+?>
+                                        </td>
+                                      </tr>
+                                  </table></td>
+                                  <td align="center"><?=$z_price_str?>
+                                    원</td>
+                                  <td align="center"><input type="text" class="input_03" size="3" id='quantityid' name='quantity[]' value='<?=$quantity?>'>
+                                    개</td>
+                                  <td align="center"><span class="price">
+                                    <?=$sum_str?>
+                                    원</span></td>
+                                  <td align="center"><?=$me_delivery_str?></td>
+                                  <td align="center"><a href='cart_in.php?mode=del&order_pro_no=<?=$order_pro_no?>&mart_id=<?=$mart_id?>&provider_id=<?=$provider_id?>&item_no_forcash=<?=$item_no_forcash?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>'><img src="../image/bu_del.gif" width="30" height="20" border="0" onclick='return really()'></a></td>
+                                </tr>
+                                <?
+		if( $i < $cart_tot ){
+?>
+                                <tr>
+                                  <td colspan="6" height="1" bgcolor="E5E5E5"></td>
+                                </tr>
+                                <?
+		}
+?>
+                                <?
+	}
+?>
+                                <?
+if($mon_tot >= $freight_limit){		// 배송료설정
+	$freight_fee = 0;
+}else if($freight_free){
+		$freight_fee = 0;
+}else{
+	$freight_fee = $freight_cost;
+}
+
+$mon_tot_freight = $mon_tot + $freight_fee;
+?>
+                              </table>
+                              <!---------------------- 장바구니 테이블 끝 --------------------------------------------->
+                              <!---------------------- 총합계 버튼 시작 ----------------------------------------------->
+                              <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td height="40" align="right" bgcolor="F4F4F4">총합계 : <span class="product">
+                                    <?=number_format($mon_tot_freight)?>
+                                    원</span>
+<? if($freight_fee){ ?>
+                                      <span class="text_red">[ 배송료 <?=number_format($freight_fee)?>원 ]</span>  
+                                      
+<? } ?>
+									  <a onClick="re_count(this.form)" style='cursor:hand'><img src="../image/bu_account.gif" width="50" height="20" hspace="5" border="0" align="absmiddle"></a>
+								    </td>
+                                </tr>
+                              </table>
+							  <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+<? if($freight_fee){ ?>
+							    <!-- <tr>
+							      <td height="40" align="right"><?=number_format($freight_limit)?>
+							        원 미만의 결제금액은 배송료
+                                      <?=number_format($freight_cost)?>
+                                    원이 부과됩니다.</td>
+							      </tr> -->
+<? } ?>
+										<tr>
+											<td align="right"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+													<tr>
+														<td height="70"><a onClick="cart_del(this.form)" style='cursor:hand'><img src="../images/mypage/shop_btn2.gif" width="147" height="58" /></a>
+                                          <?
+	if($item_no){
+?>
+                             <img src="../images/mypage/shop_btn1.gif" width="123" height="58" border="0" style='cursor:hand' onClick="location.href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>'">
+                                          <?
+	}else{
+?>
+                             <img src="../images/mypage/shop_btn1.gif" width="123" height="58" border="0" style='cursor:hand' 	onclick="history.back();">
+                                          <?
+	}
+?>
+                              </td>
+                              <td align="right"><?
+	if($mon_tot >= $pur_limit){
+?>
+	                              <img src="../images/mypage/shop_btn3.gif" width="116" height="58" border="0" style='cursor:hand' onClick="javascript:go_order_sheet()">
+                                          <?
+	}else{
+?>
+                                <img src="../images/mypage/shop_btn3.gif" width="116" height="58" border="0" style='cursor:hand' onClick="pur_limit_warn('<?=$pur_limit?>')">
+                                          <?
+	}
+?>
+                            </td>
+                          </tr>
+												</table></td>
+                     </tr>
+							  </table>
+
+
+
+                              <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                <?
+	$martintro_sql = "select * from $MartIntroTable where mart_id='$mart_id'";
+	$martintro_res = mysql_query($martintro_sql, $dbconn);
+	$martintro_row = mysql_fetch_array($martintro_res);
+?>
+                                <!---------------------- 배송안내 시작 --------------------->
+                                <tr>
+                                  <td height="60"><img src="../image/product/info_title_4.gif" ></td>
+                                </tr>								
+                                <tr>
+                                  <td><?=$martintro_row["delivery"]?></td>
+                                </tr>
+                                <!---------------------- 배송안내 끝 ---------------------->
+                                <!---------------------- 교환할부안내 시작 ---------------------->
+                                <tr>
+                                  <td height="60"><img src="../image/product/info_title_6.gif" ></td>
+                                </tr>
+                                <tr>
+                                  <td><?=$martintro_row["exchange"]?></td>
+                                </tr>
+                                <tr>
+                                  <td height="20"></td>
+                                </tr>
+                                <!---------------------- 교환할부안내 끝 ------------------------------------------------>
+                              </table>
+                              </form>
+                            <?
+}else{
+?>
+                            <table width="100%"  border="1" bordercolor='#E38E87' cellpadding="1" cellspacing="1" bgcolor="#FFFFFF">
+                              <tr height="50" align="center">
+                                <td colspan="5"><b>장바구니에 담긴 상품이 없습니다.</b></td>
+                              </tr>
+                            </table>
+                            <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td height="70"><img src="../images/mypage/shop_btn1.gif" width="123" height="58" border="0" style='cursor:hand' onClick="location.href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>'"></td>
+                              </tr>
+                            </table>
+                            <?
+}
+?>
+                            <!---------------------- 총합계 버튼 끝 ------------------------------------------------->
+                        </td>
+                      </tr>
+                  </table>
+
+
+
+
+
+
+
+
+										</div></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="10"></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

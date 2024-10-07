@@ -1,0 +1,290 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<?
+//============================= 방문자를 카운트 함 =======================================
+$today = date("Ymd");
+$co_sql = "select * from $Mart_CounterTable where mart_id='$mart_id' and date='$today'";
+$co_res = mysql_query($co_sql, $dbconn);
+$co_tot = mysql_num_rows($co_res);
+if($co_tot > 0){
+	$co_row = mysql_fetch_array($co_res);
+	$index_no = $co_row[index_no];
+	$client_ip = $co_row[client_ip];
+	if( $client_ip != $REMOTE_ADDR ){
+		$coup_sql = "update $Mart_CounterTable set count_num=count_num + 1, client_ip='$REMOTE_ADDR' where index_no='$index_no' and mart_id='$mart_id'";
+		$coup_res = mysql_query($coup_sql, $dbconn);
+		if($coup_res == false){
+			echo "방문 통계 쿼리 실패";
+		}
+	}
+}else{
+	$coin_sql = "insert into $Mart_CounterTable(mart_id, date, count_num, client_ip) values('$mart_id', '$today', '1', '$REMOTE_ADDR')";
+	$coin_res = mysql_query($coin_sql, $dbconn);
+	if($coin_res == false){
+		echo "방문 통계 쿼리 실패";
+	}
+}
+if( $co_res ){
+	mysql_free_result( $co_res );
+}
+
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+
+if ( getCookie( "Notice" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('pop3.htm','notice','left=0, top=0, width=400,height=530');
+	//noticeWindow.opener = self;
+} 
+if ( getCookie( "Notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	noticeWindow  =  window.open('popup1.htm','notice1','left=0, top=0, width=300,height=430');
+	noticeWindow.opener = self;
+} 
+
+// -->
+</SCRIPT>
+
+
+<body topmargin="0" leftmargin="0">
+<?include("../include/top2.htm");?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="9">&nbsp;</td>
+            <td width="157" height="100%" valign="top"><?include("../include/sub_menu.htm");?></td>
+            <td width="9">&nbsp;</td>
+            <td width="722" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="451" valign="top"><img src="../images/main_img.jpg">					</td>
+                    <td><img src="../images/main_31.gif" width="271" height="320" border="0" usemap="#banner2"></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="337"><a href="../main/product_info.html?mart_id=kns&category_num=70&flag=&item_no=781&page=1&mode="><img src="../images/main_34.gif" width="337" height="116" border="0"></a></td>
+                    <td width="104"><img src="../images/main_35.gif" width="104" height="116"></td>
+                    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td height="10"></td>
+                      </tr>
+                      <tr>
+                        <td><!---------------------- 공지사항 게시판 -------------------->
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td valign="top" background=""><table width="95%"  border="0" align="left" cellpadding="0" cellspacing="0">
+                                  <?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 5";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+                                  <?
+		if( $board_tot == "0" ){
+		?>
+                                  <tr valign='top'>
+                                    <td height='30' align='center' valign="middle">등록된 공지사항이  없습니다.</td>
+                                  </tr>
+                                  <?
+		}
+		?>
+                                  <?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,35);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+                                  <tr height="20" valign='top'>
+                                    <!--td width='80' align=center valign="middle">[<?=$board_date?>]</td-->
+                                    <td valign="middle"><img src="../images/notice_icon.gif" align="absmiddle">&nbsp;<a href='../board/board_read.php?index_no=<?=$board_no?>&bbs_no=1&mart_id=<?=$mart_id?>'>
+                                      <?=$board_title?>
+                                    </a></td>
+                                  </tr>
+                                  <?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td style="height:5px"></td>
+                            </tr>
+                          </table></td>
+                        </tr>
+                      </table>
+                      <!---------------------- 공지사항 끝 ----------------------></td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="9">&nbsp;</td>
+            <td width="888" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main_38.jpg" width="888" height="234" border="0" usemap="#banner1"></td>
+              </tr>
+              <tr>
+                <td><img src="../images/main_39.gif" width="888" height="48"></td>
+              </tr>
+              <tr>
+                <td background="../images/main_41.gif"><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td><?include("../include/new_item.htm");?></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td><img src="../images/main_43.gif" width="888" height="18"></td>
+              </tr>
+            </table></td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9">&nbsp;</td>
+        <td width="888"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="319"><img src="../images/main_44.gif" width="319" height="196"></td>
+            <td width="273"><img src="../images/main_45.gif" width="273" height="196"></td>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main_46.gif" width="296" height="60"></td>
+              </tr>
+              <tr>
+                <td><table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td><!---------------------- 입금확인 게시판 -------------------->
+														<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+															<tr>
+																<td background="">
+																	<table width="95%"  border="0" align="left" cellpadding="0" cellspacing="0">
+																		<?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='7' order by ansno asc limit 5";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+																		<?
+		if( $board_tot == "0" ){
+		?>
+																		<tr valign='top'>
+																			<td height='30' align='center' valign="middle">등록된 입금확인이  없습니다.</td>
+																		</tr>
+																		<?
+		}
+		?>
+																		<?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,40);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+																		<tr height="20" valign='top'>
+																			<!--td width='80' align=center valign="middle">[<?=$board_date?>]</td-->
+																			<td valign="middle"><img src="../images/notice_icon.gif" align="absmiddle">&nbsp;<a href='../board/board_read.php?index_no=<?=$board_no?>&bbs_no=7&mart_id=<?=$mart_id?>'>
+																				<?=$board_title?>
+																			</a></td>
+																		</tr>
+																		<?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+																</table></td>
+															</tr>
+															<tr>
+																<td style="height:5px"></td>
+															</tr>
+														</table>
+								  <!---------------------- 입금확인 끝 ----------------------></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td>&nbsp;</td>
+        </tr>
+    </table></td>
+  </tr>
+</table>
+<?include("../include/bottom.htm");?>
+
+<map name="banner1"><area shape="rect" coords="35,39,321,225" href="../main/product_info.html?mart_id=kns&category_num=41&flag=&item_no=48&page=1&mode=">
+<area shape="rect" coords="340,40,598,224" href="../main/product_info.html?mart_id=kns&category_num=65&flag=&item_no=550&page=1&mode=">
+<area shape="rect" coords="609,66,738,222" href="../main/product_info.html?mart_id=kns&category_num=113&flag=&item_no=44&page=1&mode=">
+<area shape="rect" coords="744,66,880,222" href="../main/product_info.html?mart_id=kns&category_num=39&flag=&item_no=552&page=1&mode=">
+</map>
+<map name="banner2">
+<area shape="rect" coords="7,18,146,113" href="../main/product_info.html?mart_id=kns&category_num=70&flag=&item_no=61&page=1&mode="><area shape="rect" coords="8,120,146,280" href="../main/product_list.html?category_num=91">
+</map></body>
+</html>

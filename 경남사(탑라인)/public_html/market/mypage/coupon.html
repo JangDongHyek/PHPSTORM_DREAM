@@ -1,0 +1,490 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$m_sql = "select * from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+$m_res = mysql_query($m_sql, $dbconn);
+$m_tot = mysql_num_rows($m_res);
+if($m_tot < 1){
+	echo ("		
+		<script>
+		window.alert('회원전용 공간입니다.');
+		parent.location.href='../member/login.html?url=$url';
+		</script>
+	");
+	exit;
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<script>
+function checkform(f){
+	if(f.agree[1].checked == true){
+		alert("\n약관에 동의하셔야 합니다.");
+		f.agree[0].focus();
+		return false;
+	}
+
+	if (f.t_title.value=="") {
+		alert("\n쿠폰번호를 입력하세요.");
+		f.t_title.focus();
+		return false;
+	}
+
+	if (f.t_jumin1.value==""){
+		alert("\n주민등록번호 앞자리를 입력하세요.");
+		f.t_jumin1.focus();  
+		return false;
+	}
+	
+	if (f.t_jumin2.value==""){
+		alert("\n주민등록번호 뒷자리를 입력하세요.");
+		f.t_jumin2.focus();  
+		return false;
+	}
+
+	if (f.t_jumin1.value.length != 6 || f.t_jumin2.value.length != 7){
+		alert("유효한 주민번호를 입력 하세요");
+		f.t_jumin2.focus();
+		return false;
+	
+	}
+	jumin = f.t_jumin1.value + f.t_jumin2.value
+	if(Jumin_chk(jumin)) {
+	alert("주민등록번호가 틀립니다.");
+	return false;
+	} 
+}
+
+function checkform1(f1){
+	if (f1.t_title.value=="") {
+		alert("\n상품권번호를 입력하세요.");
+		f1.t_title.focus();
+		return false;
+	}
+}
+
+function Jumin_chk(it) {
+	IDtot = 0;
+	IDAdd = "234567892345";
+
+	for(i=0; i<12; i++) IDtot = IDtot + parseInt(it.substring(i, i+1)) * parseInt(IDAdd.substring(i, i+1));
+	IDtot = 11 - (IDtot%11);
+	if (IDtot == 10) IDtot = 0;
+	else if (IDtot == 11) IDtot = 1;
+
+	if(parseInt(it.substring(12, 13)) != IDtot) return true;
+	else return false
+} 
+
+function check(){
+	var str = document.f.t_jumin1.value.length;
+	if(str == 6) {
+	   document.f.t_jumin2.focus();
+	}
+}
+
+</script>
+<script language='javascript'>
+<!--
+function formreset(){
+	document.f.reset();
+}
+//-->
+</script>
+
+<style type="text/css">
+<!--
+.style1 {color: #bc1b1e}
+-->
+</style>
+
+<body>
+<a name="top"></a>
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+<?
+include "../include/top2.htm";
+?>
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="30" height="70" valign="top" background="../../image/left_bg.gif">
+<!---------------------- Left Banner 시작 ----------------------------------------------->
+<?
+include "../include/banner_left.htm";
+?>
+<!---------------------- Left Banner 끝 ------------------------------------------------->
+		</td>
+		<td width="180" valign="top">
+<!---------------------- 2차 카테고리 시작 ---------------------------------------------->
+			<table width="180"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+        			<td><img src="../../image/product/category_title.gif" width="180" height="55"></td>
+        		</tr>
+        		<tr>
+        			<td height="25" align="center" valign="top" background="../../image/product/category_bg.gif">
+<?
+include "../include/menuselect.htm";
+?>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="160" border="0" align="center" cellpadding="0" cellspacing="0">
+							<tr>
+								<td height="10" ></td>
+							</tr>
+<?
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+if( !$category_num ){
+	$category_num = "6";
+}
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='$category_num' and if_hide='0' order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+$total_cate = mysql_num_rows($res_cate);
+$i = "0";
+while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	$i++;
+?>
+							<tr>
+								<td class="category_2"><img src="../../image/product/category_icon.gif" width="20" height="24" align="absmiddle"><a href="../main/product_list2.html?category_num=<?=$category_num?>&category_num1=<?=$row_cate[category_num]?>"><?=$row_cate[category_name]?></a></td>
+							</tr>
+<?
+	if( $i < $total_cate ){
+?>
+							<tr>
+								<td height="1" bgcolor="E5E5E5"></td>
+							</tr>
+<?
+	}
+?>
+<?
+}
+?>
+						</table>
+					</td>
+        		</tr>
+        	</table>
+<!---------------------- 2차 카테고리 끝 ------------------------------------------------>
+<!---------------------- 공지사항 시작 -------------------------------------------------->
+ 		    <table width="160"  border="0" align="center" cellpadding="0" cellspacing="0">
+            	<tr>
+            		<td height="10" ></td>
+           		</tr>
+            	<tr>
+            		<td height="1" bgcolor="DEDEDE"></td>
+           		</tr>
+            	<tr>
+            		<td height="30"><img src="../../image/notice_title.gif" width="80" height="20"></td>
+            	</tr>
+            	<tr>
+            		<td height="1" bgcolor="DEDEDE"></td>
+           		</tr>
+            	<tr>
+            		<td height="3" bgcolor="F0F0F0"></td>
+           		</tr>
+            	<tr>
+            		<td height="5"></td>
+           		</tr>
+<?
+//================== 공지사항 ============================================================
+$today = date("Ymd");
+$notice_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 4";
+$notice_res = mysql_query($notice_sql, $dbconn);
+$notice_tot = mysql_num_rows( $notice_res );
+?>
+<?
+if( $total4 == "0" ){
+?>
+            	<tr>
+            		<td height='30' align='center'>등록된 공지사항이 없습니다.</td>
+           		</tr>
+<?
+}
+?>
+<?
+while( $notice_row = mysql_fetch_array($notice_res) ){
+	$notice_no = $notice_row[index_no];
+	$notice_title = $notice_row[subject_new];
+	$notice_title = han_cut($notice_title,28);
+?>
+            	<tr>
+            		<td height="20" class="notice"><img src="../../image/icon_1.gif" width="15" height="9" align="absmiddle"><a href='../board/board_read.php?index_no=<?=$notice_no?>&bbs_no=1&mart_id=<?=$mart_id?>'><?=$notice_title?></a></td>
+           		</tr>
+<?
+}
+if( $notice_res ){
+	mysql_free_result( $notice_res );
+}
+?>
+            </table>
+<!---------------------- 공지사항 끝 ---------------------------------------------------->	<!---------------------- 퀵아이콘 시작 -------------------------------------------------->
+<?
+include "../include/quick.htm";
+?>
+<!---------------------- 퀵아이콘 끝 ---------------------------------------------------->	<!---------------------- 배너 시작 ------------------------------------------------------>
+<?
+include "../include/left_banner.htm";
+?>
+<!---------------------- 배너 끝 -------------------------------------------------------->
+		</td>
+		<td valign="top" >
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+        			<td background="../../image/body_bg.gif">
+<!---------------------- 검색 시작 ------------------------------------------------------>
+<?
+include "../include/search.htm";
+?>
+<!---------------------- 검색 끝 -------------------------------------------------------->
+<!---------------------- 현재위치 시작 -------------------------------------------------->
+                        <table width="750" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td height="10" colspan="3"></td>
+                          </tr>
+                          <tr>
+                            <td width="10"></td>
+                            <td width="120" ><img src="../image/mypage/title.gif" width="120" height="30"></td>
+                            <td background="../image/title_bg.gif" valign="bottom" align="right"class="navi"><img src="../image/icon_2.gif" width="15" height="9"><a href="../../.">매장</a> &gt; <a href='../mypage/.'>마이페이지</a> &gt; <a href="<?=$PHP_SELF?>">포인트받기</a> </td>
+                            <td width="10"><img src="../image/title_right.gif" width="10" height="30"></td>
+                            <td align="right"  width="85"> <img src="../image/prepage.gif" width="80" height="20" align="absmiddle" style="cursor:hand;" onclick="javascript:history.go(-1)"></td>
+                          </tr>
+                        </table>                      
+<!---------------------- 현재위치 끝 ---------------------------------------------------->
+<!---------------------- 메뉴 시작 ------------------------------------------------------>
+						<table width="750" border="0" cellspacing="0" cellpadding="0"> 
+							<tr> 
+								<td width="10"></td> 
+								<td width="130"><img src="../image/mypage/title_img.gif" width="130" height="60"></td> 
+								<td align="right" background="../image/mypage/title_bg.gif">
+									<table  border="0" cellspacing="0" cellpadding="0"> 
+										<tr> 
+											<td><a href='../mypage/update.html?mart_id=<?=$mart_id?>'><img src="../image/mypage/bu_01.gif" width="80" height="30" border="0"></a></td> 
+											<td><a href='../cart/cart.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>'><img src="../image/mypage/bu_02.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/wish.html"><img src="../image/mypage/bu_03.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../stat/order.html"><img src="../image/mypage/bu_04.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/send.html"><img src="../image/mypage/bu_05.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/point.html"><img src="../image/mypage/bu_06.gif" width="70" height="30" border="0"></a></td> 
+											<td><a href="../mypage/out.html"><img src="../image/mypage/bu_07.gif" width="60" height="30" border="0"></a></td> 
+											<td><a href="../mypage/coupon.html"><img src="../image/mypage/bu_08_on.gif" width="60" height="30" border="0"></a></td> 
+										</tr> 
+									</table>
+								</td> 
+								<td width="10"><img src="../image/mypage/title_end.gif" width="10" height="60"></td> 
+							</tr> 
+						</table> 
+<!---------------------- 메뉴 끝 -------------------------------------------------------->	
+					</td> 
+				</tr> 
+				<tr> 
+					<td bgcolor="#409FD0"><img src="../image/mosuri.gif" width="10" height="10"></td> 
+				</tr> 
+			</table> 
+<!---------------------- 포인트받기 시작 ------------------------------------------------>
+			<table width="750"  border="0" cellspacing="0" cellpadding="0"> 
+				<tr> 
+					<td height="2"></td> 
+					<td></td> 
+				</tr> 
+				<tr> 
+					<td width="10"></td> 
+					<td width="740" height="90"><img src="../image/mypage/subtitle_8.gif" width="450" height="70"></td> 
+				</tr> 
+				<tr> 
+					<td></td> 
+					<td>
+<!---------------------- 쿠폰 교환하기 시작 --------------------------------------------->
+<!---------------------- 포인트 이용약관 시작 ------------------------------------------->
+						<table width='100%' border='0' align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+						<form name='f' method='post' onsubmit="return checkform(this)" action='coupon_regist.php?flag=cupon' enctype="multipart/form-data"> 
+							<tr height='25'> 
+								<td><img src="../image/mypage/coupon_rule_title.gif" width="100" height="20"></td> 
+							</tr> 
+						</table> 
+						<table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+							<tr> 
+								<td bgcolor="964166" height="4"></td> 
+							</tr> 
+							<tr> 
+								<td align="center"  bgcolor="#F7F7F7" class="text_14_s2">
+									<table width="100%"  border="0" cellspacing="0" cellpadding="0"> 
+										<tr> 
+											<td align="center"><textarea name="textarea" cols="115" rows="10">약관에 대한 부속 규정(포인트 정책)
+
+제1조(총칙) 
+이 약관은 <?=$mart_id?>에서 제공하는 서비스의 이용조건 및 절차와 <?=$mart_id?>에서 고객의 의무사항 및 권리를 명시, 규정함을 목적으로 한다.
+
+제2조(약관의 사항)
+ 이 약관에서 규정되지 않는 사항은 관계법령에 우선 되고 그렇지 않을시 사회에서 인정하는 범위 및 일반상관례에 따른다.
+
+제3조:(약관의 효력발생 및 변경)
+1. 본 약관은 2005년 8월1일부터 회원에게 공시, 효력이 유효하다.
+2. 본 약관의 변경이 있을시 <?=$mart_id?>몰 이용약관 제3조(약관등의 명시와 설명 및 개정)절차에 따라 적용된다
+
+제4조(포인트의 정의)
+<?=$mart_id?>에서 재화를 구입 할 수 있는 e-money이다
+
+제5조(포인트의 지급받는자)
+1.<?=$mart_id?>의 회원가입된 자
+2.회원사로부터 쿠폰번호를 부여받은 자가 <?=$mart_id?>에 회원 가입했을 때.
+3.<?=$mart_id?>에서 제공하는 서비스를 이용하는 자(회원, 상점회원, 회원사)
+4.기타 <?=$mart_id?>에서 정하는 회원
+
+제6조(포인트의 이용)
+1.포인트의 이용은 언제나 이용 가능하며 단, <?=$mart_id?>의 기술적 장애로 인한 불가피한 문제로 인해 서비스가 일시중단시에는 그 날짜 및 시간을 회원에게 공지하여야 합니다.
+2. 일부 서비스에 대한 포인트 사용이 제한 될 수 있습니다
+
+제7조(포인트의 소멸기간)
+1.포인트는 쿠폰을 지급 받은 날로부터 기산해서 6월이 되는 때에 소멸합니다.
+(단:포인트 선물시 상대방의 포인트 발생시로 소급해서 6월이 되는 때에 소멸한다) 
+2.회원사 상품 가입 후 해지시 포인트 사용
+  가. 쿠폰 발급일로 소급하여 포인트가 회수됩니다.
+  나. 포인트 사용시 사용분의 금액에 대해서는 고객의 부담이 됩니다
+  다. 선물한 포인트가 있을시 해당 당사자가 받은 포인트는 회수됩니다.
+  라. 해지 후 포인트 삭제절차 기간에 사용한 일체의 포인트는 취소 및 회수 됩니다. 
+  마. 회원사로부터 받은 포인트는 사용 할 수 없으므로 상품구매는 자동 취소됩니다.
+  바. 회원사 상품 해지 후 포인트 선물시 해당 포인트가 삭제됩니다
+  사. <?=$mart_id?>의 회원 탈퇴시
+  아. 기타 <?=$mart_id?>이(가) 정하는 방법에 의해 소멸 시킬 수 있습니다.
+제8조 (포인트 및 적립금에 대한 규정)
+1. 적립금은 포인트와 함께 사용가능 합니다.
+2. 적립금은 포인트 소멸기간에 산입되지 않고 계속하여 유지 됩니다.
+ (단:<?=$mart_id?>의 운영중단 또는 회원탈퇴시 적립금은 삭제 됩니다)
+
+제9조 (포인트 약관의 특칙)
+<?=$mart_id?>의 전반적인 내용은 <?=$mart_id?>의 이용약관에 의하나 포인트 및 적립금에 관한
+사항은 특칙을 우선 적용한 후 적용이 없으면 이용약관에 의한다.</textarea></td> 
+										</tr> 
+										<tr align="center"> 
+											<td height="40" colspan="2">
+												<input name="agree" type="radio" value="y" checked> 
+												<img src="../image/mypage/coupon_type1.gif" width="110" height="20" align="absmiddle"> 
+												<input name="agree" type="radio" value="n"> 
+												<img src="../image/mypage/coupon_type2.gif" width="140" height="20" align="absmiddle">
+											</td> 
+										</tr> 
+									</table> 
+								</td> 
+							</tr> 
+							<tr> 
+								<td bgcolor="964166" height="4"></td> 
+							</tr> 
+						</table> 
+<!---------------------- 포인트 이용약관 끝 --------------------------------------------->
+						<br> 
+<!---------------------- 포인트 설명 시작 ----------------------------------------------->
+						<table width='100%' border='0' align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white"> 
+							
+							<tr height='25'> 
+								<td><img src="../image/icon_7.gif" width="30" height="27" align="absmiddle"><span class="style1"><b>쿠폰지급일</b>로부터 <b>6개월후</b>에 소멸됩니다.</span></td> 
+							</tr><tr> 
+								<td height="5" bgcolor="E9E9E9"></td> 
+							</tr>  <tr height='25'> 
+								<td><b><img src="../image/icon_2.gif" width="15" height="9" align="absmiddle">쿠폰번호</b>는 인터넷 상품을 신청하신 곳으로부터 발급받은 번호를 입력하십시오.</td> 
+							</tr> 
+							<tr> 
+								<td height="5" bgcolor="E9E9E9"></td> 
+							</tr> 
+							<tr height='25'> 
+								<td><b><img src="../image/icon_2.gif" width="15" height="9" align="absmiddle">가입자 주민등록번호</b>는 인터넷 상품을 신청하셨을 때 가입자의 주민등록번호입니다.</td> 
+							</tr> 
+							<tr> 
+								<td height="5" bgcolor="E9E9E9"></td> 
+							</tr> 
+							<tr height='25'> 
+								<td><b><img src="../image/icon_2.gif" width="15" height="9" align="absmiddle">쿠폰</b>번호와 가입자 주민등록번호가 일치하면 해당 쿠폰이 <b><?=$MemberName?>님</b>의 포인트로 지급됩니다.</td> 
+							</tr> 
+							
+						</table> 
+<!---------------------- 포인트 설명 끝 ------------------------------------------------->
+						<br> 
+<!---------------------- 포인트 정보 입력 시작 ------------------------------------------>
+						<table width='100%' border='0' align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white"> 
+							<tr height='25'> 
+								<td><img src="../image/mypage/coupon_rule_title2.gif" width="100" height="20"></td> 
+							</tr> 
+						</table> 
+						<table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white"> 
+							<tr> 
+								<td bgcolor="964166" height="4"></td> 
+							</tr> 
+							<tr> 
+								<td align="center"  bgcolor="#F7F7F7" class="text_14_s2">
+									<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0" > 
+										<tr> 
+											<td width="110"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">쿠폰번호</td> 
+											<td><input name="t_title" type="text" class="input_03" size="25" style='ime-mode:inactive'> </td> 
+										</tr> 
+										<tr> 
+											<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">가입자 주민등록번호</td> 
+											<td class="price"> <input name="t_jumin1" type="text" class="input_03" size="10" maxlength='6' style='ime-mode:inactive' onkeyup='check();'> - <input name="t_jumin2" type="password" class="input_03" size="10" maxlength='7' style='ime-mode:inactive'> </td> 
+										</tr> 
+									</table> 
+								</td> 
+							</tr> 
+							<tr> 
+								<td bgcolor="964166" height="4"></td> 
+							</tr> 
+						</table> 
+<!---------------------- 포인트 정보 입력 끝 -------------------------------------------->
+						<table width="100%"  border="0" cellspacing="0" cellpadding="0"> 
+							<tr> 
+								<td height="70" align="center"><input name="image" type='image' onfocus='blur();' src="../image/bu_coupon2.gif" border="0"><img src="../image/bu_cancel.gif" width="100" height="50" border="0" style='cursor:hand' onclick='document.f.reset();'></td> 
+							</tr>
+							</form> 
+						</table>
+<!---------------------- 쿠폰 교환하기 끝 ----------------------------------------------->
+<!---------------------- 상품권 교환하기 시작 ------------------------------------------->
+						<table width='100%' border='0' align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+						<form name='f1' method='post' onsubmit="return checkform1(this)" action='coupon_regist.php?flag=goodcupon' enctype="multipart/form-data">
+							<tr height='25'> 
+								<td><img src="../image/mypage/coupon_rule_title3.gif" width="330" height="50"></td> 
+							</tr> 
+						</table> 
+<!---------------------- 상품권 정보 입력 시작 ------------------------------------------>
+						<table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white"> 
+							<tr> 
+								<td bgcolor="D8A388" height="4"></td> 
+							</tr> 
+							<tr> 
+								<td align="center"  bgcolor="#F7F7F7" class="text_14_s2">
+									<table width="100%" border="0" align="center" cellpadding="5" cellspacing="0" > 
+										<tr> 
+											<td width="80"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">상품권번호</td> 
+											<td><input name="t_title" type="text" class="input_03" size="40" style='ime-mode:inactive'></td> 
+										</tr> 
+									</table> 
+								</td> 
+							</tr> 
+							<tr> 
+								<td bgcolor="D8A388" height="4"></td> 
+							</tr> 
+						</table> 
+<!---------------------- 상품권 정보 입력 끝 -------------------------------------------->
+						<table width="100%"  border="0" cellspacing="0" cellpadding="0"> 
+							<tr> 
+								<td height="70" align="center"><input name="image2" type='image' onfocus='blur();' src="../image/bu_coupon3.gif" width="150" height="50" border="0"><img src="../image/bu_cancel.gif" width="100" height="50" border="0" style='cursor:hand' onclick='document.f.reset();'></td> 
+							</tr>
+						</form>
+						</table>
+					</td> 
+				</tr> 
+			</table> 
+<!---------------------- 포인트받기 끝 --------------------------------------------------> 
+		</td> 
+	</tr> 
+</table> 
+<!---------------------- 하단메뉴 시작 --------------------------------------------------> 
+<?
+include "../include/bottom.htm";
+?> 
+<!---------------------- 하단메뉴 끝 ----------------------------------------------------> 
+</body>
+</html><?
+mysql_close($dbconn);
+?>

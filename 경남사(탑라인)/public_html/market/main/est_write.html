@@ -1,0 +1,182 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+?>
+<?
+$SQL = "select user_words_perm from $MartMngInfoTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$ary = mysql_fetch_array($dbresult);
+$user_words_perm = $ary[user_words_perm];
+
+if($user_words_perm=="o")
+{
+	$SQL = "select a.order_num from $Order_BuyTable as a Left Join $Order_ProTable as b on a.order_num = b.order_num where a.id='$UnameSess' and b.status = '3' and b.item_no = '$item_no'";
+	$dbresult = mysql_query($SQL, $dbconn);
+	if(!mysql_num_rows($dbresult))
+	{
+		echo "
+		<script>
+		window.alert('구입하신 상품만 상품평을 쓰실 수 있습니다.');
+		window.close();
+		//window.opener.location.reload();
+		</script>
+		";
+	}
+}elseif($user_words_perm=="m")
+{
+	if(!$UnameSess || !$MemberLevel || !$MemberName)
+	{
+		echo "
+		<script>
+		window.alert('로그인하셔야 상품평을 쓰실 수 있습니다.');
+		window.close();
+		//window.opener.location.reload();
+		</script>
+		";
+	}
+}
+
+$SQL = "select item_name from item where item_no='$item_no'";
+$dbresult = mysql_query($SQL, $dbconn);
+$item_name = mysql_result($dbresult,0,0);
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<title>▒ 상품평을 남겨주세요! ▒</title>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script language=javascript src='../js/menu_select.js'></script>
+<script language="javascript" src="../js/common.js"></script>
+<script>
+function checkform(f){
+	if(f.name.value==''){
+		alert("이름을 입력하세요.")
+		f.name.focus();
+		return false;
+	}
+	if(f.title.value==''){
+		alert("제목을 입력하세요.")
+		f.title.focus();
+		return false;
+	}
+	if(f.password.value==''){
+		alert("비번을 입력하세요.")
+		f.password.focus();
+		return false;
+	}
+	return true;	
+}	
+</script>
+</head>
+<body>
+<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="10" rowspan="3"></td>
+		<td height="70">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+					<td background="../image/blank/title_bg.gif"><img src="../image/blank/title_2.gif" width="190" height="70"></td>
+					<td width="20"><img src="../image/blank/title_right.gif" width="20" height="70"></td>
+        		</tr>
+        	</table>
+		</td>
+		<td width="10" rowspan="3"></td>
+	</tr>
+	<form name='form' method='post' action='est_write.html' onsubmit=' return checkform(this)'>
+	<input type='hidden' name='flag' value='write'>
+	<input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+	<input type='hidden' name='item_no' value='<?=$item_no?>'>	
+	<tr>
+		<td valign="top">
+			<table width="100%" height="100%"  border="0" cellpadding="10" cellspacing="0">
+				<tr>
+					<td valign="top">
+						<!--테이블 시작-->
+    					<table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolorlight="#E1E1E1" bordercolordark="white">
+							<tr>
+								<td bgcolor="CC6000" height="4" colspan="2"></td>
+							</tr>
+							<tr>
+								<td width="80"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">상품명</td>
+								<td><b><?=$item_name?></b></td>
+							</tr>
+							<tr>
+								<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">평가</td>
+								<td>
+									<input type="radio" checked value="5" name="point"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11">&nbsp; 
+									<input type="radio" value="4" name="point"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11">&nbsp; 
+									<input type="radio" value="3" name="point"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11">&nbsp; 
+									<input type="radio" value="2" name="point"><img src="../images/op_star.gif" width="11" height="11"><img src="../images/op_star.gif" width="11" height="11">&nbsp; 
+									<input type="radio" value="1" name="point"><img src="../images/op_star.gif" width="11" height="11">
+								</td>
+							</tr>
+							<tr>
+								<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">이름</td>
+								<td><input name="name" value='<?=$MemberName?>' type="text" class="input_03" size="20" style='ime-mode:active' ></td>
+							</tr>
+							<tr>
+								<td width="50"  bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">E-mail</td>
+								<td><input name="email" value='<?=$MemberEmail?>' type="text" class="input_03" size="60" style='ime-mode:inactive' ></td>
+							</tr>
+<?
+if( !$MemberName ){
+?>
+							<tr>
+								<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">비밀번호</td>
+								<td><input name="password" type="password" class="input_03" size="10"> (수정/삭제시에 필요합니다.)</td>
+							</tr>
+<?
+}
+?>
+							<tr>
+								<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">제목</td>
+								<td><input name="title" type="text" class="input_03" size="60" style='ime-mode:active'></td>
+							</tr>
+							<tr>
+								<td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">내용</td>
+								<td class="price"><textarea name="content" cols="59" rows="20" class="input_03" style='ime-mode:active'></textarea></td>
+							</tr>
+							<tr>
+								<td bgcolor="CC6000" height="4" colspan="2"></td>
+							</tr>
+						</table>
+    					<!--테이블 END-->
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="50">
+			<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        		<tr>
+					<td width="20"><img src="../image/blank/bottom_left.gif" width="20" height="50"></td>
+					<td align="center" background="../image/blank/bottom_bg.gif"><input type='image' src="../image/bu_regist2.gif" width="70" height="20" border="0">&nbsp; <img src="../image/bu_close.gif" width="60" height="20" style="cursor:hand;" onclick="window.close()"></td>
+					<td width="20"><img src="../image/blank/bottom_right.gif" width="20" height="50"></td>
+        		</tr>
+        	</table>
+		</td>
+	</tr>
+	</form>
+</table>
+</body>
+</html>
+<?
+if($flag == 'write'){
+	$write_date = date("Ymd H:i:s");
+
+	$SQL = "insert into $EstimateTable (mart_id, item_no, name, email, title, write_date, content, username, password, point) 
+	values ('$mart_id', '$item_no', '$name', '$email', '$title', '$write_date', '$content', '$UnameSess', '$password', '$point')";
+
+	$dbresult = mysql_query($SQL, $dbconn);
+	mysql_close($dbconn);
+	
+	echo "
+	<script>
+	window.alert('상품평이 등록되었습니다.');
+	window.close();
+	window.opener.location.reload();
+	</script>
+	";
+}	
+?>

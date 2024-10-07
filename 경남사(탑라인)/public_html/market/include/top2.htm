@@ -1,0 +1,72 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/bg.gif"><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="281"><a href="../main/index.html"><img src="../images/main_2.gif" width="281" height="77" border="0"></a></td>
+        <td width="47">&nbsp;</td>
+        <td width="325"><img src="../images/main_4.gif" width="325" height="77"></td>
+        <td width="31">&nbsp;</td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="18"></td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="94">&nbsp;</td>
+                <td width="4"><img src="../images/main_9.gif" width="4" height="20"></td>
+                <td bgcolor="f2f2f2"><div align="center">
+                   <?	if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/top2.htm';
+													}
+													else
+														include '../inc/top1.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/top2.htm';
+												}
+												?>
+                </div></td>
+                <td width="5"><img src="../images/main_16.gif" width="5" height="20"></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="9"></td>
+          </tr>
+          <tr>
+            <td><? include '../inc/search_form.htm'; ?></td>
+          </tr>
+          <tr>
+            <td height="8"></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="5"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="23"><img src="../images/main_23.gif" width="233" height="45" /></td>
+            <td align="right"><img src="../images/main_menu.gif" width="583" height="45" border="0" usemap="#main_menu_map" /></td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td height="7" colspan="5"></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+
+<map name="main_menu_map" id="main_menu_map">
+  <area shape="rect" coords="17,3,130,43" href="../site/company.html" />
+  <area shape="rect" coords="131,3,244,43" href="../stat/order.html" />
+  <area shape="rect" coords="244,3,322,41" href="../cart/cart.html" />
+  <area shape="rect" coords="321,3,399,41" href="../board/board_list.php?bbs_no=4" />
+  <area shape="rect" coords="404,3,482,41" href="../board/board_list.php?bbs_no=5" />
+  <area shape="rect" coords="483,3,561,41" href="../board/board_list.php?bbs_no=9" />
+</map>
