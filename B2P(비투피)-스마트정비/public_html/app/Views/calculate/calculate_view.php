@@ -166,7 +166,8 @@ function totalOrderKey($objects,$key) {
                 <th>최종결제금액</th>
                 <th>배송비</th>
                 <th>카테고리 수수료</th>
-                <th>카드 수수료</th>
+                <th>KCP수수료</th>
+                <th>KCP수수료(캐시백이벤트)</th>
                 <th>최종정산금액</th>
             </tr>
             </thead>
@@ -221,6 +222,7 @@ function totalOrderKey($objects,$key) {
                 <td><?=number_format($data['ShippingFee'])?>원</td>
                 <td><?=number_format($b2p_commission + $data['ServiceFee'])?>원</td>
                 <td><?=number_format($card_commission)?>원</td>
+                <td>-원</td>
                 <td><?=number_format($calcPrice)?>원</td>
             </tr>
             <?php }?>
@@ -233,7 +235,7 @@ function totalOrderKey($objects,$key) {
                     <b>주문금액</b> |
                     <b><?=totalOrderKey($this->data['search_all_orders']['data'],"order")?>원</b>
                 </td>
-                <td colspan="3" class="text-right">
+                <td colspan="4" class="text-right">
                     <b>수수료</b> |
                     <b><?=totalOrderKey($this->data['search_all_orders']['data'],"commission")?>원</b>
                 </td>

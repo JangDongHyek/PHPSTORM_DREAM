@@ -33,6 +33,17 @@ if( $paymethod == "byonline_point" || $paymethod == "bycard_point" || $paymethod
 	$if_use_bonus = "1";
 }
 
+// 비회원으로 포인트 결제 시도시
+if($if_use_bonus == "1" && !$_SESSION["UnameSess"]) {
+	echo ("
+			<script language=javascript>
+				alert('잘못된 접근입니다.');
+				history.go(-1);
+			</script>
+		");
+	exit;
+}
+
 if( $paymethod == "bycard_point" ){
 	$use_bonus_tot = $use_bonus_tot1;
 }
@@ -42,6 +53,36 @@ if( $paymethod == "byaccount_point" ){
 if( $paymethod == "bypoint" ){
 	$use_bonus_tot = $use_bonus_tot3;
 }
+
+// 비회원으로 포인트 결제 시도시
+if($if_use_bonus == "1" && !$_SESSION["UnameSess"]) {
+	echo ("
+			<script language=javascript>
+				alert('잘못된 접근입니다.');
+				history.go(-1);
+			</script>
+		");
+	exit;
+}
+
+// 회원이 포인트 결제 시도시 총합 포인트보다 큰 포인트 값으로 결제를 요청했으면
+if($if_use_bonus == "1") {
+	$sql = "SELECT sum(bonus) as total_bonus FROM `bonus` WHERE 1 and id = '{$_SESSION["UnameSess"]}' group by id";
+	$result = mysql_query( $sql, $dbconn );
+	$row = mysql_fetch_array( $result );
+	$total_bonus = $row['total_bonus'];
+
+	if((int)$total_bonus < (int)$use_bonus_tot) {
+		echo ("
+			<script language=javascript>
+				alert('잘못된 접근입니다.');
+				history.go(-1);
+			</script>
+		");
+		exit;
+	}
+}
+
 
 if( $paymethod == "bycard" || $paymethod == "bycard_point")
 {

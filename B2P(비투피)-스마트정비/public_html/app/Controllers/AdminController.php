@@ -4,7 +4,6 @@ use App\Libraries\JL;
 use App\Libraries\Model;
 use App\Libraries\JlModel;
 use App\Models\AdminModel;
-
 class AdminController extends BaseController {
     public function manager01_01_list() {
         return view('admin/manager01_01_list',$this->data);
@@ -278,6 +277,26 @@ class AdminController extends BaseController {
 //    메시지관리
     public function msg_list()
     {
+        $url = "https://ws.baroservice.com/SMS.asmx?wsdl";
+        $BaroService_SMS = new SoapClient($url, array(
+            'trace' => 'true',
+            'encoding' => 'UTF-8'
+        ));
+
+        $CERTKEY = '98D43872-6E8F-4BD1-BA03-E0216746D644';
+        $CorpNum = '7338802620';
+        $ID = 'pumpkin';
+        $PWD = 'vjazls01!';
+
+        $Result = $BaroService_SMS->GetSMSHistoryURL([
+            'CERTKEY' => $CERTKEY,
+            'CorpNum' => $CorpNum,
+            'ID' => $ID,
+            'PWD' => $PWD,
+        ])->GetSMSHistoryURLResult;
+
+        $this->data['sms_url'] = $Result;
+
         $this->data['pid'] = 'msg_list';
         return view('admin/msg_list',$this->data);
     }
