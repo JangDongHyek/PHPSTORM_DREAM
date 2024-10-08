@@ -21,84 +21,9 @@
     </div>
 </div>
 
-<!-- 프로젝트 생성 -->
-<div class="modal fade" id="projectFormModal" tabindex="-1" aria-labelledby="projectFormModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
-                <h5 class="modal-title" id="projectFormModalLabel">프로젝트 생성</h5>
-            </div>
-            <div class="modal-body">
-                <div class="form_wrap">
-                    <label for="">프로젝트 명</label>
-                    <input type="text" name="" id="" placeholder="프로젝트 명"/>
-                    <label for="">공사 위치</label>
-                    <input type="text" name="" id="" placeholder="공사 위치"/>
-                    <p class="flex ai-c jc-sb">
-                        <label for="">공사기간</label><span>(총0일)</span>
-                    </p>
-                    <p class="flex ai-c">
-                        <input type="date" /><span>~</span><input type="date" />
-                    </p>
-                    <label for="">시공사 명</label>
-                    <input type="text" name="" id="" placeholder="시공사 명"/>
-                    <label for="">비용 예산(억원)</label>
-                    <input type="text" name="" id="" placeholder="비용 예산(억원)"/>
-                    <label for="">담당자 지정</label>
-                    <input type="text" name="" id="" placeholder="담당자 지정" data-toggle="modal" data-target="#pmSearchModal"/>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
-                <button type="button" class="btn btn-primary">생성 완료</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- 담당자 검색 -->
-<div class="modal fade" id="pmSearchModal" tabindex="-1" aria-labelledby="pmSearchModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
-                <h5 class="modal-title" id="pmSearchModalLabel">담당자 지정</h5>
-            </div>
-            <div class="modal-body">
-                <div class="search_wrap">
-                    <div class="flex">
-                        <input type="search" name="" id="" placeholder="아이디 or 이름으로 검색해주세요"/>
-                        <button type="submit" class="btn_search"><i class="fa-regular fa-magnifying-glass"></i></button>
-                    </div>
-                    <div class="sch_field" id="" style="display: block">
-                            <table class="sch_field_tb" id="">
-                                <tr>
-                                    <th class="txt_bold">안재홍(hanul01)</th>
-                                    <td>설계부</td>
-                                    <td>사원</td>
-                                    <td><button class="btn btn_mini2 btn_line">선택</button></td>
-                                </tr>
-                                <tr>
-                                    <th class="txt_bold">안재홍(hanul01)</th>
-                                    <td>설계부</td>
-                                    <td>사원</td>
-                                    <td><button class="btn btn_mini2 btn_line">선택</button></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5"><div class="empty">검색 결과가 없습니다.</div></td>
-                                </tr>
-                            </table>
-                        </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
-                <button type="button" class="btn btn-primary">선택 완료</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 <!-- 담당자 계정 생성 -->
 <div class="modal fade" id="accountFormModal" tabindex="-1" aria-labelledby="accountFormModalLabel" aria-hidden="true">

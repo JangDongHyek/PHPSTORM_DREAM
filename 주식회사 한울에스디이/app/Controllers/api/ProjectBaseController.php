@@ -1,7 +1,7 @@
 <?php
 namespace App\Libraries;
 
-namespace App\Controllers\app;
+namespace App\Controllers\api;
 use App\Controllers\BaseController;
 
 use App\Libraries\Jl;
@@ -13,14 +13,14 @@ use App\Libraries\JlFile;
  use Exception 을 하는순간 try catch 문 작동 안합니다.
  */
 
-class BoardController extends BaseController
+class ProjectBaseController extends BaseController
 {
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "example";
+    public $table = "project_base";
     public $file_use = false;
     public $file;
 

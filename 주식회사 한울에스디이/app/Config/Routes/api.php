@@ -3,8 +3,9 @@
 
 $routes->group('api', static function ($routes) {
     // 메인
-    $routes->get('test', 'app\UserController::test');
-    $routes->post('user', 'app\UserController::method');
-    $routes->post('board', 'app\BoardController::method');
-    $routes->post('board_reply', 'app\BoardReplyController::method');
+    $routes->get('test', 'api\UserController::test');
+    $routes->post('user', 'api\UserController::method');
+    $routes->post('board', 'api\BoardController::method');
+    $routes->post('board_reply', 'api\BoardReplyController::method');
+    $routes->post('project_base', 'api\ProjectBaseController::method');
 });

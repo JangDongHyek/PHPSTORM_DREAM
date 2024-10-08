@@ -50,19 +50,19 @@ class Jl {
         //throw new \Exception($msg);
     }
 
-    function jsonDecode($json,$encode = true) {
-        // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-        $json = addslashes($json);
-        $obj = str_replace('\\n', '###NEWLINE###', $json); // textarea 값 그대로 저장하기위한 변경
-        $obj = str_replace('\\', '', $obj);
-        $obj = str_replace('\\\\', '', $obj);
-        $obj = str_replace('###NEWLINE###', '\\n', $obj);
+    function jsonDecode($origin_json,$encode = true) {
+        $json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
+        $json = str_replace('\"', '###NEWQUOTATION###', $json);
+        $json = str_replace('\\', '', $json);
+        //$json = str_replace('\\\\', '', $json);
+        $json = str_replace('###NEWLINE###', '\\n', $json);
+        $json = str_replace('###NEWQUOTATION###', '\"', $json);
 
-        $obj = json_decode($obj, true);
+        $obj = json_decode($json, true);
 
-        //if (json_last_error() !== JSON_ERROR_NONE) {
-        //    $this->error("Jl : ".json_last_error_msg());
-        //}
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->error("Jl jsonDecode()\norigin : ".$origin_json."\nreplace : $json");
+        }
 
         // 오브젝트 비교할때가있어 파라미터가 false값일땐 모든값 decode
         if($encode) {

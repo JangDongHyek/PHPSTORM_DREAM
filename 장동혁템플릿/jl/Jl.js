@@ -82,7 +82,10 @@ class Jl {
                     let req = options.required[i];
                     if(req.name == "") continue;
 
-                    if(object[req.name].trim() == "") reject(new Error(req.message));
+                    if(object[req.name].trim() == "") {
+                        reject(new Error(req.message));
+                        return false;
+                    }
                 }
             }
 
@@ -256,6 +259,9 @@ class Jl {
         return timestamp + randomPart; // 15자 (동일한 밀리세컨드안에 주문이 들어갈경우 중복될 확률 1퍼)
     }
 
+    /*
+    프로퍼티 값이 대문자인지 확인하는 함수
+     */
     isUpperCase(str) {
         return str === str.toUpperCase();
     }

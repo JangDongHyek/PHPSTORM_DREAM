@@ -22,6 +22,7 @@ class PublishController extends BaseController
         $this->models['board'] = new JlModel(array("table" => "board"));
         $this->models['board_reply'] = new JlModel(array("table" => "board_reply"));
         $this->models['user'] = new JlModel(array("table" => "user"));
+        $this->models['project_base'] = new JlModel(array("table" => "project_base"));
     }
 
     // 메인
@@ -197,8 +198,38 @@ class PublishController extends BaseController
     // 프로젝트 관리
     public function project(): string
     {
+        $session = session();
+        $user = $session->get("user");
+
+        $user_idx = $user['parent'] ? $user['parent'] : $user['idx'];
+        $obj = $this->request->getGet();
+
+        $this->models['project_base']->where("user_idx",$user_idx);
+
+        if($obj['search_key'] && $obj['search_value']) $this->models['project_base']->like($obj['search_key'],$obj['search_value']);
+
+        if($obj['start_between'] && $obj['end_between']) {
+            $this->models['project_base']->groupStart();
+            $this->models['project_base']->between("start_date",$obj['start_between'],$obj['end_between']);
+            $this->models['project_base']->between("end_date",$obj['start_between'],$obj['end_between'],"OR");
+            $this->models['project_base']->groupEnd();
+        }
+
+        $page = $obj['page'] ? $obj['page'] : 1;
+        $limit = 10;
+
+        $projects = $this->models['project_base']->get(array(
+            "page" => $page,
+            "limit" => $limit
+        ));
+
+
         $data = [
             'pid' => 'project',
+            "jl" => $this->jl,
+            "user" => $user,
+            "page" => $page,
+            "projects" => $projects
         ];
 
         return render('app/project', $data);

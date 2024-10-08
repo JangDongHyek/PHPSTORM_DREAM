@@ -256,6 +256,7 @@ class Jl {
         }
 
         objs.obj = JSON.stringify(obj);
+        console.log(objs)
         return objs;
     }
 

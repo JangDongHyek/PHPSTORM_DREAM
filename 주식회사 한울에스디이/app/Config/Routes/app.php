@@ -10,7 +10,7 @@ $routes->get("/" ,function() {
     return redirect()->to('app/index');
 });
 
-$routes->get("logout", "app\UserController::logout");
+$routes->get("logout", "api\UserController::logout");
 
 // 회원가입
 $routes->get("signUp", "app\PublishController::signUp");
@@ -69,5 +69,5 @@ $routes->group('app', static function ($routes) {
     $routes->get('test', 'app\TestController::test');
 
     //로그아웃
-    $routes->get("logout", "app\UserController::logout");
+    $routes->get("logout", "api\UserController::logout");
 });
