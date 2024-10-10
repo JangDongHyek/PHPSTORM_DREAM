@@ -101,28 +101,28 @@ if($total > 0){//그룹장
 
 
 
-	if($grsum < $row[login_point]){
-		echo("
-			<script>
-			alert('포인트가 부족하여 로그인을 할수없습니다.');
-			</script>
-			<meta http-equiv='Refresh' content='0; URL=login.html'>
-		");
-		exit;
-	}
-
-
-	if($row[login_point]!="0"){
-		if( $row[end_date] != "" && $today > $row[end_date] ){
-			echo("
-				<script>
-				alert('로그인 만료기간이 지났습니다.');
-				</script>
-				<meta http-equiv='Refresh' content='0; URL=login.html'>
-			");
-			exit;
-		}
-	}
+	//if($grsum < $row[login_point]){
+	//	echo("
+	//		<script>
+	//		alert('포인트가 부족하여 로그인을 할수없습니다.');
+	//		</script>
+	//		<meta http-equiv='Refresh' content='0; URL=login.html'>
+	//	");
+	//	exit;
+	//}
+    //
+    //
+	//if($row[login_point]!="0"){
+	//	if( $row[end_date] != "" && $today > $row[end_date] ){
+	//		echo("
+	//			<script>
+	//			alert('로그인 만료기간이 지났습니다.');
+	//			</script>
+	//			<meta http-equiv='Refresh' content='0; URL=login.html'>
+	//		");
+	//		exit;
+	//	}
+	//}
 
 
 

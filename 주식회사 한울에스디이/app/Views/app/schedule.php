@@ -1,5 +1,9 @@
 <!-- 작업관리 > 계획공정표 -->
 </div>
+<?php
+if(!$project) return false;
+?>
+
 <div class="schedule">
     <div class="flex ai-c jc-sb">
         <div class="area_filter">

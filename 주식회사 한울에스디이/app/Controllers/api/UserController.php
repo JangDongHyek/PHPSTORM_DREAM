@@ -21,6 +21,7 @@ class UserController extends BaseController
 
     public function __construct() {
         $this->models['user'] = new JlModel(array("table" => "user"));
+        $this->models['project_base'] = new JlModel(array("table" => "project_base"));
         //array_push($this->get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
     }
 
@@ -189,6 +190,31 @@ class UserController extends BaseController
             $this->jl_response['admin'] = true;
         }
 
+        // 사이트 회원일때
+        if($user['level'] == "5") {
+            $this->models['project_base']->where('user_idx',$user['idx']);
+
+        }
+        // 회원의 관리자일때
+        else if($user['level'] == "10") {
+            $this->models['project_base']->where('user_idx',$user['parent']);
+        }
+        // 회원의 직원일때
+        else if($user['level'] == "15") {
+            $this->models['project_base']->where('person_idx',$user['idx']);
+        }
+        // 회원의 직원의 프로젝트 담당자
+        else if($user['level'] == "20") {
+            $this->models['project_base']->where('idx',$user['project']);
+        }
+
+        $projects = $this->models['project_base']->get();
+        $project = $projects['data'][0];
+
+        $session->set(array(
+            "projects" => $projects,
+            "project" => $project
+        ));
 
         $this->jl_response['success'] = true;
         echo json_encode($this->jl_response);
@@ -199,6 +225,7 @@ class UserController extends BaseController
 
         $session->remove('user');
         $session->remove('admin');
+        $session->remove('project');
 
         return redirect()->to('login');
     }

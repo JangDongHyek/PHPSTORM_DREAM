@@ -1,6 +1,8 @@
 <!-- 시행사(직원) : 파일함 -->
 </div>
-
+<?php
+if(!$project) return false;
+?>
 <section class="list_table">
     <div class="area_filter flex ai-c jc-sb">
         <div class="flex ai-c">

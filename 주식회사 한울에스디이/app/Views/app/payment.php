@@ -1,6 +1,8 @@
 <!-- 기성관리 -->
 </div>
-
+<?php
+if(!$project) return false;
+?>
 <section class="payment list_table">
     <div class="area_filter flex ai-c jc-sb">
         <div class="flex ai-c">

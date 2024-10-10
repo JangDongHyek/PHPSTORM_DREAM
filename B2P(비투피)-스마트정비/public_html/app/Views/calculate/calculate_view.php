@@ -121,6 +121,15 @@ function totalOrderKey($objects,$key) {
                 </div>
             </div>
         </div>
+        <div>
+            <p>판매처</p>
+            <div class="input_select">
+                <select class="border_gray" name="">
+                    <option value="">G마켓</option>
+                    <option value="">옥션</option>
+                </select>
+            </div>
+        </div>
     </div>
 </div>
 

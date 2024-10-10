@@ -177,7 +177,7 @@ if ($mode == "car_wash_form"){
         $add .= " cw_step = '1' ";
     }
 
-    $result = insert_query2($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
+    $result = insert_query($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
 
     @mkdir(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);
     @chmod(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);

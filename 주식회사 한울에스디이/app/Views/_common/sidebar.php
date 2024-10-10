@@ -36,6 +36,7 @@ $user = $session->get("user");
 
         <div class="sidebar-menu">
             <!-- sidebar-content  -->
+            <?if($user['level'] <= 15){?>
             <div id="side-icon1">
                 <ul>
                     <li class="header-menu">
@@ -79,22 +80,27 @@ $user = $session->get("user");
                             <span>프로젝트 관리</span>
                         </a>
                     </li>
-                    <li class="sidebar-dropdown">
-                        <a href="./publicProject" <?php if($pid == "public_project") { echo "class='active'"; }?>>
+                    <!--<li class="sidebar-dropdown">
+                        <a href="./publicProject" <?php /*if($pid == "public_project") { echo "class='active'"; }*/?>>
                             <i class="fa-sharp fa-light fa-magnifying-glass"></i>
                             <span>회사 공개 프로젝트</span>
                         </a>
-                    </li>
+                    </li>-->
                     <!--관리자-->
+                    <?if($user['level'] <= 10){?>
+
                     <li class="sidebar-dropdown">
                         <a href="./employee" <?php if($pid == "employee") { echo "class='active'"; }?>>
                             <i class="fa-sharp fa-light fa-user-gear"></i>
                             <span>직원 관리</span>
                         </a>
                     </li>
+                    <?}?>
+
                     <!--관리자-->
                 </ul>
             </div>
+            <?}?>
             <div id="side-icon2">
                 <ul>
                     <li class="header-menu">

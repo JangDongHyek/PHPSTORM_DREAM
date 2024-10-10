@@ -30,7 +30,7 @@ class ProjectBaseController extends BaseController
             $this->file = new JlFile("/jl/jl_resource/{$this->table}");
         }
 
-        //array_push($this->get_tables,array("table"=> "user", "get_key" => "user_idx" ));
+        array_push($this->get_tables,array("table"=> "user", "get_key" => "person_idx",'rename' => "PERSON" ));
     }
 
     public function method() {
@@ -51,6 +51,10 @@ class ProjectBaseController extends BaseController
             }
             case "remove" : {
                 $this->delete();
+                break;
+            }
+            case "change" : {
+                $this->change();
                 break;
             }
         }
@@ -93,12 +97,15 @@ class ProjectBaseController extends BaseController
                 "table" => $info['table'],
             ));
 
+            $name = $info['rename'] ? $info['rename'] : $info['table'];
+            $name = strtoupper($name);
+
             foreach ($object["data"] as $index => $data) {
                 $joinModel->where($joinModel->primary, $data[$info['get_key']]);
                 $join_data = $joinModel->get()['data'][0];
 
                 //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 JS에 있음
-                $object["data"][$index][strtoupper($info['table'])] = $join_data;
+                $object["data"][$index][$name] = $join_data;
             }
         }
 
@@ -168,6 +175,19 @@ class ProjectBaseController extends BaseController
         }
 
         $this->models[$this->table]->delete($obj);
+
+        $this->jl_response['success'] = true;
+        echo json_encode($this->jl_response);
+    }
+
+    public function change() {
+        $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
+
+        $project = $this->models[$this->table]->where($obj)->get()['data'][0];
+
+        session()->set(array(
+            "project" => $project
+        ));
 
         $this->jl_response['success'] = true;
         echo json_encode($this->jl_response);

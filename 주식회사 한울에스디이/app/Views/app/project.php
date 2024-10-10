@@ -8,7 +8,7 @@
 <section class="list_table">
     <div class="area_filter flex ai-c jc-sb">
         <div class="flex ai-c" id="search_form">
-            <strong class="total">총 3건</strong>
+            <strong class="total">총 <?=$projects['count']?>건</strong>
             <input type="date" id="start_between" placeholder="날짜 선택" value="">
             ~
             <input type="date" id="end_between" placeholder="날짜 선택" value="">
@@ -22,7 +22,9 @@
             </div>
         </div>
         <!--관리자만-->
-        <button type="button" class="btn btn_darkblue" data-toggle="modal" data-target="#projectFormModal">프로젝트 생성</button>
+        <?if($user['level'] <= 10) {?>
+        <button type="button" class="btn btn_darkblue" onclick="openModal()">프로젝트 생성</button>
+        <?}?>
         <!--관리자만-->
     </div>
         <div class="table">
@@ -46,7 +48,9 @@
                         <th class="text-center">비용 예산(억원)</th>
                         <th class="text-center">소요 비용(억원)</th>
                         <th class="text-center">진행율</th>
+                        <?if($user['level'] <= 10) {?>
                         <th class="text-center">관리</th>
+                        <?}?>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,7 +58,7 @@
                     <tr>
                         <th>
                             <!--개별 프로젝트로 이동-->
-                            <a href="./overall"><p class="i_green"><?=$p['name']?></p></a>
+                            <a href="" onclick="goProject('<?=$p['idx']?>')"><p class="i_green"><?=$p['name']?></p></a>
                         </th>
                         <td><?=$p['name']?></td>
                         <td><?=explode(" ",$p['start_date'])[0]?> - <?=explode(" ",$p['end_date'])[0]?> (총 897일)</td>
@@ -62,7 +66,9 @@
                         <td class="text-center"><?=$p['budget']?></td>
                         <td class="text-center">미정</td>
                         <td class="text-center">미정%</td>
-                        <td class="text-center"><button class="btn btn_mini btn_black">수정</button></td>
+                        <?if($user['level'] <= 10) {?>
+                        <td class="text-center"><button class="btn btn_mini btn_black" onclick="openProjectModal('<?=$p['idx']?>')">수정</button></td>
+                        <?}?>
                     </tr>
                 <?}?>
                 </tbody>
@@ -168,6 +174,40 @@
 
     jl.INIT({page_id : 'pagination',page : page, total_page : total_page})
 
+    async function goProject(idx) {
+        let obj = {idx : idx};
+
+        try {
+            let res = await jl.ajax("change",obj,"/api/project_base");
+            window.location.href = "./overall";
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+    function openModal() {
+        jl.js.resetElement("projectForm")
+        document.getElementById('idx').value = ""
+        document.getElementById('person_idx').value = ""
+        $('#projectFormModal').modal('show')
+    }
+
+    async function openProjectModal(idx) {
+        let obj = {idx : idx}
+
+        try {
+            let res = await jl.ajax("get",obj,"/api/project_base");
+            let data = res['data'][0];
+            jl.js.setElement(data);
+            $('#projectFormModal').modal('show')
+
+            selectUser(data['PERSON']['idx'],data['PERSON']['company_person'])
+
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
     function onSearch(page = 1) {
 
         let obj = jl.getFormById('search_form');
@@ -211,9 +251,14 @@
         }
     }
 
-    async function getUser() {
+    async function getUser(idx) {
         //let obj = jl.js.getInputById(['user_id','user_pw']);
-        let obj = jl.js.getFormById("userSearchForm");
+        let obj;
+        if(idx) {
+            obj = {idx:idx}
+        }else {
+            obj = jl.js.getFormById("userSearchForm");
+        }
         //let obj = jl.js.getUrlParams();
 
         try {
@@ -230,13 +275,14 @@
         let obj = jl.js.getFormById("projectForm");
         //let obj = jl.js.getUrlParams();
 
+        let method = obj.idx != "" ? "update" : "insert";
         let required = jl.js.getFormRequired("projectForm")
         let options = {required : required};
 
         try {
             //if(obj.user_id == "") throw new Error("아이디를 입력해주세요.")
 
-            let res = await jl.ajax("insert",obj,"/api/project_base",options);
+            let res = await jl.ajax(method,obj,"/api/project_base",options);
 
             alert("완료되었습니다.");
             window.location.reload();

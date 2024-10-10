@@ -1,6 +1,10 @@
 <!-- 시행사(관리자/직원) : 종합공정 -->
 </div>
 
+<?php
+if(!$project) return false;
+?>
+
 <div class="overall grid">
     <div class="grid">
         <section class="overall_info">
@@ -169,6 +173,8 @@
 
     </section>
 </div>
+
+<?php $jl->jsLoad();?>
 
 
 <!-- D3.js 및 Billboard.js 스크립트 및 스타일시트 링크 -->

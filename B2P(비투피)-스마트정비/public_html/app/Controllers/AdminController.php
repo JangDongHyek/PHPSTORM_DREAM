@@ -4,6 +4,7 @@ use App\Libraries\JL;
 use App\Libraries\Model;
 use App\Libraries\JlModel;
 use App\Models\AdminModel;
+
 class AdminController extends BaseController {
     public function manager01_01_list() {
         return view('admin/manager01_01_list',$this->data);
@@ -278,7 +279,7 @@ class AdminController extends BaseController {
     public function msg_list()
     {
         $url = "https://ws.baroservice.com/SMS.asmx?wsdl";
-        $BaroService_SMS = new SoapClient($url, array(
+        $BaroService_SMS = new \SoapClient($url, array(
             'trace' => 'true',
             'encoding' => 'UTF-8'
         ));

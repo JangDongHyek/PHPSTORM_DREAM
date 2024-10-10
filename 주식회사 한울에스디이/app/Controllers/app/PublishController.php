@@ -206,6 +206,10 @@ class PublishController extends BaseController
 
         $this->models['project_base']->where("user_idx",$user_idx);
 
+        if($user['level'] >= 15) {
+            $this->models['project_base']->where("person_idx",$user['idx']);
+        }
+
         if($obj['search_key'] && $obj['search_value']) $this->models['project_base']->like($obj['search_key'],$obj['search_value']);
 
         if($obj['start_between'] && $obj['end_between']) {
@@ -278,8 +282,13 @@ class PublishController extends BaseController
     // 종합공정
     public function overall(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
         $data = [
             'pid' => 'overall',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/overall', $data);
@@ -288,8 +297,13 @@ class PublishController extends BaseController
     // 작업관리 > 계획공정표
     public function schedule(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
         $data = [
             'pid' => 'schedule',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/schedule', $data);
@@ -308,8 +322,13 @@ class PublishController extends BaseController
     // 작업관리 > 주간공정표
     public function scheduleWeekly(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
         $data = [
             'pid' => 'schedule_weekly',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/schedule_weekly', $data);
@@ -318,8 +337,14 @@ class PublishController extends BaseController
     // 작업관리 > 금주작업
     public function weekTask(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
         $data = [
             'pid' => 'week_task',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/week_task', $data);
@@ -328,8 +353,14 @@ class PublishController extends BaseController
     // 기성관리
     public function payment(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
         $data = [
             'pid' => 'payment',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/payment', $data);
@@ -338,8 +369,14 @@ class PublishController extends BaseController
     // 내역관리 > 수량산출서
     public function record(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
         $data = [
             'pid' => 'record',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/record', $data);
@@ -348,8 +385,14 @@ class PublishController extends BaseController
     // 내역관리 > 내역서
     public function invoice(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
         $data = [
             'pid' => 'invoice',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/invoice', $data);
@@ -358,8 +401,14 @@ class PublishController extends BaseController
     // 내역관리 > 단가목록표
     public function priceList(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
         $data = [
             'pid' => 'price_list',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/price_list', $data);
@@ -368,8 +417,14 @@ class PublishController extends BaseController
     // 계정관리
     public function account(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
         $data = [
             'pid' => 'account',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/account', $data);
@@ -378,8 +433,14 @@ class PublishController extends BaseController
     // 파일함
     public function filebox(): string
     {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
         $data = [
             'pid' => 'filebox',
+            "jl" => $this->jl,
+            "project" => $project,
+            "projects" => $projects
         ];
 
         return render('app/filebox', $data);

@@ -1,4 +1,5 @@
 <!-- 프로젝트 이동 -->
+<?php if($projects) {?>
 <div class="modal fade" id="moveModal" tabindex="-1" aria-labelledby="moveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -9,19 +10,32 @@
             <div class="modal-body">
                 <div class="form_wrap">
                     <label for="">프로젝트 선택</label>
-                    <select>
-                        <option>블루 워터 프라자 리모델링</option>
-                        <option selected>당진 수정지구 공동 블럭</option>
-                        <option>주거다지 개발</option>
-                        <option>상업시설 리모델링</option>
+                    <select onchange="changeProject(this)">
+                        <? foreach($projects['data'] as $p) { ?>
+                        <option value="<?=$p['idx']?>" <?=$p['idx'] == $project['idx'] ? 'selected' : ''?>><?=$p['name']?></option>
+                        <?}?>
                     </select>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<?php } ?>
 
+<script>
+    async function changeProject(el) {
+        const val = el.value;
 
+        let obj = {idx : val};
+
+        try {
+            let res = await jl.ajax("change",obj,"/api/project_base");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+</script>
 
 
 
