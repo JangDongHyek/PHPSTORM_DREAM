@@ -113,3 +113,73 @@ if(!$project) return false;
 
 </section>
 
+<!-- 담당자 계정 생성 -->
+<div class="modal fade" id="accountFormModal" tabindex="-1" aria-labelledby="accountFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
+                <h5 class="modal-title" id="accountFormModalLabel">담당자 계정 등록</h5>
+            </div>
+            <div class="modal-body" id="userForm">
+                <div class="form_wrap">
+                    <input type="hidden" id="project" value="<?=$project['idx']?>">
+                    <input type="hidden" id="idx" value="">
+                    <input type="hidden" id="level" value="20">
+                    <input type="hidden" id="allow" value="true">
+
+                    <label for="">소속사명</label>
+                    <input type="text" id="company_name" placeholder="소속사명" required="소속사를 입력해주세요."/>
+                    <label for="">아이디</label>
+                    <input type="text" id="user_id" placeholder="아이디" required="아이디를 입력해주세요"/>
+                    <label for="">비밀번호</label>
+                    <input type="password" id="change_user_pw" placeholder="비밀번호"/>
+                    <label for="">비밀번호 확인</label>
+                    <input type="password" id="user_pw_re" placeholder="비밀번호 확인"/>
+                    <label for="">이름</label>
+                    <input type="text" id="company_person" placeholder="이름" required="이름을 입력해주세요."/>
+                    <label for="">연락처</label>
+                    <input type="tel" id="company_person_phone" placeholder="연락처" required="연락처를 입력해주세요."/>
+                    <label for="">담당</label>
+                    <select id="company_position">
+                        <option value="콘크리트 타설">콘크리트 타설</option>
+                    </select>
+                    <label for="">비고</label>
+                    <input type="text" id="notes" placeholder="비고"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
+                <button type="button" class="btn btn-primary" onclick="postUser()">등록 완료</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php $jl->jsLoad();?>
+
+<script>
+    async function postUser() {
+        //let obj = jl.js.getInputById(['user_id','user_pw']);
+        let obj = jl.js.getFormById("userForm");
+        let method = obj['idx'] ? 'update' : "insert";
+        //let obj = jl.js.getUrlParams();
+
+        let required = jl.js.getFormRequired("userForm")
+        let options = {required : required};
+
+        try {
+            if(method == 'insert') {
+                if(!obj.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
+            }
+            if(obj.change_user_pw != obj.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
+
+            let res = await jl.ajax(method,obj,"/api/user",options);
+
+            alert("완료되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+</script>

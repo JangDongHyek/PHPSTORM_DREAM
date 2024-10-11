@@ -6,7 +6,6 @@ include_once('../lib/PHPExcel/Classes/PHPExcel/IOFactory.php');
 $response = array("message" => "");
 
 $model = new JlModel(array("table" => "meal_plan"));
-$info = new JlModel(array("table" => "meal_plan_info"));
 $log = new JlModel(array("table" => "excel_upload_log"));
 
 
@@ -152,6 +151,8 @@ if($test) {
         $page += $page_roop;
     }
 
+    $info = new JlModel(array("table" => "meal_plan_info"));
+
     //첫번째 시트 인포 내용
     for ($i = $page+1; $i <= $page+6; $i++) {
         $title = getMergedCellValue($sheet,"A{$i}");
@@ -267,6 +268,8 @@ if($test) {
         $page += $page_roop;
     }
 
+    $info = new JlModel(array("table" => "meal_plan_info"));
+
     //두번째 시트 인포 내용
     for ($i = $page+1; $i <= $page+6; $i++) {
         $title = getMergedCellValue($sheet,"A{$i}");
@@ -381,6 +384,8 @@ if($test) {
         $page += $page_roop;
     }
 
+    $info = new JlModel(array("table" => "meal_plan_info"));
+
     //세번째 시트 인포 내용
     for ($i = $page+1; $i <= $page+6; $i++) {
         $title = getMergedCellValue($sheet,"A{$i}");
@@ -412,33 +417,6 @@ if($test) {
                 $data['content_en'] = $content_en;
                 $info->update($data);
             } else {
-                $info->insert($obj);
-            }
-        }
-
-    }
-
-    //세번째 시트 인포 내용
-    for ($i = $page+1; $i <= $page+6; $i++) {
-        $title = getMergedCellValue($sheet,"A{$i}");
-        $content = getMergedCellValue($sheet,"B{$i}");
-        $title_en = getMergedCellValue($en_sheet,"A{$i}");
-        $content_en = getMergedCellValue($en_sheet,"B{$i}");
-
-        if($title) {
-            $obj = array(
-                "month" => $info_date,
-                "sheet" => $sheetName,
-                "title" => $title,
-                "content" => $content,
-                "title_en" => $title_en,
-                "content_en" => $content_en,
-            );
-
-            $data = $info->where($obj)->get();
-            $data = $data['data'][0];
-
-            if(!$data) {
                 $info->insert($obj);
             }
         }

@@ -39,42 +39,6 @@
 
 
 
-<!-- 담당자 계정 생성 -->
-<div class="modal fade" id="accountFormModal" tabindex="-1" aria-labelledby="accountFormModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
-                <h5 class="modal-title" id="accountFormModalLabel">담당자 계정 등록</h5>
-            </div>
-            <div class="modal-body">
-                <div class="form_wrap">
-                    <label for="">소속사명</label>
-                    <input type="text" name="" id="" placeholder="소속사명"/>
-                    <label for="">아이디</label>
-                    <input type="text" name="" id="" placeholder="아이디"/>
-                    <label for="">비밀번호</label>
-                    <input type="password" name="" id="" placeholder="비밀번호"/>
-                    <label for="">비밀번호 확인</label>
-                    <input type="password" name="" id="" placeholder="비밀번호 확인"/>
-                    <label for="">이름</label>
-                    <input type="text" name="" id="" placeholder="이름"/>
-                    <label for="">연락처</label>
-                    <input type="tel" name="" id="" placeholder="연락처"/>
-                    <label for="">담당</label>
-                    <input type="text" name="" id="" placeholder="담당"/>
-                    <label for="">비고</label>
-                    <input type="text" name="" id="" placeholder="비고"/>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
-                <button type="button" class="btn btn-primary">등록 완료</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- 수량산출서 수량 등록 -->
 <div class="modal fade" id="recordFormModal" tabindex="-1" aria-labelledby="recordFormModalLabel" aria-hidden="true">
     <div class="modal-dialog">

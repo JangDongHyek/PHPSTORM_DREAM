@@ -239,7 +239,24 @@ switch($_POST['mode']){
         $refundBankCd = $_POST['bankCd']; /* 가상계좌 취소시 */
         $refundAcctNo = $_POST['acctNo']; /* 가상계좌 취소시 */
         $refundAcctNm = $_POST['acctNm']; /* 가상계좌 취소시 */
-                
+
+        if($status == 'CANCEL') {
+            $classInfo = getClassInfo($class_idx);
+            $today = date("Y-m-d");
+            $event_date = date("Y-m-d", strtotime($classInfo['eventDate']));
+            // 날짜 차이 계산
+            $diff = (strtotime($event_date) - strtotime($today)) / (60 * 60 * 24); // 날짜 차이 일 단위로 계산
+
+            if (abs($diff) <= 7) {
+                echo "해당 날짜는 7일 이내입니다.";
+
+                $result['result'] = false;
+
+                $result['msg'] = '잘못된 접근. 7일이내 환불은 불가능합니다.';
+                die(json_encode($result));
+            }
+        }
+
         if($status == 'CANCEL' || $status == 'REFUND_END'){
             $classAppInfo = getClassAppInfo($class_app_idx);
             $payInfo = getPayInfo($class_app_idx);

@@ -420,11 +420,24 @@ class PublishController extends BaseController
         $project = session()->get("project");
         $projects = session()->get("projects");
 
+        $obj = $this->request->getGet();
+
+        $page = $obj['page'] ? $obj['page'] : 1;
+        $limit = 10;
+
+        $this->models['user']->where("project",$project['idx']);
+
+        $users = $this->models['user']->get(array(
+            "page" => $page,
+            "limit" => $limit
+        ));
+
         $data = [
             'pid' => 'account',
             "jl" => $this->jl,
             "project" => $project,
-            "projects" => $projects
+            "projects" => $projects,
+            "users" => $users
         ];
 
         return render('app/account', $data);

@@ -23,6 +23,7 @@ $routes->group('signup', ['namespace' => '\App\Controllers'], static function ($
     $routes->get('corpSellerCheck', 'RegisterController::corpSellerCheck');
     $routes->get('selfCerti', 'RegisterController::selfCerti');
     $routes->get('regiAgr', 'RegisterController::regiAgr');
+    $routes->get('kcpAgr', 'RegisterController::kcpAgr');
     $routes->get('infoBasic', 'RegisterController::infoBasic');
     $routes->get('infoSale', 'RegisterController::infoSale');
     $routes->get('infoSeller', 'RegisterController::infoSeller');
@@ -58,7 +59,9 @@ $routes->group('member', ['namespace' => '\App\Controllers' , 'filter' => 'auth:
     $routes->get('member_form', 'MemberController::member_form');
     $routes->post('member_form_update', 'MemberController::member_form_update');
     $routes->get('seller', 'MemberController::member_seller');
+    $routes->get('sellerFee', 'MemberController::member_seller_fee');
     $routes->get('sellerView', 'MemberController::member_seller_view');
+    $routes->get('sellerGoods', 'MemberController::member_seller_goods');
 });
 
 $routes->group('excel', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function($routes){
@@ -317,9 +320,12 @@ $routes->group('jungbi', ['namespace' => '\App\Controllers'], static function ($
     $routes->get('reserv_list', 'JungbiController::reserv_list');
     $routes->get('reserv_view', 'JungbiController::reserv_view');
     $routes->get('damaged_list', 'JungbiController::damaged_list');
+
+
     // 예약관리
     $routes->get('login', 'JungbiController::jungbi_login');
     $routes->get('logout', 'JungbiController::jungbi_logout');
+    $routes->post('save_data', 'JungbiController::save_data');
 
     // 로그인체크
     $routes->post('login_check', 'JungbiController::login_check');

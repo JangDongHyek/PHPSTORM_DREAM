@@ -74,15 +74,15 @@ function totalOrderKey($objects,$key) {
         <div>
             <p>일자구분</p>
             <div class="input_date">
-                <div class="input_select w150px">
-                    <select class="border_gray">
-                        <option value="D1" selected="">입금확인일</option>
-                        <option value="D3">매출기준일</option>
-                        <option value="D7">구매결정일</option>
-                        <option value="D4">환불일</option>
-                        <option value="D6">정산완료일</option>
-                    </select>
-                </div>
+<!--                <div class="input_select w150px">-->
+<!--                    <select class="border_gray">-->
+<!--                        <option value="D1" selected="">입금확인일</option>-->
+<!--                        <option value="D3">매출기준일</option>-->
+<!--                        <option value="D7">구매결정일</option>-->
+<!--                        <option value="D4">환불일</option>-->
+<!--                        <option value="D6">정산완료일</option>-->
+<!--                    </select>-->
+<!--                </div>-->
                 <div class="input_select">
                     <!--i class="fa-duotone fa-calendar"></i-->
                     <input type="date" class="border_gray" id="start_day" name="start_day" <?if($this->data['start_day']) echo "value='{$this->data['start_day']}'"?>>
@@ -110,6 +110,7 @@ function totalOrderKey($objects,$key) {
             <div class="flex gap5">
                 <div class="input_select">
                     <select class="border_gray" id="search_key">
+                        <option value="mb_id" <?if($this->data['search_key'] == "mb_id") echo "selected"?>>판매자ID</option>
                         <option value="PayNo" <?if($this->data['search_key'] == "PayNo") echo "selected"?>>결제번호</option>
                         <option value="OrderNo" <?if($this->data['search_key'] == "OrderNo") echo "selected"?>>주문번호</option>
                         <option value="SiteGoodsNo" <?if($this->data['search_key'] == "SiteGoodsNo") echo "selected"?>>상품번호</option>
@@ -124,9 +125,10 @@ function totalOrderKey($objects,$key) {
         <div>
             <p>판매처</p>
             <div class="input_select">
-                <select class="border_gray" name="">
-                    <option value="">G마켓</option>
-                    <option value="">옥션</option>
+                <select class="border_gray" id="SiteType">
+                    <option value="">전체</option>
+                    <option value="2" <?=$this->data['SiteType'] == '2' ? 'selected' : ''?>>G마켓</option>
+                    <option value="1" <?=$this->data['SiteType'] == '1' ? 'selected' : ''?>>옥션</option>
                 </select>
             </div>
         </div>
@@ -207,7 +209,8 @@ function totalOrderKey($objects,$key) {
                     <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
                 </td>
                 <td><?=$data['OutGoodsNo']?></td>
-                <td><a data-toggle="modal" data-target="#orderSheetModal"><?=$data['OrderNo']?></a></td>
+<!--                <td><a data-toggle="modal" data-target="#orderSheetModal">--><?//=$data['OrderNo']?><!--</a></td>-->
+                <td><a><?=$data['OrderNo']?></a></td>
                 <td><?=$data['BuyerName']?> (<?=$data['BuyerID']?>)</td>
                 <td><?=$data['GoodsName']?></td>
                 <td>카드결제</td>
@@ -305,7 +308,10 @@ function totalOrderKey($objects,$key) {
 
         let object = {
             end_day : end_day,
-            start_day : start_day
+            start_day : start_day,
+            search_key : $('#search_key').val(),
+            search_value : $('#search_value').val(),
+            SiteType : $('#SiteType').val()
         }
 
         objectHref(object);
@@ -325,14 +331,21 @@ function totalOrderKey($objects,$key) {
             start_day : $('#start_day').val(),
             end_day : $('#end_day').val(),
             search_key : $('#search_key').val(),
-            search_value : $('#search_value').val()
+            search_value : $('#search_value').val(),
+            SiteType : $('#SiteType').val()
         }
 
         objectHref(object)
     }
 
     function changeMonth(m) {
-        window.location.href = `?month=${m}`;
+        let obj = {
+            search_key : $('#search_key').val(),
+            search_value : $('#search_value').val(),
+            SiteType : $('#SiteType').val(),
+            month : m
+        }
+        objectHref(obj)
     }
 
     function changePage(p) {
