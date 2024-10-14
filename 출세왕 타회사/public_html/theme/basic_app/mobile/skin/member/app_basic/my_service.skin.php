@@ -90,7 +90,7 @@ if(!$is_member){
                 
                 <div class="form"><input type="number"   inputmode="numeric" pattern="[0-9]*"  name="cp_price" value="" id="cp_price" placeholder="사용할 적립금" class="frm"><span class="color-red">* 사용할 적립금</span></div>
 
-                <div class="form" style="display: none"><input type="text" name="cp_type" value="cp_point" id="cp_type" placeholder="종류" class="frm"
+                <div class="form" style="display: none"><input type="text" name="cp_type" value="" id="cp_type" placeholder="종류" class="frm"
                                                                readonly></div>
                 <div class="form" style="display: none"><input type="text" name="cp_id" value=""
                                          id="cp_id" placeholder="쿠폰번호" class="frm" readonly></div>

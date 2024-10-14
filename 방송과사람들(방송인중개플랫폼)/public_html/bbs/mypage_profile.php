@@ -28,6 +28,7 @@ if($mb == null) alert("로그인 해주세요", G5_URL);
 
     <div id="area_mypage" class="profile">
 		<div class="inr" id="app">
+            <?php include('./mypage_banner.php'); ?>
 			<div id="mypage_wrap">
 				<?php include_once('./mypage_info.php'); ?>
 

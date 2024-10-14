@@ -27,6 +27,24 @@ function insert_query($table_name,$table_idx,$arr,$add = ''){
 
 
 }
+
+function insert_query_sql($table_name,$table_idx,$arr,$add = ''){
+
+    $sql = "insert into ".$table_name." set ";
+
+    foreach ($arr as $key => $value) {
+        if ($key != "mode" && $key != $table_idx && $key != 'bf_file' ) {
+            $sql .= $key . "='" . $value . "',";
+        }
+    }
+
+    $sql .= $add;
+    $sql .= "wr_datetime = '" . G5_TIME_YMDHIS . "'";
+
+    return $sql;
+
+
+}
 //24-08-30 고객이 신청할떄 wr_datetime에 ,없어서 오류 매니저가 작업완료할떄 , 있어서 오류나서 insert_query 이원화
 function insert_query2($table_name,$table_idx,$arr,$add = ''){
 
@@ -123,6 +141,7 @@ if ($mode == "car_wash_form"){
         //여기 테스트용으로 풀고 정기신청 ㄱ
         $res['type'] = "NORMAL";
         $res['idx'] = 0;
+        $res['aa'] = 0;
         echo json_encode($res);
         die();
     }
@@ -171,13 +190,15 @@ if ($mode == "car_wash_form"){
 
     $sql_re = "select * from {$g5['car_wash_table']} where mb_id = '{$member['mb_id']}' and ma_id <> '' limit 0,1 ";
     $result_re = sql_fetch($sql_re);
+    $res['sql_re'] = $sql_re;
 
     if($result_re){
         $add .= " ma_id = '{$result_re['ma_id']}', ";
-        $add .= " cw_step = '1' ";
+        $add .= " cw_step = '1',";
     }
 
     $result = insert_query($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
+    $result_sql = insert_query_sql($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
 
     @mkdir(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);
     @chmod(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);
@@ -296,7 +317,9 @@ if ($mode == "car_wash_form"){
         insert_point($member['mb_id'], -($cp_price), '타입:'.$_REQUEST['car_date_type'].'member:'.$idx.' 포인트를 일부사용 결제했습니다.');
         $res['type'] = "NORMAL";
     }
+    $res['sq'] = $sql_re;
     $res['idx'] = $idx;
+    $res['result_sql'] = $result_sql;
     echo json_encode($res);
 
 

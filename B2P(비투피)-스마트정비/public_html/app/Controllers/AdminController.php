@@ -207,7 +207,9 @@ class AdminController extends BaseController {
         }else {
             $model->between("OrderDate",date('Y')."-01-01",date('Y')."-12-31");
         }
-        $model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
+        // 전 필드의 데이터값이 문자열이라 해줬던 내용
+        //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
+        $model->addSql("AND order_settle_list.SettleExpectDate BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
 
         if($this->data['search_key'] && $this->data['search_value']) {
             $model->like($this->data['search_key'],$this->data['search_value']);
@@ -238,7 +240,9 @@ class AdminController extends BaseController {
             $end_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'] + 1, 0, $this->data['year']));
         }
         $model->between("OrderDate",$start_day,$end_day);
-        $model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
+        // 전 필드의 데이터값이 문자열이라 해줬던 내용
+        //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
+        $model->addSql("AND order_settle_list.SettleExpectDate BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
         //$model->between("SettleExpectDate","2020-01-01 00:00:00",$today_end,"AND","order_settle_list");
 
         //검색 조건문

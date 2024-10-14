@@ -165,9 +165,14 @@
         var OrderAmount_total = 0;
         var ServiceFee_total = 0;
         var KCPServiceFee_total = 0;
+        var KCPServiceFeeEvent_total = 0;
         var CostPrice_total = 0;
         var SellerDiscountPrice_total = 0;
         var SettlementPrice_total = 0;
+
+        // kcp 수수료 이벤트 진행중 true
+        var card_event = false;
+
         for (var i = 0; i < listData.length; i++) {
             var calc = null;
             var idx = listData[i]['idx'];
@@ -181,12 +186,19 @@
             //console.log(response)
             //console.log(response2)
 
-            var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
-            var KCPServiceFee = calc_data ? (parseInt(calc_data['SellOrderPrice']*0.023)) : parseInt((response['result']['OrderAmount']*0.023))
+            //var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
+            // 배송비 및 옵션값 합한 판매금액은 정산이아닌 주문쪽 값에 있으므로 변경
+            var OrderAmount = response['result']['OrderAmount']
             var ServiceFee = calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
             var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
             var SellerDiscountPrice = calc_data ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice']
             var SettlementPrice = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
+
+            var BuyerPayAmt = calc_data ? calc_data['BuyerPayAmy'] : response['result']['AcntMoney']; //구매자 결제금액
+            var KCPServiceFee = BuyerPayAmt * 0.023 // 카드 수수료
+
+            KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
+
 
             //부가적인 설정
             SellerDiscountPrice = SellerDiscountPrice * -1;     // 음수화
@@ -194,8 +206,15 @@
             if (KCPServiceFee > 0) KCPServiceFee = KCPServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             var b2p_commission = OrderAmount * 0.05;            // b2p 자체 수수료 (판매금액의 5퍼센트)
 
+            //공급원가에 b2p_commission 추가
+            CostPrice = CostPrice - b2p_commission;
+
+
             ServiceFee = ServiceFee - b2p_commission;
             SettlementPrice = SettlementPrice - b2p_commission + KCPServiceFee;
+
+            if(card_event) SettlementPrice = SettlementPrice - b2p_commission;
+            else SettlementPrice = SettlementPrice - b2p_commission + KCPServiceFee;
 
 
             code_html += '<tr>';
@@ -203,10 +222,15 @@
             code_html += '<td>' + response['result']['GoodsName'] + '</td>';
             code_html += '<td>' + AddComma(OrderAmount) + '</td>';
             code_html += '<td>' + AddComma(ServiceFee) + '</td>';
-            code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';
-            code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(CostPrice) + '</td>';
+            //code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(SellerDiscountPrice) + '</td>';
+            code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';
+            code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';
+            if(card_event) {
+            code_html += '<td style="text-decoration: line-through;">' + AddComma(KCPServiceFee) + '</td>';
+            }
+
             code_html += '<td>' + AddComma(SettlementPrice) + '</td>';
             //code_html += response['body']['Message'] + '<br>';
             code_html += '</tr>';
@@ -214,6 +238,7 @@
             OrderAmount_total += (OrderAmount) * 1;
             ServiceFee_total += (ServiceFee) * 1;
             KCPServiceFee_total += (KCPServiceFee) * 1;
+            KCPServiceFeeEvent_total += (KCPServiceFee) * -1;
             CostPrice_total += (CostPrice) * 1;
             SellerDiscountPrice_total += (SellerDiscountPrice) * 1;
             SettlementPrice_total += (SettlementPrice) * 1;
@@ -249,6 +274,14 @@
         $('#modal_CostPrice_total').html(AddComma(CostPrice_total));
         $('#modal_SellerDiscountPrice_total').html(AddComma(SellerDiscountPrice_total));
         $('#modal_SettlementPrice_total').html(AddComma(SettlementPrice_total));
+
+        if(card_event) {
+            $('#modal_KCPServiceFeeEvent_total').html(AddComma(KCPServiceFeeEvent_total));
+        }else {
+            $('#kcp_event_th').remove();
+            $('#kcp_event_td').remove();
+            $('#modal_KCPServiceFeeEvent_p').remove();
+        }
         defModal.modal();
 
     }
@@ -976,7 +1009,7 @@
 
         // 241004 반품상품받으셨읍니까 에서  환불보류설정 예가 아니면 뜨게 wc
         // 241008 둘다 아니오이면 오류뜨게 wc
-        if($('#returnModal_return_radoi2_1').is(':checked') && $('#returnModal_return_radoi2_2').is(':checked') ){
+        if($('#returnModal_return_radoi1_2').is(':checked') && $('#returnModal_return_radoi2_2').is(':checked') ){
             Swal.fire({
                 title: "반품처리",
                 html: `
@@ -994,7 +1027,7 @@
 
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             }).then(result => {
-                $('#returnModal_return_radoi2_1').focus();
+                $('#returnModal_return_radoi1_2').focus();
             });
             return false;
         }
@@ -4397,11 +4430,12 @@
                             <th>주문번호</th>
                             <th>상품명</th>
                             <th>판매금액</th>
-                            <th>수수료</th>
-                            <th>KCP수수료</th>
-                            <th>KCP수수료(캐시백이벤트)</th>
+                            <th>기본서비스이용료</th>
                             <th>공급원가</th>
-                            <th>판매자할인</th>
+                            <th>판매자할인/공제금</th>
+                            <th>고객 결제금액</th>
+                            <th>KCP수수료</th>
+                            <th id="kcp_event_th">KCP수수료(캐시백이벤트)</th>
                             <th>정산예정금액</th>
                         </tr>
                         </thead>
@@ -4410,11 +4444,12 @@
                             <td>주문번호</td>
                             <td>상품명</td>
                             <td>판매금액</td>
-                            <td>수수료</td>
-                            <td>KCP수수료</td>
-                            <td>KCP수수료(캐시백이벤트)</td>
+                            <td>기본서비스이용료</td>
                             <td>공급원가</td>
-                            <td>판매자할인</td>
+                            <td>판매자할인/공제금</td>
+                            <td>고객 결제금액</td>
+                            <td>KCP수수료</td>
+                            <td id="kcp_event_td">KCP수수료(캐시백이벤트)</td>
                             <td>정산예정금액</td>
                         </tr>
                         </tbody>
@@ -4428,7 +4463,7 @@
                     <p>판매금액 <br><span class="color-blue" id="modal_OrderAmount_total">0</span>원</p>
                     <p>수수료 <br><span class="color-blue" id="modal_ServiceFee_total">0</span>원</p>
                     <p>KCP수수료 <br><span class="color-blue" id="modal_KCPServiceFee_total">0</span>원</p>
-                    <p>KCP수수료(캐시백이벤트) <br><span class="color-blue" id="">0</span>원</p>
+                    <p id="modal_KCPServiceFeeEvent_p">KCP수수료(캐시백이벤트) <br><span class="color-blue" id="modal_KCPServiceFeeEvent_total">0</span>원</p>
                     <p>공급원가 <br><span class="color-blue" id="modal_CostPrice_total">0</span>원</p>
                     <p>판매자할인 <br><span class="color-blue" id="modal_SellerDiscountPrice_total">0</span>원</p>
                     <p>정산예정금액 <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
