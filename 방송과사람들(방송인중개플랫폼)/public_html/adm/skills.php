@@ -18,7 +18,7 @@ include_once('./admin.head.php');
 </div>
 
 
-<?php $jl->vueLoad();?>
+<?php $jl->vueLoad("app",["drag"]);?>
 
 
 

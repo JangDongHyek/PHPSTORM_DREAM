@@ -2,7 +2,7 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div class="outer-container">
         <div class="container">
-            <draggable v-model="data" group="categories" class="category-list">
+            <draggable v-model="data" group="categories" class="category-list" @change="onChange">
                 <template v-for="item,index in data">
                     <li :key="index" @click="(select_item && select_item.idx == item.idx) ? select_item = '' : select_item = item;">
                         <div class="category-header">
@@ -13,7 +13,7 @@
                                 <button @click="event.stopPropagation(); deleteData(item.idx)">삭제</button>
                             </div>
                         </div>
-                        <draggable v-model="item.childs" :group="'subcategories' + index" class="subcategory-list">
+                        <draggable v-model="item.childs" :group="'subcategories' + index" class="subcategory-list" @change="onChange2(item.childs)">
                             <template v-for="child,index2 in item.childs">
                     <li :key="index2" v-show="select_item.idx == item.idx">
                         <div class="subcategory-header">
@@ -48,20 +48,7 @@
             return {
                 jl : null,
                 filter : {
-                    page : 1,
-                    limit : 1,
-                    count : 0,
-                    search_key1 : "",
-                    search_value1_1 : "",
-                    search_value1_2 : "",
-                    search_like_key1 : "",
-                    search_like_value1 : "",
-                    not_key1 : "",
-                    not_value1 : "",
-                    in_key1 : "",
-                    in_value : [],
-                    order_by_desc : "insert_date",
-                    order_by_asc : "",
+                    parent_idx : "jl_null"
                 },
                 required : [
                     {name : "",message : ""},
@@ -76,7 +63,7 @@
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
 
-            if(this.primary) this.getData();
+            this.getData();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -84,11 +71,40 @@
             });
         },
         methods: {
-            async postData() {
-                let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
+            onChange2 : function(childs) {
+                let app = this;
+
+                childs.forEach(function(data,index) {
+                    let obj = {
+                        idx : data.idx,
+                        name : data.name,
+                        priority : index
+                    }
+
+                    app.jl.ajax("update",obj,"/api/skills.php");
+
+                })
+            },
+            onChange : function(e) {
+                let app = this;
+                this.data.forEach(function(data,index) {
+                    let obj = {
+                        idx : data.idx,
+                        name : data.name,
+                        priority : index
+                    }
+
+
+                    app.jl.ajax("update",obj,"/api/skills.php");
+                })
+            },
+            async deleteData(idx) {
+                let obj = {primary : idx}
+                if(!confirm("정말 삭제 하시겠습니까?")) return false;
                 try {
-                    let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
+                    let res = await this.jl.ajax("delete",obj,"/api/skills.php");
+                    alert("삭제되었습니다.");
+                    await this.getData();
                 }catch (e) {
                     alert(e.message)
                 }
@@ -96,8 +112,8 @@
             },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
-                    this.data = res.data[0]
+                    let res = await this.jl.ajax("get",this.filter,"/api/skills.php");
+                    this.data = res.data
                 }catch (e) {
                     alert(e.message)
                 }

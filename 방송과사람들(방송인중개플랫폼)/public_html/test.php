@@ -1,29 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHP WebSocket Chat</title>
-</head>
-<body>
-<h1>PHP WebSocket 채팅</h1>
-<div id="chat-box"></div>
-<input type="text" id="message" placeholder="메시지를 입력하세요">
-<button onclick="sendMessage()">전송</button>
+<?php
+include_once("./jl/JlConfig.php");
 
-<script>
-    const ws = new WebSocket('wss://itforone.com/~broadcast/test.php443');
+$model = new JlModel(array("table" => "skills"));
 
-    ws.onmessage = function(event) {
-        const chatBox = document.getElementById('chat-box');
-        chatBox.innerHTML += '<p>' + event.data + '</p>';
-    };
+//$cate = array("영상·사진·음향 제작", "방송 디자인·편집",
+//    "방송마케팅", "방송·배우·연기", "모델", "방송 스태프",
+//    "방송·시나리오· 작가", "뷰티·패션", "MC·행사·이벤트", "레슨", "심리상담", "기타", "IT·프로그래밍", "직무역량 레슨");
+//
+//foreach($cate as $c) {
+//    $obj = array(
+//        "name" => $c
+//    );
+//    $model->insert($obj);
+//}
+$cate = array(
+"3D프린터개발산업기사",
+"3D프린터운용기능사",
+"FL스튜디오",
+"SQL",
+"TOEIC·Speaking·writing",
+"VFX",
+"게임그래픽전문가",
+"게임기획전문가",
+"게임프로그래밍전문가",
+"기타통계분석툴",
+"데이터마이닝",
+"데이터분석",
+"데이터분석전문가",
+"데이터분석준전문가",
+"데이터아키텍처전문가",
+"디지털정보활용능력",
+"딥러닝",
+"로직스튜디오",
+"리눅스마스터",
+"머신러닝",
+"멀티미디어콘텐츠제작전문가",
+"문서실무사",
+"바둑",
+"베가스",
+"비즈니스회화",
+"사무자동화산업기사",
+"스튜디오원",
+"시창청음",
+"실무회화",
+"에이블톤",
+"엑셀",
+"영사기능사",
+"영사산업기사",
+"워드·한글(문서)",
+"워드프레스",
+"워드프로세서",
+"웹디자인기능사",
+"이용사",
+"이용장",
+"인문학·학업",
+"일상회화",
+"임베디드기사",
+"전자응용기술사",
+"전자캐드기능사",
+"정보관리기술사",
+"정보기기운용기능사",
+"정보처리기능사",
+"정보처리기사",
+"정보처리산업기사",
+"컴퓨터그래픽스운용기능사",
+"컴퓨터시스템응용기술사",
+"컴퓨터운용사",
+"컴퓨터활용능력",
+"큐베이스",
+"파워포인트",
+"파이널컷",
+"프레젠테이션",
+"프로툴",
+"한글속기",
 
-    function sendMessage() {
-        const messageInput = document.getElementById('message');
-        ws.send(messageInput.value);
-        messageInput.value = '';
-    }
-</script>
-</body>
-</html>
+);
+//
+//foreach($cate as $c) {
+//    $obj = array(
+//        "parent_idx" => "28",
+//        "name" => $c
+//    );
+//    $model->insert($obj);
+//}
+?>

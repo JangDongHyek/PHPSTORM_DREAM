@@ -14,21 +14,21 @@
                                 <span class="close" @click="data.job_skills = jl.copyObject(user.job_skills); modal = false;"><i class="fa-light fa-xmark"></i></span>
                             </div>
                             <div class="modal-search">
-                                <i class="fa-light fa-magnifying-glass"></i><input type="search" placeholder="기술 검색" v-model="search_tab">
+                                <i class="fa-light fa-magnifying-glass"></i><input type="search" placeholder="기술 검색" v-model="search_tab" @input="search_tab = event.target.value;">
                             </div>
                             <div class="modal-scroll">
                                 <div class="tabs-container">
                                     <div class="tabs">
                                         <template v-for="item in searchTabs">
-                                            <div class="tab" :class="{'active' : tab == item}" data-tab="tab1" @click="tab = item">{{item}}</div>
+                                            <div class="tab" :class="{'active' : tab == item.idx}" data-tab="tab1" @click="tab = item.idx">{{item.name}}</div>
                                         </template>
                                     </div>
                                     <div class="tab-content">
                                         <div id="tab" class="content" v-if="tab && subTab" style="display: block">
                                             <div class="select">
-                                                <template v-for="item,index in subTab.tabs">
-                                                    <input type="checkbox" :id="'checkbox'+index" :value="item" v-model="data.job_skills">
-                                                    <label :for="'checkbox'+index">{{item}}</label>
+                                                <template v-for="item,index in subTab.childs">
+                                                    <input type="checkbox" :id="'checkbox'+index" :value="item.name" v-model="data.job_skills">
+                                                    <label :for="'checkbox'+index">{{item.name}}</label>
                                                 </template>
                                             </div>
                                         </div>
@@ -79,8 +79,7 @@
                 },
                 modal : false,
                 search_tab : "",
-                tabs : [ "디자인", "마케팅", "번역·통역", "문서·글쓰기", "IT·프로그래밍", "세무·법무·노무",
-                    "창업·사업", "운세", "직무역량 레슨", "취업·입시", "투잡·노하우", "취미 레슨", "생활서비스", "영상·사진·음향", "심리상담", "주문제작"],
+                tabs : [],
                 sub_tabs : [
                     {
                         name : "디자인",
@@ -103,6 +102,7 @@
         },
         created: function(){
             this.jl = new JL('<?=$componentName?>');
+            this.getData();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -116,17 +116,21 @@
             },
             getData: function () {
                 var method = "get";
-                var filter = JSON.parse(JSON.stringify(this.filter));
+                var filter = {
+                    parent_idx : "jl_null"
+                }
 
                 var objs = {
                     _method: method,
-                    filter: JSON.stringify(filter)
+                    obj: JSON.stringify(filter)
                 };
 
-                var res = ajax("/api/example.php", objs);
+                var res = ajax("/api/skills.php", objs);
                 if (res) {
-                    this.jl.log(res)
-                    this.data = res.response.data
+                    this.tabs = res.data;
+                    console.log(res);
+                    //this.jl.log(res)
+                    //this.data = res.response.data
                 }
             }
         },
@@ -134,13 +138,13 @@
             searchTabs : function() {
                 if(!this.search_tab) return this.tabs;
 
-                var filter_tabs = this.tabs.filter(item => item.includes(this.search_tab))
+                var filter_tabs = this.tabs.filter(item => item.name.includes(this.search_tab))
                 return filter_tabs;
             },
             subTab : function() {
                 if(!this.tab) return undefined;
 
-                return this.sub_tabs.find(item => item['name'] === this.tab)
+                return this.tabs.find(item => item['idx'] === this.tab)
 
             }
         },

@@ -209,7 +209,8 @@ class AdminController extends BaseController {
         }
         // 전 필드의 데이터값이 문자열이라 해줬던 내용
         //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
-        $model->addSql("AND order_settle_list.SettleExpectDate BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
+        // 정산 예정일이 없으면 안나오게 하는구문인데 왜 있는지 기억이안남
+        //$model->addSql("AND order_settle_list.SettleExpectDate BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
 
         if($this->data['search_key'] && $this->data['search_value']) {
             $model->like($this->data['search_key'],$this->data['search_value']);
@@ -217,7 +218,10 @@ class AdminController extends BaseController {
         if($this->data['SiteType']) {
             $model->where("SiteType",$this->data['SiteType']);
         }
-        $this->data['all_orders'] = $model->get();
+        $this->data['all_orders'] = $model->get(array(
+                "select" => array("SellOrderPrice","OptionPrice","SellerDiscountTotalPrice")
+            )
+        );
 
         // 조건문 및 필터링
         $model->reset();
@@ -242,7 +246,8 @@ class AdminController extends BaseController {
         $model->between("OrderDate",$start_day,$end_day);
         // 전 필드의 데이터값이 문자열이라 해줬던 내용
         //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
-        $model->addSql("AND order_settle_list.SettleExpectDate BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
+        // 정산 예정일이 없으면 안나오게 하는구문인데 왜 있는지 기억이안남
+        //$model->addSql("AND order_settle_list.SettleExpectDate BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
         //$model->between("SettleExpectDate","2020-01-01 00:00:00",$today_end,"AND","order_settle_list");
 
         //검색 조건문
@@ -259,11 +264,13 @@ class AdminController extends BaseController {
             "page" => $this->data['page'],
             "limit" =>$this->data['limit'],
             "reset" => false,
-            "sql" => true
+            "sql" => true,
+            "select" => array("SellOrderPrice","OptionPrice","SellerDiscountTotalPrice")
         ));
 
         $this->data['search_all_orders'] = $model->get(array(
-            "sql" => true
+            "sql" => true,
+            "select" => array("SellOrderPrice","OptionPrice","SellerDiscountTotalPrice")
         ));
 
         $this->data['last'] = ceil($this->data['orders']['count'] / $this->data['limit']);
@@ -278,6 +285,11 @@ class AdminController extends BaseController {
     {
         $this->data['pid'] = 'notice_list';
         return view('admin/notice_list',$this->data);
+    }
+    public function notice_view()
+    {
+        $this->data['pid'] = 'notice_view';
+        return view('admin/notice_view',$this->data);
     }
     public function notice_write()
     {
@@ -295,6 +307,11 @@ class AdminController extends BaseController {
     {
         $this->data['pid'] = 'qna_view';
         return view('admin/qna_view',$this->data);
+    }
+    public function qna_write()
+    {
+        $this->data['pid'] = 'qna_write';
+        return view('admin/qna_write',$this->data);
     }
     
 //    메시지관리

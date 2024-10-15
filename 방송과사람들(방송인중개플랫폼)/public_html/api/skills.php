@@ -42,6 +42,8 @@ try {
                 //$models[$table]->like("join_column","value","AND",$join_table);
             }
 
+            $models[$table]->orderBy("priority","ASC");
+
             $object = $models[$table]->where($obj)->get(array(
                 "page" => $obj['page'],
                 "limit" => $obj['limit'],
@@ -63,6 +65,15 @@ try {
                     //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 jl.js에 있음
                     $object["data"][$index][strtoupper($info['table'])] = $join_data;
                 }
+            }
+
+            foreach ($object["data"] as $index => $data) {
+                $models[$table]->where("parent_idx",$data['idx']);
+                $models[$table]->orderBy("priority","ASC");
+                $join_data = $models[$table]->get()['data'];
+
+                //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 jl.js에 있음
+                $object["data"][$index]["childs"] = $join_data;
             }
 
             $response['data'] = $object['data'];
@@ -126,6 +137,9 @@ try {
             }
 
             $data = $models[$table]->delete($obj);
+
+            $models[$table]->where("parent_idx",$obj[$models[$table]->primary]);
+            $models[$table]->whereDelete();
 
             $response['success'] = true;
             break;

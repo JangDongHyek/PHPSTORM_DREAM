@@ -2,6 +2,21 @@
 include_once('./_common.php');
 include_once("../jl/JlConfig.php");
 
+function replaceJsonValueQuotes($jsonString) {
+    // 정규식을 사용하여 배열 [{}] 형식에서도 키에 해당하는 따옴표는 건드리지 않고 값에 있는 따옴표만 처리
+    // (?<=:)는 콜론(:)이 앞에 있어야 한다는 의미로, 키와 값을 구분
+    // (?<!\\\\)는 역슬래시로 이스케이프되지 않은 따옴표만 찾는다는 의미
+    $pattern = '/(?<=:)(\s*)"([^"]*?)(?<!\\\\)"(\s*)([,}])/';
+
+    // 배열 [{}] 구조를 포함하여 값에 있는 따옴표만 찾아서 변형
+    $result = preg_replace_callback($pattern, function($matches) {
+        // 변환된 값을 return
+        return $matches[1] . '"' . str_replace('\"', '"', $matches[2]) . '"' . $matches[3] . $matches[4];
+    }, $jsonString);
+
+    return $result;
+}
+
 try{
     $model = new JlModel(array(
         "table" => "compete",

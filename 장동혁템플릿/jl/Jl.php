@@ -51,17 +51,29 @@ class Jl {
     }
 
     function jsonDecode($origin_json,$encode = true) {
-        $json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
-        $json = str_replace('\"', '###NEWQUOTATION###', $json);
-        $json = str_replace('\\', '', $json);
-        //$json = str_replace('\\\\', '', $json);
-        $json = str_replace('###NEWLINE###', '\\n', $json);
-        $json = str_replace('###NEWQUOTATION###', '\"', $json);
+        $str_json = stripslashes($origin_json);
 
-        $obj = json_decode($json, true);
+        $obj = json_decode($str_json, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error("Jl jsonDecode()\norigin : ".$origin_json."\nreplace : $json");
+            $json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
+            $json = str_replace('\"', '###NEWQUOTATION###', $json);
+            $json = str_replace('\\', '', $json);
+            $json = str_replace('\\\\', '', $json);
+            $json = str_replace('###NEWLINE###', '\\n', $json);
+            $json = str_replace('###NEWQUOTATION###', '\"', $json);
+
+            $obj = json_decode($json, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $msg = "Jl jsonDecode()";
+                if($this->DEV) {
+                    $msg .= "\norigin : $origin_json";
+                    $msg .= "\nstripslashes : $str_json";
+                    $msg .= "\nreplace : $json";
+                }
+                $this->error("Jl jsonDecode()\norigin : ".$origin_json."\nreplace : $json");
+            }
         }
 
         // 오브젝트 비교할때가있어 파라미터가 false값일땐 모든값 decode

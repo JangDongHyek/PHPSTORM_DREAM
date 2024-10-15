@@ -188,7 +188,7 @@
 
             //var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
             // 배송비 및 옵션값 합한 판매금액은 정산이아닌 주문쪽 값에 있으므로 변경
-            var OrderAmount = response['result']['OrderAmount']
+            var OrderAmount = calc_data ? calc_data['SellOrderPrice'] + calc_data['OptionPrice'] : response['result']['OrderAmount']
             var ServiceFee = calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
             var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
             var SellerDiscountPrice = calc_data ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice']

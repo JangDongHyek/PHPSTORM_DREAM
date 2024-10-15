@@ -25,20 +25,7 @@
             return {
                 jl : null,
                 filter : {
-                    page : 0,
-                    limit : 0,
-                    count : 0,
-                    search_key1 : "",
-                    search_value1_1 : "",
-                    search_value1_2 : "",
-                    search_like_key1 : "",
-                    search_like_value1 : "",
-                    not_key1 : "",
-                    not_value1 : "",
-                    in_key1 : "",
-                    in_value : [],
-                    order_by_desc : "insert_date",
-                    order_by_asc : "",
+
                 },
                 required : [
                     {name : "",message : ""},
@@ -51,6 +38,8 @@
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
 
+            if(this.parent_idx) this.data.parent_idx = this.parent_idx;
+            if(this.primary) this.filter.primary = this.primary;
             if(this.primary) this.getData();
         },
         mounted: function(){
@@ -64,6 +53,8 @@
                 let options = {required : this.required};
                 try {
                     let res = await this.jl.ajax(method,this.data,"/api/skills.php",options);
+                    this.$emit('close');
+                    this.$emit('update');
                 }catch (e) {
                     alert(e.message)
                 }
@@ -71,7 +62,7 @@
             },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
+                    let res = await this.jl.ajax("get",this.filter,"/api/skills.php");
                     this.data = res.data[0]
                 }catch (e) {
                     alert(e.message)

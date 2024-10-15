@@ -23,7 +23,8 @@ function sortMonthOrder($month,$objects,$card_event) {
         $data_date = new DateTime($data['OrderDate']);
 
         if($start_date <= $data_date && $data_date <= $end_date) {
-            $b2p_commission = (int)$data['OrderAmount'] * 0.05;
+            $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
+            $b2p_commission = $OrderAmount * 0.05;
             $card_commission = (int)$data['AcntMoney'] * 0.023;
             $SettlementPrice = (int)$data['SettlementPrice'];
 
@@ -42,18 +43,18 @@ function totalOrderKey($objects,$key,$card_event) {
     $total_commission = 0;
     $total_calc = 0;
     foreach ($objects as $index => $data) {
-        $OrderAmount = (int)$data['OrderAmount'];
+        $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
         $AcntMoney = (int)$data['AcntMoney'];
         $b2p_commission = $OrderAmount * 0.05;
         $card_commission = $AcntMoney * 0.023;
         $ServiceFee = (int)$data['ServiceFee'];
         $SettlementPrice = (int)$data['SettlementPrice'];
-        $SellerDiscountPrice = (int)$data['SellerDiscountPrice'];
+        $SellerDiscountTotalPrice = (int)$data['SellerDiscountTotalPrice'];
 
         if($card_event) $card_commission = 0;
 
         $total_order += $OrderAmount;
-        $total_commission += ($b2p_commission + $ServiceFee + $card_commission) + $SellerDiscountPrice;
+        $total_commission += ($b2p_commission + $ServiceFee + $card_commission) + $SellerDiscountTotalPrice;
         $total_calc += ($SettlementPrice - $b2p_commission - $card_commission);
     }
 
@@ -74,6 +75,8 @@ function totalOrderKey($objects,$key,$card_event) {
 <?php
 //echo var_dump($this->data['orders']['data']);
 //var_dump(totalMonthOrder(8,$this->data['orders']['data']));
+//echo $this->data['orders']['sql'];
+//echo 1;
 ?>
 <div class="sch_wrap">
     <p class="tit">검색조건
@@ -198,17 +201,19 @@ function totalOrderKey($objects,$key,$card_event) {
 
             <?php foreach ($this->data['orders']['data'] as $index => $data) {
                 $data['SellerCashBackMoney'] = $data['SellerCashBackMoney'] ? (int)$data['SellerCashBackMoney'] : 0;
-                $data['SellerDiscountPrice'] = $data['SellerDiscountPrice'] ? (int)$data['SellerDiscountPrice'] : 0;
+                $data['SellerDiscountTotalPrice'] = $data['SellerDiscountTotalPrice'] ? (int)$data['SellerDiscountTotalPrice'] : 0;
                 $data['OrderAmount'] = $data['OrderAmount'] ? (int)$data['OrderAmount'] : 0;
+                // 주문 금액이랑 EMS랑 안맞을때가 있어 직접 변수 생성
+                $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
                 $data['SettlementPrice'] = $data['SettlementPrice'] ? (int)$data['SettlementPrice'] : 0;
 
                 $data['DirectDiscountPrice'] = $data['DirectDiscountPrice'] ? (int)$data['DirectDiscountPrice'] : 0;
                 $data['SellerFundingDiscountPrice'] = $data['SellerFundingDiscountPrice'] ? (int)$data['SellerFundingDiscountPrice'] : 0;
 
-                $b2p_commission = $data['OrderAmount'] * 0.05;
+                $b2p_commission = $OrderAmount * 0.05;
                 $card_commission = $data['AcntMoney'] * 0.023;
                 $totalDiscount = 0;
-                $totalDiscount += $data['SellerCashBackMoney'] + $data['SellerDiscountPrice'];
+                $totalDiscount += $data['SellerCashBackMoney'] + $data['SellerDiscountTotalPrice'];
 
                 if($card_event) $calcPrice = $data['SettlementPrice'] - $b2p_commission;
                 else $calcPrice = $data['SettlementPrice'] - $b2p_commission - $card_commission;
@@ -229,13 +234,13 @@ function totalOrderKey($objects,$key,$card_event) {
                 <td><?=$data['BuyerName']?> (<?=$data['BuyerID']?>)</td>
                 <td><?=$data['GoodsName']?></td>
                 <td>카드결제</td>
-                <td><?=number_format($data['OrderAmount'])?>원</td>
+                <td><?=number_format($OrderAmount)?>원</td>
                 <td>
                     <details>
                         <summary>총 할인 <?=number_format($totalDiscount)?>원</summary>
                         <dl>
                             <dt>판매자할인</dt>
-                            <dd>-<?=number_format($data['SellerDiscountPrice'])?></dd>
+                            <dd>-<?=number_format($data['SellerDiscountTotalPrice'])?></dd>
                             <dt>쿠폰할인</dt>
                             <dd>-<?=number_format($data['DirectDiscountPrice'])?></dd>
                             <dt>지마켓(비투피)할인</dt>
