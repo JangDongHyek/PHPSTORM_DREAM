@@ -8,8 +8,23 @@ $header_name = "정산 관리";
 
 //kcp 카드수수료 이벤트중일때 true 아니면 false
 $card_event = true;
+$kcp_commission = 2.3 / 100;
+$kcp_cash_back = 2.3 / 100;
+$b2p_commission = 5 / 100;
 
-function sortMonthOrder($month,$objects,$card_event) {
+// global 변수를 사용할려면 ci설정을 바꿔야하기때문에 파라미터로 대체
+$function_array = array(
+    "card_event" => $card_event,
+    "kcp_commission" => $kcp_commission,
+    "kcp_cash_back" => $kcp_cash_back,
+    "b2p_commission" => $b2p_commission
+);
+
+function sortMonthOrder($month,$objects,$info) {
+    $card_event = $info['card_event'];
+    $kcp_commission = $info['kcp_commission'];
+    $kcp_cash_back = $info['kcp_cash_back'];
+    $b2p_commission = $info['b2p_commission'];
 
     $year = date('Y');
     $start_day = date('Y-m-d', mktime(0, 0, 0, $month, 1, $year));
@@ -24,20 +39,27 @@ function sortMonthOrder($month,$objects,$card_event) {
 
         if($start_date <= $data_date && $data_date <= $end_date) {
             $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
-            $b2p_commission = $OrderAmount * 0.05;
-            $card_commission = (int)$data['AcntMoney'] * 0.023;
+            $b2p_fee = $OrderAmount * $b2p_commission;
+            $card_fee = (int)($data['AcntMoney'] * $kcp_commission);
+            $card_payback = (int)($data['AcntMoney'] * $kcp_cash_back);
             $SettlementPrice = (int)$data['SettlementPrice'];
 
-            if($card_event) $card_commission = 0;
+            $total_fee = $card_fee;
 
-            $result += $SettlementPrice - $b2p_commission - $card_commission;
+            if($card_event) $total_fee = $card_fee - $card_payback;
+
+            $result += $SettlementPrice - $b2p_fee - $total_fee;
         }
     }
 
     return number_format($result);
 }
 
-function totalOrderKey($objects,$key,$card_event) {
+function totalOrderKey($objects,$key,$info) {
+    $card_event = $info['card_event'];
+    $kcp_commission = $info['kcp_commission'];
+    $kcp_cash_back = $info['kcp_cash_back'];
+    $b2p_commission = $info['b2p_commission'];
 
     $total_order = 0;
     $total_commission = 0;
@@ -45,17 +67,22 @@ function totalOrderKey($objects,$key,$card_event) {
     foreach ($objects as $index => $data) {
         $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
         $AcntMoney = (int)$data['AcntMoney'];
-        $b2p_commission = $OrderAmount * 0.05;
-        $card_commission = $AcntMoney * 0.023;
+
+        $service_fee = $OrderAmount * 0.13;
+        $b2p_fee = $OrderAmount * $b2p_commission;
+
+        $card_fee = (int)($AcntMoney * $kcp_commission);
+        $card_payback = (int)($AcntMoney * $kcp_cash_back);
         $ServiceFee = (int)$data['ServiceFee'];
         $SettlementPrice = (int)$data['SettlementPrice'];
         $SellerDiscountTotalPrice = (int)$data['SellerDiscountTotalPrice'];
 
-        if($card_event) $card_commission = 0;
+        $total_fee = $card_fee;
+        if($card_event) $total_fee = $card_fee - $card_payback;
 
         $total_order += $OrderAmount;
-        $total_commission += ($b2p_commission + $ServiceFee + $card_commission) + $SellerDiscountTotalPrice;
-        $total_calc += ($SettlementPrice - $b2p_commission - $card_commission);
+        $total_commission += ($b2p_fee + $service_fee + $total_fee);
+        $total_calc += ($SettlementPrice - $b2p_fee - $total_fee);
     }
 
     switch ($key) {
@@ -155,7 +182,7 @@ function totalOrderKey($objects,$key,$card_event) {
         <? for ($i=1;$i <= 12; $i++) {?>
         <div class="monthBox <?php if($this->data['month'] == $i) echo "monthBg";?>" data-action="calcMonth" data-month="<?=$i?>" onclick="changeMonth(<?=$i?>)">
             <h2><?=$i?>월</h2>
-            <p><?=sortMonthOrder($i,$this->data['all_orders']['data'],$card_event)?>원</p>
+            <p><?=sortMonthOrder($i,$this->data['all_orders']['data'],$function_array)?>원</p>
         </div>
         <?}?>
     </div>
@@ -186,10 +213,9 @@ function totalOrderKey($objects,$key,$card_event) {
                 <th>상품명</th>
                 <th>결제방식</th>
                 <th>주문금액</th>
-                <th>할인금액</th>
-                <th>최종결제금액</th>
-                <th>배송비</th>
                 <th>카테고리 수수료</th>
+                <th>공급원가</th>
+                <th>판매자할인 / 공제금</th>
                 <th>KCP수수료</th>
                 <?if($card_event){?>
                 <th>KCP수수료(캐시백이벤트)</th>
@@ -210,17 +236,24 @@ function totalOrderKey($objects,$key,$card_event) {
                 $data['DirectDiscountPrice'] = $data['DirectDiscountPrice'] ? (int)$data['DirectDiscountPrice'] : 0;
                 $data['SellerFundingDiscountPrice'] = $data['SellerFundingDiscountPrice'] ? (int)$data['SellerFundingDiscountPrice'] : 0;
 
-                $b2p_commission = $OrderAmount * 0.05;
-                $card_commission = $data['AcntMoney'] * 0.023;
-                $totalDiscount = 0;
-                $totalDiscount += $data['SellerCashBackMoney'] + $data['SellerDiscountTotalPrice'];
+                $service_fee = $OrderAmount * 0.13;     // 기존 카테고리 수수료 13프로
+                $b2p_fee = $OrderAmount * $b2p_commission; // b2p 수수료 5프로
 
-                if($card_event) $calcPrice = $data['SettlementPrice'] - $b2p_commission;
-                else $calcPrice = $data['SettlementPrice'] - $b2p_commission - $card_commission;
+                $card_fee = (int)($data['AcntMoney'] * $kcp_commission);
+                $card_payback = (int)($data['AcntMoney'] * $kcp_cash_back);
+                $total_fee = $card_fee;
+                if($card_event) $total_fee = $card_fee - $card_payback;
+
+                $totalDiscount = 0;
+                $totalDiscount += $data['SellerDiscountPrice'] + $data['SellerCashBackMoney'];
+                if($data['SiteType'] == 1) $totalDiscount += $data['DirectDiscountPrice'];
+                else $totalDiscount += $data['SellerFundingDiscountPrice'];
+
+
+                if($card_event) $calcPrice = $data['SettlementPrice'] - $b2p_fee;
+                else $calcPrice = $data['SettlementPrice'] - $b2p_fee - $total_fee;
 
                 
-                //해당 부분은 바뀔수있음
-                $totalDiscount += $data['DirectDiscountPrice'] + $data['SellerFundingDiscountPrice'];
                 ?>
             <tr>
                 <td><?=$data['data_page_no']?></td>
@@ -235,27 +268,31 @@ function totalOrderKey($objects,$key,$card_event) {
                 <td><?=$data['GoodsName']?></td>
                 <td>카드결제</td>
                 <td><?=number_format($OrderAmount)?>원</td>
+                <td><?=number_format($b2p_fee + $service_fee)?>원</td>
+                <td><?=number_format($OrderAmount - $b2p_fee - $service_fee)?>원</td>
                 <td>
                     <details>
-                        <summary>총 할인 <?=number_format($totalDiscount)?>원</summary>
+                        <summary>총 <?=number_format($totalDiscount)?>원</summary>
                         <dl>
                             <dt>판매자할인</dt>
-                            <dd>-<?=number_format($data['SellerDiscountTotalPrice'])?></dd>
+                            <dd>-<?=number_format($data['SellerDiscountPrice'])?></dd>
+                            <?if($data['SiteType'] == '1') {?>
+                            <!--옥션-->
                             <dt>쿠폰할인</dt>
                             <dd>-<?=number_format($data['DirectDiscountPrice'])?></dd>
-                            <dt>지마켓(비투피)할인</dt>
+                            <?}else {?>
+                            <!--지마켓-->
+                            <dt>쿠폰할인</dt>
                             <dd>-<?=number_format($data['SellerFundingDiscountPrice'])?></dd>
+                            <?}?>
                             <dt>스마일캐시지급</dt>
                             <dd>-<?=number_format($data['SellerCashBackMoney'])?></dd>
                         </dl>
                     </details>
                 </td>
-                <td><?=number_format($data['AcntMoney'])?>원</td>
-                <td><?=number_format($data['ShippingFee'])?>원</td>
-                <td><?=number_format($b2p_commission + $data['ServiceFee'])?>원</td>
-                <td><?=number_format($card_commission)?>원</td>
+                <td><?=number_format($card_fee)?>원</td>
                 <?if($card_event){?>
-                <td style="text-decoration: line-through;"><?=number_format($card_commission)?>원</td>
+                <td style="text-decoration: line-through;"><?=number_format($card_payback)?>원</td>
                 <?}?>
                 <td><?=number_format($calcPrice)?>원</td>
             </tr>
@@ -267,15 +304,15 @@ function totalOrderKey($objects,$key,$card_event) {
                 <td colspan="2">기간 내 합계</td>
                 <td colspan="4" class="text-right">
                     <b>주문금액</b> |
-                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"order",$card_event)?>원</b>
+                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"order",$function_array)?>원</b>
                 </td>
                 <td colspan="4" class="text-right">
                     <b>수수료</b> |
-                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"commission",$card_event)?>원</b>
+                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"commission",$function_array)?>원</b>
                 </td>
                 <td colspan="6" class="text-right">
                     <b>정산금액</b> |
-                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"calc",$card_event)?>원</b>
+                    <b><?=totalOrderKey($this->data['search_all_orders']['data'],"calc",$function_array)?>원</b>
                 </td>
             </tr>
             <?php }else {?>

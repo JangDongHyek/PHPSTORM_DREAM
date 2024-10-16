@@ -171,7 +171,10 @@
         var SettlementPrice_total = 0;
 
         // kcp 수수료 이벤트 진행중 true
-        var card_event = false;
+        var card_event = true;
+        let kcp_commission = 2.3 / 100;
+        let kcp_cashback = 2.3 / 100;
+        let b2p_commission = 5 / 100;
 
         for (var i = 0; i < listData.length; i++) {
             var calc = null;
@@ -189,32 +192,67 @@
             //var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
             // 배송비 및 옵션값 합한 판매금액은 정산이아닌 주문쪽 값에 있으므로 변경
             var OrderAmount = calc_data ? calc_data['SellOrderPrice'] + calc_data['OptionPrice'] : response['result']['OrderAmount']
-            var ServiceFee = calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
-            var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
-            var SellerDiscountPrice = calc_data ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice']
+
+            // 카테고리 이용료 직접 구하는걸로 변경
+            //var ServiceFee = calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
+            var ServiceFee = OrderAmount * 0.13;
+            // 공급원가 직접 구하는걸로 변경
+            //var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
+
+            //판매자할인/공제금 지마켓 옥션 로직이 달라 직접 구하는걸로 변경
+            //var SellerDiscountPrice = calc_data ? calc_data['DeductNontaxPrice'] : response['result']['OutsidePrice'];
+            let SellerDiscountPrice = 0;
+            let dis_a = response['result']['SellerDiscountPrice'] ? response['result']['SellerDiscountPrice'] : 0;
+            let dis_b = response['result']['SellerCashBackMoney'] ? response['result']['SellerCashBackMoney'] : 0;
+            let dis_c = response['result']['DirectDiscountPrice'] ? response['result']['DirectDiscountPrice'] : 0;
+            let dis_f = response['result']['SellerFundingDiscountPrice'] ? response['result']['SellerFundingDiscountPrice'] : 0;
+
+            SellerDiscountPrice += parseInt(dis_a);
+            SellerDiscountPrice += parseInt(dis_b);
+            if(response['result']['SiteType'] == '1') SellerDiscountPrice += parseInt(dis_c);
+            else SellerDiscountPrice += parseInt(dis_f);
+
+            console.log(dis_a)
+            console.log(dis_b)
+            console.log(dis_c)
+            console.log(dis_f)
+
             var SettlementPrice = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
 
-            var BuyerPayAmt = calc_data ? calc_data['BuyerPayAmy'] : response['result']['AcntMoney']; //구매자 결제금액
-            var KCPServiceFee = BuyerPayAmt * 0.023 // 카드 수수료
+            var BuyerPayAmt = response['result']['AcntMoney']; //구매자 결제금액
+            var KCPServiceFee = BuyerPayAmt * kcp_commission // 카드 수수료
+            var KCPPayBack = BuyerPayAmt * kcp_cashback // 카드 페이백
 
             KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
+            KCPPayBack = Math.floor(KCPPayBack); //소수점 버림
+
+            console.log(KCPServiceFee)
+            console.log(KCPPayBack)
+
+            var total_fee = KCPServiceFee;
+            if(card_event) total_fee = KCPServiceFee - KCPPayBack;
+
 
 
             //부가적인 설정
             SellerDiscountPrice = SellerDiscountPrice * -1;     // 음수화
             if (ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             if (KCPServiceFee > 0) KCPServiceFee = KCPServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
-            var b2p_commission = OrderAmount * 0.05;            // b2p 자체 수수료 (판매금액의 5퍼센트)
+            var b2p_fee = OrderAmount * b2p_commission;            // b2p 자체 수수료 (판매금액의 5퍼센트)
 
-            //공급원가에 b2p_commission 추가
-            CostPrice = CostPrice - b2p_commission;
+            ServiceFee = Math.floor(ServiceFee);
+            b2p_fee = Math.floor(b2p_fee);
 
+            console.log(1);
+            console.log(SettlementPrice)
+            console.log(b2p_fee)
+            console.log(total_fee)
 
-            ServiceFee = ServiceFee - b2p_commission;
-            SettlementPrice = SettlementPrice - b2p_commission + KCPServiceFee;
+            ServiceFee = ServiceFee - b2p_fee;
 
-            if(card_event) SettlementPrice = SettlementPrice - b2p_commission;
-            else SettlementPrice = SettlementPrice - b2p_commission + KCPServiceFee;
+            let CostPrice = OrderAmount - (ServiceFee * -1);
+
+            SettlementPrice = SettlementPrice - b2p_fee - total_fee;
 
 
             code_html += '<tr>';
@@ -228,7 +266,7 @@
             code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';
             code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';
             if(card_event) {
-            code_html += '<td style="text-decoration: line-through;">' + AddComma(KCPServiceFee) + '</td>';
+            code_html += '<td style="text-decoration: line-through;">' + AddComma(KCPPayBack) + '</td>';
             }
 
             code_html += '<td>' + AddComma(SettlementPrice) + '</td>';
@@ -238,7 +276,7 @@
             OrderAmount_total += (OrderAmount) * 1;
             ServiceFee_total += (ServiceFee) * 1;
             KCPServiceFee_total += (KCPServiceFee) * 1;
-            KCPServiceFeeEvent_total += (KCPServiceFee) * -1;
+            KCPServiceFeeEvent_total += (KCPPayBack) * 1;
             CostPrice_total += (CostPrice) * 1;
             SellerDiscountPrice_total += (SellerDiscountPrice) * 1;
             SettlementPrice_total += (SettlementPrice) * 1;
@@ -287,7 +325,7 @@
     }
 
 
-    const orderDelay_modal = async () => {
+    const orderDelay_modal = async (check) => {
 
         const defModal = $('#orderDelayModal');
 
@@ -299,6 +337,32 @@
                 idx: idx,
             });
         });
+
+        if (listData.length <= 0) {
+            Swal.fire({
+                title: "발송예정일",
+                html: `
+            <div class="text_form">
+                <p>선택된 주문이 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
+            return false;
+        }
+
+        if(check){
+            defModal.modal();
+            return false;
+        }
 
         if (!$('#orderDelay_ShippingExpectedDate').val()) {
             Swal.fire({
@@ -1947,7 +2011,7 @@
         }
 
         var response = await fetchData(`/order/GetOrder`, {idx});
-        //console.log(response);
+        console.log(response);
         var response2 = await fetchData(`/order/OrderDeliProgress`, {idx});
         //console.log(response2);
         if (response.result) {
@@ -1956,7 +2020,7 @@
             $('#modal_OrderNo').html(data.OrderNo);
 
             if(data.order_b2pAutoCar){
-                $('#modal_GoodsName').html('(' + data.order_b2pAutoCarYear + ')'+ data.order_b2pAutoCar +'<br>'+data.GoodsName);
+                $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' +'<br>'+data.GoodsName);
             }else{
                 $('#modal_GoodsName').html(data.GoodsName);
             }
@@ -2055,7 +2119,7 @@
             $('#modal_OrderNo').html(data.OrderNo);
 
             if(data.order_b2pAutoCar){
-                $('#modal_GoodsName').html('(' + data.order_b2pAutoCarYear + ')'+ data.order_b2pAutoCar +'<br>'+data.GoodsName);
+                $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' +'<br>'+data.GoodsName);
             }else{
                 $('#modal_GoodsName').html(data.GoodsName);
             }
@@ -2483,7 +2547,7 @@
     }
 
     //반품관리 수거택배 정보수정
-    const orderReturnDeliEdit_modal = async () => {
+    const orderReturnDeliEdit_modal = async (check) => {
 
         const defModal = $('#orderReturnDeliEditModal');
 
@@ -2552,7 +2616,11 @@
             //console.log(data);
             $('#orderReturnDeliEdit_TakbaeName').html(data.TakbaeName);
             $('#orderReturnDeliEdit_NoSongjang').html(data.NoSongjang);
+        }
+
+        if(check){
             defModal.modal();
+            return false;
         }
 
         if (!$('#orderReturnDeliEdit_InvoiceNo').val()) {
@@ -2743,7 +2811,7 @@
 
     }
 
-    const orderExchangeDeliEdit_modal = async () => {
+    const orderExchangeDeliEdit_modal = async (check) => {
 
         const defModal = $('#orderExchangeDeliEditModal');
 
@@ -2811,10 +2879,32 @@
             //console.log(data);
             $('#orderExchangeDeliEdit_TakbaeName').html(data.TakbaeName);
             $('#orderExchangeDeliEdit_NoSongjang').html(data.NoSongjang);
-            defModal.modal();
+
+            if(check){
+                defModal.modal();
+                return false;
+            }
         }
 
+
         if (!$('#orderExchangeDeliEdit_InvoiceNo').val()) {
+            Swal.fire({
+                title: "교환 수거택배 정보수정",
+                html: `
+            <div class="text_form">
+                <p>운송장번호가 없습니다.</p>
+            </div>
+
+
+              `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: `확인`,
+                //        cancelButtonText: ``,
+
+                closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
+            });
             return false;
         }
 
@@ -4407,7 +4497,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">취소</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -4508,7 +4598,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="orderDelay_modal()">확인
                 </button>
-                <button type="button" class="btn btn-primary">취소</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
