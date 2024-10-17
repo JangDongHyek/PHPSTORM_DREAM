@@ -300,9 +300,9 @@ class Jl {
         );
         $this->DB = array(
             "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => "example"
+            "username" => "oceanship_eng",
+            "password" => "sglz0t4%",
+            "database" => "oceanship_eng"
         );
 
         //resource 폴더 생성

@@ -160,6 +160,7 @@ $opt_order_j4=$rs[opt_order];
 
 $short_explain = eregi_replace( "<br>", "", $short_explain );
 }
+
 ?>
 <html>
 <head>
@@ -969,8 +970,11 @@ if( $back == "ok" ){
 
 
 					<tr align="center">
-						<td width="100%" bgcolor="#FFFFFF" valign="top"><input class='butt_none' style='width:100' type="button" onclick="postData()" value="Á¤º¸¼öÁ¤" style='cursor:hand'>
+						<td width="100%" bgcolor="#FFFFFF" valign="top">
+							<input class='butt_none' style='width:100' type="button" onclick="postData()" value="Á¤º¸¼öÁ¤" style='cursor:hand'>
+							<input class='butt_none' style='width:100' type="button" onclick="deleteData()" value="È¸¿øÅ»Åð" style='cursor:hand'>
 						</td>
+
 					</tr>
 				</table>
 				</form>
@@ -983,6 +987,27 @@ if( $back == "ok" ){
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script>
+	function deleteData() {
+		if(!confirm("Á¤¸» Å»ÅðÇÏ½Ã°Ú½À´Ï±î?")) return false;
+
+		$.ajax({
+			url : "/api/item.php",
+			method : "post",
+			data : {
+				"_method" : "delete",
+			},
+			contentType: "application/x-www-form-urlencoded; charset=euc-kr",
+			dataType : "text",
+			success: function(res){
+				console.log(res);
+				if(res != "true") alert(res);
+				else {
+					alert("Å»Åð µÇ¾ú½À´Ï´Ù.");
+					window.location.href = "/admin/logout.php";
+				}
+			}
+		});
+	}
 	function postData() {
 		var item_pw = $('input[name="item_pw"]').val();
 		var co_num = $('input[name="co_num"]').val();

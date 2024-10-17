@@ -68,7 +68,10 @@ function totalOrderKey($objects,$key,$info) {
         $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
         $AcntMoney = (int)$data['AcntMoney'];
 
-        $service_fee = $OrderAmount * 0.13;
+        //$service_fee = $OrderAmount * 0.13;
+        if($data['SiteType'] == 1) $service_fee = (int)$data['BasicServiceFee'];
+        else $service_fee = (int)$data['ServiceFee'];
+
         $b2p_fee = $OrderAmount * $b2p_commission;
 
         $card_fee = (int)($AcntMoney * $kcp_commission);
@@ -229,6 +232,7 @@ function totalOrderKey($objects,$key,$info) {
                 $data['SellerCashBackMoney'] = $data['SellerCashBackMoney'] ? (int)$data['SellerCashBackMoney'] : 0;
                 $data['SellerDiscountTotalPrice'] = $data['SellerDiscountTotalPrice'] ? (int)$data['SellerDiscountTotalPrice'] : 0;
                 $data['OrderAmount'] = $data['OrderAmount'] ? (int)$data['OrderAmount'] : 0;
+
                 // 주문 금액이랑 EMS랑 안맞을때가 있어 직접 변수 생성
                 $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
                 $data['SettlementPrice'] = $data['SettlementPrice'] ? (int)$data['SettlementPrice'] : 0;
@@ -236,7 +240,13 @@ function totalOrderKey($objects,$key,$info) {
                 $data['DirectDiscountPrice'] = $data['DirectDiscountPrice'] ? (int)$data['DirectDiscountPrice'] : 0;
                 $data['SellerFundingDiscountPrice'] = $data['SellerFundingDiscountPrice'] ? (int)$data['SellerFundingDiscountPrice'] : 0;
 
-                $service_fee = $OrderAmount * 0.13;     // 기존 카테고리 수수료 13프로
+                //카테고리 수수료 직접 만들기로 변경
+                //$service_fee = $OrderAmount * 0.13;     // 기존 카테고리 수수료 13프로
+                //카테고리 수수료 토탈값 가져오는걸로 변경
+                //옥션
+                if($data['SiteType'] == 1) $service_fee = (int)$data['BasicServiceFee'];
+                else $service_fee = (int)$data['ServiceFee'];
+
                 $b2p_fee = $OrderAmount * $b2p_commission; // b2p 수수료 5프로
 
                 $card_fee = (int)($data['AcntMoney'] * $kcp_commission);

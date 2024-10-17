@@ -60,6 +60,45 @@ switch ($_method) {
         else echo "true";
 
         break;
+
+    case "delete" :
+        $item_idx = iconv('UTF-8','EUC-KR',$_POST['idx']);
+        $primary = $_SESSION['item_no'];
+
+        if(!$primary) {
+            echo "잘못된 접근입니다.";
+            die();
+        }
+
+        $sql = "select * from item where item_no = '$primary' ";
+        $result = mysql_query( $sql, $dbconn );
+        $row_total = mysql_num_rows( $result );
+
+        if(!$row_total) {
+            echo "잘못된 접근입니다.";
+            die();
+        }
+
+        $row = mysql_fetch_assoc( $result );
+
+        $sql = arrayToInsert("item_log",$row,true);
+        $result = mysql_query( $sql, $dbconn );
+
+        if(mysql_error()) {
+            echo mysql_error();
+            die();
+        }
+
+        $sql = "delete from item where item_no = '$primary'";
+        $result = mysql_query( $sql, $dbconn );
+
+        if(mysql_error()) {
+            echo mysql_error();
+            die();
+        }
+
+        echo "true";
+        break;
 }
 
 

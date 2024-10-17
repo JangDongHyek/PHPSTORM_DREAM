@@ -67,6 +67,7 @@ if($total > 0){//그룹장
 	$result = mysql_query( $query, $dbconn );
 	$row = mysql_fetch_array( $result );
 	$username = $row[g_id];
+    $item_no = $row['item_no'];
 	$db_passwd = $row[g_pw];
 	$db_passwd2 = $row[g_pw2];
 	$perms = $row[perms];
@@ -140,6 +141,7 @@ if($total > 0){//그룹장
 		$email = $row[email];
 		$mart_id = $row[mart_id];
 		$country_num = $row[country_num];
+		$item_no = $row['item_no'];
 
 		$perms = "10";
 
@@ -331,6 +333,7 @@ if($total > 0){//그룹장
 			}
 		}
 		$username = $row[item_id];
+        $item_no = $row['item_no'];
 		$db_passwd = $row[item_pw];
 		$name = $row[item_name];
 		$email = $row[email];
@@ -409,6 +412,7 @@ if( $db_passwd == $password || $super_pw == "ok"){
 		$Admin_enddate = $admin_enddate;
 
         $_SESSION["Mall_Admin_ID"] = $username;
+        $_SESSION['item_no'] = $item_no;
         $_SESSION["MemberLevel"] = $perms;
         $_SESSION["MemberName"] = $name;
 		$_SESSION["MemberEmail"] = $email;

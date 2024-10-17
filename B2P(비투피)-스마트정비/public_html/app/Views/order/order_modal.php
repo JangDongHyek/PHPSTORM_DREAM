@@ -4203,14 +4203,14 @@
                 <div class="modal-body">
                     <div>
                         <ul class="guide">
-                            <li>발송정보는 <strong>1회 최대 500건 (750kb) 까지</strong> 일괄업로드가 가능합니다.</li>
-                            <li>파일 업로드시 정확한 주문정보가 아닐경우 업로드에 실패하며, 이와 같은 경우에는 발송처리를 다시 시도해 주셔야합니다.</li>
-                            <li><strong>업로드 실패후 재 시도시 이전에 업로드하신 모든 주문건을 다시 업로드 해주셔야 합니다.</strong></li>
-                            <li>컴퓨터 성능에 따라 다량의 주문건을 한꺼번에 등록시 일시적인 오류가 발생할 수 있습니다.</li>
-                            <li>운송장/등기번호가 기입된 엑셀파일에서 <strong>주문번호/택배사/운송장등기번호가</strong> 있는 엑셀열을 선택하세요</li>
-                            <li>엑셀 파일은 파일형식 xls 파일만 업로드가 가능합니다.</li>
-                            <li>엑셀 파일 문서를 닫으신 후 등록하세요</li>
-                            <li>메모리를 많이 사용하는 프로그램 등을 종료하고 등록해주시기 바랍니다.</li>
+                            <li>* 발송정보는 <strong>1회 최대 500건 (750kb) 까지</strong> 일괄업로드가 가능합니다.</li>
+                            <li>* 파일 업로드시 정확한 주문정보가 아닐경우 업로드에 실패하며, 이와 같은 경우에는 발송처리를 다시 시도해 주셔야합니다.</li>
+                            <li>* <strong>업로드 실패후 재 시도시 이전에 업로드하신 모든 주문건을 다시 업로드 해주셔야 합니다.</strong></li>
+                            <li>* 컴퓨터 성능에 따라 다량의 주문건을 한꺼번에 등록시 일시적인 오류가 발생할 수 있습니다.</li>
+                            <li>* 운송장/등기번호가 기입된 엑셀파일에서 <strong>주문번호/택배사/운송장등기번호가</strong> 있는 엑셀열을 선택하세요</li>
+                            <li>* 엑셀 파일은 파일형식 xls 파일만 업로드가 가능합니다.</li>
+                            <li>* 엑셀 파일 문서를 닫으신 후 등록하세요</li>
+                            <li>* 메모리를 많이 사용하는 프로그램 등을 종료하고 등록해주시기 바랍니다.</li>
                         </ul>
                         <div class="table">
                             <table>
@@ -4226,10 +4226,8 @@
                                     <th>
                                         주문번호
                                     </th>
-                                    <td>
-
+                                    <td colspan="3">
                                         <div class="input_select">
-
                                             <select id="selOrderNoCell" name="selOrderNoCell" class="border_gray">
                                                 <option value="" selected="selected">-선택-</option>
                                                 <option value="A">A열</option>
@@ -4351,20 +4349,20 @@
                         <h2 class="popstit">
                             저장문서 가져오기
                         </h2>
-
-                        <input type="file" id="OrderSendExcelFile" name="OrderSendExcelFile" accept=".xls,.xlsx"
-                               style="display:none"
-                               onchange="$('#FileuploadName').val(this.value.split('\\').reverse()[0])">
-                        <input id="FileuploadName" type="text" class="border_gray"
-                               onclick="$('#OrderSendExcelFile').click()">
-                        <label for="OrderSendExcelFile" class="btn btn-gray btn-md w100px">파일 선택</label>
+                        <div class="flex">
+                            <input type="file" id="OrderSendExcelFile" name="OrderSendExcelFile" accept=".xls,.xlsx"
+                                   style="display:none"
+                                   onchange="$('#FileuploadName').val(this.value.split('\\').reverse()[0])">
+                            <input id="FileuploadName" type="text" class="border_gray" readonly
+                                   onclick="$('#OrderSendExcelFile').click()">
+                            <label for="OrderSendExcelFile" class="btn btn-gray btn-md w100px">파일 선택</label>
+                        </div>
                         <br>
                         <ul class="guide">
                             <li>* 엑셀 2010 파일형식인 xlsx 파일은 지원하지 않습니다.</li>
-                            <li>엑셀 2010 사용자분들은 <strong>엑셀 97-2003 파일형식인 xls</strong>로 저장 후 업로드해 주세요.</li>
-                            <li>엑셀2010에서 업로드 하실 엑셀파일을 저장하실 경우 파일 메뉴의 ‘다른이름으로 저장’을 선택하고 하단 파일형식을 ‘Excel 97 - 2003 통합문서’로
-                                선택한
-                                후 저장해주세요.
+                            <li>* 엑셀 2010 사용자분들은 <strong>엑셀 97-2003 파일형식인 xls</strong>로 저장 후 업로드해 주세요.</li>
+                            <li>* 엑셀2010에서 업로드 하실 엑셀파일을 저장하실 경우 파일 메뉴의 ‘다른이름으로 저장’을 선택하고 하단 파일형식을 ‘Excel 97 - 2003 통합문서’로
+                                선택한 후 저장해주세요.
                             </li>
                         </ul>
                     </div>
