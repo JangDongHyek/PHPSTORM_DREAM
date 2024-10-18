@@ -186,7 +186,7 @@
             var calc_data = null;
             if (response2.count) calc_data = response2['data'][0];
 
-            //console.log(response)
+            console.log(response)
             //console.log(response2)
 
             //var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
@@ -194,28 +194,40 @@
             var OrderAmount = calc_data ? calc_data['SellOrderPrice'] + calc_data['OptionPrice'] : response['result']['OrderAmount']
 
             // 카테고리 이용료 직접 구하는걸로 변경
-            //var ServiceFee = calc_data ? calc_data['TotCommission'] : response['result']['ServiceFee']
-            var ServiceFee = OrderAmount * 0.13;
+            let ServiceFee = 0;
+            if(response['result']['SiteType'] == '1') ServiceFee = response['result']['BasicServiceFee'];
+            else ServiceFee = response['result']['ServiceFee'];
+
+            if(calc_data) ServiceFee =  calc_data['TotCommission'];
+
             // 공급원가 직접 구하는걸로 변경
             //var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
 
             //판매자할인/공제금 지마켓 옥션 로직이 달라 직접 구하는걸로 변경
             //var SellerDiscountPrice = calc_data ? calc_data['DeductNontaxPrice'] : response['result']['OutsidePrice'];
-            let SellerDiscountPrice = 0;
-            let dis_a = response['result']['SellerDiscountPrice'] ? response['result']['SellerDiscountPrice'] : 0;
-            let dis_b = response['result']['SellerCashBackMoney'] ? response['result']['SellerCashBackMoney'] : 0;
-            let dis_c = response['result']['DirectDiscountPrice'] ? response['result']['DirectDiscountPrice'] : 0;
-            let dis_f = response['result']['SellerFundingDiscountPrice'] ? response['result']['SellerFundingDiscountPrice'] : 0;
+            let totalDiscount = 0;
+            let SellerDiscountPrice = response['result']['SellerDiscountPrice'] ? response['result']['SellerDiscountPrice'] : 0;
+            let SellerCashbackMoney = response['result']['SellerCashbackMoney'] ? response['result']['SellerCashbackMoney'] : 0;
+            let DirectDiscountPrice = response['result']['DirectDiscountPrice'] ? response['result']['DirectDiscountPrice'] : 0;
+            let SellerFundingDiscountPrice = response['result']['SellerFundingDiscountPrice'] ? response['result']['SellerFundingDiscountPrice'] : 0;
 
-            SellerDiscountPrice += parseInt(dis_a);
-            SellerDiscountPrice += parseInt(dis_b);
-            if(response['result']['SiteType'] == '1') SellerDiscountPrice += parseInt(dis_c);
-            else SellerDiscountPrice += parseInt(dis_f);
+            console.log(`ServiceFee : ${ServiceFee}`);
+            console.log(`SellerCashbackMoney : ${SellerCashbackMoney}`);
 
-            console.log(dis_a)
-            console.log(dis_b)
-            console.log(dis_c)
-            console.log(dis_f)
+            totalDiscount += parseInt(SellerDiscountPrice);
+            totalDiscount += parseInt(SellerCashbackMoney);
+            if(response['result']['SiteType'] == '1') totalDiscount += parseInt(DirectDiscountPrice); // 옥션
+            else totalDiscount += parseInt(SellerFundingDiscountPrice); // 지마켓
+
+            let OutsidePrice = Math.abs(response['result']['OutsidePrice']) // 판매자할인 / 공제금 토탈값
+
+            if(totalDiscount != OutsidePrice) {
+                let rest = OutsidePrice - totalDiscount
+                totalDiscount += rest;
+            }
+
+
+
 
             var SettlementPrice = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
 
@@ -226,27 +238,24 @@
             KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
             KCPPayBack = Math.floor(KCPPayBack); //소수점 버림
 
-            console.log(KCPServiceFee)
-            console.log(KCPPayBack)
-
             var total_fee = KCPServiceFee;
             if(card_event) total_fee = KCPServiceFee - KCPPayBack;
 
 
 
             //부가적인 설정
-            SellerDiscountPrice = SellerDiscountPrice * -1;     // 음수화
+            totalDiscount = totalDiscount * -1;     // 음수화
             if (ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             if (KCPServiceFee > 0) KCPServiceFee = KCPServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             var b2p_fee = OrderAmount * b2p_commission;            // b2p 자체 수수료 (판매금액의 5퍼센트)
 
-            ServiceFee = Math.floor(ServiceFee);
-            b2p_fee = Math.floor(b2p_fee);
+            b2p_fee = Math.ceil(b2p_fee);
 
-            console.log(1);
-            console.log(SettlementPrice)
-            console.log(b2p_fee)
-            console.log(total_fee)
+            console.log(`b2p_fee : ${b2p_fee}`)
+
+            ServiceFee = ServiceFee + parseInt(SellerCashbackMoney); // 음수일테니 플러스해서 빼기 처리
+            console.log(ServiceFee)
+
 
             ServiceFee = ServiceFee - b2p_fee;
 
@@ -262,7 +271,7 @@
             code_html += '<td>' + AddComma(ServiceFee) + '</td>';
             code_html += '<td>' + AddComma(CostPrice) + '</td>';
             //code_html += '<td>' + '-' + '</td>';
-            code_html += '<td>' + AddComma(SellerDiscountPrice) + '</td>';
+            code_html += '<td>' + AddComma(totalDiscount) + '</td>';
             code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';
             code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';
             if(card_event) {
@@ -278,7 +287,7 @@
             KCPServiceFee_total += (KCPServiceFee) * 1;
             KCPServiceFeeEvent_total += (KCPPayBack) * 1;
             CostPrice_total += (CostPrice) * 1;
-            SellerDiscountPrice_total += (SellerDiscountPrice) * 1;
+            SellerDiscountPrice_total += (totalDiscount) * 1;
             SettlementPrice_total += (SettlementPrice) * 1;
 
         }
