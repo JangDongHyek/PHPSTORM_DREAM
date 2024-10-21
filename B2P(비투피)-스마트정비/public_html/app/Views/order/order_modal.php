@@ -19,9 +19,9 @@
     </div>
 </div> */ ?>
 <?php
-    //택배사 배송코드가져오기
-    $delivery_company_list = get_delivery_company_list();
-    $delivery_company_list_AC = get_delivery_company_list_AC();
+//택배사 배송코드가져오기
+$delivery_company_list = get_delivery_company_list();
+$delivery_company_list_AC = get_delivery_company_list_AC();
 ?>
 <script>
 
@@ -170,6 +170,9 @@
         var SellerDiscountPrice_total = 0;
         var SettlementPrice_total = 0;
 
+        var dl_DelFeeAmt_total = 0;
+        var dl_DelFeeCommission_total = 0;
+
         // kcp 수수료 이벤트 진행중 true
         var card_event = true;
         let kcp_commission = 2.3 / 100;
@@ -186,25 +189,31 @@
             var calc_data = null;
             if (response2.count) calc_data = response2['data'][0];
 
-            console.log(response)
-            //console.log(response2)
-
-            //var OrderAmount = calc_data ? calc_data['SellOrderPrice'] : response['result']['OrderAmount']
-            // 배송비 및 옵션값 합한 판매금액은 정산이아닌 주문쪽 값에 있으므로 변경
+            // 판매금액
             var OrderAmount = calc_data ? calc_data['SellOrderPrice'] + calc_data['OptionPrice'] : response['result']['OrderAmount']
 
-            // 카테고리 이용료 직접 구하는걸로 변경
+            // 카테고리 이용료
             let ServiceFee = 0;
-            if(response['result']['SiteType'] == '1') ServiceFee = response['result']['BasicServiceFee'];
+            if (response['result']['SiteType'] == '1') ServiceFee = response['result']['BasicServiceFee'];
             else ServiceFee = response['result']['ServiceFee'];
+            if (calc_data) ServiceFee = calc_data['TotCommission'];
 
-            if(calc_data) ServiceFee =  calc_data['TotCommission'];
+            // b2p 수수료
+            var b2p_fee = OrderAmount * b2p_commission;            // b2p
+            b2p_fee = Math.ceil(b2p_fee);
 
-            // 공급원가 직접 구하는걸로 변경
-            //var CostPrice = calc_data ? (parseInt(calc_data['GoodsCost']) + parseInt(calc_data['OptionCost'])) : response['result']['CostPrice']
 
-            //판매자할인/공제금 지마켓 옥션 로직이 달라 직접 구하는걸로 변경
-            //var SellerDiscountPrice = calc_data ? calc_data['DeductNontaxPrice'] : response['result']['OutsidePrice'];
+            // 카드 수수료
+            var BuyerPayAmt = response['result']['AcntMoney']; //구매자 결제금액
+            var KCPServiceFee = BuyerPayAmt * kcp_commission // 카드 수수료
+            var KCPPayBack = BuyerPayAmt * kcp_cashback // 카드 페이백
+            KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
+            KCPPayBack = Math.floor(KCPPayBack); //소수점 버림
+            var total_fee = KCPServiceFee;
+            if (card_event) total_fee = KCPServiceFee - KCPPayBack;// 자체 수수료 (판매금액의 5퍼센트)
+
+
+            // 판매자 할인/공제금 정산데이터 없을때
             let totalDiscount = 0;
             let SellerDiscountPrice = response['result']['SellerDiscountPrice'] ? response['result']['SellerDiscountPrice'] : 0;
             let SellerCashbackMoney = response['result']['SellerCashbackMoney'] ? response['result']['SellerCashbackMoney'] : 0;
@@ -216,30 +225,47 @@
 
             totalDiscount += parseInt(SellerDiscountPrice);
             totalDiscount += parseInt(SellerCashbackMoney);
-            if(response['result']['SiteType'] == '1') totalDiscount += parseInt(DirectDiscountPrice); // 옥션
+            if (response['result']['SiteType'] == '1') totalDiscount += parseInt(DirectDiscountPrice); // 옥션
             else totalDiscount += parseInt(SellerFundingDiscountPrice); // 지마켓
 
             let OutsidePrice = Math.abs(response['result']['OutsidePrice']) // 판매자할인 / 공제금 토탈값
 
-            if(totalDiscount != OutsidePrice) {
+            if (totalDiscount != OutsidePrice) {
                 let rest = OutsidePrice - totalDiscount
                 totalDiscount += rest;
             }
 
+            // 판매자할인 / 공제금 정산데이터있을때
+            if(calc_data) {
+                totalDiscount = 0;
+                SellerDiscountPrice = response['result']['SiteType'] == '1' ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice'];
+                console.log(`SellerDiscountPrice : ${SellerDiscountPrice}`);
+                totalDiscount += parseInt(SellerDiscountPrice)
+
+                if(response['result']['SiteType'] == '2') {
+                    totalDiscount += parseInt(SellerCashbackMoney);
+                    totalDiscount += parseInt(SellerFundingDiscountPrice);
+                }
+            }
+
+
+
+            //배송비 수수료 정산데이터 없을때
+            let dl_DelFeeAmt = parseInt(response['result']['ShippingFee']);
+            let dl_DelFeeCommission = dl_DelFeeAmt * 0.033;
+            let b2p_shipping_fee = dl_DelFeeAmt * 0.03;
+
+            //배송비 수수료 정산데이터 있을떄
+            if(calc_data) {
+                dl_DelFeeAmt = calc_data['dl_DelFeeAmt'];
+                dl_DelFeeCommission = calc_data['dl_DelFeeCommission'];
+                b2p_shipping_fee = dl_DelFeeAmt * 0.03;
+            }
 
 
 
             var SettlementPrice = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
 
-            var BuyerPayAmt = response['result']['AcntMoney']; //구매자 결제금액
-            var KCPServiceFee = BuyerPayAmt * kcp_commission // 카드 수수료
-            var KCPPayBack = BuyerPayAmt * kcp_cashback // 카드 페이백
-
-            KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
-            KCPPayBack = Math.floor(KCPPayBack); //소수점 버림
-
-            var total_fee = KCPServiceFee;
-            if(card_event) total_fee = KCPServiceFee - KCPPayBack;
 
 
 
@@ -247,21 +273,16 @@
             totalDiscount = totalDiscount * -1;     // 음수화
             if (ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             if (KCPServiceFee > 0) KCPServiceFee = KCPServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
-            var b2p_fee = OrderAmount * b2p_commission;            // b2p 자체 수수료 (판매금액의 5퍼센트)
 
-            b2p_fee = Math.ceil(b2p_fee);
 
-            console.log(`b2p_fee : ${b2p_fee}`)
 
             ServiceFee = ServiceFee + parseInt(SellerCashbackMoney); // 음수일테니 플러스해서 빼기 처리
-            console.log(ServiceFee)
-
 
             ServiceFee = ServiceFee - b2p_fee;
 
             let CostPrice = OrderAmount - (ServiceFee * -1);
 
-            SettlementPrice = SettlementPrice - b2p_fee - total_fee;
+            SettlementPrice = SettlementPrice - b2p_fee - total_fee - dl_DelFeeCommission - b2p_shipping_fee;
 
 
             code_html += '<tr>';
@@ -274,9 +295,12 @@
             code_html += '<td>' + AddComma(totalDiscount) + '</td>';
             code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';
             code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';
-            if(card_event) {
-            code_html += '<td style="text-decoration: line-through;">' + AddComma(KCPPayBack) + '</td>';
+            if (card_event) {
+                code_html += '<td style="text-decoration: line-through;">' + AddComma(KCPPayBack) + '</td>';
             }
+
+            code_html += '<td>' + AddComma(dl_DelFeeAmt) + '</td>';
+            code_html += '<td>' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';
 
             code_html += '<td>' + AddComma(SettlementPrice) + '</td>';
             //code_html += response['body']['Message'] + '<br>';
@@ -289,6 +313,9 @@
             CostPrice_total += (CostPrice) * 1;
             SellerDiscountPrice_total += (totalDiscount) * 1;
             SettlementPrice_total += (SettlementPrice) * 1;
+
+            dl_DelFeeAmt_total += dl_DelFeeAmt;
+            dl_DelFeeCommission_total += (dl_DelFeeCommission + b2p_shipping_fee)
 
         }
 
@@ -322,9 +349,12 @@
         $('#modal_SellerDiscountPrice_total').html(AddComma(SellerDiscountPrice_total));
         $('#modal_SettlementPrice_total').html(AddComma(SettlementPrice_total));
 
-        if(card_event) {
+        $('#modal_dl_DelFeeAmt_total').html(AddComma(dl_DelFeeAmt_total));
+        $('#modal_dl_DelFeeCommission_total').html(AddComma(dl_DelFeeCommission_total));
+
+        if (card_event) {
             $('#modal_KCPServiceFeeEvent_total').html(AddComma(KCPServiceFeeEvent_total));
-        }else {
+        } else {
             $('#kcp_event_th').remove();
             $('#kcp_event_td').remove();
             $('#modal_KCPServiceFeeEvent_p').remove();
@@ -368,7 +398,7 @@
             return false;
         }
 
-        if(check){
+        if (check) {
             defModal.modal();
             return false;
         }
@@ -525,10 +555,10 @@
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
 
-            if($('#companyNo' + idx).val()){
+            if ($('#companyNo' + idx).val()) {
                 var TakbaeName = $('#companyNo' + idx).find("option:selected").data("name");
                 var companyNo = $('#companyNo' + idx).val();
-            }else{
+            } else {
                 var TakbaeName = $('#companyNo_AC' + idx).find("option:selected").data("name");
                 var companyNo = $('#companyNo_AC' + idx).val();
             }
@@ -650,9 +680,9 @@
             return false;
         }
         var idx = listData[0]['idx'];
-        if($('#SiteType'+idx).val() == 1){
+        if ($('#SiteType' + idx).val() == 1) {
             $('#OrderClaimRelease_DeliveryCompCode').html(delivery_company_list_AC);
-        }else{
+        } else {
             $('#OrderClaimRelease_DeliveryCompCode').html(delivery_company_list);
         }
 
@@ -958,7 +988,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "반품처리",
                 html: `
@@ -1038,7 +1068,7 @@
                     4: '[판매자귀책] : 상품불량',
                     5: '[판매자귀책] : 판매자요청',
                 };
-                $('#returnModal_return_ReasonDetail').html(return_ReasonCode[data.return_ReasonCode]+'<br>'+data.return_ReasonDetail);
+                $('#returnModal_return_ReasonDetail').html(return_ReasonCode[data.return_ReasonCode] + '<br>' + data.return_ReasonDetail);
 
                 $('#returnModal_return_ReturnShippingFee').html(AddComma(data.return_ReturnShippingFee));
                 console.log(data);
@@ -1056,7 +1086,6 @@
 
                 $('#returnModal_return_AddReturnShippingFee').html(AddComma(data.return_AddReturnShippingFee));
                 $('#returnModal_return_AddReturnShippingFeeWay').html(return_ReturnShippingFeeWay[data.return_AddReturnShippingFeeWay]);
-
 
 
                 /*
@@ -1082,7 +1111,7 @@
 
         // 241004 반품상품받으셨읍니까 에서  환불보류설정 예가 아니면 뜨게 wc
         // 241008 둘다 아니오이면 오류뜨게 wc
-        if($('#returnModal_return_radoi1_2').is(':checked') && $('#returnModal_return_radoi2_2').is(':checked') ){
+        if ($('#returnModal_return_radoi1_2').is(':checked') && $('#returnModal_return_radoi2_2').is(':checked')) {
             Swal.fire({
                 title: "반품처리",
                 html: `
@@ -1154,7 +1183,7 @@
                     code_html += response['body']['Message'] + '<br>';
                 }
 
-            }else if($('#returnModal_return_radoi1_1').is(":checked")) {
+            } else if ($('#returnModal_return_radoi1_1').is(":checked")) {
 
                 var response = await fetchData(`/order/OrderReturnCheck`, {idx});
                 //console.log(response);
@@ -1226,7 +1255,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "반품처리 환불승인",
                 html: `
@@ -1249,7 +1278,7 @@
             return false;
         }
 
-        if(!$('#returnModal_return_radoi1_1').is(':checked')){
+        if (!$('#returnModal_return_radoi1_1').is(':checked')) {
             Swal.fire({
                 title: "반품처리 환불승인",
                 html: `
@@ -1277,17 +1306,17 @@
         var code_title = '';
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
-                var response = await fetchData(`/order/OrderReturnCheck`, {idx});
-                //console.log(response);
-                code_html += '[' + response['api_data']['OrderNo'] + ']';
-                code_title = '반품처리 환불승인';
-                if (response['body']['Message'] == 'Success') {
-                    code_html += '반품,환불처리 성공<br>';
-                } else if (response['body']['Message'] == null) {
-                    code_html += '결과값이 없습니다.' + '<br>';
-                } else {
-                    code_html += response['body']['Message'] + '<br>';
-                }
+            var response = await fetchData(`/order/OrderReturnCheck`, {idx});
+            //console.log(response);
+            code_html += '[' + response['api_data']['OrderNo'] + ']';
+            code_title = '반품처리 환불승인';
+            if (response['body']['Message'] == 'Success') {
+                code_html += '반품,환불처리 성공<br>';
+            } else if (response['body']['Message'] == null) {
+                code_html += '결과값이 없습니다.' + '<br>';
+            } else {
+                code_html += response['body']['Message'] + '<br>';
+            }
         }
 
 
@@ -1487,7 +1516,6 @@
         }
 
 
-
         //for문
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
@@ -1501,8 +1529,8 @@
                     returnSelfModal_OrderReturnCheck: returnSelfModal_OrderReturnCheck
                 };
 
-                data_arr['pickupCompCode'] = $('#returnSelfModal_DeliveryCompName').val();
-                data_arr['invoiceNo'] = $('#returnSelfModal_InvoiceNo').val();
+            data_arr['pickupCompCode'] = $('#returnSelfModal_DeliveryCompName').val();
+            data_arr['invoiceNo'] = $('#returnSelfModal_InvoiceNo').val();
 
             var response = await fetchData(`/order/OrderReturnSelf`, {data_arr});
             //console.log(response);
@@ -1540,7 +1568,7 @@
             history.go(0);
         });
     }
-    
+
     //옥션 거래완료 후 환불처리
     const orderAfterRemittanceBySeller_modal = async () => {
 
@@ -1647,7 +1675,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "반품건 교환전환",
                 html: `
@@ -1679,9 +1707,9 @@
 
                 };
 
-            if($('#SiteType'+idx).val() == 1){
+            if ($('#SiteType' + idx).val() == 1) {
                 $('#ReturnExchange_ResendInfo_DeliveryCompName').html(delivery_company_list_AC);
-            }else{
+            } else {
                 $('#ReturnExchange_ResendInfo_DeliveryCompName').html(delivery_company_list);
             }
 
@@ -1707,7 +1735,7 @@
                     4: '[판매자귀책] : 상품불량',
                     5: '[판매자귀책] : 판매자요청',
                 };
-                $('#ReturnExchange_return_ReasonDetail').html(return_ReasonCode[data.return_ReasonCode]+'<br>'+data.return_ReasonDetail);
+                $('#ReturnExchange_return_ReasonDetail').html(return_ReasonCode[data.return_ReasonCode] + '<br>' + data.return_ReasonDetail);
 
                 var return_AddReturnShippingFeeWay = {
                     0: '없음',
@@ -1805,7 +1833,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "교환건 반품전환",
                 html: `
@@ -1830,9 +1858,9 @@
 
         if (check) {
             var idx = listData[0].idx;
-            if($('#SiteType'+idx).val() == 1){
+            if ($('#SiteType' + idx).val() == 1) {
                 $('#ExchangeReturn_ResendInfo_DeliveryCompName').html(delivery_company_list_AC);
-            }else{
+            } else {
                 $('#ExchangeReturn_ResendInfo_DeliveryCompName').html(delivery_company_list);
             }
             var data_arr =
@@ -1864,10 +1892,10 @@
                     5: '[판매자귀책] : 판매자요청',
                 };
 
-                if(!data.exchange_ResonDetail){
+                if (!data.exchange_ResonDetail) {
                     data.exchange_ResonDetail = '';
                 }
-                $('#ExchangeReturn_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode]+'<br>'+data.exchange_ResonDetail);
+                $('#ExchangeReturn_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode] + '<br>' + data.exchange_ResonDetail);
 
                 var exchange_ExchangeShippingFeeWay = {
                     0: '없음',
@@ -1885,7 +1913,7 @@
             return false;
         }
 
-        if(!$('#ExchangeReturn_return_radio1_Y').is(':checked')){
+        if (!$('#ExchangeReturn_return_radio1_Y').is(':checked')) {
             Swal.fire({
                 title: "교환건 반품전환",
                 html: `
@@ -1908,7 +1936,7 @@
             return false;
         }
 
-        if(!$('#ExchangeReturn_return_radio2_Y').is(':checked')){
+        if (!$('#ExchangeReturn_return_radio2_Y').is(':checked')) {
             Swal.fire({
                 title: "교환건 반품전환",
                 html: `
@@ -2028,9 +2056,9 @@
             $('#modal_SiteGoodsNo').html(data.SiteGoodsNo);
             $('#modal_OrderNo').html(data.OrderNo);
 
-            if(data.order_b2pAutoCar){
-                $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' +'<br>'+data.GoodsName);
-            }else{
+            if (data.order_b2pAutoCar) {
+                $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' + '<br>' + data.GoodsName);
+            } else {
                 $('#modal_GoodsName').html(data.GoodsName);
             }
             $('#modal_ContrAmount').html(data.ContrAmount);
@@ -2065,9 +2093,9 @@
             $('#modal_HpNo').html(data.HpNo);
             $('#modal_TelNo').html(data.TelNo);
 
-            if(data.order_b2pAutoDelFullAddress){
+            if (data.order_b2pAutoDelFullAddress) {
                 $('#modal_DelFullAddress').html('(' + data.order_b2pZip + ')' + data.order_b2pAutoDelFullAddress);
-            }else{
+            } else {
                 $('#modal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
             }
 
@@ -2127,9 +2155,9 @@
             $('#modal_SiteGoodsNo').html(data.SiteGoodsNo);
             $('#modal_OrderNo').html(data.OrderNo);
 
-            if(data.order_b2pAutoCar){
-                $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' +'<br>'+data.GoodsName);
-            }else{
+            if (data.order_b2pAutoCar) {
+                $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' + '<br>' + data.GoodsName);
+            } else {
                 $('#modal_GoodsName').html(data.GoodsName);
             }
             $('#modal_ContrAmount').html(data.ContrAmount);
@@ -2164,9 +2192,9 @@
             $('#modal_HpNo').html(data.HpNo);
             $('#modal_TelNo').html(data.TelNo);
 
-            if(data.order_b2pAutoDelFullAddress){
+            if (data.order_b2pAutoDelFullAddress) {
                 $('#modal_DelFullAddress').html('(' + data.order_b2pZip + ')' + data.order_b2pAutoDelFullAddress);
-            }else{
+            } else {
                 $('#modal_DelFullAddress').html('(' + data.ZipCode + ')' + data.DelFullAddress);
             }
 
@@ -2350,7 +2378,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "배송정보수정",
                 html: `
@@ -2376,9 +2404,9 @@
         var idx = listData[0]['idx'];
         var response_order = await fetchData(`/order/GetOrder`, {idx});
 
-        if($('#SiteType'+idx).val() == 1){
+        if ($('#SiteType' + idx).val() == 1) {
             $('#orderDeliEdit_companyNo').html(delivery_company_list_AC);
-        }else{
+        } else {
             $('#orderDeliEdit_companyNo').html(delivery_company_list);
         }
 
@@ -2588,7 +2616,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "반품 수거택배 정보수정",
                 html: `
@@ -2612,9 +2640,9 @@
         }
 
         var idx = listData[0]['idx'];
-        if($('#SiteType'+idx).val() == 1){
+        if ($('#SiteType' + idx).val() == 1) {
             $('#orderReturnDeliEdit_companyNo').html(delivery_company_list_AC);
-        }else{
+        } else {
             $('#orderReturnDeliEdit_companyNo').html(delivery_company_list);
         }
 
@@ -2627,7 +2655,7 @@
             $('#orderReturnDeliEdit_NoSongjang').html(data.NoSongjang);
         }
 
-        if(check){
+        if (check) {
             defModal.modal();
             return false;
         }
@@ -2640,12 +2668,14 @@
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
-            var TakbaeName = $('#orderReturnDeliEdit_companyNo').find("option:selected").data("name");
+            //var TakbaeName = $('#orderReturnDeliEdit_companyNo').find("option:selected").data("name");
+            var TakbaeName = $('#orderReturnDeliEdit_takbaeName_input').val();
+            var companyNo = $('#orderReturnDeliEdit_companyNo_input').val();
             //var TakbaeName = $('#companyNo' + idx).data('name');
             var data_arr =
                 {
                     idx: idx,
-                    companyNo: $('#orderReturnDeliEdit_companyNo').val(),
+                    companyNo: companyNo,
                     NoSongjang: $('#orderReturnDeliEdit_InvoiceNo').val(),
                     TakbaeName: TakbaeName
                 };
@@ -2852,7 +2882,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "교환 수거택배 정보수정",
                 html: `
@@ -2876,10 +2906,10 @@
         }
 
         var idx = listData[0]['idx'];
-        if($('#SiteType'+idx).val() == 1){
-            $('#orderExchangeDeliEdit_companyNo').html(delivery_company_list_AC);
-        }else{
-            $('#orderExchangeDeliEdit_companyNo').html(delivery_company_list);
+        if ($('#SiteType' + idx).val() == 1) {
+            $('#orderExchangeDeliEdit_companyNo2').html(delivery_company_list_AC);
+        } else {
+            $('#orderExchangeDeliEdit_companyNo2').html(delivery_company_list);
         }
         var response_order = await fetchData(`/order/GetOrder`, {idx});
 
@@ -2889,7 +2919,7 @@
             $('#orderExchangeDeliEdit_TakbaeName').html(data.TakbaeName);
             $('#orderExchangeDeliEdit_NoSongjang').html(data.NoSongjang);
 
-            if(check){
+            if (check) {
                 defModal.modal();
                 return false;
             }
@@ -2921,12 +2951,14 @@
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
-            var TakbaeName = $('#orderExchangeDeliEdit_companyNo').find("option:selected").data("name");
-            //var TakbaeName = $('#companyNo' + idx).data('name');
+
+            //var TakbaeName = $('#orderExchangeDeliEdit_companyNo2').find("option:selected").data("name");
+            var TakbaeName = $('#orderExchangeDeliEdit_takbaeName_input').val();
+            var companyNo = $('#orderExchangeDeliEdit_companyNo_input').val();
             var data_arr =
                 {
                     idx: idx,
-                    companyNo: $('#orderExchangeDeliEdit_companyNo').val(),
+                    companyNo: companyNo,
                     NoSongjang: $('#orderExchangeDeliEdit_InvoiceNo').val(),
                     TakbaeName: TakbaeName
                 };
@@ -2972,7 +3004,7 @@
 
             closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
         }).then(result => {
-            history.go(0);
+            //history.go(0);
         });
     }
 
@@ -3009,7 +3041,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "교환처리",
                 html: `
@@ -3034,9 +3066,9 @@
 
         if (check) {
             var idx = listData[0].idx;
-            if($('#SiteType'+idx).val() == 1){
+            if ($('#SiteType' + idx).val() == 1) {
                 $('#exchangeModal_ResendInfo_DeliveryCompName').html(delivery_company_list_AC);
-            }else{
+            } else {
                 $('#exchangeModal_ResendInfo_DeliveryCompName').html(delivery_company_list);
             }
             var data_arr =
@@ -3093,7 +3125,7 @@
                     4: '[판매자귀책] : 상품불량',
                     5: '[판매자귀책] : 판매자요청',
                 };
-                $('#exchangeModal_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode]+'<br>'+data.exchange_ReasonDetail);
+                $('#exchangeModal_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode] + '<br>' + data.exchange_ReasonDetail);
 
                 var exchange_ExchangeShippingFeeWay = {
                     0: '없음',
@@ -3129,7 +3161,7 @@
             return false;
         }
 
-        if(!$('#exchangeModal_return_radoi1_1').is(':checked')){
+        if (!$('#exchangeModal_return_radoi1_1').is(':checked')) {
             Swal.fire({
                 title: "교환처리",
                 html: `
@@ -3152,7 +3184,7 @@
             return false;
         }
 
-        if ($('#exchangeModal_return_radoi2_1').is(":checked") && ( !$('#exchangeModal_ResendInfo_InvoiceNo').val() || !$('#exchangeModal_ResendInfo_DeliveryCompName').val())) {
+        if ($('#exchangeModal_return_radoi2_1').is(":checked") && (!$('#exchangeModal_ResendInfo_InvoiceNo').val() || !$('#exchangeModal_ResendInfo_DeliveryCompName').val())) {
             Swal.fire({
                 title: "교환처리",
                 html: `
@@ -3175,7 +3207,7 @@
             return false;
         }
 
-        if ($('#exchangeModal_return_radoi4_1').is(":checked") && ( !$('#exchangeModal_HoldReason').val() || !$('#exchangeModal_ResendExpectDate').val())) {
+        if ($('#exchangeModal_return_radoi4_1').is(":checked") && (!$('#exchangeModal_HoldReason').val() || !$('#exchangeModal_ResendExpectDate').val())) {
             Swal.fire({
                 title: "교환처리",
                 html: `
@@ -3244,7 +3276,7 @@
                     code_html2 += response2['body']['Message'] + '<br>';
                 }
             }
-            
+
             //교환보류
             if ($('#exchangeModal_return_radoi4_1').is(":checked")) {
                 var data_arr =
@@ -3324,7 +3356,7 @@
                 closeButtonHtml: '<i class="fa-light fa-xmark"></i>닫기'
             });
             return false;
-        }else if(listData.length > 1){
+        } else if (listData.length > 1) {
             Swal.fire({
                 title: "교환처리",
                 html: `
@@ -3403,7 +3435,7 @@
                     4: '[판매자귀책] : 상품불량',
                     5: '[판매자귀책] : 판매자요청',
                 };
-                $('#exchangeModal_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode]+'<br>'+data.exchange_ReasonDetail);
+                $('#exchangeModal_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode] + '<br>' + data.exchange_ReasonDetail);
 
                 var exchange_ExchangeShippingFeeWay = {
                     0: '없음',
@@ -3440,7 +3472,7 @@
         }
 
 
-        if ( ( !$('#exchangeModal_ResendInfo_InvoiceNo').val() || !$('#exchangeModal_ResendInfo_DeliveryCompName').val())) {
+        if ((!$('#exchangeModal_ResendInfo_InvoiceNo').val() || !$('#exchangeModal_ResendInfo_DeliveryCompName').val())) {
             Swal.fire({
                 title: "교환처리",
                 html: `
@@ -3462,7 +3494,6 @@
             });
             return false;
         }
-
 
 
         //for문
@@ -4370,7 +4401,8 @@
                         <ul class="guide">
                             <li>* 엑셀 2010 파일형식인 xlsx 파일은 지원하지 않습니다.</li>
                             <li>* 엑셀 2010 사용자분들은 <strong>엑셀 97-2003 파일형식인 xls</strong>로 저장 후 업로드해 주세요.</li>
-                            <li>* 엑셀2010에서 업로드 하실 엑셀파일을 저장하실 경우 파일 메뉴의 ‘다른이름으로 저장’을 선택하고 하단 파일형식을 ‘Excel 97 - 2003 통합문서’로
+                            <li>* 엑셀2010에서 업로드 하실 엑셀파일을 저장하실 경우 파일 메뉴의 ‘다른이름으로 저장’을 선택하고 하단 파일형식을 ‘Excel 97 - 2003
+                                통합문서’로
                                 선택한 후 저장해주세요.
                             </li>
                         </ul>
@@ -4533,6 +4565,8 @@
                             <th>고객 결제금액</th>
                             <th>KCP수수료</th>
                             <th id="kcp_event_th">KCP수수료(캐시백이벤트)</th>
+                            <th>배송비</th>
+                            <th>배송비수수료</th>
                             <th>정산예정금액</th>
                         </tr>
                         </thead>
@@ -4547,6 +4581,8 @@
                             <td>고객 결제금액</td>
                             <td>KCP수수료</td>
                             <td id="kcp_event_td">KCP수수료(캐시백이벤트)</td>
+                            <th>배송비</th>
+                            <th>배송비수수료</th>
                             <td>정산예정금액</td>
                         </tr>
                         </tbody>
@@ -4560,9 +4596,13 @@
                     <p>판매금액 <br><span class="color-blue" id="modal_OrderAmount_total">0</span>원</p>
                     <p>수수료 <br><span class="color-blue" id="modal_ServiceFee_total">0</span>원</p>
                     <p>KCP수수료 <br><span class="color-blue" id="modal_KCPServiceFee_total">0</span>원</p>
-                    <p id="modal_KCPServiceFeeEvent_p">KCP수수료(캐시백이벤트) <br><span class="color-blue" id="modal_KCPServiceFeeEvent_total">0</span>원</p>
+                    <p id="modal_KCPServiceFeeEvent_p">KCP수수료(캐시백이벤트) <br><span class="color-blue"
+                                                                                id="modal_KCPServiceFeeEvent_total">0</span>원
+                    </p>
                     <p>공급원가 <br><span class="color-blue" id="modal_CostPrice_total">0</span>원</p>
                     <p>판매자할인 <br><span class="color-blue" id="modal_SellerDiscountPrice_total">0</span>원</p>
+                    <p>배송비 <br><span class="color-blue" id="modal_dl_DelFeeAmt_total">0</span>원</p>
+                    <p>배송비수수료 <br><span class="color-blue" id="modal_dl_DelFeeCommission_total">0</span>원</p>
                     <p>정산예정금액 <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
                 </div>
             </div>
@@ -4918,7 +4958,7 @@
                 <br>
 
 
-                <?php if($_GET['list_sql'] == 'return_hold_count'){ ?>
+                <?php if ($_GET['list_sql'] == 'return_hold_count'){ ?>
                 <div class="box_white2">
                     <p><strong>현재 환불 보류가 설정되어있습니다 / 보류를 해제하고 바로 환불 승인을 하겠습니다</strong></p>
                     <div class="select">
@@ -4940,87 +4980,87 @@
                 <button type="button" class="btn btn-primary" onclick="orderReturnCheck2_modal()">확인</button>
             </div>
 
-                <?php }else{ ?>
+            <?php }else{ ?>
 
-                <div class="box_white2">
-                    <p><strong>반품상품을 받으셨습니까?</strong></p>
-                    <div class="select">
-                        <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_1"
-                               value="o"
-                               onclick="$('#returnModal_return_radoi2').show();$('#returnModal_return_radoi2_hide').focus()">
-                        <label for="returnModal_return_radoi1_1">예</label>
-                        <!--
-                        <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_2"
-                               value="x"
-                               onclick="$('#returnModal_return_radoi2').hide();$('#returnModal_return_radoi3').hide();$('input[name=\'returnModal_return_radoi2\']').prop('checked', false);">
-                        <label for="returnModal_return_radoi1_2">아니요</label>
-                        -->
+            <div class="box_white2">
+                <p><strong>반품상품을 받으셨습니까?</strong></p>
+                <div class="select">
+                    <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_1"
+                           value="o"
+                           onclick="$('#returnModal_return_radoi2').show();$('#returnModal_return_radoi2_hide').focus()">
+                    <label for="returnModal_return_radoi1_1">예</label>
+                    <!--
+                    <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_2"
+                           value="x"
+                           onclick="$('#returnModal_return_radoi2').hide();$('#returnModal_return_radoi3').hide();$('input[name=\'returnModal_return_radoi2\']').prop('checked', false);">
+                    <label for="returnModal_return_radoi1_2">아니요</label>
+                    -->
 
-                        <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_2"
-                               value="x"
-                               onclick="$('#returnModal_return_radoi2').show();$('#returnModal_return_radoi2_hide').focus()"">
-                        <label for="returnModal_return_radoi1_2">아니요</label>
-                    </div>
+                    <input type="radio" class="" name="returnModal_return_radoi1" id="returnModal_return_radoi1_2"
+                           value="x"
+                           onclick="$('#returnModal_return_radoi2').show();$('#returnModal_return_radoi2_hide').focus()"">
+                    <label for="returnModal_return_radoi1_2">아니요</label>
                 </div>
-                <br>
-                <div class="box_white2" id="returnModal_return_radoi2" style="display: none">
-                    <p><strong>환불보류설정을 하시겠습니까?</strong></p>
-                    <div class="select">
-                        <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_1"
-                               value="o"
-                               onclick="$('#returnModal_return_radoi3').show();$('#returnModal_ResendInfo_HoldReasonDetail').focus()">
-                        <label for="returnModal_return_radoi2_1">예</label>
-                        <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_2"
-                               value="x"
-                               onclick="$('#returnModal_return_radoi3').hide();$('#returnModal_ResendInfo_HoldReasonDetail').val('');$('#returnModal_ReturnShippingFee').val('')">
-                        <label for="returnModal_return_radoi2_2">아니요</label>
-                        <input type="text" id="returnModal_return_radoi2_hide" readonly
-                               style="width: 0px;height: 0px;border: none">
-                    </div>
-                </div>
-
-                <div class="box_white table" id="returnModal_return_radoi3" style="display: none">
-                    <table>
-                        <tbody>
-                        <!-- 날짜 보내는 api없음
-                        <tr>
-                            <td>재발송일자</td>
-                            <td><input type="date" class="border_gray" id="ReturnExchange_ResendInfo_ResendDate"/></td>
-                        </tr>
-                        -->
-                        <tr>
-                            <td>보류사유</td>
-                            <td>
-                                <select id="returnModal_ResendInfo_HoldReason">
-                                    <option value="0">기타유보사유</option>
-                                    <option value="2">추가반품비청구(기타반품비)</option>
-                                    <option value="4">반품미입고</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>보류상세사유</td>
-                            <td><input type="text" class="border_gray" id="returnModal_ResendInfo_HoldReasonDetail"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>추가반품배송비</td>
-                            <td><input type="number" class="border_gray" id="returnModal_ReturnShippingFee" value="0"/>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary" onclick="orderReturnCheck_modal()">확인</button>
+            <br>
+            <div class="box_white2" id="returnModal_return_radoi2" style="display: none">
+                <p><strong>환불보류설정을 하시겠습니까?</strong></p>
+                <div class="select">
+                    <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_1"
+                           value="o"
+                           onclick="$('#returnModal_return_radoi3').show();$('#returnModal_ResendInfo_HoldReasonDetail').focus()">
+                    <label for="returnModal_return_radoi2_1">예</label>
+                    <input type="radio" class="" name="returnModal_return_radoi2" id="returnModal_return_radoi2_2"
+                           value="x"
+                           onclick="$('#returnModal_return_radoi3').hide();$('#returnModal_ResendInfo_HoldReasonDetail').val('');$('#returnModal_ReturnShippingFee').val('')">
+                    <label for="returnModal_return_radoi2_2">아니요</label>
+                    <input type="text" id="returnModal_return_radoi2_hide" readonly
+                           style="width: 0px;height: 0px;border: none">
+                </div>
             </div>
-                <?php } ?>
+
+            <div class="box_white table" id="returnModal_return_radoi3" style="display: none">
+                <table>
+                    <tbody>
+                    <!-- 날짜 보내는 api없음
+                    <tr>
+                        <td>재발송일자</td>
+                        <td><input type="date" class="border_gray" id="ReturnExchange_ResendInfo_ResendDate"/></td>
+                    </tr>
+                    -->
+                    <tr>
+                        <td>보류사유</td>
+                        <td>
+                            <select id="returnModal_ResendInfo_HoldReason">
+                                <option value="0">기타유보사유</option>
+                                <option value="2">추가반품비청구(기타반품비)</option>
+                                <option value="4">반품미입고</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>보류상세사유</td>
+                        <td><input type="text" class="border_gray" id="returnModal_ResendInfo_HoldReasonDetail"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>추가반품배송비</td>
+                        <td><input type="number" class="border_gray" id="returnModal_ReturnShippingFee" value="0"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
         </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            <button type="button" class="btn btn-primary" onclick="orderReturnCheck_modal()">확인</button>
+        </div>
+        <?php } ?>
+
     </div>
+</div>
 </div>
 <!-- 반품건 교환처리 -->
 <div class="modal fade" id="orderReExchangeModal" tabindex="-1" aria-labelledby="orderReExchangeModalLabel"
@@ -5183,16 +5223,11 @@
                                     <div class="input_select">
 
                                         <select class="border_gray" id="orderReturnDeliEdit_companyNo"
-                                                style="width: 200px;">
-                                            <option value="">선택</option>
-                                            <?php
-                                            $delivery_company_list = get_delivery_company_list();
-                                            ?>
-                                            <? foreach ($delivery_company_list as $index => $data): ?>
-                                                <option value="<?= $data['code'] ?>"
-                                                        data-name="<?= $data['name'] ?>"><?= $data['name'] ?></option>
-                                            <? endforeach; ?>
+                                                style="width: 200px;" onchange="$('#orderReturnDeliEdit_companyNo_input').val(this.value);$('#orderReturnDeliEdit_takbaeName_input').val($('#orderReturnDeliEdit_companyNo option:selected').data('name'))">
                                         </select>
+
+                                        <input type="hidden" id="orderReturnDeliEdit_companyNo_input">
+                                        <input type="hidden" id="orderReturnDeliEdit_takbaeName_input">
                                     </div>
                                 </td>
                             </tr>
@@ -5366,7 +5401,7 @@
                 </div>
 
 
-                <?php if($_GET['list_sql'] == 'exchange_hold_count'){ ?>
+                <?php if ($_GET['list_sql'] == 'exchange_hold_count'){ ?>
 
                 <div class="box_white2" id="exchangeModal_return_radoi2">
                     <p><strong>보류를 해제하고 바로 재발송 하겠습니다.</strong></p>
@@ -5435,7 +5470,7 @@
                            onclick="$('#exchangeModal_return_radoi3').show();$('#exchangeModal_ResendInfo_InvoiceNo').focus();$('#exchangeModal_return_radoi4_box').hide();$('input[name=exchangeModal_return_radoi4]').prop('checked',false)">
                     <label for="exchangeModal_return_radoi2_1">예</label>
                     <input type="radio" class="" name="exchangeModal_return_radoi2"
-                           id="exchangeModal_return_radoi2_2"  value="x"
+                           id="exchangeModal_return_radoi2_2" value="x"
                            onclick="$('#exchangeModal_return_radoi3').hide();$('#exchangeModal_ResendInfo_InvoiceNo').val('');$('#exchangeModal_return_radoi4_2').click();$('#exchangeModal_return_radoi4_box').show();$('input[name=exchangeModal_return_radoi4]').prop('checked',false)">
                     <label for="exchangeModal_return_radoi2_2">아니요</label>
                     <input type="text" id="exchangeModal_return_radoi2_hide" readonly
@@ -5474,11 +5509,17 @@
             </div>
 
             <div id="exchangeModal_return_radoi4_box" style="display: none">
-                <div class="box_white2" >
+                <div class="box_white2">
                     <p><strong>교환보류 설정하시겠습니까?</strong></p>
                     <div class="select">
-                        <input type="radio" class="" name="exchangeModal_return_radoi4" id="exchangeModal_return_radoi4_1" value="o" onclick="$('#exchangeModal_return_radoi4').show();$('#exchangeModal_ResendExpectDate').focus()"> <label for="exchangeModal_return_radoi4_1">예</label>
-                        <input type="radio" class="" name="exchangeModal_return_radoi4" id="exchangeModal_return_radoi4_2"  value="x" onclick="$('#exchangeModal_return_radoi4').hide()"> <label for="exchangeModal_return_radoi4_2">아니요</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi4"
+                               id="exchangeModal_return_radoi4_1" value="o"
+                               onclick="$('#exchangeModal_return_radoi4').show();$('#exchangeModal_ResendExpectDate').focus()">
+                        <label for="exchangeModal_return_radoi4_1">예</label>
+                        <input type="radio" class="" name="exchangeModal_return_radoi4"
+                               id="exchangeModal_return_radoi4_2" value="x"
+                               onclick="$('#exchangeModal_return_radoi4').hide()"> <label
+                                for="exchangeModal_return_radoi4_2">아니요</label>
                     </div>
                 </div>
                 <!-- 보류 시-->
@@ -5490,7 +5531,8 @@
                         <option value="4">교환입고미확인</option>
                     </select>
                     <p>예상재발송일</p>
-                    <input type="date" name="exchangeModal_ResendExpectDate" id="exchangeModal_ResendExpectDate" class="border_gray">
+                    <input type="date" name="exchangeModal_ResendExpectDate" id="exchangeModal_ResendExpectDate"
+                           class="border_gray">
                 </div>
             </div>
 
@@ -5499,9 +5541,9 @@
             <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             <button type="button" class="btn btn-primary" onclick="orderExchange_modal()">확인</button>
         </div>
-            <?php } ?>
-        </div>
+        <?php } ?>
     </div>
+</div>
 </div>
 <!-- 교환건 반품처리 -->
 <div class="modal fade" id="orderExReturnModal" tabindex="-1" aria-labelledby="orderExReturnModalLabel"
@@ -5660,7 +5702,8 @@
                         </tr>
                         <tr>
                             <td>추가반품배송비</td>
-                            <td><input type="number" class="border_gray" id="ExchangeReturn_ReturnShippingFee" value="0"/>
+                            <td><input type="number" class="border_gray" id="ExchangeReturn_ReturnShippingFee"
+                                       value="0"/>
                             </td>
                         </tr>
                         </tbody>
@@ -5670,47 +5713,45 @@
             </div>
 
 
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                 <button type="button" class="btn btn-primary" onclick="orderExchangeReturn_modal()">확인</button>
             </div>
 
 
-
             <script>
-                $(document).ready(function() {
+                $(document).ready(function () {
 
-                    $('#ExchangeReturn_return_radio1_Y').on('click', function() {
+                    $('#ExchangeReturn_return_radio1_Y').on('click', function () {
                         $('#ExchangeReturn_return_radio2').show();
                         $('#ExchangeReturn_return_radoi2_hide').focus();
                     });
 
-                    $('#ExchangeReturn_return_radio1_N').on('click', function() {
+                    $('#ExchangeReturn_return_radio1_N').on('click', function () {
                         hideAndResetElement('ExchangeReturn_return_radio2');
                         hideAndResetElement('ExchangeReturn_return_radio_refund');
                         hideAndResetElement('ExchangeReturn_return_radio3_refund');
                         hideAndResetElement('ExchangeReturn_return_radio3');
                     });
 
-                    $('#ExchangeReturn_return_radio2_Y').on('click', function() {
+                    $('#ExchangeReturn_return_radio2_Y').on('click', function () {
                         $('#ExchangeReturn_return_radio_refund').show();
                         $('#ExchangeReturn_return_radio_refund_hide').focus();
                     });
 
-                    $('#ExchangeReturn_return_radio2_N').on('click', function() {
+                    $('#ExchangeReturn_return_radio2_N').on('click', function () {
                         hideAndResetElement('ExchangeReturn_return_radio_refund');
                         hideAndResetElement('ExchangeReturn_return_radio3_refund');
                         hideAndResetElement('ExchangeReturn_return_radio3');
                     });
 
-                    $('#ExchangeReturn_return_radio_refund_Y').on('click', function() {
+                    $('#ExchangeReturn_return_radio_refund_Y').on('click', function () {
                         $('#ExchangeReturn_return_radio3').show();
                         $('#ExchangeReturn_ResendInfo_InvoiceNo').focus();
                         hideAndResetElement('ExchangeReturn_return_radio3_refund');
                     });
 
-                    $('#ExchangeReturn_return_radio_refund_N').on('click', function() {
+                    $('#ExchangeReturn_return_radio_refund_N').on('click', function () {
                         $('#ExchangeReturn_return_radio3_refund').show();
                         $('#ExchangeReturn_ReturnShippingFee').focus();
                         hideAndResetElement('ExchangeReturn_return_radio3');
@@ -5757,17 +5798,13 @@
                                 <td>
                                     <div class="input_select">
 
-                                        <select class="border_gray" id="orderExchangeDeliEdit_companyNo"
-                                                style="width: 200px;">
-                                            <option value="">선택</option>
-                                            <?php
-                                            $delivery_company_list = get_delivery_company_list();
-                                            ?>
-                                            <? foreach ($delivery_company_list as $index => $data): ?>
-                                                <option value="<?= $data['code'] ?>"
-                                                        data-name="<?= $data['name'] ?>"><?= $data['name'] ?></option>
-                                            <? endforeach; ?>
+                                        <select class="border_gray" id="orderExchangeDeliEdit_companyNo2"
+                                                style="width: 200px;"
+                                                onchange="$('#orderExchangeDeliEdit_companyNo_input').val(this.value);$('#orderExchangeDeliEdit_takbaeName_input').val($('#orderExchangeDeliEdit_companyNo2 option:selected').data('name'))">
                                         </select>
+
+                                        <input type="hidden" id="orderExchangeDeliEdit_companyNo_input">
+                                        <input type="hidden" id="orderExchangeDeliEdit_takbaeName_input">
                                     </div>
                                 </td>
                             </tr>

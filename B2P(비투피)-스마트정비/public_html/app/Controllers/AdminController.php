@@ -219,7 +219,10 @@ class AdminController extends BaseController {
             $model->where("SiteType",$this->data['SiteType']);
         }
         $this->data['all_orders'] = $model->get(array(
-                "select" => array("SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission")
+                "select" => array(
+                    "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
+                    "dl_DelFeeAmt","dl_DelFeeCommission"
+                )
             )
         );
 
@@ -265,12 +268,18 @@ class AdminController extends BaseController {
             "limit" =>$this->data['limit'],
             "reset" => false,
             "sql" => true,
-            "select" => array("SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission")
+            "select" => array(
+                "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
+                "dl_DelFeeAmt","dl_DelFeeCommission"
+            )
         ));
 
         $this->data['search_all_orders'] = $model->get(array(
             "sql" => true,
-            "select" => array("SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission")
+            "select" => array(
+                "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
+                "dl_DelFeeAmt","dl_DelFeeCommission"
+            )
         ));
 
         $this->data['last'] = ceil($this->data['orders']['count'] / $this->data['limit']);

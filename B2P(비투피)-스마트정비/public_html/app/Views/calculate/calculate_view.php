@@ -48,7 +48,12 @@ function sortMonthOrder($month,$objects,$info) {
 
             if($card_event) $total_fee = $card_fee - $card_payback;
 
-            $result += $SettlementPrice - $b2p_fee - $total_fee;
+            // 배송비 및 배송비 수수료 관련
+            $dl_DelFeeAmt = $data['dl_DelFeeAmt'];
+            $dl_DelFeeCommission = $data['dl_DelFeeCommission'];
+            $b2p_shipping_fee = $dl_DelFeeAmt * 0.03;
+
+            $result += $SettlementPrice - $b2p_fee - $total_fee - $dl_DelFeeCommission - $b2p_shipping_fee;
         }
     }
 
@@ -82,9 +87,14 @@ function totalOrderKey($objects,$key,$info) {
         $total_fee = $card_fee;
         if($card_event) $total_fee = $card_fee - $card_payback;
 
+        // 배송비 및 배송비 수수료 관련
+        $dl_DelFeeAmt = $data['dl_DelFeeAmt'];
+        $dl_DelFeeCommission = $data['dl_DelFeeCommission'];
+        $b2p_shipping_fee = $dl_DelFeeAmt * 0.03;
+
         $total_order += $OrderAmount;
-        $total_commission += ($b2p_fee + $service_fee + $total_fee);
-        $total_calc += ($SettlementPrice - $b2p_fee - $total_fee);
+        $total_commission += ($b2p_fee + $service_fee + $total_fee + $dl_DelFeeCommission + $b2p_shipping_fee);
+        $total_calc += ($SettlementPrice - $b2p_fee - $total_fee - $dl_DelFeeCommission - $b2p_shipping_fee);
     }
 
     switch ($key) {
@@ -222,60 +232,61 @@ function totalOrderKey($objects,$key,$info) {
                 <?if($card_event){?>
                 <th>KCP수수료(캐시백이벤트)</th>
                 <?}?>
+                <th>배송비</th>
+                <th>배송비수수료</th>
                 <th>최종정산금액</th>
             </tr>
             </thead>
             <tbody>
 
             <?php foreach ($this->data['orders']['data'] as $index => $data) {
+                // 빈값 및 소수점 절사를 위한 데이터 재 선언
                 $data['SellerCashbackMoney'] = $data['SellerCashbackMoney'] ? (int)$data['SellerCashbackMoney'] : 0;
                 $data['SellerDiscountTotalPrice'] = $data['SellerDiscountTotalPrice'] ? (int)$data['SellerDiscountTotalPrice'] : 0;
                 $data['OrderAmount'] = $data['OrderAmount'] ? (int)$data['OrderAmount'] : 0;
-
-                // 주문 금액이랑 EMS랑 안맞을때가 있어 직접 변수 생성
-                $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
                 $data['SettlementPrice'] = $data['SettlementPrice'] ? (int)$data['SettlementPrice'] : 0;
-
                 $data['DirectDiscountPrice'] = $data['DirectDiscountPrice'] ? (int)$data['DirectDiscountPrice'] : 0;
                 $data['SellerFundingDiscountPrice'] = $data['SellerFundingDiscountPrice'] ? (int)$data['SellerFundingDiscountPrice'] : 0;
 
-                //카테고리 수수료 직접 만들기로 변경
-                //$service_fee = $OrderAmount * 0.13;     // 기존 카테고리 수수료 13프로
-                //카테고리 수수료 토탈값 가져오는걸로 변경
-                //if($data['SiteType'] == 1) $service_fee = (int)$data['BasicServiceFee']; // 옥션
-                //else $service_fee = (int)$data['ServiceFee']; // 지마켓
-                // 카테고리 토탈값 찾음
-                $service_fee = abs($data['TotCommission']);
-                $service_fee -= $data['SellerCashbackMoney'];
+                // 주문 금액 * EMS 주문금액이 안맞을때가 있어 직접 변수 생성
+                $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
 
+                // 카테고리 수수료
+                $service_fee = abs($data['TotCommission']);
+                if($data['SiteType']== "2") $service_fee -= $data['SellerCashbackMoney'];
+
+                //b2p 수수료
                 $b2p_fee = ceil($OrderAmount * $b2p_commission); // b2p 수수료 5프로 올림처리
 
-                echo $b2p_fee;
-
+                //카드수수료
                 $card_fee = (int)($data['AcntMoney'] * $kcp_commission);
                 $card_payback = (int)($data['AcntMoney'] * $kcp_cash_back);
                 $total_fee = $card_fee;
                 if($card_event) $total_fee = $card_fee - $card_payback;
 
+                //판매자 할인 / 공제금
+                $SellerDiscountPrice = $data['SiteType'] == 1 ? $data['SellerDiscountTotalPrice'] : $data['SellerDiscountPrice'];
                 $totalDiscount = 0;
-                $totalDiscount += $data['SellerDiscountPrice'] + $data['SellerCashbackMoney'];
-                if($data['SiteType'] == 1) $totalDiscount += $data['DirectDiscountPrice'];
-                else $totalDiscount += $data['SellerFundingDiscountPrice'];
+                $totalDiscount += $SellerDiscountPrice;
 
+                // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
+                if($data['SiteType'] == 1) {
 
-                // 해당부분은 정산값이 무조건 맞춰지므로 위험도가 높아짐
-                $OutsidePrice = abs((int)$data['OutsidePrice']); // 판매자 할인 / 공제금 총합 값
-                if($totalDiscount != $OutsidePrice) {
-                    $rest = $OutsidePrice - $totalDiscount;
-                    $data['DirectDiscountPrice'] += $rest;
-                    $totalDiscount += $rest;
+                }else {
+                    $totalDiscount += $data['SellerCashbackMoney'];
+                    $totalDiscount += $data['SellerFundingDiscountPrice'];
                 }
 
-
+                // 정산 예정 값
                 if($card_event) $calcPrice = $data['SettlementPrice'] - $b2p_fee;
                 else $calcPrice = $data['SettlementPrice'] - $b2p_fee - $total_fee;
 
-                
+                // 배송비 및 배송비 수수료 관련
+                $dl_DelFeeAmt = $data['dl_DelFeeAmt'];
+                $dl_DelFeeCommission = $data['dl_DelFeeCommission'];
+                $b2p_shipping_fee = $dl_DelFeeAmt * 0.03;
+
+                $calcPrice = $calcPrice - $dl_DelFeeCommission - $b2p_shipping_fee;
                 ?>
             <tr>
                 <td><?=$data['data_page_no']?></td>
@@ -296,16 +307,9 @@ function totalOrderKey($objects,$key,$info) {
                     <details>
                         <summary>총 <?=number_format($totalDiscount)?>원</summary>
                         <dl>
-                            <? if($data['SiteType'] == '2' ) {?>
-                            <!--지마켓-->
                             <dt>판매자할인</dt>
-                            <dd>-<?=number_format($data['SellerDiscountPrice'])?></dd>
-                            <?}else {?>
-                            <!--옥션-->
-                            <dt>판매자할인</dt>
-                            <dd>-<?=number_format($data['SellerDiscountTotalPrice'])?></dd>
-                            <?}?>
-                            
+                            <dd>-<?=number_format($SellerDiscountPrice)?></dd>
+
                             <?if($data['SiteType'] == '2' ) {?>
                             <!--지마켓-->
                             <dt>쿠폰할인</dt>
@@ -324,6 +328,8 @@ function totalOrderKey($objects,$key,$info) {
                 <?if($card_event){?>
                 <td style="text-decoration: line-through;"><?=number_format($card_payback)?>원</td>
                 <?}?>
+                <td><?=number_format($dl_DelFeeAmt)?>원</td>
+                <td><?=number_format($dl_DelFeeCommission + $b2p_shipping_fee)?>원</td>
                 <td><?=number_format($calcPrice)?>원</td>
             </tr>
             <?php }?>
@@ -331,7 +337,7 @@ function totalOrderKey($objects,$key,$info) {
             <?php if($this->data['orders']['count']) {?>
 
             <tr class="sum">
-                <td colspan="2">기간 내 합계</td>
+                <td colspan="3">기간 내 합계</td>
                 <td colspan="4" class="text-right">
                     <b>주문금액</b> |
                     <b><?=totalOrderKey($this->data['search_all_orders']['data'],"order",$function_array)?>원</b>
