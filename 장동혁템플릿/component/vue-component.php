@@ -24,6 +24,7 @@
         data: function(){
             return {
                 jl : null,
+                component_idx : "",
                 filter : {
                     page : 0,
                     limit : 0,
@@ -50,6 +51,7 @@
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
+            this.component_idx = this.jl.generateUniqueId();
 
             if(this.primary) this.getData();
         },

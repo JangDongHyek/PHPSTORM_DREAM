@@ -1,775 +1,421 @@
-<?php
-//namespace App\Libraries;
-include_once("Jl.php");
+function vueLoad(app_name) {
+Vue[app_name] = new Vue({
+el: "#" + app_name,
+data: {},
+methods: {},
+watch: {},
+components: {},
+computed: {},
+created: function(){
+this.jl = new Jl(app_name,"#42B883");
+},
+mounted: function(){
 
-class JlModel extends Jl{
-    //Database 설정
-    private $hostname;
-    private $username;
-    private $password;
-    private $database;
-
-    private $schema;
-    private $table;
-    private $connect;
-    private $mysqli = false;
-    public  $primary;
-    public  $primary_type;
-    public $autoincrement;
-
-    private $sql = "";
-    private $sql_order_by = "";
-    private $group_bool = false;
-    private $group_index = 0;
-
-    private $join_sql = "";
-    private $join_table = "";
-    private $join_primary = "";
-    private $group_by_sql_front = "";
-    private $group_by_sql_back = "";
-
-    function __construct($object = array()) {
-        //부모 생성자
-        parent::__construct();
-
-        // mysql 버전 확인
-        if(function_exists("mysqli_connect")) $this->mysqli = true;
-
-        //connect전 필수 정보확인
-        if(!$this->DB["hostname"]) $this->error("JlModel construct() : hostname를 입력해주세요.");
-        $this->hostname = $this->DB["hostname"];
-        if(!$this->DB["username"]) $this->error("JlModel construct() : username를 입력해주세요.");
-        $this->username = $this->DB["username"];
-        if(!$this->DB["password"]) $this->error("JlModel construct() : password를 입력해주세요.");
-        $this->password = $this->DB["password"];
-        if(!$this->DB["database"]) $this->error("JlModel construct(): database를 입력해주세요.");
-        $this->database = $this->DB["database"];
-
-        //DB Connection
-        if($this->mysqli) {
-            $connect = new \mysqli($this->hostname, $this->username, $this->password, $this->database);
-            if ($connect->connect_errno) $this->error(mysqli_error($this->connect));
-        }else {
-            $connect = mysql_connect($this->hostname, $this->username, $this->password);
-            if(!$connect) $this->error(2);
-            mysql_select_db($this->database, $connect);
-        }
-        $this->connect = $connect;
-
-        $this->schema = array(
-            "columns" => array(),
-            "tables" => array(),
-            "join_columns" => array()
-        );
-
-        if(!$object["table"]) $this->error("JlModel construct() : 테이블을 지정해주세요.");
-        $this->table =$object["table"];
-
-        // 테이블 확인
-        $sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='{$this->database}'";
-        if($this->mysqli) {
-            $result = @mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect));
-
-            while($row = mysqli_fetch_array($result)){
-                array_push($this->schema['tables'], $row['TABLE_NAME']);
-            }
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-
-            while($row = mysql_fetch_array($result)){
-                array_push($this->schema['tables'], $row['TABLE_NAME']);
-            }
-        }
-
-
-        if(!in_array($this->table, $this->schema['tables'])) $this->error("JlModel construct() : 테이블을 찾을수 없습니다.");
-
-        // Primary Key 확인
-        $primary = $this->getPrimary($this->table);
-        $this->primary = $primary['COLUMN_NAME'];
-        $this->primary_type = $primary['DATA_TYPE'];
-        $this->autoincrement = $primary["EXTRA"] ? true : false;
-
-        if(!$this->primary) $this->error("해당 테이블에 Primary 값이 존재하지않습니다.");
-        if($this->primary_type == "int" && !$this->autoincrement) $this->error("Primary 타입이 int인데 autoincrement가 설정되어있지않습니다..");
-
-        // 테이블 스키마 정보 조회
-        $this->schema['columns'] = $this->getColumns($this->table);
-        $this->schema['columns_info'] = $this->getColumnsInfo($this->table);
-    }
-
-    function getPrimary($table) {
-        $sql = "SELECT COLUMN_NAME, EXTRA,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{$this->database}' AND TABLE_NAME = '{$table}' AND COLUMN_KEY = 'PRI';";
-        if($this->mysqli) {
-            $result = @mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect));
-
-            if(!$row = mysqli_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-
-            if(!$row = mysql_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
-        }
-
-        return $row;
-    }
-
-    function getColumnsInfo($table) {
-        $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$table}' AND TABLE_SCHEMA='{$this->database}' ";
-        $array = array();
-        if($this->mysqli) {
-            $result = @mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect));
-
-            while($row = mysqli_fetch_array($result)){
-                $array[$row['COLUMN_NAME']] = $row;
-            }
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-
-            while($row = mysql_fetch_array($result)){
-                $array[$row['COLUMN_NAME']] = $row;
-            }
-        }
-
-        return $array;
-    }
-
-    function getColumns($table) {
-        $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$table}' AND TABLE_SCHEMA='{$this->database}' ";
-        $array = array();
-        if($this->mysqli) {
-            $result = @mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect));
-
-            while($row = mysqli_fetch_array($result)){
-                array_push($array, $row['COLUMN_NAME']);
-            }
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-
-            while($row = mysql_fetch_array($result)){
-                array_push($array, $row['COLUMN_NAME']);
-            }
-        }
-
-        return $array;
-    }
-
-    function getSchema() {
-        return $this->schema;
-    }
-
-    function reset() {
-        $this->sql = "";
-        $this->sql_order_by = "";
-        $this->join_sql = "";
-        $this->join_table = "";
-        $this->join_primary = "";
-        $this->group_by_sql_front = "";
-        $this->group_by_sql_back = "";
-
-        return $this;
-    }
-
-    function query($sql) {
-        $array = array();
-
-        if($this->mysqli) {
-            $result = @mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect));
-
-            while($row = mysqli_fetch_array($result)){
-                array_push($array, $row);
-            }
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-
-            while($row = mysql_fetch_array($result)){
-                array_push($array, $row);
-            }
-        }
-
-        return $array;
-    }
-
-    function insert($_param){
-
-        $param = $this->escape($_param);
-
-        if($this->autoincrement) {
-            $param[$this->primary] = empty($param[$this->primary]) ? '' : $param[$this->primary];
-
-        }else {
-            $param[$this->primary] = empty($param[$this->primary]) ? uniqid().str_pad(rand(0, 99), 2, "0", STR_PAD_LEFT) : $param[$this->primary];
-        }
-
-        foreach($this->schema['columns'] as $column) {
-            $info = $this->schema['columns_info'][$column];
-            $value = $param[$column];
-            if($column == $this->primary && $value == '') continue; // 10.2부터 int에 빈값이 허용안되기때문에 빈값일경우 패스
-
-            // 컬럼의 데이터타입이 datetime 인데 널값이 허용이면 넘기고 아니면 기본값을 넣어서 쿼리작성
-            if($info['DATA_TYPE'] == "datetime") {
-                if($value == '') {
-                    if($info['IS_NULLABLE'] == "NO") $value = '0000-00-00 00:00:00';
-                    else continue;
-                }
-            }
-            if($column == 'insert_date') $value = 'now()';
-
-            if(!empty($columns)) $columns .= ", ";
-            $columns .= "`{$column}`";
-
-            if(!empty($values)) $values .= ", ";
-
-            if($value == "now()") $values .= "{$value}";
-            else $values .= "'{$value}'";
-        }
-
-        $sql = "INSERT INTO {$this->table} ($columns) VALUES ($values)";
-
-        if($this->mysqli) {
-            $result = mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-        }
-
-        //return $_id;
-        if($this->mysqli)
-            return mysqli_insert_id($this->connect);
-        else
-            return mysql_insert_id($this->connect);
-    }
-
-    function count($_param = array()){
-        $reset = isset($_param['reset']) ? $_param['reset'] : true;
-        // Summary Query
-        $sql = $this->getSql(array("count" => true));
-
-        if($this->mysqli) {
-            $result = mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
-
-            $total_count = mysqli_num_rows($result);
-
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-
-            $total_count = mysql_num_rows($result);
-
-        }
-
-        if($reset) {
-            $this->reset();
-        }
-
-        return $total_count ? $total_count : 0;
-    }
-
-    function get($_param = array()) {
-        $page = $_param['page'] ? $_param['page'] : 0;
-        $limit = $_param['limit'] ? $_param['limit'] : 0;
-        $reset = isset($_param['reset']) ? $_param['reset'] : true;
-        $_param['source'] = $_param['source'] ? $_param['source'] : $this->table;
-
-        if($_param['source'] != $this->table) {
-            if(!$this->join_table) $this->error("JlModel get() : join() 부터 실행해주세요.");
-            if(!in_array($_param['source'], $this->schema['tables'])) $this->error("JlModel get() : join 테이블을 찾을수 없습니다.");
-        }
-
-        // 페이징
-        $skip  = ($page - 1) * $limit;
-
-        // Data Query
-        $sql = $this->getSql($_param);
-        if($limit) $sql .= " LIMIT $skip, $limit";
-
-        $object["data"] = array();
-        $object["count"] = $this->count($_param);
-        $object['total_page'] = $limit ? ceil($object["count"] / $limit) : 0;
-        if($_param['sql']) $object["sql"] = $sql;
-
-        $index = 1;
-
-        if($this->mysqli) {
-            $result = mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
-
-            while($row = mysqli_fetch_assoc($result)){
-                $row["data_page_no"] = ($page -1) * $limit + $index;
-                $row["data_page_nor"] = $object['count'] - $index + 1 - (($page -1) * $limit);
-                foreach ($row as $key => $value) {
-                    // JSON인지 확인하고 디코딩 시도
-                    $decoded_value = json_decode($value, true);
-
-                    // JSON 디코딩이 성공했다면 값을 디코딩된 데이터로 변경
-                    if (!is_null($decoded_value)) {
-                        $row[$key] = $decoded_value;
-                    }
-                }
-                array_push($object["data"], $row);
-                $index++;
-            }
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-
-            while($row = mysql_fetch_assoc($result)){
-                $row["data_page_no"] = ($page -1) * $limit + $index;
-                $row["data_page_nor"] = $object['count'] - $index + 1 - (($page -1) * $limit);
-                foreach ($row as $key => $value) {
-                    // JSON인지 확인하고 디코딩 시도
-                    $decoded_value = json_decode($value, true);
-
-                    // JSON 디코딩이 성공했다면 값을 디코딩된 데이터로 변경
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        $row[$key] = $decoded_value;
-                    }
-                }
-                array_push($object["data"], $row);
-                $index++;
-            }
-        }
-
-        if($reset) {
-            $this->reset();
-        }
-
-        return $object;
-    }
-
-    function update($_param){
-
-        $param = $this->escape($_param);
-
-        if(!isset($param[$this->primary])) $this->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
-
-        $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
-
-        foreach($param as $key => $value){
-            if(in_array($key, $this->schema['columns'])){
-                if(!empty($update_sql)) $update_sql .= ", ";
-
-                if($value == "now()") $update_sql .= "`{$key}`={$value}";
-                else $update_sql .= "`{$key}`='{$value}'";
-            }
-        }
-
-        if(in_array("update_date", $this->schema['columns'])){
-            $update_sql .= ", `update_date` = now() ";
-        }
-
-        $sql = "UPDATE {$this->table} SET $update_sql WHERE 1 $search_sql";
-
-        if($this->mysqli) {
-            $result = mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-        }
-
-        $this->reset();
-
-        return $this;
-    }
-
-    function delete($_param){
-
-        $param = $this->escape($_param);
-
-        if(!isset($param[$this->primary])) $this->error("JlModel delete() : 고유 키 값이 존재하지 않습니다.");
-
-        $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
-
-        $sql = "DELETE FROM {$this->table} WHERE 1 $search_sql ";
-
-        if($this->mysqli) {
-            $result = mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-        }
-
-        $this->reset();
-
-        return $this;
-    }
-
-    function whereDelete(){
-        if($this->sql == "") $this->error("JlModel whereDelete() : 조건 삭제에 조건이 없습니다.");
-
-        $sql = "DELETE FROM {$this->table} WHERE 1 $this->sql ";
-
-        if($this->mysqli) {
-            $result = mysqli_query($this->connect, $sql);
-            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
-        }else {
-            $result = @mysql_query($sql, $this->connect);
-            if(!$result) $this->error(mysql_error());
-        }
-
-        $this->reset();
-
-        return $param[$this->primary];
-    }
-
-    function getSql($_param = array()) {
-        $source = $_param['source'] ? $_param['source'] : $this->table;
-        $other = $source == $this->table ? $this->join_table : $this->table;
-        $scope = $_param['count'] ? $source == $this->table ? $this->primary : $this->join_primary : "*";
-
-        $select = "";
-
-        if($_param['select']) {
-            if($_param['select'] == "*") {
-                $columns = $source == $this->table ? $this->schema['join_columns'] : $this->schema['columns'];
-                foreach($columns as $column) {
-                    $select .= ", {$other}.{$column} AS join_{$other}_{$column}";
-                }
-            }else {
-                if(is_string($_param['select'])) $select .= ", ".$_param['select'];
-                if(is_array($_param['select'])) {
-                    foreach($_param['select'] as $d) {
-                        $select .= ", $d";
-                    }
-                }
-            }
-        }
-
-        $sql = "SELECT $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
-        $sql .= $this->sql;
-        $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
-        $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : " ORDER BY $this->primary DESC";
-        return $sql;
-    }
-
-    function addSql($query) {
-        $this->sql .= "$query";
-    }
-
-    function orderBy($first,$second = "",$source="") {
-        $source = $source ? $source : $this->table;
-        if(is_array($first)) {
-            $param = $this->escape($first);
-
-            foreach($param as $key => $value){
-                if(in_array($key, $this->schema['columns'])){
-                    if(!in_array($value,array("DESC","ASC"))) $this->error("JlModel orderBy() : DESC , ASC 둘중 하나만 선택가능합니다.");
-                    if($this->sql_order_by) $this->sql_order_by .= ",";
-                    $this->sql_order_by .= " {$source}.{$key} {$value}";
-                }
-            }
-        }
-
-        if(is_string($first)) {
-            if($first == "") $this->error("JlModel orderBy() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel orderBy() : 필터를 입력해주새요.");
-            if(!in_array($first, $this->schema['columns'])) $this->error("JlModel orderBy() : 존재하지않는 컬럼입니다..");
-            if(!in_array($second,array("DESC","ASC"))) $this->error("JlModel orderBy() : DESC , ASC 둘중 하나만 선택가능합니다.");
-
-            if($this->sql_order_by) $this->sql_order_by .= ",";
-            $this->sql_order_by .= " {$source}.{$first} {$second}";
-        }
-
-        return $this;
-    }
-
-    function join($table,$origin_key,$join_key) {
-        if(!in_array($table, $this->schema['tables'])) $this->error("JlModel join() : $table 테이블을 찾을수 없습니다.");
-        if(!in_array($origin_key, $this->schema['columns'])) $this->error("JlModel join() : Origin Key를 찾을 수 없습니다.");
-        $this->schema['join_columns'] = $this->getColumns($table);
-        if(!in_array($join_key, $this->schema['join_columns'])) $this->error("JlModel join() : Join Key를 찾을 수 없습니다.");
-        $this->join_table = $table;
-        $primary = $this->getPrimary($table);
-        $this->join_primary = $primary['COLUMN_NAME'];
-
-        $this->join_sql = " JOIN $table ON $this->table.$origin_key = $table.$join_key ";
-    }
-
-    function groupBy($group_key,$total_key,$as,$type = "COUNT") {
-        if(!$this->join_table) $this->error("JlModel groupBy() : join()을 먼저 해주세요.");
-        if(strpos($group_key,".") === false) $this->error("JlModel groupBy() : group_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
-        if(strpos($total_key,".") === false) $this->error("JlModel groupBy() : total_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
-        $groups = explode(".",$group_key);
-        $totals = explode(".",$total_key);
-
-        $group_columns = $groups[0] == $this->table ? $this->schema['columns'] : $this->schema['join_columns'];
-        $total_columns = $totals[0] == $this->table ? $this->schema['columns'] : $this->schema['join_columns'];
-
-        if(!in_array($groups[0], $this->schema['tables'])) $this->error("JlModel groupBy() : {$groups[0]} 테이블을 찾을수 없습니다.");
-        if(!in_array($totals[0], $this->schema['tables'])) $this->error("JlModel groupBy() : {$totals[0]} 테이블을 찾을수 없습니다.");
-        if(!in_array($groups[1], $group_columns)) $this->error("JlModel groupBy() : {$groups[0]}에서 {$groups[1]} 를 찾을 수 없습니다.");
-        if(!in_array($totals[1], $total_columns)) $this->error("JlModel groupBy() : {$totals[0]}에서 {$totals[1]} 를 찾을 수 없습니다.");
-
-        $this->group_by_sql_front = " , $type($total_key) AS $as ";
-        $this->group_by_sql_back = " GROUP BY $group_key";
-    }
-
-    function groupStart($operator = "AND") {
-        if($this->group_bool) return false;
-
-        $this->group_bool = true;
-        $this->sql .= " {$operator} ( ";
-
-        return $this;
-    }
-
-    function groupEnd() {
-        if(!$this->group_bool) return false;
-
-        $this->group_bool = false;
-        $this->group_index = 0;
-        $this->sql .= " ) ";
-
-        return $this;
-    }
-
-    function between($column,$start,$end,$operator = "AND",$source = "") {
-        if($column == "") $this->error("JlModel between() : 컬럼명을 대입 해주새요.");
-        if($start == "") $this->error("JlModel between() : 시작시간을 대입 해주새요.");
-        if($end == "") $this->error("JlModel between() : 종료시간을 대입 해주새요.");
-
-        if($source == "") {
-            $columns = $this->schema['columns'];
-            $source = $this->table;
-        } else {
-            if(!$this->join_table) $this->error("JlModel between() : join()을 먼저 해주세요.");
-            $columns = $this->schema['join_columns'];
-        }
-
-        if(strtolower($column) == "curdate()" || strtolower($column) == "now()") {
-            if(!in_array($start, $columns)) $this->error("JlModel between() : start 컬럼이 존재하지않습니다.");
-            if(!in_array($end, $columns)) $this->error("JlModel between() : end 컬럼이 존재하지않습니다.");
-            if($this->group_bool) {
-                if(!$this->group_index) $this->group_index = 1;
-                else $this->sql .= " {$operator} ";
-            }else {
-                $this->sql .= " {$operator} ";
-            }
-
-            $this->sql .= "$column BETWEEN $source.{$start} AND $source.{$end} ";
-        }else {
-            if(in_array($column, $columns)){
-                if(strpos($start,":") === false) $start .= " 00:00:00";
-                if(strpos($end,":") === false) $end .= " 23:59:59";
-
-                if($this->group_bool) {
-                    if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " {$operator} ";
-                }else {
-                    $this->sql .= " {$operator} ";
-                }
-
-                $this->sql .= "$source.{$column} BETWEEN '{$start}' AND '{$end}' ";
-            }else {
-                $this->error("JlModel between() : 유효하지않는 컬럼입니다.");
-            }
-        }
-
-
-
-        return $this;
-    }
-
-    function in($first,$second = "",$operator = "AND",$source = "") {
-        if($source == "") {
-            $columns = $this->schema['columns'];
-            $source = $this->table;
-        } else {
-            if(!$this->join_table) $this->error("JlModel in() : join()을 먼저 해주세요.");
-            $columns = $this->schema['join_columns'];
-        }
-
-        if(is_array($first)) {
-            $param = $this->escape($first);
-
-            foreach($param as $key => $value){
-                if(in_array($key, $columns)){
-                    if(!is_array($value)) $this->error("JlModel in() : 비교값이 배열이아닙니다.");
-                    if(!count($value)) continue;
-
-                    if($this->group_bool) {
-                        if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
-                    }else {
-                        $this->sql .= " $operator ";
-                    }
-
-                    $this->sql .= "$source.`{$key}` IN (";
-
-                    $bool = false;
-                    foreach($value as $v) {
-                        if($bool) $this->sql .= ", ";
-                        else $bool = true;
-
-                        if(is_numeric($v)) $this->sql .= "$v";
-                        else $this->sql .= "'$v'";
-                    }
-
-                    $this->sql .= ")";
-
-                }
-            }
-        }
-
-        if(is_string($first)) {
-            if($first == "") $this->error("JlModel in() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel in() : 필터를 입력해주새요.");
-            if(!is_array($second)) $this->error("JlModel in() : 비교값이 배열이 아닙니다.");
-
-            if(in_array($first, $columns) && count($second)){
-                if($this->group_bool) {
-                    if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
-                }else {
-                    $this->sql .= " $operator ";
-                }
-
-                $this->sql .= "$source.`{$first}` IN (";
-
-                $bool = false;
-                foreach($second as $v) {
-                    if($bool) $this->sql .= ", ";
-                    else $bool = true;
-
-                    if(is_numeric($v)) $this->sql .= "$v";
-                    else $this->sql .= "'$v'";
-
-                }
-
-                $this->sql .= ")";
-            }
-        }
-
-        return $this;
-    }
-
-    function where($first,$second = "",$operator = "AND",$source = "") {
-        if($source == "") {
-            $columns = $this->schema['columns'];
-            $source = $this->table;
-        } else {
-            if(!$this->join_table) $this->error("JlModel where() : join()을 먼저 해주세요.");
-            $columns = $this->schema['join_columns'];
-        }
-
-        if(is_array($first)) {
-            $param = $this->escape($first);
-
-            foreach($param as $key => $value){
-                if(in_array($key, $columns)){
-                    if($value == "") continue;
-
-                    if($value == "jl_null") $value = "";
-
-                    if($this->group_bool) {
-                        if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
-                    }else {
-                        $this->sql .= " $operator ";
-                    }
-
-                    $this->sql .= "$source.`{$key}` = '{$value}'";
-                }
-            }
-        }
-
-        if(is_string($first)) {
-            if($first == "") $this->error("JlModel where() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel where() : 필터를 입력해주새요.");
-            if($second == "jl_null") $second = "";
-
-            if(in_array($first, $columns)){
-                if($this->group_bool) {
-                    if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
-                }else {
-                    $this->sql .= " $operator ";
-                }
-
-                $this->sql .= "$source.`{$first}` = '{$second}'";
-            }
-        }
-
-        return $this;
-    }
-
-    function like($first,$second = "",$operator = "AND", $source = "") {
-        if($source == "") {
-            $columns = $this->schema['columns'];
-            $source = $this->table;
-        } else {
-            if(!$this->join_table) $this->error("JlModel like() : join()을 먼저 해주세요.");
-            $columns = $this->schema['join_columns'];
-        }
-
-        if(is_array($first)) {
-            $param = $this->escape($first);
-
-            foreach($param as $key => $value){
-                if(in_array($key, $columns)){
-                    if($value == "") continue;
-
-                    if($value == "jl_null") $value = "";
-
-                    if($this->group_bool) {
-                        if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
-                    }else {
-                        $this->sql .= " $operator ";
-                    }
-
-                    $this->sql .= "$source.`{$key}` LIKE '%{$value}%'";
-                }
-            }
-        }
-
-        if(is_string($first)) {
-            if($first == "") $this->error("JlModel like() : 컬럼명을 입력해주새요.");
-            if($second == "") $this->error("JlModel like() : 필터를 입력해주새요.");
-            if($second == "jl_null") $second = "";
-
-            if(in_array($first, $columns)){
-                if($this->group_bool) {
-                    if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
-                }else {
-                    $this->sql .= " $operator ";
-                }
-
-                $this->sql .= "$source.`{$first}` LIKE '%{$second}%'";
-            }
-        }
-
-        return $this;
-    }
-
-    function escape($_param) {
-        $param = array();
-        foreach($_param as $key => $value){
-            if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-            if (is_object($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-
-            if($this->mysqli) {
-                $param[$key] = mysqli_real_escape_string($this->connect, $value);
-            }else {
-                $param[$key] = mysql_real_escape_string($value);
-            }
-
-        }
-        return $param;
-    }
 }
-?>
+});
+}
+
+Number.prototype.format = function (n, x) {
+var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
+class Jl {
+constructor(name = "Jl.js",background = "#35495e") {
+this.name = name;
+this.root = Jl_base_url;
+this.editor = Jl_editor;
+
+// 의존성주입 패턴
+if (typeof JlJavascript !== 'undefined') {
+this.js = new JlJavascript(this);
+}
+if (typeof JlVue !== 'undefined') {
+this.vue = new JlVue(this);
+}
+
+let textColor = "white"
+
+if(name == "Jl.js") {
+background = "#f0db4f"; // JavaScript 로고의 노란색
+textColor = "#323330"; // 어두운 색으로 글자 색상 지정
+}
+
+if(Jl_dev) {
+console.log(
+'%c' + name,
+`background: ${background}; color: ${textColor}; font-weight: bold; font-size: 14px; padding: 5px; border-radius: 3px;`
+);
+}
+
+// Proxy를 사용해  의존성으로 사용하고있는 함수 jl 인스턴스에서 불러오기
+return new Proxy(this, {
+get: (target, prop) => {
+if (prop in target) {
+return target[prop];
+} else if (target.js && prop in target.js) {
+return target.js[prop].bind(target.js);
+} else if (target.vue && prop in target.vue) {
+return target.vue[prop].bind(target.vue);
+} else {
+return undefined;
+}
+}
+});
+
+
+
+}
+
+INIT(object = {}) {
+this.js.JS_INIT(object);
+}
+
+ajax(method,obj,url,options = {}) {
+if(!obj) new Error("obj 가 존재하지않습니다.");
+
+return new Promise((resolve, reject) => {
+var object = this.copyObject(obj);
+
+if("required" in options) {
+for (let i = 0; i < options.required.length; i++) {
+let req = options.required[i];
+if(req.name == "") continue;
+
+if(object[req.name].trim() == "") {
+reject(new Error(req.message));
+return false;
+}
+}
+}
+
+var objects = {_method : method};
+objects = this.processObject(objects,object);
+
+//form 으로 데이터가공
+var form = new FormData();
+for (let i in objects) {
+let data = objects[i];
+if(Array.isArray(data)) {
+data.forEach(file => {
+form.append(i+"[]", file);
+
+})
+}else {
+form.append(i, objects[i]);
+
+}
+}
+
+// 통신부분
+var xhr = new XMLHttpRequest();
+xhr.open('POST', Jl_base_url + url, true);
+xhr.responseType = "download" in options ? 'blob' : "json";
+
+let res = null
+let jl = this;
+
+xhr.onload = function () {
+res = xhr.response;
+if (xhr.status === 200) {
+if("download" in options && options.download) {
+var link = document.createElement('a');
+link.href = window.URL.createObjectURL(res);
+link.download = options.download;  // 다운로드할 파일 이름 설정
+link.click();
+
+// 메모리 해제를 위해 URL 객체를 폐기
+window.URL.revokeObjectURL(link.href);
+}else {
+if (!res.success) {
+let message = res.message + "\n";
+
+if(Jl_dev) {
+if(res.file_0) {
+message += `${res.file_0} : ${res.line_0} Line\n`;
+}
+if(res.file_1) {
+message += `${res.file_1} : ${res.line_1} Line\n`;
+}
+if(res.file_2) {
+message += `${res.file_2} : ${res.line_2} Line\n`;
+}
+}
+reject(new Error(message));
+}
+}
+jl.log(res,function_name);
+resolve(res);
+
+} else {
+reject(new Error("xhr Status 200 아님"));
+console.log(xhr.statusText);
+}
+};
+
+xhr.onerror = function () {
+reject(new Error("xhr on error 발생"));
+};
+
+xhr.send(form);
+
+// 로그 부분
+try {
+// IOS 같은경우 에러를 일으켜 함수명 추적이 불가능해 js 에러가 발생해 그뒤 로직이 꼬임 에러 발생시 문제없이 넘어가게 try catch 추가
+const parsedStack = this.parseStackTrace(new Error().stack);
+var function_name = parsedStack[1].function.replace('a.','');
+}catch (e) {
+var function_name = "IOS Error";
+}
+});
+}
+
+loadJS(path) {
+var scriptElement = document.createElement('script');
+scriptElement.src = this.root + path;
+
+scriptElement.onload = function() {
+jl.log(`${path} Script Load`,"","#66cdaa");
+};
+
+scriptElement.onerror = function() {
+jl.log(`${path} Script Error`,"","#66cdaa");
+};
+
+document.head.appendChild(scriptElement);
+}
+
+commonFile(files,obj,key,permission) {
+if(Array.isArray(obj[key])) {
+for (let i = 0; i < files.length; i++) {
+var file = files[i];
+if(!file.type) {
+alert("파일 타입을 읽을수 없습니다.");
+return false;
+}
+
+if(permission.length > 0 && !permission.includes(file.type)) {
+alert("혀용되는 파일 형식이 아닙니다.");
+return false;
+}
+
+if(file.type.startsWith('image/')) {
+//이미지 미리보기 파일 데이터에 추가
+const reader = new FileReader();
+reader.onload = (function(f) {
+return function(e) {
+f.preview = e.target.result;
+obj[key].push(f); // 비동기로 파일을 읽는 중이라 onload 안에 넣어줘야 파일을 다 읽고 데이터가 완벽하게 들어간다
+};
+})(file); // 클로저 사용
+reader.readAsDataURL(file);
+}
+}
+
+
+}else {
+file = files[0]
+if (file) {
+if(!file.type) {
+alert("파일 타입을 읽을수 없습니다.");
+return false;
+}
+
+if(permission.length > 0 && !permission.includes(file.type)) {
+alert("혀용되는 파일 형식이 아닙니다.");
+return false;
+}
+
+if(file.type.startsWith('image/')) {
+const reader = new FileReader();
+reader.onload = (function(f) {
+return function(e) {
+f.preview = e.target.result;
+obj[key] = (f); // 비동기로 파일을 읽는 중이라 onload 안에 넣어줘야 파일을 다 읽고 데이터가 완벽하게 들어간다
+};
+})(file); // 클로저 사용
+reader.readAsDataURL(file);
+}
+
+} else {
+obj[key]  = '';
+}
+}
+}
+
+dropFile(event,obj,key,permission = []) {
+this.commonFile(event.dataTransfer.files,obj,key,permission);
+this.log(obj[key])
+}
+
+changeFile(event,obj,key,permission = []) {
+this.commonFile(event.target.files,obj,key,permission)
+this.log(obj[key])
+}
+
+generateUniqueId(length = 15) {
+const timestamp = Date.now().toString(); // 현재 시간을 밀리초 단위로 문자열로 변환 * 13자
+const randomPart = Math.floor(Math.random() * 100).toString(); // 2자리 랜덤 숫자 생성
+return timestamp + randomPart; // 15자 (동일한 밀리세컨드안에 주문이 들어갈경우 중복될 확률 1퍼)
+}
+
+/*
+프로퍼티 값이 대문자인지 확인하는 함수
+*/
+isUpperCase(str) {
+return str === str.toUpperCase();
+}
+
+findObject(arrays,key,value) {
+return arrays.find(obj => obj[key] === value);
+}
+
+// ajax로 데이터 보내기전 가공
+processObject(objs,obj) {
+objs = this.copyObject(objs);
+obj = this.copyObject(obj);
+
+for (const key in obj) {
+if (obj.hasOwnProperty(key)) {
+if(this.isUpperCase(key)) delete obj[key]; //대문자인경우 조인데이터이기때문에 삭제
+const value = obj[key];
+if (value instanceof File) {
+objs[key] = value;
+delete obj[key];
+}else if(Array.isArray(value)) {
+value.forEach(function(item) {
+if(item instanceof File) {
+objs[key] = value;
+delete obj[key];
+}
+});
+}
+}
+}
+
+objs.obj = JSON.stringify(obj);
+return objs;
+}
+
+changeFile(event,obj,key) {
+const file = event.target.files[0];
+console.log(file)
+if (file) {
+obj[key] = file;
+} else {
+obj[key]  = '';
+}
+}
+
+copyObject(obj) {
+// 파일 객체는 복사하지 않고 그대로 반환
+if (obj instanceof File) {
+return obj;
+}
+
+// 배열일 경우
+if (Array.isArray(obj)) {
+return obj.map(item => this.copyObject(item));
+}
+
+// 객체일 경우
+if (obj !== null && typeof obj === 'object') {
+const copy = {};
+for (const key in obj) {
+if (obj.hasOwnProperty(key)) {
+copy[key] = this.copyObject(obj[key]);
+}
+}
+return copy;
+}
+
+// 원시 타입일 경우 (숫자, 문자열, 불리언 등)
+return obj;
+}
+
+/*
+object 의 키값을 빈값으로 만들어 반환
+*/
+initObject(obj) {
+var result = this.copyObject(obj)
+for (let key in result) {
+if (typeof result[key] === "number") {
+result[key] = 0;
+} else if(typeof result[key] === "object"){
+if(result[key] instanceof File) result[key] = "";
+else if(Array.isArray(result[key])) result[key] = [];
+else result[key] = {}
+} else {
+result[key] = "";
+}
+}
+return result;
+}
+
+formatNumber(value,comma = false) {
+value = value.replace(/[^0-9]/g, '');
+
+if(comma) return isNaN(parseInt(value)) ? value : parseInt(value).format();
+
+return value;
+}
+
+formatPhone(value,hyphen = true) {
+var length = hyphen ? 13 : 11
+
+// 최대 길이를 13자로 제한
+if (value.length > length) {
+value = value.slice(0, length);
+}
+
+// 숫자만 남기기
+value = value.replace(/\D/g, '');
+
+// 포맷팅: XXX-XXXX-XXXX
+if (hyphen && value.length > 3 && value.length <= 7) {
+value = value.replace(/(\d{3})(\d+)/, '$1-$2');
+} else if (hyphen && value.length > 7) {
+value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+}
+
+
+// 입력값 업데이트
+return value;
+}
+
+log(obj,name="",background = "#35495e",color = "white") {
+if(!Jl_dev) return false;
+
+if(!name) {
+const parsedStack = this.parseStackTrace(new Error().stack);
+var function_name = parsedStack[1].function.replace('a.','');
+}else {
+function_name = name
+}
+
+console.group('%c' + function_name,
+`background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
+);
+console.log(obj);
+console.groupEnd();
+}
+
+// 에러를 일으켜 에러 추적하여 함수명 알아내는 함수
+parseStackTrace(stack) {
+const lines = stack.split('\n');
+const frames = lines.map(line => {
+const match = line.match(/at\s+(.+?)\s+\((.+):(\d+):(\d+)\)/);
+if (match) {
+return {
+function: match[1],
+file: match[2],
+line: parseInt(match[3], 10),
+column: parseInt(match[4], 10)
+};
+}
+return null;
+}).filter(frame => frame !== null);
+
+return frames;
+}
+}

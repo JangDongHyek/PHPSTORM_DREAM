@@ -14,6 +14,7 @@ class Jl {
     public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
     public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
     public $CI = false;                     // namespace 가 존재한다면 Ci를 사용한다고 인식합니다. INIT()에서 자동으로 바뀝니다.
+    public $COMPONENT = "component";
 
 
     protected $PHP;                         // JlFile 에서 사용
@@ -110,6 +111,21 @@ class Jl {
         echo "vueLoad('$app_name')";
         echo "}, false);";
         echo "</script>";
+    }
+
+    function componentLoad($path) {
+        if($path[0] != "/") $path = "/".$path;
+        $path = $this->ROOT.$this->COMPONENT.$path;
+
+        if(is_file($path)) {
+            include_once($path);
+        }else if(is_file($path.".php")){
+            include_once($path.".php");
+        }else if(is_dir($path)) {
+            $this->includeDir($path);
+        }else {
+            $this->error("Jl componentLoad() : $path 가 존재하지않습니다.");
+        }
     }
 
     function includeDir($dir_name) {
