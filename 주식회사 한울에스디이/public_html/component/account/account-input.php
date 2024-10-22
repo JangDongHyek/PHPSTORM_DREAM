@@ -5,17 +5,17 @@
             <template v-slot:default>
                 <div class="form_wrap" >
                     <label for="">소속사명</label>
-                    <input type="text" v-model="company_name" placeholder="소속사명" required="소속사를 입력해주세요."/>
+                    <input type="text" v-model="data.company_name" placeholder="소속사명"/>
                     <label for="">아이디</label>
-                    <input type="text" id="user_id" placeholder="아이디" required="아이디를 입력해주세요"/>
+                    <input type="text" v-model="data.user_id" placeholder="아이디"/>
                     <label for="">비밀번호</label>
-                    <input type="password" id="change_user_pw" placeholder="비밀번호"/>
+                    <input type="password" v-model="data.change_user_pw" placeholder="비밀번호"/>
                     <label for="">비밀번호 확인</label>
-                    <input type="password" id="user_pw_re" placeholder="비밀번호 확인"/>
+                    <input type="password" v-model="data.user_pw_re" placeholder="비밀번호 확인"/>
                     <label for="">이름</label>
-                    <input type="text" id="company_person" placeholder="이름" required="이름을 입력해주세요."/>
+                    <input type="text" v-model="data.company_person" placeholder="이름"/>
                     <label for="">연락처</label>
-                    <input type="tel" id="company_person_phone" placeholder="연락처" required="연락처를 입력해주세요."/>
+                    <input type="tel" v-model="data.company_person_phone" placeholder="연락처"/>
                     <label for="">담당</label>
                     <!--<select id="company_position">-->
                     <!--    <option value="콘크리트 타설">콘크리트 타설</option>-->
@@ -23,13 +23,13 @@
                     <input type="checkbox" value="콘크리트 타설" id="company_position">콘크리트 타설
                     <input type="checkbox" value="테스트 카테고리" id="company_position">테스트 카테고리
                     <label for="">비고</label>
-                    <input type="text" id="notes" placeholder="비고"/>
+                    <input type="text" v-model="data.notes" placeholder="비고"/>
                 </div>
             </template>
 
 
             <template v-slot:footer>
-                <button type="button" class="btn btn-primary" >등록 완료</button>
+                <button type="button" class="btn btn-primary" @click="postData()">등록 완료</button>
             </template>
         </slot-modal>
     </div>
@@ -47,29 +47,25 @@
             return {
                 jl : null,
                 component_idx : "",
-                filter : {
-                    page : 0,
-                    limit : 0,
-                    count : 0,
-                    search_key1 : "",
-                    search_value1_1 : "",
-                    search_value1_2 : "",
-                    search_like_key1 : "",
-                    search_like_value1 : "",
-                    not_key1 : "",
-                    not_value1 : "",
-                    in_key1 : "",
-                    in_value : [],
-                    order_by_desc : "insert_date",
-                    order_by_asc : "",
-                },
+                filter : {},
                 required : [
-                    {name : "",message : ""},
+                    {name : "company_name",message : "소속사를 입력해주세요."},
+                    {name : "user_id",message : "아이디를 입력해주세요."},
+                    {name : "company_person",message : "이름을 입력해주세요."},
+                    {name : "company_person_phone",message : "연락처를 입력해주세요."},
                 ],
                 data : {
                     project : this.project_idx,
                     level : "20",
                     allow : "true",
+                    company_name : "",
+                    user_id : "",
+                    change_user_pw : "",
+                    user_pw_re : "",
+                    company_person : "",
+                    company_person_phone : "",
+
+                    notes : "",
                 },
             };
         },
@@ -89,7 +85,15 @@
                 let method = this.primary ? "update" : "insert";
                 let options = {required : this.required};
                 try {
-                    let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
+                    if(method == 'insert') {
+                        if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
+                    }
+                    if(this.data.change_user_pw != this.data.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
+
+                    let res = await this.jl.ajax(method,this.data,"/api/user",options);
+
+                    alert("완료 되었습니다");
+                    window.location.reload();
                 }catch (e) {
                     alert(e.message)
                 }

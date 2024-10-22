@@ -1,12 +1,14 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div class="container" v-if="parseInt(count)">
-        <div class="pagination">
-            <a @click="setPage(1)">&laquo;</a>
+    <div class="paging" v-if="parseInt(count)">
+        <div class="pagingWrap">
+            <a class="first" @click="setPage(1)"><i class="fa-light fa-chevrons-left"></i></a>
+            <a class="prev" @click="setPage(page-1)"><i class="fa-light fa-chevron-left"></i></a>
             <template v-for="index in getPages()">
                 <a @click="setPage(index)" :class="{'active' : index == page}">{{index}}</a>
             </template>
-            <a @click="setPage(last)">&raquo;</a>
+            <a class="next" @click="setPage(page+1)"><i class="fa-light fa-chevron-right"></i></a>
+            <a class="last" @click="setPage(last)"><i class="fa-light fa-chevrons-right"></i></a>
         </div>
     </div>
 </script>
@@ -74,31 +76,5 @@
 </script>
 
 <style>
-    .container {
-        text-align: center; /* 텍스트 가운데 정렬 */
-    }
 
-    .pagination {
-        display: inline-block;
-    }
-
-    .pagination a {
-        color: black;
-        float: left;
-        padding: 8px 16px;
-        text-decoration: none;
-        transition: background-color .3s;
-        border: 1px solid #ddd;
-        margin: 0 4px;
-    }
-
-    .pagination a.active {
-        background-color: #4CAF50;
-        color: white;
-        border: 1px solid #4CAF50;
-    }
-
-    .pagination a:hover:not(.active) {
-        background-color: #ddd;
-    }
 </style>

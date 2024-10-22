@@ -3,16 +3,16 @@
     <div>
         <div class="area_filter flex ai-c jc-sb">
             <div class="flex ai-c">
-                <strong class="total">총 4건</strong>
+                <strong class="total">총 {{filter.count}}건</strong>
                 <div class="search">
-                    <select name="sfl">
-                        <option value="">소속사명</option>
-                        <option value="">이름</option>
-                        <option value="">아이디</option>
-                        <option value="">연락처</option>
+                    <select v-model="filter.like_key">
+                        <option value="company_name">소속사명</option>
+                        <option value="company_person">이름</option>
+                        <option value="user_id">아이디</option>
+                        <option value="company_person_phone">연락처</option>
                     </select>
-                    <input type="search" name="stx" placeholder="검색어 입력" value="">
-                    <button type="submit" class="btn_search"><i class="fa-regular fa-magnifying-glass"></i></button>
+                    <input type="search" v-model="filter.like_value" placeholder="검색어 입력" value="" @keyup.enter="filter.page = 1; getData();">
+                    <button type="submit" class="btn_search" @click="filter.page = 1; getData();"><i class="fa-regular fa-magnifying-glass"></i></button>
                 </div>
             </div>
             <button type="button" class="btn btn_darkblue" @click="modal = true">계정 등록</button>
@@ -44,68 +44,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th class="text-center">4</th>
-                    <th>대우건설</th>
-                    <td>nr_global01</td>
-                    <td class="text-center">안재홍</td>
-                    <td class="text-center">010-1234-1234</td>
-                    <td class="text-center">거푸집 엔지니어</td>
-                    <td class="text-center">경력 10년</td>
-                    <td class="text-center">2024.06.19</td>
-                    <td class="text-center"><button class="btn btn_mini btn_black">수정</button></td>
-                </tr>
-                <tr>
-                    <th class="text-center">3</th>
-                    <th>대우건설</th>
-                    <td>nr_global01</td>
-                    <td class="text-center">이주현</td>
-                    <td class="text-center">010-1234-1234</td>
-                    <td class="text-center">레미콘 품질 관리자</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">2024.06.19</td>
-                    <td class="text-center"><button class="btn btn_mini btn_black">수정</button></td>
-                </tr>
-                <tr>
-                    <th class="text-center">2</th>
-                    <th>대우건설</th>
-                    <td>nr_global01</td>
-                    <td class="text-center">진준수</td>
-                    <td class="text-center">010-1234-1234</td>
-                    <td class="text-center">철근 배근 엔지니어</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">2024.06.19</td>
-                    <td class="text-center"><button class="btn btn_mini btn_black">수정</button></td>
-                </tr>
-                <tr>
-                    <th class="text-center">1</th>
-                    <th>대우건설</th>
-                    <td>nr_global01</td>
-                    <td class="text-center">김설주</td>
-                    <td class="text-center">010-1234-1234</td>
-                    <td class="text-center">기계 엔지니어</td>
-                    <td class="text-center">-</td>
-                    <td class="text-center">2024.06.19</td>
+                <tr v-for="item in data">
+                    <th class="text-center">{{item.jl_no_reverse}}</th>
+                    <th>{{item.company_name}}</th>
+                    <td>{{item.user_id}}</td>
+                    <td class="text-center">{{item.company_person}}</td>
+                    <td class="text-center">{{item.company_person_phone}}</td>
+                    <td class="text-center">개발예정</td>
+                    <td class="text-center">{{item.notes}}</td>
+                    <td class="text-center">{{item.insert_date.split(' ')[0]}}</td>
                     <td class="text-center"><button class="btn btn_mini btn_black">수정</button></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div class="paging">
-            <div class="pagingWrap">
-                <a class="first disabled"><i class="fa-light fa-chevrons-left"></i></a>
-                <a class="prev disabled"><i class="fa-light fa-chevron-left"></i></a>
-                <a class="active">1</a>
-                <a>2</a>
-                <a>3</a>
-                <a>4</a>
-                <a>5</a>
-                <a>6</a>
-                <a>7</a>
-                <a class="next disabled"><i class="fa-light fa-chevron-right"></i></a>
-                <a class="last disabled"><i class="fa-light fa-chevrons-right"></i></a>
-            </div>
-        </div>
+
+        <pagination-component :filter="filter" @change="changePage"></pagination-component>
 
         <account-input :modal="modal" @close="modal = false;" :project_idx="project_idx"></account-input>
     </div>
@@ -123,20 +77,14 @@
                 jl : null,
                 component_idx : "",
                 filter : {
-                    page : 0,
-                    limit : 0,
+                    project : this.project_idx,
+                    page : 1,
+                    limit : 10,
                     count : 0,
-                    search_key1 : "",
-                    search_value1_1 : "",
-                    search_value1_2 : "",
-                    search_like_key1 : "",
-                    search_like_value1 : "",
-                    not_key1 : "",
-                    not_value1 : "",
-                    in_key1 : "",
-                    in_value : [],
                     order_by_desc : "insert_date",
-                    order_by_asc : "",
+
+                    like_key : "company_name",
+                    like_value : "",
                 },
                 required : [
                     {name : "",message : ""},
@@ -149,7 +97,7 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.getData();
+            this.getData();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -157,20 +105,16 @@
             });
         },
         methods: {
-            async postData() {
-                let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
-                try {
-                    let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
-                }catch (e) {
-                    alert(e.message)
-                }
+            changePage(page) {
+                this.filter.page = page;
 
+                this.getData();
             },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
-                    this.data = res.data[0]
+                    let res = await this.jl.ajax("get",this.filter,"/api/user");
+                    this.data = res.data
+                    this.filter.count = res.count;
                 }catch (e) {
                     alert(e.message)
                 }
@@ -180,10 +124,7 @@
 
         },
         watch : {
-            search_key1() {
-                this.search_value1_1 = "";
-                this.search_value1_2 = "";
-            }
+
         }
     });
 </script>

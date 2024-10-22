@@ -24,13 +24,13 @@ try {
 
             //필터링
             if($obj['primary']) $obj[$models[$table]->primary] = $obj['primary'];
-            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2'] == "") $models[$table]->where($obj['search_key1'],$obj['search_value1_1']);
-            if($obj['search_key1'] && $obj['search_value1_1'] && $obj['search_value1_2']) $models[$table]->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
-            if($obj['search_like_key1'] && $obj['search_like_value1']) $models[$table]->like($obj['search_like_key1'],$obj['search_like_value1']);
+            if($obj['where_key'] && $obj['where_value']) $models[$table]->where($obj['where_key'],$obj['where_value']);
+            if($obj['between_key'] && $obj['between_value1'] && $obj['between_value2']) $models[$table]->between($obj['between_key'],$obj['between_value1'],$obj['between_value2']);
+            if($obj['like_key'] && $obj['like_value']) $models[$table]->like($obj['like_key'],$obj['like_value']);
             if($obj['order_by_desc']) $models[$table]->orderBy($obj['order_by_desc'],"DESC");
             if($obj['order_by_asc']) $models[$table]->orderBy($obj['order_by_asc'],"ASC");
-            if($obj['not_key1'] && $obj['not_value1']) $models[$table]->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
-            if($obj['in_key1'] && $obj['in_value1']) $models[$table]->in($obj['in_key1'],$models[$table]->jsonDecode($obj['in_value1']));
+            if($obj['not_key'] && $obj['not_value']) $models[$table]->where($obj['not_key'],$obj['not_value'],"AND NOT");
+            if($obj['in_key'] && $obj['in_value']) $models[$table]->in($obj['in_key'],$models[$table]->jsonDecode($obj['in_value']));
 
             //join
             if ($join_table) {

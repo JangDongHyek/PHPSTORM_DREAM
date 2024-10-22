@@ -65,6 +65,7 @@
                 let method = this.primary ? "update" : "insert";
                 let options = {required : this.required};
                 try {
+                    //if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
                     let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
                 }catch (e) {
                     alert(e.message)

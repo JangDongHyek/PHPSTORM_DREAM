@@ -86,6 +86,7 @@ class UserController extends BaseController
         if($obj['order_by_asc']) $this->models['user']->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key1'] && $obj['not_value1']) $this->models['user']->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
         if($obj['in_key1'] && $obj['in_value1']) $this->models['user']->in($obj['in_key1'],$this->models['user']->jsonDecode($obj['in_value1']));
+        if($obj['like_key'] && $obj['like_value']) $this->models['user']->like($obj['like_key'],$obj['like_value']);
 
         //join
         if ($this->join_table) {
