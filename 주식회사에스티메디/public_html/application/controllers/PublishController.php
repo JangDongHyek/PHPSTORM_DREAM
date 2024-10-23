@@ -1,7 +1,22 @@
 <?php
+include_once APPPATH.'libraries/Jl.php';
+include_once APPPATH.'libraries/JlModel.php';
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class PublishController extends CI_Controller {
+
+    public $jl;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        try {
+            $this->jl = new Jl();
+        }catch(Exception $e) {}
+    }
+
 
     //mall
     public function index2Page()
@@ -100,8 +115,14 @@ class PublishController extends CI_Controller {
     {
 		if (!loginCheck(true)) return;
 
+		$model = new JlModel(array("table" => "bs_comparative"));
+
+		$items = $model->get();
+
         $data = [
-            'pid' => 'adm_esti_sample'
+            'pid' => 'adm_esti_sample',
+            "jl" => $this->jl,
+            "data" => $items
         ];
 
 		render('adm/esti_sample', $data, true);
@@ -112,7 +133,8 @@ class PublishController extends CI_Controller {
 		if (!loginCheck(true)) return;
 
         $data = [
-            'pid' => 'adm_esti_sample_form'
+            'pid' => 'adm_esti_sample_form',
+            "jl" => $this->jl
         ];
 
 		render('adm/esti_sample_form', $data, true);

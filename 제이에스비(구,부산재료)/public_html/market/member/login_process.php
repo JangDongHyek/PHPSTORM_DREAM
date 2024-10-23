@@ -1,7 +1,11 @@
 <?
 //================== DB 설정 파일을 불러옴 ===============================================
 include "../../connect_login.php";
+$new_url = "";
+if($_SERVER['HTTPS'] == "on") $new_url .= "https";
+else $new_url .= "http";
 
+$new_url .= "://".$_SERVER['HTTP_HOST'];;
 if( !$url ){
 	$url = "../../.";
 } 
@@ -135,7 +139,7 @@ if( strcmp( $db_passwd, get_password_str($password) ) ){ // 두 변수를 비교하여 �
 		$url = str_replace( "../","/",$url);
 		$url = str_replace( "./","/",$url);
 		$url = str_replace("/market","",$url);
-		$url = "http://www.jsbusan.com/market".$url;
+		$url = "$new_url/market".$url;
 		echo ("
 			<!-- <script>
 			window.alert('{$url}님 안녕하세요!');

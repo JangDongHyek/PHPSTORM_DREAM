@@ -4,6 +4,13 @@ include "../../connect.php";
 ?>
 <?
 include "../include/getmartinfo.php";
+
+$new_url = "";
+if($_SERVER['HTTPS'] == "on") $new_url .= "https";
+else $new_url .= "http";
+
+$new_url .= "://".$_SERVER['HTTP_HOST'];;
+
 ?>
 
 <?
@@ -199,7 +206,7 @@ if (mysql_num_rows($dbresult)>0) {
 			alert('이미 존재하는 주문번호입니다.\\n\\n 중복으로 추가될 수 없습니다.');
 		</script>
 	");
-	echo "<meta http-equiv='refresh' content='0; URL=http://www.jsbusan.com/market/main/'>";
+	echo "<meta http-equiv='refresh' content='0; URL=$new_url/market/main/'>";
 	exit;
 }
 
@@ -363,7 +370,7 @@ if($if_use_bonus == 1){ //포인트 사용시 포인트 만큼 빼 준다.
 }
 
 if( $paymethod == "byescro" || $paymethod == "byonline" || $paymethod == "byonline_point" || $paymethod == "bypoint" ){ //온라인입금,포인트결제
-	echo "<meta http-equiv='refresh' content='0; URL=http://www.jsbusan.com/market/cart/order_ok.html?order_num=$order_num&mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>";
+	echo "<meta http-equiv='refresh' content='0; URL=$new_url/market/cart/order_ok.html?order_num=$order_num&mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>";
 	exit;
 }
 
@@ -378,12 +385,12 @@ if($paymethod == 'bycard' || $paymethod == 'bycard_point' ){
 		 }
 		//-->
 		</script>
-		<form name='FormA'  method='post' action ='http://www.jsbusan.com/market/cart/card_account_xpay.html?order_num=$order_num&mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>
+		<form name='FormA'  method='post' action ='$new_url/market/cart/card_account_xpay.html?order_num=$order_num&mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>
 		<!-- 결제를 위한 필수 hidden정보 -->
 		<input type='hidden' name='OrderID' value='$order_num'>
 		<input type='hidden' name='Amount' value='$mon_tot_freight'>
-		<input type='hidden' name='Ret_URL' value='http://$HTTP_HOST$cur_dir/order_ok_new.html?mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod&use_bonus_tot=$use_bonus_tot'>
-		<input type='hidden' name='note_url' value='http://$HTTP_HOST$cur_dir/note_url.php'>
+		<input type='hidden' name='Ret_URL' value='$new_url$cur_dir/order_ok_new.html?mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod&use_bonus_tot=$use_bonus_tot'>
+		<input type='hidden' name='note_url' value='$new_url$cur_dir/note_url.php'>
 
 
 		<input type='hidden' name='Name' value='$name'>
@@ -418,12 +425,12 @@ if($paymethod == 'byaccount' || $paymethod == 'byaccount_point' ){
 		 }
 		//-->
 		</script>
-		<form name='FormA'  method='post' action ='http://www.jsbusan.com/market/cart/card_account1_xpay.html?order_num=$order_num&mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>
+		<form name='FormA'  method='post' action ='$new_url/market/cart/card_account1_xpay.html?order_num=$order_num&mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>
 		<!-- 결제를 위한 필수 hidden정보 -->
 		<input type='hidden' name='OrderID' value='$order_num'>
 		<input type='hidden' name='Amount' value='$mon_tot_freight'>
-		<input type='hidden' name='Ret_URL' value='http://$HTTP_HOST$cur_dir/order_ok.html?mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>
-		<input type='hidden' name='note_url' value='http://$HTTP_HOST$cur_dir/note_url.php'>
+		<input type='hidden' name='Ret_URL' value='$new_url$cur_dir/order_ok.html?mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod'>
+		<input type='hidden' name='note_url' value='$new_url$cur_dir/note_url.php'>
 		<input type='hidden' name='Name' value='$name'>
 		<input type='hidden' name='passport1' value='$passport1'>
 		<input type='hidden' name='passport2' value='$passport2'>

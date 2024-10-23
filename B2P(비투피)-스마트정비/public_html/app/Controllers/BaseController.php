@@ -100,6 +100,7 @@ abstract class BaseController extends Controller
         if ($session->get('is_login')) {
             $this->memberModel = new MemberModel();
             $this->data['member'] = $this->memberModel->getMember($session->get('in_mb_id'));
+            $session->set('member', $this->data['member']);
         }
     }
 }

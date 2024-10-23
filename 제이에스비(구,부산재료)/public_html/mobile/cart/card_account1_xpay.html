@@ -178,7 +178,7 @@ include "../../market/include/head_alltemplate.php";
 			}			
 		</script>
 
-<script language="javascript" src="http://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript"></script>
+<script language="javascript" src="<?= $_SERVER['HTTPS'] != 'on' ?"http":"https" ?>://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript"></script>
 <script type="text/javascript">
 
 /*

@@ -9,6 +9,11 @@ include "../../market/include/getmartinfo.php";
 include "../../market/include/head_alltemplate.php";
 ?>
 <?php
+$new_url = "";
+if($_SERVER['HTTPS'] == "on") $new_url .= "https";
+else $new_url .= "http";
+
+$new_url .= "://".$_SERVER['HTTP_HOST'];;
 	session_start();
     /*
      * [결제 인증요청 페이지(STEP2-1)]
@@ -39,19 +44,19 @@ include "../../market/include/head_alltemplate.php";
     /*
      * 가상계좌(무통장) 결제 연동을 하시는 경우 아래 LGD_CASNOTEURL 을 설정하여 주시기 바랍니다. 
      */    
-    $LGD_CASNOTEURL				= "http://jsbusan.com/mobile/cart/cas_noteurl.php";    
+    $LGD_CASNOTEURL				= "$new_url/mobile/cart/cas_noteurl.php";
 
     /*
      * LGD_RETURNURL 을 설정하여 주시기 바랍니다. 반드시 현재 페이지와 동일한 프로트콜 및  호스트이어야 합니다. 아래 부분을 반드시 수정하십시요.
      */    
-    $LGD_RETURNURL				= "http://jsbusan.com/mobile/cart/returnurl.php";  
+    $LGD_RETURNURL				= "$new_url/mobile/cart/returnurl.php";
 	
     /*
      * ISP 카드결제 연동중 모바일ISP방식(고객세션을 유지하지않는 비동기방식)의 경우, LGD_KVPMISPNOTEURL/LGD_KVPMISPWAPURL/LGD_KVPMISPCANCELURL를 설정하여 주시기 바랍니다. 
      */    
-    $LGD_KVPMISPNOTEURL       	= "http://jsbusan.com/mobile/cart/note_url.php";
-    $LGD_KVPMISPWAPURL			= "http://jsbusan.com/mobile/cart/mispwapurl.php?LGD_OID=".$LGD_OID;   //ISP 카드 결제시, URL 대신 앱명 입력시, 앱호출함 
-    $LGD_KVPMISPCANCELURL     	= "http://jsbusan.com/mobile/cart/cancel_url.php";
+    $LGD_KVPMISPNOTEURL       	= "$new_url/mobile/cart/note_url.php";
+    $LGD_KVPMISPWAPURL			= "$new_url/mobile/cart/mispwapurl.php?LGD_OID=".$LGD_OID;   //ISP 카드 결제시, URL 대신 앱명 입력시, 앱호출함
+    $LGD_KVPMISPCANCELURL     	= "$new_url/mobile/cart/cancel_url.php";
     
     /*
      *************************************************
@@ -168,7 +173,7 @@ include "../../market/include/head_alltemplate.php";
 			}			
 		</script>
 
-<script language="javascript" src="http://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript"></script>
+<script language="javascript" src="<?= $_SERVER['HTTPS'] != 'on' ?"http":"https" ?>://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript"></script>
 <script type="text/javascript">
 
 /*

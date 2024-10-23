@@ -1,7 +1,7 @@
 <section class="sample">
 	<form name="searchFrm" autocomplete="off">
 		<div class="panel">
-			<p>총 <span class="green">0</span>개 </p>
+			<p>총 <span class="green"><?=$data['count']?></span>개 </p>
 			<div>
 				<select name="sfl">
 					<option value="title">제목</option>
@@ -38,18 +38,22 @@
 				</tr>
 				</thead>
 				<tbody>
+                <? foreach($data['data'] as $d) {?>
 				<tr>
 					<td><input type="checkbox" onclick="selectAllCheckbox(this, 'checkIdx')"></td>
-					<td>-</td>
-					<td><input type="number"></td>
-					<td>제목</td>
-					<td>24.01.01</td>
+					<td><?=$d['jl_no']?></td>
+					<td><input type="number" value="<?=$d['priority']?>"></td>
+					<td><?=$d['title']?></td>
+					<td><?=explode(" ",$d['insert_date'])[0]?></td>
 					<td>
 						<button type="button" class="btn btn_whiteline">수정</button>
 						<button type="button" class="btn btn_redline">삭제</button>
 					</td>
 				</tr>
+                <?}?>
+                <?if(!$data['count']){?>
 				<tr><td colspan="20" class="noDataAlign">등록된 샘플이 없습니다.</td></tr>
+                <?}?>
 				</tbody>
 			</table>
 		</div>

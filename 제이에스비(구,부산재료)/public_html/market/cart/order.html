@@ -114,7 +114,10 @@ include "../include/top2.htm";
 	</td>
   </tr>
 </table>
-<table width="950"  border="0" cellspacing="0" cellpadding="0">
+
+
+<div style="text-align:center !important; width:100%">
+<table width="950"  border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
     <td><table width="901" border="0" cellspacing="0" cellpadding="0">
       <tr>
@@ -408,7 +411,7 @@ if($cart_tot > 0){
 												<? if(isset($opt4)&&$opt4!=""){?><br>
 												<?=$opt_name4?>
 												<? }?>
-												</span>
+										  </span>
 										</td>
 									</tr>
 								</table>
@@ -1262,7 +1265,7 @@ function point_check(form , obj , id ) {
 	}
 }
                   </script>
-                      <form action='https://www.jsbusan.com:8026/market/cart/order_sheet_ok.php?order_num=<?=$order_num?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>' id='form1' name='f' onSubmit="return checkform(this)" method='post'>
+                      <form action='../cart/order_sheet_ok.php?order_num=<?=$order_num?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>' id='form1' name='f' onSubmit="return checkform(this)" method='post'>
                         <input type='hidden' name='mode' value='addinfo'>
                         <input type='hidden' name='mart_id' value='<?=$mart_id?>'>
                         <input type='hidden' name='partner' value='<?=$partner?>'>
@@ -1477,7 +1480,7 @@ if($UnameSess){
                   주문자정보와 동일
 			<input name="C1" onClick="val_sel2(this.form)" type="radio">
                  새로운배송지
-				  <img src="../images/myaddr.gif" onclick="javascript:window.open('../board_myaddr/board_list.php?bbs_no=11','board_list','width=800,height=700,top=100,left=200,scrollbars=yes');" style="cursor:hand;">
+				  <img src="../images/myaddr.gif" onClick="javascript:window.open('../board_myaddr/board_list.php?bbs_no=11','board_list','width=800,height=700,top=100,left=200,scrollbars=yes');" style="cursor:hand;">
 								  
 								  
 								  </td>
@@ -2141,6 +2144,8 @@ if( ($point_sum >= $mon_tot_freight) && $MemberName && $bonus_ok == 't' ){   // 
     </table></td>
   </tr>
 </table>
+</div>
+
 <table width="100%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td>
