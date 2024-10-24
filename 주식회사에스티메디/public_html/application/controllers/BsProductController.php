@@ -2,14 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 include_once APPPATH.'libraries/JlModel.php';
 include_once APPPATH.'libraries/JlFile.php';
-class BsComparativeController extends CI_Controller {
+class BsProductController extends CI_Controller {
 
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "bs_comparative";
+    public $table = "bs_product";
     public $file_use = false;
     public $file;
 
@@ -45,13 +45,9 @@ class BsComparativeController extends CI_Controller {
                 $this->delete();
                 break;
             }
+
             case "delete" : {
                 $this->delete();
-                break;
-            }
-
-            case "deletes" : {
-                $this->deletes();
                 break;
             }
         }
@@ -166,28 +162,6 @@ class BsComparativeController extends CI_Controller {
         }
 
         $this->models[$this->table]->delete($obj);
-
-        $this->jl_response['success'] = true;
-        echo json_encode($this->jl_response);
-    }
-
-    public function deletes() {
-        $obj = $this->models[$this->table]->jsonDecode($this->input->get_post('obj'));
-
-        if($obj['primary']) $obj[$this->models[$this->table]->primary] = $obj['primary'];
-
-
-        foreach(json_decode($obj['deletes'],true) as $idx) {
-            if($this->file_use) {
-                $getData = $this->models[$this->table]->where($this->models[$this->table]->primary,$idx)->get()['data'][0];
-                $this->file->deleteDirGate($getData['data_column']);
-            }
-
-            $delete = array($this->models[$this->table]->primary => $idx);
-
-            $this->models[$this->table]->delete($delete);
-        }
-
 
         $this->jl_response['success'] = true;
         echo json_encode($this->jl_response);

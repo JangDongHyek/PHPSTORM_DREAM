@@ -3,9 +3,9 @@ function vueLoad(app_name) {
         el: "#" + app_name,
         data: Jl_data,
         methods: {},
-        watch: {},
+        watch: Jl_watch,
         components: {},
-        computed: {},
+        computed: Jl_computed,
         created: function(){
             this.jl = new Jl(app_name,"#42B883");
         },

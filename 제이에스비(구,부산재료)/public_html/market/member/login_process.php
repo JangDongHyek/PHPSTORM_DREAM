@@ -5,10 +5,10 @@ $new_url = "";
 if($_SERVER['HTTPS'] == "on") $new_url .= "https";
 else $new_url .= "http";
 
-$new_url .= "://".$_SERVER['HTTP_HOST'];;
+$new_url .= "://".$_SERVER['HTTP_HOST'];
 if( !$url ){
 	$url = "../../.";
-} 
+}
 
 if( !$username ){
 	echo ("

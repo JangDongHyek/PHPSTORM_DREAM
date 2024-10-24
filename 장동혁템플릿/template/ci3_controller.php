@@ -45,6 +45,11 @@ class BsComparativeController extends CI_Controller {
                 $this->delete();
                 break;
             }
+
+            case "delete" : {
+                $this->delete();
+                break;
+            }
         }
     }
 

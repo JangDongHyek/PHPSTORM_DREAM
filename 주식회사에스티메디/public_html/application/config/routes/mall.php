@@ -21,8 +21,7 @@ $route['mypage'] = 'MallAccountController/myPage';
 
 // 약재 목록
 $route['medicinal'] = 'MallMedicinalController/medicinalList';
-// 약재 목록 리뉴얼 241014
-$route['medicinal2'] = 'MallMedicinalController/medicinalList2';
+
 // 약재 목록
 $route['medicinalSearch'] = 'MallMedicinalController/medicinalSearch';
 // 동일성분 약품 목록

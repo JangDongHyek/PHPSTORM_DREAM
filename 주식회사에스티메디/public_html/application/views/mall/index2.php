@@ -26,8 +26,9 @@
 		<ul class="swiper examSwiper">
 			<ul class="nav nav-tabs swiper-pagination"></ul>
 			<div class="swiper-wrapper">
+                <? foreach($data['data'] as $index => $d){?>
 				<div class="swiper-slide">
-					<div class="tab-pane active" id="v1">
+					<div class="tab-pane active" id="v<?=$index?>">
 
 						<div class="contsTable table">
 							<div class="scroll_comm">↔ 좌우로 스크롤 하세요 ↔</div>
@@ -47,60 +48,23 @@
 								</tr>
 								</thead>
 								<tbody>
+                                <?
+                                $origin_price_total = 0;
+                                $other_price_total = 0;
+                                $price_total = 0;
+                                ?>
+                                <? foreach($d['contents'] as $c) {
+                                    $origin_price_total += ($c['origin_price'] * $c['amount']);
+                                    $other_price_total += ($c['other_price'] * $c['amount']);
+                                    $price_total += ($c['price'] * $c['amount']);
+                                ?>
 								<tr>
-									<td>아로세트정 5mg</td>
-									<td>669</td>
-									<td>330</td>
-									<td>280</td>
+									<td><?=$c['name']?></td>
+									<td><?=$c['origin_price']?></td>
+									<td><?=$c['other_price']?></td>
+									<td><?=$c['price']?></td>
 								</tr>
-								<tr>
-									<td>아로세트정 10mg</td>
-									<td>991</td>
-									<td>440</td>
-									<td>380</td>
-								</tr>
-								<tr>
-									<td>뉴로스캡슐 100mg</td>
-									<td>198</td>
-									<td>100</td>
-									<td>90</td>
-								</tr>
-								<tr>
-									<td>이노시캄캡슐 7.5mg</td>
-									<td>266</td>
-									<td>145</td>
-									<td>131</td>
-								</tr>
-								<tr>
-									<td>동광세프트리악손주 1g</td>
-									<td>5,923</td>
-									<td>3,410</td>
-									<td>3,069</td>
-								</tr>
-								<tr>
-									<td>울트라맥세미정</td>
-									<td>125</td>
-									<td>75</td>
-									<td>70</td>
-								</tr>
-								<tr>
-									<td>카바피나캡슐 300mg</td>
-									<td>292</td>
-									<td>180</td>
-									<td>170</td>
-								</tr>
-								<tr>
-									<td>우리들아세틸시스테인캡슐 200mg</td>
-									<td>81</td>
-									<td>52</td>
-									<td>40</td>
-								</tr>
-								<tr>
-									<td>프라탐서방정 0.2mg</td>
-									<td>440</td>
-									<td>350</td>
-									<td>315</td>
-								</tr>
+                                <?}?>
 								</tbody>
 							</table>
 
@@ -111,228 +75,18 @@
 							<div>
 								<span class="title txt_gray">기존 합계</span>
 								<span class="title txt_gray2">타사 합계</span>
-								<span class="title txt_blue">ST 합계 <span>49.44% 절감</span></span>
+								<span class="title txt_blue">ST 합계 <span><?=number_format((($price_total / $origin_price_total) * 100),2)?>% 절감</span></span>
 							</div>
 							<div>
-								<span class="counter txt_gray" data-start="0" data-end="11835068"><br/>0</span>
-								<span class="counter txt_gray2" data-start="0" data-end="6803775">0</span>
-								<span class="counter txt_blue" data-start="0" data-end="5983404">0</span>
+								<span class="counter txt_gray" data-start="0" data-end="<?=$origin_price_total?>"><br/>0</span>
+								<span class="counter txt_gray2" data-start="0" data-end="<?=$other_price_total?>">0</span>
+								<span class="counter txt_blue" data-start="0" data-end="<?=$price_total?>">0</span>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="swiper-slide">
+                <?}?>
 
-					<div class="tab-pane" id="v2">
-
-						<div class="contsTable table">
-
-							<div class="scroll_comm">↔ 좌우로 스크롤 하세요 ↔</div>
-							<table class="animate__animated animate__fadeIn">
-								<colgroup>
-									<col width="55%">
-									<col width="15%">
-									<col width="15%">
-									<col width="15%">
-								</colgroup>
-								<thead>
-								<tr>
-									<th>품명</th>
-									<th>기존단가</th>
-									<th>타사단가</th>
-									<th class="bg2"><i class="fa-solid fa-badge-check"></i> ST단가</th>
-								</tr>
-								</thead>
-								<tbody>
-								<tr>
-									<td>하이페질정 5mg</td>
-									<td>646</td>
-									<td>330</td>
-									<td>280</td>
-								</tr>
-								<tr>
-									<td>하이페질정 10mg</td>
-									<td>943</td>
-									<td>440</td>
-									<td>380</td>
-								</tr>
-								<tr>
-									<td>세프리트리악손나트륨주 1g</td>
-									<td>7,937</td>
-									<td>3,410</td>
-									<td>3,069</td>
-								</tr>
-								<tr>
-									<td>아트놀셋정</td>
-									<td>190</td>
-									<td>100</td>
-									<td>90</td>
-								</tr>
-								<tr>
-									<td>클로델정 75mg</td>
-									<td>892</td>
-									<td>450</td>
-									<td>430</td>
-								</tr>
-								<tr>
-									<td>콜리날연질캡슐 400mg</td>
-									<td>445</td>
-									<td>380</td>
-									<td>350</td>
-								</tr>
-								<tr>
-									<td>아이빅사정 10mg</td>
-									<td>334</td>
-									<td>360</td>
-									<td>324</td>
-								</tr>
-								<tr>
-									<td>쿠에티아핀정 25mg</td>
-									<td>321</td>
-									<td>150</td>
-									<td>120</td>
-								</tr>
-								<tr>
-									<td>타박탐주 4.5mg</td>
-									<td>7,044</td>
-									<td>5,300</td>
-									<td>5,100</td>
-								</tr>
-								</tbody>
-							</table>
-
-						</div>
-
-						<!--숫자증감애니메이션-->
-						<div class="counterareabg">
-							<div>
-								<span class="title txt_gray">기존 합계</span>
-								<span class="title txt_gray2">타사 합계</span>
-								<span class="title txt_blue">ST 합계 <span>54.92% 절감</span></span>
-							</div>
-							<div>
-								<span class="counter txt_gray" data-start="0" data-end="16793440"><br/>0</span>
-								<span class="counter txt_gray2" data-start="0" data-end="9197000">0</span>
-								<span class="counter txt_blue" data-start="0" data-end="8127400">0</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="swiper-slide">
-
-					<div class="tab-pane" id="v3">
-
-						<div class="contsTable table">
-
-							<div class="scroll_comm">↔ 좌우로 스크롤 하세요 ↔</div>
-							<table class="animate__animated animate__fadeIn">
-								<colgroup>
-									<col width="55%">
-									<col width="15%">
-									<col width="15%">
-									<col width="15%">
-								</colgroup>
-								<thead>
-								<tr>
-									<th>품명</th>
-									<th>기존단가</th>
-									<th>타사단가</th>
-									<th class="bg2"><i class="fa-solid fa-badge-check"></i> ST단가</th>
-								</tr>
-								</thead>
-								<tbody>
-								<tr>
-									<td>세프트리악손주 1g</td>
-									<td>5,923</td>
-									<td>3,410</td>
-									<td>3,069</td>
-								</tr>
-								<tr>
-									<td>타박탐주 4.5g</td>
-									<td>7,044</td>
-									<td>5,300</td>
-									<td>5,100</td>
-								</tr>
-								<tr>
-									<td>큐로빅스정 75mg</td>
-									<td>827</td>
-									<td>450</td>
-									<td>430</td>
-								</tr>
-								<tr>
-									<td>메펨주 1g</td>
-									<td>13,761</td>
-									<td>9,800</td>
-									<td>9,300</td>
-								</tr>
-								<tr>
-									<td>도넬정 10mg</td>
-									<td>700</td>
-									<td>440</td>
-									<td>380</td>
-								</tr>
-								<tr>
-									<td>도넬정 5mg</td>
-									<td>500</td>
-									<td>330</td>
-									<td>280</td>
-								</tr>
-								<tr>
-									<td>뉴로케이정 10mg</td>
-									<td>545</td>
-									<td>360</td>
-									<td>324</td>
-								</tr>
-								<tr>
-									<td>시틸로정 10mg</td>
-									<td>426</td>
-									<td>300</td>
-									<td>290</td>
-								</tr>
-								<tr>
-									<td>쿠티아핀정 100mg</td>
-									<td>560</td>
-									<td>330</td>
-									<td>310</td>
-								</tr>
-								<tr>
-									<td>쿠티아핀정 25mg</td>
-									<td>201</td>
-									<td>150</td>
-									<td>120</td>
-								</tr>
-								<tr>
-									<td>암로바정</td>
-									<td>312</td>
-									<td>332</td>
-									<td>229</td>
-								</tr>
-								<tr>
-									<td>노통펜프러스정</td>
-									<td>162</td>
-									<td>100</td>
-									<td>90</td>
-								</tr>
-								</tbody>
-							</table>
-
-						</div>
-
-						<!--숫자증감애니메이션-->
-						<div class="counterareabg">
-							<div>
-								<span class="title txt_gray">기존 합계</span>
-								<span class="title txt_gray2">타사 합계</span>
-								<span class="title txt_blue">ST 합계 <span>38.8% 절감</span></span>
-							</div>
-							<div>
-								<span class="counter txt_gray" data-start="0" data-end="26479760"><br/>0</span>
-								<span class="counter txt_gray2" data-start="0" data-end="17783700">0</span>
-								<span class="counter txt_blue" data-start="0" data-end="16204570">0</span>
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
 
 			<div class="contsBtn">
@@ -697,6 +451,8 @@
 				</section>
 			</div>
 		</section>
+
+		<button type="button" class="btn btn_ani btn_large" onclick="location.href='./medicinal'"><i class="fa-solid fa-pills"></i> 의약품 바로구매</button>
 
 
 		<!-- 동일성분약품 Modal -->

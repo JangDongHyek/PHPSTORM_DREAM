@@ -2,10 +2,10 @@ function vueLoad(app_name) {
     Vue[app_name] = new Vue({
         el: "#" + app_name,
         data: Jl_data,
-        methods: {},
-        watch: {},
-        components: {},
-        computed: {},
+        methods: Jl_methods,
+        watch: Jl_watch,
+        components: Jl_components,
+        computed: Jl_computed,
         created: function(){
             this.jl = new Jl(app_name,"#42B883");
         },

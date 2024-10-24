@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function(){
         },
         methods: {
             changePage : function(page) {
-                window.location.href = `${this.base_url}/adm/class_register_list.php?page=${page}&all_search=${this.all_search}`;
+                window.location.href = `${this.base_url}/adm/class_register_list.php?page=${page}&all_search=${this.filter.all_search}`;
             },
             postData : function() {
                 var method = this.data._idx ? "put" : "post";

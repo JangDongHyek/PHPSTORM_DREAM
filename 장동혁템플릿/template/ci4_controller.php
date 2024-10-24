@@ -53,6 +53,10 @@ class BoardController extends BaseController
                 $this->delete();
                 break;
             }
+            case "delete" : {
+                $this->delete();
+                break;
+            }
         }
     }
 

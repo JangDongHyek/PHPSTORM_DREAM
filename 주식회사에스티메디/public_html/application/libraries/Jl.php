@@ -104,6 +104,8 @@ class Jl {
         echo "const Jl_editor = '{$this->EDITOR_HTML}';";
         echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
         echo "let Jl_data = {};"; //Vue 데이터 연동을 위한 변수
+        echo "let Jl_computed = {};"; //Vue 데이터 연동을 위한 변수
+        echo "let Jl_watch = {};"; //Vue 데이터 연동을 위한 변수
         echo "</script>";
         echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
         if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";

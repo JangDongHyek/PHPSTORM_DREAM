@@ -12,7 +12,10 @@ $route['provision'] = 'PublishController/provisionPage';
 $route['estimate'] = 'PublishController/estimate';
 $route['estimateView'] = 'PublishController/estimateView';
 $route['estimatePrint'] = 'PublishController/estimatePrint';
+// 약재 목록 리뉴얼 241014
+$route['medicinal2'] = 'PublishController/medicinalList2';
 
 //관리자
 $route['admProduct'] = 'PublishController/admProductPage';
 $route['admProductForm'] = 'PublishController/admProductFormPage';
+

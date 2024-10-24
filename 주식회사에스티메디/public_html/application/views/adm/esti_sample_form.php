@@ -1,11 +1,11 @@
 <!--관리자 비교견적 샘플 등록/수정-->
 <section class="estimateupd" id="app">
 	<form name="estimate" autocomplete="off">
-		<input type="hidden" name="idx" value=""/>
+		<input type="hidden" id="idx" value="<?=$data['idx']?>"/>
 
 		<div class="panel">
 			<label class="title">샘플 제목</label>
-			<input type="text" id="title" name="title" placeholder="샘플 제목을 입력하세요" class="title" required maxlength="30" value=""/>
+			<input type="text" id="title" name="title" placeholder="샘플 제목을 입력하세요" class="title" required maxlength="30" value="<?=$data['title']?>"/>
 			<span>
                 <button type="button" class="btn btn_gray" onclick="history.back()">목록</button>
                 <button type="button" class="btn btn_blue" onclick="postData()">등록</button>
@@ -14,7 +14,7 @@
 		<div class="box">
 			<p class="name">우선순위</p>
 			<p class="line">
-				<input type="number" id="priority" name="" value="" /> 높을수록 우선
+				<input type="number" id="priority" name="" value="<?=$data['priority']?>" /> 높을수록 우선
 			</p>
 			<p class="name">샘플내용</p>
 			<div class="table">
@@ -50,7 +50,7 @@
 <?php $jl->vueLoad();?>
 
 <script>
-    let contents = [];
+    let contents = <?=$data ? json_encode($data['contents'],JSON_UNESCAPED_UNICODE) : '[]'?>;
     let content = {
         name : "",
         origin_price : "",
@@ -67,15 +67,21 @@
         //let obj = jl.js.getUrlParams();
 
         let obj = {
+            idx : jl.js.getInputById("idx"),
             title : jl.js.getInputById("title"),
             contents : contents,
             priority : jl.js.getInputById("priority"),
         }
 
+        let method = obj['idx'] ? 'update' : "insert";
+
         try {
             //if(obj.user_id == "") throw new Error("아이디를 입력해주세요.")
 
-            let res = await jl.ajax("insert",obj,"/api/bs_comparative");
+            let res = await jl.ajax(method,obj,"/api/bs_comparative");
+
+            alert("완료되었습니다");
+            window.location.href = "estiSample"
         }catch (e) {
             alert(e.message)
         }
