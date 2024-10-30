@@ -111,7 +111,7 @@ $sheet = $_GET['sheet'] ? $_GET['sheet'] : 'MS,SS';
                         }
 
                         // 조식,석식 그날의 데이터 시간타임을 가져오는 쿼리
-                        $sql = "SELECT DISTINCT times AS times_list , times_en FROM meal_plan where day = '$date' and sheet = '$sheet'";
+                        $sql = "SELECT DISTINCT times AS times_list , times_en FROM meal_plan where day = '$date' and sheet = '$sheet' ORDER BY idx ASC";
                         $time_list = $model->query($sql);
 
 

@@ -64,3 +64,4 @@ $route['api/deleteComment']['post'] = 'MallBoardController/postDeleteBoardCommen
 
 $route['api/bs_comparative']['post'] = 'BsComparativeController/method';
 $route['api/bs_product']['post'] = 'BsProductController/method';
+$route['api/bs_order_item']['post'] = 'BsOrderItemController/method';

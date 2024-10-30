@@ -221,7 +221,7 @@ class AdminController extends BaseController {
         $this->data['all_orders'] = $model->get(array(
                 "select" => array(
                     "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                    "dl_DelFeeAmt","dl_DelFeeCommission"
+                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice"
                 )
             )
         );
@@ -270,7 +270,7 @@ class AdminController extends BaseController {
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice"
             )
         ));
 
@@ -278,7 +278,7 @@ class AdminController extends BaseController {
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice"
             )
         ));
 

@@ -125,6 +125,7 @@ class PublishController extends CI_Controller {
         $bs_product = new JlModel(array("table" => "bs_product"));
 
         //해당 유저 주문건
+        $bs_order->orderBy("reg_date","DESC");
         $orders = $bs_order->where("mb_id",$member['mb_id'])->get()['data'];
 
         foreach ($orders as $index => $order) {

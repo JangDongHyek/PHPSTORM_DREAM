@@ -269,8 +269,20 @@ class Jl {
         return str === str.toUpperCase();
     }
 
-    findObject(arrays,key,value) {
-        return arrays.find(obj => obj[key] === value);
+    findObject(arrays,key,value,like = false) {
+        if(like) {
+            return arrays.find(obj => obj[key].includes(value));
+        }else {
+            return arrays.find(obj => obj[key] === value);
+        }
+    }
+
+    findsObject(arrays,key,value,like = false) {
+        if(like) {
+            return arrays.filter(obj => obj[key].includes(value));
+        }else {
+            return arrays.filter(obj => obj[key] === value);
+        }
     }
 
     // ajax로 데이터 보내기전 가공

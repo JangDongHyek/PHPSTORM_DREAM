@@ -170,8 +170,13 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
         var SellerDiscountPrice_total = 0;
         var SettlementPrice_total = 0;
 
+        //배송비
         var dl_DelFeeAmt_total = 0;
         var dl_DelFeeCommission_total = 0;
+        // 부가세
+        var surTax_total = 0;
+        var b2p_surTax_total = 0;
+        var refund_total = 0;
 
         // kcp 수수료 이벤트 진행중 true
         var card_event = true;
@@ -189,6 +194,8 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             var calc_data = null;
             if (response2.count) calc_data = response2['data'][0];
 
+            let style = calc_data ? "" : "class='color-red';";
+
             // 판매금액
             var OrderAmount = calc_data ? calc_data['SellOrderPrice'] + calc_data['OptionPrice'] : response['result']['OrderAmount']
 
@@ -196,7 +203,10 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             let ServiceFee = 0;
             if (response['result']['SiteType'] == '1') ServiceFee = response['result']['BasicServiceFee'];
             else ServiceFee = response['result']['ServiceFee'];
-            if (calc_data) ServiceFee = calc_data['TotCommission'];
+            if (calc_data) {
+                ServiceFee = calc_data['TotCommission'];
+                ServiceFee = ServiceFee - calc_data['DeductTaxPrice'];  // 토탈 카테고리 이용료에 기타이용료 를 뺸후 판매자 할인공제에 더한다
+            }
 
             // b2p 수수료
             var b2p_fee = OrderAmount * b2p_commission;            // b2p
@@ -230,10 +240,10 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
             let OutsidePrice = Math.abs(response['result']['OutsidePrice']) // 판매자할인 / 공제금 토탈값
 
-            if (totalDiscount != OutsidePrice) {
-                let rest = OutsidePrice - totalDiscount
-                totalDiscount += rest;
-            }
+            //if (totalDiscount != OutsidePrice) {
+            //    let rest = OutsidePrice - totalDiscount
+            //    totalDiscount += rest;
+            //}
 
             // 판매자할인 / 공제금 정산데이터있을때
             if(calc_data) {
@@ -246,6 +256,8 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     totalDiscount += parseInt(SellerCashbackMoney);
                     totalDiscount += parseInt(SellerFundingDiscountPrice);
                 }
+
+                totalDiscount += parseInt(calc_data['DeductTaxPrice']) * -1;
             }
 
 
@@ -256,53 +268,64 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             let b2p_shipping_fee = dl_DelFeeAmt * 0.03;
 
             //배송비 수수료 정산데이터 있을떄
-            if(calc_data) {
-                dl_DelFeeAmt = calc_data['dl_DelFeeAmt'];
-                dl_DelFeeCommission = calc_data['dl_DelFeeCommission'];
-                b2p_shipping_fee = dl_DelFeeAmt * 0.03;
+            // 장바구니로 한번에 계산했을시 정산은 두개의 데이터에 배송비가 오고 주문쪽은 한개쪽에 제대로 붙기때문에 주문데이터로만 이용
+            //if(calc_data) {
+            //    dl_DelFeeAmt = calc_data['dl_DelFeeAmt'];
+            //    dl_DelFeeCommission = calc_data['dl_DelFeeCommission'];
+            //    b2p_shipping_fee = dl_DelFeeAmt * 0.03;
+            //}
+
+            // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
+            if (response['result']['SiteType'] == '1') {
+                b2p_shipping_fee = Math.round(b2p_shipping_fee);
+                dl_DelFeeCommission = Math.round(dl_DelFeeCommission);
+            }else {
+                b2p_shipping_fee = Math.ceil(b2p_shipping_fee);
+                dl_DelFeeCommission = Math.ceil(dl_DelFeeCommission);
             }
 
 
+            // 부가세
+            let surTax = OrderAmount * 0.1;
+            let b2p_surTax = surTax * 0.05; // 부가세 / (b2p수수료)
+            b2p_surTax = Math.ceil(b2p_surTax) // b2p 부가세 올림처리
+            let refund = surTax - b2p_surTax;
+
 
             var SettlementPrice = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
-
-
-
 
             //부가적인 설정
             totalDiscount = totalDiscount * -1;     // 음수화
             if (ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
             if (KCPServiceFee > 0) KCPServiceFee = KCPServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
 
-
-
             ServiceFee = ServiceFee + parseInt(SellerCashbackMoney); // 음수일테니 플러스해서 빼기 처리
-
             ServiceFee = ServiceFee - b2p_fee;
-
             let CostPrice = OrderAmount - (ServiceFee * -1);
+            SettlementPrice = SettlementPrice - b2p_fee - total_fee - dl_DelFeeCommission - b2p_shipping_fee - b2p_surTax;
 
-            SettlementPrice = SettlementPrice - b2p_fee - total_fee - dl_DelFeeCommission - b2p_shipping_fee;
 
-
-            code_html += '<tr>';
-            code_html += '<td>' + response['result']['OrderNo'] + '</td>';
-            code_html += '<td>' + response['result']['GoodsName'] + '</td>';
-            code_html += '<td>' + AddComma(OrderAmount) + '</td>';
-            code_html += '<td>' + AddComma(ServiceFee) + '</td>';
-            code_html += '<td>' + AddComma(CostPrice) + '</td>';
+            code_html += `<tr ${style}>`;
+            code_html += '<td>' + response['result']['OrderNo'] + '</td>'; // 주문번호
+            code_html += '<td>' + response['result']['GoodsName'] + '</td>'; // 상품명
+            code_html += '<td>' + AddComma(OrderAmount) + '</td>';  // 판매금액
+            code_html += '<td>' + AddComma(ServiceFee) + '</td>';   // 기본 서비스 이용료
+            code_html += '<td>' + AddComma(CostPrice) + '</td>';    // 공급원가
             //code_html += '<td>' + '-' + '</td>';
-            code_html += '<td>' + AddComma(totalDiscount) + '</td>';
-            code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';
-            code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';
-            if (card_event) {
-                code_html += '<td style="text-decoration: line-through;">' + AddComma(KCPPayBack) + '</td>';
-            }
+            code_html += '<td>' + AddComma(totalDiscount) + '</td>';    // 판매자할인/공제금
+            code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';      // 고객 결제 금액
+            code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';    // kcp 수수료
+            code_html += '<td>' + AddComma(KCPPayBack) + '</td>'; // kcp 캐시백
+            code_html += '<td>' + AddComma(total_fee) + '</td>';    // kcp 합계
 
-            code_html += '<td>' + AddComma(dl_DelFeeAmt) + '</td>';
-            code_html += '<td>' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';
+            code_html += '<td>' + AddComma(dl_DelFeeAmt) + '</td>';     // 배송비
+            code_html += '<td>' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 수수료
 
-            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';
+            code_html += '<td>' + AddComma(surTax) + '</td>';     // 부가세
+            code_html += '<td>' + AddComma(b2p_surTax) + '</td>';     // b2p부가세
+            code_html += '<td>' + AddComma(refund) + '</td>';     // 환급금
+
+            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';  //정산금액
             //code_html += response['body']['Message'] + '<br>';
             code_html += '</tr>';
 
@@ -316,6 +339,10 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
             dl_DelFeeAmt_total += dl_DelFeeAmt;
             dl_DelFeeCommission_total += (dl_DelFeeCommission + b2p_shipping_fee)
+
+            surTax_total += (surTax);
+            b2p_surTax_total += (b2p_surTax);
+            refund_total += (refund);
 
         }
 
@@ -351,6 +378,10 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
         $('#modal_dl_DelFeeAmt_total').html(AddComma(dl_DelFeeAmt_total));
         $('#modal_dl_DelFeeCommission_total').html(AddComma(dl_DelFeeCommission_total));
+
+        $('#modal_surTax_total').html(AddComma(surTax_total));
+        $('#modal_b2p_surTax_total').html(AddComma(b2p_surTax_total));
+        $('#modal_refund_total').html(AddComma(refund_total));
 
         if (card_event) {
             $('#modal_KCPServiceFeeEvent_total').html(AddComma(KCPServiceFeeEvent_total));
@@ -3207,6 +3238,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             return false;
         }
 
+        /*
         if ($('#exchangeModal_return_radoi4_1').is(":checked") && (!$('#exchangeModal_HoldReason').val() || !$('#exchangeModal_ResendExpectDate').val())) {
             Swal.fire({
                 title: "교환처리",
@@ -3229,7 +3261,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             });
             return false;
         }
-
+*/
 
         //for문
         var code_html = '';
@@ -4556,18 +4588,27 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     <table>
                         <thead>
                         <tr>
-                            <th>주문번호</th>
-                            <th>상품명</th>
-                            <th>판매금액</th>
-                            <th>기본서비스이용료</th>
-                            <th>공급원가</th>
-                            <th>판매자할인/공제금</th>
-                            <th>고객 결제금액</th>
-                            <th>KCP수수료</th>
-                            <th id="kcp_event_th">KCP수수료(캐시백이벤트)</th>
+                            <th rowspan="2">주문번호</th>
+                            <th rowspan="2">상품명</th>
+                            <th rowspan="2">판매금액</th>
+                            <th rowspan="2">기본서비스이용료</th>
+                            <th rowspan="2">공급원가</th>
+                            <th rowspan="2">판매자할인/공제금</th>
+                            <th rowspan="2">고객 결제금액</th>
+                            <th colspan="3">KCP수수료</th>
+                            <th colspan="2">배송비</th>
+                            <th colspan="3">부가세금처리</th>
+                            <th rowspan="2">정산예정금액</th>
+                        </tr>
+                        <tr>
+                            <th>수수료</th>
+                            <th>캐시백</th>
+                            <th>합계</th>
                             <th>배송비</th>
                             <th>배송비수수료</th>
-                            <th>정산예정금액</th>
+                            <th>부가세10%</th>
+                            <th>B2P부가세</th>
+                            <th>환급금</th>
                         </tr>
                         </thead>
                         <tbody id="orderAmountModal_list">
@@ -4579,10 +4620,14 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                             <td>공급원가</td>
                             <td>판매자할인/공제금</td>
                             <td>고객 결제금액</td>
-                            <td>KCP수수료</td>
-                            <td id="kcp_event_td">KCP수수료(캐시백이벤트)</td>
-                            <th>배송비</th>
-                            <th>배송비수수료</th>
+                            <td>수수료</td>
+                            <td id="kcp_event_td">캐시백</td>
+                            <td>합계</td>
+                            <td>배송비</td>
+                            <td>배송비수수료</td>
+                            <td>부가세10%</td>
+                            <td>B2P부가세</td>
+                            <th>환급금</th>
                             <td>정산예정금액</td>
                         </tr>
                         </tbody>
@@ -4603,6 +4648,9 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     <p>판매자할인 <br><span class="color-blue" id="modal_SellerDiscountPrice_total">0</span>원</p>
                     <p>배송비 <br><span class="color-blue" id="modal_dl_DelFeeAmt_total">0</span>원</p>
                     <p>배송비수수료 <br><span class="color-blue" id="modal_dl_DelFeeCommission_total">0</span>원</p>
+                    <p>부가세 <br><span class="color-blue" id="modal_surTax_total">0</span>원</p>
+                    <p>B2P부가세 <br><span class="color-blue" id="modal_b2p_surTax_total">0</span>원</p>
+                    <p>환급금 <br><span class="color-blue" id="modal_refund_total">0</span>원</p>
                     <p>정산예정금액 <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
                 </div>
             </div>
@@ -5530,9 +5578,9 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                         <option value="1">교환배송비청구</option>
                         <option value="4">교환입고미확인</option>
                     </select>
-                    <p>예상재발송일</p>
+                    <p style="display: none">예상재발송일</p>
                     <input type="date" name="exchangeModal_ResendExpectDate" id="exchangeModal_ResendExpectDate"
-                           class="border_gray">
+                           class="border_gray" style="display: none">
                 </div>
             </div>
 

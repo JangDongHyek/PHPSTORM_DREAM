@@ -14,8 +14,8 @@ var_dump($orders);
                 <? foreach($orders as $index => $order) {?>
 				<div class="flex js sub" id="drugs_list_recent">
 					<span class="flex gap10 ai-c w100">
-						<strong>주문일 <b class="txt_blue">24.10.17</b></strong>
-						<button type="button" class="btn male-auto btn_blueline">전체 담기</button>
+						<strong>주문일 <b class="txt_blue"><?=explode(' ',$order['reg_date'])[0]?></b></strong>
+						<button type="button" class="btn male-auto btn_blueline" onclick="addAllProduct('<?=$order['idx']?>')">전체 담기</button>
 					</span>
 				</div>
 				<div class="drugs_list my_list">
@@ -30,7 +30,7 @@ var_dump($orders);
 											<?=$product['info']['PRODUCT_NM']?>
 										</p>
 										<span>제조사 <strong><?=$product['info']['MAKER_NM']?></strong> |</span>
-										<span>단위 <strong><?=$product['info']['PRODUCT_UNIT']?></strong> |</span><br class="visible-xs">
+										<span>규격 <strong><?=$product['info']['PRODUCT_STANDARD']?></strong> |</span><br class="visible-xs">
 										<span>성분명 <strong><?=$product['info']['CONS_CD_NM']?></strong> |</span>
 										<span>재고수량  <strong><?=$product['info']['STOCK_QTY']?></strong></span>
                                         <span>주문수량  <strong><?=$product['item_cnt']?></strong></span>
@@ -75,22 +75,22 @@ var_dump($orders);
             <div>
 				<div class="flex gap10">
 
-					<button type="button" class="btn btn_large btn_blue" onclick="medicinalSearchPopup()"><i class="fa-solid fa-cart-plus"></i> 신규약 담기</button>
+					<button type="button" class="btn btn_large btn_blue" class="more" data-toggle="modal" data-target="#moreModal2"><i class="fa-solid fa-cart-plus"></i> 신규약 담기</button>
 					<button type="button" class="btn btn_large btn_green"><i class="fa-solid fa-bags-shopping"></i> 주문하기</button>
 				</div>
                 <div class="drugs_list">
                     <ul id="drugs_list">
-						<li v-for="product in products">
+						<li v-for="product,index in products">
 							<div class="flex">
-								<button type="button" class="delete"><i class="fa-solid fa-x"></i></button>
-								<input type="checkbox" name="checkIdx" id="checkIdx" value="" class="" onclick="checkboxes_func2()" checked disabled>
-								<label for="checkIdx">
+								<button type="button" class="delete" @click="deleteCart(product.idx)"><i class="fa-solid fa-x"></i></button>
+								<input type="checkbox" name="checkIdx" :value="product.idx" v-model="carts">
+								<label>
 									<div>
 										<p class="p_name">
-											{{product.prod_name}}
+											{{product.PRODUCT_NM}}
 										</p>
 										<span>제조사 <strong>{{product.MAKER_NM}}</strong> |</span>
-										<span>단위 <strong>{{product.PRODUCT_UNIT}}</strong> |</span><br class="visible-xs">
+										<span>규격 <strong>{{product.PRODUCT_STANDARD}}</strong> |</span><br class="visible-xs">
 										<span>성분명 <strong>{{product.CONS_CD_NM}}</strong> |</span>
 										<span>재고수량  <strong>{{product.STOCK_QTY}}</strong></span>
 									</div>
@@ -101,7 +101,7 @@ var_dump($orders);
 							</div>
 							<div class="more" data-toggle="modal" data-target="#moreModal1" @click="modal_product_idx = product.idx">
 								<i class="fa-regular fa-arrow-turn-down-right"></i>
-								<span><b>대체약</b>(1)</span>
+								<span><b>대체약</b>({{product.OTHER_PRODUCTS.length}})</span>
 							</div>
 						</li>
 						<li class="empty">
@@ -128,7 +128,7 @@ var_dump($orders);
                         <p class="txt_bold txt_blue">선택 의약품</p>
                         <div class="flex jc-sb basic">
                             <div>
-                                <p class="p_name">{{modal_product.prod_name}}</p>
+                                <p class="p_name">{{modal_product.PRODUCT_NM}}</p>
                             </div>
                             <div class="area_text">
                                 <p class="p_price">{{parseInt(modal_product.prod_price).format()}}원</p>
@@ -136,24 +136,89 @@ var_dump($orders);
                         </div>
                     </div>
                     <div class="search">
-                        <input type="search" name="hstx" id="" placeholder="원하시는 제품을 검색하세요" value=""/>
-                        <button type="button" class="btn" onclick=""><i class="fa-regular fa-magnifying-glass"></i></button>
+                        <input type="search" v-model="modal_search_value" placeholder="원하시는 제품을 검색하세요" value=""/>
+                        <button type="button" class="btn"><i class="fa-regular fa-magnifying-glass"></i></button>
                     </div>
 
                     <p class="txt_bold txt_blue">대체약</p>
                     <ul class="drugs_list">
-                        <li>
+                        <li v-for="item,index in modal_other_products">
                             <div class="flex">
-                                <input type="checkbox" name="" id="more1" value="5">
-                                <label for="more1">
+                                <input type="checkbox" name="" :value="item.idx" v-model="carts">
+                                <label>
                                     <div>
-                                        <p class="p_name">레바미피드 100mg</p>
-                                        <span>제조사 <strong>구매문의</strong> |</span>
-                                        <span>단위 <strong>500T</strong> |</span>
-                                        <span>대체약  <strong>무코스타</strong></span>
+                                        <p class="p_name">{{item.PRODUCT_NM}}</p>
+                                        <span>제조사 <strong>{{item.MAKER_NM}}</strong> |</span>
+                                        <span>규격 <strong>{{item.PRODUCT_STANDARD}}</strong> |</span>
+                                        <!--<span>대체약  <strong>무코스타</strong></span>-->
                                     </div>
                                     <div class="area_text">
-                                        <p class="p_price">40,000원</p>
+                                        <p class="p_price">{{parseInt(item.prod_price).format()}}원</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <div class="paging">
+                        <div class="pagingWrap">
+                            <!--처음-->
+
+                            <!--이전-->
+
+                            <!--페이지-->
+                            <a class="active" href="javascript:void(0)">1</a>
+                            <a class="" onclick="callContent()" href="?page=2&amp;">2</a>
+                            <a class="" href="?page=3&amp;">3</a>
+                            <a class="" href="?page=4&amp;">4</a>
+                            <a class="" href="?page=5&amp;">5</a>
+
+                            <!--다음-->
+                            <a class="next disabled" href="?page=11&amp;"><i class="fa-light fa-chevron-right"></i></a>
+
+                            <!--마지막-->
+                            <a class="last disabled" href="?page=101&amp;"><i class="fa-light fa-chevrons-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!--
+                    <button type="button" class="btn btn_middle btn_gray" data-dismiss="modal">닫기</button>
+                    -->
+                    <button type="button" class="btn btn_middle btn_blue" data-dismiss="modal">선택 완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신규약 Modal -->
+    <div class="modal fade more_modal" id="moreModal2" tabindex="-1" aria-labelledby="moreModal2Label" aria-hidden="true">
+        <div class="modal-dialog wide">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="drugs_list_cons_modal">
+                    <div class="search">
+                        <input type="search" v-model="modal2_like_value" placeholder="원하시는 제품을 검색하세요" value=""/>
+                        <button type="button" class="btn"><i class="fa-regular fa-magnifying-glass"></i></button>
+                    </div>
+
+                    <ul class="drugs_list">
+                        <li v-for="item,index in modal2_products">
+                            <div class="flex">
+                                <input type="checkbox" name="" :value="item.idx" v-model="carts">
+                                <label>
+                                    <div>
+                                        <p class="p_name">{{item.PRODUCT_NM}}</p>
+                                        <span>제조사 <strong>{{item.MAKER_NM}}</strong> |</span>
+                                        <span>규격 <strong>{{item.PRODUCT_STANDARD}}</strong> |</span>
+                                        <!--<span>대체약  <strong>무코스타</strong></span>-->
+                                    </div>
+                                    <div class="area_text">
+                                        <p class="p_price">{{parseInt(item.prod_price).format()}}원</p>
                                     </div>
                                 </label>
                             </div>
@@ -200,6 +265,12 @@ var_dump($orders);
     Jl_data.products = [];
     Jl_data.modal_product_idx = "";
     Jl_data.modal_product = {};
+    Jl_data.modal_search_value = "";
+
+    Jl_data.modal2_like_value = "";
+    Jl_data.modal2_page = 1;
+    Jl_data.modal2_limit = 10;
+    Jl_data.modal2_products = [];
 
     Jl_watch.carts = function() {
         getProduct(this.carts)
@@ -207,6 +278,61 @@ var_dump($orders);
 
     Jl_watch.modal_product_idx = function() {
         getModalProduct(this.modal_product_idx)
+    }
+
+    Jl_methods.deleteCart = function(idx) {
+        let index = this.carts.findIndex(item => item == idx);
+        console.log(idx);
+        console.log(index);
+        if(index !== -1) {
+            this.carts.splice(index,1);
+        }
+    }
+
+    //검색 된 데이터 반환 만드는
+    Jl_computed.modal_other_products = function() {
+        if(!this.modal_product) return [];
+
+        if(this.modal_search_value) return this.jl.findsObject(this.modal_product.OTHER_PRODUCTS,'PRODUCT_NM',this.modal_search_value,true)
+
+        return this.modal_product.OTHER_PRODUCTS;
+    }
+
+    async function getAllProduct() {
+        let vue = Vue.user.$data
+        let obj = {
+            del_yn : "N",
+            use_yn : "Y",
+            page : vue.modal2page,
+            limit : vue.modal2_limit,
+            like_key : "PRODUCT_NM",
+            like_value : vue.modal2_like_value
+        };
+        try {
+            let res = await jl.ajax("get",obj,"/api/bs_product");
+
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+
+    async function addAllProduct(idx) {
+        if(!idx) return false;
+
+        let obj = {ord_idx : idx};
+        try {
+            let res = await jl.ajax("get",obj,"/api/bs_order_item");
+            let carts = Vue.user.$data.carts
+            res.data.forEach(function(product) {
+                console.log(product);
+                let index = carts.findIndex(item => item == product.product_idx);
+                if(index == -1) {
+                    carts.push(product.product_idx)
+                }
+            });
+        }catch (e) {
+            alert(e.message)
+        }
     }
 
     async function getModalProduct(idx) {
