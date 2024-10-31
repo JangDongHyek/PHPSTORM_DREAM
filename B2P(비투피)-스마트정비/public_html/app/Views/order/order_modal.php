@@ -265,7 +265,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             //배송비 수수료 정산데이터 없을때
             let dl_DelFeeAmt = parseInt(response['result']['ShippingFee']);
             let dl_DelFeeCommission = dl_DelFeeAmt * 0.033;
-            let b2p_shipping_fee = dl_DelFeeAmt * 0.03;
+            let b2p_shipping_fee = dl_DelFeeAmt * 0;
 
             //배송비 수수료 정산데이터 있을떄
             // 장바구니로 한번에 계산했을시 정산은 두개의 데이터에 배송비가 오고 주문쪽은 한개쪽에 제대로 붙기때문에 주문데이터로만 이용
@@ -4634,24 +4634,26 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     </table>
                 </div>
 
-                <div class="flex ai-c jc-sb box_whiteline">
+                <div class="flex jc-sb box_whiteline">
                     <h2 class="popstit">
                         총 합계
                     </h2>
-                    <p>판매금액 <br><span class="color-blue" id="modal_OrderAmount_total">0</span>원</p>
-                    <p>수수료 <br><span class="color-blue" id="modal_ServiceFee_total">0</span>원</p>
-                    <p>KCP수수료 <br><span class="color-blue" id="modal_KCPServiceFee_total">0</span>원</p>
-                    <p id="modal_KCPServiceFeeEvent_p">KCP수수료(캐시백이벤트) <br><span class="color-blue"
+                    <div class="flex jc-sb">
+                    <p><b>판매금액</b> <br><span class="color-blue" id="modal_OrderAmount_total">0</span>원</p>
+                    <p><b>수수료</b> <br><span class="color-blue" id="modal_ServiceFee_total">0</span>원</p>
+                    <p><b>KCP수수료</b> <br><span class="color-blue" id="modal_KCPServiceFee_total">0</span>원</p>
+                    <p id="modal_KCPServiceFeeEvent_p"><b>KCP수수료(캐시백이벤트)</b> <br><span class="color-blue"
                                                                                 id="modal_KCPServiceFeeEvent_total">0</span>원
                     </p>
-                    <p>공급원가 <br><span class="color-blue" id="modal_CostPrice_total">0</span>원</p>
-                    <p>판매자할인 <br><span class="color-blue" id="modal_SellerDiscountPrice_total">0</span>원</p>
-                    <p>배송비 <br><span class="color-blue" id="modal_dl_DelFeeAmt_total">0</span>원</p>
-                    <p>배송비수수료 <br><span class="color-blue" id="modal_dl_DelFeeCommission_total">0</span>원</p>
-                    <p>부가세 <br><span class="color-blue" id="modal_surTax_total">0</span>원</p>
-                    <p>B2P부가세 <br><span class="color-blue" id="modal_b2p_surTax_total">0</span>원</p>
-                    <p>환급금 <br><span class="color-blue" id="modal_refund_total">0</span>원</p>
-                    <p>정산예정금액 <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
+                    <p><b>공급원가</b> <br><span class="color-blue" id="modal_CostPrice_total">0</span>원</p>
+                    <p><b>판매자할인</b> <br><span class="color-blue" id="modal_SellerDiscountPrice_total">0</span>원</p>
+                    <p><b>배송비</b> <br><span class="color-blue" id="modal_dl_DelFeeAmt_total">0</span>원</p>
+                    <p><b>배송비수수료</b> <br><span class="color-blue" id="modal_dl_DelFeeCommission_total">0</span>원</p>
+                    <p><b>부가세</b> <br><span class="color-blue" id="modal_surTax_total">0</span>원</p>
+                    <p><b>B2P부가세</b> <br><span class="color-blue" id="modal_b2p_surTax_total">0</span>원</p>
+                    <p><b>환급금</b> <br><span class="color-blue" id="modal_refund_total">0</span>원</p>
+                    <p><b>정산예정금액</b> <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
+                    </div>
                 </div>
             </div>
         </div>

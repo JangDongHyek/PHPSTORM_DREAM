@@ -19,7 +19,7 @@ class Jl {
     public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
     public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
     public $CI = true;                     // namespace 가 존재한다면 Ci를 사용한다고 인식합니다. INIT()에서 자동으로 바뀝니다.
-    public $COMPONENT = "component";
+    public $COMPONENT = "/assets/component";
 
 
     protected $PHP;                         // JlFile 에서 사용

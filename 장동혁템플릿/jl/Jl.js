@@ -292,7 +292,7 @@ class Jl {
 
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
-                if(this.isUpperCase(key)) delete obj[key]; //대문자인경우 조인데이터이기때문에 삭제
+                if(key[0] == "$") delete obj[key]; //첫글자가 $일경우 조인데이터이기때문에 삭제
                 const value = obj[key];
                 if (value instanceof File) {
                     objs[key] = value;

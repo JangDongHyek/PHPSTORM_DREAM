@@ -85,10 +85,7 @@
 
         },
         watch : {
-            search_key1() {
-                this.search_value1_1 = "";
-                this.search_value1_2 = "";
-            }
+
         }
     });
 </script>

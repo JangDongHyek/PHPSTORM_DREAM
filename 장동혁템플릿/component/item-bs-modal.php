@@ -1,12 +1,11 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <div class="modal fade" :id="component_idx" tabindex="-1" aria-labelledby="accountFormModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade more_modal" :id="component_idx" tabindex="-1" aria-labelledby="accountFormModalLabel" aria-hidden="true">
+            <div class="modal-dialog wide">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
-                        <h5 class="modal-title">{{title}}</h5>
+                        <slot name="header"></slot>
                     </div>
                     <div class="modal-body">
                         <slot></slot>
@@ -25,7 +24,6 @@
         template: "#<?=$componentName?>-template",
         props: {
             modal : {type : Boolean, default : false},
-            title : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -57,6 +55,9 @@
         watch : {
             modal() {
                 if(this.modal) $(`#${this.component_idx}`).modal('show');
+                else {
+                    $(`#${this.component_idx}`).modal('hide');
+                }
             }
         }
     });

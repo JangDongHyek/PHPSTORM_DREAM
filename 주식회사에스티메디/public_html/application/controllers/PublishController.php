@@ -21,13 +21,18 @@ class PublishController extends CI_Controller {
     //mall
     public function index2Page()
     {
+
+        $member = $this->session->userdata('member');
+
         $model = new JlModel(array("table" => "bs_comparative"));
         $model->orderBy("priority","DESC");
         $items = $model->get();
 
         $data = [
             'pid' => 'index2',
-            "data" => $items
+            "data" => $items,
+            "member" => $member,
+            "jl" => $this->jl
         ];
 
         render('mall/index2', $data);

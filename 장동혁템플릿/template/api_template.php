@@ -60,8 +60,8 @@ try {
                     $joinModel->where($joinModel->primary, $data[$info['get_key']]);
                     $join_data = $joinModel->get()['data'][0];
 
-                    //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 jl.js에 있음
-                    $object["data"][$index][strtoupper($info['table'])] = $join_data;
+                    //Join시 변수명은 첫번째에 무조건 $로 진행 조인데이터일시 문제발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
+                    $object["data"][$index]["$".$info['table']] = $join_data;
                 }
             }
 
@@ -83,7 +83,7 @@ try {
                 }
             }
 
-            $models[$table]->insert($obj);
+            $response['idx'] = $models[$table]->insert($obj);
             $response['success'] = true;
             break;
         }

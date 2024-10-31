@@ -51,7 +51,7 @@ function sortMonthOrder($month,$objects,$info) {
             // 배송비 및 배송비 수수료 관련
             $dl_DelFeeAmt = $data['ShippingFee'];
             $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
-            $b2p_shipping_fee = $dl_DelFeeAmt * 0.03;
+            $b2p_shipping_fee = $dl_DelFeeAmt * 0;
 
             // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
             if($data['SiteType'] == 1) {
@@ -105,7 +105,7 @@ function totalOrderKey($objects,$key,$info) {
         // 배송비 및 배송비 수수료 관련
         $dl_DelFeeAmt = $data['ShippingFee'];
         $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
-        $b2p_shipping_fee = $dl_DelFeeAmt * 0.03;
+        $b2p_shipping_fee = $dl_DelFeeAmt * 0;
 
         // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
         if($data['SiteType'] == 1) {
@@ -322,7 +322,7 @@ function totalOrderKey($objects,$key,$info) {
                 // 배송비 및 배송비 수수료 관련
                 $dl_DelFeeAmt = $data['ShippingFee'];
                 $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
-                $b2p_shipping_fee = $dl_DelFeeAmt * 0.03;
+                $b2p_shipping_fee = $dl_DelFeeAmt * 0;
 
                 // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
                 if($data['SiteType'] == 1) {

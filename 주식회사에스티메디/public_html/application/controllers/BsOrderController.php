@@ -2,14 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 include_once APPPATH.'libraries/JlModel.php';
 include_once APPPATH.'libraries/JlFile.php';
-class BsProductController extends CI_Controller {
+class BsOrderController extends CI_Controller {
 
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "bs_product";
+    public $table = "bs_order";
     public $file_use = false;
     public $file;
 
@@ -18,6 +18,9 @@ class BsProductController extends CI_Controller {
         parent::__construct();
 
         $this->models[$this->table] = new JlModel(array("table" => $this->table));
+
+        $this->models['bs_order_item'] = new JlModel(array("table" => "bs_order_item"));
+        $this->models['bs_product'] = new JlModel(array("table" => "bs_product"));
 
         if($this->file_use) {
             $this->file = new JlFile("/jl/jl_resource/{$this->table}");
@@ -65,7 +68,6 @@ class BsProductController extends CI_Controller {
         if($obj['order_by_asc']) $this->models[$this->table]->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key1'] && $obj['not_value1']) $this->models[$this->table]->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
         if($obj['in_key1'] && $obj['in_value1']) $this->models[$this->table]->in($obj['in_key1'],$this->models[$this->table]->jsonDecode($obj['in_value1']));
-        if($obj['like_key'] && $obj['like_value']) $this->models[$this->table]->like($obj['like_key'],$obj['like_value']);
 
         //join
         if ($this->join_table) {
@@ -85,17 +87,17 @@ class BsProductController extends CI_Controller {
             "sql" => true
         ));
 
-        //대체약 가져오는 구문
-        foreach ($object["data"] as $index => $data) {
-            // 필수 조건
-            $this->models[$this->table]->where("del_yn","N");
-            $this->models[$this->table]->where("use_yn","Y");
+        //주문건의 상품들을 가져오고 상품의 정보를 가져오는 부분
+        foreach ($object["data"] as $index => $order) {
+            // 주문건의 상품
+            $products = $this->models['bs_order_item']->where("ord_idx",$order['idx'])->get()['data'];
 
-            $this->models[$this->table]->where("CONS_CD",$data['CONS_CD']);
-            $join_data = $this->models[$this->table]->get()['data'];
-
-            //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 JS에 있음
-            $object["data"][$index]['OTHER_PRODUCTS'] = $join_data;
+            foreach($products as $index2 => $product) {
+                // 상품 정보
+                $product_info = $this->models['bs_product']->where("idx",$product['product_idx'])->get()['data'][0];
+                $products[$index2]['INFO'] = $product_info;
+            }
+            $object['data'][$index]['PRODUCTS'] = $products;
         }
 
         //getKey ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져오는형식 속도는 join이랑 비슷하거나 빠름

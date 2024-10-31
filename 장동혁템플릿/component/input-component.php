@@ -1,7 +1,12 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <bs-modal :modal="modal" @close="$emit('close')" title="담당자 계정 등록">
+        <item-bs-modal :modal="modal" @close="$emit('close')">
+            <template v-slot:header>
+
+            </template>
+
+            <!-- body -->
             <template v-slot:default>
 
             </template>
@@ -10,7 +15,7 @@
             <template v-slot:footer>
 
             </template>
-        </bs-modal>
+        </item-bs-modal>
     </div>
 </script>
 
