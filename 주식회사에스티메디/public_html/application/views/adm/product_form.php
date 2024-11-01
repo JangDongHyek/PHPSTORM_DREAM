@@ -1,7 +1,7 @@
 <!-- 상품관리 등록/수정 폼 -->
 <? include_once VIEWPATH. 'component/summer_note_resource.php'; // summernote?>
 
-<section class="productupd">
+<section class="productupd" id="productForm">
     <form name="productFrm" autocomplete="off" method="post">
         <input type="hidden" name="idx" value="<?=(int)$productData['idx']?>">
         <div class="panel">
@@ -134,6 +134,15 @@
 				<?php } ?>
             </p>
 
+				<!--<p class="name">의약품 구분</p>-->
+				<!--<p class="line">-->
+				<!--	<label>구분</label>-->
+				<!--	<select>-->
+				<!--		<option>실의약품</option>-->
+				<!--		<option>대체의약품</option>-->
+				<!--	</select>-->
+				<!--</p>-->
+            <product-replace product_idx="<?=$productData['idx']?>"></product-replace>
             <!--
             <p class="name">상세 정보</p>
             <div class="editor">
@@ -171,3 +180,7 @@
 </script>
 <!-- 상품등록/수정 JS -->
 <script src="<?=ASSETS_URL?>/js/adm/product_form.js?v=<?=JS_VER?>"></script>
+
+<?php $jl->vueLoad("productForm");?>
+<?php $jl->componentLoad("product");?>
+<?php $jl->componentLoad("item");?>

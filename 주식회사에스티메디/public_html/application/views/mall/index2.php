@@ -208,9 +208,6 @@
             <estimate-list mb_id="<?=$member['mb_id']?>" INSU_CHECK="<?=$member['INSU_CHECK']?>"></estimate-list>
         </div>
 
-
-		<button type="button" class="btn btn_ani btn_large" onclick="location.href='./medicinal'"><i class="fa-solid fa-pills"></i> 의약품 바로구매</button>
-
 		<script>
 
 			function medicinalSearchPopup() {

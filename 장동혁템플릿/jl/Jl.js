@@ -367,6 +367,27 @@ class Jl {
         return result;
     }
 
+    // 숫자와 문자가섞인 문자열데이터를 숫자만 가져오는 정규식
+    getNumbersOnly(str) {
+        return str.replace(/\D/g, '');
+    }
+
+    //숫자 키입력만 허용하고 나머지는 안되게
+    isNumberKey(event) {
+        const charCode = event.keyCode || event.which;
+        // 숫자 키 코드 (0-9 및 숫자 키패드 0-9)와 백스페이스, Delete 키만 허용
+        if (
+            (charCode >= 48 && charCode <= 57) ||
+            (charCode >= 96 && charCode <= 105) ||
+            charCode === 8 ||
+            charCode === 46
+        ) {
+            return true;
+        }
+        event.preventDefault(); // 숫자가 아닌 경우 입력 차단
+        return false;
+    }
+
     formatNumber(value,comma = false) {
         value = value.replace(/[^0-9]/g, '');
 

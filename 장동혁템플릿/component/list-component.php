@@ -3,7 +3,7 @@
     <div>
         <input-component :modal="modal" @close="modal = false;"></input-component>
 
-        <pagination-component :filter="filter" @change="changePage"></pagination-component>
+        <item-pagination :filter="filter" @change="changePage"></item-pagination>
     </div>
 </script>
 

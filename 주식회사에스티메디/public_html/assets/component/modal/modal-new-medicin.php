@@ -18,7 +18,7 @@
                     <li v-for="item,index in products">
                         <div class="flex">
                             <input v-if="version == 1" type="checkbox" name="" :value="item.idx" v-model="carts">
-                            <input v-if="version == 2" type="checkbox" @click="emitProduct(item)">
+                            <input v-if="version == 2" type="checkbox" :checked="isCarts(item)" @click="event.preventDefault(); emitProduct(item)">
                             <label>
                                 <div>
                                     <p class="p_name">{{item.PRODUCT_NM}}</p>
@@ -90,9 +90,32 @@
             });
         },
         methods: {
+            isCarts(product) {
+                return this.carts.some((cart) => cart.idx == product.idx);
+            },
             emitProduct(product) {
+                if(!confirm("해당 상품을 선택 하시겠습니까?")) return false;
+                this.$set(product,'new_amount',1);
+                let bool = false
+                let carts = this.carts
+                let index = 0;
+                for(const item of carts) {
+                    if(item == 1) {
+                        carts[index] = product;
+                        bool = true;
+                        break;
+                    }else {
+                        if(item.idx == product.idx) {
+                            alert("이미 등록된 상품입니다.");
+                            return false;
+                        }
+                    }
+                    index++;
+                }
+
+                if(!bool) this.carts.push(product);
+
                 this.$emit('close')
-                console.log(product);
 
             },
             changePage(page) {
@@ -117,6 +140,9 @@
             modal() {
                 this.filter.page = 1;
                 this.filter.like_value = "";
+
+                if(this.modal && this.version == 2) this.getData();
+                if(!this.modal) this.products = [];
             },
             carts: {
                 handler(newVal, oldVal) {

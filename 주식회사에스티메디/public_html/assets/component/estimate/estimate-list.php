@@ -23,19 +23,22 @@
                 <div class="btn_wrap btn_list">
                     <a class="btn btn_large btn_line" href="./estimate"><i class="fa-duotone fa-solid fa-floppy-disk"></i> 견적 저장</a>
                     <a class="btn btn_large btn_line" href="./estimatePrint" target="_blank"><i class="fa-duotone fa-solid fa-print"></i> 견적 출력</a>
-                    <a class="btn btn_large btn_line" id=""><i class="fa-duotone fa-solid fa-bags-shopping"></i> 바로 구매</a>
+                    <a class="btn btn_large btn_line" @click="postOrder()"><i class="fa-duotone fa-solid fa-bags-shopping"></i> 바로 구매</a>
                 </div>
                 <section class="list_wrap">
                     <div class="table_total">
                         <h5 class="origin">
                             <span>기존 견적 금액</span>
-                            <span><b>￦<em class="price-wrapper"><div class="price-slash"></div>1,563,250</em></b></span>
-                            <span class="txt_red txt_bold">&nbsp;<i class="fa-solid fa-down"></i> 58%</span>
+                            <span><b>￦<em class="price-wrapper"><div class="price-slash"></div>{{originTotalPrice().format()}}</em></b></span>
+                            <span class="txt_red txt_bold">&nbsp;<i class="fa-solid fa-down"></i> {{
+                                    isNaN(stTotalPrice() / originTotalPrice())
+                                    ? 0 : ((stTotalPrice() / originTotalPrice()) * 100).toFixed(2)
+                                }}%</span>
                         </h5>
                         <h5>
                             <span>ST 견적 금액</span>
                             <span>일금 영 <b><em class="korUnit" data-number="900750"></em>원</b></span>
-                            <span><b>( ￦<em>900,750</em>)</b> ※부가세 포함</span>
+                            <span><b>( ￦<em>{{stTotalPrice().format()}}</em>)</b> ※부가세 포함</span>
                         </h5>
                     </div>
                     <div class="table_wrap table">
@@ -56,49 +59,87 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="product in data">
-                                <td alt="No.">
-                                    <p>1 <button type="button" class="btn btn_mini btn_black"><i class="fa-solid fa-trash"></i></button></p>
-
-                                </td>
-                                <td alt="제품명">
-                                    <input type="text" value="산텐플루메토론0.02점안액/5ml">
-                                </td>
-                                <td alt="포장단위" class="text_right">
-                                    <p><em>포장단위</em>100</p>
-                                </td>
-                                <td alt="수량">
-                                    <div class="number_controller">
-                                        <button type="button" onclick="changeCount(, -1)"><i class="fa-regular fa-minus"></i></button>
-                                        <input type="number" name="inputNumber" value="1" onkeyup="this.value=numberChk(this.value);changeCount(, this.value, true)" id="inputNumber">
-                                        <button type="button" onclick="changeCount(, 1)" id="Count_add1102"><i class="fa-regular fa-plus"></i></button>
-                                    </div>
-                                </td>
-                                <td alt="약가" class="text_right">
-                                    <p><em>약가</em>1,165</p>
-                                </td>
-                                <td alt="총수량" class="text_right">
-                                    <p><em>총수량</em>100</p>
-                                </td>
-                                <td alt="기존합계" class="text_right">
-                                    <p><b><em>기존합계</em>116,500</b></p>
-                                </td>
-                                <td alt="ST단가" class="text_right">
-                                    <p><em>ST단가</em><b>825</b></p>
-                                </td>
-                                <td alt="대체품목">
-                                    <p>
-                                        <b>후메론점안액0.02%/5ml</b>
-                                        <button type="button" data-toggle="modal" data-target="#moreModal1" class="btn btn_mini btn_black">변경</button>
-                                    </p>
-                                </td>
-                                <td alt="ST합계" class="text_right">
-                                    <p><em>ST합계</em><b>825</b></p>
-                                </td>
-                                <td alt="절감금액" class="text_right">
-                                    <p class="txt_red"><em>절감금액</em><b>34,000</b></p>
-                                </td>
-                            </tr>
+                            <template v-for="product,index in carts">
+                                <tr v-if="product == 1">
+                                    <td alt="No.">
+                                        <p class="temp">-</p>
+                                    </td>
+                                    <td alt="제품명">
+                                        <input type="text" value="제품을 선택하세요." readonly @click="new_modal = true;">
+                                    </td>
+                                    <td alt="포장단위" class="text_right">
+                                        <p class="temp">포장단위</p>
+                                    </td>
+                                    <td alt="수량" class="text_right">
+                                        <p class="temp">0</p>
+                                    </td>
+                                    <td alt="약가" class="text_right">
+                                        <p class="temp">0</p>
+                                    </td>
+                                    <td alt="총수량" class="text_right">
+                                        <p class="temp">0</p>
+                                    </td>
+                                    <td alt="기존합계" class="text_right">
+                                        <p class="temp">0</p>
+                                    </td>
+                                    <td alt="ST단가" class="text_right">
+                                        <p class="temp">0</p>
+                                    </td>
+                                    <td alt="대체품목">
+                                        <p class="temp">대체품목</p>
+                                    </td>
+                                    <td alt="ST합계" class="text_right">
+                                        <p class="temp">0</p>
+                                    </td>
+                                    <td alt="절감금액" class="text_right">
+                                        <p class="temp">0</p>
+                                    </td>
+                                </tr>
+                                <tr v-else>
+                                    <td alt="No.">
+                                        <p>{{index+1}} <button type="button" class="btn btn_mini btn_black" @click="deleteCart(index)"><i class="fa-solid fa-trash"></i></button></p>
+                                    </td>
+                                    <td alt="제품명">
+                                        <input type="text" :value="product.PRODUCT_NM" readonly>
+                                    </td>
+                                    <td alt="포장단위" class="text_right">
+                                        <p><em>포장단위</em>{{jl.getNumbersOnly(product.PRODUCT_STANDARD)}}</p>
+                                    </td>
+                                    <td alt="수량">
+                                        <div class="number_controller">
+                                            <button type="button" @click="product.new_amount > 1 ? product.new_amount-- : product.new_amount"><i class="fa-regular fa-minus"></i></button>
+                                            <input type="number" name="inputNumber" v-model="product.new_amount" @keydown="jl.isNumberKey"/>
+                                            <button type="button" @click="product.new_amount++"><i class="fa-regular fa-plus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td alt="약가" class="text_right">
+                                        <p><em>약가</em>{{getPrice(product).format()}}</p>
+                                    </td>
+                                    <td alt="총수량" class="text_right">
+                                        <p><em>총수량</em>{{jl.getNumbersOnly(product.PRODUCT_STANDARD) * product.new_amount}}</p>
+                                    </td>
+                                    <td alt="기존합계" class="text_right">
+                                        <p><b><em>기존합계</em>{{(getPrice(product) * product.new_amount).format()}}</b></p>
+                                    </td>
+                                    <td alt="ST단가" class="text_right">
+                                        <p><em>ST단가</em><b>{{getPrice(getReplace(product)).format()}}</b></p>
+                                    </td>
+                                    <td alt="대체품목">
+                                        <p>
+                                            <b>{{getReplace(product).PRODUCT_NM}}</b>
+                                            <!--<button type="button" data-toggle="modal" data-target="#moreModal1" class="btn btn_mini btn_black">변경</button>-->
+                                        </p>
+                                    </td>
+                                    <td alt="ST합계" class="text_right">
+                                        <p><em>ST합계</em><b>{{(getPrice(getReplace(product)) * product.new_amount).format()}}</b></p>
+                                    </td>
+                                    <td alt="절감금액" class="text_right">
+                                        <p class="txt_red"><em>절감금액</em><b>
+                                                {{ ((getPrice(product) * product.new_amount) - (getPrice(getReplace(product)) * product.new_amount)).format() }}
+                                            </b></p>
+                                    </td>
+                                </tr>
+                            </template>
 
                             <tr>
                                 <td colspan="99">
@@ -111,13 +152,13 @@
                                     기존합계
                                 </td>
                                 <td alt="기존합계" colspan="2" class="text_right">
-                                    <p>1,563,250</p>
+                                    <p>{{originTotalPrice().format()}}</p>
                                 </td>
                                 <td alt="계" colspan="1" class="text_right">
                                     ST합계
                                 </td>
                                 <td alt="ST합계" colspan="2" class="text_right">
-                                    <p>900,750</p>
+                                    <p>{{stTotalPrice().format()}}</p>
                                 </td>
                             </tr>
                             </tbody>
@@ -137,8 +178,8 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>1,563,250</td>
-                                <td>900,750</td>
+                                <td>{{originTotalPrice().format()}}</td>
+                                <td>{{stTotalPrice().format()}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -155,8 +196,12 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>662,500</td>
-                                <td class="txt_red">58%</td>
+                                <td>{{(originTotalPrice() - stTotalPrice()).format()}}</td>
+                                <td class="txt_red">
+                                    {{
+                                    isNaN(stTotalPrice() / originTotalPrice())
+                                    ? 0 : ((stTotalPrice() / originTotalPrice()) * 100).toFixed(2)
+                                    }}%</td>
                             </tr>
                             </tbody>
                         </table>
@@ -166,9 +211,17 @@
             </div>
         </section>
 
-        <modal-new-medicin :modal="new_modal" @close="new_modal = false;" :INSU_CHECK="INSU_CHECK"
+        <button type="button" class="btn btn_ani btn_large" @click="postOrder();"><i class="fa-solid fa-pills"></i> 의약품 바로구매</button>
+
+        <modal-new-medicin :modal="new_modal" @close="new_modal = false;" :INSU_CHECK="INSU_CHECK" :carts.sync="carts"
                            version="2"
         ></modal-new-medicin>
+
+        <form name="order" autocomplete="off" method="post">
+            <input type="hidden" name="productIdx"/> <!--상품인덱스-->
+            <input type="hidden" name="productCnt"/> <!--구매수량-->
+            <input type="hidden" name="totalPrice"/> <!--총상품금액-->
+        </form>
     </div>
 </script>
 
@@ -193,6 +246,7 @@
                     {name : "",message : ""},
                 ],
                 data : [],
+                carts : [1,1,1,1,1,1,1,1,1,1],
 
                 new_modal : false,
             };
@@ -209,16 +263,42 @@
             });
         },
         methods: {
-            async postData() {
-                let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
-                try {
-                    //if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
-                    let res = await this.jl.ajax(method,this.data,"/api/example.php",options);
-                }catch (e) {
-                    alert(e.message)
+            stTotalPrice() {
+                let price = 0;
+
+                for(let product of this.carts) {
+                    if(product === 1 || typeof product !== 'object') continue;
+
+                    price += this.getPrice(this.getReplace(product)) * product.new_amount;
                 }
 
+                return price;
+            },
+            originTotalPrice() {
+                let price = 0;
+
+                for(let product of this.carts) {
+                    if(product === 1 || typeof product !== 'object') continue;
+                    price += this.getPrice(product) * product.new_amount;
+                }
+
+                return price;
+            },
+            getReplace(product) {
+                if(product.REPLACE_PRODUCTS.length == 0) return product;
+
+                return product.REPLACE_PRODUCTS[0]['$info'];
+            },
+            deleteCart(index) {
+                this.carts.splice(index,1);
+                this.carts.push(1);
+            },
+            getPrice(product) {
+                if(this.INSU_CHECK == "Y") return product.INSU_PRICE;
+
+                if(product.prod_price == 0) return product.INSU_PRICE;
+
+                return product.prod_price;
             },
             async getData() {
                 try {
@@ -227,16 +307,79 @@
                 }catch (e) {
                     alert(e.message)
                 }
+            },
+            async postOrder() {
+                let vue = this;
+                let productIdx = "";
+                let productCnt = "";
+                let totalPrice = "0";
+                let cartIdx = [];
+
+                let bool = true;
+
+                try {
+                    for (const product of this.carts) {
+                        if(product == 1) continue;
+                        bool = false
+
+                        let replace = this.getReplace(product);
+                        let obj = {
+                            add_cart_yn: "N",
+                            mb_id: vue.mb_id,
+                            product_idx: replace.idx,
+                            product_cnt: product.new_amount,
+                            reg_date: "now()",
+                            ord_idx: 0
+                        };
+
+                        if (productIdx) productIdx += ",";
+                        productIdx += replace.idx;
+
+                        if (productCnt) productCnt += ",";
+                        productCnt += product.new_amount;
+
+                        // Ensure vue.jl.ajax returns a Promise to use await here
+                        let res = await vue.jl.ajax("insert", obj, "/api/bs_product_cart");
+                        let idx = res.idx
+                        cartIdx.push(idx);
+                    }
+                }catch (e) {
+                    alert(e.message)
+                    return false;
+                }
+
+                if(bool) {
+                    alert("등록된 의약품이 없습니다.");
+                    return false;
+                }
+
+                let order_form = document.order;
+
+                order_form.productIdx.value = productIdx;
+                order_form.productCnt.value = productCnt;
+                order_form.totalPrice.value = totalPrice;
+
+                //
+                for (let i = 0; i < cartIdx.length; i++) {
+                    let input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "cartIdx[]";
+                    input.value = cartIdx[i];
+                    console.log(cartIdx[i])
+                    order_form.appendChild(input);
+                }
+
+
+                //
+                order_form.action = baseUrl + 'orderSheet';
+                order_form.submit();
             }
         },
         computed: {
 
         },
         watch : {
-            search_key1() {
-                this.search_value1_1 = "";
-                this.search_value1_2 = "";
-            }
+
         }
     });
 </script>

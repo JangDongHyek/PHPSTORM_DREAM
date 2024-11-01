@@ -2,14 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 include_once APPPATH.'libraries/JlModel.php';
 include_once APPPATH.'libraries/JlFile.php';
-class BsProductController extends CI_Controller {
+class BsProductReplaceController extends CI_Controller {
 
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "bs_product";
+    public $table = "bs_product_replace";
     public $file_use = false;
     public $file;
 
@@ -18,7 +18,7 @@ class BsProductController extends CI_Controller {
         parent::__construct();
 
         $this->models[$this->table] = new JlModel(array("table" => $this->table));
-        $this->models["bs_product_replace"] = new JlModel(array("table" => "bs_product_replace"));
+        $this->models["bs_product"] = new JlModel(array("table" => "bs_product"));
 
         if($this->file_use) {
             $this->file = new JlFile("/jl/jl_resource/{$this->table}");
@@ -66,7 +66,6 @@ class BsProductController extends CI_Controller {
         if($obj['order_by_asc']) $this->models[$this->table]->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key1'] && $obj['not_value1']) $this->models[$this->table]->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
         if($obj['in_key1'] && $obj['in_value1']) $this->models[$this->table]->in($obj['in_key1'],$this->models[$this->table]->jsonDecode($obj['in_value1']));
-        if($obj['like_key'] && $obj['like_value']) $this->models[$this->table]->like($obj['like_key'],$obj['like_value']);
 
         //join
         if ($this->join_table) {
@@ -86,28 +85,11 @@ class BsProductController extends CI_Controller {
             "sql" => true
         ));
 
-        //같은성분 약 가져오는 구문
-        foreach ($object["data"] as $index => $data) {
-            // 필수 조건
-            $this->models[$this->table]->where("del_yn","N");
-            $this->models[$this->table]->where("use_yn","Y");
+        // replace 상품의 정보를 가져오는 로직
+        foreach ($object["data"] as $index => $replace) {
+            $product = $this->models['bs_product']->where("idx",$replace['replace_idx'])->get()['data'][0];
 
-            $this->models[$this->table]->where("CONS_CD",$data['CONS_CD']);
-            $join_data = $this->models[$this->table]->get()['data'];
-
-            $object["data"][$index]['OTHER_PRODUCTS'] = $join_data;
-        }
-
-        //대체약 가져오는 구문
-        foreach ($object["data"] as $index => $data) {
-            $replaces = $this->models['bs_product_replace']->where("product_idx",$data['idx'])->get();
-
-            foreach($replaces['data'] as $index2 => $replace) {
-                $replace_product = $this->models[$this->table]->where("idx",$replace['replace_idx'])->get()['data'][0];
-                $replaces['data'][$index]['$info'] = $replace_product;
-            }
-
-            $object["data"][$index]['REPLACE_PRODUCTS'] = $replaces['data'];
+            $object['data'][$index]['$info'] = $product;
         }
 
         //getKey ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져오는형식 속도는 join이랑 비슷하거나 빠름
@@ -134,6 +116,10 @@ class BsProductController extends CI_Controller {
 
     public function insert() {
         $obj = $this->models[$this->table]->jsonDecode($this->input->get_post('obj'));
+
+        $data = $this->models[$this->table]->where($obj)->get();
+
+        if($data['count']) $this->models[$this->table]->error("이미 추가 되어있는 상품입니다.");
 
         if($this->file_use) {
             foreach ($_FILES as $key => $file_data) {

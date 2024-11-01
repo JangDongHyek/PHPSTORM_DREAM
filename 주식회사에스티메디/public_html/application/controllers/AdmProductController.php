@@ -4,8 +4,24 @@
  * @property ProductModel $ProductModel
  * @property ConfigModel $ConfigModel
  */
+
+include_once APPPATH.'libraries/Jl.php';
+include_once APPPATH.'libraries/JlModel.php';
+
+
 class AdmProductController extends CI_Controller
 {
+
+    public $jl;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        try {
+            $this->jl = new Jl();
+        }catch(Exception $e) {}
+    }
 
 	// 상품 목록
 	public function admProduct()
@@ -133,6 +149,7 @@ class AdmProductController extends CI_Controller
 			'productData' => $productData,
 			'imageFiles' => $imageFiles,
 			'isModify' => $isModify,
+            "jl" => $this->jl
 
 		];
 
