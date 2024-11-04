@@ -83,8 +83,13 @@ class PublishController extends CI_Controller {
 
     public function estimate()
     {
+        if (!loginCheck()) return;
+        $member = $this->session->userdata('member');
+
         $data = [
             'pid' => 'estimate',
+            "jl" => $this->jl,
+            "member" => $member
         ];
 
         render('mall/estimate_list', $data);
@@ -92,8 +97,15 @@ class PublishController extends CI_Controller {
 
     public function estimateView()
     {
+        if (!loginCheck()) return;
+        $member = $this->session->userdata('member');
+
+        $request_get = $this->input->get();
         $data = [
             'pid' => 'estimate',
+            "jl" => $this->jl,
+            "request_get" => $request_get,
+            "member" => $member
         ];
 
         render('mall/estimate_view', $data);
@@ -101,8 +113,15 @@ class PublishController extends CI_Controller {
 
     public function estimatePrint()
     {
+        if (!loginCheck()) return;
+        $member = $this->session->userdata('member');
+        $request_get = $this->input->get();
+
         $data = [
             'pid' => 'estimate_print',
+            "jl" => $this->jl,
+            "request_get" => $request_get,
+            "member" => $member
         ];
 
         render('mall/estimate_print', $data);
@@ -204,7 +223,8 @@ class PublishController extends CI_Controller {
 		if (!loginCheck(true)) return;
 
         $data = [
-            'pid' => 'adm_product_request'
+            'pid' => 'adm_product_request',
+            "jl" => $this->jl,
         ];
 
 		render('adm/product_request', $data, true);

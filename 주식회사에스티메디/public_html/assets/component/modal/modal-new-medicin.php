@@ -34,6 +34,10 @@
                         </div>
                     </li>
 
+                    <li class="noDataAlign" style="width: 100%; text-align: center;" v-if="search && products.length == 0">
+                    등록된 상품이 없습니다.<br>
+                    <button type="button" class="btn btn_blue btn_mini" @click="postRequest()">약품 입고 요청</button>
+                    </li>
                 </ul>
 
                 <item-pagination :filter="filter" @change="changePage"></item-pagination>
@@ -53,6 +57,7 @@
         props: {
             modal : {type : Boolean, default : false},
             INSU_CHECK : {type : String, default : "N"},
+            mb_id : {type : String, default : ""},
             primary : {type : String, default : ""},
             carts : {type : Array, default : []},
             version : {type : String, default : 1}
@@ -76,6 +81,7 @@
                     {name : "",message : ""},
                 ],
                 products : [],
+                search : false,
             };
         },
         created: function(){
@@ -90,6 +96,23 @@
             });
         },
         methods: {
+            async postRequest() {
+                if(!confirm(`${this.filter.like_value} 상품을 입고 요청 하시겠습니까?`)) return false;
+
+                let obj = {
+                    mb_id : this.mb_id,
+                    content : this.filter.like_value,
+                    status : "",
+                }
+                try {
+                    let res = await this.jl.ajax("insert",obj,"/api/bs_product_request");
+
+                    alert("완료 되었습니다");
+                }catch (e) {
+                    alert(e.message)
+                }
+
+            },
             isCarts(product) {
                 return this.carts.some((cart) => cart.idx == product.idx);
             },
@@ -128,6 +151,7 @@
                     let res = await this.jl.ajax("get",this.filter,"/api/bs_product");
                     this.products = res.data
                     this.filter.count = res.count;
+                    this.search = true;
                 }catch (e) {
                     alert(e.message)
                 }
@@ -142,7 +166,10 @@
                 this.filter.like_value = "";
 
                 if(this.modal && this.version == 2) this.getData();
-                if(!this.modal) this.products = [];
+                if(!this.modal) {
+                    this.products = [];
+                    this.search = false;
+                }
             },
             carts: {
                 handler(newVal, oldVal) {

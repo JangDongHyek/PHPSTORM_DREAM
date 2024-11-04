@@ -205,7 +205,7 @@
 
 	<div id="tab-2" class="tab-content">
         <div id="estimate">
-            <estimate-list mb_id="<?=$member['mb_id']?>" INSU_CHECK="<?=$member['INSU_CHECK']?>"></estimate-list>
+            <estimate-input mb_id="<?=$member['mb_id']?>" INSU_CHECK="<?=$member['INSU_CHECK']?>"></estimate-input>
         </div>
 
 		<script>

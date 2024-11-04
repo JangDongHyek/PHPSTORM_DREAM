@@ -25,7 +25,7 @@ try {
             //필터링
             if($obj['primary']) $obj[$models[$table]->primary] = $obj['primary'];
             if($obj['where_key'] && $obj['where_value']) $models[$table]->where($obj['where_key'],$obj['where_value']);
-            if($obj['between_key'] && $obj['between_value1'] && $obj['between_value2']) $models[$table]->between($obj['between_key'],$obj['between_value1'],$obj['between_value2']);
+            if($obj['between_key'] && $obj['between_value_s'] && $obj['between_value_e']) $models[$table]->between($obj['between_key'],$obj['between_value_s'],$obj['between_value_e']);
             if($obj['like_key'] && $obj['like_value']) $models[$table]->like($obj['like_key'],$obj['like_value']);
             if($obj['order_by_desc']) $models[$table]->orderBy($obj['order_by_desc'],"DESC");
             if($obj['order_by_asc']) $models[$table]->orderBy($obj['order_by_asc'],"ASC");
@@ -75,6 +75,9 @@ try {
         case "insert":
         {
             $obj = $models[$table]->jsonDecode($_POST['obj']);
+
+            //$item = $models[$table]->where($obj)->get();
+            //if($item['count']) $models[$table]->error("이미 신청한 상품입니다.");
 
             if($file_use) {
                 foreach ($_FILES as $key => $file_data) {
@@ -133,6 +136,7 @@ try {
 
         case "where_delete" :
             $obj = $models[$table]->jsonDecode($_POST['obj'],false);
+            if($obj['in_key'] && $obj['in_value']) $models[$table]->in($obj['in_key'],$models[$table]->jsonDecode($obj['in_value']));
 
             $models[$table]->where($obj)->whereDelete();
             break;

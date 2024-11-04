@@ -221,7 +221,7 @@ class AdminController extends BaseController {
         $this->data['all_orders'] = $model->get(array(
                 "select" => array(
                     "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice"
+                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
                 )
             )
         );
@@ -270,15 +270,14 @@ class AdminController extends BaseController {
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
             )
         ));
-
         $this->data['search_all_orders'] = $model->get(array(
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
             )
         ));
 

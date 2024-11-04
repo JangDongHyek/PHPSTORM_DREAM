@@ -1,227 +1,28 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <section id="first02">
-            <div class="inr">
-                <img src="<?= ASSETS_URL ?>/img/main/clip.png" class="clip">
-                <div class="info">
-                    <h6>STmedi <strong>에스티메디</strong>&nbsp;견적서</h6>
-                </div>
-                <div class="flex js info">
-                    <p>공급자 <strong>에스티메디</strong>&nbsp;</p>
-                    <span>
-					<p>견적일 : <?php echo date('Y/m/d ', time()); ?></p>
-					<p>&nbsp;| &nbsp; 견적번호 : <?php echo date('Ymd', time()); ?>0001</p>
-				</span>
-                </div>
-                <div class="box_red">
-                    <p>
-                        <i class="fa-solid fa-triangle-exclamation"></i> 제품이 검색되지 않을 시, 성분명으로 검색해보세요.
+        <div class="btn_wrap">
+            <a class="btn btn_small btn_line" @click="deletesData()">선택 삭제</a>
+            <a class="btn btn_small btn_blue male-auto" href="./2">신규 견적</a>
+        </div>
+
+        <div class="board_list">
+            <p>총 <strong class="txt_blue">{{filter.count}}</strong>개 </p>
+            <ul>
+                <li v-for="item in data">
+                    <input type="checkbox" :value="item.idx" v-model="deletes">
+                    <p class="p_num">{{item.jl_no}}</p>
+                    <p class="p_title">
+                        <a :href="'./estimateView?idx=' + item.idx">{{item.insert_date}}에 저장한 견적서</a>
+
                     </p>
-                </div>
+                    <p class="p_date">{{item.insert_date.split(' ')[0]}}</p>
+                </li>
+            </ul>
 
-                <div class="btn_wrap btn_list">
-                    <a class="btn btn_large btn_line" href="./estimate"><i class="fa-duotone fa-solid fa-floppy-disk"></i> 견적 저장</a>
-                    <a class="btn btn_large btn_line" href="./estimatePrint" target="_blank"><i class="fa-duotone fa-solid fa-print"></i> 견적 출력</a>
-                    <a class="btn btn_large btn_line" @click="postOrder()"><i class="fa-duotone fa-solid fa-bags-shopping"></i> 바로 구매</a>
-                </div>
-                <section class="list_wrap">
-                    <div class="table_total">
-                        <h5 class="origin">
-                            <span>기존 견적 금액</span>
-                            <span><b>￦<em class="price-wrapper"><div class="price-slash"></div>{{originTotalPrice().format()}}</em></b></span>
-                            <span class="txt_red txt_bold">&nbsp;<i class="fa-solid fa-down"></i> {{
-                                    isNaN(stTotalPrice() / originTotalPrice())
-                                    ? 0 : ((stTotalPrice() / originTotalPrice()) * 100).toFixed(2)
-                                }}%</span>
-                        </h5>
-                        <h5>
-                            <span>ST 견적 금액</span>
-                            <span>일금 영 <b><em class="korUnit" data-number="900750"></em>원</b></span>
-                            <span><b>( ￦<em>{{stTotalPrice().format()}}</em>)</b> ※부가세 포함</span>
-                        </h5>
-                    </div>
-                    <div class="table_wrap table">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>제품명</th>
-                                <th>포장단위</th>
-                                <th>수량</th>
-                                <th>약가</th>
-                                <th>총수량</th>
-                                <th>기존합계</th>
-                                <th>ST단가</th>
-                                <th>대체품목</th>
-                                <th>ST합계</th>
-                                <th>절감금액</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <template v-for="product,index in carts">
-                                <tr v-if="product == 1">
-                                    <td alt="No.">
-                                        <p class="temp">-</p>
-                                    </td>
-                                    <td alt="제품명">
-                                        <input type="text" value="제품을 선택하세요." readonly @click="new_modal = true;">
-                                    </td>
-                                    <td alt="포장단위" class="text_right">
-                                        <p class="temp">포장단위</p>
-                                    </td>
-                                    <td alt="수량" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                    <td alt="약가" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                    <td alt="총수량" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                    <td alt="기존합계" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                    <td alt="ST단가" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                    <td alt="대체품목">
-                                        <p class="temp">대체품목</p>
-                                    </td>
-                                    <td alt="ST합계" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                    <td alt="절감금액" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                </tr>
-                                <tr v-else>
-                                    <td alt="No.">
-                                        <p>{{index+1}} <button type="button" class="btn btn_mini btn_black" @click="deleteCart(index)"><i class="fa-solid fa-trash"></i></button></p>
-                                    </td>
-                                    <td alt="제품명">
-                                        <input type="text" :value="product.PRODUCT_NM" readonly>
-                                    </td>
-                                    <td alt="포장단위" class="text_right">
-                                        <p><em>포장단위</em>{{jl.getNumbersOnly(product.PRODUCT_STANDARD)}}</p>
-                                    </td>
-                                    <td alt="수량">
-                                        <div class="number_controller">
-                                            <button type="button" @click="product.new_amount > 1 ? product.new_amount-- : product.new_amount"><i class="fa-regular fa-minus"></i></button>
-                                            <input type="number" name="inputNumber" v-model="product.new_amount" @keydown="jl.isNumberKey"/>
-                                            <button type="button" @click="product.new_amount++"><i class="fa-regular fa-plus"></i></button>
-                                        </div>
-                                    </td>
-                                    <td alt="약가" class="text_right">
-                                        <p><em>약가</em>{{getPrice(product).format()}}</p>
-                                    </td>
-                                    <td alt="총수량" class="text_right">
-                                        <p><em>총수량</em>{{jl.getNumbersOnly(product.PRODUCT_STANDARD) * product.new_amount}}</p>
-                                    </td>
-                                    <td alt="기존합계" class="text_right">
-                                        <p><b><em>기존합계</em>{{(getPrice(product) * product.new_amount).format()}}</b></p>
-                                    </td>
-                                    <td alt="ST단가" class="text_right">
-                                        <p><em>ST단가</em><b>{{getPrice(getReplace(product)).format()}}</b></p>
-                                    </td>
-                                    <td alt="대체품목">
-                                        <p>
-                                            <b>{{getReplace(product).PRODUCT_NM}}</b>
-                                            <!--<button type="button" data-toggle="modal" data-target="#moreModal1" class="btn btn_mini btn_black">변경</button>-->
-                                        </p>
-                                    </td>
-                                    <td alt="ST합계" class="text_right">
-                                        <p><em>ST합계</em><b>{{(getPrice(getReplace(product)) * product.new_amount).format()}}</b></p>
-                                    </td>
-                                    <td alt="절감금액" class="text_right">
-                                        <p class="txt_red"><em>절감금액</em><b>
-                                                {{ ((getPrice(product) * product.new_amount) - (getPrice(getReplace(product)) * product.new_amount)).format() }}
-                                            </b></p>
-                                    </td>
-                                </tr>
-                            </template>
+            <item-pagination :filter="filter" @change="changePage"></item-pagination>
 
-                            <tr>
-                                <td colspan="99">
-                                    <button type="button" class="btn btn_mini btn_black" @click="new_modal = true;">추가</button>
-                                </td>
-                            </tr>
-
-                            <tr class="bg2">
-                                <td alt="계" colspan="6" class="text_right">
-                                    기존합계
-                                </td>
-                                <td alt="기존합계" colspan="2" class="text_right">
-                                    <p>{{originTotalPrice().format()}}</p>
-                                </td>
-                                <td alt="계" colspan="1" class="text_right">
-                                    ST합계
-                                </td>
-                                <td alt="ST합계" colspan="2" class="text_right">
-                                    <p>{{stTotalPrice().format()}}</p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="total_table table flex">
-                        <table>
-                            <colgroup>
-                                <col style="width: 50%">
-                                <col style="width: 50%">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>기존 합계</th>
-                                <th>ST 합계</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>{{originTotalPrice().format()}}</td>
-                                <td>{{stTotalPrice().format()}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <table>
-                            <colgroup>
-                                <col style="width: 50%">
-                                <col style="width: 50%">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>차액</th>
-                                <th>절감 %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>{{(originTotalPrice() - stTotalPrice()).format()}}</td>
-                                <td class="txt_red">
-                                    {{
-                                    isNaN(stTotalPrice() / originTotalPrice())
-                                    ? 0 : ((stTotalPrice() / originTotalPrice()) * 100).toFixed(2)
-                                    }}%</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </section>
-            </div>
-        </section>
-
-        <button type="button" class="btn btn_ani btn_large" @click="postOrder();"><i class="fa-solid fa-pills"></i> 의약품 바로구매</button>
-
-        <modal-new-medicin :modal="new_modal" @close="new_modal = false;" :INSU_CHECK="INSU_CHECK" :carts.sync="carts"
-                           version="2"
-        ></modal-new-medicin>
-
-        <form name="order" autocomplete="off" method="post">
-            <input type="hidden" name="productIdx"/> <!--상품인덱스-->
-            <input type="hidden" name="productCnt"/> <!--구매수량-->
-            <input type="hidden" name="totalPrice"/> <!--총상품금액-->
-        </form>
+        </div>
     </div>
 </script>
 
@@ -230,7 +31,6 @@
         template: "#<?=$componentName?>-template",
         props: {
             mb_id : {type : String, default : ""},
-            INSU_CHECK : {type : String, default : "N"},
             primary : {type : String, default : ""}
         },
         data: function(){
@@ -238,24 +38,24 @@
                 jl : null,
                 component_idx : "",
                 filter : {
-                    page : 0,
-                    limit : 0,
+                    page : 1,
+                    limit : 10,
                     count : 0,
-                },
-                required : [
-                    {name : "",message : ""},
-                ],
-                data : [],
-                carts : [1,1,1,1,1,1,1,1,1,1],
+                    order_by_desc : "insert_date",
 
-                new_modal : false,
+                    mb_id : this.mb_id
+                },
+
+                data : [],
+                modal : false,
+                deletes : [],
             };
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.getData();
+            this.getData();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -263,116 +63,38 @@
             });
         },
         methods: {
-            stTotalPrice() {
-                let price = 0;
+            async deletesData() {
+                if(this.deletes.length == 0) {
+                    alert("선택된 데이터가 없습니다.");
+                    return false;
+                }
+                if(!confirm("정말 삭제하시겠습니까?")) return false;
 
-                for(let product of this.carts) {
-                    if(product === 1 || typeof product !== 'object') continue;
-
-                    price += this.getPrice(this.getReplace(product)) * product.new_amount;
+                let obj = {
+                    in_key : "idx",
+                    in_value : this.deletes
                 }
 
-                return price;
-            },
-            originTotalPrice() {
-                let price = 0;
-
-                for(let product of this.carts) {
-                    if(product === 1 || typeof product !== 'object') continue;
-                    price += this.getPrice(product) * product.new_amount;
+                try {
+                    let res = await this.jl.ajax("where_delete",obj,"/api/bs_estimate");
+                    alert("삭제되었습니다.");
+                    window.location.reload();
+                }catch (e) {
                 }
-
-                return price;
             },
-            getReplace(product) {
-                if(product.REPLACE_PRODUCTS.length == 0) return product;
+            changePage(page) {
+                this.filter.page = page;
 
-                return product.REPLACE_PRODUCTS[0]['$info'];
-            },
-            deleteCart(index) {
-                this.carts.splice(index,1);
-                this.carts.push(1);
-            },
-            getPrice(product) {
-                if(this.INSU_CHECK == "Y") return product.INSU_PRICE;
-
-                if(product.prod_price == 0) return product.INSU_PRICE;
-
-                return product.prod_price;
+                this.getData();
             },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
-                    this.data = res.data[0]
+                    let res = await this.jl.ajax("get",this.filter,"/api/bs_estimate");
+                    this.data = res.data
+                    this.filter.count = res.count;
                 }catch (e) {
                     alert(e.message)
                 }
-            },
-            async postOrder() {
-                let vue = this;
-                let productIdx = "";
-                let productCnt = "";
-                let totalPrice = "0";
-                let cartIdx = [];
-
-                let bool = true;
-
-                try {
-                    for (const product of this.carts) {
-                        if(product == 1) continue;
-                        bool = false
-
-                        let replace = this.getReplace(product);
-                        let obj = {
-                            add_cart_yn: "N",
-                            mb_id: vue.mb_id,
-                            product_idx: replace.idx,
-                            product_cnt: product.new_amount,
-                            reg_date: "now()",
-                            ord_idx: 0
-                        };
-
-                        if (productIdx) productIdx += ",";
-                        productIdx += replace.idx;
-
-                        if (productCnt) productCnt += ",";
-                        productCnt += product.new_amount;
-
-                        // Ensure vue.jl.ajax returns a Promise to use await here
-                        let res = await vue.jl.ajax("insert", obj, "/api/bs_product_cart");
-                        let idx = res.idx
-                        cartIdx.push(idx);
-                    }
-                }catch (e) {
-                    alert(e.message)
-                    return false;
-                }
-
-                if(bool) {
-                    alert("등록된 의약품이 없습니다.");
-                    return false;
-                }
-
-                let order_form = document.order;
-
-                order_form.productIdx.value = productIdx;
-                order_form.productCnt.value = productCnt;
-                order_form.totalPrice.value = totalPrice;
-
-                //
-                for (let i = 0; i < cartIdx.length; i++) {
-                    let input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = "cartIdx[]";
-                    input.value = cartIdx[i];
-                    console.log(cartIdx[i])
-                    order_form.appendChild(input);
-                }
-
-
-                //
-                order_form.action = baseUrl + 'orderSheet';
-                order_form.submit();
             }
         },
         computed: {

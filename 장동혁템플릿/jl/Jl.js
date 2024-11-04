@@ -367,9 +367,67 @@ class Jl {
         return result;
     }
 
+    // 프로퍼티 날짜타입의 데이터를 한글식 날로 변경
+    dateToKorean(dateString,time = false) {
+        if (!dateString || dateString === '0000-00-00' || dateString === '0000-00-00 00:00:00') {
+            return '유효하지 않은 날짜';
+        }
+
+        const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+        const dateParts = dateString.split(/[- :]/);
+
+        const year = dateParts[0];
+        const month = months[parseInt(dateParts[1], 10) - 1];
+        const day = dateParts[2].replace(/^0/, '');
+        const hour = dateParts[3] ? dateParts[3].replace(/^0/, '') : null;
+        const minute = dateParts[4] ? dateParts[4].replace(/^0/, '') : null;
+        const second = dateParts[5] ? dateParts[5].replace(/^0/, '') : null;
+
+        let formattedDate = `${year}년 ${month} ${day}일`;
+
+        if (hour !== null && minute !== null && second !== null) {
+            if(time) formattedDate += ` ${hour}시 ${minute}분 ${second}초`;
+
+        }
+
+        return formattedDate;
+    }
+
     // 숫자와 문자가섞인 문자열데이터를 숫자만 가져오는 정규식
     getNumbersOnly(str) {
         return str.replace(/\D/g, '');
+    }
+
+    // 숫자를 원화 한글 발음으로 반환한다
+    numberToKorean(num) {
+        const units = ['', '십', '백', '천'];
+        const bigUnits = ['', '만', '억', '조', '경'];
+        const koreanNumbers = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+
+        if (num === 0) return '영원';
+
+        let result = '';
+        let bigUnitIndex = 0;
+
+        while (num > 0) {
+            let chunk = num % 10000;
+            num = Math.floor(num / 10000);
+
+            if (chunk > 0) {
+                let chunkResult = '';
+                for (let i = 0; chunk > 0; i++) {
+                    const digit = chunk % 10;
+                    chunk = Math.floor(chunk / 10);
+                    if (digit > 0) {
+                        chunkResult = (digit === 1 && i > 0 ? '' : koreanNumbers[digit]) + units[i] + chunkResult;
+                    }
+                }
+                result = chunkResult + bigUnits[bigUnitIndex] + result;
+            }
+            bigUnitIndex++;
+        }
+
+        return result;
     }
 
     //숫자 키입력만 허용하고 나머지는 안되게

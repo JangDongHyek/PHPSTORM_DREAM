@@ -1,7 +1,7 @@
 <!-- 상품관리 등록/수정 폼 -->
 <? include_once VIEWPATH. 'component/summer_note_resource.php'; // summernote?>
 
-<section class="productupd" id="productForm">
+<section class="productupd">
     <form name="productFrm" autocomplete="off" method="post">
         <input type="hidden" name="idx" value="<?=(int)$productData['idx']?>">
         <div class="panel">
@@ -142,7 +142,10 @@
 				<!--		<option>대체의약품</option>-->
 				<!--	</select>-->
 				<!--</p>-->
-            <product-replace product_idx="<?=$productData['idx']?>"></product-replace>
+
+            <div id="productForm">
+                <product-replace product_idx="<?=$productData['idx']?>"></product-replace>
+            </div>
             <!--
             <p class="name">상세 정보</p>
             <div class="editor">

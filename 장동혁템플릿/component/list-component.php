@@ -32,7 +32,7 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            this.getData();
+            //this.getData();
         },
         mounted: function(){
             this.$nextTick(() => {

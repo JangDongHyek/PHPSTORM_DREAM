@@ -32,16 +32,10 @@
                                                 <span>성분명 <strong>{{product.INFO.CONS_CD_NM}}</strong> |</span>
                                                 <span>재고수량  <strong>{{product.INFO.STOCK_QTY}}</strong></span>
                                             </div>
-                                            <div class="area_text" v-if="INSU_CHECK == 'Y'">
+                                            <div class="area_text">
 												<p class="p_date"><span>개당 {{parseInt(product.INFO.INSU_PRICE).format()}}</span><br><b>{{product.item_cnt}}</b>개 구매</p>
-                                                <p class="p_price" style="display: none">{{(product.INFO.INSU_PRICE * product.item_cnt)}}원</p>
-                                                <p style="font-weight: 700;text-align: right;">{{(product.INFO.INSU_PRICE * product.item_cnt).format()}}원</p>
-                                            </div>
-
-                                            <div class="area_text" v-if="INSU_CHECK == 'N'">
-                                                <p class="p_date"><span>개당 {{parseInt(product.INFO.UNIT_PRICE).format()}}</span><br><b>{{product.item_cnt}}</b>개 구매</p>
-                                                <p class="p_price" style="display: none">{{(product.INFO.UNIT_PRICE * product.item_cnt)}}원</p>
-                                                <p style="font-weight: 700;text-align: right;">{{(product.INFO.UNIT_PRICE * product.item_cnt).format()}}원</p>
+                                                <p class="p_price" style="display: none">{{(getPrice(product) * product.item_cnt)}}원</p>
+                                                <p style="font-weight: 700;text-align: right;">{{(getPrice(product.INFO) * product.item_cnt).format()}}원</p>
                                             </div>
                                         </label>
                                     </div>
@@ -82,8 +76,7 @@
                                             <span>재고수량  <strong>{{product.STOCK_QTY}}</strong></span>
                                         </div>
                                         <div class="area_text">
-                                            <p class="p_price" v-if="INSU_CHECK == 'Y'">{{(product.INSU_PRICE * product.new_amount).format()}}원</p>
-                                            <p class="p_price" v-if="INSU_CHECK == 'N'">{{(product.UNIT_PRICE * product.new_amount).format()}}원</p>
+                                            <p class="p_price">{{(getPrice(product) * product.new_amount).format()}}원</p>
                                         </div>
                                     </label>
                                 </div>
@@ -111,7 +104,7 @@
         </div>
 
         <modal-new-medicin :modal="new_modal" @close="new_modal = false;" :carts.sync="carts"
-                           :INSU_CHECK="INSU_CHECK"
+                           :INSU_CHECK="INSU_CHECK" :mb_id="mb_id"
         ></modal-new-medicin>
 
         <modal-same-medicin :modal="same_modal" @close="same_modal = false;" :product="same_modal_product" :carts.sync="carts"
@@ -194,6 +187,13 @@
             });
         },
         methods: {
+            getPrice(product) {
+                if(this.INSU_CHECK == "Y") return product.INSU_PRICE;
+
+                if(product.prod_price == 0) return product.INSU_PRICE;
+
+                return product.prod_price;
+            },
             async postOrder() {
                 let vue = this;
                 let productIdx = "";

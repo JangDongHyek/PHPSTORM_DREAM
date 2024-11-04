@@ -2,14 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 include_once APPPATH.'libraries/JlModel.php';
 include_once APPPATH.'libraries/JlFile.php';
-class BsComparativeController extends CI_Controller {
+class BsEstimateController extends CI_Controller {
 
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "bs_comparative";
+    public $table = "bs_estimate";
     public $file_use = false;
     public $file;
 
@@ -41,14 +41,13 @@ class BsComparativeController extends CI_Controller {
                 $this->update();
                 break;
             }
-
-            case "delete" : {
-                $this->delete();
+            case "where_delete" : {
+                $this->whereDelete();
                 break;
             }
 
-            case "where_delete" : {
-                $this->whereDelete();
+            case "delete" : {
+                $this->delete();
                 break;
             }
         }
@@ -59,13 +58,13 @@ class BsComparativeController extends CI_Controller {
 
         //필터링
         if($obj['primary']) $obj[$this->models[$this->table]->primary] = $obj['primary'];
-        if($obj['where_key'] && $obj['where_value']) $this->models[$this->table]->where($obj['where_key'],$obj['where_value']);
-        if($obj['between_key'] && $obj['between_value_s'] && $obj['between_value_e']) $this->models[$this->table]->between($obj['between_key'],$obj['between_value_s'],$obj['between_value_e']);
-        if($obj['like_key'] && $obj['like_value']) $this->models[$this->table]->like($obj['like_key'],$obj['like_value']);
+        if($obj['search_key1'] && $obj['search_value1']) $this->models[$this->table]->where($obj['search_key1'],$obj['search_value1']);
+        if($obj['between_key1'] && $obj['between_value1'] && $obj['between_value2']) $this->models[$this->table]->between($obj['search_key1'],$obj['search_value1_1'],$obj['search_value1_2']);
+        if($obj['like_key1'] && $obj['like_value1']) $this->models[$this->table]->like($obj['search_like_key1'],$obj['search_like_value1']);
         if($obj['order_by_desc']) $this->models[$this->table]->orderBy($obj['order_by_desc'],"DESC");
         if($obj['order_by_asc']) $this->models[$this->table]->orderBy($obj['order_by_asc'],"ASC");
-        if($obj['not_key'] && $obj['not_value']) $this->models[$this->table]->where($obj['not_key'],$obj['not_value'],"AND NOT");
-        if($obj['in_key'] && $obj['in_value']) $this->models[$this->table]->in($obj['in_key'],$this->models[$this->table]->jsonDecode($obj['in_value']));
+        if($obj['not_key1'] && $obj['not_value1']) $this->models[$this->table]->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
+        if($obj['in_key1'] && $obj['in_value1']) $this->models[$this->table]->in($obj['in_key1'],$this->models[$this->table]->jsonDecode($obj['in_value1']));
 
         //join
         if ($this->join_table) {

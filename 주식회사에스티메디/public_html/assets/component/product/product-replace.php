@@ -1,6 +1,6 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div>
+    <div v-if="product_idx">
         <p class="name">대체의약품 설정</p>
         <div class="alter">
             <div class="flex">
@@ -105,6 +105,8 @@
                     page : 1,
                     limit : 3,
                     count : 0,
+
+                    product_idx : this.product_idx,
 
                     del_yn : "N",
                     use_yn : "Y",
