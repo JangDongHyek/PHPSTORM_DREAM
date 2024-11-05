@@ -20,6 +20,7 @@ $function_array = array(
     "b2p_commission" => $b2p_commission
 );
 
+//달의 정산금액을 확인하는
 function sortMonthOrder($month,$objects,$info) {
     $card_event = $info['card_event'];
     $kcp_commission = $info['kcp_commission'];
@@ -38,39 +39,10 @@ function sortMonthOrder($month,$objects,$info) {
         $data_date = new DateTime($data['OrderDate']);
 
         if($start_date <= $data_date && $data_date <= $end_date) {
-            $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
-            $b2p_fee = ceil($OrderAmount * $b2p_commission);
-            $card_fee = (int)($data['AcntMoney'] * $kcp_commission);
-            $card_payback = (int)($data['AcntMoney'] * $kcp_cash_back);
-            $SettlementPrice = (int)$data['SettlementPrice'];
-            $BuyerPayAmt = (int)$data['BuyerPayAmt'];
-
-            $total_fee = $card_fee;
-
-            if($card_event) $total_fee = $card_fee - $card_payback;
-
-            // 배송비 및 배송비 수수료 관련
-            $dl_DelFeeAmt = $data['ShippingFee'];
-            $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
-            $b2p_shipping_fee = $dl_DelFeeAmt * 0;
-
-            // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
-            if($data['SiteType'] == 1) {
-                $b2p_shipping_fee = round($b2p_shipping_fee);
-                $dl_DelFeeCommission = round($dl_DelFeeCommission);
-            }else {
-                $b2p_shipping_fee = ceil($b2p_shipping_fee);
-                $dl_DelFeeCommission = ceil($dl_DelFeeCommission);
-            }
+            $order = processOrder($data);
 
 
-            //부가세
-            $surTax = $BuyerPayAmt * 0.11;  // B2P 부가세 ( 고객 결제금 / 11% )
-            $b2p_surTax = $SettlementPrice * 0.11; //셀러 부가세 = 정산예정금액 / 11%
-            $b2p_surTax = ceil($b2p_surTax);
-            $refund = $surTax - $b2p_surTax;
-
-            $result += $SettlementPrice - $b2p_fee - $total_fee - $dl_DelFeeCommission - $b2p_shipping_fee;
+            $result += $order['b2p']['calcPrice'];
 
         }
     }
@@ -78,6 +50,7 @@ function sortMonthOrder($month,$objects,$info) {
     return number_format($result);
 }
 
+//검색 및 현재 데이터의 총합 값
 function totalOrderKey($objects,$key,$info) {
     $card_event = $info['card_event'];
     $kcp_commission = $info['kcp_commission'];
@@ -88,47 +61,11 @@ function totalOrderKey($objects,$key,$info) {
     $total_commission = 0;
     $total_calc = 0;
     foreach ($objects as $index => $data) {
-        $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
-        $AcntMoney = (int)$data['AcntMoney'];
+        $order = processOrder($data);
 
-        $service_fee = abs($data['TotCommission']);
-        $service_fee -= $data['SellerCashbackMoney'];
-
-        $b2p_fee = ceil($OrderAmount * $b2p_commission); // 지마켓
-
-        $card_fee = (int)($AcntMoney * $kcp_commission);
-        $card_payback = (int)($AcntMoney * $kcp_cash_back);
-        $ServiceFee = (int)$data['ServiceFee'];
-        $SettlementPrice = (int)$data['SettlementPrice'];
-        $SellerDiscountTotalPrice = (int)$data['SellerDiscountTotalPrice'];
-        $BuyerPayAmt = (int)$data['BuyerPayAmt'];
-
-        $total_fee = $card_fee;
-        if($card_event) $total_fee = $card_fee - $card_payback;
-
-        // 배송비 및 배송비 수수료 관련
-        $dl_DelFeeAmt = $data['ShippingFee'];
-        $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
-        $b2p_shipping_fee = $dl_DelFeeAmt * 0;
-
-        // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
-        if($data['SiteType'] == 1) {
-            $b2p_shipping_fee = round($b2p_shipping_fee);
-            $dl_DelFeeCommission = round($dl_DelFeeCommission);
-        }else {
-            $b2p_shipping_fee = ceil($b2p_shipping_fee);
-            $dl_DelFeeCommission = ceil($dl_DelFeeCommission);
-        }
-
-        //부가세
-        $surTax = $BuyerPayAmt * 0.11;// B2P 부가세 = 고객 결제금 / 11%
-        $b2p_surTax = $SettlementPrice * 0.11;// 셀러 부가세 = 정산예정금액 / 11%
-        $b2p_surTax = ceil($b2p_surTax);
-        $refund = $surTax - $b2p_surTax;
-
-        $total_order += $OrderAmount;
-        $total_commission += ($b2p_fee + $service_fee + $total_fee + $dl_DelFeeCommission + $b2p_shipping_fee);
-        $total_calc += ($SettlementPrice - $b2p_fee - $total_fee - $dl_DelFeeCommission - $b2p_shipping_fee);
+        $total_order += $order['b2p']['OrderAmount'];
+        $total_commission += $order['b2p']['totalCommission'];
+        $total_calc += $order['b2p']['calcPrice'];
     }
 
     switch ($key) {
@@ -139,6 +76,114 @@ function totalOrderKey($objects,$key,$info) {
         case 'calc' :
             return number_format($total_calc);
     }
+}
+
+function processOrder($order) {
+    //데이터 재선언
+    // 빈값 및 소수점 절사를 위한 데이터 재 선언
+    $order['SellerCashbackMoney'] = $order['SellerCashbackMoney'] ? (int)$order['SellerCashbackMoney'] : 0;
+    $order['SellerDiscountTotalPrice'] = $order['SellerDiscountTotalPrice'] ? (int)$order['SellerDiscountTotalPrice'] : 0;
+    $order['OrderAmount'] = $order['OrderAmount'] ? (int)$order['OrderAmount'] : 0;
+    $order['SettlementPrice'] = $order['SettlementPrice'] ? (int)$order['SettlementPrice'] : 0;
+    $order['DirectDiscountPrice'] = $order['DirectDiscountPrice'] ? (int)$order['DirectDiscountPrice'] : 0;
+    $order['SellerFundingDiscountPrice'] = $order['SellerFundingDiscountPrice'] ? (int)$order['SellerFundingDiscountPrice'] : 0;
+    $order['DeductTaxPrice'] = $order['DeductTaxPrice'] ? (int)$order['DeductTaxPrice'] : 0;
+    $order['BuyerPayAmt'] = $order['BuyerPayAmt'] ? (int)$order['BuyerPayAmt'] : 0;
+    $order['ServiceFee'] = $order['ServiceFee'] ? (int)$order['ServiceFee'] : 0;
+    $order['DeductTaxPrice'] = abs($order['DeductTaxPrice']);
+    $order['b2p_kcp_price'] = $order['b2p_kcp_price'] ? (int)$order['b2p_kcp_price'] : 0;
+    $order['b2p_cp_fee_price'] = $order['b2p_cp_fee_price'] ? (int)$order['b2p_cp_fee_price'] : 0;
+
+    //주문금액
+    $OrderAmount = (int)$order['SellOrderPrice'] + (int)$order['OptionPrice'];
+    // 카테고리 수수료
+    $category_fee_cost = $order['category_fee_cost'];
+    //b2p 수수료
+    $b2p_cost = $order['b2p_cost'];
+    //b2p 카드 수수료
+    $b2p_kcp_price = $order['b2p_kcp_price'];
+    //b2p 셀러별 카드 페이백
+    $b2p_cp_fee_price = $order['b2p_cp_fee_price'];
+
+    //판매자 할인 / 공제금
+    $SellerDiscountPrice = $order['SiteType'] == 1 ? $order['SellerDiscountTotalPrice'] : $order['SellerDiscountPrice'];
+    $totalDiscount = 0;
+    $totalDiscount += $SellerDiscountPrice;
+    $totalDiscount += $order['DeductTaxPrice'];
+
+    // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
+    if($order['SiteType'] == 1) {
+
+    }else {
+        $totalDiscount += $order['SellerCashbackMoney'];
+        $totalDiscount += $order['SellerFundingDiscountPrice'];
+    }
+
+    // 정산 예정 값
+    try {
+        $calcPrice = $order['SettlementPrice'] - $b2p_kcp_price + $b2p_cp_fee_price;
+
+    }catch (Exception $e) {
+        var_dump($order);
+        //$calcPrice=0;
+        die();
+    }
+
+    // 배송비 및 배송비 수수료 관련
+    $dl_DelFeeAmt = $order['ShippingFee'];
+    $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
+    $b2p_shipping_fee = $dl_DelFeeAmt * 0;
+
+    // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
+    if($order['SiteType'] == 1) {
+        $b2p_shipping_fee = round($b2p_shipping_fee);
+        $dl_DelFeeCommission = round($dl_DelFeeCommission);
+    }else {
+        $b2p_shipping_fee = ceil($b2p_shipping_fee);
+        $dl_DelFeeCommission = ceil($dl_DelFeeCommission);
+    }
+
+    //부가세
+    $surTax = round($order['BuyerPayAmt'] / 11);// B2P 부가세 = 고객 결제금 / 11
+    $b2p_surTax = round($calcPrice / 11);// 셀러 부가세 = 정산예정금액 / 11
+    $b2p_surTax = ceil($b2p_surTax);
+    $refund = $surTax - $b2p_surTax;
+
+
+
+
+    $totalCommission = $category_fee_cost + $totalDiscount + $dl_DelFeeCommission + $b2p_shipping_fee;
+    // 정산 예정 값
+    try {
+        $totalCommission += ($b2p_kcp_price - $b2p_cp_fee_price);
+    }catch (Exception $e) {
+        //$totalCommission += 0;
+        var_dump($order);
+        die();
+    }
+
+    $calcPrice = ($OrderAmount + ($dl_DelFeeAmt - $dl_DelFeeCommission - $b2p_shipping_fee));
+    $calcPrice -= $category_fee_cost;
+    $calcPrice -= $totalDiscount;
+    $calcPrice -= ($b2p_kcp_price - $b2p_cp_fee_price);
+
+    $b2p = array(
+        "OrderAmount" => $OrderAmount,                  // 주문금액
+        "totalDiscount" => $totalDiscount,              // 판매자 할인금액
+        "SellerDiscountPrice" => $SellerDiscountPrice,  // 쿠폰할인
+        "calcPrice" => $calcPrice,                      // 정산 금액
+        "dl_DelFeeAmt" => $dl_DelFeeAmt,                // 배송금액
+        "dl_DelFeeCommission" => $dl_DelFeeCommission,  // 배송비 수수료
+        "b2p_shipping_fee" => $b2p_shipping_fee,        // b2p 배송비 수수료
+        "surTax" => $surTax,                            // 부가세
+        "b2p_surTax" => $b2p_surTax,                    // b2p 부가세
+        "refund" => $refund,                            // 총부가세
+        "totalCommission" => $totalCommission,          // 카테고리,판매자 할인총금액,배송비수수료
+    );
+
+    $order['b2p'] = $b2p;
+
+    return $order;
 }
 
 ?>
@@ -271,85 +316,7 @@ function totalOrderKey($objects,$key,$info) {
             <tbody>
 
             <?php foreach ($this->data['orders']['data'] as $index => $data) {
-                // 빈값 및 소수점 절사를 위한 데이터 재 선언
-                $data['SellerCashbackMoney'] = $data['SellerCashbackMoney'] ? (int)$data['SellerCashbackMoney'] : 0;
-                $data['SellerDiscountTotalPrice'] = $data['SellerDiscountTotalPrice'] ? (int)$data['SellerDiscountTotalPrice'] : 0;
-                $data['OrderAmount'] = $data['OrderAmount'] ? (int)$data['OrderAmount'] : 0;
-                $data['SettlementPrice'] = $data['SettlementPrice'] ? (int)$data['SettlementPrice'] : 0;
-                $data['DirectDiscountPrice'] = $data['DirectDiscountPrice'] ? (int)$data['DirectDiscountPrice'] : 0;
-                $data['SellerFundingDiscountPrice'] = $data['SellerFundingDiscountPrice'] ? (int)$data['SellerFundingDiscountPrice'] : 0;
-                $data['DeductTaxPrice'] = $data['DeductTaxPrice'] ? (int)$data['DeductTaxPrice'] : 0;
-                $data['BuyerPayAmt'] = $data['BuyerPayAmt'] ? (int)$data['BuyerPayAmt'] : 0;
-                $data['ServiceFee'] = $data['ServiceFee'] ? (int)$data['ServiceFee'] : 0;
-
-
-                $DeductTaxPrice = abs($data['DeductTaxPrice']); // 음수로 올때도있고 양수로 올때도있으므로 절대값 사용
-
-                // 주문 금액 * EMS 주문금액이 안맞을때가 있어 직접 변수 생성
-                $OrderAmount = (int)$data['SellOrderPrice'] + (int)$data['OptionPrice'];
-
-                // 카테고리 수수료
-                $service_fee = $data['category_fee_cost'];
-                //if($data['SiteType']== "1"){
-                //    //$service_fee -= $data['SellerCashbackMoney'];
-                //    $service_fee = $data['BasicServiceFee'];
-                //} else{
-                //    $service_fee = $data['ServiceFee'];
-                //}
-                //$service_fee -= $DeductTaxPrice; // 카테고리 수수료에 기타이용료를 뺸후 판매자 할인공제에 포함
-
-                //b2p 수수료
-                //$b2p_fee = ceil($OrderAmount * $b2p_commission); // b2p 수수료 5프로 올림처리
-                $b2p_fee = $data['b2p_cost'];
-
-                //카드수수료
-                $card_fee = (int)($data['AcntMoney'] * $kcp_commission);
-                $card_payback = (int)($data['AcntMoney'] * $kcp_cash_back);
-                $total_fee = $card_fee;
-                if($card_event) $total_fee = $card_fee - $card_payback;
-
-                //판매자 할인 / 공제금
-                $SellerDiscountPrice = $data['SiteType'] == 1 ? $data['SellerDiscountTotalPrice'] : $data['SellerDiscountPrice'];
-                $totalDiscount = 0;
-                $totalDiscount += $SellerDiscountPrice;
-                $totalDiscount += $DeductTaxPrice;
-
-                // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
-                if($data['SiteType'] == 1) {
-
-                }else {
-                    $totalDiscount += $data['SellerCashbackMoney'];
-                    $totalDiscount += $data['SellerFundingDiscountPrice'];
-                }
-
-                // 정산 예정 값
-                if($card_event) $calcPrice = $data['SettlementPrice'] - $b2p_fee;
-                else $calcPrice = $data['SettlementPrice'] - $b2p_fee - $total_fee;
-
-                // 배송비 및 배송비 수수료 관련
-                $dl_DelFeeAmt = $data['ShippingFee'];
-                $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
-                $b2p_shipping_fee = $dl_DelFeeAmt * 0;
-
-                // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
-                if($data['SiteType'] == 1) {
-                    $b2p_shipping_fee = round($b2p_shipping_fee);
-                    $dl_DelFeeCommission = round($dl_DelFeeCommission);
-                }else {
-                    $b2p_shipping_fee = ceil($b2p_shipping_fee);
-                    $dl_DelFeeCommission = ceil($dl_DelFeeCommission);
-                }
-
-                //부가세
-                $surTax = round($data['BuyerPayAmt'] / 11);// B2P 부가세 = 고객 결제금 / 11
-                $b2p_surTax = round($calcPrice / 11);// 셀러 부가세 = 정산예정금액 / 11
-                $b2p_surTax = ceil($b2p_surTax);
-                $refund = $surTax - $b2p_surTax;
-
-                //$calcPrice = $calcPrice - $dl_DelFeeCommission - $b2p_shipping_fee;
-                $calcPrice = ( $OrderAmount + $dl_DelFeeAmt - $dl_DelFeeCommission + $b2p_shipping_fee ) - ( abs($service_fee) + abs($totalDiscount) + abs($total_fee));
-                $calcPrice = ( $OrderAmount + $dl_DelFeeAmt - $dl_DelFeeCommission + $b2p_shipping_fee ) - ( abs($service_fee) );
-                //$service_fee 이거안맞음
+                $order = processOrder($data);
                 ?>
                 <tr>
                     <td><?=$data['data_page_no']?></td>
@@ -363,68 +330,66 @@ function totalOrderKey($objects,$key,$info) {
                     <td><?=$data['BuyerName']?> (<?=$data['BuyerID']?>)</td>
                     <td><?=$data['GoodsName']?></td>
                     <td>카드결제</td>
-                    <td class="text_right"><?=number_format($OrderAmount)?>원</td>
-                    <td class="text_right"><?=number_format($service_fee)?>원</td>
-                    <td class="text_right"><?=number_format($OrderAmount  - $service_fee)?>원</td>
+                    <td class="text_right"><?=number_format($order['b2p']['OrderAmount'])?>원</td>
+                    <td class="text_right"><?=number_format($order['category_fee_cost'])?>원</td>
+                    <td class="text_right"><?=number_format($order['OrderAmount']  - $order['category_fee_cost'])?>원</td>
                     <td class="text_right">
                         <details>
-                            <summary>총 <?=number_format($totalDiscount)?>원</summary>
+                            <summary>총 <?=number_format($order['b2p']['totalDiscount'])?>원</summary>
                             <dl>
                                 <dt>판매자할인</dt>
-                                <dd>-<?=number_format($SellerDiscountPrice + $DeductTaxPrice)?>원</dd>
+                                <dd>-<?=number_format($order['b2p']['SellerDiscountPrice'] + $order['DeductTaxPrice'])?>원</dd>
 
                                 <?if($data['SiteType'] == '2' ) {?>
                                     <!--지마켓-->
                                     <dt>쿠폰할인</dt>
-                                    <dd>-<?=number_format($data['SellerFundingDiscountPrice'])?>원</dd>
+                                    <dd>-<?=number_format($order['SellerFundingDiscountPrice'])?>원</dd>
                                 <?}else {?>
                                     <!--옥션-->
                                     <!--                                <dt>쿠폰할인</dt>-->
                                     <!--                                <dd>---><?//=number_format($data['DirectDiscountPrice'])?>원<!--</dd>-->
                                 <?}?>
                                 <dt>스마일캐시지급</dt>
-                                <dd>-<?=number_format($data['SellerCashbackMoney'])?>원</dd>
+                                <dd>-<?=number_format($order['SellerCashbackMoney'])?>원</dd>
                             </dl>
                         </details>
                     </td>
                     <td class="text_right">
                         <details>
-                            <summary>총 <?=$card_event ? number_format($card_fee - $card_payback) : number_format($card_fee) ?>원</summary>
+                            <summary>총 <?=number_format($order['b2p_kcp_price'] - $order['b2p_cp_fee_price'])?>원</summary>
                             <dl>
                                 <dt>KCP수수료</dt>
-                                <dd><?=number_format($card_fee)?>원</dd>
-                                <?if($card_event){?>
-                                    <dt>KCP수수료(캐시백이벤트)</dt>
-                                    <dd style="text-decoration: line-through"><?=number_format($card_payback)?>원</dd>
-                                <?}?>
+                                <dd><?=number_format($order['b2p_kcp_price'])?>원</dd>
+                                <dt>KCP수수료(캐시백이벤트)</dt>
+                                <dd style="text-decoration: line-through"><?=number_format($order['b2p_cp_fee_price'])?>원</dd>
                             </dl>
                         </details>
                     </td>
                     <td class="text_right">
                         <details>
-                            <summary>총 <?=number_format($dl_DelFeeAmt - $dl_DelFeeCommission + $b2p_shipping_fee)?>원</summary>
+                            <summary>총 <?=number_format($order['b2p']['dl_DelFeeAmt'] - $order['b2p']['dl_DelFeeCommission'] + $order['b2p']['b2p_shipping_fee'])?>원</summary>
                             <dl>
                                 <dt>배송비</dt>
-                                <dd><?=number_format($dl_DelFeeAmt)?>원</dd>
+                                <dd><?=number_format($order['b2p']['dl_DelFeeAmt'])?>원</dd>
                                 <dt>배송비수수료</dt>
-                                <dd><?=number_format($dl_DelFeeCommission + $b2p_shipping_fee)?>원</dd>
+                                <dd><?=number_format($order['b2p']['dl_DelFeeCommission'] + $order['b2p']['b2p_shipping_fee'])?>원</dd>
                             </dl>
                         </details>
                     </td>
                     <td class="text_right">
                         <details>
-                            <summary>총 <?=number_format($surTax + $b2p_surTax)?>원</summary>
+                            <summary>총 <?=number_format($order['b2p']['surTax'] + $order['b2p']['b2p_surTax'])?>원</summary>
                             <dl>
                                 <dt>B2P부가세</dt>
-                                <dd><?=number_format($surTax)?>원</dd>
+                                <dd><?=number_format($order['b2p']['surTax'])?>원</dd>
                                 <dt>셀러부가세</dt>
-                                <dd><?=number_format($b2p_surTax)?>원</dd>
+                                <dd><?=number_format($order['b2p']['b2p_surTax'])?>원</dd>
                                 <dt>차액</dt>
-                                <dd><?=number_format($refund)?>원</dd>
+                                <dd><?=number_format($order['b2p']['refund'])?>원</dd>
                             </dl>
                         </details>
                     </td>
-                    <td class="text_right"><?=number_format($calcPrice)?>원</td>
+                    <td class="text_right"><?=number_format($order['b2p']['calcPrice'])?>원</td>
                 </tr>
             <?php }?>
 
