@@ -208,9 +208,9 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             }
 
             if (calc_data) {
-                //ServiceFee = calc_data['TotCommission'];
-                //ServiceFee = ServiceFee - calc_data['DeductTaxPrice'];  // 토탈 카테고리 이용료에 기타이용료 를 뺸후 판매자 할인공제에 더한다
-                ServiceFee = Math.round(calc_data['category_fee_cost']);
+                ServiceFee = calc_data['TotCommission'];
+                ServiceFee = ServiceFee - calc_data['DeductTaxPrice'];  // 토탈 카테고리 이용료에 기타이용료 를 뺸후 판매자 할인공제에 더한다
+                //ServiceFee = Math.round(calc_data['category_fee_cost']);
             }
 
             // b2p 수수료
@@ -218,15 +218,16 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             //b2p_fee = Math.ceil(b2p_fee);
             var b2p_fee = response['result']['b2p_cost'];
 
+            ServiceFee -= parseInt(b2p_fee);
+
 
             // 카드 수수료
             var BuyerPayAmt = response['result']['AcntMoney']; //구매자 결제금액
-            var KCPServiceFee = BuyerPayAmt * kcp_commission // 카드 수수료
-            var KCPPayBack = BuyerPayAmt * kcp_cashback // 카드 페이백
-            KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
-            KCPPayBack = Math.floor(KCPPayBack); //소수점 버림
-            var total_fee = KCPServiceFee;
-            if (card_event) total_fee = KCPServiceFee - KCPPayBack;// 자체 수수료 (판매금액의 5퍼센트)
+            var KCPServiceFee = response['result']['b2p_kcp_price'] // 카드 수수료
+            var KCPPayBack = response['result']['b2p_cp_fee_price'] // 카드 페이백
+            //KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
+            //KCPPayBack = Math.floor(KCPPayBack); //소수점 버림
+            var total_fee = KCPServiceFee - KCPPayBack;// 자체 수수료 (판매금액의 5퍼센트)
 
 
             // 판매자 할인/공제금 정산데이터 없을때
@@ -259,6 +260,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                 totalDiscount += parseInt(SellerDiscountPrice)
 
                 if(response['result']['SiteType'] == '2') {
+                    ServiceFee -= parseInt(SellerCashbackMoney);
                     totalDiscount += parseInt(SellerCashbackMoney);
                     totalDiscount += parseInt(SellerFundingDiscountPrice);
                 }
@@ -302,7 +304,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             let CostPrice = OrderAmount - (ServiceFee * -1);
             //SettlementPrice = SettlementPrice - b2p_fee - total_fee - dl_DelFeeCommission - b2p_shipping_fee;
             SettlementPrice = ( OrderAmount + dl_DelFeeAmt -dl_DelFeeCommission + b2p_shipping_fee ) - ( Math.abs(ServiceFee) + Math.abs(totalDiscount) + Math.abs(total_fee)); // + ( 1 + 11 )  - ( 2 + 4 + 8 )
-
+            SettlementPrice = Math.round(SettlementPrice);
             // 부가세
             //let surTax = OrderAmount * 0.1;
             let surTax = Math.round(BuyerPayAmt / 11);  // B2P 부가세 = 고객 결제금 / 11
@@ -1106,7 +1108,24 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     4: '[판매자귀책] : 상품불량',
                     5: '[판매자귀책] : 판매자요청',
                 };
-                $('#returnModal_return_ReasonDetail').html(return_ReasonCode[data.return_ReasonCode] + '<br>' + data.return_ReasonDetail);
+
+                var return_Reason = {
+                    0: '판매자귀책',
+                    1: '구매자 귀책',
+                    2: '기타',
+                };
+
+                if(data.return_Reason){
+                    $('#returnModal_return_ReasonDetail').html(return_Reason[data.return_Reason]);
+                }
+
+                if(data.return_ReasonCode){
+                    $('#returnModal_return_ReasonDetail').append('<br>' + return_ReasonCode[data.return_ReasonCode]);
+                }
+
+                if(data.return_ReasonDetail){
+                    $('#returnModal_return_ReasonDetail').append('<br>' + data.return_ReasonDetail);
+                }
 
                 $('#returnModal_return_ReturnShippingFee').html(AddComma(data.return_ReturnShippingFee));
                 console.log(data);
@@ -3163,7 +3182,24 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     4: '[판매자귀책] : 상품불량',
                     5: '[판매자귀책] : 판매자요청',
                 };
-                $('#exchangeModal_exchange_ReasonDetail').html(exchange_ReasonCode[data.exchange_ReasonCode] + '<br>' + data.exchange_ReasonDetail);
+
+                var exchange_Reason = {
+                    0: '판매자귀책',
+                    1: '구매자 귀책',
+                    2: '기타',
+                };
+
+                if(data.exchange_Reason){
+                    $('#exchangeModal_exchange_ReasonDetail').html(exchange_Reason[data.exchange_Reason]);
+                }
+
+                if(data.exchange_ReasonCode){
+                    $('#exchangeModal_exchange_ReasonDetail').append('<br>' + exchange_ReasonCode[data.exchange_ReasonCode]);
+                }
+
+                if(data.exchange_ReasonDetail){
+                    $('#exchangeModal_exchange_ReasonDetail').append('<br>' + data.exchange_ReasonDetail);
+                }
 
                 var exchange_ExchangeShippingFeeWay = {
                     0: '없음',

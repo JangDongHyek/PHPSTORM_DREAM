@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/public_html/admin/good/item_category_list.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/admin/include/left_menu_layer.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/admin/main.html" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/admin/theme_item/theme_item.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/admin/top.html" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/connect_login.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/market/cart/naver_wishlist.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/market/cart/navercheckout.php" charset="x-windows-949" />

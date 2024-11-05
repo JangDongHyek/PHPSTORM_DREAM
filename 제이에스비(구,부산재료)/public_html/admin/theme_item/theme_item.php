@@ -691,7 +691,7 @@ for($i=0; $i < $tot0; $i++){
 	$new2_item_no = $ary0[new_item_no];
 	$item_no = $ary0[item_no];
 	$provider_id = $ary0[provider_id];
-	$new_item_order = $ary0[new_item_order];
+	$new2_item_order = $ary0[new_item_order];
 	$new2_main =  $ary0[new_main];
 
 	if( $new2_main == 'y' ){
@@ -726,13 +726,13 @@ for($i=0; $i < $tot0; $i++){
 	} 
 
 	if($i < $tot0 - 1){
-		$down_str = "<a href='theme_item.php?new2_item_no=$new2_item_no&new_item_order=$new_item_order&flag=down'><img src='../images/dn_subcategory.gif' width='13' height='13' border='0' alt='한단계내리기'>";
+		$down_str = "<a href='theme_item.php?new2_item_no=$new2_item_no&new2_item_order=$new2_item_order&flag=down'><img src='../images/dn_subcategory.gif' width='13' height='13' border='0' alt='한단계내리기'>";
 	}else{
 		$down_str = "<img src='../images/blank_subcategory.gif' width='13' height='13' border='0'> ";
 	}
 
 	if($i > 0){
-		$up_str = "<a href='theme_item.php?new2_item_no=$new2_item_no&new_item_order=$new_item_order&flag=up'><img src='../images/up_subcategory.gif' width='13' height='13' border='0' alt='한단계올리기'>";
+		$up_str = "<a href='theme_item.php?new2_item_no=$new2_item_no&new2_item_order=$new2_item_order&flag=up'><img src='../images/up_subcategory.gif' width='13' height='13' border='0' alt='한단계올리기'>";
 	}else{
 		$up_str = "<img src='../images/blank_subcategory.gif' width='13' height='13' border='0'>";
 	}
@@ -741,7 +741,7 @@ for($i=0; $i < $tot0; $i++){
 									<tr bgcolor='#FFFFFF' align='center'>
 									<input type='hidden' name='new2_no[]' value='<?=$new2_item_no?>'>
 										<td><?=$j?><input type='checkbox' name='new2_checkSel[]' value='<?=$new2_item_no?>'></td>
-										<td><input type='text' name='new_item_order[]' value='<?=$new_item_order?>' size='7' style='BORDER-BOTTOM: rgb(136,136,136) 1px solid; BORDER-LEFT: rgb(136,136,136) 1px solid; BORDER-RIGHT: rgb(136,136,136) 1px solid; BORDER-TOP: rgb(136,136,136) 1px solid; WIDTH: 50%'></td>		
+										<td><input type='text' name='new2_item_order[]' value='<?=$new2_item_order?>' size='7' style='BORDER-BOTTOM: rgb(136,136,136) 1px solid; BORDER-LEFT: rgb(136,136,136) 1px solid; BORDER-RIGHT: rgb(136,136,136) 1px solid; BORDER-TOP: rgb(136,136,136) 1px solid; WIDTH: 50%'></td>
 										<td align='left' colspan='2'><?=$upperclass_str?> &gt; <a onclick="window.open( '../good/item_edit_old.php?item_no=<?=$item_no?>', 'mainpage','toolbar=no,width=700,height=600,location=no,direc2tories=no,status=no,menubar=no,scrollbars=yes,resizable=no');" style='cursor:hand'><?=$item_name?></a></td>
 										<!-- <td><?=$new2_main_str?></td> -->
 										<td><input onclick="document.location.href='theme_item.php?flag=del&target=new2&new2_item_no=<?=$new2_item_no?>'" style='BACKGROUND-COLOR: white; BORDER-BOTTOM: #5a5a5a 1px solid; BORDER-LEFT: #5a5a5a 1px solid; BORDER-RIGHT: #5a5a5a 1px solid; BORDER-TOP: #5a5a5a 1px solid; COLOR: black; HEIGHT: 18px' type='button' value='삭제'></td>
@@ -790,7 +790,7 @@ for ($i=0; $i < $tot2; $i++){
 	$fav2_item_no = $ary2[fav_item_no];
 	$item_no = $ary2[item_no];
 	$provider_id = $ary2[provider_id];
-	$fav_item_order = $ary2[fav_item_order];
+	$fav2_item_order = $ary2[fav_item_order];
 	$fav2_main =  $ary2[fav_main];
 
 	if( $fav2_main == 'y' ){
@@ -825,13 +825,13 @@ for ($i=0; $i < $tot2; $i++){
 	}
 
 	if($i < $tot2 - 1){
-		$down_str = "<a href='theme_item.php?fav2_item_no=$fav2_item_no&fav_item_order=$fav_item_order&flag=down'><img src='../images/dn_subcategory.gif' width='13' height='13' border='0' alt='한단계내리기'>";
+		$down_str = "<a href='theme_item.php?fav2_item_no=$fav2_item_no&fav2_item_order=$fav2_item_order&flag=down'><img src='../images/dn_subcategory.gif' width='13' height='13' border='0' alt='한단계내리기'>";
 	}else{
 		$down_str = "<img src='../images/blank_subcategory.gif' width='13' height='13' border='0'> ";
 	}
 
 	if($i > 0){
-		$up_str = "<a href='theme_item.php?fav2_item_no=$fav2_item_no&fav_item_order=$fav_item_order&flag=up'><img src='../images/up_subcategory.gif' width='13' height='13' border='0' alt='한단계올리기'>";
+		$up_str = "<a href='theme_item.php?fav2_item_no=$fav2_item_no&fav2_item_order=$fav2_item_order&flag=up'><img src='../images/up_subcategory.gif' width='13' height='13' border='0' alt='한단계올리기'>";
 	}else{
 		$up_str = "<img src='../images/blank_subcategory.gif' width='13' height='13' border='0'>";
 	}
@@ -841,7 +841,7 @@ for ($i=0; $i < $tot2; $i++){
 									<tr>
 									<input type='hidden' name='fav2_no[]' value='<?=$fav2_item_no?>'>
 										<td bgcolor='#FFFFFF' align='center'><?=$j?><input type='checkbox' name='fav2_checkSel[]' value='<?=$fav2_item_no?>'></td>
-										<td align="center"><input type='text' name='fav_item_order[]' value='<?=$fav_item_order?>' size='7' style='BORDER-BOTTOM: rgb(136,136,136) 1px solid; BORDER-LEFT: rgb(136,136,136) 1px solid; BORDER-RIGHT: rgb(136,136,136) 1px solid; BORDER-TOP: rgb(136,136,136) 1px solid; WIDTH: 50%'></td>
+										<td align="center"><input type='text' name='fav2_item_order[]' value='<?=$fav2_item_order?>' size='7' style='BORDER-BOTTOM: rgb(136,136,136) 1px solid; BORDER-LEFT: rgb(136,136,136) 1px solid; BORDER-RIGHT: rgb(136,136,136) 1px solid; BORDER-TOP: rgb(136,136,136) 1px solid; WIDTH: 50%'></td>
 										<td align='left' colspan='2'><?=$upperclass_str?> &gt; <a onclick="javascript:window.open( '../good/item_edit_old.php?item_no=<?=$item_no?>', 'mainpage','toolbar=no,width=700,height=600,location=no,direc2tories=no,status=no,menubar=no,scrollbars=yes,resizable=no');" style='cursor:hand'><?=$item_name?></a></td>
 										<td align="center"><input onclick="document.location.href='theme_item.php?flag=del&target=fav2&fav2_item_no=<?=$fav2_item_no?>'" style='BACKGROUND-COLOR: white; BORDER-BOTTOM: #5a5a5a 1px solid; BORDER-LEFT: #5a5a5a 1px solid; BORDER-RIGHT: #5a5a5a 1px solid; BORDER-TOP: #5a5a5a 1px solid; COLOR: black; HEIGHT: 18px' type='button' value='삭제'></td>
 									</tr>
@@ -888,7 +888,7 @@ for($i=0; $i < $tot4; $i++){
 	$rec2_item_no = $ary4[rec_item_no];
 	$item_no = $ary4[item_no];
 	$provider_id = $ary4[provider_id];
-	$rec_item_order = $ary4[rec_item_order];
+	$rec2_item_order = $ary4[rec_item_order];
 	$rec2_main =  $ary4[rec_main];
 
 	if( $rec2_main == 'y' ){
@@ -927,13 +927,13 @@ for($i=0; $i < $tot4; $i++){
 	else $item_name = "제품이 삭제되었습니다.";
 
 	if($i < $tot4 - 1){
-		$down_str = "<a href='theme_item.php?rec2_item_no=$rec2_item_no&rec_item_order=$rec_item_order&flag=down'><img src='../images/dn_subcategory.gif' width='13' height='13' border='0' alt='한단계내리기'>";
+		$down_str = "<a href='theme_item.php?rec2_item_no=$rec2_item_no&rec2_item_order=$rec2_item_order&flag=down'><img src='../images/dn_subcategory.gif' width='13' height='13' border='0' alt='한단계내리기'>";
 	}else{
 		$down_str = "<img src='../images/blank_subcategory.gif' width='13' height='13' border='0'> ";
 	}
 
 	if($i > 0){
-		$up_str = "<a href='theme_item.php?rec2_item_no=$rec2_item_no&rec_item_order=$rec_item_order&flag=up'><img src='../images/up_subcategory.gif' width='13' height='13' border='0' alt='한단계올리기'>";
+		$up_str = "<a href='theme_item.php?rec2_item_no=$rec2_item_no&rec2_item_order=$rec2_item_order&flag=up'><img src='../images/up_subcategory.gif' width='13' height='13' border='0' alt='한단계올리기'>";
 	}else{
 		$up_str = "<img src='../images/blank_subcategory.gif' width='13' height='13' border='0'>";
 	}
@@ -943,7 +943,7 @@ for($i=0; $i < $tot4; $i++){
 									<tr bgcolor='#FFFFFF' align='center'>
 									<input type='hidden' name='rec2_no[]' value='<?=$rec2_item_no?>'>
 										<td><?=$j?><input type='checkbox' name='rec2_checkSel[]' value='<?=$rec2_item_no?>'></td>
-										<td><input type='text' name='rec_item_order[]' value='<?=$rec_item_order?>' size='7' style='BORDER-BOTTOM: rgb(136,136,136) 1px solid; BORDER-LEFT: rgb(136,136,136) 1px solid; BORDER-RIGHT: rgb(136,136,136) 1px solid; BORDER-TOP: rgb(136,136,136) 1px solid; WIDTH: 50%'></td>
+										<td><input type='text' name='rec2_item_order[]' value='<?=$rec2_item_order?>' size='7' style='BORDER-BOTTOM: rgb(136,136,136) 1px solid; BORDER-LEFT: rgb(136,136,136) 1px solid; BORDER-RIGHT: rgb(136,136,136) 1px solid; BORDER-TOP: rgb(136,136,136) 1px solid; WIDTH: 50%'></td>
 										<td align='left' colspan='2'><?=$upperclass_str?> &gt;  <a onclick="window.open( '../good/item_edit_old.php?item_no=<?=$item_no?>', 'mainpage','toolbar=no,width=700,height=600,location=no,direc2tories=no,status=no,menubar=no,scrollbars=yes,resizable=no');" style='cursor:hand'><?=$item_name?></a></td>
 										<td><input onclick="document.location.href='theme_item.php?flag=del&target=rec2&rec2_item_no=<?=$rec2_item_no?>'" style='BACKGROUND-COLOR: white; BORDER-BOTTOM: #5a5a5a 1px solid; BORDER-LEFT: #5a5a5a 1px solid; BORDER-RIGHT: #5a5a5a 1px solid; BORDER-TOP: #5a5a5a 1px solid; COLOR: black; HEIGHT: 18px' type='button' value='삭제'></td>
 									</tr>
@@ -1083,7 +1083,7 @@ if($flag=="del_item13"){
 
 
 //================== 신상품 순서를 변경함 ================================================
-if($flag == "new_item"){						
+if($flag == "new_item"){
 	for($i=0; $i<count($new_no); $i++) {
 		$new_item_no = $new_no[$i];
 		
@@ -1128,7 +1128,11 @@ if($flag == "rec_item"){
 
 
 //================== 신상품 순서를 변경함 ================================================
-if($flag == "new2_item"){						
+if($flag == "new2_item"){
+    //var_dump($new2_no);
+    //echo "<br>";
+    //var_dump($new2_item_order);
+    //die();
 	for($i=0; $i<count($new2_no); $i++) {
 		$new2_item_no = $new2_no[$i];
 		

@@ -28,6 +28,7 @@
 
 		// 검색조건이 없고 정렬이 headnum에 의한 것일때;; 즉 일반 정렬일때;; 
 		if ($select_arrange=="headnum"&&$desc=="asc") {
+
 			while($division_data=mysql_fetch_array($division_result)) {
 				$sum=$sum+$division_data[num];
 				$division=$division_data[division];

@@ -90,16 +90,19 @@ function processOrder($order) {
     $order['DeductTaxPrice'] = $order['DeductTaxPrice'] ? (int)$order['DeductTaxPrice'] : 0;
     $order['BuyerPayAmt'] = $order['BuyerPayAmt'] ? (int)$order['BuyerPayAmt'] : 0;
     $order['ServiceFee'] = $order['ServiceFee'] ? (int)$order['ServiceFee'] : 0;
-    $order['DeductTaxPrice'] = abs($order['DeductTaxPrice']);
     $order['b2p_kcp_price'] = $order['b2p_kcp_price'] ? (int)$order['b2p_kcp_price'] : 0;
     $order['b2p_cp_fee_price'] = $order['b2p_cp_fee_price'] ? (int)$order['b2p_cp_fee_price'] : 0;
+    $order['DeductTaxPrice'] = abs($order['DeductTaxPrice']);
+    $order['TotCommission'] = abs($order['TotCommission']);
+
+
 
     //주문금액
     $OrderAmount = (int)$order['SellOrderPrice'] + (int)$order['OptionPrice'];
-    // 카테고리 수수료
-    $category_fee_cost = $order['category_fee_cost'];
     //b2p 수수료
     $b2p_cost = $order['b2p_cost'];
+    // 카테고리 수수료
+    $category_fee_cost = $order['TotCommission'] - $order['DeductTaxPrice'] + $b2p_cost;
     //b2p 카드 수수료
     $b2p_kcp_price = $order['b2p_kcp_price'];
     //b2p 셀러별 카드 페이백
@@ -115,6 +118,7 @@ function processOrder($order) {
     if($order['SiteType'] == 1) {
 
     }else {
+        $category_fee_cost -= $order['SellerCashbackMoney'];;
         $totalDiscount += $order['SellerCashbackMoney'];
         $totalDiscount += $order['SellerFundingDiscountPrice'];
     }
@@ -169,6 +173,7 @@ function processOrder($order) {
 
     $b2p = array(
         "OrderAmount" => $OrderAmount,                  // 주문금액
+        "category_fee_cost" => $category_fee_cost,      // 카테고리 수수료
         "totalDiscount" => $totalDiscount,              // 판매자 할인금액
         "SellerDiscountPrice" => $SellerDiscountPrice,  // 쿠폰할인
         "calcPrice" => $calcPrice,                      // 정산 금액
@@ -270,7 +275,7 @@ function processOrder($order) {
 
 <div class="result_wrap">
     <div class="box_gray">
-        <? for ($i=1;$i <= 12; $i++) {?>
+        <?php for ($i=1;$i <= 12; $i++) {?>
             <div class="monthBox <?php if($this->data['month'] == $i) echo "monthBg";?>" data-action="calcMonth" data-month="<?=$i?>" onclick="changeMonth(<?=$i?>)">
                 <h2><?=$i?>월</h2>
                 <p><?=sortMonthOrder($i,$this->data['all_orders']['data'],$function_array)?>원</p>
@@ -279,11 +284,11 @@ function processOrder($order) {
     </div>
     <div class="top_text">
         <div class="wrap w100 flex">
-            <?if($this->data['start_day'] && $this->data['end_day']) {?>
+            <?php if($this->data['start_day'] && $this->data['end_day']) {?>
                 <h1>정산 내역 <span class="color-blue"><?=$this->data['start_day']?> ~ <?=$this->data['end_day']?></span></h1>
-            <?} else {?>
+            <?php } else {?>
                 <h1>정산 내역 <span class="color-blue"><?=$this->data['year']?>.<?=$this->data['month']?></span></h1>
-            <?}?>
+            <?php }?>
         </div>
     </div>
     <div class="table">
@@ -309,7 +314,9 @@ function processOrder($order) {
                 <th>판매자할인 / 공제금</th>
                 <th>KCP수수료</th>
                 <th>배송비</th>
+                <?php if(false){?>
                 <th>부가세</th>
+                <?php } ?>
                 <th>최종정산금액</th>
             </tr>
             </thead>
@@ -331,8 +338,8 @@ function processOrder($order) {
                     <td><?=$data['GoodsName']?></td>
                     <td>카드결제</td>
                     <td class="text_right"><?=number_format($order['b2p']['OrderAmount'])?>원</td>
-                    <td class="text_right"><?=number_format($order['category_fee_cost'])?>원</td>
-                    <td class="text_right"><?=number_format($order['OrderAmount']  - $order['category_fee_cost'])?>원</td>
+                    <td class="text_right"><?=number_format($order['b2p']['category_fee_cost'])?>원</td>
+                    <td class="text_right"><?=number_format($order['OrderAmount']  - $order['b2p']['category_fee_cost'])?>원</td>
                     <td class="text_right">
                         <details>
                             <summary>총 <?=number_format($order['b2p']['totalDiscount'])?>원</summary>
@@ -376,6 +383,7 @@ function processOrder($order) {
                             </dl>
                         </details>
                     </td>
+                    <?php if(false){?>
                     <td class="text_right">
                         <details>
                             <summary>총 <?=number_format($order['b2p']['surTax'] + $order['b2p']['b2p_surTax'])?>원</summary>
@@ -389,6 +397,7 @@ function processOrder($order) {
                             </dl>
                         </details>
                     </td>
+                    <?php } ?>
                     <td class="text_right"><?=number_format($order['b2p']['calcPrice'])?>원</td>
                 </tr>
             <?php }?>

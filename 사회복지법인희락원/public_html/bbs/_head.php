@@ -120,6 +120,11 @@
 			// 정렬 기능 : $select_arrange 는 정렬 필드, $desc 는 정렬, 역정렬시
 			if(!$select_arrange) $select_arrange="headnum";
 			if(!$desc) $desc="asc";
+
+			if($id == 'notice') {
+				$select_arrange = "date_free";
+				$desc = "desc";
+			}
 	
 			// 답글 목록에 나타나지 않게 설정하였을때 (게시판 설정시 use_showreply가 체크 되었을때)
 			if(!$setup[use_showreply]) if(!$s_que) $s_que=" arrangenum=0 "; else $s_que.=" and arrangenum=0 ";
