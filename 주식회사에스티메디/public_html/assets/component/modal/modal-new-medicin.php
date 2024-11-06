@@ -17,9 +17,9 @@
                 <ul class="drugs_list">
                     <li v-for="item,index in products">
                         <div class="flex">
-                            <input v-if="version == 1" type="checkbox" name="" :value="item.idx" v-model="carts">
-                            <input v-if="version == 2" type="checkbox" :checked="isCarts(item)" @click="event.preventDefault(); emitProduct(item)">
-                            <label>
+                            <input v-if="version == 1" :id="'item_id' + item.idx" type="checkbox" name="" :value="item.idx" v-model="carts">
+                            <input v-if="version == 2" :id="'item_id' + item.idx" type="checkbox" :checked="isCarts(item)" @click="event.preventDefault(); emitProduct(item)">
+                            <label :for="'item_id' + item.idx">
                                 <div>
                                     <p class="p_name">{{item.PRODUCT_NM}}</p>
                                     <span>제조사 <strong>{{item.MAKER_NM}}</strong> |</span>
@@ -34,9 +34,10 @@
                         </div>
                     </li>
 
-                    <li class="noDataAlign" style="width: 100%; text-align: center;" v-if="search && products.length == 0">
-                    등록된 상품이 없습니다.<br>
-                    <button type="button" class="btn btn_blue btn_mini" @click="postRequest()">약품 입고 요청</button>
+                    <li class="noDataAlign" id="mediRequest" v-if="search && products.length == 0">
+						<i class="fa-solid fa-house-medical-circle-xmark"></i><br>
+                    	등록된 상품이 없습니다.<br>
+                    	<button type="button" class="btn btn_blue" @click="postRequest()">약품 입고 요청</button>
                     </li>
                 </ul>
 

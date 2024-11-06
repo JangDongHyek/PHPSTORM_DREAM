@@ -192,7 +192,11 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             var OrderNo = response['result']['OrderNo'];
             var response2 = await fetchData(`/order/GetCalc/${OrderNo}`);
             var calc_data = null;
-            if (response2.count) calc_data = response2['data'][0];
+            if (response2.count) {
+                calc_data = response2['data'][0];
+                calc_data['TotCommission'] = Math.abs(calc_data['TotCommission']);
+                calc_data['DeductTaxPrice'] = Math.abs(calc_data['DeductTaxPrice'])
+            }
 
             let style = calc_data ? "" : "class='color-red';";
 
@@ -218,7 +222,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             //b2p_fee = Math.ceil(b2p_fee);
             var b2p_fee = response['result']['b2p_cost'];
 
-            ServiceFee -= parseInt(b2p_fee);
+            ServiceFee += parseInt(b2p_fee);
 
 
             // 카드 수수료
@@ -236,6 +240,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             let SellerCashbackMoney = response['result']['SellerCashbackMoney'] ? response['result']['SellerCashbackMoney'] : 0;
             let DirectDiscountPrice = response['result']['DirectDiscountPrice'] ? response['result']['DirectDiscountPrice'] : 0;
             let SellerFundingDiscountPrice = response['result']['SellerFundingDiscountPrice'] ? response['result']['SellerFundingDiscountPrice'] : 0;
+            SellerFundingDiscountPrice = Math.abs(SellerFundingDiscountPrice);
 
             console.log(`ServiceFee : ${ServiceFee}`);
             console.log(`SellerCashbackMoney : ${SellerCashbackMoney}`);
@@ -257,15 +262,20 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                 totalDiscount = 0;
                 SellerDiscountPrice = response['result']['SiteType'] == '1' ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice'];
                 console.log(`SellerDiscountPrice : ${SellerDiscountPrice}`);
+                console.log(`DeductTaxPrice : ${calc_data['DeductTaxPrice']}`);
                 totalDiscount += parseInt(SellerDiscountPrice)
 
-                if(response['result']['SiteType'] == '2') {
+                if(response['result']['SiteType'] == '1') {
+                    ServiceFee += parseInt(calc_data['DeductTaxPrice']);
+                }else {
                     ServiceFee -= parseInt(SellerCashbackMoney);
                     totalDiscount += parseInt(SellerCashbackMoney);
                     totalDiscount += parseInt(SellerFundingDiscountPrice);
+
+                    totalDiscount += parseInt(calc_data['DeductTaxPrice']);
+
                 }
 
-                totalDiscount += parseInt(calc_data['DeductTaxPrice']) * -1;
             }
 
 

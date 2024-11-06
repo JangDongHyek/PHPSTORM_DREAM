@@ -66,6 +66,10 @@
 						<label>판매가</label><!--
 					--><input type="text" name="prodPrice" placeholder="기본 판매가를 입력하세요" value="<?=empty($productData['prod_price'])?'':number_format(removeComma($productData['prod_price']))?>" >원
 					</p>
+					<p class="line">
+						<label>규격단가</label><input type="text" name="standard_price" placeholder="규격단가를 입력하세요" value="<?=empty($productData['standard_price'])?'':number_format(removeComma($productData['standard_price']))?>" >
+						<span>* 예) 100T 규격시 1T에 대한 단가</span>
+					</p>
 				</div>
 				<div class="grid grid2">
 					<p class="line"><label>단가</label><input type="text" name="UNIT_PRICE" placeholder="단가를 입력하세요" value="<?=number_format(removeComma($productData['UNIT_PRICE']),2)?>" ></p>
@@ -119,6 +123,13 @@
                 <label>노출 상태</label>
                 <input type="radio" id="use1" name="useYn" value="Y" <?=$productData['use_yn']=='Y'||empty($productData['use_yn'])?'checked':''?>><label for="use1">노출</label>
                 <input type="radio" id="use2" name="useYn" value="N" <?=$productData['use_yn']=='N'?'checked':''?>><label for="use2">노출안함</label>
+            </p>
+
+            <p class="name">판매 분류</p>
+            <p class="line">
+                <label>상태 구분</label>
+                <input type="radio" id="sell1" name="sell_yn" value="Y" <?=$productData['sell_yn']=='Y'||empty($productData['sell_yn'])?'checked':''?>><label for="sell1">판매중</label>
+                <input type="radio" id="sell2" name="sell_yn" value="N" <?=$productData['sell_yn']=='N'?'checked':''?>><label for="sell2">미판매</label>
             </p>
 
             <p class="name">결제 정보</p>

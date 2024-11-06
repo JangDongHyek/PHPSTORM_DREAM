@@ -13,13 +13,14 @@
     JlModel, JlFile 모두 namespace 를 추가해주셔야 합니다.
  */
 //namespace App\Libraries;
+require_once("JlDefine.php");
 class Jl {
-    private $root_dir = "public_html";
-    private $JS = "/jl";
-    public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
-    public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
-    public $CI = false;                     // namespace 가 존재한다면 Ci를 사용한다고 인식합니다. INIT()에서 자동으로 바뀝니다.
-    public $COMPONENT = "component";
+    private $root_dir;
+    private $JS;
+    public $EDITOR_JS;
+    public $EDITOR_HTML;
+    public $CI;
+    public $COMPONENT;
 
 
     protected $PHP;                         // JlFile 에서 사용
@@ -31,8 +32,17 @@ class Jl {
     public static $LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
+        if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
         array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
+
+        $this->root_dir = JL_ROOT_DIR;
+        $this->JS = JL_JS;
+        $this->EDITOR_JS = JL_EDITOR_JS;
+        $this->EDITOR_HTML = JL_EDITOR_HTML;
+        $this->CI = JL_CI;
+        $this->COMPONENT = JL_COMPONENT;
+
         $this->INIT();
     }
 
@@ -320,16 +330,10 @@ class Jl {
 
         //DB 설정
         $this->DB = array(
-            "hostname" => "localhost",
-            "username" => "example",
-            "password" => "",
-            "database" => "example"
-        );
-        $this->DB = array(
-            "hostname" => "localhost",
-            "username" => "stmedi",
-            "password" => "",
-            "database" => "q61eh96w"
+            "hostname" => JL_HOSTNAME,
+            "username" => JL_USERNAME,
+            "password" => JL_PASSWORD,
+            "database" => JL_DATABASE
         );
 
         //resource 폴더 생성

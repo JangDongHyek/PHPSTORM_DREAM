@@ -56,6 +56,15 @@
                     <p><a onclick="searchFilter('soldOut', 'Y')"><span class="tag <?=getParamMatches('soldOut', "Y")?>">여</span></a></p>
                     <p><a onclick="searchFilter('soldOut', 'N')"><span class="tag <?=getParamMatches('soldOut', "N")?>">부</span></a></p>
                 </div>
+					<div>
+						<p><strong>판매구분</strong></p>
+					</div>
+					<div>
+                        <input type="hidden" name="sell_yn" value="<?=$_GET['sell_yn']?>">
+						<p><a onclick="searchFilter('sell_yn', '')"><span class="tag <?=getParamMatches('sell_yn', "")?>">전체</span></a></p>
+						<p><a onclick="searchFilter('sell_yn', 'Y')"><span class="tag <?=getParamMatches('sell_yn', "Y")?>">유</span></a></p>
+						<p><a onclick="searchFilter('sell_yn', 'N')"><span class="tag <?=getParamMatches('sell_yn', "N")?>">무</span></a></p>
+					</div>
                 <!--
                 <div>
                     <p><strong>카테고리</strong></p>
@@ -67,26 +76,6 @@
 					<p><a onclick="searchFilter('cate', '<?=$key?>')"><span class="tag <?=getParamMatches('cate', $key)?>"><?=$name?></span></a></p>
 					<? } ?>
                 </div>
-
-                <div>
-                    <p><strong>배송</strong></p>
-                </div>
-                <div>
-					<input type="hidden" name="isShipFree" value="<?=$_GET['isShipFree']?>">
-					<p><a onclick="searchFilter('isShipFree', '')"><span class="tag <?=getParamMatches('isShipFree', "")?>">전체</span></a></p>
-					<p><a onclick="searchFilter('isShipFree', 'Y')"><span class="tag <?=getParamMatches('isShipFree', "Y")?>">유료</span></a></p>
-					<p><a onclick="searchFilter('isShipFree', 'N')"><span class="tag <?=getParamMatches('isShipFree', "N")?>">무료</span></a></p>
-                </div>
-
-				<div>
-					<p><strong>MD추천</strong></p>
-				</div>
-				<div>
-					<input type="hidden" name="mdRec" value="<?=$_GET['mdRec']?>">
-					<p><a onclick="searchFilter('mdRec', '')"><span class="tag <?=getParamMatches('mdRec', "")?>">전체</span></a></p>
-					<p><a onclick="searchFilter('mdRec', 'Y')"><span class="tag <?=getParamMatches('mdRec', "Y")?>">여</span></a></p>
-					<p><a onclick="searchFilter('mdRec', 'N')"><span class="tag <?=getParamMatches('mdRec', "N")?>">부</span></a></p>
-				</div>
 				-->
             </div>
         </div>
@@ -111,6 +100,7 @@
             <table>
                 <colgroup>
                     <col width="65px">
+						<col width="50px">
 					<col width="20%">
                     <col width="*">
                     <col width="*">
@@ -131,6 +121,7 @@
 
                     <th>이미지</th>
                     -->
+						<th rowspan="2">구분</th>
 					<th>제품명</th>
                     <th>성분코드</th>
                     <th>성분분류코드</th>
@@ -165,6 +156,7 @@
 				foreach($listData as $list) {
 					$shipFreeYn = $list['shipping_free_yn']=="Y"; // 배송무료?
 					$useYn = $list['use_yn']=="Y"; // 사용중?
+                    $sellYn = $list['sell_yn'] == "Y"; // 판매
 
 					$idx = $list['idx'];
 					$thumbNail = ASSETS_URL . '/' . getProductThumbnail($list['file_name_list']); // 썸네일
@@ -178,6 +170,15 @@
                     <td><?=PRODUCT_CATEGORY[$list['category']]?></td>
                     <td><div class="thumb_img"><img src="<?=$thumbNail?>"></div></td>
                     -->
+						<td rowspan="2">
+							<div class="icon">
+                                <? if($sellYn) {?>
+                                <span class="red">실의약품</span>
+                                <? } else {?>
+                                <span class="blue">대체의약품</span>
+                                <?}?>
+							</div>
+						</td>
 					<td class="text_left">
 						<?/*<!--라벨--><div class="icon"><span class="green">인기상품</span><span class="gray">임시품절</span></div>*/?>
 						<div class="icon">

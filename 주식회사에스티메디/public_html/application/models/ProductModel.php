@@ -107,6 +107,8 @@ class ProductModel extends CI_Model
 		if ($param['isUse']) $sqlCommon .= " AND use_yn = '" . strtoupper($param['isUse']) . "'";
 		if ($param['del_yn']) $sqlCommon .= " AND del_yn = '" . strtoupper($param['del_yn']) . "'";
 
+        if ($param['sell_yn']) $sqlCommon .= " AND sell_yn = '" . strtoupper($param['sell_yn']) . "'";
+
         if($param['member'] != 'admin'){
             $sqlCommon .= " AND use_yn = 'Y' AND del_yn = 'N'";
         }else{

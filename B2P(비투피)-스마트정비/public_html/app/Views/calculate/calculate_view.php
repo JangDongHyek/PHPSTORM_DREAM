@@ -112,15 +112,17 @@ function processOrder($order) {
     $SellerDiscountPrice = $order['SiteType'] == 1 ? $order['SellerDiscountTotalPrice'] : $order['SellerDiscountPrice'];
     $totalDiscount = 0;
     $totalDiscount += $SellerDiscountPrice;
-    $totalDiscount += $order['DeductTaxPrice'];
+
 
     // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
     if($order['SiteType'] == 1) {
-
+        $category_fee_cost += $order['DeductTaxPrice'];
     }else {
         $category_fee_cost -= $order['SellerCashbackMoney'];;
         $totalDiscount += $order['SellerCashbackMoney'];
         $totalDiscount += $order['SellerFundingDiscountPrice'];
+
+        $totalDiscount += $order['DeductTaxPrice'];
     }
 
     // 정산 예정 값
@@ -344,7 +346,7 @@ function processOrder($order) {
                         <details>
                             <summary>총 <?=number_format($order['b2p']['totalDiscount'])?>원</summary>
                             <dl>
-                                <dt>판매자할인</dt>
+                                <dt>판매자할인/쿠폰비</dt>
                                 <dd>-<?=number_format($order['b2p']['SellerDiscountPrice'] + $order['DeductTaxPrice'])?>원</dd>
 
                                 <?if($data['SiteType'] == '2' ) {?>
@@ -352,9 +354,7 @@ function processOrder($order) {
                                     <dt>쿠폰할인</dt>
                                     <dd>-<?=number_format($order['SellerFundingDiscountPrice'])?>원</dd>
                                 <?}else {?>
-                                    <!--옥션-->
-                                    <!--                                <dt>쿠폰할인</dt>-->
-                                    <!--                                <dd>---><?//=number_format($data['DirectDiscountPrice'])?>원<!--</dd>-->
+                                    
                                 <?}?>
                                 <dt>스마일캐시지급</dt>
                                 <dd>-<?=number_format($order['SellerCashbackMoney'])?>원</dd>

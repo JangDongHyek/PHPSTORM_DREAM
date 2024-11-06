@@ -35,6 +35,7 @@ class AdmProductController extends CI_Controller
 			'cate' => $_GET['cate'] ?? '',
 			'isUse' => $_GET['isUse'] ?? '',
 			'del_yn' => $_GET['del_yn'] ?? '',
+            'sell_yn' => $_GET['sell_yn'] ?? '',
 			'isShipFree' => $_GET['isShipFree'] ?? '',
 			'soldOut' => $_GET['soldOut'] ?? '',
 			'mdRec' => $_GET['mdRec'] ?? '',
@@ -74,6 +75,7 @@ class AdmProductController extends CI_Controller
             'cate' => $_GET['cate'] ?? '',
             'isUse' => $_GET['isUse'] ?? '',
             'del_yn' => $_GET['del_yn'] ?? '',
+            'sell_yn' => $_GET['sell_yn'] ?? '',
             'isShipFree' => $_GET['isShipFree'] ?? '',
             'soldOut' => $_GET['soldOut'] ?? '',
             'mdRec' => $_GET['mdRec'] ?? '',
@@ -201,6 +203,7 @@ class AdmProductController extends CI_Controller
                 'INSU_CD' => trim($_POST['INSU_CD']), //보험코드
                 'STANDARD_CD' => trim($_POST['STANDARD_CD']), //표준코드
                 'PRODUCT_STANDARD' => trim($_POST['PRODUCT_STANDARD']), //규격
+                'standard_price' => trim($_POST['standard_price']), //규격 단가
                 'PRODUCT_UNIT' => trim($_POST['PRODUCT_UNIT']), //단위
                 'STOCK_QTY' => trim($_POST['STOCK_QTY']), //재고수량
                 'ACC_UNIT' => trim($_POST['ACC_UNIT']), //계산단위
@@ -217,6 +220,7 @@ class AdmProductController extends CI_Controller
                 'soldout_yn' => ($_POST['soldoutYn']=='Y')? 'Y' : 'N',
                 'md_rec_yn' => ($_POST['mdRecYn']=='Y')? 'Y' : 'N',
                 'del_yn' => ($_POST['del_yn']=='Y')? 'Y' : 'N',
+                'sell_yn' => ($_POST['sell_yn']=='Y')? 'Y' : 'N',
                 'idx' => (int)$_POST['idx'],
             );
             // $resultData['상품등록'] = $productData;

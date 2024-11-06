@@ -1,6 +1,6 @@
 <?php
 //namespace App\Libraries;
-include_once("Jl.php");
+require_once("Jl.php");
 class JlFile extends Jl{
 
     private $path;

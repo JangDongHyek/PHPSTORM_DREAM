@@ -10,7 +10,7 @@ A:hover { color: #FF0000; text-decoration:none; }
 mysql_connect("localhost","heerak","ffpcm080"); 
 mysql_select_db("heerak"); 
 
-$result=mysql_query("select * from zetyx_board_notice order by no desc limit 5"); 
+$result=mysql_query("select * from zetyx_board_notice order by date_free desc limit 5");
 while($data=mysql_fetch_array($result)) 
 { 
 $data[subject] = stripslashes($data[subject]);   
@@ -26,7 +26,7 @@ $data[subject] = stripslashes($data[subject]);
   else { 
   $data[subject] = "$data[subject]"; 
   }   
-echo " <tr><td height=25><img src='images/icon.gif' align='absmiddle'>&nbsp;<span style='font-size:9pt;'>[".date("y-m-d",$data[reg_date])."] <a href=./bbs/view.php?id=notice&no=$data[no]>".nl2br($data[subject])."</a></span></td></tr>"; 
+echo " <tr><td height=25><img src='images/icon.gif' align='absmiddle'>&nbsp;<span style='font-size:9pt;'>[$data[date_free]] <a href=./bbs/view.php?id=notice&no=$data[no]>".nl2br($data[subject])."</a></span></td></tr>";
 } 
 mysql_close(); 
 ?>

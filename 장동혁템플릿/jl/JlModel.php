@@ -1,6 +1,6 @@
 <?php
 //namespace App\Libraries;
-include_once("Jl.php");
+require_once("Jl.php");
 
 class JlModel extends Jl{
     //Database 설정
@@ -38,11 +38,11 @@ class JlModel extends Jl{
         //connect전 필수 정보확인
         if(!$this->DB["hostname"]) $this->error("JlModel construct() : hostname를 입력해주세요.");
         $this->hostname = $this->DB["hostname"];
-        if(!$this->DB["username"]) $this->error("JlModel construct() : username를 입력해주세요.");
+        if(!$this->DB["username"] || $this->DB["username"] == "exam") $this->error("JlModel construct() : username를 입력해주세요.");
         $this->username = $this->DB["username"];
-        if(!$this->DB["password"]) $this->error("JlModel construct() : password를 입력해주세요.");
+        if(!$this->DB["password"] || $this->DB["username"] == "pass") $this->error("JlModel construct() : password를 입력해주세요.");
         $this->password = $this->DB["password"];
-        if(!$this->DB["database"]) $this->error("JlModel construct(): database를 입력해주세요.");
+        if(!$this->DB["database"] || $this->DB["username"] == "exam") $this->error("JlModel construct(): database를 입력해주세요.");
         $this->database = $this->DB["database"];
 
         //DB Connection
