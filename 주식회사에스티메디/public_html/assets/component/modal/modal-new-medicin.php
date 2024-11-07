@@ -167,7 +167,7 @@
                 this.filter.like_value = "";
 
                 if(this.modal && this.version == 2) this.getData();
-                if(!this.modal) {
+                if(!this.modal && this.version == 2) {
                     this.products = [];
                     this.search = false;
                 }

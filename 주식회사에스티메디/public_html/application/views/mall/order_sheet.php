@@ -59,12 +59,16 @@
                                     }
 
                                     foreach ($listData as $list) {
-
                                         if($member['INSU_CHECK'] == 'Y') {
                                             $price = (int)removeComma($list['INSU_PRICE']); // 상품가격
                                         }else{
-                                            $price = (int)removeComma($list['prod_price']); // 상품가격
+                                            if((int)removeComma($list['prod_price']) == 0) {
+                                                $price = (int)removeComma($list['INSU_PRICE']); // 상품가격
+                                            }else {
+                                                $price = (int)removeComma($list['prod_price']); // 상품가격
+                                            }
                                         }
+
 
                                         $count = (int)$list['product_cnt']; // 장바구니수량
                                         $itemAmt = $price * $count;
@@ -104,7 +108,10 @@
                                                     <dl>
                                                         <dt><!--기본옵션--></dt>
                                                         <dd>
-                                                            <div class="number"><?=number_format($count)?>개</div>
+                                                            <!--<input type="button" value="-">-->
+                                                            <!--<div class="number">--><?//=number_format($count)?><!--개</div>-->
+                                                            <div class="number"><input type="number" id="new_count" value="<?=$count?>" onkeyup="jl.isNumberKey(event)"></input>개</div>
+                                                            <input type="button" value="수정" onclick="updateCount(<?=$list['cart_idx']?>)">
                                                             <p class="p_price"><?=number_format($price)?>원</p>
                                                         </dd>
                                                     </dl>
@@ -332,6 +339,33 @@
 
 <? include_once VIEWPATH . 'component/daum_addr_popup.php'; // 다음주소 ?>
 <? include_once VIEWPATH . 'component/innopay_form.php'; // 이노페이 ?>
+
+<?php $jl->jsLoad();?>
+
+<script>
+    async function updateCount(idx) {
+        let new_count = document.getElementById('new_count').value;
+
+        if(!jl.isNumber(new_count)) {
+            alert("수량에 숫자만 기입가능합니다.");
+            return false;
+        }
+
+        let obj = {
+            idx : idx,
+            product_cnt : new_count
+        }
+
+        try {
+            let res = await jl.ajax("update",obj,"/api/bs_product_cart");
+
+            alert("변경되었습니다.");
+            window.location.reload();
+        }catch (e) {
+            alert(e.message)
+        }
+    }
+</script>
 
 <!-- 주문서 js -->
 <script src="<?=ASSETS_URL?>/js/mall/order_sheet.js?v=<?=JS_VER?>"></script>

@@ -47,13 +47,11 @@
                             <tr>
                                 <th>No.</th>
                                 <th>제품명</th>
-                                <th>포장단위</th>
-                                <th>수량</th>
-                                <th>약가</th>
-                                <th>총수량</th>
+                                <th>규격단가</th>
+                                <th>처방수량(월)</th>
                                 <th>기존합계</th>
+                                <th>대체의약품</th>
                                 <th>ST단가</th>
-                                <th>대체품목</th>
                                 <th>ST합계</th>
                                 <th>절감금액</th>
                             </tr>
@@ -67,26 +65,21 @@
                                     <td alt="제품명">
                                         <input type="text" value="제품을 선택하세요." readonly @click="new_modal = true;">
                                     </td>
-                                    <td alt="포장단위" class="text_right">
-                                        <p class="temp">포장단위</p>
+                                    <td alt="규격단가" class="text_right">
+                                        <p class="temp">규격단가</p>
                                     </td>
                                     <td alt="수량" class="text_right">
                                         <p class="temp">0</p>
                                     </td>
-                                    <td alt="약가" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
-                                    <td alt="총수량" class="text_right">
-                                        <p class="temp">0</p>
-                                    </td>
+
                                     <td alt="기존합계" class="text_right">
                                         <p class="temp">0</p>
                                     </td>
+                                    <td alt="대체의약품">
+                                        <p class="temp">대체의약품</p>
+                                    </td>
                                     <td alt="ST단가" class="text_right">
                                         <p class="temp">0</p>
-                                    </td>
-                                    <td alt="대체품목">
-                                        <p class="temp">대체품목</p>
                                     </td>
                                     <td alt="ST합계" class="text_right">
                                         <p class="temp">0</p>
@@ -102,8 +95,8 @@
                                     <td alt="제품명">
                                         <input type="text" :value="product.PRODUCT_NM" readonly>
                                     </td>
-                                    <td alt="포장단위" class="text_right">
-                                        <p><em>포장단위</em>{{jl.getNumbersOnly(product.PRODUCT_STANDARD)}}</p>
+                                    <td alt="규격단가" class="text_right">
+                                        <p><em>규격단가</em>{{product.standard_price}}</p>
                                     </td>
                                     <td alt="수량">
                                         <div class="number_controller">
@@ -112,23 +105,18 @@
                                             <button type="button" @click="product.new_amount++"><i class="fa-regular fa-plus"></i></button>
                                         </div>
                                     </td>
-                                    <td alt="약가" class="text_right">
-                                        <p><em>약가</em>{{getPrice(product).format()}}</p>
-                                    </td>
-                                    <td alt="총수량" class="text_right">
-                                        <p><em>총수량</em>{{jl.getNumbersOnly(product.PRODUCT_STANDARD) * product.new_amount}}</p>
-                                    </td>
+
                                     <td alt="기존합계" class="text_right">
                                         <p><b><em>기존합계</em>{{(getPrice(product) * product.new_amount).format()}}</b></p>
                                     </td>
-                                    <td alt="ST단가" class="text_right">
-                                        <p><em>ST단가</em><b>{{getPrice(getReplace(product)).format()}}</b></p>
-                                    </td>
-                                    <td alt="대체품목">
+                                    <td alt="대체의약품">
                                         <p>
                                             <b>{{getReplace(product).PRODUCT_NM}}</b>
                                             <!--<button type="button" data-toggle="modal" data-target="#moreModal1" class="btn btn_mini btn_black">변경</button>-->
                                         </p>
+                                    </td>
+                                    <td alt="ST단가" class="text_right">
+                                        <p><em>ST단가</em><b>{{getPrice(getReplace(product)).format()}}</b></p>
                                     </td>
                                     <td alt="ST합계" class="text_right">
                                         <p><em>ST합계</em><b>{{(getPrice(getReplace(product)) * product.new_amount).format()}}</b></p>
@@ -148,7 +136,7 @@
                             </tr>
 
                             <tr class="bg2">
-                                <td alt="계" colspan="6" class="text_right">
+                                <td alt="계" colspan="5" class="text_right">
                                     기존합계
                                 </td>
                                 <td alt="기존합계" colspan="2" class="text_right">
@@ -324,11 +312,13 @@
                 this.carts.push(1);
             },
             getPrice(product) {
-                if(this.INSU_CHECK == "Y") return product.INSU_PRICE;
+                //if(this.INSU_CHECK == "Y") return product.INSU_PRICE;
+                //
+                //if(product.prod_price == 0) return product.INSU_PRICE;
+                //
+                //return product.prod_price;
 
-                if(product.prod_price == 0) return product.INSU_PRICE;
-
-                return product.prod_price;
+                return product.standard_price;
             },
             async getData() {
                 try {
@@ -357,7 +347,8 @@
                             add_cart_yn: "N",
                             mb_id: vue.mb_id,
                             product_idx: replace.idx,
-                            product_cnt: product.new_amount,
+                            //product_cnt: product.new_amount,
+                            product_cnt: 1,
                             reg_date: "now()",
                             ord_idx: 0
                         };

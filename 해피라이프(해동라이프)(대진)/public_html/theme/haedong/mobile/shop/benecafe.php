@@ -1,5 +1,5 @@
 <?php
-//
+include_once(G5_PATH."/jl/JlConfig.php");
 //include_once('./_common.php');
 //include_once(G5_THEME_MSHOP_PATH.'/shop.head.php');
 
@@ -8,9 +8,18 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL; ?>/all.min.css">
 
 <div id="benepia_landing">
-
     <section class="s1">
         <div class="container">
+            <?php if($_SERVER['REMOTE_ADDR'] == "59.19.201.109" || $_SERVER['REMOTE_ADDR'] == "121.140.204.65"){ ?>
+                <div class="preApply_slg">
+                    <h7><strong>그리움을</strong> 간직하겠습니다</h7>
+                    <p>마지막 가시는 길 외롭지 않도록 가족의 마음으로 모시겠습니다</p>
+                </div>
+                <button type="button" class="preApply_btn wow animate__animated animate__fadeInDown animate__delay-0.5s" style="position:relative; z-index:1;" @click="modal = true;">
+                    <p>무료 사전장례상담 신청</p>
+                    <span>* 장례지도사 + 3년이상 유경험</span>
+                </button>
+            <?php }?>
             <div class="wow animate__animated animate__fadeInDown animate__delay-0.5s" style="position:relative; z-index:1;">
                 <div class="tit_wrap">
                     <h6 class="color-black">월납입금 없이 바로 이용 가능한</h6>
@@ -265,6 +274,9 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
         <a href="tel:1899-2919" class="btn btn-white">전화 1899-2919</a>
     </div>
 
+    <consult-modal :modal="modal" @close="modal = false;" type="이제너두"></consult-modal>
+
+
 </div>
 
 
@@ -376,6 +388,87 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<!-- 무료 사전장례상담 신청 -->
+<div class="modal fade preApply" id="preApplyModal" tabindex="-1" aria-labelledby="preApplyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
+                <h5 class="modal-title" id="preApplyModalLabel">무료 사전장례상담 신청</h5>
+            </div>
+            <div class="modal-body">
+                <dl class="">
+                    <dt>
+                        <span class="color-red">(필수)</span>
+                        신청인 성명
+                    </dt>
+                    <dd>
+                        <input type="text" class="input_form" placeholder='입력하세요'>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>
+                        <span class="color-red">(필수)</span>
+                        신청인 휴대폰
+                    </dt>
+                    <dd class="input_phone">
+                        <select class="input_form">
+                            <option value="010">010</option>
+                            <option value="010">010</option>
+                            <option value="010">010</option>
+                        </select>
+                        -
+                        <input type="text" class="input_form" placeholder='4자리'>
+                        -
+                        <input type="text" class="input_form" placeholder='4자리'>
+                    </dd>
+                </dl>
+                <div class="agr_form">
+                    <ul>
+                        <li>
+                            <input type="checkbox" id="agr01">
+                            <label for="agr01">
+                                <p><i class="fa-solid fa-square-check"></i>개인정보처리방침 동의</p>
+                                <button type="button" class="btn" data-toggle="modal" data-target="#privacyModal">약관보기</button>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="bttn btn-save" data-toggle="modal" data-target="#">사전 장례상담 신청</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--개인정보처리방침 약관-->
+<div class="modal fade preApply" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
+                <h5 class="modal-title" id="privacyModalLabel">개인정보처리방침</h5>
+            </div>
+            <div class="modal-body">
+                <p> ▶ 개인정보 제공받는자 : 해피라이프 1899-2919 </p>
+                <p> ▶ 개인정보 수집범위 : 고객명, 연락처 </p>
+                <p> ▶ 개인정보 수집 및 이용목적 : 해피라이프 상담 활용(전화, SMS,카카오톡)</p>
+                <p> ▶ 개인정보 보유 및 이용기간 : 개인정보는 수집 및 이용 목적 달성시까지보유하며, 이용 목적 달성 되면 파기하는 것을 원칙으로 한다
+            </div>
+        </div>
+    </div>
+</div>
+
+<? $jl->vueLoad("benepia_landing");?>
+<? $jl->componentLoad("consult/consult-modal.php");?>
+<? $jl->componentLoad("item");?>
+<script>
+    Jl_data.modal = false;
+</script>
+
 <script>
     wow = new WOW({
         animateClass: 'animate__animated' //updated default animate 4.+

@@ -392,16 +392,13 @@ class Jl {
 
         return formattedDate;
     }
-    
+
     // 숫자와 문자가섞인 문자열데이터를 숫자만 가져오는 정규식
     getNumbersOnly(str) {
-        try {
-            return str.replace(/\D/g, '');
-        }catch (e) {
-            return "잘못된 참조값 : str";
-        }
+        return str.replace(/\D/g, '');
     }
 
+    // 숫자를 원화 한글 발음으로 반환한다
     numberToKorean(num) {
         const units = ['', '십', '백', '천'];
         const bigUnits = ['', '만', '억', '조', '경'];
@@ -433,7 +430,12 @@ class Jl {
         return result;
     }
 
-    //숫자 키입력만 허용하고 나머지는 안되게
+    // 참조값이 숫자만으로 이러우져있는지 확인하는 함수
+    isNumber(str) {
+        return !/[^0-9]/.test(str);
+    }
+
+    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)"
     isNumberKey(event) {
         const charCode = event.keyCode || event.which;
         // 숫자 키 코드 (0-9 및 숫자 키패드 0-9)와 백스페이스, Delete 키만 허용

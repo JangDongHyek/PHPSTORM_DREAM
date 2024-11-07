@@ -23,7 +23,7 @@ define("JL_COMPONENT","/component");
 
 // DB 설정
 define("JL_HOSTNAME","localhost");
-define("JL_USERNAME","exam");
-define("JL_PASSWORD","pass");
-define("JL_DATABASE","exam");
+define("JL_USERNAME","apworlddaejin");
+define("JL_PASSWORD","tnnj%uy%");
+define("JL_DATABASE","apworlddaejin");
 ?>

@@ -1,4 +1,5 @@
 <?php
+include_once APPPATH.'libraries/Jl.php';
 /**
  * 관리자 상품관리
  * @property ProductCartModel $ProductCartModel
@@ -7,6 +8,17 @@
  * @property OrderItemModel $OrderItemModel
  */
 class MallOrderController extends CI_Controller {
+    public $jl;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        try {
+            $this->jl = new Jl();
+        }catch(Exception $e) {}
+    }
+
 	// 주문서 작성
 	public function orderSheet()
 	{
@@ -64,6 +76,7 @@ class MallOrderController extends CI_Controller {
 			'configData' => $configData,
 			'member' => $member,
 			'agencyData' => $agencyData,
+            "jl" => $this->jl
         ];
 
 		render('mall/order_sheet', $data);

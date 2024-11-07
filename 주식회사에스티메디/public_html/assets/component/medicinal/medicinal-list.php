@@ -188,11 +188,13 @@
         },
         methods: {
             getPrice(product) {
-                if(this.INSU_CHECK == "Y") return product.INSU_PRICE;
+                console.log('1');
+                console.log(product);
+                if(this.INSU_CHECK == "Y") return parseInt(product.INSU_PRICE);
 
-                if(product.prod_price == 0) return product.INSU_PRICE;
+                if(product.prod_price == 0) return parseInt(product.INSU_PRICE);
 
-                return product.prod_price;
+                return parseInt(product.prod_price);
             },
             async postOrder() {
                 let vue = this;

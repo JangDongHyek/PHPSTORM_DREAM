@@ -39,11 +39,16 @@ if($_SESSION['ss_mb_id'] != "lets080")
 if (!$sst) {
     $sst = "mb_datetime";
     $sod = "desc";
+
+    $newWhere = "and mb_intercept_date = '' and mb_leave_date = ''";
 }
+
+if($sst == "mb_intercept_date") $sql_search .= " and mb_intercept_date != '' and mb_leave_date = ''";
+if($sst == "mb_leave_date") $sql_search .= " and mb_leave_date != ''";
 
 $sql_order = " order by {$sst} {$sod} ";
 
-$sql = " select count(*) as cnt {$sql_common} {$sql_search} {$sql_order} ";
+$sql = " select count(*) as cnt {$sql_common} {$sql_search} and mb_intercept_date = '' and mb_leave_date = '' {$sql_order} ";
 $row = sql_fetch($sql);
 $total_count = $row['cnt'];
 
@@ -52,13 +57,18 @@ $total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
 if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
 $from_record = ($page - 1) * $rows; // 시작 열을 구함
 
+// 총회원수
+$sql = " select count(*) as cnt {$sql_common} where mb_id!='lets080' and mb_intercept_date = '' and mb_leave_date = '' {$sql_order} ";
+$row = sql_fetch($sql);
+$tot_count = $row['cnt'];
+
 // 탈퇴회원수
-$sql = " select count(*) as cnt {$sql_common} {$sql_search} and mb_leave_date <> '' {$sql_order} ";
+$sql = " select count(*) as cnt {$sql_common} where 1 and mb_leave_date <> '' {$sql_order} ";
 $row = sql_fetch($sql);
 $leave_count = $row['cnt'];
 
 // 차단회원수
-$sql = " select count(*) as cnt {$sql_common} {$sql_search} and mb_intercept_date <> '' {$sql_order} ";
+$sql = " select count(*) as cnt {$sql_common} where 1 and mb_intercept_date != '' and mb_leave_date = '' {$sql_order} ";
 $row = sql_fetch($sql);
 $intercept_count = $row['cnt'];
 
@@ -67,7 +77,7 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
 $g5['title'] = '회원관리';
 include_once('./admin.head.php');
 
-$sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+$sql = " select * {$sql_common} {$sql_search} $newWhere  {$sql_order} limit {$from_record}, {$rows} ";
 $result = sql_query($sql);
 
 $colspan = 16;
@@ -79,7 +89,7 @@ $colspan = 16;
 
 <div class="local_ov01 local_ov">
     <?php echo $listall ?>
-    총회원수 <?php echo number_format($total_count) ?>명 중,
+    총회원수 <?php echo number_format($tot_count) ?>명 중,
     <a href="?sst=mb_intercept_date&amp;sod=desc&amp;sfl=<?php echo $sfl ?>&amp;stx=<?php echo $stx ?>">차단 <?php echo number_format($intercept_count) ?></a>명,
     <a href="?sst=mb_leave_date&amp;sod=desc&amp;sfl=<?php echo $sfl ?>&amp;stx=<?php echo $stx ?>">탈퇴 <?php echo number_format($leave_count) ?></a>명
 </div>

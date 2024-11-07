@@ -430,7 +430,12 @@ class Jl {
         return result;
     }
 
-    //숫자 키입력만 허용하고 나머지는 안되게
+    // 참조값이 숫자만으로 이러우져있는지 확인하는 함수
+    isNumber(str) {
+        return !/[^0-9]/.test(str);
+    }
+
+    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)"
     isNumberKey(event) {
         const charCode = event.keyCode || event.which;
         // 숫자 키 코드 (0-9 및 숫자 키패드 0-9)와 백스페이스, Delete 키만 허용
