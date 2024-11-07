@@ -4,7 +4,7 @@ echo view('common/header_adm');
 echo view('common/adm_head');
 $header_name = "정산 관리";
 
-//var_dump($this->data['search_all_orders']['sql']);
+//var_dump($this->data['all_orders']['sql']);
 
 //kcp 카드수수료 이벤트중일때 true 아니면 false
 $card_event = true;
@@ -293,21 +293,57 @@ function processOrder($order) {
             <?php }?>
         </div>
     </div>
-    <div class="table">
-        <table>
+    <div class="table flex nowrap">
+        <table class="sticky" id="leftTable">
             <colgroup>
                 <col style="width: 50px;">
                 <col style="width: ;">
                 <col style="width: 50px;">
             </colgroup>
             <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>판매일자</th>
+                    <th>구분</th>
+                    <th>판매자코드/거래처명</th>
+                    <th>주문번호</th>
+                    <th>구매자명(아이디)</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->data['orders']['data'] as $index => $data) {
+            $order = processOrder($data);
+            ?>
+                <tr>
+
+                    <td><?=$data['data_page_no']?></td>
+                    <td><?=$data['OrderDate']?></td>
+                    <td>
+                        <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
+                    </td>
+                    <td><?=$data['OutGoodsNo']?></td>
+                    <!--                <td><a data-toggle="modal" data-target="#orderSheetModal">--><?//=$data['OrderNo']?><!--</a></td>-->
+                    <td><a><?=$data['OrderNo']?></a></td>
+                    <td><?=$data['BuyerName']?> (<?=$data['BuyerID']?>)</td>
+                </tr>
+            <?php }?>
+            <?php if($this->data['orders']['count']) {?>
+
+                <tr class="sum">
+                    <td colspan="6">기간 내 합계</td>
+                </tr>
+            <?php }else {?>
+                <tr>
+                    <td colspan="6" class="empty">
+                        데이터가 없습니다.
+                    </td>
+                </tr>
+            <?php }?>
+            </tbody>
+        </table>
+        <table id="rightTable">
+            <thead>
             <tr>
-                <th>No.</th>
-                <th>판매일자</th>
-                <th>구분</th>
-                <th>판매자코드/거래처명</th>
-                <th>주문번호</th>
-                <th>구매자명(아이디)</th>
                 <th>상품명</th>
                 <th>결제방식</th>
                 <th>판매금액</th>
@@ -328,15 +364,6 @@ function processOrder($order) {
                 $order = processOrder($data);
                 ?>
                 <tr>
-                    <td><?=$data['data_page_no']?></td>
-                    <td><?=$data['OrderDate']?></td>
-                    <td>
-                        <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
-                    </td>
-                    <td><?=$data['OutGoodsNo']?></td>
-                    <!--                <td><a data-toggle="modal" data-target="#orderSheetModal">--><?//=$data['OrderNo']?><!--</a></td>-->
-                    <td><a><?=$data['OrderNo']?></a></td>
-                    <td><?=$data['BuyerName']?> (<?=$data['BuyerID']?>)</td>
                     <td><?=$data['GoodsName']?></td>
                     <td>카드결제</td>
                     <td class="text_right"><?=number_format($order['b2p']['OrderAmount'])?>원</td>
@@ -405,8 +432,7 @@ function processOrder($order) {
             <?php if($this->data['orders']['count']) {?>
 
                 <tr class="sum">
-                    <td colspan="3">기간 내 합계</td>
-                    <td colspan="5" class="text-right">
+                    <td colspan="2" class="text-right">
                         <b>주문금액</b> |
                         <b><?=totalOrderKey($this->data['search_all_orders']['data'],"order",$function_array)?>원</b>
                     </td>
@@ -435,7 +461,53 @@ function processOrder($order) {
     <?php echo createPagination($this->data['page'], $this->data['orders']['count'], $this->data['limit'], getCurrentUrl()); ?>
 
 </div>
+<script>
+    function syncRowHeights() {
+        const leftRows = document.querySelectorAll('#leftTable tbody tr');
+        const rightRows = document.querySelectorAll('#rightTable tbody tr');
 
+        // 각 테이블의 행 수에 따라 동일한 높이 설정
+        for (let i = 0; i < Math.min(leftRows.length, rightRows.length); i++) {
+            const leftRow = leftRows[i];
+            const rightRow = rightRows[i];
+
+            // 기존 높이를 초기화
+            leftRow.style.height = 'auto';
+            rightRow.style.height = 'auto';
+
+            // 각 행의 높이를 비교하여 더 큰 값으로 설정
+            const maxHeight = Math.max(leftRow.offsetHeight, rightRow.offsetHeight);
+            leftRow.style.height = `${maxHeight}px`;
+            rightRow.style.height = `${maxHeight}px`;
+        }
+    }
+
+    // 초기 높이 동기화 및 details 클릭 시 높이 동기화
+    syncRowHeights();
+    document.querySelectorAll('#rightTable details').forEach(detail => {
+        detail.addEventListener('toggle', syncRowHeights);
+    });
+
+    // 창 크기가 변경될 때 높이 다시 동기화
+    window.addEventListener('resize', syncRowHeights);
+
+
+    // 모든 details 요소에 이벤트 리스너 추가
+    document.querySelectorAll('tr').forEach(tr => {
+        const detailsList = tr.querySelectorAll('details');
+
+        // 각 details 요소에 이벤트 리스너 설정
+        detailsList.forEach(details => {
+            details.addEventListener('toggle', () => {
+                // 현재 열린 상태를 다른 details에도 반영
+                const isOpen = details.open;
+                detailsList.forEach(otherDetails => {
+                    otherDetails.open = isOpen;
+                });
+            });
+        });
+    });
+</script>
 <script>
     let last = <?=$this->data['last']?>;
     let page = <?=$this->data['page']?>;

@@ -197,6 +197,8 @@ class AdminController extends BaseController {
         if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
         $model->where("CancelStatus","0");
         $model->where("ReturnStatus","0");
+        $model->addSql(" and order_settle_list.BuyDecisonDate <= DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND order_settle_list.BuyDecisonDate != '0000-00-00'");
+
 
         // 모든 데이터
         //검색 조건문
@@ -219,6 +221,7 @@ class AdminController extends BaseController {
             $model->where("SiteType",$this->data['SiteType']);
         }
         $this->data['all_orders'] = $model->get(array(
+                "sql" => true,
                 "select" => array(
                     "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
                     "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
@@ -238,6 +241,7 @@ class AdminController extends BaseController {
         if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
         $model->where("CancelStatus","0");
         $model->where("ReturnStatus","0");
+        $model->addSql(" and order_settle_list.BuyDecisonDate <= DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND order_settle_list.BuyDecisonDate != '0000-00-00'");
 
         if($this->data['start_day'] && $this->data['end_day']) {
             $start_day = $this->data['start_day'];
