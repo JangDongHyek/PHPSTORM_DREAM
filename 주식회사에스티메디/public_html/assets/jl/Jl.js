@@ -269,11 +269,20 @@ class Jl {
         return str === str.toUpperCase();
     }
 
-    findObject(arrays,key,value,like = false) {
-        if(like) {
-            return arrays.find(obj => obj[key].includes(value));
+    // 반환값은 일치하는 객체를 반환 없을시 undefined
+    findObject(arrays,key,value,like = false,index = false) {
+        if(index) {
+            if(like) {
+                return arrays.findIndex(obj => obj[key].includes(value));
+            }else {
+                return arrays.findIndex(obj => obj[key] === value);
+            }
         }else {
-            return arrays.find(obj => obj[key] === value);
+            if(like) {
+                return arrays.find(obj => obj[key].includes(value));
+            }else {
+                return arrays.find(obj => obj[key] === value);
+            }
         }
     }
 

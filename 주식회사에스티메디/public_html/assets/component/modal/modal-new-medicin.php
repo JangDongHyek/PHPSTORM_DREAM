@@ -10,14 +10,14 @@
 
             <template v-slot:default>
                 <div class="search">
-                    <input type="search" v-model="filter.like_value" @keyup.enter="getData()" placeholder="원하시는 제품을 검색하세요" value=""/>
-                    <button type="button" class="btn" @click="getData();"><i class="fa-regular fa-magnifying-glass"></i></button>
+                    <input type="search" v-model="filter.like_value" @keyup.enter="filter.page = 1; getData()" placeholder="원하시는 제품을 검색하세요" value=""/>
+                    <button type="button" class="btn" @click="filter.page = 1; getData();"><i class="fa-regular fa-magnifying-glass"></i></button>
                 </div>
 
                 <ul class="drugs_list">
                     <li v-for="item,index in products">
                         <div class="flex">
-                            <input v-if="version == 1" :id="'item_id' + item.idx" type="checkbox" name="" :value="item.idx" v-model="carts">
+                            <input v-if="version == 1" :id="'item_id' + item.idx" type="checkbox" :checked="isCarts2(item)" @click="addCart(item)">
                             <input v-if="version == 2" :id="'item_id' + item.idx" type="checkbox" :checked="isCarts(item)" @click="event.preventDefault(); emitProduct(item)">
                             <label :for="'item_id' + item.idx">
                                 <div>
@@ -46,7 +46,7 @@
 
 
             <template v-slot:footer>
-                <button type="button" class="btn btn_middle btn_blue" data-dismiss="modal">선택 완료</button>
+                <!--<button type="button" class="btn btn_middle btn_blue" data-dismiss="modal">선택 완료</button>-->
             </template>
         </item-bs-modal>
     </div>
@@ -97,12 +97,19 @@
             });
         },
         methods: {
-            async postRequest() {
-                if(!confirm(`${this.filter.like_value} 상품을 입고 요청 하시겠습니까?`)) return false;
+            async postRequest(product = null) {
+                let content;
+                if(product) {
+                    content = product.PRODUCT_NM
+                }else {
+                    if(!confirm(`${this.filter.like_value} 상품을 입고 요청 하시겠습니까?`)) return false;
+                    content = this.filter.like_value
+                }
+
 
                 let obj = {
                     mb_id : this.mb_id,
-                    content : this.filter.like_value,
+                    content : content,
                     status : "",
                 }
                 try {
@@ -117,8 +124,21 @@
             isCarts(product) {
                 return this.carts.some((cart) => cart.idx == product.idx);
             },
+            isCarts2(product) {
+                return this.carts.includes(product.idx);
+            },
+            addCart(product) {
+                if(product.sell_yn == "N") {
+                    event.preventDefault();
+                    if(!confirm("해당 상품은 재고가 없습니다. 입고 요청 하시겠습니까?")) return false;
+                    this.postRequest(product)
+                    return false;
+                }
+
+                this.carts.push(product.idx)
+            },
             emitProduct(product) {
-                if(!confirm("해당 상품을 선택 하시겠습니까?")) return false;
+                //if(!confirm("해당 상품을 선택 하시겠습니까?")) return false;
                 this.$set(product,'new_amount',1);
                 let bool = false
                 let carts = this.carts

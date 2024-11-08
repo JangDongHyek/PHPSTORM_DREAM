@@ -335,42 +335,48 @@
                 let totalPrice = "0";
                 let cartIdx = [];
 
-                let bool = true;
+                let newCart = [];
+                for (const product of this.carts) {
+                    if(product == 1) continue;
+                    let replace = this.getReplace(product);
+
+                    let obj = {
+                        add_cart_yn: "N",
+                        mb_id: vue.mb_id,
+                        product_idx: replace.idx,
+                        //product_cnt: product.new_amount,
+                        product_cnt: 1,
+                        reg_date: "now()",
+                        ord_idx: 0
+                    };
+
+                    //let cartIdx = newCart.findIndex(item => item['product_idx'] === obj.product_idx);
+                    let idx = this.jl.findObject(newCart,"product_idx",obj.product_idx,false,true)
+                    console.log(idx);
+                    if(idx !== -1) newCart[idx].product_cnt += 1;
+                    else newCart.push(obj);
+                }
+
+                if(newCart.length == 0) {
+                    alert("등록된 의약품이 없습니다.");
+                    return false;
+                }
 
                 try {
-                    for (const product of this.carts) {
-                        if(product == 1) continue;
-                        bool = false
-
-                        let replace = this.getReplace(product);
-                        let obj = {
-                            add_cart_yn: "N",
-                            mb_id: vue.mb_id,
-                            product_idx: replace.idx,
-                            //product_cnt: product.new_amount,
-                            product_cnt: 1,
-                            reg_date: "now()",
-                            ord_idx: 0
-                        };
-
+                    for (const product of newCart) {
                         if (productIdx) productIdx += ",";
-                        productIdx += replace.idx;
+                        productIdx += product.idx;
 
                         if (productCnt) productCnt += ",";
-                        productCnt += product.new_amount;
+                        productCnt += product.product_cnt;
 
                         // Ensure vue.jl.ajax returns a Promise to use await here
-                        let res = await vue.jl.ajax("insert", obj, "/api/bs_product_cart");
+                        let res = await vue.jl.ajax("insert", product, "/api/bs_product_cart");
                         let idx = res.idx
                         cartIdx.push(idx);
                     }
                 }catch (e) {
                     alert(e.message)
-                    return false;
-                }
-
-                if(bool) {
-                    alert("등록된 의약품이 없습니다.");
                     return false;
                 }
 

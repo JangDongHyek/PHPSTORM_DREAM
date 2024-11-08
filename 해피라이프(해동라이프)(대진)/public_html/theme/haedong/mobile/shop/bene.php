@@ -35,7 +35,6 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
     <!-- Section 1 -->
     <section class="s1">
         <div class="container">
-            <?php if($_SERVER['REMOTE_ADDR'] == "59.19.201.109" || $_SERVER['REMOTE_ADDR'] == "121.140.204.65"){ ?>
                 <div class="preApply_slg">
                     <h7><strong>그리움을</strong> 간직하겠습니다</h7>
                     <p>마지막 가시는 길 외롭지 않도록 가족의 마음으로 모시겠습니다</p>
@@ -44,7 +43,6 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                     <p>무료 사전장례상담 신청</p>
                     <span>* 장례지도사 + 3년이상 유경험</span>
                 </button>
-            <?php }?>
             <div class="wow animate__animated animate__fadeInDown animate__delay-0.5s" style="position:relative; z-index:1;">
                 <div class="tit_wrap">
                     <h6 class="color-black">월납입금 없이 바로 이용 가능한</h6>

@@ -104,7 +104,7 @@ class BsProductController extends CI_Controller {
 
             foreach($replaces['data'] as $index2 => $replace) {
                 $replace_product = $this->models[$this->table]->where("idx",$replace['replace_idx'])->get()['data'][0];
-                $replaces['data'][$index]['$info'] = $replace_product;
+                $replaces['data'][$index2]['$info'] = $replace_product;
             }
 
             $object["data"][$index]['REPLACE_PRODUCTS'] = $replaces['data'];
