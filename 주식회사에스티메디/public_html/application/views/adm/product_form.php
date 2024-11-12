@@ -132,6 +132,14 @@
                 <input type="radio" id="sell2" name="sell_yn" value="N" <?=$productData['sell_yn']=='N'?'checked':''?>><label for="sell2">미판매</label>
             </p>
 
+            <p class="name">의약품 구분</p>
+            <p class="line">
+                <label>상태 구분</label>
+                <input type="radio" id="medi1" name="medi_yn" value="Y" <?=$productData['medi_yn']=='Y'?'checked':''?>><label for="medi1">실의약품</label>
+                <input type="radio" id="medi2" name="medi_yn" value="N" <?=$productData['medi_yn']=='N'?'checked':''?>><label for="medi2">대체의약품</label>
+                <input type="radio" id="medi2" name="medi_yn" value="NONE" <?=$productData['medi_yn']=='NONE' || empty($productData['medi_yn'])?'checked':''?>><label for="medi2">구분안함</label>
+            </p>
+
             <p class="name">결제 정보</p>
             <p class="line">
                 <label>결제 수단</label>

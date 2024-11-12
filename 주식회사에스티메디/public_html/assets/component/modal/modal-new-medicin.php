@@ -61,7 +61,7 @@
             mb_id : {type : String, default : ""},
             primary : {type : String, default : ""},
             carts : {type : Array, default : []},
-            version : {type : String, default : 1}
+            version : {type : String, default : 1} // 1 의약품 2 비교견적
         },
         data: function(){
             return {

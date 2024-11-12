@@ -56,15 +56,25 @@
                     <p><a onclick="searchFilter('soldOut', 'Y')"><span class="tag <?=getParamMatches('soldOut', "Y")?>">여</span></a></p>
                     <p><a onclick="searchFilter('soldOut', 'N')"><span class="tag <?=getParamMatches('soldOut', "N")?>">부</span></a></p>
                 </div>
-					<div>
-						<p><strong>판매구분</strong></p>
-					</div>
-					<div>
-                        <input type="hidden" name="sell_yn" value="<?=$_GET['sell_yn']?>">
-						<p><a onclick="searchFilter('sell_yn', '')"><span class="tag <?=getParamMatches('sell_yn', "")?>">전체</span></a></p>
-						<p><a onclick="searchFilter('sell_yn', 'Y')"><span class="tag <?=getParamMatches('sell_yn', "Y")?>">유</span></a></p>
-						<p><a onclick="searchFilter('sell_yn', 'N')"><span class="tag <?=getParamMatches('sell_yn', "N")?>">무</span></a></p>
-					</div>
+                <div>
+                    <p><strong>판매구분</strong></p>
+                </div>
+                <div>
+                    <input type="hidden" name="sell_yn" value="<?=$_GET['sell_yn']?>">
+                    <p><a onclick="searchFilter('sell_yn', '')"><span class="tag <?=getParamMatches('sell_yn', "")?>">전체</span></a></p>
+                    <p><a onclick="searchFilter('sell_yn', 'Y')"><span class="tag <?=getParamMatches('sell_yn', "Y")?>">유</span></a></p>
+                    <p><a onclick="searchFilter('sell_yn', 'N')"><span class="tag <?=getParamMatches('sell_yn', "N")?>">무</span></a></p>
+                </div>
+                <div>
+                    <p><strong>의약품구분</strong></p>
+                </div>
+                <div>
+                    <input type="hidden" name="medi_yn" value="<?=$_GET['medi_yn']?>">
+                    <p><a onclick="searchFilter('medi_yn', '')"><span class="tag <?=getParamMatches('medi_yn', "")?>">전체</span></a></p>
+                    <p><a onclick="searchFilter('medi_yn', 'Y')"><span class="tag <?=getParamMatches('medi_yn', "Y")?>">실의약품</span></a></p>
+                    <p><a onclick="searchFilter('medi_yn', 'N')"><span class="tag <?=getParamMatches('medi_yn', "N")?>">대체의약품</span></a></p>
+                    <p><a onclick="searchFilter('medi_yn', 'NONE')"><span class="tag <?=getParamMatches('medi_yn', "NONE")?>">구분안함</span></a></p>
+                </div>
                 <!--
                 <div>
                     <p><strong>카테고리</strong></p>
@@ -172,10 +182,12 @@
                     -->
 						<td rowspan="2">
 							<div class="icon">
-                                <? if($sellYn) {?>
+                                <? if($list['medi_yn'] == "Y") {?>
                                 <span class="red">실의약품</span>
-                                <? } else {?>
+                                <? } else if($list['medi_yn'] == "N") {?>
                                 <span class="blue">대체의약품</span>
+                                <?} else {?>
+                                <span class="gray">구분안함</span>
                                 <?}?>
 							</div>
 						</td>

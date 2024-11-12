@@ -62,6 +62,7 @@ include_once('./admin.head.php');
                 <th>참여자(아이디)</th>
                 <th>연락처</th>
                 <th>SNS 링크</th>
+                <th>네이버/쿠팡</th>
                 <th>선정</th>
                 <th>최초보고일</th>
                 <th>활동링크</th>
@@ -77,6 +78,10 @@ include_once('./admin.head.php');
                 <td><?=$d['mb_name']?>(<?=$d['mb_id']?>)</td>
                 <td><?=$d['mb_hp']?></td>
                 <td><a href="<?=$d['sns_link']?>" target="_blank"><?=$d['sns_link'] ?: '-' ?></a></td>
+                <td>
+                    <p>네이버 : <?=$d['naver_id']?></p>
+                    <p>쿠팡 : <?=$d['coupang_id']?></p>
+                </td>
                 <td class="<?=$d['status'] == '선정' ? 'bg3' : 'bg2'?>">
                     <!--
                     <select onchange="putRequest('<?=$d['idx']?>',event.target.value)">

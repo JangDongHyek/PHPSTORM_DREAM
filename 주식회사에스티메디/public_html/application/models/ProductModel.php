@@ -106,8 +106,10 @@ class ProductModel extends CI_Model
 		// 사용분류 선택시
 		if ($param['isUse']) $sqlCommon .= " AND use_yn = '" . strtoupper($param['isUse']) . "'";
 		if ($param['del_yn']) $sqlCommon .= " AND del_yn = '" . strtoupper($param['del_yn']) . "'";
-
+        //판매구분
         if ($param['sell_yn']) $sqlCommon .= " AND sell_yn = '" . strtoupper($param['sell_yn']) . "'";
+        //의약품구분
+        if ($param['medi_yn']) $sqlCommon .= " AND medi_yn = '" . strtoupper($param['medi_yn']) . "'";
 
         if($param['member'] != 'admin'){
             $sqlCommon .= " AND use_yn = 'Y' AND del_yn = 'N'";

@@ -310,9 +310,16 @@ include_once('./_head.php');
                         <label for="youtube">유튜브</label>
                         <input type="radio" name="sns" value="tiktok" id="tiktok">
                         <label for="tiktok">틱톡</label>
+                            <input type="radio" name="sns" value="review" id="review">
+                            <label for="review">구매평</label>
                     </div>
                     <p>SNS 링크</p>
                     <input type="text" id="sns_link" placeholder="SNS 링크를 작성해주세요">
+                        <p>구매평 체험단 신청 정보 입력<br>
+                            <span>* 구매평 체험단을 신청하는 경우에만 입력해주세요.</span><br>
+                            <span>* 쿠팡, 네이버 가입 ID/성함을 입력해주세요. (정확한 가입 성함을 기재해주세요.)</span></p>
+                        <input type="text" id="naver_id" placeholder="네이버 가입 ID/성함">
+                        <input type="text" id="coupang_id" placeholder="쿠팡 가입 ID/성함">
                 </div>
 
                 <div class="modal-footer">
@@ -341,7 +348,14 @@ include_once('./_head.php');
 
         async function postRequest(idx) {
             try {
-                const selectedValue = document.querySelector('input[name="sns"]:checked');
+                let selectedValue = document.querySelector('input[name="sns"]:checked');
+                if(!selectedValue) {
+                    alert("활동중인 SNS를 선택해주세요.")
+                    return false;
+                }
+                selectedValue = selectedValue.value;
+                let naver_id = document.getElementById('naver_id').value;
+                let coupang_id = document.getElementById('coupang_id').value;
                 //if(!selectedValue) {
                 //    alert("활동중인 SNS를 입력해주세요.");
                 //    return false;
@@ -356,6 +370,8 @@ include_once('./_head.php');
                     user_idx : user_idx,
                     campaign_idx : idx,
                     sns_type : selectedValue,
+                    naver_id : naver_id,
+                    coupang_id : coupang_id,
                     sns_link : document.getElementById("sns_link").value
                 }
 

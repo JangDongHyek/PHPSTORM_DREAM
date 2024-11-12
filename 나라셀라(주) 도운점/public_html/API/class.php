@@ -235,10 +235,11 @@ switch($_POST['mode']){
         $class_idx = $_POST['class_idx'];
         $class_app_idx = $_POST['class_app_idx'];        
         $status = $_POST['status'];
+
         $cancelMsg = $_POST['cancelMsg']; /* 가상계좌 취소시 */
-        $refundBankCd = $_POST['bankCd']; /* 가상계좌 취소시 */
-        $refundAcctNo = $_POST['acctNo']; /* 가상계좌 취소시 */
-        $refundAcctNm = $_POST['acctNm']; /* 가상계좌 취소시 */
+        $refundBankCd = $_POST['refundBankCd']; /* 가상계좌 취소시 */
+        $refundAcctNo = $_POST['refundAcctNo']; /* 가상계좌 취소시 */
+        $refundAcctNm = $_POST['refundAcctNm']; /* 가상계좌 취소시 */
 
         if($status == 'CANCEL') {
             $classInfo = getClassInfo($class_idx);

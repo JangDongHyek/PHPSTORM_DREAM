@@ -36,6 +36,7 @@ class AdmProductController extends CI_Controller
 			'isUse' => $_GET['isUse'] ?? '',
 			'del_yn' => $_GET['del_yn'] ?? '',
             'sell_yn' => $_GET['sell_yn'] ?? '',
+            'medi_yn' => $_GET['medi_yn'] ?? '',
 			'isShipFree' => $_GET['isShipFree'] ?? '',
 			'soldOut' => $_GET['soldOut'] ?? '',
 			'mdRec' => $_GET['mdRec'] ?? '',
@@ -76,6 +77,7 @@ class AdmProductController extends CI_Controller
             'isUse' => $_GET['isUse'] ?? '',
             'del_yn' => $_GET['del_yn'] ?? '',
             'sell_yn' => $_GET['sell_yn'] ?? '',
+            'medi_yn' => $_GET['medi_yn'] ?? '',
             'isShipFree' => $_GET['isShipFree'] ?? '',
             'soldOut' => $_GET['soldOut'] ?? '',
             'mdRec' => $_GET['mdRec'] ?? '',
@@ -221,6 +223,7 @@ class AdmProductController extends CI_Controller
                 'md_rec_yn' => ($_POST['mdRecYn']=='Y')? 'Y' : 'N',
                 'del_yn' => ($_POST['del_yn']=='Y')? 'Y' : 'N',
                 'sell_yn' => ($_POST['sell_yn']=='Y')? 'Y' : 'N',
+                'medi_yn' => $_POST['medi_yn'],
                 'idx' => (int)$_POST['idx'],
             );
             // $resultData['상품등록'] = $productData;
