@@ -163,15 +163,33 @@ for ($i=0; $row=sql_fetch_array($result); $i++) {
 
 	?>
 	<script type="text/javascript">
-		$(function(){
-			$("#progressBar<?=$i?>").LineProgressbar({
-				percentage : <?=intval($row[it_1])?>,
-				fillBackgroundColor:'blue',
-				height:'6px',
-				width:'100%',
-			});
-			$("#progressBar<?=$i?> .percentCount").css("left","<?=$row[it_1]?>%");
-	});
+
+
+		//$(function(){
+		//	$("#progressBar<?//=$i?>//").LineProgressbar({
+		//		percentage : <?//=intval($row[it_1])?>//,
+		//		fillBackgroundColor:'blue',
+		//		height:'6px',
+		//		width:'100%',
+		//	});
+		//	$("#progressBar<?//=$i?>// .percentCount").css("left","<?//=$row[it_1]?>//%");
+	    //});
+
+		//console.log(<?//=$i?>//);
+        //console.log(<?//=$page?>//);
+
+        progressBar_id.push('<?=$i?>');
+        progressBar_percent.push('<?=$row[it_1];?>')
+
+        $(".progressBar").each(function(index) {
+            $(this).LineProgressbar({
+                percentage: progressBar_percent[index],
+                fillBackgroundColor: 'blue',
+                height: '6px',
+                width: '100%',
+            });
+            $(this).find(".percentCount").css("left", progressBar_percent[index] + "%");
+        });
 	</script>
 	<?
     echo "</div></li>\n";

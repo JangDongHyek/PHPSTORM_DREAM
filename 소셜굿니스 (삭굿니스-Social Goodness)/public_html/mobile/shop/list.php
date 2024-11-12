@@ -53,6 +53,8 @@ define('G5_SHOP_CSS_URL', str_replace(G5_PATH, G5_URL, $skin_dir));
 
 <script>
 var g5_shop_url = "<?php echo G5_SHOP_URL; ?>";
+let progressBar_id = [];
+let progressBar_percent = [];
 </script>
 <script src="<?php echo G5_JS_URL; ?>/shop.mobile.list.js"></script>
 
