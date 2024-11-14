@@ -305,9 +305,6 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             //code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(totalDiscount) + '</td>';    // 판매자할인/공제금
             code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';      // 고객 결제 금액
-            code_html += '<td>-' + AddComma(KCPServiceFee) + '</td>';    // kcp 수수료
-            code_html += '<td>' + AddComma(KCPPayBack) + '</td>'; // kcp 캐시백
-            code_html += '<td>' + AddComma(total_fee) + '</td>';    // kcp 합계
 
             code_html += '<td>' + AddComma(dl_DelFeeAmt) + '</td>';     // 배송비
             code_html += '<td>-' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 수수료
@@ -317,7 +314,13 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             //code_html += '<td>' + AddComma(b2p_surTax) + '</td>';     // b2p부가세 -> 셀러 부가세
             //code_html += '<td>' + AddComma(refund) + '</td>';     // 환급금 -> 차액
 
-            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';  //정산금액
+            code_html += '<td>' + AddComma(SettlementPrice + total_fee) + '</td>';  //정산예정금액
+
+            code_html += '<td>-' + AddComma(KCPServiceFee) + '</td>';    // kcp 수수료
+            code_html += '<td>' + AddComma(KCPPayBack) + '</td>'; // kcp 캐시백
+            code_html += '<td>' + AddComma(total_fee) + '</td>';    // kcp 합계
+            
+            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';  //최종정산예정금액
             //code_html += response['body']['Message'] + '<br>';
             code_html += '</tr>';
 
@@ -4621,10 +4624,12 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                             <th rowspan="2">공급원가</th>
                             <th rowspan="2">판매자할인/공제금</th>
                             <th rowspan="2">고객 결제금액</th>
-                            <th colspan="3">KCP수수료</th>
                             <th colspan="3">배송비</th>
                             <th colspan="3" style="display: none">부가세금처리</th>
                             <th rowspan="2">정산예정금액</th>
+                            <th colspan="3">KCP수수료</th>
+                            <th rowspan="2">최종정산예정금액</th>
+
                         </tr>
                         <tr>
                             <th>수수료</th>

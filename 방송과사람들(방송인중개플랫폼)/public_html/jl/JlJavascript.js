@@ -282,10 +282,11 @@ class JlJavascript {
 
     /*
     input = input 아이디 문자열이나 배열로 가능하다
-    파라미터로 넣은 값을 object 형태로 반환
+    string 이면 값 반환
+    배열이면 넣은 값을 object 형태로 반환
      */
     getInputById(input) {
-        const result = {};
+        let result = {};
 
         if (typeof input === 'string') {
             // 문자열이면 해당 ID의 input, select, radio 값을 객체로 반환
@@ -293,15 +294,15 @@ class JlJavascript {
             if (element) {
                 // select 요소일 경우 선택된 값을 가져옴
                 if (element.tagName === 'SELECT') {
-                    result[input] = element.options[element.selectedIndex].value;
+                    result = element.options[element.selectedIndex].value;
                 } else if (element.type === 'radio') {
                     // radio 그룹 중 체크된 값을 가져옴
                     const radioGroup = document.querySelector(`input[name="${element.name}"]:checked`);
                     if (radioGroup) {
-                        result[element.name] = radioGroup.value;
+                        result = radioGroup.value;
                     }
                 } else {
-                    result[input] = element.value;
+                    result = element.value;
                 }
             } else {
                 alert(`${input} 아이디를 가진 input, select 또는 radio를 찾을 수 없습니다.`);

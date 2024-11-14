@@ -1,6 +1,6 @@
 <?php
 //namespace App\Libraries;
-include_once("Jl.php");
+require_once("Jl.php");
 
 class JlModel extends Jl{
     //Database 설정
@@ -38,11 +38,11 @@ class JlModel extends Jl{
         //connect전 필수 정보확인
         if(!$this->DB["hostname"]) $this->error("JlModel construct() : hostname를 입력해주세요.");
         $this->hostname = $this->DB["hostname"];
-        if(!$this->DB["username"]) $this->error("JlModel construct() : username를 입력해주세요.");
+        if(!$this->DB["username"] || $this->DB["username"] == "exam") $this->error("JlModel construct() : username를 입력해주세요.");
         $this->username = $this->DB["username"];
-        if(!$this->DB["password"]) $this->error("JlModel construct() : password를 입력해주세요.");
+        if(!$this->DB["password"] || $this->DB["username"] == "pass") $this->error("JlModel construct() : password를 입력해주세요.");
         $this->password = $this->DB["password"];
-        if(!$this->DB["database"]) $this->error("JlModel construct(): database를 입력해주세요.");
+        if(!$this->DB["database"] || $this->DB["username"] == "exam") $this->error("JlModel construct(): database를 입력해주세요.");
         $this->database = $this->DB["database"];
 
         //DB Connection
@@ -71,7 +71,7 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }else {
@@ -106,7 +106,7 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            if(!$row = mysqli_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysqli_fetch_assoc($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
@@ -124,7 +124,7 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 $array[$row['COLUMN_NAME']] = $row;
             }
         }else {
@@ -146,7 +146,7 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($array, $row['COLUMN_NAME']);
             }
         }else {
@@ -184,7 +184,7 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($array, $row);
             }
         }else {
@@ -306,8 +306,8 @@ class JlModel extends Jl{
             if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
 
             while($row = mysqli_fetch_assoc($result)){
-                $row["data_page_no"] = ($page -1) * $limit + $index;
-                $row["data_page_nor"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+                $row["jl_no"] = ($page -1) * $limit + $index;
+                $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
@@ -325,8 +325,8 @@ class JlModel extends Jl{
             if(!$result) $this->error(mysql_error());
 
             while($row = mysql_fetch_assoc($result)){
-                $row["data_page_no"] = ($page -1) * $limit + $index;
-                $row["data_page_nor"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+                $row["jl_no"] = ($page -1) * $limit + $index;
+                $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);

@@ -186,6 +186,14 @@ try {
             $response['success'] = true;
             break;
         }
+
+        case "query" :
+        {
+            $obj = $model->jsonDecode($_POST['obj'],false);
+
+            $data = $model->query($obj['query']);
+            break;
+        }
     }
 } catch (Exception $e) {
     $response['success'] = false;

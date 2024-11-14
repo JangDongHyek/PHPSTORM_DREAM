@@ -134,6 +134,28 @@ try {
             break;
         }
 
+        case "where_delete" :
+            $obj = $models[$table]->jsonDecode($_POST['obj'],false);
+            if($obj['in_key'] && $obj['in_value']) $models[$table]->in($obj['in_key'],$models[$table]->jsonDecode($obj['in_value']));
+
+            $models[$table]->where($obj)->whereDelete();
+            break;
+
+        case "deletes":
+        {
+            $arrays = $models[$table]->jsonDecode($_POST['arrays']);
+
+            foreach ($arrays as $primary) {
+                $models[$table]->delete(array(
+                    $models[$table]->primary => $primary
+                ));
+            }
+
+            $response['arrays'] = $arrays;
+            $response['success'] = true;
+            break;
+        }
+
         case "query":
         {
             $obj = $models[$table]->jsonDecode($_POST['obj'],false);
@@ -143,13 +165,6 @@ try {
             $response['success'] = true;
             break;
         }
-
-        case "where_delete" :
-            $obj = $models[$table]->jsonDecode($_POST['obj'],false);
-            if($obj['in_key'] && $obj['in_value']) $models[$table]->in($obj['in_key'],$models[$table]->jsonDecode($obj['in_value']));
-
-            $models[$table]->where($obj)->whereDelete();
-            break;
 
         //csv 파일 만들고 다운받는 처리
         case "csv" :

@@ -3,21 +3,28 @@
     해당 모듈은 5.4부터 최적화 되어있습니다.
     4.* 은 사용이 아예 불가능하고 5.2는 부분적으로 사용가능하나 바꿔줘야할 부분이 꽤 있습니다.
 
+    CI3
+    CI3 에 적용시킬려면 namespace 를 사용하지않고 컨트롤러 상위에
+    require_once APPPATH.'libraries/Jl.php'; 추가시켜주면 됩니다.
+    $CI 를 true 직접 바꿔줘야합니다
+
     CI4
     CI4 에 적용시킬려면 밑에 namespace 를 지정해주면 됩니다.
     JlModel, JlFile 모두 namespace 를 추가해주셔야 합니다.
  */
 //namespace App\Libraries;
+require_once("JlDefine.php");
 class Jl {
-    private $root_dir = "public_html";
-    private $JS = "/jl";
-    public $EDITOR_JS = "/plugin/editor/smarteditor2/js/HuskyEZCreator.js";
-    public $EDITOR_HTML = "/plugin/editor/smarteditor2/SmartEditor2Skin.html";
-    public $CI = false;                     // namespace 가 존재한다면 Ci를 사용한다고 인식합니다. INIT()에서 자동으로 바뀝니다.
+    private $root_dir;
+    private $JS;
+    public $EDITOR_JS;
+    public $EDITOR_HTML;
+    public $CI;
+    public $COMPONENT;
 
 
     protected $PHP;                         // JlFile 에서 사용
-    private $DEV = false;                   //해당값이 false 이면 로그가 안찍힙니다. INIT()에서 자동으로 바뀝니다.
+    public $DEV = false;                   //해당값이 false 이면 로그가 안찍힙니다. INIT()에서 자동으로 바뀝니다.
     private $DEV_IP = array();
     public  $ROOT;
     public  $DB;
@@ -25,8 +32,17 @@ class Jl {
     public static $LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
+        if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
         array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
+
+        $this->root_dir = JL_ROOT_DIR;
+        $this->JS = JL_JS;
+        $this->EDITOR_JS = JL_EDITOR_JS;
+        $this->EDITOR_HTML = JL_EDITOR_HTML;
+        $this->CI = JL_CI;
+        $this->COMPONENT = JL_COMPONENT;
+
         $this->INIT();
     }
 
@@ -51,17 +67,29 @@ class Jl {
     }
 
     function jsonDecode($origin_json,$encode = true) {
-        $json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
-        $json = str_replace('\"', '###NEWQUOTATION###', $json);
-        $json = str_replace('\\', '', $json);
-        //$json = str_replace('\\\\', '', $json);
-        $json = str_replace('###NEWLINE###', '\\n', $json);
-        $json = str_replace('###NEWQUOTATION###', '\"', $json);
+        $str_json = stripslashes($origin_json);
 
-        $obj = json_decode($json, true);
+        $obj = json_decode($str_json, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error("Jl jsonDecode()\norigin : ".$origin_json."\nreplace : $json");
+            $json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
+            $json = str_replace('\"', '###NEWQUOTATION###', $json);
+            $json = str_replace('\\', '', $json);
+            $json = str_replace('\\\\', '', $json);
+            $json = str_replace('###NEWLINE###', '\\n', $json);
+            $json = str_replace('###NEWQUOTATION###', '\"', $json);
+
+            $obj = json_decode($json, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $msg = "Jl jsonDecode()";
+                if($this->DEV) {
+                    $msg .= "\norigin : $origin_json";
+                    $msg .= "\nstripslashes : $str_json";
+                    $msg .= "\nreplace : $json";
+                }
+                $this->error("Jl jsonDecode()\norigin : ".$origin_json."\nreplace : $json");
+            }
         }
 
         // 오브젝트 비교할때가있어 파라미터가 false값일땐 모든값 decode
@@ -85,6 +113,12 @@ class Jl {
         echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
         echo "const Jl_editor = '{$this->EDITOR_HTML}';";
         echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
+        //Vue 데이터 연동을 위한 변수
+        echo "let Jl_data = {};";
+        echo "let Jl_methods = {};";
+        echo "let Jl_watch = {};";
+        echo "let Jl_components = {};";
+        echo "let Jl_computed = {};";
         echo "</script>";
         echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
         if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
@@ -110,6 +144,21 @@ class Jl {
         echo "vueLoad('$app_name')";
         echo "}, false);";
         echo "</script>";
+    }
+
+    function componentLoad($path) {
+        if($path[0] != "/") $path = "/".$path;
+        $path = $this->ROOT.$this->COMPONENT.$path;
+
+        if(is_file($path)) {
+            include_once($path);
+        }else if(is_file($path.".php")){
+            include_once($path.".php");
+        }else if(is_dir($path)) {
+            $this->includeDir($path);
+        }else {
+            $this->error("Jl componentLoad() : $path 가 존재하지않습니다.");
+        }
     }
 
     function includeDir($dir_name) {
@@ -255,7 +304,7 @@ class Jl {
             //URL 구하기
             $this->URL = base_url();
             //resource 경로 지정
-            $resource_path = FCPATH."jl";
+            $resource_path = FCPATH.$this->JS;
         }else {
             //ROOT 위치 찾기
             $root = __FILE__;
@@ -276,15 +325,15 @@ class Jl {
             $this->URL = $http.$host.$user;
 
             //resource 경로 지정
-            $resource_path = $this->ROOT."/jl";
+            $resource_path = $this->ROOT.$this->JS;
         }
 
         //DB 설정
         $this->DB = array(
-            "hostname" => "localhost",
-            "username" => "broadcast",
-            "password" => "c3gq%qyc",
-            "database" => "broadcast"
+            "hostname" => JL_HOSTNAME,
+            "username" => JL_USERNAME,
+            "password" => JL_PASSWORD,
+            "database" => JL_DATABASE
         );
 
         //resource 폴더 생성

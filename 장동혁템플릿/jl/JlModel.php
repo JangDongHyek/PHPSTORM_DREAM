@@ -71,14 +71,14 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }
@@ -106,12 +106,12 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            if(!$row = mysqli_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysqli_fetch_assoc($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            if(!$row = mysql_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysql_fetch_assoc($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }
 
         return $row;
@@ -124,14 +124,14 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 $array[$row['COLUMN_NAME']] = $row;
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 $array[$row['COLUMN_NAME']] = $row;
             }
         }
@@ -146,14 +146,14 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($array, $row['COLUMN_NAME']);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($array, $row['COLUMN_NAME']);
             }
         }
@@ -184,14 +184,14 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($array, $row);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($array, $row);
             }
         }

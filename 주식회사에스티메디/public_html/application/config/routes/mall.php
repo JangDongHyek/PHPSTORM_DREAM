@@ -4,7 +4,8 @@
  */
 
 // 메인
-$route['index'] = 'MallMainController/index';
+//$route['index'] = 'MallMainController/index';
+$route['index'] = 'PublishController/index';
 
 // 로그인
 $route['login'] = 'MallAccountController/login';
@@ -20,7 +21,8 @@ $route['resetPw'] = 'MallAccountController/resetPw';
 $route['mypage'] = 'MallAccountController/myPage';
 
 // 약재 목록
-$route['medicinal'] = 'MallMedicinalController/medicinalList';
+//$route['medicinal'] = 'MallMedicinalController/medicinalList';
+$route['medicinal'] = 'PublishController/medicinalList2';
 
 // 약재 목록
 $route['medicinalSearch'] = 'MallMedicinalController/medicinalSearch';

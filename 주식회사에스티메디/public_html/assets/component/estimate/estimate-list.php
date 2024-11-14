@@ -3,7 +3,7 @@
     <div>
         <div class="btn_wrap">
             <a class="btn btn_small btn_line" @click="deletesData()">선택 삭제</a>
-            <a class="btn btn_small btn_blue male-auto" href="./2">신규 견적</a>
+            <a class="btn btn_small btn_blue male-auto" href="./estimateInput">신규 견적</a>
         </div>
 
         <div class="board_list">

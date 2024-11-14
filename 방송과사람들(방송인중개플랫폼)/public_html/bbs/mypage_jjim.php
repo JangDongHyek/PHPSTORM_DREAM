@@ -42,7 +42,8 @@ $result = sql_query($sql);
 </style>
 
     <div id="area_mypage" class="jjim">
-		<div class="inr">		
+		<div class="inr">
+            <?php include('./mypage_banner.php'); ?>
 			<div id="mypage_wrap">
 				<?php include_once('./mypage_info.php'); ?>
 
@@ -51,8 +52,8 @@ $result = sql_query($sql);
                 </div>
 
 				<!-- 마이페이지에만 나오는 메뉴 -->
-				<?php include_once('./mypage_menu.php'); ?> 	
-			</div>				
+				<?php include_once('./mypage_menu.php'); ?>
+            </div>
 		</div>
 
     </div>

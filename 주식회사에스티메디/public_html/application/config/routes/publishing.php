@@ -10,6 +10,7 @@ $route['guide'] = 'PublishController/guidePage';
 $route['privacy'] = 'PublishController/privacyPage';
 $route['provision'] = 'PublishController/provisionPage';
 $route['estimate'] = 'PublishController/estimate';
+$route['estimateInput'] = 'PublishController/indexNoOrder';
 $route['estimateView'] = 'PublishController/estimateView';
 $route['estimatePrint'] = 'PublishController/estimatePrint';
 // 약재 목록 리뉴얼 241014

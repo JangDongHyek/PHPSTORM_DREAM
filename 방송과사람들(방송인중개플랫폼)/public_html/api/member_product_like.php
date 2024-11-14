@@ -130,7 +130,7 @@ try {
             $object = $model->get($obj["page"], $obj["limit"]);
 
             if($object["count"]) {
-                $model->sqlDelete();
+                $model->delete($object['data'][0]);
             }else {
                 $model->insert($obj);
             }

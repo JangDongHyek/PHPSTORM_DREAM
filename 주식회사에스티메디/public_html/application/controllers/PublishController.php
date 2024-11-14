@@ -17,13 +17,33 @@ class PublishController extends CI_Controller {
         }catch(Exception $e) {}
     }
 
+    public function index() {
+        $member = $this->session->userdata('member');
+        if(!$member) $this->indexNoMember();
+        else {
+            $model = new JlModel(array("table" => "bs_order"));
+            $data = $model->where("mb_id",$member['mb_id'])->get();
+            if($data['count']) {
+                $this->indexNoOrder();
+            }else {
+                $this->indexNoOrder();
+            }
+        }
+    }
 
-    //mall
-    public function index2Page()
-    {
-
+    public function indexNoOrder() {
         $member = $this->session->userdata('member');
 
+        $data = [
+            'pid' => 'index2',
+            "member" => $member,
+            "jl" => $this->jl
+        ];
+
+        render('mall/index2_no', $data);
+    }
+
+    public function indexNoMember() {
         $model = new JlModel(array("table" => "bs_comparative"));
         $model->orderBy("priority","DESC");
         $items = $model->get();
@@ -31,11 +51,27 @@ class PublishController extends CI_Controller {
         $data = [
             'pid' => 'index2',
             "data" => $items,
-            "member" => $member,
             "jl" => $this->jl
         ];
 
-        render('mall/index2', $data);
+        render('mall/index2_main', $data);
+    }
+
+
+    //mall
+    public function index2Page()
+    {
+        $model = new JlModel(array("table" => "bs_comparative"));
+        $model->orderBy("priority","DESC");
+        $items = $model->get();
+
+        $data = [
+            'pid' => 'index2',
+            "data" => $items,
+            "jl" => $this->jl
+        ];
+
+        render('mall/index2_main', $data);
     }
 
     public function resultPage()

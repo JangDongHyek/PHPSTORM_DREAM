@@ -3,6 +3,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 include_once('./_common.php');
 include_once(G5_THEME_MOBILE_PATH.'/head.php');
 include_once("../../../class/Lib.php");
+include_once("../../../jl/JlConfig.php");
 
 $jl = new JL();
 //신규 재능 상품
@@ -14,16 +15,47 @@ $big_ctg = ctg_list(0);
 
 <div id="wrapper">
 
-	<div class="area_visual">
-		<div class="visual_wrap">
-			<div class="area_obj"><img src="<?php echo G5_IMG_URL ?>/app/main_obj.png"></div>
-			<div class="area_txt">
-				<h3>다양한 분야의 방송 <br>전문가를 확인해보세요!</h3>
-				<span>고객님께 딱 맞는 전문가들이 기다리고 있습니다.</span>
-			</div>	
-		</div>			
-	</div>
 
+    <!--메인 상단배너-->
+    <div class="area_visual">
+        <div class="visual_wrap">
+            <div class="swiper visualSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="area_obj"><img src="<?php echo G5_IMG_URL ?>/app/main_obj.png"></div>
+                        <div class="area_txt">
+                            <h3>다양한 분야의 방송 <br>전문가를 확인해보세요!</h3>
+                            <span>고객님께 딱 맞는 전문가들이 기다리고 있습니다.</span>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/app/visual01.jpg">
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var swiper = new Swiper('.visualSwiper', {
+            spaceBetween: 0,
+            loop: true,
+            centeredSlides: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
+    <!--//메인 상단배너-->
 	<div id="content">
 		<div class="inr cate">
                     <ul id="cate_list" class="v2">
@@ -187,17 +219,324 @@ $big_ctg = ctg_list(0);
 
 			</section>*/?>
 
+
             <product-main-list member_idx="<?=$member['mb_no']?>" order_by_key="order_by_desc" order_by_value="insert_date" title="신규 재능 상품"></product-main-list>
+
+                <section>
+                    <h3 class="title">방송과 사람들 전문가 순위</h3>
+
+                    <div class="ranking r01">
+                        <ul class="nav nav-tabs" id="myTab">
+                            <li class="active"><a href="#tab1" data-toggle="tab">배우·모델</a></li>
+                            <li><a href="#tab2" data-toggle="tab">방송·스태프</a></li>
+                            <li><a href="#tab3" data-toggle="tab">레슨</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <main-product-ranking></main-product-ranking>
+                            <div class="tab-pane fade" id="tab2">
+                                <ul>
+                                    <li>
+                                        <p class="icon"><i class="fa-duotone fa-medal"></i></p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="name">
+                                                <p class="photo">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                                </p>
+                                                <strong>배우 안효섭</strong>
+                                            </div>
+                                            <div class="price">322,546,560원</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>2</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="name">
+                                                <p class="photo">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                                </p>
+                                                <strong>배우 안효섭</strong>
+                                            </div>
+                                            <div class="price">322,546,560원</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>3</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="name">
+                                                <p class="photo">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                                </p>
+                                                <strong>배우 안효섭</strong>
+                                            </div>
+                                            <div class="price">322,546,560원</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <button type="button" class="btn">더보기 <i class="fa-light fa-angle-down"></i></button>
+                            </div>
+                            <div class="tab-pane fade" id="tab3">
+                                <ul>
+                                    <li>
+                                        <p class="icon"><i class="fa-duotone fa-medal"></i></p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="name">
+                                                <p class="photo">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                                </p>
+                                                <strong>배우 안효섭</strong>
+                                            </div>
+                                            <div class="price">322,546,560원</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>2</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="name">
+                                                <p class="photo">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                                </p>
+                                                <strong>배우 안효섭</strong>
+                                            </div>
+                                            <div class="price">322,546,560원</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>3</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="name">
+                                                <p class="photo">
+                                                    <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                                </p>
+                                                <strong>배우 안효섭</strong>
+                                            </div>
+                                            <div class="price">322,546,560원</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <button type="button" class="btn">더보기 <i class="fa-light fa-angle-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ranking r02">
+                        <ul class="nav nav-tabs" id="myTab">
+                            <li class="active"><a href="#tab4" data-toggle="tab">영상·디자인</a></li>
+                            <li><a href="#tab5" data-toggle="tab">방송·마케팅</a></li>
+                            <li><a href="#tab6" data-toggle="tab">MC·행사·이벤트</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="tab4">
+                                <ul>
+                                    <li>
+                                        <p class="icon"><i class="fa-duotone fa-medal"></i></p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>2</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>3</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>4</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>5</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="tab5">
+                                <ul>
+                                    <li>
+                                        <p class="icon"><i class="fa-duotone fa-medal"></i></p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>2</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>3</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>4</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>5</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="tab6">
+                                <ul>
+                                    <li>
+                                        <p class="icon"><i class="fa-duotone fa-medal"></i></p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>2</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>3</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>4</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <p class="icon"><strong>5</strong>위</p>
+                                        <div class="img">
+                                            <img src="<?php echo G5_THEME_IMG_URL ?>/noimg.jpg">
+                                        </div>
+                                        <div class="text">
+                                            <div class="price">322,546,560원</div>
+                                            <div class="title">영화 촬영 스튜디오</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const ul = document.querySelector('.r02 .tab-content ul');
+
+                        // Scroll every 3 seconds
+                        setInterval(() => {
+                            ul.scrollBy({
+                                top: 0,
+                                left: 200, // Change this value based on your item width
+                                behavior: 'smooth'
+                            });
+                        }, 3000);
+                    });
+                </script>
+
+
+
+
+
                 <section>
                     <h3 class="title">프로젝트 의뢰</h3>
                     <div id="area_bn2" onclick="location.href='<?php echo G5_BBS_URL ?>/contest_list.php'">
-
                         <div class="txt">
-                            <span>방송과 사람들에서</span>
-                            <h2>프로젝트 의뢰 맡겨보세요!</h2>
+                            <span>방송과 사람들</span>
+                            <h2><strong>프로젝트 의뢰</strong> 맡겨보세요!</h2>
                         </div>
-
-
                     </div>
                 </section>
 
@@ -222,6 +561,7 @@ $big_ctg = ctg_list(0);
 <?php
 $jl->vueLoad("content");
 include_once($jl->ROOT."/component/product/product-main-list.php");
+include_once($jl->ROOT."/component/main/main-product-ranking.php");
 include_once(G5_PATH.'/tail.php');
 ?>
 

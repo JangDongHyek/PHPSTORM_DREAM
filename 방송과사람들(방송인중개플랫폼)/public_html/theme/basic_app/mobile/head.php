@@ -211,6 +211,8 @@ $jl->includeDir("/component/inc");
     <? if (defined('_INDEX_')) { ?>
     <div id="idx_container">
         <? }else { ?>
+        
+
         <!--서브메뉴-->
 
         <?php if ($_SERVER['QUERY_STRING'] == 'co_id=company') { ?>

@@ -79,7 +79,6 @@ function totalOrderKey($objects,$key,$info) {
 }
 
 
-
 ?>
 
 
@@ -137,9 +136,13 @@ function totalOrderKey($objects,$key,$info) {
             <div class="flex gap5">
                 <div class="input_select">
                     <select class="border_gray" id="search_key">
-                        <option value="mb_id" <?if($this->data['search_key'] == "mb_id") echo "selected"?>>판매자ID</option>
-                        <option value="PayNo" <?if($this->data['search_key'] == "PayNo") echo "selected"?>>결제번호</option>
                         <option value="OrderNo" <?if($this->data['search_key'] == "OrderNo") echo "selected"?>>주문번호</option>
+                        <option value="mb_id" <?if($this->data['search_key'] == "mb_id") echo "selected"?>>판매자ID</option>
+                        <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
+                        <option value="cp_name" <?if($this->data['search_key'] == "cp_name") echo "selected"?>>회사명</option>
+                        <option value="mb_name" <?if($this->data['search_key'] == "mb_name") echo "selected"?>>담당자</option>
+                        <?php } ?>
+                        <option value="PayNo" <?if($this->data['search_key'] == "PayNo") echo "selected"?>>결제번호</option>
                         <option value="SiteGoodsNo" <?if($this->data['search_key'] == "SiteGoodsNo") echo "selected"?>>상품번호</option>
                     </select>
                 </div>
@@ -195,6 +198,10 @@ function totalOrderKey($objects,$key,$info) {
                     <th>판매일자</th>
                     <th>구분</th>
                     <th>판매자코드/거래처명</th>
+                    <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
+                    <th>회사명</th>
+                    <th>담당자</th>
+                    <?php } ?>
                     <th>주문번호</th>
                     <th>구매자명(아이디)</th>
                 </tr>
@@ -211,15 +218,20 @@ function totalOrderKey($objects,$key,$info) {
                         <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
                     </td>
                     <td><?=$data['OutGoodsNo']?></td>
+
+                    <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
+                    <td><?=$data['cp_name']?></td>
+                    <td><?=$data['mb_name']?></td>
+                    <?php } ?>
                     <!--                <td><a data-toggle="modal" data-target="#orderSheetModal">--><?//=$data['OrderNo']?><!--</a></td>-->
                     <td><a><?=$data['OrderNo']?></a></td>
-                    <td><?=$data['BuyerName']?> (<?=$data['BuyerID']?>)</td>
+                    <td><?=$data['BuyerName']?> (<?=$data['BuyerId']?>)</td>
                 </tr>
             <?php }?>
             <?php if($this->data['orders']['count']) {?>
 
                 <tr class="sum">
-                    <td colspan="6">기간 내 합계</td>
+                    <td colspan="8">기간 내 합계</td>
                 </tr>
             <?php }else {?>
                 <tr>
@@ -407,7 +419,9 @@ function totalOrderKey($objects,$key,$info) {
     let search_value = "<?=$this->data['search_value']?>";
 
     function downExcel() {
-        window.location.href = "calculate/calcExcelDown"
+        let obj = getUrlParams()
+        let addUrl = getUrlQuery(obj);
+        window.location.href = "calculate/calcExcelDown?" + addUrl;
     }
 
     function getSelectData(select_day) {
@@ -443,6 +457,25 @@ function totalOrderKey($objects,$key,$info) {
         }
 
         objectHref(object);
+    }
+
+    function getUrlQuery(obj) {
+        return Object.keys(obj)
+            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`)
+            .join('&');
+    }
+
+    function getUrlParams() {
+        // URLSearchParams를 사용하여 쿼리 스트링을 처리
+        const params = new URLSearchParams(window.location.search);
+        const paramsObject = {};
+
+        // URLSearchParams의 모든 키-값 쌍을 객체에 추가
+        params.forEach((value, key) => {
+            paramsObject[key] = value;
+        });
+
+        return paramsObject;
     }
 
     function objectHref(object) {
