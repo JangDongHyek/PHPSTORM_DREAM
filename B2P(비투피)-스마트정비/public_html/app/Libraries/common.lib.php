@@ -27,6 +27,15 @@ function get_displayed($field, $value){
     return ($field==$value) ? ' block;' : 'none;';
 }
 
+function get_dateformat($date,$format = 'Y-m-d'){
+
+    if($date && $date != '0000-00-00' && $date != '0001-01-01' && $date != '0001-01-01 00:00:00' && $date != '0000-00-00 00:00:00' && $date != '0001-01-01T00:00:00' && $date != '1900-01-01'){
+        return date($format, strtotime( $date ) );
+    }else{
+        return ' ';
+    }
+}
+
 function createPagination($current_page, $total_items, $items_per_page, $url_prefix, $pages_to_show = 5) {
     
     //아이템없으면 아에안해줌
@@ -86,6 +95,150 @@ function createPagination($current_page, $total_items, $items_per_page, $url_pre
     // 맨 마지막 페이지 링크
     if ($end_page < $total_pages) {
         $last_page_query = http_build_query(array_merge($_GET, ['page' => $total_pages]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $last_page_query . '"><i class="fa-light fa-chevrons-right"></i></a></li>';
+    }
+
+    $pagination_html .= '</ul></nav>';
+
+    return $pagination_html;
+}
+
+function createPagination2($current_page, $total_items, $items_per_page, $url_prefix, $pages_to_show = 5) {
+
+    //아이템없으면 아에안해줌
+    if ($total_items <= 0) {
+        return '';
+    }
+    $total_pages = ceil($total_items / $items_per_page);
+    // 전체 페이지 수가 1 이하인 경우, 페이징 네비게이션을 출력할 필요가 없으므로 빈 문자열을 반환
+    if ($total_pages <= 1) {
+        return '';
+    }
+
+    $current_page = max(1, (int)$current_page);
+    $current_page = min($current_page, $total_pages);
+
+    // 현재 페이지 그룹 계산
+    $current_group = ceil($current_page / $pages_to_show);
+    $start_page = ($current_group - 1) * $pages_to_show + 1;
+    $end_page = min($start_page + $pages_to_show - 1, $total_pages);
+    $last_group_start = (ceil($total_pages / $pages_to_show) - 1) * $pages_to_show + 1;
+
+    // URL 설정
+    $url_components = parse_url($url_prefix);
+    $base_url = $url_components['scheme'] . '://' . $url_components['host'] . $url_components['path'];
+    $pagination_html = '<nav aria-label="Page navigation"><ul class="pagination">';
+
+    // 'page' 키를 제외한 $_GET 배열 생성
+    $query_params = array_diff_key($_GET, array_flip(['page']));
+    $query_params = array_diff_key($query_params, array_flip(['page3']));
+
+    // 맨 처음 페이지 링크
+    if ($current_page > $pages_to_show) {
+        $first_page_query = http_build_query(array_merge($query_params, ['page2' => 1]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $first_page_query . '"><i class="fa-light fa-chevrons-left"></i></a></li>';
+    }
+
+    // 이전 페이지 그룹 링크
+    if ($start_page > 1) {
+        $prev_group_page = $start_page - 1;
+        $prev_group_query = http_build_query(array_merge($query_params, ['page2' => $prev_group_page]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $prev_group_query . '"><i class="fa-regular fa-angle-left"></i></a></li>';
+    }
+
+    // 페이지 번호 링크
+    for ($i = $start_page; $i <= $end_page; $i++) {
+
+        $page_query = http_build_query(array_merge($query_params, ['page2' => $i]));
+        if ($i == $current_page) {
+            $pagination_html .= '<li class="page-item active"><span class="page-link">' . $i . '</span></li>';
+        } else {
+            $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $page_query . '">' . $i . '</a></li>';
+        }
+    }
+
+    // 다음 페이지 그룹 링크
+    if ($end_page < $total_pages) {
+        $next_group_page = $end_page + 1;
+        $next_group_query = http_build_query(array_merge($query_params, ['page2' => $next_group_page]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $next_group_query . '"><i class="fa-regular fa-angle-right"></i></a></li>';
+    }
+
+    // 맨 마지막 페이지 링크
+    if ($end_page < $total_pages) {
+        $last_page_query = http_build_query(array_merge($query_params, ['page2' => $total_pages]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $last_page_query . '"><i class="fa-light fa-chevrons-right"></i></a></li>';
+    }
+
+    $pagination_html .= '</ul></nav>';
+
+    return $pagination_html;
+}
+
+function createPagination3($current_page, $total_items, $items_per_page, $url_prefix, $pages_to_show = 5) {
+
+    //아이템없으면 아에안해줌
+    if ($total_items <= 0) {
+        return '';
+    }
+    $total_pages = ceil($total_items / $items_per_page);
+    // 전체 페이지 수가 1 이하인 경우, 페이징 네비게이션을 출력할 필요가 없으므로 빈 문자열을 반환
+    if ($total_pages <= 1) {
+        return '';
+    }
+
+    $current_page = max(1, (int)$current_page);
+    $current_page = min($current_page, $total_pages);
+
+    // 현재 페이지 그룹 계산
+    $current_group = ceil($current_page / $pages_to_show);
+    $start_page = ($current_group - 1) * $pages_to_show + 1;
+    $end_page = min($start_page + $pages_to_show - 1, $total_pages);
+    $last_group_start = (ceil($total_pages / $pages_to_show) - 1) * $pages_to_show + 1;
+
+    // URL 설정
+    $url_components = parse_url($url_prefix);
+    $base_url = $url_components['scheme'] . '://' . $url_components['host'] . $url_components['path'];
+    $pagination_html = '<nav aria-label="Page navigation"><ul class="pagination">';
+
+    // 'page' 키를 제외한 $_GET 배열 생성
+    $query_params = array_diff_key($_GET, array_flip(['page']));
+    $query_params = array_diff_key($query_params, array_flip(['page2']));
+
+    // 맨 처음 페이지 링크
+    if ($current_page > $pages_to_show) {
+        $first_page_query = http_build_query(array_merge($query_params, ['page3' => 1]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $first_page_query . '"><i class="fa-light fa-chevrons-left"></i></a></li>';
+    }
+
+    // 이전 페이지 그룹 링크
+    if ($start_page > 1) {
+        $prev_group_page = $start_page - 1;
+        $prev_group_query = http_build_query(array_merge($query_params, ['page3' => $prev_group_page]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $prev_group_query . '"><i class="fa-regular fa-angle-left"></i></a></li>';
+    }
+
+    // 페이지 번호 링크
+    for ($i = $start_page; $i <= $end_page; $i++) {
+
+        $page_query = http_build_query(array_merge($query_params, ['page3' => $i]));
+        if ($i == $current_page) {
+            $pagination_html .= '<li class="page-item active"><span class="page-link">' . $i . '</span></li>';
+        } else {
+            $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $page_query . '">' . $i . '</a></li>';
+        }
+    }
+
+    // 다음 페이지 그룹 링크
+    if ($end_page < $total_pages) {
+        $next_group_page = $end_page + 1;
+        $next_group_query = http_build_query(array_merge($query_params, ['page3' => $next_group_page]));
+        $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $next_group_query . '"><i class="fa-regular fa-angle-right"></i></a></li>';
+    }
+
+    // 맨 마지막 페이지 링크
+    if ($end_page < $total_pages) {
+        $last_page_query = http_build_query(array_merge($query_params, ['page3' => $total_pages]));
         $pagination_html .= '<li class="page-item"><a class="page-link" href="' . $base_url . '?' . $last_page_query . '"><i class="fa-light fa-chevrons-right"></i></a></li>';
     }
 
@@ -232,66 +385,168 @@ function isNum($str) {
     }
 }
 
-/*
-====================================================================
-1. 문자박스 로그인
-http://biz2.smsbox.co.kr/
-ID : letskt080
-PW : 3001jun
-
-2. 마이페이지 - 회신번호관리 - 회신번호등록
-관리계정
-1. sms만 사용		: letskt0802 (165서버)
-2. mms 함께 사용	: seongu (184서버)
-
-3. DB정보
-letskt0802 계정 : http://211.51.221.165/_phpMyadmin/
----------------------------------------------------------------------
-*/
-function goSms($reserv_phone, $msg, $send_phone="0518910088")
+/**
+ * 바로빌 문자발송
+ */
+function goSms($reserv_phone, $Contents, $Subject="")
 {
-    return;
-    //lets0802
-    $conn_db = mysqli_connect("211.51.221.165", "emma", "wjsghk!@#", "emma");
-    $mart_id = "b2p";			//계정명
 
-    $number_receive_people = 0;
-    $tran_phone1 = $reserv_phone;			// 수신번호
-    $tran_callback1 = $send_phone;			// 발신번호
-    $msg1 = $msg;							// 문자내용
-    $send_date = date("YmdHis");
+    $reserv_phone = trim(str_replace("-", "", $reserv_phone));
 
-    $sql = "select count(tran_pr) cnt from emma.em_all_log
-            where tran_date like '".G5_TIME_YMD."%' and tran_phone = '{$reserv_phone}' ";
+    $url = "https://ws.baroservice.com/SMS.asmx?wsdl";
+    $BaroService_SMS = new SoapClient($url, array(
+        'trace' => 'true',
+        'encoding' => 'UTF-8'
+    ));
 
-    $result = mysqli_query($conn_db,$sql);
-    $result = mysqli_fetch_array($result);
-    //6회부터 오류창 표시
-    if ($result['cnt'] > 20){
-        //die(json_encode(array( 'msg' => "하루 인증횟수(20회)를 초과하였습니다.")));
-        //exit();
+    $CERTKEY = '98D43872-6E8F-4BD1-BA03-E0216746D644';
+    $CorpNum = '7338802620';
+    $SenderID = 'pumpkin';
+    $FromNumber = '1522-6605';
+    $ToName = '';
+    $ToNumber = $reserv_phone;
+    $SendDT = '';
+    $RefKey = '';
+
+    $SendKey = $BaroService_SMS->SendLMSMessage([
+        'CERTKEY' => $CERTKEY,
+        'CorpNum' => $CorpNum,
+        'SenderID' => $SenderID,
+        'FromNumber' => $FromNumber,
+        'ToName' => $ToName,
+        'ToNumber' => $ToNumber,
+        'Subject' => $Subject,
+        'Contents' => $Contents,
+        'SendDT' => $SendDT,
+        'RefKey' => $RefKey,
+    ])->SendLMSMessageResult;
+
+/*    $sendState = $BaroService_SMS->GetSMSSendState([
+        'CERTKEY' => $CERTKEY,
+        'CorpNum' => $CorpNum,
+        'SendKey' => $SendKey,
+    ])->GetSMSSendStateResult;
+
+    $sms_result = 1;
+    if ($sendState != 0 && $sendState != 0) { // 실패
+        $sms_result = 0;
     }
-    if(!$tran_callback1){
-        //die(json_encode(array( 'msg' => "전화번호가 잘못되었습니다. 다시 입력해주세요.")));
-        exit();
+
+    $Subject = sql_real_escape_string($Subject);
+    $Contents = sql_real_escape_string($Contents);
+    $SendKey = sql_real_escape_string($SendKey);
+
+    $sql = "insert into `sms_log` set `receive_number` = '$reserv_phone', `subject` = '$Subject', `contents` = '$Contents', `sms_result` = '$sms_result', `sms_no` = '$SendKey'";
+    sql_query($sql);*/
+
+    return $SendKey;
+
+}
+
+// 정산데이터 가공
+function processOrder($order) {
+    //데이터 재선언
+    // 빈값 및 소수점 절사를 위한 데이터 재 선언
+    $order['SellerCashbackMoney'] = $order['SellerCashbackMoney'] ? (int)$order['SellerCashbackMoney'] : 0;
+    $order['SellerDiscountTotalPrice'] = $order['SellerDiscountTotalPrice'] ? (int)$order['SellerDiscountTotalPrice'] : 0;
+    $order['OrderAmount'] = $order['OrderAmount'] ? (int)$order['OrderAmount'] : 0;
+    $order['SettlementPrice'] = $order['SettlementPrice'] ? (int)$order['SettlementPrice'] : 0;
+    $order['DirectDiscountPrice'] = $order['DirectDiscountPrice'] ? (int)$order['DirectDiscountPrice'] : 0;
+    $order['SellerFundingDiscountPrice'] = $order['SellerFundingDiscountPrice'] ? (int)$order['SellerFundingDiscountPrice'] : 0;
+    $order['DeductTaxPrice'] = $order['DeductTaxPrice'] ? (int)$order['DeductTaxPrice'] : 0;
+    $order['BuyerPayAmt'] = $order['BuyerPayAmt'] ? (int)$order['BuyerPayAmt'] : 0;
+    $order['ServiceFee'] = $order['ServiceFee'] ? (int)$order['ServiceFee'] : 0;
+    $order['b2p_kcp_price'] = $order['b2p_kcp_price'] ? (int)$order['b2p_kcp_price'] : 0;
+    $order['b2p_cp_fee_price'] = $order['b2p_cp_fee_price'] ? (int)$order['b2p_cp_fee_price'] : 0;
+    $order['DeductTaxPrice'] = abs($order['DeductTaxPrice']);
+    $order['TotCommission'] = abs($order['TotCommission']);
+
+
+
+    //주문금액
+    $OrderAmount = (int)$order['SellOrderPrice'] + (int)$order['OptionPrice'];
+    //b2p 수수료
+    $b2p_cost = $order['b2p_cost'];
+    // 카테고리 수수료
+    $category_fee_cost = $order['TotCommission'] - $order['DeductTaxPrice'] + $b2p_cost;
+    //b2p 카드 수수료 퍼센트
+    $b2p_kcp_fee = $order['b2p_kcp_fee'] ? : 0;
+    //b2p 셀러별 카드 페이백 퍼센트
+    $b2p_cp_fee = $order['b2p_cp_fee'] ? : 0;
+
+    //판매자 할인 / 공제금
+    $SellerDiscountPrice = $order['SiteType'] == 1 ? $order['SellerDiscountTotalPrice'] : $order['SellerDiscountPrice'];
+    $totalDiscount = 0;
+    $totalDiscount += $SellerDiscountPrice;
+
+
+    // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
+    if($order['SiteType'] == 1) {
+        $category_fee_cost += $order['DeductTaxPrice'];
+    }else {
+        $category_fee_cost -= $order['SellerCashbackMoney'];;
+        $totalDiscount += $order['SellerCashbackMoney'];
+        $totalDiscount += $order['SellerFundingDiscountPrice'];
+
+        $totalDiscount += $order['DeductTaxPrice'];
     }
 
-    $tran_msg1 = iconv("UTF-8", "EUC-KR", $msg1);
 
-    $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1')";
-    $result = mysqli_query($conn_db, $sms_query);
-    if(!$result) {
-        //echo mysql_error();
-        return false;
+
+    // 배송비 및 배송비 수수료 관련
+    $dl_DelFeeAmt = $order['ShippingFee'];
+    $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
+    $b2p_shipping_fee = $dl_DelFeeAmt * 0;
+
+    // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
+    if($order['SiteType'] == 1) {
+        $b2p_shipping_fee = round($b2p_shipping_fee);
+        $dl_DelFeeCommission = round($dl_DelFeeCommission);
+    }else {
+        $b2p_shipping_fee = ceil($b2p_shipping_fee);
+        $dl_DelFeeCommission = ceil($dl_DelFeeCommission);
     }
 
-    //전체기록남기기
-    $all_query = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1',curdate())";
-    $result2 = mysqli_query($conn_db, $all_query);
+    //부가세
+    $surTax = round($order['BuyerPayAmt'] / 11);// B2P 부가세 = 고객 결제금 / 11
+    $b2p_surTax = round($calcPrice / 11);// 셀러 부가세 = 정산예정금액 / 11
+    $b2p_surTax = ceil($b2p_surTax);
+    $refund = $surTax - $b2p_surTax;
 
-    $query = "Insert into tbl_sms(f_idno,f_from_phone,f_to_phone,f_comment,f_wdate) values('$mart_id','$tran_callback1','$tran_phone1','$tran_msg1','$send_date')";
-    mysqli_query($conn_db,$query);
 
+
+
+    $totalCommission = $category_fee_cost + $totalDiscount + $dl_DelFeeCommission + $b2p_shipping_fee;
+
+    $calcPrice = ($OrderAmount + ($dl_DelFeeAmt - $dl_DelFeeCommission - $b2p_shipping_fee));
+    $calcPrice -= $category_fee_cost;
+    $calcPrice -= $totalDiscount;
+
+    $b2p_kcp_price = round($calcPrice * ($b2p_kcp_fee / 100));
+    $b2p_cp_fee_price = round($calcPrice * ($b2p_cp_fee / 100));
+
+    $calcPrice -= ($b2p_kcp_price - $b2p_cp_fee_price);
+
+    $b2p = array(
+        "OrderAmount" => $OrderAmount,                  // 주문금액
+        "category_fee_cost" => $category_fee_cost,      // 카테고리 수수료
+        "totalDiscount" => $totalDiscount,              // 판매자 할인금액
+        "SellerDiscountPrice" => $SellerDiscountPrice,  // 쿠폰할인
+        "calcPrice" => $calcPrice,                      // 정산 금액
+        "dl_DelFeeAmt" => $dl_DelFeeAmt,                // 배송금액
+        "dl_DelFeeCommission" => $dl_DelFeeCommission,  // 배송비 수수료
+        "b2p_shipping_fee" => $b2p_shipping_fee,        // b2p 배송비 수수료
+        "surTax" => $surTax,                            // 부가세
+        "b2p_surTax" => $b2p_surTax,                    // b2p 부가세
+        "refund" => $refund,                            // 총부가세
+        "totalCommission" => $totalCommission,          // 카테고리,판매자 할인총금액,배송비수수료
+        "new_b2p_kcp_price" => $b2p_kcp_price,          // 새로 바뀐 카드수수료
+        "new_b2p_cp_fee_price" => $b2p_cp_fee_price,    // 새로 바뀌 카드 페이백
+    );
+
+    $order['b2p'] = $b2p;
+
+    return $order;
 }
 
 ?>

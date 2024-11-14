@@ -14,8 +14,10 @@ $routes->get('common/logout', 'LoginController::logout');
 $routes->post('common/login/authenticate', 'LoginController::authenticate');
 $routes->cli('queueprocessor/(:any)', 'QueueProcessor::$1');
 
-$routes->get('/api/resve/confirm','UserController::resveConfirm');
-$routes->get('/api/maintenance/result','UserController::maintenanceReulst');
+// POST와 GET 요청 모두 허용
+$routes->match(['get', 'post'], '/api/resve/confirm', 'UserController::resveConfirm');
+$routes->match(['get', 'post'], '/api/maintenance/result', 'UserController::maintenanceResult');
+$routes->match(['get', 'post'], '/api/resve/delivery', 'UserController::resveDelivery');
 
 // 회원가입
 $routes->group('signup', ['namespace' => '\App\Controllers'], static function ($routes) {
@@ -62,6 +64,7 @@ $routes->group('member', ['namespace' => '\App\Controllers' , 'filter' => 'auth:
     $routes->get('sellerFee', 'MemberController::member_seller_fee');
     $routes->get('sellerView', 'MemberController::member_seller_view');
     $routes->get('sellerGoods', 'MemberController::member_seller_goods');
+    $routes->post('setCpSize', 'MemberController::setCpSize');
 });
 
 $routes->group('excel', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function($routes){
@@ -171,10 +174,12 @@ $routes->group('admin', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     // 공지사항
     $routes->get('notice', 'AdminController::notice_list');
     $routes->get('noticeWrite', 'AdminController::notice_write');
+    $routes->get('noticeView', 'AdminController::notice_view');
 
     // Q&A
     $routes->get('qna', 'AdminController::qna_list');
     $routes->get('qnaView', 'AdminController::qna_view');
+    $routes->get('qnaWrite', 'AdminController::qna_write');
 
     // 메시지관리
     $routes->get('msg', 'AdminController::msg_list');
@@ -237,7 +242,7 @@ $routes->group('order', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     $routes->get('exchangeExcelDown', 'OrderController::ExchangeExcelDown');
 
     // 주문통합검색
-    $routes->get('search', 'AdminController::order_search');
+    $routes->get('search', 'OrderController::Searchlist');
     
     //주문가져오기
     $routes->post('GetOrder', 'OrderController::GetOrderByIdx');
@@ -265,10 +270,33 @@ $routes->group('calculate', ['namespace' => '\App\Controllers' , 'filter' => 'au
     /*24.07.01*/
     // 옥션판매
     $routes->get('auction', 'CalculateController::auction_list');
+    // 옥션판매 엑셀다운
+    $routes->get('auctionListExcelDown', 'CalculateController::auctionListExcelDown');
+    // 옥션판매 상세내역 엑셀다운
+    $routes->get('auctionDeliveryFeeExcelDown', 'CalculateController::auctionDeliveryFeeExcelDown');
+    // 지마켓 구매자 부담/환급금 엑셀다운
+    $routes->get('auctionRefundExcelDown', 'CalculateController::auctionRefundExcelDown');
+
     // 지마켓판매
     $routes->get('gmarket', 'CalculateController::gmarket_list');
+    // 지마켓 미정산
+    $routes->get('gmarket_settleNo', 'CalculateController::gmarket_settleNo_list');
+    // 지마켓판매 엑셀다운
+    $routes->get('gmarketListExcelDown', 'CalculateController::gmarketListExcelDown');
+    // 지마켓배송비 상세내역 엑셀다운
+    $routes->get('gmarketDeliveryFeeExcelDown', 'CalculateController::gmarketDeliveryFeeExcelDown');
+    // 지마켓 구매자 부담/환급금 엑셀다운
+    $routes->get('gmarketRefundExcelDown', 'CalculateController::gmarketRefundExcelDown');
+
+    // 지마켓 미정산 엑셀다운
+    $routes->get('gmarketSettleNoListExcelDown', 'CalculateController::gmarketSettleNoListExcelDown');
+    // 지마켓 미정산 배송비 엑셀다운
+    $routes->get('gmarketSettleNoDeliveryFeeExcelDown', 'CalculateController::gmarketSettleNoDeliveryFeeExcelDown');
+
     // 정산관리
     $routes->get('/', 'AdminController::calculate_view');
+    // 정산관리 엑셀 다운로드
+    $routes->get('calcExcelDown', 'CalculateAPIController::downloadExcel');
     // 정산관리 뷰페이지 관련 API
     $routes->post('/api/getData', 'CalculateAPIController::getData');
 });
@@ -345,9 +373,12 @@ $routes->group('user', ['namespace' => '\App\Controllers'], static function ($ro
     $routes->get('rvDone', 'UserController::rv_list02');
     $routes->get('rvWrite', 'UserController::rv_write');
     $routes->get('rvConfirm', 'UserController::rv_confirm');
+    $routes->get('subsidy', 'UserController::subsidy');
 
     // 예약관리
     $routes->get('reserv', 'UserController::reserv_list', ['filter' => 'auth']);
+    $routes->get('reserv_view', 'UserController::reserv_view', ['filter' => 'auth']);
+
 
 
     $routes->post('ajax_check_order', 'UserController::ajax_check_order');
@@ -355,6 +386,7 @@ $routes->group('user', ['namespace' => '\App\Controllers'], static function ($ro
     $routes->get('getStoreFromApi', 'UserController::getStoreFromApi');
     $routes->post('getReservationDataFromApi', 'UserController::getReservationDataFromApi');
     $routes->post('saveReservation', 'UserController::saveReservation');
+    $routes->post('postBadreamApi','UserController::postBadreamApi');
 });
 
 // 관리자
@@ -363,7 +395,10 @@ $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($
     $routes->get('GetOrder/(:segment)/(:segment)', 'OrderController::GetOrder/$1/$2');
 
     //정산 목록 가져오기
-    $routes->get('GetSettleOrder/(:segment)', 'OrderController::GetSettleOrder/$1');
+    $routes->get('GetSettleOrder/(:segment)/(:segment)', 'OrderController::GetSettleOrder/$1/$2');
+    
+    //정산 배송비 가져오기
+    $routes->get('GetSettleDeliveryFee/(:segment)/(:segment)', 'OrderController::GetSettleDeliveryFee/$1/$2');
 
     //주문취소 목록 가져오기
     $routes->get('GetOrderCancel/(:segment)', 'OrderController::GetOrderCancel/$1');
@@ -393,6 +428,10 @@ $routes->group('order', ['namespace' => '\App\Controllers' ], static function ($
     //반품보류
     $routes->get('OrderReturnHold', 'OrderController::OrderReturnHold');
     $routes->post('OrderReturnHold', 'OrderController::OrderReturnHold');
+
+    //교환건 반품전환
+    $routes->get('OrderExchangeReturn', 'OrderController::OrderExchangeReturn');
+    $routes->post('OrderExchangeReturn', 'OrderController::OrderExchangeReturn');
 
     //판매자 직접 반품 신청
     $routes->get('OrderReturnSelf/(:segment)', 'OrderController::OrderReturnSelf/$1');
@@ -495,6 +534,8 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     //배치키로 결제하는곳
     $routes->get('OrderPay', 'PayController::OrderPay');
     $routes->post('OrderPay', 'PayController::OrderPay');
+    $routes->get('OrderPayAutoPage', 'PayController::OrderPayAutoPage');
+    $routes->post('OrderPayAutoPage', 'PayController::OrderPayAutoPage');
     $routes->get('OrderPayPop', 'PayController::OrderPayPop');
     $routes->post('OrderPayPop', 'PayController::OrderPayPop');
     $routes->get('OrderPayResult', 'PayController::OrderPayResult');
@@ -507,12 +548,18 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     //KCP 가상계좌 받는곳
     $routes->get('OrderVcnt', 'PayController::OrderVcnt');
     $routes->post('OrderVcnt', 'PayController::OrderVcnt');
+    $routes->get('OrderVcntAutoPage', 'PayController::OrderVcntAutoPage');
+    $routes->post('OrderVcntAutoPage', 'PayController::OrderVcntAutoPage');
     $routes->get('OrderVcntPop', 'PayController::OrderVcntPop');
     $routes->post('OrderVcntPop', 'PayController::OrderVcntPop');
     $routes->get('OrderVcntResult', 'PayController::OrderVcntResult');
     $routes->post('OrderVcntResult', 'PayController::OrderVcntResult');
     $routes->get('OrderVcntNoti', 'PayController::OrderVcntNoti');
     $routes->post('OrderVcntNoti', 'PayController::OrderVcntNoti');
+    $routes->get('OrderVcntAuto/(:segment)', 'PayController::OrderVcntAuto/$1');
+    $routes->post('OrderVcntAuto/(:segment)', 'PayController::OrderVcntAuto/$1');
+    $routes->get('OrderVcntAuto', 'PayController::OrderVcntAuto');
+    $routes->post('OrderVcntAuto', 'PayController::OrderVcntAuto');
 
     //KCP 가상계좌 취소하는곳
     $routes->get('OrderVcntCancle', 'PayController::OrderVcntCancle');
@@ -521,13 +568,6 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->post('OrderVcntCanclePop', 'PayController::OrderVcntCanclePop');
     $routes->get('OrderVcntCancleResult', 'PayController::OrderVcntCancleResult');
     $routes->post('OrderVcntCancleResult', 'PayController::OrderVcntCancleResult');
-
-    //펌뱅킹 잔액확인
-    $routes->get('GetFirmBalance', 'PayController::GetFirmBalance');
-    $routes->post('GetFirmBalance', 'PayController::GetFirmBalance');
-    //펌뱅킹 지급이체(송금)
-    $routes->get('GetFirmTransfer', 'PayController::GetFirmTransfer');
-    $routes->post('GetFirmTransfer', 'PayController::GetFirmTransfer');
 
     //매입요청 하는 곳
     $routes->get('OrderPerchase/(:segment)', 'PayController::OrderPerchase/$1');
@@ -554,6 +594,34 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     
     //주문 결제하는곳
     $routes->get('OrderPayAuto/(:segment)', 'PayController::OrderPayAuto/$1');
+    $routes->get('OrderPayAuto', 'PayController::OrderPayAuto');
+    $routes->post('OrderPayAuto', 'PayController::OrderPayAuto');
+
+    //펌뱅킹 송금요청하는 곳
+    $routes->get('OrderGetFirmTransferAutoPage', 'PayController::OrderGetFirmTransferAutoPage');
+    $routes->post('OrderGetFirmTransferAutoPage', 'PayController::OrderGetFirmTransferAutoPage');
+    //펌뱅킹 잔액확인
+    $routes->get('GetFirmBalance', 'PayController::GetFirmBalance');
+    $routes->post('GetFirmBalance', 'PayController::GetFirmBalance');
+    //펌뱅킹 지급이체(송금)
+    $routes->get('GetFirmTransfer/(:segment)', 'PayController::GetFirmTransfer/$1');
+    $routes->post('GetFirmTransfer/(:segment)', 'PayController::GetFirmTransfer/$1');
+    $routes->get('GetFirmTransfer', 'PayController::GetFirmTransfer');
+    $routes->post('GetFirmTransfer', 'PayController::GetFirmTransfer');
+    //펌뱅킹 지급이체확인
+    $routes->get('OrderGetFirmTransferCheckAutoPage', 'PayController::OrderGetFirmTransferCheckAutoPage');
+    $routes->post('OrderGetFirmTransferCheckAutoPage', 'PayController::OrderGetFirmTransferCheckAutoPage');
+    //펌뱅킹 지급이체확인(송금)
+    $routes->get('GetFirmTransferCheck/(:segment)', 'PayController::GetFirmTransferCheck/$1');
+    $routes->post('GetFirmTransferCheck/(:segment)', 'PayController::GetFirmTransferCheck/$1');
+    $routes->get('GetFirmTransferCheck', 'PayController::GetFirmTransferCheck');
+    $routes->post('GetFirmTransferCheck', 'PayController::GetFirmTransferCheck');
+    //펌뱅킹 원화명세통지
+    $routes->get('SetDoznNoti', 'PayController::SetDoznNoti');
+    $routes->post('SetDoznNoti', 'PayController::SetDoznNoti');
+    //펌뱅킹 타행이체불능통지
+    $routes->get('SetDoznErrorNoti', 'PayController::SetDoznErrorNoti');
+    $routes->post('SetDoznErrorNoti', 'PayController::SetDoznErrorNoti');
 
 });
 

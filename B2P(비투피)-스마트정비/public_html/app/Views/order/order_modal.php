@@ -192,16 +192,15 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             var OrderNo = response['result']['OrderNo'];
             var response2 = await fetchData(`/order/GetCalc/${OrderNo}`);
             var calc_data = null;
-            if (response2.count) {
-                calc_data = response2['data'][0];
-                calc_data['TotCommission'] = Math.abs(calc_data['TotCommission']);
-                calc_data['DeductTaxPrice'] = Math.abs(calc_data['DeductTaxPrice'])
+            console.log(response2);
+            if (response2) {
+                calc_data = response2;
             }
 
             let style = calc_data ? "" : "class='color-red';";
 
             // 판매금액
-            var OrderAmount = calc_data ? calc_data['SellOrderPrice'] + calc_data['OptionPrice'] : response['result']['OrderAmount']
+            var OrderAmount = calc_data ? calc_data['b2p']['OrderAmount'] : response['result']['OrderAmount']
 
             // 카테고리 이용료
             let ServiceFee = 0;
@@ -212,25 +211,21 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             }
 
             if (calc_data) {
-                ServiceFee = calc_data['TotCommission'];
-                ServiceFee = ServiceFee - calc_data['DeductTaxPrice'];  // 토탈 카테고리 이용료에 기타이용료 를 뺸후 판매자 할인공제에 더한다
-                //ServiceFee = Math.round(calc_data['category_fee_cost']);
+                ServiceFee = calc_data['b2p']['category_fee_cost'];
             }
-
-            // b2p 수수료
-            //var b2p_fee = OrderAmount * b2p_commission;            // b2p
-            //b2p_fee = Math.ceil(b2p_fee);
-            var b2p_fee = response['result']['b2p_cost'];
-
-            ServiceFee += parseInt(b2p_fee);
 
 
             // 카드 수수료
             var BuyerPayAmt = response['result']['AcntMoney']; //구매자 결제금액
             var KCPServiceFee = response['result']['b2p_kcp_price'] // 카드 수수료
             var KCPPayBack = response['result']['b2p_cp_fee_price'] // 카드 페이백
-            //KCPServiceFee = Math.floor(KCPServiceFee); //소수점 버림
-            //KCPPayBack = Math.floor(KCPPayBack); //소수점 버림
+
+            if (calc_data) {
+                KCPServiceFee = calc_data['b2p']['new_b2p_kcp_price'];
+                KCPPayBack = calc_data['b2p']['new_b2p_cp_fee_price'];
+            }
+
+
             var total_fee = KCPServiceFee - KCPPayBack;// 자체 수수료 (판매금액의 5퍼센트)
 
 
@@ -259,23 +254,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
             // 판매자할인 / 공제금 정산데이터있을때
             if(calc_data) {
-                totalDiscount = 0;
-                SellerDiscountPrice = response['result']['SiteType'] == '1' ? calc_data['SellerDiscountTotalPrice'] : response['result']['SellerDiscountPrice'];
-                console.log(`SellerDiscountPrice : ${SellerDiscountPrice}`);
-                console.log(`DeductTaxPrice : ${calc_data['DeductTaxPrice']}`);
-                totalDiscount += parseInt(SellerDiscountPrice)
-
-                if(response['result']['SiteType'] == '1') {
-                    ServiceFee += parseInt(calc_data['DeductTaxPrice']);
-                }else {
-                    ServiceFee -= parseInt(SellerCashbackMoney);
-                    totalDiscount += parseInt(SellerCashbackMoney);
-                    totalDiscount += parseInt(SellerFundingDiscountPrice);
-
-                    totalDiscount += parseInt(calc_data['DeductTaxPrice']);
-
-                }
-
+                totalDiscount = calc_data['b2p']['totalDiscount'];
             }
 
 
@@ -302,42 +281,36 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                 dl_DelFeeCommission = Math.ceil(dl_DelFeeCommission);
             }
 
-            var SettlementPrice = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
-            var SettlementPrice2 = calc_data ? calc_data['SettlementPrice'] : response['result']['SettlementPrice']
-
-            //부가적인 설정
-            totalDiscount = totalDiscount * -1;     // 음수화
-            if (ServiceFee > 0) ServiceFee = ServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
-            if (KCPServiceFee > 0) KCPServiceFee = KCPServiceFee * -1;    // 정산데이터가없을경우 양수로 오기때문에 양수일때 음수화
-
-            ServiceFee = ServiceFee + parseInt(SellerCashbackMoney); // 음수일테니 플러스해서 빼기 처리
-            let CostPrice = OrderAmount - (ServiceFee * -1);
+            var SettlementPrice = calc_data ? calc_data['b2p']['calcPrice'] : response['result']['SettlementPrice']
+            let CostPrice = parseInt(OrderAmount) - parseInt(ServiceFee);
             //SettlementPrice = SettlementPrice - b2p_fee - total_fee - dl_DelFeeCommission - b2p_shipping_fee;
-            SettlementPrice = ( OrderAmount + dl_DelFeeAmt -dl_DelFeeCommission + b2p_shipping_fee ) - ( Math.abs(ServiceFee) + Math.abs(totalDiscount) + Math.abs(total_fee)); // + ( 1 + 11 )  - ( 2 + 4 + 8 )
-            SettlementPrice = Math.round(SettlementPrice);
-            // 부가세
-            //let surTax = OrderAmount * 0.1;
+
             let surTax = Math.round(BuyerPayAmt / 11);  // B2P 부가세 = 고객 결제금 / 11
-            //let b2p_surTax = surTax * 0.05; // 부가세 / (b2p수수료)
             let b2p_surTax = Math.round(SettlementPrice / 11); // 셀러 부가세 = 정산예정금액 / 11
             b2p_surTax = Math.ceil(b2p_surTax) // b2p 부가세 올림처리
             let refund = surTax*1 - b2p_surTax*1; // 차액
+
+            if(calc_data) {
+                surTax = calc_data['b2p']['surTax']
+                b2p_surTax = calc_data['b2p']['b2p_surTax']
+                refund = calc_data['b2p']['refund']
+            }
 
             code_html += `<tr ${style}>`;
             code_html += '<td>' + response['result']['OrderNo'] + '</td>'; // 주문번호
             code_html += '<td>' + response['result']['GoodsName'] + '</td>'; // 상품명
             code_html += '<td>' + AddComma(OrderAmount) + '</td>';  // 판매금액
-            code_html += '<td>' + AddComma(ServiceFee) + '</td>';   // 기본 서비스 이용료
+            code_html += '<td>-' + AddComma(ServiceFee) + '</td>';   // 기본 서비스 이용료
             code_html += '<td>' + AddComma(CostPrice) + '</td>';    // 공급원가
             //code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(totalDiscount) + '</td>';    // 판매자할인/공제금
             code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';      // 고객 결제 금액
-            code_html += '<td>' + AddComma(KCPServiceFee) + '</td>';    // kcp 수수료
+            code_html += '<td>-' + AddComma(KCPServiceFee) + '</td>';    // kcp 수수료
             code_html += '<td>' + AddComma(KCPPayBack) + '</td>'; // kcp 캐시백
             code_html += '<td>' + AddComma(total_fee) + '</td>';    // kcp 합계
 
             code_html += '<td>' + AddComma(dl_DelFeeAmt) + '</td>';     // 배송비
-            code_html += '<td>' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 수수료
+            code_html += '<td>-' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 수수료
             code_html += '<td>' + AddComma(dl_DelFeeAmt -dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 합계
 
             //code_html += '<td>' + AddComma(surTax) + '</td>';     // 부가세 -> B2P 부가세
@@ -389,14 +362,14 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
         $('#orderAmountModal_list').html(code_html);
         $('#modal_OrderAmount_total').html(AddComma(OrderAmount_total));
-        $('#modal_ServiceFee_total').html(AddComma(ServiceFee_total));
-        $('#modal_KCPServiceFee_total').html(AddComma(KCPServiceFee_total));
+        $('#modal_ServiceFee_total').html('-'+AddComma(ServiceFee_total));
+        $('#modal_KCPServiceFee_total').html('-'+AddComma(KCPServiceFee_total));
         $('#modal_CostPrice_total').html(AddComma(CostPrice_total));
-        $('#modal_SellerDiscountPrice_total').html(AddComma(SellerDiscountPrice_total));
+        $('#modal_SellerDiscountPrice_total').html('-'+AddComma(SellerDiscountPrice_total));
         $('#modal_SettlementPrice_total').html(AddComma(SettlementPrice_total));
 
         $('#modal_dl_DelFeeAmt_total').html(AddComma(dl_DelFeeAmt_total));
-        $('#modal_dl_DelFeeCommission_total').html(AddComma(dl_DelFeeCommission_total));
+        $('#modal_dl_DelFeeCommission_total').html('-'+AddComma(dl_DelFeeCommission_total));
 
         $('#modal_surTax_total').html(AddComma(surTax_total));
         $('#modal_b2p_surTax_total').html(AddComma(b2p_surTax_total));
@@ -5133,7 +5106,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     <tr>
                         <td>보류사유</td>
                         <td>
-                            <select id="returnModal_ResendInfo_HoldReason">
+                            <select id="returnModal_ResendInfo_HoldReason" onchange="if(this.value == 2){ $('#returnModal_ReturnShippingFee_box').show() }else{ $('#returnModal_ReturnShippingFee_box').hide()}">
                                 <option value="0">기타유보사유</option>
                                 <option value="2">추가반품비청구(기타반품비)</option>
                                 <option value="4">반품미입고</option>
@@ -5145,7 +5118,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                         <td><input type="text" class="border_gray" id="returnModal_ResendInfo_HoldReasonDetail"/>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="returnModal_ReturnShippingFee_box" style="display:none;">
                         <td>추가반품배송비</td>
                         <td><input type="number" class="border_gray" id="returnModal_ReturnShippingFee" value="0"/>
                         </td>

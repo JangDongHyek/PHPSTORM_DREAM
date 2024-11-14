@@ -66,6 +66,7 @@ include_once('./admin.head.php');
                 <th>선정</th>
                 <th>최초보고일</th>
                 <th>활동링크</th>
+                <th>활동사진</th>
                 <th>설명 / 수정요청</th>
                 <th>상태</th>
             </tr>
@@ -99,6 +100,7 @@ include_once('./admin.head.php');
                 </td>
                 <td><?=$d['report_date'] ?: '-' ?></td>
                 <td><a target="_blank" href="<?=$d['activity_link']?>"><i class="<?=$d['activity_link'] ? 'fa-solid fa-link' : ''?>"></i><?=$d['activity_link'] ? '활동링크' : '' ?></a></td>
+                <td><a href="<?=$d['activity_image']['src']?>" download="<?=$d['activity_image']['name']?>"><?=$d['activity_image']['name']?></a></td>
                 <td>
                     <div style="width: 300px" readonly><?=$d['description'] ?: '-' ?></div>
                     <textarea style="width: 300px" placeholder="수정요청을 입력하세요." id="textarea<?=$d['idx']?>" oninput="onStatus('<?=$d['idx']?>')"><?=$d['update_comment']?></textarea>

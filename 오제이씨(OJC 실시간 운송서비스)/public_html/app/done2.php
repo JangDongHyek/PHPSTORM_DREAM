@@ -1,6 +1,33 @@
 <?php
 $pid = "done";
 include_once("./app_head.php");
+include_once("../jl/JlConfig.php");
+$model = new JlModel(array("table" => "dispatch_list"));
+$g5_member = new JlModel(array("table" => "g5_member"));
+
+$new_data = $model->where("idx",$_GET['idx'])->get()['data'][0];
+
+$customer = $g5_member->where('mb_id',$new_data['company_mb_id'])->get()['data'][0];
+
+//울산
+if($new_data['shipping_point'] == "1100") {
+    $client = array(
+        "mb_company_number" => "620-85-00816",
+        "mb_company_name" => "오제이씨 주식회사 울산공장",
+        "mb_addr" => "울산광역시 북구 책골길 59, 1층(연암동)",
+        "mb_name" => "송성근",
+    );
+}
+//전주
+else if($new_data['shipping_point'] == "1200") {
+    $client = array(
+        "mb_company_number" => "402-85-07773",
+        "mb_company_name" => "오제이씨(주) 전주공장",
+        "mb_addr" => "전라북도 완주군 봉동읍 용암리 794",
+        "mb_name" => "이재열",
+    );
+}
+
 
 $dispatch_idx = $_GET['idx'];
 $data = getDispatchInfo($dispatch_idx);
@@ -93,7 +120,32 @@ $data = getDispatchInfo($dispatch_idx);
             </table>
         </div>
     </div>
+    <? if($jl->DEV) {?>
+        <p>일련번호 : <?=$new_data['product_pk']?> </p>
+        <p>용차공통 : ?? </p>
 
+        <h1>공급자</h1>
+        <p>등록번호 : <?=$client['mb_company_number']?> </p>
+        <p>상호 : <?=$client['mb_company_name']?> </p>
+        <p>주소 : <?=$client['mb_addr']?> <?=$client['mb_addr_detail']?> <?=$client['mb_zip_code']?> </p>
+        <p>성명 : <?=$client['mb_name']?> </p>
+
+        <h1>공급받는자</h1>
+        <p>등록번호 : <?=$customer['mb_company_number']?> </p>
+        <p>상호 : <?=$customer['mb_company_name']?> </p>
+        <p>주소 : <?=$customer['mb_addr']?> <?=$customer['mb_addr_detail']?> <?=$customer['mb_zip_code']?> </p>
+        <p>성명 : <?=$customer['mb_name']?> </p>
+
+        <h1>명세내역</h1>
+        <div>
+            <? foreach($new_data['product_full_string'] as $p) {?>
+            <p>년월일 : <?=$p['WADAT']?></p>
+            <p>품목 : <?=$p['MAKTX']?></p>
+            <p>규격 : EA</p>
+            <p>수량 : <?=$p['LFIMG']?></p>
+            <?}?>
+        </div>
+    <? }?>
 </div>
 
 <?

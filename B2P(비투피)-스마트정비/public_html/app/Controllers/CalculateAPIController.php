@@ -4,6 +4,11 @@ use App\Libraries\Model;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\GmarketApiModel;
 use Matrix\Exception;
+use App\Libraries\JlModel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 
 class CalculateAPIController extends ResourceController {
     public $api_response = array("message"=>"");
@@ -14,6 +19,34 @@ class CalculateAPIController extends ResourceController {
         "autoincrement" => true,
         "empty" => false
     );
+
+    public function downloadExcel(){
+        ob_start();
+
+        // 스프레드시트 객체 생성
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // 엑셀 데이터 작성
+        $sheet->setCellValue('A1', 'Header 1');
+        $sheet->setCellValue('B1', 'Header 2');
+        $sheet->setCellValue('A2', 'Data 1');
+        $sheet->setCellValue('B2', 'Data 2');
+
+        ob_end_clean();
+
+        // 파일을 출력하기 위해 Writer 객체 생성
+        $writer = new XlsxWriter($spreadsheet);
+
+        // HTTP 헤더 설정
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="example.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        // 파일 출력
+        $writer->save('php://output');
+        exit;
+    }
 
 
 

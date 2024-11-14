@@ -27,8 +27,13 @@
                                     <!--<span>대체약  <strong>무코스타</strong></span>-->
                                 </div>
                                 <div class="area_text">
-                                    <p class="p_price" v-if="INSU_CHECK == 'Y'">{{parseInt(item.INSU_PRICE).format()}}원</p>
-                                    <p class="p_price" v-if="INSU_CHECK == 'N'">{{parseInt(item.UNIT_PRICE).format()}}원</p>
+                                    <template v-if="item.sell_yn == 'N'">
+                                        <a class="btn btn_blue" @click="event.preventDefault(); addCart(item)">제품문의</a>
+                                    </template>
+                                    <template v-else>
+                                        <p class="p_price" v-if="INSU_CHECK == 'Y'">{{parseInt(item.INSU_PRICE).format()}}원</p>
+                                        <p class="p_price" v-if="INSU_CHECK == 'N'">{{parseInt(item.UNIT_PRICE).format()}}원</p>
+                                    </template>
                                 </div>
                             </label>
                         </div>
@@ -37,7 +42,7 @@
                     <li class="noDataAlign" id="mediRequest" v-if="search && products.length == 0">
 						<i class="fa-solid fa-house-medical-circle-xmark"></i><br>
                     	등록된 상품이 없습니다.<br>
-                    	<button type="button" class="btn btn_blue" @click="postRequest()">약품 입고 요청</button>
+                    	<button type="button" class="btn btn_blue" @click="postRequest()">제품문의</button>
                     </li>
                 </ul>
 
@@ -97,12 +102,13 @@
             });
         },
         methods: {
+
             async postRequest(product = null) {
                 let content;
                 if(product) {
                     content = product.PRODUCT_NM
                 }else {
-                    if(!confirm(`${this.filter.like_value} 상품을 입고 요청 하시겠습니까?`)) return false;
+                    if(!confirm(`${this.filter.like_value} 상품을 제품문의 하시겠습니까?`)) return false;
                     content = this.filter.like_value
                 }
 
@@ -130,7 +136,7 @@
             addCart(product) {
                 if(product.sell_yn == "N") {
                     event.preventDefault();
-                    if(!confirm("해당 상품은 재고가 없습니다. 입고 요청 하시겠습니까?")) return false;
+                    if(!confirm("해당 상품은 재고가 없습니다. 제품문의 하시겠습니까?")) return false;
                     this.postRequest(product)
                     return false;
                 }

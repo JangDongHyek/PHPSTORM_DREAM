@@ -134,6 +134,7 @@ if($member['mb_no']) {
         <section id="right_view">
             <h3>체험단 관리</h3>
 
+
             <div class="wrapper">
                 <div class="tabs cf">
                 <ul>
@@ -406,8 +407,16 @@ if($member['mb_no']) {
                     <div class="box box_red" id="comment_box">
                         <textarea id="update_comment" readonly></textarea>
                     </div>
-                    <p>활동 링크 <span class="txt_color">* 필수</span></p>
+                    <p>활동 링크 <span class="txt_color">* 일반 체험단 필수 (구매평 체험단 제외)</span></p>
                         <input type="text" id="activity_link" placeholder="활동 링크를 작성해주세요">
+
+
+                        <p>활동 사진 <span class="txt_color">* 구매평 체험단 필수</span></p>
+                        <div class="flex">
+                            <input type="text" id="fileName" readonly placeholder="작성한 후기 캡처본을 업로드해주세요.">
+                            <label type="button" for="fileInput" class="btn btn_gray btn_h40">파일 선택</label>
+                            <input type="file" class="hide" id="fileInput"> <!--숨김처리 바람-->
+                        </div>
 
                     <p>추가 설명</p>
                     <textarea placeholder="설명을 작성하세요." id="description"></textarea>
@@ -442,6 +451,8 @@ if($member['mb_no']) {
             report_status : "보고"
         }
 
+        if(document.getElementById("fileInput").files[0]) data.activity_image = document.getElementById("fileInput").files[0];
+
         try {
             let res = await jl.ajax("update",data,"/api/campaign_request.php");
             alert("보고를 완료했습니다.");
@@ -461,6 +472,9 @@ if($member['mb_no']) {
             document.getElementById("activity_link").value = res.data[0].activity_link;
             document.getElementById("description").value = res.data[0].description;
             document.getElementById("update_comment").textContent = res.data[0].update_comment;
+            if(res.data[0].activity_image) document.getElementById('fileName').value = res.data[0].activity_image.name;
+            else document.getElementById('fileName').value = ''
+
             if(res.data[0].report_status == "수정요청") {
                 $("#comment_box").show();
             }else {

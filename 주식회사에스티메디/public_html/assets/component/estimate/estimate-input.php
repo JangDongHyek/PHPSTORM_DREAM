@@ -23,7 +23,7 @@
                 <div class="btn_wrap btn_list">
                     <a class="btn btn_large btn_line" @click="postEstimate(1)"><i class="fa-duotone fa-solid fa-floppy-disk"></i> 견적 저장</a>
                     <a class="btn btn_large btn_line" @click="postEstimate(2)"" target="_blank"><i class="fa-duotone fa-solid fa-print"></i> 견적 출력</a>
-                    <a class="btn btn_large btn_line" @click="postOrder()"><i class="fa-duotone fa-solid fa-bags-shopping"></i> 바로 구매</a>
+                    <a class="btn btn_large btn_line" @click="postOrder()"><i class="fa-duotone fa-solid fa-bags-shopping"></i> 의약품 구매</a>
                 </div>
                 <section class="list_wrap">
                     <div class="table_total">
@@ -47,7 +47,7 @@
                             <tr>
                                 <th>No.</th>
                                 <th>제품명</th>
-                                <th>규격단가</th>
+                                <th>단가</th>
                                 <th>처방수량(월)</th>
                                 <th>기존합계</th>
                                 <th>대체의약품</th>
@@ -65,8 +65,8 @@
                                     <td alt="제품명">
                                         <input type="text" value="제품을 선택하세요." readonly @click="new_modal = true;">
                                     </td>
-                                    <td alt="규격단가" class="text_right">
-                                        <p class="temp">규격단가</p>
+                                    <td alt="단가" class="text_right">
+                                        <p class="temp">단가</p>
                                     </td>
                                     <td alt="수량" class="text_right">
                                         <p class="temp">0</p>

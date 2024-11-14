@@ -98,7 +98,7 @@ switch ($pid) {
     case "adm_product_request" :
         $header_type = 1;
         $footer_type = 1;
-        $header_name = "약품 입고 요청";
+        $header_name = "제품문의 요청";
         break;
     case "adm_main_banner" :
         $header_type = 1;
@@ -148,7 +148,7 @@ $CI->load->vars(['header_name' => $header_name]);
                             <li class="gnb_2dli"><a href="<?=PROJECT_URL?>/adm/productKeyword" class="gnb_2da">상품 키워드관리</a></li>
                             -->
                             <li class="gnb_2dli"><a href="<?=PROJECT_URL?>/adm/order" class="gnb_2da">주문배송</a></li>
-							<li class="gnb_2dli"><a href="<?=PROJECT_URL?>/adm/productRequest" class="gnb_2da">입고요청</a></li>
+							<li class="gnb_2dli"><a href="<?=PROJECT_URL?>/adm/productRequest" class="gnb_2da">제품문의 요청</a></li>
                         </ul>
                     </li>
                     <!--li class="gnb_1dli"><a class="gnb_1da"><i class="fa-light fa-credit-card"></i> 결제관리</a>

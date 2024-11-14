@@ -19,7 +19,7 @@ try {
     $join_table = "";
     $join_table_delete = false; // true시 join테이블 데이터가 없으면 조회된 데이터 삭제
 
-    //$file = new JlFile("/data/example");
+    $file = new JlFile("/jl/jl_resource/campaign_request");
 
     switch (strtolower($_method)) {
         case "get":
