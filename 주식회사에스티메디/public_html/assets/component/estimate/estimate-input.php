@@ -96,7 +96,7 @@
                                         <input type="text" :value="product.PRODUCT_NM" readonly>
                                     </td>
                                     <td alt="규격단가" class="text_right">
-                                        <p><em>규격단가</em>{{product.standard_price}}</p>
+                                        <input type="number" v-model="product.standard_price" @keydown="jl.isNumberKey">
                                     </td>
                                     <td alt="수량">
                                         <div class="number_controller">

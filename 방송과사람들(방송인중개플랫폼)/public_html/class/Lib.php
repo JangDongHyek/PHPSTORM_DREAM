@@ -37,12 +37,18 @@ class JL {
         if(!self::$vue_load) {
             echo "<script>";
             echo "const JL_base_url = '{$this->URL}';";
-            echo "const JL_dev = {$this->DEV};";
+            echo "const JL_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
+            echo "let Jl_data = {};";
+            echo "let Jl_methods = {};";
+            echo "let Jl_watch = {};";
+            echo "let Jl_components = {};";
+            echo "let Jl_computed = {};";
             echo "</script>";
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
             echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             echo "<script src='{$this->URL}{$this->JS}?name={$app_name}'></script>";
+            echo "<script src='{$this->URL}/jl/Jl.js'></script>";
 
             self::$vue_load = true;
         }

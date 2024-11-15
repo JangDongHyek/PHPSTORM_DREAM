@@ -304,7 +304,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             code_html += '<td>' + AddComma(CostPrice) + '</td>';    // 공급원가
             //code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(totalDiscount) + '</td>';    // 판매자할인/공제금
-            code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';      // 고객 결제 금액
+            //code_html += '<td>' + AddComma(BuyerPayAmt) + '</td>';      // 고객 결제 금액
 
             code_html += '<td>' + AddComma(dl_DelFeeAmt) + '</td>';     // 배송비
             code_html += '<td>-' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 수수료
@@ -4623,8 +4623,8 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                             <th rowspan="2">기본서비스이용료</th>
                             <th rowspan="2">공급원가</th>
                             <th rowspan="2">판매자할인/공제금</th>
-                            <th rowspan="2">고객 결제금액</th>
-                            <th colspan="3">배송비</th>
+<!--                            <th rowspan="2">고객 결제금액</th>-->
+                            <th colspan="3">선결제배송비</th>
                             <th colspan="3" style="display: none">부가세금처리</th>
                             <th rowspan="2">정산예정금액</th>
                             <th colspan="3">KCP수수료</th>
@@ -4632,11 +4632,11 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
                         </tr>
                         <tr>
-                            <th>수수료</th>
-                            <th>캐시백</th>
-                            <th>합계</th>
                             <th>배송비</th>
                             <th>배송비수수료</th>
+                            <th>합계</th>
+                            <th>수수료</th>
+                            <th>캐시백</th>
                             <th>합계</th>
                             <th style="display: none">B2P 부가세</th>
                             <th style="display: none">셀러 부가세</th>

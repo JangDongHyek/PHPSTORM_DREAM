@@ -9,7 +9,6 @@ try {
     $models = array();
     $table = $file_name;
     $models[$table] = new JlModel(array("table" => $table));
-    $models['g5_member'] = new JlModel(array("table" => "g5_member"));
 
     $join_table = "";
     $get_tables = [];
@@ -135,48 +134,22 @@ try {
             break;
         }
 
+        case "query":
+        {
+            $obj = $models[$table]->jsonDecode($_POST['obj'],false);
+
+            $data = $models[$table]->query($obj['query']);
+            $response['data'] = $data;
+            $response['success'] = true;
+            break;
+        }
+
         case "where_delete" :
             $obj = $models[$table]->jsonDecode($_POST['obj'],false);
             if($obj['in_key'] && $obj['in_value']) $models[$table]->in($obj['in_key'],$models[$table]->jsonDecode($obj['in_value']));
 
             $models[$table]->where($obj)->whereDelete();
             break;
-
-        case "deletes":
-        {
-            $arrays = $models[$table]->jsonDecode($_POST['arrays']);
-
-            foreach ($arrays as $primary) {
-                $models[$table]->delete(array(
-                    $models[$table]->primary => $primary
-                ));
-            }
-
-            $response['arrays'] = $arrays;
-            $response['success'] = true;
-            break;
-        }
-
-        case "query":
-        {
-            $obj = $models[$table]->jsonDecode($_POST['obj'],false);
-
-            $data = $models[$table]->query($obj['query']);
-
-
-            foreach($data as $index => $d) {
-                $path= "/data/file/member/{$d['seller_idx']}.jpg";
-
-                $seller = $models['g5_member']->where('mb_no',$d['seller_idx'])->get()['data'][0];
-                $data[$index]['$seller'] = $seller;
-                $data[$index]['isThumb'] = file_exists($models['g5_member']->ROOT.$path);
-                $data[$index]['path'] = $path;
-            }
-
-            $response['data'] = $data;
-            $response['success'] = true;
-            break;
-        }
 
         //csv 파일 만들고 다운받는 처리
         case "csv" :

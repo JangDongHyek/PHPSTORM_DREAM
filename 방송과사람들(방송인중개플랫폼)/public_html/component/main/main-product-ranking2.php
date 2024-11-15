@@ -10,18 +10,11 @@
                     <img v-else :src="jl.root + '/theme/basic_app/img/noimg.jpg'">
                 </div>
                 <div class="text">
-                    <div class="name">
-                        <p class="photo">
-                            <img v-if="item.isThumb" :src="jl.root + item.path">
-                            <img v-else :src="jl.root + '/theme/basic_app/img/noimg.jpg'">
-                        </p>
-                        <strong>{{item.$seller['mb_nick']}}</strong>
-                    </div>
                     <div class="price">{{parseInt(item.total_price).format()}}원</div>
+                    <div class="title">{{item.$seller['mb_nick']}}</div>
                 </div>
             </li>
         </ul>
-        <button type="button" class="btn" v-if="!more" @click="more = true; getData();">더보기 <i class="fa-light fa-angle-down"></i></button>
     </div>
 </script>
 
@@ -32,7 +25,6 @@
             primary : {type : String, default : ""},
             component_id : {type : String, default : ""},
             categories : {type : Array, default : []},
-
         },
         data: function(){
             return {
@@ -48,8 +40,6 @@
                 category_data : [],
                 data : [],
                 modal : false,
-                more : false,
-                where : "",
             };
         },
         created: function(){
@@ -74,8 +64,7 @@
                 });
 
                 let where = `(${arr.join(",")})`;
-                this.where = where;
-                this.getData();
+                this.getData(where);
             },
             async getCategory() {
                 let filter = {
@@ -91,15 +80,14 @@
                     alert(e.message)
                 }
             },
-            async getData() {
-                let limit = this.more ? 5 : 3
+            async getData(where) {
                 let filter = {
                     query : "SELECT o.seller_idx, SUM(o.price) AS total_price FROM `member_order` AS o " +
                         "JOIN member_product AS p ON o.product_idx = p.idx " +
-                        `WHERE p.category_idx in ${this.where}`  +
+                        `WHERE p.category_idx in ${where}`  +
                         "GROUP BY o.seller_idx " +
                         "ORDER BY total_price DESC " +
-                        `LIMIT ${limit};`
+                        "LIMIT 5;"
                 }
 
                 try {

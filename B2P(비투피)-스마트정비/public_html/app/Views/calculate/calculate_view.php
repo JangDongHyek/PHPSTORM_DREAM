@@ -274,12 +274,12 @@ function totalOrderKey($objects,$key,$info) {
                         <details>
                             <summary>총 <?=number_format($order['b2p']['totalDiscount'])?>원</summary>
                             <dl>
-                                <dt>판매자할인<?=$data['SiteType'] == '1' ? '/쿠폰비' : ''?></dt>
+                                <dt>판매자할인/공제금<?=$data['SiteType'] == '1' ? '/쿠폰비' : ''?></dt>
                                 <dd>-<?=number_format($order['b2p']['SellerDiscountPrice'] + $order['DeductTaxPrice'])?>원</dd>
 
                                 <?if($data['SiteType'] == '2' ) {?>
                                     <!--지마켓-->
-                                    <dt>쿠폰할인</dt>
+                                    <dt>판매자분담쿠폰비</dt>
                                     <dd>-<?=number_format($order['SellerFundingDiscountPrice'])?>원</dd>
                                 <?}else {?>
                                     

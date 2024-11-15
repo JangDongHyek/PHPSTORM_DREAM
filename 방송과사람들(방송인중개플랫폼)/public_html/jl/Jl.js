@@ -1,24 +1,4 @@
-function vueLoad(app_name) {
-    Vue[app_name] = new Vue({
-        el: "#" + app_name,
-        data: Jl_data,
-        methods: Jl_methods,
-        watch: Jl_watch,
-        components: Jl_components,
-        computed: Jl_computed,
-        created: function(){
-            this.jl = new Jl(app_name,"#42B883");
-        },
-        mounted: function(){
 
-        }
-    });
-}
-
-Number.prototype.format = function (n, x) {
-    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-};
 
 class Jl {
     constructor(name = "Jl.js",background = "#35495e") {
