@@ -1,0 +1,614 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+
+include "../../market/include/getmartinfo.php";
+?>
+
+<?
+if( $Mall_Admin_ID ){
+?>
+<script language="javascript" src="../js/common_login.js" type="text/javascript"></script>
+<?
+}else{
+?>
+<script language="javascript" src="../js/common.js" type="text/javascript"></script>
+<?
+}
+?>
+
+
+<? include("../include/header.html");?>
+
+<style>
+.a_tr {display:;}
+.b_tr {display:;}
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+function idcheck(){
+	var username = document.f.username.value;
+	var url = "xml_id_check.php";
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	var Digit = '1234567890'
+	
+	if (Tcheck(f.username, '희망 ID', Alpha + Digit, 6, 10)) return false;
+	else{
+				$.ajax({
+					type: "GET",
+					url: "./xml_id_check.php",
+					data: "user_id="+username,
+					success:function( html ) {
+						if(html==0){
+							alert(document.f.username.value+"는 사용 가능한 아이디입니다.");
+							document.f.password.focus();
+						}else{
+							alert(document.f.username.value+"는 사용중인 아이디입니다.");
+							document.f.username.value="";
+							document.f.username.focus();
+						}
+					},
+					error:function(err){
+						alert("Error");
+					}
+				});
+	}
+}
+
+
+function Tcheck(target, cmt, astr, lmin, lmax){
+	var i
+	var t = target.value
+	var id_chk=document.getElementById("id_chk");
+	if (t.length < lmin || t.length > lmax) {
+		if (lmin == lmax) alert(cmt + '는 ' + lmin + ' 자 이어야 합니다.');
+			 else alert(cmt + '는 ' + lmin + ' ~ ' + lmax + ' 자 이내의 영문 및 숫자로 입력하세요.');
+		//id_chk.innerHTML="(아이디는 영문자, 숫자 포함해서 6자이상)";
+		target.focus()
+
+		return true
+	}
+	if (astr.length > 1) {
+			for (i=0; i<t.length; i++)
+					if(astr.indexOf(t.substring(i,i+1))<0) {
+				alert(cmt + '에 허용할 수 없는 문자가 입력되었습니다'+'\n\n아이디는 영문자, 숫자 포함해서 6자이상입니다.');
+				//id_chk.innerHTML="(아이디는 영문자, 숫자 포함해서 6자이상)";
+				target.focus()
+				return true
+			}
+	}
+	
+	
+		return false
+	
+}
+
+
+function Eaddcheck(target, cmt){
+	var i
+	var t = target.value
+
+	if (t.length > 1) {
+			for (i=0; i<t.length; i++)
+					if(t.substring(i,i+1) == '@') {
+				return false;
+			}
+	}
+			alert(cmt + '를 정확히 입력하여 주십시오.');
+	target.focus()
+	return true	
+}
+	
+
+function checkform1(f){
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var Digit = '1234567890';
+
+	if (Tcheck(f.username, '희망 ID', Alpha + Digit, 4, 10)) return false;
+	/*if (Tcheck(f.password, '비밀번호', Alpha + Digit, 4, 8)) return false;
+	if (Tcheck(f.password1, '비밀번호 확인', Alpha + Digit, 4, 8)) return false;*/
+	if (f.password.value != f.password1.value) {
+		alert('비밀번호 확인을 다시 해주세요.')
+		f.password.focus()
+		return false;
+	}
+	
+	if (f.name.value=="") {
+			alert("\n이름을 입력하세요.");
+			f.name.focus();
+			return false;
+	}
+<?
+if($zip_use == 0 || $zip_use == ""){
+?>	
+	if (f.zip.value==""){
+		alert("\n우편번호를 입력하세요.");
+		//f.find_button.focus()
+		return false;
+	}
+<?
+}
+if($address_use == 0 || $address_use == ""){
+?>
+	if (f.address.value==""){
+		alert("\n주소를 입력하세요.");
+		f.address.focus();
+		return false;
+	}
+	if (f.address_d.value==""){
+		alert("\n상세주소를 입력하세요.");
+		f.address_d.focus();
+		return false;
+	}
+<?
+}
+if($tel_use == 0 || $tel_use == ""){
+?>
+	if (f.tel.value==""){
+		alert("\n연락처를 입력하세요.");
+		f.tel.focus()
+		return false;
+	}
+<?
+}
+if($tel1_use == 0 || $tel1_use == ""){
+?>
+	if (f.tel1.value==""){
+		alert("\n기타연락처를 입력하세요.");
+		f.tel1.focus()
+		return false;
+	}
+<?
+}
+if($email_use == 0 || $email_use == ""){
+?>
+	var emailchk;
+	emailchk = 0;
+	if (f.email.value ==""){
+		alert("\n이메일을 입력하세요.");
+		f.email.focus()
+		return false;
+	}else{	
+		for (var j=0; j < f.email.value.length ; j++ ){
+			 var ch= f.email.value.substring(j,j+1)
+			 if (ch == "@" | ch== "." ){
+					emailchk = emailchk + 1;
+			 }
+		}
+		if (emailchk < 2 ){
+			alert("유효한 전자우편를 입력하세요!");
+			f.email.focus(); 
+			return (false);
+		}
+	}
+	
+	if(!f.mb_chk.checked){
+		alert('이용약관/개인정보취급방침 동의를 해주세요.');
+		f.mb_chk.focus();
+		return false;
+	}
+<?
+}
+if($chuchon_use == 0 || $chuchon_use == ""){
+?>
+	if (f.partner.value==""){
+		alert("\n추천인을 입력하세요.");
+		f.partner.focus()
+		return false;
+	}
+<?
+}
+if($msg_use == 0 || $msg_use == ""){
+?>
+	if (f.msg.value==""){
+		alert("\n하고싶은말을 입력하세요.");
+		f.msg.focus()
+		return false;
+	}
+<?
+}
+if($job_use == 0 || $job_use == ""){
+?>
+	if (f.job.value==""){
+		alert("\n직업을 입력하세요.");
+		f.job.focus()
+		return false;
+	}
+<?
+}
+if($com_name_use == 0 || $com_name_use == ""){
+?>
+	if (f.com_name.value==""){
+		alert("\n직장/학교명을 입력하세요.");
+		f.com_name.focus()
+		return false;
+	}
+<?
+}
+if($homepage_use == 0 || $homepage_use == ""){
+?>
+	if (f.homepage.value==""){
+		alert("\n홈페이지 주소를 입력하세요.");
+		f.homepage.focus()
+		return false;
+	}
+<?
+}
+if($hobby_use == 0 || $hobby_use == ""){
+?>
+	if (f.hobby.value==""){
+		alert("\n취미를 입력하세요.");
+		f.hobby.focus()
+		return false;
+	}
+<?
+}
+if($religion_use == 0 || $religion_use == ""){
+?>
+	if (f.religion.value==""){
+		alert("\n종교를 입력하세요.");
+		f.religion.focus()
+		return false;
+	}
+<?
+}
+if(($ext1_use == 0 || $ext1_use == "")&&$ext1_field !=""){
+?>
+	if (f.ext1_content.value==""){
+		alert("\n<?=$ext1_field?>를 입력하세요.");
+		f.ext1_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext2_use == 0 || $ext2_use == "")&&$ext2_field !=""){
+?>
+	if (f.ext2_content.value==""){
+		alert("\n<?=$ext2_field?>를 입력하세요.");
+		f.ext2_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext3_use == 0 || $ext3_use == "")&&$ext3_field !=""){
+?>
+	if (f.ext3_content.value==""){
+		alert("\n<?=$ext3_field?>를 입력하세요.");
+		f.ext3_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext4_use == 0 || $ext4_use == "")&&$ext4_field !=""){
+?>
+	if (f.ext4_content.value==""){
+		alert("\n<?=$ext4_field?>를 입력하세요.");
+		f.ext4_content.focus()
+		return false;
+	}
+<?
+}
+if(($sel_use == 0 || $sel_use == "")&& $sel_field !=""){
+?>
+	if (f.sel_content.value==""){
+		alert("\n<?=$sel_field?>를 선택하세요.");
+		f.sel_content.focus()
+		return false;
+	}
+<?
+}
+?>
+
+}
+
+
+function find_zip(){
+   	var Sel = open( '../../market/member/find_zip.php', 'Zip', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=400,height=270' );
+}
+
+function resizeFrame(frm){
+	frm.style.height = "auto";
+	contentHeight = frm.contentWindow.document.body.scrollHeight;
+	frm.style.height = contentHeight + 0 + "px";
+}
+
+
+/*########################### Div레이어팝업을 띄울 자바스크립트 함수 ###########################*/
+	function doLayerPopup(v) {
+		var layerPopupFull = document.getElementById("layerPopupFull");
+		var client_width = document.body.clientWidth;
+		var client_height = document.body.clientHeight;
+		var window_height = document.body.scrollHeight;
+		var layerPopup = document.getElementById("layerPopup");
+
+		if (v=="show"){
+			layerPopupFull.style.height = window_height;
+			layerPopupFull.style.display = "";
+			layerPopup.style.left = parseInt(client_width) / 2 - (parseInt(layerPopup.style.width) / 2);
+			layerPopup.style.top = parseInt(client_height) / 2 - (parseInt(layerPopup.style.height) / 2);
+			layerPopup.style.display = "";
+			resizeFrame(document.getElementById("test"));
+		}else{
+			layerPopupFull.style.display = "none";
+			layerPopup.style.display = "none";
+		}
+	}
+	/*##############################################################################################*/
+
+
+</script> 
+	<body>
+
+
+
+<!--############################################### Div레이어팝업 창 ###############################################-->
+<div id="layerPopupFull" style="position:absolute; z-index:9;width:100%; left:0px; top:0px; display:none; background-color:000;filter:alpha(opacity=60);opacity:.6;"></div>
+<div id="layerPopup" style="position:absolute; z-index:10; width:300px; height:150px; display:none; margin:0; padding:0;">
+<iframe src="./find_zip_mobile.php" name="test" id="test" width="300" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" scrolling="no" onload="resizeFrame(this);"></iframe>
+<div align="center" valign="middle"><input type="button" value="닫기" onclick="doLayerPopup('hide')"></div>
+</div>
+<!--################################################################################################################-->
+
+
+
+<? include("../include/top.html"); ?>
+ 
+<style type="text/css">
+.li1	{text-decoration:none; margin:0px auto; padding:6px 0px 6px 0px; width:30%; float:left; border:0px; background-color:#EBEEC5;}
+.li2	{text-decoration:none; margin:0px auto; padding:6px 0px 6px 0px; width:70%; float:left; border:0px;}
+.li3	{text-decoration:none; margin:0px auto; padding:6px 0px 6px 0px; width:100%; float:left; border:0px;}
+.line1	{height:2px; line-height:1px; background:#B9A372;}
+.line2	{height:1px; line-height:1px; background:#B9A372;}
+</style>
+		
+    <section id="content">
+		<article id="contentSubTitle">
+			<div class="cate_list">
+				<h2>&nbsp;&nbsp;<a href="../">홈</a> > 회원가입</h2>
+			</div>
+		</article>
+		
+        <article id="new_join">
+          <div class="form">
+        <form  name='f' method='post' onSubmit="return checkform1(this)" action='./join_regist.php' enctype="multipart/form-data">
+		<input type="hidden" name="flag" value="adduser">
+		<input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+           <p class="title">가입신청서 작성</p>
+           <p class="text01">아래 신청서를 작성해주세요.</p>
+           <p class="text01"><span>주소 및 연락처</span>는 배송과 연관되므로 정확히 입력해주세요.</p>
+		   <!-- 회원 구분 -->
+		   <p class="mt10">
+			회원구분
+			<label><input type="radio" name="division" id="A" value="일반회원" onclick="a_act();" checked> 일반회원</label>
+			<label><input type="radio" name="division" id="B" value="기업회원" onclick="b_act();"> 기업회원</label>
+		   </p>
+		   <!-- 회원 구분 -->
+           <p class="mt10"><input type="text" name="username" value='<?=$username?>' class="input" placeholder="아이디" ></p>
+           <p><input type='password' name="password" class="input" placeholder="비밀번호" ></p>
+           <p><input type='password' name="password1" class="input" style='ime-mode:inactive;' placeholder="비밀번호 확인"></p>
+           <p><input type="text" name="name" value='<?=$name?>' class="input" style='ime-mode:active;' placeholder="이름"></p>
+		   <!-- 일반회원 폼 시작 -->
+		   <!-- 성별 체크 -->
+		   <p class="a_tr input" style="width:90%">
+			<label><input type="radio" name="gender" id="gA" value="남성"> 남성</label>
+			<label><input type="radio" name="gender" id="gB" value="여성"> 여성</label>
+		   </p>	
+		   <!-- 성별 체크 -->
+		   <!-- 생년월일 -->
+		   <p class="a_tr input" style="width:90%">
+			<select name="birth1" id="birth1">
+				<option value="">선택</option>
+				<?php for($i=date('Y'); $i>=1920; $i--){ ?>
+				<option value="<?php echo $i ?>"><?php echo $i ?></option>
+				<?php } ?>
+			</select>년&nbsp;
+
+			<select name="birth2" id="birth2">
+				<option value="">선택</option>
+				<?php for($i=1; $i<=12; $i++){ ?>
+				<option value="<?php echo $i ?>"><?php echo $i ?></option>
+				<?php } ?>
+			</select>월&nbsp;
+
+			<select name="birth3" id="birth3">
+				<option value="">선택</option>
+				<?php for($i=1; $i<=31; $i++){ ?>
+				<option value="<?php echo $i ?>"><?php echo $i ?></option>
+				<?php } ?>
+			</select>일&nbsp;<br/>
+
+			<label><input type="radio" name="sl" id="s" value="양력"> 양력</label>
+			<label><input type="radio" name="sl" id="l" value="음력"> 음력</label>
+		   </p>	
+		   <!-- 생년월일 -->
+		   <!-- 일반회원 폼 끝 -->
+		   <!-- 기업회원 폼 시작 -->
+		   <p class="b_tr"><input type="text"  name="company" id="company" value='<?=$company?>' class="input" placeholder="회사(법인)명"></p>
+		   <p class="b_tr"><input type="text"  name="company_number" id="company_number" value='<?=$company_number?>' class="input" placeholder="사업자등록번호"></p>
+		   <p class="b_tr"><input type="text"  name="boss_name" id="boss_name" value='<?=$boss_name?>' class="input" placeholder="대표자명"></p>
+		   <p class="b_tr"><input type="text"  name="ct1" id="ct1" value='<?=$ct1?>' class="input" placeholder="업태"></p>
+		   <p class="b_tr"><input type="text"  name="ct2" id="ct2" value='<?=$ct2?>' class="input" placeholder="종목"></p>
+		   <p class="b_tr"><input type="text"  name="charge" id="charge" value='<?=$charge?>' class="input" placeholder="담당자명"></p>
+		   <p class="b_tr"><input type="text"  name="charge_hp" id="charge_hp" value='<?=$charge_hp?>' class="input" placeholder="담당자 연락처"></p>
+		   <!-- 기업회원 폼 끝 -->
+           <p><input type="text"  name="email" value='<?=$email?>' class="input" style='ime-mode:inactive;' placeholder="이메일"></p>
+           <p><select name="if_maillist" class="select">
+			<option value="1" <?if($if_maillist == '1'||empty($if_maillist)) echo "selected";?>>이메일 수신가능 선택</option>
+			<option value="0"  <?if($if_maillist == '0') echo "selected";?>>이메일 수신불가능 선택</option>
+		</select></p>
+           <p><input type="text" name="zip" value='<?=$zip?>' class="input" id="zip" placeholder="우편번호 찾기">
+           <input type="button" class="s_submit" value="우편번호찾기"   onclick="sample2_execDaumPostcode()"></p>
+           <p><input type="text" name="address" value='<?=$address?>' id="address" class="input" placeholder="주소 입력"></p>
+           <p><input type="text" name="address_d" value='<?=$address_d?>' id="address-d" class="input" placeholder="상세주소 입력"></p>
+           <p><input type="text" name="tel" value='<?=$tel?>' class="input" placeholder="전화번호"></p>
+           <p><input type="text" name="tel1" value='<?=$tel1?>' class="input" placeholder="휴대폰번호"></p>
+		   <!-- iOS에서는 position:fixed 버그가 있음, 적용하는 사이트에 맞게 position:absolute 등을 이용하여 top,left값 조정 필요 -->
+					<div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
+					<img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
+					</div>
+					<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+					<script>
+						// 우편번호 찾기 화면을 넣을 element
+						var element_layer = document.getElementById('layer');
+
+						function closeDaumPostcode() {
+							// iframe을 넣은 element를 안보이게 한다.
+							element_layer.style.display = 'none';
+						}
+
+						function sample2_execDaumPostcode() {
+							new daum.Postcode({
+								oncomplete: function(data) {
+									// 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+									// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+									// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+									var fullAddr = data.address; // 최종 주소 변수
+									var extraAddr = ''; // 조합형 주소 변수
+
+									// 기본 주소가 도로명 타입일때 조합한다.
+									if(data.addressType === 'R'){
+										//법정동명이 있을 경우 추가한다.
+										if(data.bname !== ''){
+											extraAddr += data.bname;
+										}
+										// 건물명이 있을 경우 추가한다.
+										if(data.buildingName !== ''){
+											extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+										}
+										// 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+										fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+									}
+
+									// 우편번호와 주소 정보를 해당 필드에 넣는다.
+									document.getElementById('zip').value = data.zonecode; //5자리 새우편번호 사용
+									document.getElementById('address').value = fullAddr;
+									document.getElementById('address-d').focus();
+									
+
+									// iframe을 넣은 element를 안보이게 한다.
+									// (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+									element_layer.style.display = 'none';
+								},
+								width : '100%',
+								height : '100%',
+								maxSuggestItems : 5
+							}).embed(element_layer);
+
+							// iframe을 넣은 element를 보이게 한다.
+							element_layer.style.display = 'block';
+
+							// iframe을 넣은 element의 위치를 화면의 가운데로 이동시킨다.
+							initLayerPosition();
+						}
+
+						// 브라우저의 크기 변경에 따라 레이어를 가운데로 이동시키고자 하실때에는
+						// resize이벤트나, orientationchange이벤트를 이용하여 값이 변경될때마다 아래 함수를 실행 시켜 주시거나,
+						// 직접 element_layer의 top,left값을 수정해 주시면 됩니다.
+						function initLayerPosition(){
+							var width = 300; //우편번호서비스가 들어갈 element의 width
+							var height = 400; //우편번호서비스가 들어갈 element의 height
+							var borderWidth = 5; //샘플에서 사용하는 border의 두께
+
+							// 위에서 선언한 값들을 실제 element에 넣는다.
+							element_layer.style.width = width + 'px';
+							element_layer.style.height = height + 'px';
+							element_layer.style.border = borderWidth + 'px solid';
+							// 실행되는 순간의 화면 너비와 높이 값을 가져와서 중앙에 뜰 수 있도록 위치를 계산한다.
+							element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width)/2 - borderWidth) + 'px';
+							element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
+						}
+					</script>
+		   <table width="95%" cellpadding="0" cellspacing="0" style="background-color:#fff;border:1px solid #ccc;margin:0 auto;">
+			<tr>
+				<td style="padding:10px">부가정보</td>
+			</tr>
+			<tr>
+				<td style="padding:10px">
+					<label for="addinfo1">
+						<input type="radio" name="addinfo" value="1" id="addinfo1" checked>결혼기념일 
+					</label>
+					<label for="addinfo2">
+						<input type="radio" name="addinfo" value="2" id="addinfo2">생일기념일
+					</label><br><br>
+					<select name="addinfo_date[0]" id="addinfo_date0" >
+						<option value="">선택</option>
+						<?php for($i=date('Y'); $i>=1960; $i--){ 
+							
+						?>
+						<option value="<?php echo $i ?>"><?php echo $i ?></option>
+						<?php } ?>
+					</select>년&nbsp;
+
+					<select name="addinfo_date[1]" id="addinfo_date1">
+						<option value="">선택</option>
+						<?php for($i=1; $i<=12; $i++){ 
+							$i<10?$j="0".$i:$j=$i;
+						?>
+						<option value="<?php echo $j ?>"><?php echo $j ?></option>
+						<?php } ?>
+					</select>월&nbsp;
+
+					<select name="addinfo_date[2]" id="addinfo_date2">
+						<option value="">선택</option>
+						<?php for($i=1; $i<=31; $i++){ 
+							$i<10?$j="0".$i:$j=$i;
+						?>
+						<option value="<?php echo $j ?>"><?php echo $j ?></option>
+						<?php } ?>
+					</select>일&nbsp;
+					<br>
+							(<font color="blue">기입된 날짜에 축하 문자와 선물을 전달을 받을 수 있습니다.</font>)
+				</td>
+			</tr>
+		   </table>
+		   <!--<p><input type="text" name="recommand_id" value='' class="input" placeholder="추천인아이디"></p>-->
+           <br>
+           <p><input type="button" class="ss_submit" value="이용약관" placeholder="이용약관" style="width:100%;"><br>
+           <div style="overflow:auto;-webkit-overflow-scrolling:touch;width:100%;height:200px">
+          	 <iframe src="../../market/member/rule.html" frameborder="0" height="200" width="100%" scrolling="auto" style="background:#fff; padding:10px; box-sizing:border-box;"></iframe>
+           </div>
+           </p>
+           <br>
+           <p><input type="button" class="ss_submit2" value="개인정보수집이용" placeholder="개인정보수집이용" style="width:100%;"><br>
+           <div style="width:100%; border:1px solid #E1E1E1; padding:20px; line-height:2em; text-align:left; background:#fff; box-sizing:border-box ">
+                            <p><strong>■ 개인정보의 수집&middot;이용 목적</strong> <br>
+                              서비스 제공 및 계약의 이행, 구매 및 대금결제, 물품배송 또는 청구지 발송, 회원관리 등을 위한 목적 <br>
+                              <br>
+                            <p><strong>■ 수집하려는 개인정보의 항목</strong> <br>
+                              이름, 주소, 연락처, 이메일 등 <br>
+                              <br>
+                            <p><strong>■ 개인정보의 보유 및 이용 기간</strong> <br>
+                              회사는 개인정보 수집 및 이용목적이 달성된 후에는 예외없이 해당정보를 파기합니다. <br>
+                      </div></p>
+           <br>
+           <p class="text01 mt10 mb10">이용약관 / 개인정보취급방침 동의 <input type="radio" name="mb_chk"></p>
+           <p><INPUT type="submit" class="s_submit" value="회원가입신청" ></p>
+
+          </form>
+          </div>
+        </article>
+        
+        
+    </section>
+ 
+ 
+<? include("../include/bottom.html"); ?>
+	</body>
+</html>
+<script>
+function a_act(){
+	$(".a_tr").css('display','block');
+	$(".b_tr").css('display','none');
+}
+
+
+function b_act(){
+	$(".b_tr").css('display','block');
+	$(".a_tr").css('display','none');
+}
+
+a_act();
+</script>

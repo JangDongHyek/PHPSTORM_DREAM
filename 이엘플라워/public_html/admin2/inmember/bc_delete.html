@@ -1,0 +1,51 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+$table = "bc";
+
+for($i=0; $i<sizeof($del_check) ; $i++){
+	if($del_check[$i]){
+		$delnum = $del_check[$i];
+
+		$query = "select * from $table where b_uid='$delnum'" ;
+		$res = mysql_query( $query, $dbconn );
+		$row = mysql_fetch_array( $res );
+
+		//==================== 2차 카테고리가 있으면 삭제 못함 ===========================
+		$sql0 = "select b_uid from mc where b_uid='$delnum'";
+		$res0 = mysql_query( $sql0, $dbconn );
+		$tot0 = mysql_num_rows( $res0 );
+
+		if( $tot0 > 0 ){
+			echo("
+				<script>
+				window.alert('$row[b_name]에는 인터넷상품이 있어서 삭제할 수 없습니다.');
+				history.go(-1)
+				</script>
+			");
+			exit;
+		}
+		
+		$dbdelete = "delete from $table where b_uid='$delnum'";
+		$result = mysql_query($dbdelete);
+	}
+}
+
+//========================================================================================
+
+if( $result ){
+	echo("
+		<meta http-equiv='Refresh' content='0; URL=bc_index.html?mode=$mode&select_key=$select_key&input_key=$input_key&page=$page'>
+	");
+}else{
+	echo("
+		<script>
+		window.alert('삭제하기에 실패했습니다!');
+		history.go(-1)
+		</script>
+	");
+	exit;
+}
+mysql_close( $dbconn );
+?>

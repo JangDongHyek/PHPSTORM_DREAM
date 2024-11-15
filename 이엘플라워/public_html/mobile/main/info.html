@@ -1,0 +1,159 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+ 
+ 
+ 
+ 
+ 
+ 
+<? include("../include/header.html");?>
+
+		
+		
+	
+	
+
+	<script type="text/javascript">
+	//<[CDATA[
+		var currentMenuId = '';
+		
+		function showSubMenu(menuId) {
+			
+			if(currentMenuId != "") {
+				$(".iconSet"+currentMenuId+" .subCategory").toggle();
+				if($(".iconSet"+currentMenuId+" .toggleBullet").is(".btnOn")) {
+					$(".iconSet"+currentMenuId+" .toggleBullet").removeClass("btnOn").addClass("btnOut");
+				}
+			}
+			
+			if(currentMenuId != menuId) {
+				$(".iconSet"+menuId+" .subCategory").slideDown();
+				$(".iconSet"+menuId+" .toggleBullet").removeClass("btnOut").addClass("btnOn");
+				currentMenuId = menuId;
+			} else {
+				currentMenuId = "";
+			}
+		}
+	//]]>
+	</script>
+ 
+	<body>
+	<? include("../include/top4.html"); ?>
+ 
+		
+ 
+ 
+  <section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;우리동네 정보통</h2>
+				</div>
+			</article>
+			<article id="sublist">
+			<div class="b_top">
+			<div class="b_total"><img src="../images/info_t_icon.gif" style="vertical-align:middle">&nbsp;지역리스트</div>
+			</div>
+<div class="n_board_list">
+           <ul>
+			<li class="title"><a href="../main/info2.html">서울</a></dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;125</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">경기</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list">
+           <ul>
+			<li class="title">인천</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">경남</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list">
+           <ul>
+			<li class="title">부산</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">경북</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list">
+           <ul>
+			<li class="title">대구</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">울산</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list">
+           <ul>
+			<li class="title">전남</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">광주</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div><div class="n_board_list">
+           <ul>
+			<li class="title">전북</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">충북</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+</div><div class="n_board_list">
+           <ul>
+			<li class="title">충남</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">대전</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+</div><div class="n_board_list">
+           <ul>
+			<li class="title">제주</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+			</article>
+			
+		</section>
+ 
+ 
+ 
+ 
+	<? include("../include/bottom.html"); ?>
+	</body>
+</html>

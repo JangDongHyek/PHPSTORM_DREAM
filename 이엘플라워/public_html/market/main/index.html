@@ -1,0 +1,205 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+
+
+if ( getCookie( "notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop_notice.htm','notice1','left=0, top=0, width=705,height=900, scrollbars=yes');
+	//noticeWindow.opener = self;
+} 
+// -->
+</SCRIPT>
+
+
+
+
+
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<? if($Mall_Admin_ID&&$MemberLevel==1){ ?>
+<body topmargin="0" leftmargin="0">
+<?}else{?>
+<body topmargin="0" leftmargin="0"> 
+<?}?>
+<? include("../include/top_main.htm"); ?>
+<div id="main_slider_wrap">
+	<!--<div class="slogan"><img src="../images2/slogan.png" alt=""></div> -->
+    	<div class="main_slider">
+			<?
+				for($i=1;$i<=5;$i++){
+					${slideImg.$i}=$row[slideImg.$i];
+					if($row[slideLink.$i]){
+						$href=$row[slideLink.$i];
+					}else{
+						$href="#";
+					}
+					if(${slideImg.$i}){
+			?>
+   			<a href="<?=$href?>">
+				<div class="simg s1" style="background:url('../../up/<?=$mart_id?>/<?=${slideImg.$i}?>') no-repeat center 0;">
+					<div class="sinner1"></div><!--.sinner문구들어갈것임-->
+				</div><!--.simg s1-->
+            </a>
+			<? }}?>
+			
+   		</div><!--.main_slider-->
+</div><!--#main_slider_wrap-->
+        <ul class="middle_icon">
+        	<li><a href="../main/product_list.html?&flag=&category_num=48"><span><img src="../images2/middle_icon01.png" alt=""></span><p>생일</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=46"><span><img src="../images2/middle_icon02.png" alt=""></span><p>프로포즈</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=43"><span><img src="../images2/middle_icon03.png" alt=""></span><p>출산</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=44"><span><img src="../images2/middle_icon04.png" alt=""></span><p>승진/취임</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=47"><span><img src="../images2/middle_icon05.png" alt=""></span><p>개업이사</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=42"><span><img src="../images2/middle_icon06.png" alt=""></span><p>결혼/축하</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=41"><span><img src="../images2/middle_icon07.png" alt=""></span><p>조문/추모</p></a></li>
+        </ul>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+      	<td>
+        <dl class="main_bast">
+        	<dt><p><img src="../images2/main_pro_title01.png" alt="베스트상품" ></p></dt>
+        	<dd><? include "../include/fav_item.htm" ?></dd>
+        </dl>
+        <dl class="main_new">
+        	<dt><p><img src="../images2/main_pro_title02.png" alt="새로운상품" ></p></dt>
+        	<dd><? include "../include/new_item.htm" ?></dd>
+        </dl>
+		<dl class="main_new">
+        	<dt><p><img src="../images2/main_pro_title03.png" alt="추천상품" ></p></dt>
+        	<dd><? include "../include/rec_item.htm" ?></dd>
+        </dl>
+        </td>
+      </tr>
+      <!--<tr>
+        <td valign="top">
+             <ul class="point_banner cf">
+                <div class="img_title"><img src="../images2/bar2.gif" /></div>
+                <h2><span>아이티포원</span>은 다릅니다.</h2>
+                <p>고객을 최우선으로 하는 전문화 되고 안정화된 온라인 서비스</p>
+                <li>
+                    <img src="../images2/m_banner1.jpg" /><p class="over"></p>
+                    <div class="con a">
+                        <div class="point">투명하고 합리적인 개발가격</div>
+                        <div class="content">무료형, 기본형, 일반형, 고급형, 쇼핑몰 등<br>다양한 가격의 홈페이지</div>
+                    </div>
+                </li>
+                <li>
+                    <img src="../images2/m_banner2.jpg" /><p class="over"></p>
+                    <div class="con b">
+                        <div class="point">맞춤형 제작 홈페이지</div>
+                        <div class="content">무료형, 기본형, 일반형, 고급형, 쇼핑몰 등<br>다양한 가격의 홈페이지</div>
+                    </div>
+                </li>
+                <li>
+                    <img src="../images2/m_banner3.jpg" /><p class="over"></p>
+                    <div class="con c">
+                        <div class="point">체계적인 관리시스템</div>
+                        <div class="content">무료형, 기본형, 일반형, 고급형, 쇼핑몰 등<br>다양한 가격의 홈페이지</div>
+                    </div>
+                </li>
+             </ul>
+        </td>
+      </tr>-->
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<div style="height:10px;"></div>
+<!--제품추출3-->
+<!--<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center"><img src="../images2/pro_title03.gif" alt="추천상품" title="추천상품"></td>
+      </tr>
+      <tr>
+        <td align="center" valign="top" style="padding-top:45px;"><?include("../include/rec_item.htm");?></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<div style="height:20px;"></div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="com_banner">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000">
+    	<ul class="com_in cf">
+        	<li><a href="#">
+            	<img src="../images2/dong_01.png" alt="포인트" title="포인트">
+                <p>포인트</p>
+            </a></li>
+            <li><a href="#">
+            	<img src="../images2/dong_02.png" alt="메일문의" title="메일문의">
+                <p>메일문의</p>
+            </a></li>
+           <li><a href="#">
+            	<img src="../images2/dong_03.png" alt="온라인상담" title="온라인상담">
+                <p>온라인 상담</p>
+            </a></li>
+            <li>
+            	<img src="../images2/dong_title.png" alt="커뮤니티 메뉴" title="커뮤니티 메뉴">
+            </li>
+            <li><a href="#">
+            	<img src="../images2/dong_04.png" alt="이용안내" title="이용안내">
+                <p>이용안내</p>
+            </a></li>
+            <li><a href="#">
+            	<img src="../images2/dong_05.png" alt="회사소개" title="회사소개">
+                <p>회사소개</p>
+            </a></li>
+            <li><a href="#">
+            	<img src="../images2/dong_06.png" alt="창업안내" title="창업안내">
+                <p>창업안내</p>
+            </a></li>
+        </ul>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>-->
+<? include("../include/bottom.htm"); ?>
+</body>
+</html>

@@ -1,0 +1,89 @@
+												
+												<table width="100%"  border="0" cellspacing="0" cellpadding="0" align='left'>
+													<tr align='left'>
+<?
+//================== 오늘 쇼핑한 상품 ====================================================
+if($_COOKIE[latest_items]){
+	//echo $latest_items;
+	$arr_item = explode("|",$_COOKIE[latest_items]);
+	$cnt = count($arr_item);
+
+	if( $cnt > 5 )
+		$cnt = 5;	
+
+	for( $i=0; $i < $cnt; $i++ ){
+		$hit_sql = "select * from $ItemTable where mart_id='$mart_id' and item_no='$arr_item[$i]'";
+		$hit_res = mysql_query( $hit_sql, $dbconn );
+		$hit_row = mysql_fetch_array($hit_res);
+ 
+		$short_explain = han_cut($hit_row[short_explain],28);
+		$img_sml = $hit_row[img_sml];
+		$img = $hit_row[img];
+		$img_big = $hit_row[img_big];
+
+		//============================ 상품 이미지 =======================================
+		if($img_sml != "" && file_exists("$Co_img_UP$mart_id/$img_sml")){
+			if (strstr(strtolower(substr($img_sml,-4)),'.jpg') || strstr(strtolower(substr($img_sml,-4)),'.gif')){
+				$hit_img_str = "<img src='$Co_img_DOWN$mart_id/$img_sml' border='0' width='100' height='100' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_sml,-4)),'.swf')){
+				$hit_img_str = "<embed src='$Co_img_DOWN$mart_id/$img_sml' width='100' height='100'></embed>";
+			}
+		}else if($img != "" && file_exists("$Co_img_UP$mart_id/$img")){
+			if (strstr(strtolower(substr($img,-4)),'.jpg') || strstr(strtolower(substr($img,-4)),'.gif')){
+				$hit_img_str = "<img src='$Co_img_DOWN$mart_id/$img' border='0' width='100' height='100' border='0'>";
+			}
+			if (strstr(strtolower(substr($img,-4)),'.swf')){
+				$hit_img_str = "<embed src='$Co_img_DOWN$mart_id/$img' width='100' height='100'></embed>";
+			}
+		}else if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+			if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+				$hit_img_str = "<img src='$Co_img_DOWN$mart_id/$img_big' border='0' width='100' height='100' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_big,-4)),'.swf')){
+				$hit_img_str = "<embed src='$Co_img_DOWN$mart_id/$img_big' width='100' height='100'></embed>";
+			}
+		}else{
+			$hit_img_str = "<img src='../image/noimage_s.gif' border='0' width='100' height='100' border='0'>";
+		}
+?>
+														<td width="130" valign="top">
+															<table width="120"  border="0" align="center" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td height="110" align="center"><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$hit_row[category_num]?>&flag=<?=$flag?>&item_no=<?=$hit_row[item_no]?>'><?=$hit_img_str?></a></td>
+																</tr>
+																<tr>
+																	<td align="center"><span class="text_red"><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$hit_row[category_num]?>&flag=<?=$flag?>&item_no=<?=$hit_row[item_no]?>'>[<?=$hit_row[item_name]?>]</a></span><br><!-- <span class="text_14_s2"><?=$short_explain?></span><br> --><span class="price">\<?=number_format($hit_row[z_price]);?>원</span></td>
+																</tr>
+																<tr>
+																	<td align=center><img src="../image/icon_point.gif" width="13" height="10"><span class="point"><?=number_format($hit_row[bonus])?> 원</span>
+																	</td>
+																</tr>
+															</table>
+														</td>
+														<td width="5"></td>
+
+<?
+	}
+}
+?>
+<?
+$k = 5 - $cnt;
+for( $j = 1; $j <= $k; $j++ ){
+?>
+														<td width="130" valign="top">
+															<table width="120"  border="0" align="center" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td height="110" align="center"><img src='../image/noimage_100.gif' width='100' height='100' border='0'></td>
+																</tr>
+																<tr>
+																	<td><span class="text_red"></span><br><span class="text_14_s2"><br></span></td>
+																</tr>
+															</table>
+														</td>
+														<td width="5"></td>
+<?
+}
+?>
+													</tr>
+												</table>

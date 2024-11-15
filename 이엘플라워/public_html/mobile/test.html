@@ -1,0 +1,186 @@
+
+<link rel="stylesheet" type="text/css" href="../../market/css/font-awesome.min.css">
+<script src="../js/jquery.scrollbox.js"></script><!--전후롤링-->
+<script>
+document.title = "<?php echo $page_title ?>";
+</script>
+	<script type="text/javascript">
+	//<[CDATA[
+		var currentMenuId = '';
+		
+		function showSubMenu(menuId) {
+			
+			if(currentMenuId != "") {
+				$(".iconSet"+currentMenuId+" .subCategory").toggle();
+				if($(".iconSet"+currentMenuId+" .toggleBullet").is(".btnOn")) {
+					$(".iconSet"+currentMenuId+" .toggleBullet").removeClass("btnOn").addClass("btnOut");
+				}
+			}
+			
+			if(currentMenuId != menuId) {
+				$(".iconSet"+menuId+" .subCategory").slideDown();
+				$(".iconSet"+menuId+" .toggleBullet").removeClass("btnOut").addClass("btnOn");
+				currentMenuId = menuId;
+			} else {
+				currentMenuId = "";
+			}
+		}
+	//]]>
+
+//상단배너
+function tbnView(){
+	document.getElementById("bnImg").style.display="inline";
+	document.getElementById("tbn1").style.display="none";
+	document.getElementById("tbn2").style.display="block";
+}
+function tbnHidden(){
+	document.getElementById("bnImg").style.display="none";
+	document.getElementById("tbn1").style.display="block";
+	document.getElementById("tbn2").style.display="none";
+}
+    </script>
+
+<div id="top_bn">
+    <div id="bnImg">
+      <!--<a href="https://open.kakao.com/o/sbrddZJ" target="_blank"><img src="../../market/images2/top_bn01.jpg" alt="" border="0"></a>
+      <img src="../../market/images2/top_bn02.jpg" alt="" border="0">
+      <img src="../../market/images2/top_bn03.jpg" alt="" border="0">
+      <a href="../main/product_list.html?&flag=&category_num=54"><img src="../../market/images2/top_bn04.jpg" alt="" border="0"></a> -->
+      <a href="../main/friend.htm"><img src="../../market/images2/top_bn02.jpg" alt="" border="0"></a>
+      <a href="../main/join.html"><img src="../../market/images2/top_bn06.jpg" alt="" border="0"></a>
+</div>
+    <div class="btn">
+        <span id="tbn1" onclick="tbnView()" style="display:none">EVENT OPEN</span>
+        <span id="tbn2" onclick="tbnHidden()">CLOSE</span>
+    </div>
+</div>
+
+<header>
+     
+			
+		</header>
+        
+		<script language="javascript">
+		/*애니메이션 메뉴*/
+	     function menuView(){
+		//var FullScreenWidth=$(window).width();
+		//if(FullScreenWidth>450){
+		//$("#cate").css("width","450");
+		//}
+		$("#cate").animate({"left":"0%"},"fast");
+		//$("#cate").css("top",$(window).scrollTop());
+		$("#cate").css("height","100%");
+		$("#left_menu").css("height","100%");
+		$("#lay").css("opacity","0.7");
+		$("#lay").css("display","block");
+		//$("#wrap").css({overflow:'hidden',position:'fixed'})
+		//$("#wrap").css({overflow:'hidden'}).bind('touchmove', function(e){e.preventDefault()}); 
+		//팝업 애니메이션 시 스크롤을 막음 (활성화 시)
+    	}
+	    function menuClose(){
+		$("#cate").animate({"left":"-90%"},"fast");
+		$("#lay").css("display","none");
+		//$("#wrap").css({overflow:'scroll',position:'relative'})
+		//$("#wrap").unbind('touchmove');
+	   }
+
+       </script>
+
+
+       <div id="cate" style="position:absolute;left:-100%;width:70%;z-index:10; height:100%; top:0; background:#414141; position:fixed;">
+             <? include "../main/category.html";?>
+       </div>
+       <div id="lay"></div>
+
+        <div id="glayLayer" style="display:none"></div>
+        <div id="overLayer" style="display:">
+        	<div class="title">공유하기</div>
+             <ul>
+            	<li><a href="javascript:;" onclick="toSNS('naver','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')"><img src="../images/sns/sns01.png" alt="네이버"></a></li>
+            	<li><a href="javascript:;" onclick="toSNS('band','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')"><img src="../images/sns/sns02.png" alt="밴드"></a></li>
+            	<li><a href="javascript:;" onclick="toSNS('line','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')"><img src="../images/sns/sns03.png" alt="라인"></a></li>
+            	<li><a href="javascript:;" onclick="toSNS('kakaostory','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')"><img src="../images/sns/sns04.png" alt="카카오스토리"></a></li>
+            	<li><a href="javascript:;" onclick="toSNS('twitter','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')"><img src="../images/sns/sns05.png" alt="트위터"></a></li>
+            	<li><a href="javascript:;" onclick="toSNS('facebook','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')"><img src="../images/sns/sns06.png" alt="페이스북"></a></li>
+            	<li><a href="javascript:;" onclick="toSNS('google','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')"><img src="../images/sns/sns07.png" alt="구글+"></a></li>
+            	<li><a id="kakao-link-btn" onclick="kakaoSend()" href="javascript:;"><img src="../images/sns/sns08.png" alt="카카오톡"></a></li>
+                <li><a href="javascript:;" onclick="toSNS('sms','[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')" class="btn"><i class="far fa-envelope"></i> 문자공유</a></li>
+            </ul>
+        </div>
+		<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+		<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+        <script type="text/javascript">
+        
+		var sharedTitle="";
+		var sharedUrl="";
+		function sharedInfo(title,url){
+			sharedTitle=title;
+			sharedUrl=url;
+			alert(sharedTitle);
+		}
+		//sns공유
+		function toSNS(sns) { 
+			var snsArray = new Array(); 
+			var image = "이미지경로"; 
+			snsArray['twitter'] = "http://twitter.com/home?status=" + encodeURIComponent(sharedTitle) + ' ' + 'http://www.elflower.co.kr/'; 
+			snsArray['facebook'] = "https://www.facebook.com/sharer/sharer.php?u=" + 'http://www.elflower.co.kr/'+"&t="+encodeURIComponent(sharedTitle); 
+			snsArray['band'] = "http://band.us/plugin/share?body=" + encodeURIComponent(sharedTitle) + "  " + 'http://www.elflower.co.kr/' + "&route=" + 'http://www.elflower.co.kr/'; 
+			snsArray['blog'] = "http://blog.naver.com/openapi/share?url=" + 'http://www.elflower.co.kr/' + "&title=" + encodeURIComponent(sharedTitle); 
+			snsArray['line'] = "http://line.me/R/msg/text/?" + encodeURIComponent(sharedTitle) + " " + 'http://www.elflower.co.kr/'; 
+			snsArray['naver'] = "http://share.naver.com/web/shareView.nhn?url="+'http://www.elflower.co.kr/'+"&title=" + encodeURIComponent(sharedTitle); 
+			snsArray['kakaostory'] = "https://story.kakao.com/s/share?url="+'http://www.elflower.co.kr/'+"&amp;text="+encodeURIComponent(sharedTitle); 
+			snsArray['google'] = "https://plus.google.com/share?url=" + 'http://www.elflower.co.kr/' + "&t=" + encodeURIComponent(sharedTitle); 
+			snsArray['sms'] = "sms:<?php echo (preg_match('/iPhone/', $_SERVER['HTTP_USER_AGENT'])) ? '&' : '?'; ?>body="+sharedTitle+"["+sharedUrl+"]";
+			window.open(snsArray[sns]); 
+		} 
+
+		 //<![CDATA[
+    // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('aee322cb87cf618d04fdaa0c5169b5ac');
+
+	function kakaoSend(){
+		Kakao.Link.sendDefault({
+    	objectType: 'feed',
+    	content: {
+    	  title: "이엘플라워",
+    	  description: '#이엘플라워 #꽃집 #꽃배달 #꽃배달쇼핑몰',
+    	  imageUrl: 'http://www.elflower.co.kr/market/images2/logo.png',
+    	  link: {
+			  mobileWebUrl: 'http://www.elflower.co.kr/',
+			  webUrl: 'http://www.elflower.co.kr/'
+			}
+    	},
+    	social: {
+    	  likeCount: 286,
+    	  commentCount: 45,
+    	  sharedCount: 845
+    	},
+    	buttons: [
+        {
+          title: '웹으로 보기',
+          link: {
+             mobileWebUrl: 'http://www.elflower.co.kr/',
+			  webUrl: 'http://www.elflower.co.kr/'
+          }
+        },
+        {
+          title: '앱으로 보기',
+          link: {
+             mobileWebUrl: 'http://www.elflower.co.kr/',
+			  webUrl: 'http://www.elflower.co.kr/'
+          }
+        }]
+      });
+
+	}
+    
+  //]]>
+        </script>
+		<script type='text/javascript'>
+ 
+</script>
+
+
+
+
+

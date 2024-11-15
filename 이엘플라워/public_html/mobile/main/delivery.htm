@@ -1,0 +1,64 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title></title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	
+    
+  <section id="content">
+			<article id="sublist">
+			<!--페이지 -->
+			<div class="page">
+			<p align="center"><img src="../../market/images2/delivery_picture.jpg" width="300" border="0" usemap="#Map">
+			  <map name="Map">
+			    <area shape="rect" coords="45,239,98,304" href="../main/product_list.html?&flag=&category_num=66">
+			    <area shape="rect" coords="120,237,183,305" href="../main/product_list.html?&flag=&category_num=72">
+			    <area shape="rect" coords="202,237,262,305" href="../main/product_list.html?&flag=&category_num=74">
+			    <area shape="rect" coords="200,153,259,225" href="../main/product_list.html?&flag=&category_num=65">
+			    <area shape="rect" coords="118,153,178,222" href="../main/product_list.html?&flag=&category_num=73">
+			    <area shape="rect" coords="42,152,101,222" href="../main/product_list.html?&flag=&category_num=71">
+			    <area shape="rect" coords="198,69,257,142" href="../main/product_list.html?&flag=&category_num=68">
+			    <area shape="rect" coords="123,71,180,142" href="../main/product_list.html?&flag=&category_num=70">
+			    <area shape="rect" coords="42,73,100,136" href="../main/product_list.html?&flag=&category_num=69">
+		      </map>
+			</p>
+			</div>
+			<!--페이지 -->
+			</article>
+			
+		</section>
+    
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

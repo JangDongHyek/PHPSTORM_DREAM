@@ -1,0 +1,37 @@
+<?
+$SQL = "select * from $Domain_forwardTable where mart_id='$mart_id' and if_confirm = '1'";
+$dbresult = mysql_query($SQL, $dbconn);
+if ($dbresult == false) echo "쿼리 실행 실패!";
+$numRows = mysql_num_rows($dbresult);
+if($numRows > 0){
+	$page_title = mysql_result($dbresult, 0, "title");
+}
+?>
+<script>
+document.title = "<?php echo $page_title ?>";
+</script>
+
+<header>
+     <div id="top">
+          <h1 id="logo"><a href="../main/"><img src="../images/logo.png" /></a></h1>
+          <div class="home"><a href="../main/"><img src="../images/home.png"  border="0" /></a></div>
+          <div class="phone"><a href="tel:0512663607"><img src="../images/phone.png" border="0" /></a></div>
+           <!--<div class="cate"><a href="../main/category.html"><img src="../images/cate.png" border="0" /></a></div>-->
+     </div>
+		   <div class="topSearch">
+				<form name="searchForm" method="post" action='../main/search.html' onsubmit="check_submit(); return false;">
+				<input type='hidden' name='select_key' value='item_name'>
+				<input type='hidden' name='mode' value='search'>
+				<input type="text" name="searchTerm" /> <input type="submit" class="smit" value="검색"/></form>
+		   </div> 
+			<nav>
+				<div class="menu">
+		            <dl>
+		              	<dd><a href="javascript:alert('준비중입니다');">회사소개</a></dd>
+			            <dd><a href="../main/category.html">제품소개</a></dd>
+						<dd><a href="../board/board.html">커뮤니티</a></dd>
+			            <dd style="border:0px;"><a href="../main/mypage.html">마이페이지</a></dd>
+                   </dl>
+				</div>
+			</nav>
+		</header>

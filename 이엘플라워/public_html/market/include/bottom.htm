@@ -1,0 +1,154 @@
+
+<div style="height:50px;"></div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top">
+    	<ul class="cus">
+            <li class="b">
+            	<h3>고객센터</h3>
+                <p><i class="fa fa-phone-square" aria-hidden="true"></i> 1588-1943</p>
+                <div class="fax">FAX : 02-6008-6689</div>
+                <span>
+                    영업시간 : 9시 ~ 20시 [인터넷주문은 24시간 가능합니다]
+                    <!--평일   09:00~18:00 / 점심시간   12:00~13:00<br>토요일, 일요일, 공휴일은 휴무 -->
+                    <br>E-mail : el@flowerhd.co.kr
+                </span>
+            </li>
+			
+			
+            <li class="c">
+            	<h3>계좌입금안내</h3>
+              	<p class="bank"><i class="fa fa-credit-card" aria-hidden="true"></i> 301-0232-4580-61</p>
+                <span><strong>은행명</strong> : 농협&nbsp; · &nbsp;<strong>예금주</strong> : 김수헌</span>
+                <div class="cau">주문자명과 입금자명이 다른 경우는 게시판이나 고객센터로 연락바랍니다.</div>
+            </li>
+			
+			
+			
+        	<li class="a">
+            	
+				<!--h3>공지사항</h3>
+				
+                <a href="../board/board_list.php?bbs_no=1"><img src="../images2/bbs_more.gif"></a>
+                <div><table width="100%"  border="0" align="left" cellpadding="0" cellspacing="0">
+                                    <?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 5";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+                                    <?
+		if( $board_tot == "0" ){
+		?>
+                                    <tr valign='top'>
+                                      <td height='30' align='center' valign="middle">등록된 공지사항이  없습니다.</td>
+                                    </tr>
+                                    <?
+		}
+		?>
+                                    <?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,50);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+                                    <tr height="25" valign='top'>
+                                      <td width='80' align=center valign="middle">[<?=$board_date?>]</td>
+                                      <td valign="middle" class="notiti">&middot;<a href='../board/board_read.php?index_no=<?=$board_no?>&amp;bbs_no=1&amp;mart_id=<?=$mart_id?>'>
+                                       <?=$board_title?></a></td>
+                                    </tr>
+                                    <?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+                                </table></div>
+								
+				-->				
+            </li>
+			
+			
+			
+        </ul>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<div style="height:70px;"></div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" id="footer_top">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top">
+    	<div id="footer_top_in">
+        	<ul class="foot_menu">
+            	<!--<li><a href="../site/company2.htm">오시는 길</a></li> -->
+            	<li><a href="../member/mem_rule.html">이용약관</a></li>
+            	<li><a href="../member/mem_person.html" style="color:#F63">개인정보처리방침</a></li>
+            	<li><a href="../board/board_list.php?bbs_no=1">고객센터</a></li>
+            	<li><a href="http://www.ftc.go.kr/info/bizinfo/communicationList.jsp" target="_blank" class="none">사업자정보확인</a></li>
+            </ul>           
+        </div><!--footer_top_in-->
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table><!--footer_top-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" id="footer">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top">
+            <div class="info">
+            	<!--<ul class="sns cf">
+                	<li><a href="#"><img src="../images2/sns_f.png" /></a></li>
+                    <li><a href="#"><img src="../images2/sns_t.png" /></a></li>
+                    <li><a href="#"><img src="../images2/sns_h.png" /></a></li>
+                    <li><a href="#"><img src="../images2/sns_i.png" /></a></li>
+                </ul>-->
+                <p>이엘플라워&nbsp;&nbsp;&nbsp;&nbsp;주소 : 서울특별시 중구 세종대로 124, 지하1층(태평로1가, 한국프레스센터)&nbsp;&nbsp;&nbsp;&nbsp;사업자등록번호 : 638-99-00551&nbsp;&nbsp;&nbsp;&nbsp;대표이사 : 김수헌<br />
+                문의전화 : 1588-1943&nbsp;&nbsp;&nbsp;&nbsp;E-mail : el@flowerhd.co.kr&nbsp;&nbsp;&nbsp;&nbsp;통신판매업신고증 : 제 2018-서울중구-0874호&nbsp;&nbsp;&nbsp;&nbsp;<br /></p>
+				<div class="co">COPYRIGHT(C) 2017. <span class="point">ELFLOWER</span> ALL RIGHTS RESERVED.</div>	
+            </div><!--info-->          
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table><!--copy-->
+
+
+<!--스크롤시 나타나는 상하단버튼-->
+<div id="gobtn">
+	<a href="#hd" class="goHd"><span></span>브라우저 최상단으로 이동합니다</a>
+	<a href="#footer" class="goFt"><span></span>브라우저 최하단으로 이동합니다</a>
+</div>
+
+
+
+<div align="center"><script language = "JavaScript" src = "http://pgweb.uplus.co.kr/WEB_SERVER/js/escrowValid.js" type="text/javascript"></script><a onClick="goValidEscrow('elflower');"><img src="../images2/escro.jpg" width="227" border="0" style="cursor:hand" /></a></div>
+
+<script type="text/javascript">
+    wcs_do();
+</script>
+
+<!--AceCounter-Plus Log Gathering for AceTag Manager V.9.2.20170103>
+<script type="text/javascript">
+var _AceTM = (function (_j, _s, _b, _o, _y) {
+	var _uf='undefined',_pmt='',_lt=location;var _ap = String(typeof(_y.appid) != _uf ? _y.appid():(isNaN(window.name))?0:window.name);var _ai=(_ap.length!=6)?(_j!=0?_j:0):_ap;if(typeof(_y.em)==_uf&&_ai!=0){var _sc=document.createElement('script');var _sm=document.getElementsByTagName('script')[0];
+	var _cn={tid:_ai+_s,hsn:_lt.hostname,hrf:(document.referrer.split('/')[2]),dvp:(typeof(window.orientation)!=_uf?(_ap!=0?2:1):0),tgp:'',tn1:_y.uWorth,tn2:0,tn3:0,tw1:'',tw2:'',tw3:'',tw4:'',tw5:'',tw6:'',tw7:_y.pSearch};_cn.hrf=(_cn.hsn!=_cn.hrf)?_cn.hrf:'in';for(var _aix in _y){var _ns=(_y[_aix])||{};
+	if(typeof(_ns)!='function'){_cn.tgp=String(_aix).length>=3?_aix:'';_cn.tn2=_ns.pPrice;_cn.tn3=_ns.bTotalPrice;_cn.tw1=_ns.bOrderNo;_cn.tw2=_ns.pCode;_cn.tw3=_ns.pName;_cn.tw4=_ns.pImageURl;_cn.tw5=_ns.pCategory;_cn.tw6=_ns.pLink;break;};};_cn.rnd=(new Date().getTime());for(var _alx in _cn){
+	var _ct=String(_cn[_alx]).substring(0,128);_pmt+=(_alx+"="+encodeURIComponent((_ct!=_uf)?_ct:'')+"&");};_y.acid=_ai;_y.atid=_cn.tid;_y.em=_cn.rnd;_sc.src=((_lt.protocol.indexOf('http')==0?_lt.protocol:'http:')+'//'+_b+'/'+_o)+'?'+_pmt+'py=0';_sm.parentNode.insertBefore(_sc,_sm);};return _y;
+})(127793,'CT-50-A', 'atm.acecounter.com','ac.js',window._AceTM||{});
+</script>
+<!--AceCounter-Plus Log Gathering for AceTag Manager End -->
+
+
+<!-- Mirae Log Analysis Script Ver 1.0   >
+<script TYPE="text/javascript">
+var mi_adkey = "oisch";
+var mi_is_defender = "";
+var mi_date = parseInt(new Date().toISOString().slice(0,13).replace(/-/g,"").replace(/t/gi,"").replace(/:/gi,""))+Math.abs(new Date().getTimezoneOffset()/60) ;
+var mi_script = "<scr"+"ipt "+"type='text/javascr"+"ipt' src='//log1.toup.net/mirae_log.js?t="+mi_date+"' async='true'></scr"+"ipt>"; 
+document.writeln(mi_script);
+</script>
+<!-- Mirae Log Analysis Script END  -->

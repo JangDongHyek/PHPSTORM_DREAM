@@ -1,0 +1,579 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$order_sql = "select * from $Order_BuyTable where order_num='$order_num_query' and mart_id='$mart_id'";
+$order_res = mysql_query($order_sql, $dbconn);
+$order_tot = mysql_num_rows($order_res);
+
+$order_row = mysql_fetch_array($order_res);
+$name = $order_row[name];
+$passport1 = $order_row[passport1];
+$passport2 = $order_row[passport2];
+$buyer_tel1 = $order_row[tel1];
+$buyer_tel2 = $order_row[tel2];
+$email = $order_row[email];
+$buyer_zip = $order_row[buyer_zip];
+$buyer_address = $order_row[buyer_address];
+$buyer_address_d = $order_row[buyer_address_d ];
+$receiver = $order_row[receiver];
+$rev_tel = $order_row[rev_tel];
+$rev_tel1 = $order_row[rev_tel1];
+$zip = $order_row[zip];
+$address = $order_row[address];
+$address_d = $order_row[address_d];
+$message = $order_row[message];
+$paymethod = $order_row[paymethod];
+$account_no = $order_row[account_no];
+$status = $order_row[status];
+$date = $order_row[date];
+$pay_day = $order_row[pay_day];
+$money_sender = $order_row[money_sender];
+$date_str = substr($date,0,4)."년 ".substr($date,5,2)."월 ".substr($date,8,2)."일 ".substr($date,11,2)."시 ".substr($date,14,2)."분 ".substr($date,17,2)."초 ";
+$if_use_bonus = $order_row[if_use_bonus];
+$use_bonus_tot = $order_row[use_bonus_tot];
+$freight_fee = $order_row[freight_fee];
+$keeper_message = $order_row[keeper_message];
+$app_no = $order_row[authnumber];
+$tno = $order_row[field1];
+$quota = $order_row[field2];
+$card_name = $order_row[field3];
+$noinf = $order_row[field4];
+$bank_name = $order_row[field3];
+$card_paid = $order_row[card_paid];
+$pay_message = $order_row[field5];
+
+//====================== 결제방법 정보 ===================================================
+if($paymethod== 'byonline' || $paymethod== 'byonline_point'){
+	$pay_sql = "select * from $BankTable where mart_id='$mart_id' and account_no='$account_no'";
+	$pay_res = mysql_query($pay_sql, $dbconn);
+	$pay_row = mysql_fetch_array($pay_res);
+	$account_no = $pay_row[account_no];
+	$bank_name = $pay_row[bank_name];
+	$bank_number = $pay_row[bank_number];
+	$owner_name = $pay_row[owner_name];
+}
+
+if($paymethod== 'bycard'){
+	$paystr = "카드결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'bycard_point'){
+	$paystr = "카드결제 + 포인트결제";
+	$totpaystr = "카드결제 금액";
+}
+if($paymethod== 'byaccount'){
+	$paystr = "계좌이체";
+	$totpaystr = "계좌이체 금액";
+}
+if($paymethod== 'byaccount_point'){
+	$paystr = "계좌이체 + 포인트결제";
+	$totpaystr = "계좌이체 금액";
+}
+
+if($card_paid == 'f' && eregi("bycard", $paymethod))
+	$paystr = "<b>카드 결제 실패</b>";
+if($card_paid == 'f' && eregi("byaccount", $paymethod))
+	$paystr = "<b>계좌이체 실패</b>";
+
+//====================== 온라인 입금시 계좌 정보 =========================================
+if($paymethod== 'byonline'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'byonline_point'){
+	if( $account_no ){
+		$account_str ="( $bank_name $bank_number 예금주 : $owner_name )";
+		$paystr = "온라인입금 + 포인트결제";
+		$totpaystr = "온라인 입금 금액";
+	}else{
+		$account_str ="";
+		$paystr = "";
+		$totpaystr = "온라인 입금 금액";
+	}
+}
+
+if($paymethod== 'bypoint'){
+	$paystr = "포인트결제";
+	$totpaystr = "결제 금액";
+}
+if($paymethod == "byeasy"){
+	$paystr = "간편결제";
+}
+if($status == 1) $status_str = "주문";
+if($status == 2) $status_str = "입금확인";
+if($status == 3) $status_str = "배송완료";
+if($status == 4) $status_str = "환불";
+if($status == 5) $status_str = "주문취소";
+if($status == 6) $status_str = "배송중";
+if($status == 7) $status_str = "교환";
+if($status == 8) $status_str = "<font color='red'>고객주문취소</font>";	
+if($status == 10) $status_str = "<font color='red'>결제취소</font>";	
+
+if($status == 1||$status == 2){
+	if($card_paid == 't')
+	{
+		$cancel_str = "<input type='image' src='../image/bu_ordercancel.gif' width='65' height='20' border='0' align='absmiddle'>";
+	}else
+	{
+		$cancel_str = "<a href='order_cancel.html?flag=cancel&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html' onclick='return really()'><img src='../image/bu_ordercancel.gif' width='65' height='20' border='0' align='absmiddle'></a>";	
+	}
+	$modify_str = "<a href='order_update.html?flag=modify&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html'><img src='../image/bu_modify.gif' border='0' align='absmiddle'></a>";
+}
+if($status == 1)
+{
+	$payment_update_str = "<a href='payment_update.html?flag=payment_update&order_pro_no=$order_pro_no&order_num_query=$order_num_query&mart_id=$mart_id&order_num=$order_num&target=order.html'>[결제변경]</a>";
+}
+?>
+
+<?
+include "../../market/include/getmartinfo.php";
+//include "../../market/include/head_alltemplate.php";
+?>
+
+<!DOCTYPE html>
+<? include("../include/header.html");?>
+
+	<body>
+	<? include("../include/top.html"); ?>
+
+		
+
+<section id="content">
+			<article id="contentSubTitle">
+				<div class="cate_list">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 마이페이지</h2>
+				</div>
+			</article>
+
+        <article id="productReview">
+            <h3>&nbsp;&nbsp;<strong><?=$name?></strong> 님이 구매하신 상품의 상세내역입니다</h3>
+
+
+			<table class="orderForm mt10 mb20">
+                <colgroup>
+                    <col width="35%" />
+                    <col width="65%" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>주문번호</th>
+                        <td><?=$order_num_query?></td>
+                    </tr>
+                    <tr>
+                        <th>주문일시</th>
+                        <td><?=$date_str?></td>
+                    </tr>
+                    <tr>
+                        <th>주문상태</th>
+                        <td>
+						<?=$status_str?>
+						<?php if($order_row['anonymity'] == 'y') echo '&nbsp;&nbsp;&nbsp;[ 익명배송 ]'; ?>
+						</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+		
+		
+		
+		
+		
+		
+		
+<div class="basket">		
+<?
+$order_sql1 = "select * from $Order_ProTable where mart_id='$mart_id' and order_num = '$order_num_query' and status > 0 order by order_pro_no desc";
+$order_res1 = mysql_query($order_sql1, $dbconn);
+$order_tot1 = mysql_num_rows($order_res1);
+$mon_tot = 0;
+$bonus_tot = 0;
+for ($i=0; $i<$order_tot1; $i++) {
+	mysql_data_seek($order_res1,$i);
+	$order_row1 = mysql_fetch_array($order_res1);
+
+	$order_pro_no = $order_row1[order_pro_no];
+	$mart_id = $order_row1[mart_id];
+	$item_name = $order_row1[item_name];
+	$z_price = $order_row1[z_price];
+	$bonus = $order_row1[bonus];
+	$good_status = $order_row1[status];
+	$pro_freight_code = $order_row1[pro_freight_code];
+	$pro_delivery = $order_row1[pro_delivery];
+	$item_no_forcash = $order_row1[item_no];
+	$z_price_str = number_format($z_price);
+	$bonus_str = number_format($bonus);
+	$bonus_tot += $bonus;
+	
+	$use_bonus = $order_row1[use_bonus];
+	$quantity = $order_row1[quantity];
+
+	$opt = $order_row1[opt];
+	$opt2 = $order_row1[opt2];
+	$opt3 = $order_row1[opt3];
+	$opt4 = $order_row1[opt4];
+	$opt5 = $order_row1[opt5];
+	$opt6 = $order_row1[opt6];
+	$opt_price = $order_row1[opt_price];
+	$opt_price2 = $order_row1[opt_price2];
+	$opt_price3 = $order_row1[opt_price3];
+	$opt_price4 = $order_row1[opt_price4];
+	$opt_price5 = $order_row1[opt_price5];
+	$opt_price6 = $order_row1[opt_price6];
+	$priceKind = $order_row1[priceKind];
+	$ment = $order_row[ment];
+	$card_content = $order_row[card_content];
+	$send_name = $order_row[send_name];
+	$occ_choice= $order_row[occ_choice];
+	//옵션 가격 추가
+	//옵션1
+	if($opt){
+		$sql="select * from $OptionTable where opt_no='$opt'";
+		$result=mysql_query($sql);
+		$rs=mysql_fetch_array($result);
+		
+		$opt_name=$rs[opt_name];
+		
+	}else{}
+	//옵션2
+	if($opt2){
+		$sql="select * from $OptionTable2 where opt_no='$opt2'";
+		$result=mysql_query($sql);
+		$rs=mysql_fetch_array($result);
+		
+		$opt_name2=$rs[opt_name];
+		
+	}else{}
+	//옵션3
+	if($opt3){
+		$sql="select * from $OptionTable3 where opt_no='$opt3'";
+		$result=mysql_query($sql);
+		$rs=mysql_fetch_array($result);
+		
+		$opt_name3=$rs[opt_name];
+		
+	}else{}
+	//옵션4
+	if($opt4){
+		$sql="select * from $OptionTable4 where opt_no='$opt4'";
+		$result=mysql_query($sql);
+		$rs=mysql_fetch_array($result);
+		
+		$opt_name4=$rs[opt_name];
+		
+	}else{}
+	//옵션5
+	if($opt5){
+		$sql="select * from $OptionTable5 where opt_no='$opt5'";
+		$result=mysql_query($sql);
+		$rs=mysql_fetch_array($result);
+		
+		$opt_name5=$rs[opt_name];
+		
+	}else{}
+	//옵션6
+	if($opt6){
+		$sql="select * from $OptionTable6 where opt_no='$opt6'";
+		$result=mysql_query($sql);
+		$rs=mysql_fetch_array($result);
+		
+		$opt_name6=$rs[opt_name];
+		
+	}else{}
+	$sum = ($z_price+$opt_price+$opt_price2+$opt_price3+$opt_price4+$opt_price5+$opt_price6)*$quantity;
+
+
+
+	$sum_str = number_format($sum);
+	$mon_tot += $sum;
+	
+	$if_cash_str = '';
+	$cart_sql1 = "select * from $ItemTable where item_no='$item_no_forcash'";
+	$cart_res1 = mysql_query($cart_sql1, $dbconn);
+	$cart_row1 = mysql_fetch_array($cart_res1);
+
+	$prevno = $cart_row1[prevno];
+	$cate_num = $cart_row1[category_num];
+	$if_cash = $cart_row1[if_cash];
+	$mart_id_tmp = $cart_row1[mart_id];
+	
+	if($mart_id == $mart_id_tmp){
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}else{
+		$SQL_T = "select if_cash from gnt_item where seller_id='$mart_id' and item_no='$item_no_forcash'";
+		$dbresult_T = mysql_query($SQL_T, $dbconn);
+		$numRows_T = mysql_num_rows($dbresult_T);
+		if($numRows_T > 0)
+		$if_cash = mysql_result($dbresult_T,0,0);
+		if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' WIDTH='46' HEIGHT='15' absalign='middle'>";
+	}
+
+	if($good_status == 1){
+		$good_status_str = "주문";
+	}else if($good_status == 2){
+		$good_status_str = "입금확인";
+	}else if($good_status == 3){
+		$good_status_str = "배송완료";
+	}else if($good_status == 4){
+		$good_status_str = "환불";
+	}else if($good_status == 5){
+		$good_status_str = "주문취소";
+	}else if($good_status == 6){
+		$good_status_str = "배송중";
+	}else if($good_status == 7){
+		$good_status_str = "교환";
+	}else if($good_status == 10)
+		$good_status_str = "결제취소";	
+?>		
+		
+		
+		
+					<dl>
+						<dt>
+							<ul>
+								<li><?=$item_name?> </li>
+								<?
+													if(isset($opt)&&$opt!=""){
+												?>
+												<br>
+												옵션:
+												<?=$optionNameArray[1]?>
+												<?=$opt_name?>-<?=$opt_price?>원
+												<?}?>
+												<? if(isset($opt2)&&$opt2!=""){?><br>
+												<?=$optionNameArray[2]?>
+												<?=$opt_name2?>-<?=$opt_price2?>원
+												<? }?>
+												<? if(isset($opt3)&&$opt3!=""){?><br>
+												<?=$optionNameArray[3]?>
+												<?=$opt_name3?>-<?=$opt_price3?>원
+												<? }?>
+												<? if(isset($opt4)&&$opt4!=""){?><br>
+												<?=$optionNameArray[4]?>
+												<?=$opt_name4?>-<?=$opt_price4?>원
+												<? }?>
+												<? if(isset($opt5)&&$opt5!=""){?><br>
+												<?=$optionNameArray[5]?>
+												<?=$opt_name5?>-<?=$opt_price5?>원
+												<? }?>
+												<? if(isset($opt6)&&$opt6!=""){?><br>
+												<?=$optionNameArray[6]?>
+												<?=$opt_name6?>-<?=$opt_price6?>원
+												<? }?>
+                                          <?}?> 				
+								
+							</ul>
+						</dt>
+						<dd>
+							<ul>
+									<li><span class="item">상품가격</span>: <?=$priceKindArray[$priceKind]?> - <?=$z_price_str?>원</li>
+									<li><span class="item">수량</span>: <?=$quantity?>개</li>
+									<li><span class="item">배송정보</span>: <?=$me_delivery_str?></li>
+									<li><span class="item">합계금액</span>: <?=$sum_str?>원</li>
+							</ul>
+						</dd>
+					</dl>		
+		
+		
+		
+<?
+if($freight_fee == ''){
+	if($mon_tot >= $freight_limit){
+		$freight_fee = 0;
+	}else{
+		$freight_fee = $freight_cost;
+	}
+}
+$mon_tot_freight = $mon_tot + $freight_fee;
+?>
+                              <dd>
+                                <ul height="40" align="center">총합계:
+                                    <span class="price"><strong> <?=number_format($mon_tot_freight)?></strong></span> 원 
+                                    <!-- <span class="text_red">[ 소계:<?=number_format($mon_tot)?>원 ] -->
+<? if($freight_fee){ ?>
+									<span class="text_red">[ 배송료 <?=number_format($freight_fee)?>원 ]</span>
+<? } ?>
+<? if($bonus_tot){ ?>
+									<!-- <span class="text_red">[ 포인트 <?=number_format($bonus_tot)?>원 ]</span> -->
+<? } ?>
+                                </ul>
+                              </dd>
+</div>	
+
+
+           <h3>&nbsp;&nbsp;배송지 정보</h3>
+		   <table class="orderForm mt10 mb20">
+                <colgroup>
+                    <col width="35%" />
+                    <col width="65%" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>받는사람</th>
+                        <td><?=$receiver?></td>
+                    </tr>
+                    <tr>
+                        <th>연락처</th>
+                        <td><?=$rev_tel?></td>
+                    </tr>
+                    <tr>
+                        <th>휴대폰번호</th>
+                        <td><?=$rev_tel1?></td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td>[
+                              <?=$zip?>
+                              ]
+                              <?=$address?>
+							  <?=$address_d?></td>
+                    </tr>
+					<tr>
+                        <th>희망 배송일</th>
+                        <td><?=$order_row[hope_date]." ".$order_row[ampm]." ".$order_row[hope_time]." ".$order_row[hope_type]?></td>
+                    </tr>
+				</tbody>
+            </table>
+
+			<h3>&nbsp;&nbsp;배송지 정보</h3>
+			<table class="orderForm mt10 mb20">
+			<tr>
+					  <th> 전달메세지</th>
+					  <td>
+						<table width="100%" cellpadding="0" cellspacing="0">
+							<tr>
+								<th>카드리본선택</th>
+								<td><?=$occChoiceArray[$occ_choice]?></td>
+							</tr>
+							<?
+								if($occ_choice=="card"||$occ_choice=="card+ribon"){
+							?>
+							<tr>
+								<th>카드메세지</th>
+								<td><?=$card_content?></td>
+							</tr>
+							<? }
+							if($occ_choice=="ribon"||$occ_choice=="card+ribon"){
+							?>
+							<tr>
+								<th>경조사어</th>
+								<td><?=$ment?></td>
+							</tr>
+							<tr>
+								<th>보내는 분</th>
+								<td><?=$send_name?></td>
+							</tr>
+							<? }?>
+							
+						</table>
+					  </td>
+					</tr>
+			</table>
+
+
+			<h3>&nbsp;&nbsp;결제방법 및 금액</h3>
+			<table class="orderForm mt10 mb20">
+                <colgroup>
+                    <col width="35%" />
+                    <col width="65%" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>결제방법</th>
+                        <td><?=$paystr?>
+                              <?=$account_str?></td>
+                    </tr>
+<?
+	if($paymethod== 'bycard' || $paymethod== 'bycard_point'){
+		if($quota == "00")
+		{
+			$quota_str = "일시불";
+		}
+		if($noinf == 'y')
+		{
+			$noinf_str = "무이자";
+		}
+
+		if($card_paid == 't'){
+?>
+                    <tr>
+                        <th>카드명</th>
+                        <td><?=$card_name?></td>
+                    </tr>
+                    <tr>
+                        <th>승인번호</th>
+                        <td><?=$app_no?> </td>
+                    </tr>
+                    <tr>
+                        <th>할부</th>
+                        <td><?=$quota_str?>&nbsp;<?=$noinf_str?></td>
+                    </tr>
+
+<?
+		}
+	}else if($paymethod== 'byaccount' || $paymethod== 'byaccount_point'){
+?>
+						<tr>
+                          <th>은행명</th>
+                          <td><?=$bank_name?></td>
+                        </tr>
+<?
+	}
+?>
+<?
+if( $use_bonus_tot < $mon_tot_freight ){
+?>
+<?
+	if($paymethod== 'byonline'||$paymethod== 'byonline_point'){
+?>
+ 						<tr>
+                          <th>입금자명</th>
+                          <td><?=$money_sender?></td>
+                        </tr>
+ 						<tr>
+                          <th>입금예정일</th>
+                          <td><?=$pay_day?></td>
+                        </tr>
+
+                        <?
+	}
+?>
+<?
+}
+?>
+<?php
+							if($if_use_bonus == "1"){?>
+						<tr>
+							<th>포인트사용</th>
+							<td class="price"><?=number_format($use_bonus_tot)?>P</td>
+						</tr>
+						<?php }?>
+
+                </tbody>
+            </table>
+
+
+
+
+		</article>
+		
+    </section>
+
+ 
+ 
+<? include("../include/bottom.html"); ?>
+	</body>
+</html>

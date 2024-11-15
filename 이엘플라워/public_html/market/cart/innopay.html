@@ -1,0 +1,223 @@
+<?
+//================== DB ?ㅼ젙 ?뚯씪??遺덈윭??===============================================
+include "../../connect.php";
+header("Content-Type:text/html;charset=utf-8");
+//================== ?⑥닔 ?뚯씪??遺덈윭??==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<?php
+ session_start();
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+<!--
+.style1 {
+	font-size: 14px;
+	font-weight: bold;
+	line-height:20px;
+}
+.style2 {color: #FF0000; font-weight:900; line-height:20px;}
+-->
+</style>
+
+
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- ?묐찓???쒖옉 ---------------------------------------------------->
+
+<?
+include "../include/top_innopay.htm";
+?>
+
+<!---------------------- ?묐찓????------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<script type="text/javascript" src="https://pg.innopay.co.kr/pay/js/Innopay.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+    	$("#PayMethod").change(function(){
+            if("VBANK"==$("#payMethod").val()){
+            	$("#VbankExpDate").removeAttr("disabled");
+            	$("#VbankExpDate").val(ediDate.substring(0, 8));
+            }else{
+            	$("#VbankExpDate").attr("disabled",true);
+            }
+        });
+    });
+</script>
+<?php
+	if(0 < strpos($paymethod,'card')){
+		$iPay = "CARD";
+	}else if(0 < strpos($paymethod,'easy')){
+		$iPay = "EPAY";
+	}else{
+		$iPay = "BANK";
+	}
+?>
+
+<form action="" name="frm" id="frm" method="post" style=""> 
+<input type="hidden" name="PayMethod" value="<? echo $iPay;?>">
+<input type="hidden" name="GoodsCnt" value="1" placeholder="">
+<input type="hidden" name="GoodsName" value="<?=iconv('euc-kr','utf-8',$item_name)?>" placeholder="">
+<input type="hidden" name="Amt" value="<?=$Amount?>" placeholder="" onKeyUp="javascript:numOnly(this,document.frm,false);">
+<input type="hidden" name="Moid" value="<?=$OrderID?>" placeholder="">
+<select style="width: 100%; display:none" name="MID" id="MID">
+	<option value="pgelflowem">pgelflowem(?몄쬆)</option>
+</select>
+ <input type="hidden" name="ReturnURL" value="http://www.elflower.co.kr/market/cart/order_ok2.html" placeholder="">
+ <input type="hidden" name="ResultYN" value="N" >
+ <input type="hidden" name="RetryURL" value="http://www.elflower.co.kr/market/cart/order_ok2.html" placeholder="">
+ <input type="hidden" name="mallUserID" value="<?=$_SESSION[UnameSess]?>" maxlength="30" placeholder="">
+ <input type="hidden" name="BuyerName" value="<?=iconv('euc-kr','utf-8',$Name)?>" placeholder="">
+ <input type="hidden" name="BuyerTel" value="<?=$buyer_tel?>" placeholder="">
+ <input type="hidden" name="BuyerEmail" value="<?=$email?>" placeholder="">
+ <input type="hidden" name="VbankExpDate" id="VbankExpDate" value="" disabled placeholder="">
+ <input type="hidden" name="EncodingType" value="euc-kr">
+ <input type="hidden" name="FORWARD" VALUE="Y">
+ <!--hidden ?곗씠? ?꾩닔-->
+<input type="hidden" name="ediDate" value=""> <!-- 寃곗젣?붿껌?쇱떆 ?쒓났??js ??setEdiDate ?⑥닔瑜??ъ슜?섍굅??媛留뱀젏?먯꽌 ?ㅼ젙 yyyyMMddHHmmss-->
+<input type="hidden" name="MerchantKey" value="ogi9txwREN8mbDsqv21CkzIudBfDhngQyQ2ITCU/xnDlNNi/ZuEMIXOl4Li0xjsoBA7/q/BO1AECwPv9SWdZ6w=="> <!-- 諛쒓툒??媛留뱀젏??-->
+<input type="hidden" name="EncryptData" value=""> <!-- ?뷀샇?붾뜲?댄꽣 -->
+<input type="hidden" name="MallIP" value="127.0.0.1"/> <!-- 媛留뱀젏?쒕쾭 IP 媛留뱀젏?먯꽌 ?ㅼ젙-->
+<input type="hidden" name="UserIP" value="127.0.0.1"> <!-- 援щℓ??IP 媛留뱀젏?먯꽌 ?ㅼ젙-->
+<!-- <input type="hidden" name="FORWARD" value="Y"> Y:?앹뾽?곕룞 N:?섏씠吏?꾪솚 -->
+<input type="hidden" name="MallResultFWD"   value="N"> <!-- Y ??寃쎌슦 PG寃곗젣寃곌낵李쎌쓣 蹂댁씠吏 ?딆쓬 -->
+<input type="hidden" name="device" value=""> <!-- ?먮룞?뗮똿 -->
+<!--hidden ?곗씠? ?듭뀡-->
+<input type="hidden" name="BrowserType" value="">
+<input type="hidden" name="MallReserved" value="">
+<!-- ?꾩옱???ъ슜?덊븿 -->
+<input type="hidden" name="SUB_ID" value=""> <!-- ?쒕툕紐?ID -->
+<input type="hidden" name="BuyerPostNo" value="" > <!-- 諛곗넚吏 ?고렪踰덊샇 -->
+<input type="hidden" name="BuyerAddr" value=""> <!-- 諛곗넚吏二쇱냼 -->
+<input type="hidden" name="BuyerAuthNum">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+
+                    <td height="100%" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                                <td height="20"></td>
+                    </tr>
+		
+                        <tr>
+                          <td><table width="100%" border="0" cellpadding="0" cellspacing="0">
+              
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td width="7"><img src="../images/mypage/order_view_1.gif" width="7" height="58" /></td>
+                                            <td background="../images/mypage/order_view_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title1.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title2.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title3_over.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title4.gif" width="101" height="18" /></div></td>
+                                                </tr>
+                                            </table></td>
+                                            <td width="7"><img src="../images/mypage/order_view_2.gif" width="7" height="58" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                  
+                              <tr>
+                                <td>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>
+                            <table width="80%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td width="20"><img src="../image/table_1.gif" width="20" height="20"></td>
+                                <td background="../image/table_1_bg.gif">&nbsp;</td>
+                                <td width="20"><img src="../image/table_2.gif" width="20" height="20"></td>
+                              </tr>
+                              <tr>
+                                <td background="../image/table_4_bg.gif">&nbsp;</td>
+                                 <td height="150" align="center">  <strong class="style1"><span class="style1">카드 결제를 진행하실려면<br>
+                                  <span class="style2">결제하기 버튼</span>을 누르십시오.<br><br>
+
+                                
+                                  새창에서 카드결제가 진행되므로<br>
+                                  창을 닫으시면 결제가 진행되지 않습니다.</span><br>                                  </td>
+                                <td background="../image/table_2_bg.gif">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="20"><img src="../image/table_4.gif" width="20" height="20"></td>
+                                <td background="../image/table_3_bg.gif">&nbsp;</td>
+                                <td><img src="../image/table_3.gif" width="20" height="20"></td>
+                              </tr>
+                            </table>
+                            <table width="100%"  border="0" cellspacing="0" cellpadding="0" align="center">
+                              <tr>
+                                  <td height="70" align="center">
+								  
+								  
+<a href="#" onClick="return goPay(frm)"/><img src="../image/bu_account2.gif" border="0" style='cursor:hand' ></a> <a href="card_account_cancel.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>"><img src="../image/bu_cancel.gif"  border="0"></a>
+<!------------------------------寃곗젣 ????----------------------------------->								  </td>
+											  </tr>
+                            </table>                        </td>
+                      </tr>
+                  </table>								</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+             
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="10"></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</form>
+
+
+<!---------------------- ?섎떒硫붾돱 ?쒖옉 -------------------------------------------------->
+<?
+include "../include/bottom_innopay.htm";
+?>
+<!---------------------- ?섎떒硫붾돱 ??---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

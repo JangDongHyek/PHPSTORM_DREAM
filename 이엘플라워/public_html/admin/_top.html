@@ -1,0 +1,58 @@
+<?
+include "./admin_head1.php";
+?>
+<?
+$sql = "select * from $MartMngInfoTable where mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$total = mysql_num_rows($res);
+if( $total > 0 ){
+	$row = mysql_fetch_array($res);
+	$shop_logo = $row[logo];
+	$target = "../up/".$mart_id."/".$shop_logo;
+}
+?>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0">
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="200" rowspan="2" align="center"><a href="./main.html" target="main"><img src="<?=$target?>" border="0"></a></td>
+		<td height="30">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+        		<tr>
+					<td width="610" >&nbsp;</td>
+					<td>
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="60"><a href="./logout.php" target="_top"><img src="./images/bu_logout.gif" width="60" height="30" border="0"></a></td>
+								<td width="80"><a href="../." target="_blank"><img src="./images/bu_shop.gif" width="80" height="30" border="0"></a></td>
+								<!-- <td width='80'><a onclick="window.open('./sms/phone.html','','scrollbars=yes,width=180,height=530');" style='cursor:hand'><img src="./images/bu_sms.gif" width="66" height="30" border="0"></a></td> -->
+							</tr>
+						</table>
+					</td>
+        		</tr>
+        	</table>
+		</td>
+	</tr>
+	<tr>
+		<td background="images/menu_bg.gif">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="100"><a href="./setting/main_setting.php" target="main" onMouseOver="MM_swapImage('Image2','','images/menu_01_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_01.gif" name="Image2" width="100" height="60" border="0"></a></td>
+					<td width="100"><a href="./category/category_list.php" target="main" onMouseOver="MM_swapImage('Image3','','images/menu_02_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_02.gif" name="Image3" width="100" height="60" border="0"></a></td>
+					<td width="80"><a href="./good/item_frame.html" target="main" onMouseOver="MM_swapImage('Image4','','images/menu_03_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_03.gif" name="Image4" width="80" height="60" border="0"></a></td>
+					<td width="80"><a href="./order/order_new.php" target="main" onMouseOver="MM_swapImage('Image5','','images/menu_04_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_04.gif" name="Image5" width="80" height="60" border="0"></a></td>
+					<td width="80"><a href="./member/member_list.php" target="main" onMouseOver="MM_swapImage('Image6','','images/menu_05_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_05.gif" name="Image6" width="80" height="60" border="0"></a></td>
+
+					<td width="90"><a href="./board/admin_board_list.php" target="main" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image7','','images/menu_08_on.gif',1)"><img src="images/menu_08.gif" name="Image7" width="90" height="60" border="0"></a></td>
+
+					<td width="80"><a href="./stat/member_region.php" target="main" onMouseOver="MM_swapImage('Image8','','images/menu_09_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_09.gif" name="Image8" width="80" height="60" border="0" ></a></td>
+					
+					<td width="80"><a href="./sms/sms_list.php" target="main" onMouseOver="MM_swapImage('Image11','','images/menu_sms_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_sms.gif" name="Image9" width="80" height="60" border="0" ></a></td>
+					<!--회원사 및 입점몰 사용-->
+					<!--<td width="100"><a href="./inmall/inmall_member_list.php" target="main" onMouseOver="MM_swapImage('Image7','','images/menu_06_on.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/menu_06.gif" name="Image7" width="100" height="60" border="0"></a></td>
+					<td width="90"><a href="./inmember/inmember_member_list.php" target="main" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image8','','images/menu_07_on.gif',1)"><img src="images/menu_07.gif" name="Image8" width="90" height="60" border="0"></a></td>-->
+				</tr>
+        	</table>
+		</td>
+	</tr>
+</table>

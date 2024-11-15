@@ -1,0 +1,547 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<?
+//============================= 방문자를 카운트 함 =======================================
+$today = date("Ymd");
+$co_sql = "select * from $Mart_CounterTable where mart_id='$mart_id' and date='$today'";
+$co_res = mysql_query($co_sql, $dbconn);
+$co_tot = mysql_num_rows($co_res);
+if($co_tot > 0){
+	$co_row = mysql_fetch_array($co_res);
+	$index_no = $co_row[index_no];
+	$client_ip = $co_row[client_ip];
+	if( $client_ip != $REMOTE_ADDR ){
+		$coup_sql = "update $Mart_CounterTable set count_num=count_num + 1, client_ip='$REMOTE_ADDR' where index_no='$index_no' and mart_id='$mart_id'";
+		$coup_res = mysql_query($coup_sql, $dbconn);
+		if($coup_res == false){
+			echo "방문 통계 쿼리 실패";
+		}
+	}
+}else{
+	$coin_sql = "insert into $Mart_CounterTable(mart_id, date, count_num, client_ip) values('$mart_id', '$today', '1', '$REMOTE_ADDR')";
+	$coin_res = mysql_query($coin_sql, $dbconn);
+	if($coin_res == false){
+		echo "방문 통계 쿼리 실패";
+	}
+}
+if( $co_res ){
+	mysql_free_result( $co_res );
+}
+?>
+<script>
+function checkform(f){
+	if(f.username.value==""){
+		alert("아이디를 입력하세요.");
+		f.username.focus();
+		return false;
+	}
+	if(f.password.value==""){
+		alert("비밀번호를 입력하세요.");
+		f.password.focus();
+		return false;
+	}
+	return true;
+}
+</script>
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: 굴림, 돋움;
+}
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+//-->
+</script>
+<script language="JavaScript" src="/iezn_embed_patch.js"></script>
+<body onLoad="MM_preloadImages('../images/hot_product_3.gif','../images/hot_product_over_3.gif','../images/hot_product_4.gif','../images/hot_product_over_4.gif','../images/hot_product_5.gif','../images/hot_product_over_5.gif','../images/hot_product_6.gif','../images/hot_product_over_6.gif');">
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../img/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>
+	</td>
+  </tr>
+</table> 
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>      <table width="960" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="30" rowspan="4" valign="top"><table width="30" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><img src="../img/new_main_16.gif" width="30" height="308"></td>
+            </tr>
+          <tr>
+            <td>&nbsp;</td>
+            </tr>
+          <tr>
+            <td>&nbsp;</td>
+            </tr>
+          <tr>
+            <td>&nbsp;</td>
+            </tr>
+        </table></td>
+        <td width="208"><img src="../img/new_main_17.gif" width="208" height="55"></td>
+        <td colspan="2" rowspan="2" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="69%"><img src="../img/new_main_18.gif" width="482" height="55"></td>
+            <td width="31%"><img src="../img/new_main_19.gif" width="240" height="55"></td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td rowspan="3" valign="top">
+          <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><img src="../img/new_main_24.gif" width="208" height="28"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_20.gif" width="208" height="29"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_25.gif" width="208" height="28"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_26.gif" width="208" height="28"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_27.gif" width="208" height="28"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_29.gif" width="208" height="28"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_30.gif" width="208" height="28"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_31.gif" width="208" height="37"></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_32.gif" width="208" height="19"></td>
+          </tr>
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="83">
+<!---------------------------- 메인 로그인 시작 ------------------------------->
+<?
+if( isset($MemberName) ){
+?>
+			<table width="208" border="0" cellspacing="0" cellpadding="0">
+			  <tr>
+				<td><img src="../images/login_box_1.gif" width="208" height="14"></td>
+			  </tr>
+			  <tr>
+				<td><table width="208"  border="0" cellspacing="0" cellpadding="0">
+				  <tr>
+					<td width="136"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="70%" align="center"><?=$MemberName?> </td>
+                        <td width="30%" align="center"><img src="../images/greeting_font.gif" width="63" height="20"></td>
+                      </tr>
+                    </table></td>
+					<td valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td></td>
+					  </tr>
+					  <tr>
+						<td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+						  <tr>
+							<td width="56%"><a href="../member/logout.php"><img src="../images/logout_box_4.gif" width="40" height="28" border="0"></a></td>
+							<td width="44%">&nbsp;</td>
+						  </tr>
+						</table></td>
+					  </tr>
+					  <tr>
+						<td>&nbsp;</td>
+					  </tr>
+					</table></td>
+				  </tr>
+				</table></td>
+			  </tr>
+			  <tr>
+				<td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+				  <tr>
+					<td>&nbsp;</td>
+					<td width="56"><a href="../mypage/update.html"><img src="../images/logout_box_8.gif" width="56" height="24" border="0"></a></td>
+					<td>&nbsp;</td>
+					</tr>
+				</table></td>
+			  </tr>
+			</table>			
+<?
+}else{
+?>
+              <table width="208" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><img src="../images/login_box_1.gif" width="208" height="14"></td>
+                </tr>
+                <tr>
+                  <td><table width="208"  border="0" cellspacing="0" cellpadding="0">
+				  <form name='f' method='post' action='../member/login_process.php?url=<?=$url?>&mart_id=<?=$mart_id?>' onsubmit='return checkform(this)'>
+				  <input type="hidden" name="member_type" value="1">
+                      <tr>
+                        <td width="136"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td height="22"><div align="center">
+                                  <input name="username" type="text" id="username" size="15" class="input_03">
+                              </div></td>
+                            </tr>
+                            <tr>
+                              <td height="23"><div align="center">
+                                  <input name="password" type="password" class="input_03" id="password" size="15">
+                              </div></td>
+                            </tr>
+                        </table></td>
+                        <td valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                              <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="56%"><input type='image' src="../images/login_box_4.gif" width="40" height="28"></td>
+                                    <td width="44%">&nbsp;</td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td>&nbsp;</td>
+                            </tr>
+                        </table></td>
+                      </tr>
+					  </form>
+                  </table>
+				  </td>
+                </tr>
+                <tr>
+                  <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="22">&nbsp;</td>
+                        <td width="56"><a href="../member/."><img src="../images/login_box_9.gif" width="56" height="24" border="0"></a></td>
+                        <td width="98"><a href="../member/idfind.html"><img src="../images/login_box_10.gif" width="98" height="24" border="0"></a></td>
+                        <td width="32">&nbsp;</td>
+                      </tr>
+                  </table></td>
+                </tr>
+              </table>
+<?
+}
+?>
+<!---------------------------- 메인 로그인 끝 ------------------------------->
+                </td>
+              </tr>
+            </table>
+<? include "../include/sub_menu.htm" ?>
+			</td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td colspan="2" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="40%"><img src="../img/new_main_21.jpg" width="288" height="306"></td>
+                <td width="4%"><img src="../img/new_main_22.gif" width="194" height="306"></td>
+                <td width="56%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="125" valign="top" background="../img/new_main_23.gif"><table width="93%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>
+
+<!---------------------- 공지사항 시작 -------------------------------------------------->
+						<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td background="">
+									<table width="95%"  border="0" align="left" cellpadding="0" cellspacing="0">
+<?             			
+$today = date("Ymd");
+$notice_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 5";
+$notice_res = mysql_query($notice_sql, $dbconn);
+$notice_tot = mysql_num_rows( $notice_res );
+?>
+<?
+if( $notice_tot == "0" ){
+?>
+										<tr valign='top'>
+										  <td height='30' align='center' valign="middle">등록된 공지사항이 없습니다.</td>
+										</tr>
+<?
+}
+?>
+<?
+$i = 0;
+while( $notice_row = mysql_fetch_array($notice_res) ){
+	$notice_no = $notice_row[index_no];
+	$notice_title = $notice_row[subject_new];
+	$notice_title = han_cut($notice_title,40);
+?>
+										<tr height="20" valign='top'>
+										  <td width='40' align=center valign="middle"><img src="../images/notice_icon.gif" width="29" height="11" align="absmiddle"></td>
+										  <td valign="middle" class=""><a href='../board/board_read.php?index_no=<?=$notice_no?>&bbs_no=1&mart_id=<?=$mart_id?>'><?=$notice_title?></a></td>
+										</tr>
+<?
+}
+if( $notice_res ){
+	mysql_free_result( $notice_res );
+}
+?>
+								  </table>
+								</td>
+							</tr>
+							<tr>
+								<td style="height:5px"></td>
+							</tr>
+						</table>
+<!---------------------- 공지사항 끝 ---------------------------------------------------->	
+
+						</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                  <tr>
+                    <td><img src="../img/new_main_28.jpg" width="240" height="181"></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_35.gif" width="722" height="49"></td>
+          </tr>
+          <tr>
+            <td height="169">
+<!------------------------------ 신상품 시작 --------------------------------->
+<? include "../include/new_item.htm" ?>
+<!------------------------------ 신상품 끝 --------------------------------->
+			</td>
+          </tr>
+          <tr>
+            <td><img src="../img/new_main_43.gif" width="722" height="51"></td>
+          </tr>
+          <tr>
+            <td height="170">
+<!------------------------------ 인기상품 시작 --------------------------------->
+<? include "../include/fav_item.htm" ?>
+<!------------------------------ 인기상품 끝 --------------------------------->
+			</td>
+          </tr>
+        </table></td>
+        </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="960" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="30">&nbsp;</td>
+        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="23%"><img src="../img/new_main_45.gif" width="217" height="162"></td>
+            <td width="1%"><img src="../img/new_main_46.gif" width="208" height="162"></td>
+            <td width="76%"><img src="../img/new_main_47.jpg" width="505" height="162"></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="37%"><img src="../img/new_main_48.jpg" width="343" height="269"></td>
+            <td width="60%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../img/new_main_49.gif" width="262" height="22"></td>
+              </tr>
+              <tr>
+                <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><img src="../img/new_main_51.gif" width="131" height="113"></td>
+                    <td><img src="../img/new_main_52.gif" width="131" height="113"></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><img src="../img/new_main_53.gif" width="131" height="109"></td>
+                    <td><img src="../img/new_main_54.gif" width="131" height="109"></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td><img src="../img/new_main_55.gif" width="262" height="25"></td>
+              </tr>
+            </table></td>
+            <td width="3%"><img src="../img/new_main_50.jpg" width="325" height="269"></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><img src="../img/new_main_56.gif" width="930" height="39"></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><img src="../img/new_main_57.gif" width="930" height="286"></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="36%" valign="top"><table width="38%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../img/new_main_58.gif" width="335" height="32"></td>
+              </tr>
+              <tr>
+                <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="37%"><img src="../img/new_main_61.gif" width="123" height="149"></td>
+                    <td width="56%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><img src="../img/new_main_62.gif" width="191" height="15"></td>
+                      </tr>
+                      <tr>
+                        <td><img src="../img/new_main_66.gif" width="191" height="30"></td>
+                      </tr>
+                      <tr>
+                        <td><img src="../img/new_main_68.gif" width="191" height="30"></td>
+                      </tr>
+                      <tr>
+                        <td><img src="../img/new_main_69.gif" width="191" height="30"></td>
+                      </tr>
+                      <tr>
+                        <td><img src="../img/new_main_70.gif" width="191" height="30"></td>
+                      </tr>
+                      <tr>
+                        <td><img src="../img/new_main_71.gif" width="191" height="14"></td>
+                      </tr>
+                    </table></td>
+                    <td width="7%"><img src="../img/new_main_63.gif" width="21" height="149"></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td width="1%" valign="top"><table width="2%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../img/new_main_59.gif" width="265" height="32"></td>
+              </tr>
+              <tr>
+                <td><img src="../img/new_main_64.gif" width="265" height="149"></td>
+              </tr>
+            </table></td>
+            <td width="63%" valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../img/new_main_60.gif" width="330" height="32"></td>
+              </tr>
+              <tr>
+                <td><img src="../img/new_main_65.gif" width="330" height="35"></td>
+              </tr>
+              <tr>
+                <td height="114" valign="top" background="../img/new_main_67.gif">
+				<table width="92%"  border="0" align="center" cellpadding="0" cellspacing="0">
+<?
+$bank_sql = "select * from $BankTable where mart_id = '$mart_id' order by account_no";
+$bank_res = mysql_query($bank_sql, $dbconn);
+$bank_tot = mysql_num_rows( $bank_res );	
+
+if( $bank_tot == "0" ){
+?>
+				  <tr valign='top'>
+					<td height='30' align='center' valign="middle">등록된 은행 계좌번호가 없습니다.</td>
+				  </tr>
+<?
+}
+?>
+<?
+$i = 0;
+while( $bank_row = mysql_fetch_array($bank_res) ){
+	$account_no = $bank_row["account_no"];
+	$bank_name = $bank_row["bank_name"];
+	$bank_number = $bank_row["bank_number"];
+	$owner_name = $bank_row["owner_name"];
+
+	if($bank_name&&$bank_number&&$owner_name){
+?>
+                  <tr>
+                    <td><?=$bank_name?></td>
+					<td><?=$bank_number?></td>
+                    <td><?=$owner_name?></td>
+                  </tr>
+<?
+	}
+}
+?>
+                </table></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+	</td>
+  </tr>
+</table>
+<map name="bar1">
+  <area shape="rect" coords="3,3,45,25" href="/market/main/index.html">
+  <area shape="rect" coords="47,3,93,25" href="<?="../member/login.html?url=$url"?>">
+  <area shape="rect" coords="97,3,162,25" href="../member/.">
+  <area shape="rect" coords="167,3,220,25" href="../mypage/index.html">
+  <area shape="rect" coords="227,3,278,25" href="<?="../cart/cart.html?category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no"?>">
+  <area shape="rect" coords="282,3,327,25" href="../stat/order.html">
+  <area shape="rect" coords="330,3,381,25" href="../board/board_list.php?bbs_no=2">
+  <area shape="rect" coords="386,2,437,24" href="../board/board_list.php?bbs_no=3">
+</map>
+</body>
+</html>

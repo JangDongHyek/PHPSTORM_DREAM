@@ -1,0 +1,155 @@
+<?
+//============================== 카테고리 상품  =================================
+
+$rec_sql = "select * from $ItemTable where mart_id='$mart_id' and firstno = '{$cat_num}' and if_hide='0' order by item_order desc, item_no desc limit 0,9";
+$rec_res = mysql_query($rec_sql, $dbconn);
+$rec_tot = mysql_num_rows($rec_res);
+
+$_tdCount=3;
+?>
+<table width="100%" border="0" cellspacing="3" cellpadding="0" align="center">
+	<tr>
+<?
+for( $k = 0; $rec_row = mysql_fetch_array($rec_res); $k++ ){
+	$rec_item_no[$k] = $rec_row[rec_item_no];
+	$item_no[$k] = $rec_row[item_no];
+
+	if($k%$_tdCount==0)
+		echo "			  <tr>\n";
+
+	$item_no1 = $rec_row[item_no];
+	$category_num = $rec_row[firstno];
+	$prevno = $rec_row[prevno];
+	$cate_num = $rec_row[category_num];
+	$item_name = $rec_row[item_name];
+	//$img_high = $rec_row[img_high];
+	$img_high = $rec_row[img];
+	if(!$img_high)
+		$img_high = $rec_row[img_sml];
+	$short_explain = $rec_row[short_explain];
+	$price = $rec_row[price];
+	$price_str = number_format($price);
+	$if_strike = $rec_row[if_strike];
+	$z_price = number_format($rec_row[z_price]);
+	$bonus = number_format($rec_row[bonus]);
+	$icon_no = $rec_row[icon_no];
+	$icon_no2 = $rec_row[icon_no2];
+	$icon_no3 = $rec_row[icon_no3];
+	$icon_no4 = $rec_row[icon_no4];
+	$icon_no5 = $rec_row[icon_no5];
+	$icon_no6 = $rec_row[icon_no6];
+	$icon_no7 = $rec_row[icon_no7];
+	$icon_no8 = $rec_row[icon_no8];
+	$jaego = $rec_row[jaego];
+	$jaego_use = $rec_row[jaego_use];
+	$thumbnail = $rec_row[thumbnail];
+	if($thumbnail == 'y'){
+		$fixed_size = "width=245 height=200";
+	}else{
+		$fixed_size = "width=245 height=200";
+	//	$fixed_size = " width='130' height='130' ";
+	}	
+	$item_name = han_cut2($item_name,22);
+
+	if($jaego_use == 1 && $jaego == 0){
+		$icon_str = "<img src='../image/soldout_icon_s.gif' width='25' height='12' align='absmiddle'>";
+	}else{
+		if($icon_no == 1){ $icon_str = "<img src='../image/hot.gif' width='22' height='13' align='absmiddle'>";}else{$icon_str="";};
+		if($icon_no2 == 2){ $icon_str2 = "<img src='../image/new.gif' width='25' height='14' align='absmiddle'>";}else{$icon_str2="";};
+		if($icon_no3 == 3){ $icon_str3 = "<img src='../image/sale.gif' width='22' height='13' align='absmiddle'>";}else{$icon_str3="";}
+		if($icon_no4 == 4){ $icon_str4 = "<img src='../image/reserv.gif' align='absmiddle'>";}else{$icon_str4="";}
+		if($icon_no5 == 5){ $icon_str5 = "<img src='../image/btn_ingi.gif' align='absmiddle'>";}else{$icon_str5="";}
+		if($icon_no6 == 6){ $icon_str6 = "<img src='../image/btn_good.gif' align='absmiddle'>";}else{$icon_str6="";}
+		if($icon_no7 == 7){ $icon_str7 = "<img src='../image/btn_man.gif' align='absmiddle'>";}else{$icon_str7="";}
+		if($icon_no8 == 8){ $icon_str8 = "<img src='../image/btn_chu.gif' align='absmiddle'>";}else{$icon_str8="";}
+		//$icon_str = make_incon_tag($icon_no, "../image/");
+	}
+
+	//============================ 상품 이미지 =======================================
+	if($img_high != "" && file_exists("$Co_img_UP$mart_id/$img_high")){
+		if (strstr(strtolower(substr($img_high,-4)),'.jpg') || strstr(strtolower(substr($img_high,-4)),'.gif')){
+			$img_str = "<a href='../main/product_info.html?mart_id=$mart_id&category_num=$category_num&category_num1=$prevno&category_num2=$category_num2&cate_num=$cate_num&item_no=$item_no1' target='_parent'><img src='../..$Co_img_DOWN$mart_id/$img_high' $fixed_size></a>";
+		}
+	}else{
+		$img_str = "<a href='../main/product_info.html?mart_id=$mart_id&category_num=$category_num&category_num1=$prevno&category_num2=$category_num2&cate_num=$cate_num&item_no=$item_no1' target='_parent'><img src='../image/noimage_s.gif' $fixed_size></a>";
+	}
+	if($z_price == 0){
+		$z_price = "가격문의";
+	}
+?>
+		<td valign="top" align="center" width="333">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="margin-bottom:30px;">
+				<tr>
+					<td align=center valign="middle"><div style="width:308px; padding:10px 0; border:1px solid #E7E7E7;"><?=$img_str?></div></td>
+				</tr>
+								<tr>
+					<td height="5" align=center></td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<table width="100%" border="0" cellspacing="1" cellpadding="0">
+							<tr>
+								<td align=center><span class="text_main_s2"><?=$item_name?><br> <?=$icon_str?>
+								<?=$icon_str2?>
+								<?=$icon_str3?>
+								<?=$icon_str4?>
+								<?=$icon_str5?>
+								<?=$icon_str6?>
+								<?=$icon_str7?>
+								<?=$icon_str8?>
+								</span></td>
+							</tr>
+							<tr>
+								<td align=center><span class="text_18_s"><?=$short_explain?></span></td>
+							</tr>
+					<?
+					if($if_strike=='1'&&$price>0){
+					?>
+							<tr>
+								<td align=center><span class="text_main1_ss"><strike><?=$price_str?>원</strike></span></td>
+							</tr>
+					<?
+					}
+					?>
+							<tr>
+								<td align=center><span class="text_main1_s"><?=$z_price?>원</span></td>
+							</tr>
+						<?
+						if($bonus_ok == 't'){
+						?>
+
+							<tr>
+								<td align=center><img src="../image/icon_point.gif" width="13" height="10"><span class="point"><?=$bonus?> 원</span>									</td>
+								</tr>
+						<?
+						}
+						?>
+						</table>					</td>
+				</tr>
+			</table>		</td>
+<?
+	if($k%$_tdCount==$_tdCount-1)
+		echo "			  </tr>\n";
+}
+	if($k%$_tdCount)
+	{
+		for($l=$k%$_tdCount; $l<$_tdCount; $l++)
+		{
+?>
+
+<?
+			if($l%$_tdCount==$_tdCount-1)
+				echo "			  </tr>\n";
+		}
+	}
+?>
+	</tr>
+</table>
+<?
+if( $rec_res ){
+	mysql_free_result( $rec_res );
+}
+if( $rec_res1 ){
+	mysql_free_result( $rec_res1 );
+}
+?>

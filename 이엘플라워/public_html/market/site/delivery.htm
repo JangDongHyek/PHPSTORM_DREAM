@@ -1,0 +1,83 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	</td>
+  </tr>
+</table>
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top">
+    	        <div id="sub_container">
+    				<div class="article">
+               	  			  <p><img src="../images2/delivery_picture.jpg" border="0" usemap="#Map"></p>
+                    </div><!--.article-->
+    </div><!--sub_container-->
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+
+<map name="Map">
+  <area shape="rect" coords="141,238,336,458" href="../main/product_list.html?&flag=&category_num=69">
+  <area shape="rect" coords="411,235,596,459" href="../main/product_list.html?&flag=&category_num=70">
+  <area shape="rect" coords="665,237,849,459" href="../main/product_list.html?&flag=&category_num=68">
+  <area shape="rect" coords="141,507,336,729" href="../main/product_list.html?&flag=&category_num=71">
+  <area shape="rect" coords="405,515,600,739" href="../main/product_list.html?&flag=&category_num=73">
+  <area shape="rect" coords="662,517,861,736" href="../main/product_list.html?&flag=&category_num=65">
+  <area shape="rect" coords="147,787,335,1014" href="../main/product_list.html?&flag=&category_num=66">
+  <area shape="rect" coords="407,790,602,1007" href="../main/product_list.html?&flag=&category_num=72">
+  <area shape="rect" coords="663,788,858,1004" href="../main/product_list.html?&flag=&category_num=74">
+</map>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

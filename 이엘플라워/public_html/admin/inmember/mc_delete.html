@@ -1,0 +1,32 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+$table = "mc";
+
+for($i=0; $i<sizeof($del_check) ; $i++){
+	if($del_check[$i]){
+		$delnum = $del_check[$i];
+		
+		$dbdelete = "delete from $table where m_uid='$delnum'";
+		$result = mysql_query($dbdelete);
+	}
+}
+
+//========================================================================================
+
+if( $result ){
+	echo("
+		<meta http-equiv='Refresh' content='0; URL=mc_index.html?mode=$mode&select_key=$select_key&input_key=$input_key&page=$page'>
+	");
+}else{
+	echo("
+		<script>
+		window.alert('삭제하기에 실패했습니다!');
+		history.go(-1)
+		</script>
+	");
+	exit;
+}
+mysql_close( $dbconn );
+?>

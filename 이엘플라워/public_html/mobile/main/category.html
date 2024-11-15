@@ -1,0 +1,51 @@
+       <div id="left_menu">
+       <div class="close"><a href="javascript:menuClose()"><img src="../images/btn_close.png" /></a></div>
+       <div class="title"><img src="../images/all_menu.png" /> 이엘플라워</div>
+        <!--메뉴시작-->
+        <section id="content">
+            <article id="sublist">
+            	<div id="tnb">
+                	<ul>
+                    	<li>
+                        <?
+                        if(!$UnameSess || !$MemberLevel || !$MemberName)
+                        {
+                            if($NonMemberName)
+                            {
+                                $Logined_Member_Name = $NonMemberName;
+                                echo"<a href='../main/logout.php'>로그아웃<i class='fas fa-sign-out-alt'></i></a>";
+                            }
+                            else
+                                echo"<a href='../main/login.html'>로그인<i class='fas fa-sign-in-alt'></i></a>";
+                        }else{
+                            $Logined_Member_Name = $UnameSess;
+                            echo"<a href='../main/update.html'>정보수정<i class='fas fa-user'></i></a>";
+                        } 
+                        ?>
+                        </li>
+                    	<li><a href="../cart/cart.html">장바구니<i class="fas fa-shopping-cart"></i></a></li>
+                    	<li><a href="../main/mypage.html">주문내역<i class="far fa-file-alt"></i></a></li>
+                    	<li>
+							<a href="../main/mypoint.php">적립금 <span style="color:red;font-weight:bold"><?=number_format($bonus_total_str)?></span>P<i class="fas fa-money-bill-alt"></i></a>
+						</li>
+                    </ul>
+                </div>
+                 
+                <div id="lnb">
+                	<ul>
+                    	<li><a href="../main/recomm.htm" class="modal" onclick="sharedInfo('[이엘플라워] 친구추천','http://<?=$_SERVER[HTTP_HOST]?>')">공유하기</a></li>
+                    	<li><a href="../main/product_list.html?category_num=63">포인트몰</a></li>
+                    	<li><a href="../main/private.html">이용약관</a></li>
+                        <li><a href="../board/board_list.html?bbs_no=1">공지사항</a></li>
+						<li><a href="../main/delivery.htm">배송갤러리</a>
+						<? if($_SESSION[UnameSess]){?>
+						<li><a href="../main/logout.php">로그아웃</a></li>
+						<? }?>
+                    </ul>
+                </div>
+			</article>
+		</section>
+       <!--메뉴끝-->
+       </div>
+       <a href="javascript:menuClose()"><div id="lay"></div></a>
+      

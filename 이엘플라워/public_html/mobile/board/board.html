@@ -1,0 +1,68 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+ 
+ 
+ 
+ 
+ 
+ 
+<? include("../include/header.html");?>
+		
+	
+	<script type="text/javascript">
+	//<[CDATA[
+		var currentMenuId = '';
+		
+		function showSubMenu(menuId) {
+			
+			if(currentMenuId != "") {
+				$(".iconSet"+currentMenuId+" .subCategory").toggle();
+				if($(".iconSet"+currentMenuId+" .toggleBullet").is(".btnOn")) {
+					$(".iconSet"+currentMenuId+" .toggleBullet").removeClass("btnOn").addClass("btnOut");
+				}
+			}
+			
+			if(currentMenuId != menuId) {
+				$(".iconSet"+menuId+" .subCategory").slideDown();
+				$(".iconSet"+menuId+" .toggleBullet").removeClass("btnOut").addClass("btnOn");
+				currentMenuId = menuId;
+			} else {
+				currentMenuId = "";
+			}
+		}
+	//]]>
+	</script>
+ 
+	<body>
+	<? include("../include/top.html"); ?>
+ 
+		
+ 
+ 
+  <section id="content">
+			<article id="contentSubTitle">
+				<div class="cate_list">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> >  커뮤니티</h2>
+				</div>
+			</article>
+			<article id="sublist">
+				<ul class="iconSetCategory">
+					<li class="iconSet"><a href="board_list.html?bbs_no=1"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;공지사항&nbsp;</a></li>
+					<li class="iconSet"><a href="board_list.html?bbs_no=2"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;이용안내&nbsp;</a></li>
+					<li class="iconSet"><a href="board_list.html?bbs_no=4"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;온라인상담&nbsp;</a></li>
+					<li class="iconSet"><a href="board_list.html?bbs_no=5"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;비회원문의&nbsp;</a></li>
+                 </ul>
+			</article>
+		</section>
+ 
+ 
+ 
+ 
+	<? include("../include/bottom.html"); ?>
+	</body>
+</html>

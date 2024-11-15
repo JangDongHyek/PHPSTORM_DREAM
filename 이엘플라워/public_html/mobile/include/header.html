@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+		<meta charset="euc-kr" />
+		<title>이엘플라워</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="이엘플라워">
+        <meta property="og:url" content="http://www.elflower.co.kr">
+        <meta property="og:description" content="기분좋은 꽃배달 서비스">
+        <meta property="og:image" content="http://www.elflower.co.kr/market/images2/logo.jpg">
+
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+        <link rel="stylesheet" type="text/css" href="../css/owl.carousel.css" />
+        <link rel="stylesheet" type="text/css" href="../css/owl.theme.css" />
+        
+        <script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+        <script src="../js/owl.carousel.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>

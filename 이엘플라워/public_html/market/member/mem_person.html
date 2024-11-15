@@ -1,0 +1,107 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+
+<?
+//================== 개인정보보호정책 정보를 불러옴 ======================================
+/*$filename = "$Co_img_UP$mart_id/privacy";
+if(file_exists($filename)){
+	$fp = fopen($filename,"r");
+	$privacy = fread($fp, filesize ($filename));
+	$privacy = ereg_replace("<b>","",$privacy);
+	$privacy = ereg_replace("</b>","",$privacy);
+	fclose($fp);
+}*/
+$info_sql = "select privacy from $MartMngInfoTable where mart_id='$mart_id'";
+$info_res = mysql_query($info_sql, $dbconn);
+$info_row = mysql_fetch_array($info_res);
+$privacy = $info_row[privacy];
+$privacy = eregi_replace( "\n", "<br>", $privacy );
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td style="padding:20px 0"><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="1000" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              
+                              <tr>
+                                <td valign="top"><table width="100%" border="0" align="center" cellpadding="4" cellspacing="1">
+                                  <tr>
+                                    <td height="35"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td style="font-size:27px ;color:#111111; font-weight:bold; line-height:28px;">개인정보처리방침</td>
+                                          <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <a href="../main/index.html">홈</a> &gt; 개인정보처리방침 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5" valign="top"></td>
+                              </tr>
+                              <tr>
+                      <td height="10" style="border-top:1px solid #9b9b9b;">&nbsp;</td>
+                    </tr>
+                              <tr>
+                                <td align="center">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td><div class="mem_per"><?=$privacy?></div></tr>
+                                  </table>								</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="9"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->
+</body>
+</html>

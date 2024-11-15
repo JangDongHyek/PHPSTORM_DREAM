@@ -1,0 +1,91 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+ 
+ 
+ 
+ 
+ 
+ 
+<? include("../include/header.html");?>
+	
+	
+
+	<script type="text/javascript">
+	//<[CDATA[
+		var currentMenuId = '';
+		
+		function showSubMenu(menuId) {
+			
+			if(currentMenuId != "") {
+				$(".iconSet"+currentMenuId+" .subCategory").toggle();
+				if($(".iconSet"+currentMenuId+" .toggleBullet").is(".btnOn")) {
+					$(".iconSet"+currentMenuId+" .toggleBullet").removeClass("btnOn").addClass("btnOut");
+				}
+			}
+			
+			if(currentMenuId != menuId) {
+				$(".iconSet"+menuId+" .subCategory").slideDown();
+				$(".iconSet"+menuId+" .toggleBullet").removeClass("btnOut").addClass("btnOn");
+				currentMenuId = menuId;
+			} else {
+				currentMenuId = "";
+			}
+		}
+	//]]>
+	</script>
+ 
+	<body>
+	<? include("../include/top4.html"); ?>
+ 
+		
+ 
+ 
+  <section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;우리동네 정보통</h2>
+				</div>
+			</article>
+			<article id="sublist">
+			<div class="b_top">
+			<div class="b_total"><img src="../images/info_t_icon.gif" style="vertical-align:middle">&nbsp;<a href="../main/info.html">지역리스트</a><span class="greenTxt">&gt; 서울 </span></div><div class="b_total_btn"><span class="button medium"><a href="../main/info.html">전체지역보기</a></span></div>
+			</div>
+            <div class="n_board_list">
+           <ul>
+			<li class="title">붕어빵</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;125</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">호떡</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+      </ul> 
+</div>
+<div class="n_board_list">
+           <ul>
+			<li class="title">호두과자</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+		   </ul> 
+</div>
+<div class="n_board_list_bg">
+          <ul>
+			<li class="title">와플</dd>
+			<li class="writer"><img src="../images/map_point.png" style="vertical-align:middle">&nbsp;30</dd>
+      </ul> 
+</div>
+			</article>
+			
+		</section>
+ 
+ 
+ 
+ 
+	<? include("../include/bottom.html"); ?>
+	</body>
+</html>

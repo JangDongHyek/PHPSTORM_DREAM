@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<? include "../include/header.html";?>
+	<body>
+<? include("../include/top.html"); ?>
+
+
+<section id="content">	
+
+
+<div class="m_rolling_banner">
+          
+                <div id="owl-demo" class="owl-carousel">
+				<?
+				for($i=1;$i<=5;$i++){
+					${mobileslideImg.$i}=$row[mobileslideImg.$i];
+					if($row[mobileslideLink.$i]){
+						$href=$row[mobileslideLink.$i];
+					}else{
+						$href="#";
+					}
+					if(${mobileslideImg.$i}){
+				?>
+                <div class="item">
+					<a href="<?=$href?>">
+					<img src="../../up/<?=$mart_id?>/<?=${mobileslideImg.$i}?>" alt="" border="0">
+					</a>
+				</div>
+				<? }}?>
+				
+				<? /*<div class="item"><a href="../main/product_list.html?category_num=48"><img src="../../market/images2/m_img01.jpg"></a></div>
+                <div class="item"><a href="../main/product_list.html?category_num=48"><img src="../../market/images2/m_img02.jpg"></a></div>
+                <div class="item"><a href="../main/product_list.html?category_num=44"><img src="../../market/images2/m_img03.jpg"></a></div>
+                <div class="item"><img src="../../market/images2/m_img04.jpg"></div>*/?>
+               <!-- <div class="item"><img class="lazyOwl" data-src="images/m_rolling_banner_01.jpg"></div>
+                <div class="item"><img class="lazyOwl" data-src="images/m_rolling_banner_02.jpg"></div>
+                <div class="item"><img class="lazyOwl" data-src="images/m_rolling_banner_03.jpg"></div>-->
+
+              </div>
+              <!-- rolling -->   
+     <script>
+     $(document).ready(function() {
+ 
+     $("#owl-demo").owlCarousel({
+		 
+	  autoPlay : 3000,
+	  navigation : false,
+      slideSpeed : 300,
+      paginationSpeed : 400,
+      singleItem : true,
+		 
+		 
+		  //autoPlay : 5000,
+          //items : 1,
+          //lazyLoad : true,
+          //navigation : true
+
+      });
+    });
+    </script>
+          
+</div>
+ 
+<!--제품배너-->
+        <section class="infomation cf">
+        	<ul>
+            	<li class="w7"><a href="../main/product_list.html?&flag=&category_num=38">꽃다발</a></li>
+            	<li class="w3"><a href="../main/product_list.html?&flag=&category_num=39">꽃바구니</a></li>
+                <li class="w33"><a href="../main/product_list.html?&flag=&category_num=36">화분/식물</a></li>
+                <li class="w33"><a href="../main/product_list.html?&flag=&category_num=35">축하화환</a></li>
+                <li class="w33"><a href="../main/product_list.html?&flag=&category_num=34">근조화환</a></li>
+                <li class="w5"><a href="../main/product_list.html?&flag=&category_num=32">서양란</a></li>
+                <li class="w5"><a href="../main/product_list.html?&flag=&category_num=33">동양란</a></li>
+                <li class="w3"><a href="../main/product_list.html?&flag=&category_num=31">분재</a></li>
+                <li class="w7"><a href="../main/product_list.html?&flag=&category_num=37">꽃상자</a></li>
+            	<li class="w7"><a href="../main/product_list.html?&flag=&category_num=52">코사지</a></li>
+            	<li class="w3"><a href="../main/product_list.html?&flag=&category_num=51">사방화</a></li>
+            </ul>
+        </section><!--infomation-->
+<div><img src="../images/img_business_05.jpg" border="0" style="width:100%"></div>
+
+
+<!--동글배너-->
+
+
+    <div id="m_cus">
+    	<ul>
+        	<li>
+            	<div class="c_title"><img src="../images/cus_icon01.png"><p>고객센터</p></div>
+                <p>1588-1943</p>
+                <strong>FAX. 02-6008-6689</strong>
+                <h3>
+                <span>영업시간 : 9시 ~ 20시</span><br>
+                인터넷 주문은 24시간 가능합니다.
+                <!--<span>평일&nbsp;&nbsp;&nbsp;</span> 오전 09:00~18:00<br><span>토요일&nbsp;&nbsp;&nbsp;</span>09:00~13:00(일요일/공휴일 휴무) -->
+                </h3>
+            </li>
+            <li>
+            	<div class="c_title"><img src="../images/cus_icon02.png"><p style="padding-top:7px;">입금계좌</p></div>
+            	<p class="con">301-0232-4580-61</p>
+                <h3><span>입금은행&nbsp;&nbsp;&nbsp;</span> 농협<br>
+                <span>예금주&nbsp;&nbsp;&nbsp;</span>김수헌</h3>
+            </li>
+        </ul>
+    </div><!--m_cus-->
+
+
+<!--div class="intro_icon mt5">
+				 <dl>
+		     	<dd><a href=""><img src="../images/m_icon_01.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_02.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_03.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_04.png"></a></dd
+		     </dl>
+</div-->
+
+
+
+<!--
+<div class="intro_icon mt10">
+				 <dl>
+		     	<dd><a href=""><img src="../images/m_icon_01.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_02.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_03.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_04.png"></a></dd>
+		     </dl>
+</div>-->
+
+
+<!--<article style="width:95%">
+                <h3 style="text-align:center; padding-top:40px;"><img src="../images/best.gif" style="width:40%"></h3>
+                <ul class="specialList" style="text-align:center; padding-left:2%">
+				<? include "../include/fav_item.html" ?>
+				</ul>
+</article>-->
+
+
+<!--article id="mainNotice">
+                <h3><span class="ic"></span>공지사항</h3>
+
+				 <?             			
+				$today = date("Ymd");
+				$notice_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 2";
+				$notice_res = mysql_query($notice_sql, $dbconn);
+				$notice_tot = mysql_num_rows( $notice_res );
+				?>
+											<?
+				if( $notice_tot == "0" ){
+				?>
+                <ul>
+                    <li>등록된 공지사항이 없습니다.</li>
+                </ul>
+											<?
+				}
+				?>
+											<?
+				$i = 0;
+				while( $notice_row = mysql_fetch_array($notice_res) ){
+					$notice_no = $notice_row[index_no];
+					$notice_title = $notice_row[subject_new];
+					$notice_title = han_cut($notice_title,40);
+				?>
+                <ul>
+                    <li><a href='../board/board_read.html?index_no=<?=$notice_no?>&bbs_no=1&mart_id=<?=$mart_id?>'>-&nbsp;<?=$notice_title?></a></li>
+                </ul>
+				<?
+				}
+				if( $notice_res ){
+					mysql_free_result( $notice_res );
+				}
+				?>
+
+</article-->
+
+</section>
+
+
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

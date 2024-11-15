@@ -1,0 +1,283 @@
+
+<script language="javascript">
+<!-- 
+function addbookmark()
+{
+        bookmarkurl="http://www.letsit.kr/~hyosan" // 즐겨찾기에 추가할 곳 의 URL
+        bookmarktitle="효산유황오리" // 사이트명
+         if (document.all)
+        window.external.AddFavorite(bookmarkurl,bookmarktitle)
+}
+// -->
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="background:#f0f0f0; border-bottom:1px solid #c7c7c7;">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000">
+	<div id="top_in">
+    	<ul class="t_menu01">
+        	<li><a href="javascript://" onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://www.letsit.kr/~hyosan');">시작페이지 설정</a></li>
+            <li><a href="javascript:addbookmark()">즐겨찾기 추가</a></li>
+        </ul>
+        <ul class="t_menu02">
+              <?	if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName && $NonMemberPass)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/top2.htm';
+													}
+													else
+														include '../inc/top1.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/top2.htm';
+												}
+												?>
+        </ul>
+    </div><!--top_in-->    
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" id="header">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000">
+ 		<div id="header_in">
+        	<h1 class="logo"><a href="../main/"><img src="../images2/logo.jpg" alt="로고" /></a></h1>
+            <div class="gnb">
+            	<h2 class="hide">메인메뉴</h2>
+                <ul>
+                	<li class="g1"><a href="../site/company1.htm" class="m">효산유황오리</a>
+                    	<ul class="sub">
+                        	<li><a href="../site/company1.htm">인사말</a></li>
+                            <li><a href="../site/company2.htm">효산유황오리는 왜 특별한가?</a></li>
+                            <li><a href="../site/company3.htm">먹거리X파일</a></li>
+                            <li><a href="../site/company4.htm">특허증 및 인증서</a></li>
+                            <li><a href="../site/company5.htm">오시는 길</a></li>
+                        </ul>
+                    </li><!-- .g1 -->
+                    <li class="g2"><a href="../site/farm1.htm" class="m">효산농장</a>
+                    	<ul class="sub">
+                        	<li><a href="../site/farm1.htm">특허 유황오리의 특징</a></li>
+                            <li><a href="../site/farm2.htm">진품 유황오리 이야기</a></li>
+                            <li><a href="../site/farm3.htm">효산 유황오리알</a></li>
+                            <li><a href="../site/farm4.htm">약쑥(애엽,뜸쑥)재배법</a></li>
+                            <li><a href="../site/farm5.htm">유황 밭마늘 재배법</a></li>
+                        </ul>
+                    </li><!-- .g2 -->
+                    <li class="g3"><a href="../site/food1.htm" class="m">효산식품</a>
+                    	<ul class="sub">
+                        	<li><a href="../site/food1.htm">효산식품 소개</a></li>
+                            <li><a href="../site/food2.htm">효산유황오리 추출액</a></li>
+                            <li><a href="../site/food3.htm">난황유</a></li>
+                            <li><a href="../site/food4.htm">효산유황 밭마늘로 만든 흑마늘</a></li>
+                            <li><a href="../site/food5.htm">흑마늘 진액</a></li>
+                            <li><a href="../site/food6.htm">자연면역 강화차</a></li>
+                        </ul>
+                    </li><!-- .g3 -->
+                    <li class="g4"><a href="../site/store1.htm" class="m">효산일반음식점</a>
+                    	<ul class="sub">
+                        	<li><a href="../site/store1.htm">효산일반음식점 소개</a></li>
+                        </ul>
+                    </li><!-- .g4 -->
+                    <li class="g5"><a href="../main/product_list.html" class="mm">쇼핑몰</a>
+                    	<ul class="sub">
+                        	<li><a href="#">생유황오리</a></li>
+                            <li><a href="#">오리알</a></li>
+                            <li><a href="#">추출액</a></li>
+                            <li><a href="#">난황유</a></li>
+                            <li><a href="#">유황 약쑥</a></li>
+                            <li><a href="#">유황 밭마늘</a></li>
+                            <li><a href="#">유황 흑마늘</a></li>
+                            <li><a href="#">추출액</a></li>
+                        </ul>
+                    </li><!-- .g5 -->
+                    <li class="g6"><a href="../board/board_list.php?bbs_no=1" class="m" style="margin-right:0; padding-right:0;">고객센터</a>
+                    	<ul class="sub">
+                        	<li><a href="../board/board_list.php?bbs_no=1">공지사항</a></li>
+                            <li><a href="../board/board_list.php?bbs_no=2">이용안내</a></li>
+                            <li><a href="../board/board_list.php?bbs_no=3">자주묻는 질문</a></li>
+                            <li><a href="../board/change.html">교환/반품신청</a></li>
+                            <li><a href="../board/board_list.php?bbs_no=4">질문 및 답변</a></li>
+                            <li><a href="../board/board_list.php?bbs_no=5">비회원 문의</a></li>
+                            <li><a href="../board/epilogue.html">구매후기</a></li>
+                        </ul>
+                    </li><!-- .g6 -->
+                </ul>
+            </div><!--.gnb-->
+        </div><!--header_in-->   
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<!-- 플래시메뉴 적용 자바스크립트 시작 -->
+<script type="text/javascript"> 
+function large(){ 
+ document.all['flashArea'].style.height = 210; 
+} 
+function small(){ 
+
+ document.all['flashArea'].style.height = 44; 
+} 
+function subView(){
+	document.getElementById("categoryMenu").style.display="inline";
+	document.getElementById("sub1").style.display="none";
+	document.getElementById("sub2").style.display="block";
+}
+function subHidden(){
+	document.getElementById("categoryMenu").style.display="none";
+	document.getElementById("sub1").style.display="block";
+	document.getElementById("sub2").style.display="none";
+}
+</SCRIPT>
+<!-- 플래시메뉴 적용 자바스크립트 끝 -->
+
+<!--메인메뉴 레이어 시작 -->
+<style type="text/css">
+<!--
+#flashArea {
+	position: absolute;
+	top:110px;
+	text-align: center;
+	width: 100%;
+	z-index: 4;
+}
+#Layer {
+margin: 0 auto;
+position: relative;
+width: 1000px;
+height: 100%;
+text-align: center;
+padding-left: 0px;
+}
+
+-->
+</style>
+
+
+ <div id='categoryMenu' style="display:none; position:absolute; width:1000px; z-index:99999; top:30px; left:50%; margin-left:-500px">
+  <div style="position:absolute; right:0; bottom:0; z-index:100"><img src="../images2/btn_close.png"  onclick="subHidden()" style="cursor:pointer"/></div>
+<?
+//================== 1차 카테고리 갯수를 불러옴 ==========================================
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide='0' and category_num > 28 order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+?>
+
+<table width="1000" border="0" align="center" cellpadding="15" cellspacing="0" style="height:250px; border:1px #84c747 solid; background:#FFF; padding-top:15px;">
+	<?
+	//================== 1차 카테고리 정보를 불러옴 ===================
+	$upload = "../../up/$mart_id/";
+	$i=0;
+	$_tdCount_1 = 5;
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+		$category_num1 = $row_cate[category_num];
+		$category_name1 = $row_cate[category_name];
+		$category_img = $row_cate[category_img];
+
+		$target = "$upload"."$category_img";
+		if( $category_img ){
+			$cate_target_img = "<img src='$target' border='0' align='absmiddle'>";
+		}else{
+			$cate_target_img = "$category_name1";
+		}
+		if($i%$_tdCount_1==0)
+		echo "<tr>\n";
+	?>
+					
+		<td valign="top" align="center">
+		<table width="170" height="28" border="0" align="center" cellpadding="0" cellspacing="0" >
+				<tr>
+		<td><a href="../main/product_list.html?category_num=<?=$category_num1?>"><b style="font-size:15px; line-height:30px; color:#666"><?=$category_name1?></b></font></a>
+		</td>
+		</tr>
+		</table>
+
+			<table align="center" cellpadding="0" cellspacing="0" width="170">
+			<?
+			//================== 2차 카테고리 정보를 불러옴 ===================
+			$sql_cate2 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree='1' and prevno='$category_num1' and if_hide='0' and category_num > 28 order by cat_order desc";
+			$res_cate2 = mysql_query($sql_cate2, $dbconn);
+			$total_cate2 = mysql_num_rows($res_cate2);
+
+			$j=0;
+			$_tdCount = 1;
+			while( $row_cate2 = mysql_fetch_array( $res_cate2 ) )
+			{
+				$category_num2 = $row_cate2[category_num];
+				$category_name2 = $row_cate2[category_name];
+				$category_img2 = $row_cate2[category_img];
+
+				$target2 = "$upload"."$category_img2";
+				if( $category_img2 ){
+					$cate_target_img2 = "<img src='$target2' border='0' align='absmiddle'>";
+				}else{
+					$cate_target_img2 = "$category_name2";
+				}
+
+				if($j%$_tdCount==0)
+				echo "<tr>\n";
+			?>
+							<td width="50%" height="20" valign="top" align="left" class="pop_2depth"><strong>-</strong>&nbsp;<a href="../main/product_list.html?category_num=<?=$category_num2?>"><?=$cate_target_img2?></a>								
+								<?
+								//================== 3차 카테고리 정보를 불러옴 
+								$sql_cate3 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '2' and prevno='$category_num2' and if_hide='0' order by cat_order desc";
+								$res_cate3 = mysql_query($sql_cate3, $dbconn);
+								$total_cate3 = mysql_num_rows($res_cate3);
+								while( $row_cate3 = mysql_fetch_array( $res_cate3 ) ){			
+								?>							
+										<br>
+										<a href="../main/product_list.html?category_num=<?=$row_cate3[category_num]?>"><?=$row_cate3[category_name]?></a>
+								<?
+								}
+								?>
+							</td>
+			<?
+				if($j%$_tdCount==$_tdCount-1)
+					echo "</tr>\n";
+				$j++;
+				
+			}
+			?>
+		  </table>
+		  </td>
+	<?	 
+		if($i%$_tdCount_1==$_tdCount_1-1)
+			echo "</tr>\n";
+		$i++;
+	}
+
+
+
+
+
+	// td를 다 채우지 못했을 경우
+	if($i%$_tdCount_1)
+	{
+		for($j=$i%$_tdCount_1; $j<$_tdCount_1; $j++)
+		{	
+			?>
+	    <td>&nbsp;</td>			
+			<?											
+		}
+		
+	}
+
+
+
+
+
+	?>	
+			</tr>
+   </table>
+		
+<?
+	if( $res_cate ){
+		mysql_free_result( $res_cate );
+	}
+?>
+</div>
+<? include '../include/sub_main.htm'; ?>
+<!--회사관련페이지상단-->

@@ -1,0 +1,31 @@
+
+					<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td align="center">
+                    			<select id="search_year" style="width:134px" onChange="change_year(this);">
+								<option value=''>매장선택</option>
+<?
+if( !$category_num ){
+	$category_num = "6";
+}
+$sql_cate = "select * from $CategoryTable where category_num > 28 and mart_id='$mart_id' and prevno='0' and if_hide='0' order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+$total_cate = mysql_num_rows($res_cate);
+$i = "0";
+while( $row_cate = mysql_fetch_array( $res_cate ) ){
+	$i++;
+	$row_cate[category_num];
+	$row_cate[category_name];
+?>
+
+								<option value='../main/product_list.html?category_num=<?=$row_cate[category_num]?>'  <?if($category_num==$row_cate[category_num]){echo ("selected");}?>><?=$row_cate[category_name]?></option>
+<?
+}
+?>
+                    			</select>
+							</td>
+						</tr>
+					</table>
+<script language=javascript>
+getSelectToLayer(document.all.search_year,140,'javascript:change_year(document.all.search_year);');
+</script>

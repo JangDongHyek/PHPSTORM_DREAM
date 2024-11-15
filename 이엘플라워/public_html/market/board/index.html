@@ -1,0 +1,63 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect_login.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif"><? include "../include/top2.htm"; ?></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="1000" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="166" height="100%" valign="top"><? include "../include/comm_menu.htm" ?>					  </td><td width="9"></td>
+                    <td valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="100%" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+                              <td><img src="../images2/comm_index.gif" width="825" height="502" border="0" usemap="#comm_index">
+                                <map name="comm_index">
+                                  <area shape="rect" coords="363,232,420,253" href="board_list.php?bbs_no=1">
+                                  <area shape="rect" coords="483,232,539,252" href="board_write.php?bbs_no=4">
+                                  <area shape="rect" coords="608,232,664,253" href="board_write.php?bbs_no=5">
+                                  <area shape="rect" coords="731,231,786,251" href="board_list.php?bbs_no=3">
+                                </map></td>
+							</tr>
+                            <tr>
+                              <td>&nbsp;</td>
+                            </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<?
+include "../include/bottom.htm";
+?>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<script type="text/javascript" src="http://wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript">
+if(!wcs_add) var wcs_add = {};
+wcs_add["wa"] = "s_49cee49e4652";
+wcs.inflow("elflower.co.kr");
+</script>  
+<div id="top_bn">
+    <div id="bnImg">
+      <a href="https://open.kakao.com/o/svyUJsL" target="_blank" style="padding:0 10px"><img src="../images2/top_bn01.jpg" alt="" border="0"></a>
+	  <!--a href="../site/friend.htm"><img src="../images2/top_bn02.jpg" alt="" border="0"></a-->
+	  <a href="../site/delivery.htm" style="padding:0 10px"><img src="../images2/top_bn07.jpg" alt="" border="0"></a>
+	  <a href="../main/product_list.html?category_num=63" style="padding:0 10px"><img src="../images2/top_bn03.jpg" alt="" border="0"></a>
+	  <!--<a href="../main/product_list.html?&flag=&category_num=54"><img src="../images2/top_bn04.jpg" alt="" border="0"></a> <img src="../images2/top_bn05.jpg" alt="" border="0"> -->
+	  <a href="../member/" style="padding:0 10px"><img src="../images2/top_bn06.jpg" alt="" border="0"></a>
+</div>
+    <div class="btn">
+        <span id="tbn1" onclick="tbnView()" style="display:none">EVENT OPEN</span>
+        <span id="tbn2" onclick="tbnHidden()">CLOSE</span>
+    </div>
+</div>
+
+<!--<div class="quick">
+        <ul class="quick_icon">
+        	<li><a href="../main/product_list.html?&flag=&category_num=47"><span><img src="../images2/middle_icon01.png" alt=""></span><p>생일</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=46"><span><img src="../images2/middle_icon02.png" alt=""></span><p>프로포즈</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=45"><span><img src="../images2/middle_icon03.png" alt=""></span><p>출산</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=44"><span><img src="../images2/middle_icon04.png" alt=""></span><p>승진/취임</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=43"><span><img src="../images2/middle_icon05.png" alt=""></span><p>개업이사</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=42"><span><img src="../images2/middle_icon06.png" alt=""></span><p>결혼/축하</p></a></li>
+        	<li><a href="../main/product_list.html?&flag=&category_num=41"><span><img src="../images2/middle_icon07.png" alt=""></span><p>조문/추모</p></a></li>
+        </ul>
+<div class="add_fav"><a href="javascript:addbookmark()">BOOK MARK</a></div>
+</div> -->
+<script language="javascript">
+<!-- 
+function addbookmark()
+{
+        bookmarkurl="http://www.elflower.co.kr/" // 즐겨찾기에 추가할 곳 의 URL
+        bookmarktitle="이엘플라워" // 사이트명
+         if (document.all)
+        window.external.AddFavorite(bookmarkurl,bookmarktitle)
+}
+// -->
+</script>
+<?
+/*
+if($NaPm || $NaPm!="" ){ ?>
+
+<script type="text/javascript">
+var ua = window.navigator.userAgent.toLowerCase();
+if ( /iphone/.test(ua) || /android/.test(ua) || /opera/.test(ua) || /bada/.test(ua) ) {
+	document.location.replace('http://www.hangphone.co.kr/mobile/main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>&NaPm=<?=$NaPm?>');
+}
+</script>
+
+<?
+}
+*/
+?>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="background:#fafafa; border-bottom:1px solid #f0f0f0;">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000">
+	<div id="top_in">
+    	
+    	<!--<ul class="t_menu01">
+        	<li><a href="javascript://" onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://www.letsit.kr/~amabilrisedog');">시작페이지 설정</a></li>
+            <li><a href="javascript:addbookmark()">즐겨찾기 추가</a></li>
+        </ul>-->
+        <ul class="t_menu02">
+              <?	if(!$UnameSess || !$MemberLevel || !$MemberName)
+												{
+													if($NonMemberName && $NonMemberPass)
+													{
+														$Logined_Member_Name = $NonMemberName;
+														include '../inc/top2.htm';
+													}
+													else
+														include '../inc/top1.htm';
+												}else{
+													$Logined_Member_Name = $UnameSess;
+													include '../inc/top2.htm';
+												}
+												?>
+        </ul>
+    </div><!--top_in-->    
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" id="header">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top">
+ 		<div id="header_in">
+        	 <h1 class="logo"><a href="../main/"><img src="../images2/logo.png" alt="로고" /></a></h1>
+          <div class="search_for"><? include "../inc/search_form.htm"; ?></div><!--search_for-->
+          	 
+             <ul class="mini_menu">
+                <img src="../images2/top_call.jpg" alt="고객센터 전화번호" >
+             	<!--<li class="a"><a href="../cart/cart.html">장바구니</a></li>
+                <li class="b"><a href="../stat/order.html">배송조회</a></li>
+                <li class="c"><a href="../mypage/wish.html">위시리스트</a></li>-->
+             </ul>
+        </div><!--header_in-->   
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="background:#7C5AC6;">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" height="52" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="166">
+
+<script>
+function test() {
+
+document.all.catelist.style.display = "none";
+
+}
+onload=function() {
+ setTimeout("test()", 2000); //로드후 1초 뒤에 test함수 호출...
+}
+</script>
+
+
+        <span id="cate">
+        	<a href="javascript:;" class="cate_a" onmouseover="document.all.catelist.style.display = ''" onmouseout="document.all.catelist.style.display = 'none'">카&nbsp;테&nbsp;고&nbsp;리 <i class="fa fa-caret-down" aria-hidden="true"></i>
+        	<div id="catelist" style="position:absolute; z-index:99999; background-color:#fff; padding-top:10px; border:1px solid #000066;display:none" ><? include("../include/first.htm"); ?></div>
+			</a>
+        </span>
+
+        <!--<span id="sub1" onclick="subView()" style="cursor:hand;"><a href="#" style="color:#fff;">전체제품보기</a></span>
+        <span id="sub2" onclick="subHidden()" style="cursor:hand;display:none"><a href="#" class="all_m cl" style="color:#fff;">전체제품닫기</a></span> -->
+        </td>
+        <td>
+        <td style="position:relative;">
+            <!--상단카테고리시작-->
+            <ul id="navi">
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=48" class="tab">생일/기념일</a></li>
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=47" class="tab">개업/이전</a></li>
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=46" class="tab">프로포즈</a></li>
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=45" class="tab">행사/전시회</a></li>
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=44" class="tab">승진/취임</a></li>
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=43" class="tab">출산/병문안</a></li>
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=42" class="tab">결혼/축하</a></li>
+                <li id="navi"><a href="../main/product_list.html?&flag=&category_num=41" class="tab">근조/추모</a></li>
+
+                <?php
+                $cate1_sql = " select * from category where category_num>'30' and category_degree='0' and prevno='0' and if_hide='0' order by cat_order desc ";
+                $cate1_qry = mysql_query($cate1_sql, $dbconn);
+                $cate1_num = mysql_num_rows($cate1_qry);
+                if($cate1_num > 0){
+                    for($ca1=0; $ca1<$cate1_num; $ca1++){
+                        $cate1_row = mysql_fetch_array($cate1_qry);
+                ?>
+                <!--메뉴1 S
+                <li id="navi"><a href="../main/product_list.html?category_num=<?php echo $cate1_row['category_num'] ?>" class="tab"><?php echo $cate1_row['category_name'] ?></a>
+                  <div class="menu">
+                    <div class="menu_title">
+                        <strong>Arirang Motors</strong>
+                        <p><?php echo $cate1_row['category_name'] ?></p>
+                    </div>
+                    <div class="sub">
+                        <?php
+                        $cate2_sql = " select * from category where category_num>'30' and category_degree='1' and prevno='{$cate1_row['category_num']}' and if_hide='0' order by cat_order desc ";
+                        $cate2_qry = mysql_query($cate2_sql, $dbconn);
+                        $cate2_num = mysql_num_rows($cate2_qry);
+                        if($cate2_num > 0){
+                        ?>
+                        <ul>
+                        <?php
+                            for($ca2=0; $ca2<$cate2_num; $ca2++){
+                                if($ca2%8 == 0) echo '</ul><ul>';
+                                $cate2_row = mysql_fetch_array($cate2_qry);
+                        ?>
+                            서브메뉴
+                            <li><a href="../main/product_list.html?category_num=<?php echo $cate2_row['category_num'] ?>"><?php echo $cate2_row['category_name'] ?></a></li>
+                        <?php
+                            }
+                        ?>
+                        </ul>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="banner">
+                        <div class="img">메뉴별로 들어갈 배너</div>
+                    </div>
+                  </div>
+                </li>
+                <!--메뉴1 E-->
+                <?php
+                    }
+                }
+                ?>
+            </ul>
+            <!--상단카테고리끝-->
+        </td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td bgcolor="#404040">&nbsp;</td>
+    <td bgcolor="#404040">
+    <span style="padding:10px 0; color:#fff; opacity:0.5">기분좋은 꽃배달 서비스<strong>이엘플라워</strong></span>
+    <div id="cate2ul">
+    	<a href="../main/product_list.html?&flag=&category_num=59">장미100송이</a>
+    	<a href="../main/product_list.html?&flag=&category_num=58">비누꽃</a>
+    	<a href="../main/product_list.html?&flag=&category_num=57">쌀화환</a>
+    	<a href="../main/product_list.html?&flag=&category_num=56">최저가</a>
+    	<a href="../main/product_list.html?&flag=&category_num=55">프리미엄</a>
+    	<a href="../main/product_list.html?&flag=&category_num=54">김영란꽃</a>
+		<a href="../main/product_list.html?&flag=&category_num=53">대량주문</a>
+		<a href="../main/product_list.html?&flag=&category_num=52">코사지</a>
+		<a href="../main/product_list.html?&flag=&category_num=51">사방화</a>
+		<a href="https://blog.naver.com/el_flower_s" target="_blank">웨딩장식</a>
+    </div>
+    </td>
+    <td bgcolor="#404040">&nbsp;</td>
+  </tr>
+</table>
+<div style="height:0px;"></div>
+<? if(defined('_INDEX_')) { ?>
+<div style="height:20px;"></div>
+<? } ?><!-- 플래시메뉴 적용 자바스크립트 시작 -->
+<script type="text/javascript"> 
+function large(){ 
+ document.all['flashArea'].style.height = 210; 
+} 
+function small(){ 
+
+ document.all['flashArea'].style.height = 44; 
+} 
+//상단배너
+function tbnView(){
+	document.getElementById("bnImg").style.display="inline";
+	document.getElementById("tbn1").style.display="none";
+	document.getElementById("tbn2").style.display="block";
+}
+function tbnHidden(){
+	document.getElementById("bnImg").style.display="none";
+	document.getElementById("tbn1").style.display="block";
+	document.getElementById("tbn2").style.display="none";
+}
+//전체카테고리
+function subView(){
+	document.getElementById("categoryMenu").style.display="inline";
+	document.getElementById("sub1").style.display="none";
+	document.getElementById("sub2").style.display="block";
+}
+function subHidden(){
+	document.getElementById("categoryMenu").style.display="none";
+	document.getElementById("sub1").style.display="block";
+	document.getElementById("sub2").style.display="none";
+}
+</SCRIPT>
+<!-- 플래시메뉴 적용 자바스크립트 끝 -->
+
+
+ <div id='categoryMenu' style="display:none; position:absolute; width:1000px; z-index:99999; top:173px; left:50%; margin-left:-500px">
+  <div style="position:absolute; right:0; bottom:0; z-index:100"><img src="../images2/btn_close.png"  onclick="subHidden()" style="cursor:pointer"/></div>
+<?
+//================== 1차 카테고리 갯수를 불러옴 ==========================================
+$sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide='0' and category_num > 28 order by cat_order desc";
+$res_cate = mysql_query($sql_cate, $dbconn);
+?>
+
+<table width="1000" border="0" align="center" cellpadding="15" cellspacing="0" style="height:320px; border:1px #000 solid; background:#FFF; padding-top:15px;">
+	<?
+	//================== 1차 카테고리 정보를 불러옴 ===================
+	$upload = "../../up/$mart_id/";
+	$i=0;
+	$_tdCount_1 = 5;
+	while( $row_cate = mysql_fetch_array( $res_cate ) ){
+		$category_num1 = $row_cate[category_num];
+		$category_name1 = $row_cate[category_name];
+		$category_img = $row_cate[category_img];
+
+		$target = "$upload"."$category_img";
+		if( $category_img ){
+			$cate_target_img = "<img src='$target' border='0' align='absmiddle'>";
+		}else{
+			$cate_target_img = "$category_name1";
+		}
+		if($i%$_tdCount_1==0)
+		echo "<tr>\n";
+	?>
+					
+		<td valign="top" align="center">
+		<table width="170" height="28" border="0" align="center" cellpadding="0" cellspacing="0" >
+				<tr>
+		<td><a href="../main/product_list.html?category_num=<?=$category_num1?>"><b style="font-size:15px; line-height:30px; color:#424040"><?=$category_name1?></b></font></a>
+		</td>
+		</tr>
+		</table>
+
+			<table align="center" cellpadding="0" cellspacing="0" width="170">
+			<?
+			//================== 2차 카테고리 정보를 불러옴 ===================
+			$sql_cate2 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree='1' and prevno='$category_num1' and if_hide='0' and category_num > 28 order by cat_order desc";
+			$res_cate2 = mysql_query($sql_cate2, $dbconn);
+			$total_cate2 = mysql_num_rows($res_cate2);
+
+			$j=0;
+			$_tdCount = 1;
+			while( $row_cate2 = mysql_fetch_array( $res_cate2 ) )
+			{
+				$category_num2 = $row_cate2[category_num];
+				$category_name2 = $row_cate2[category_name];
+				$category_img2 = $row_cate2[category_img];
+
+				$target2 = "$upload"."$category_img2";
+				if( $category_img2 ){
+					$cate_target_img2 = "<img src='$target2' border='0' align='absmiddle'>";
+				}else{
+					$cate_target_img2 = "$category_name2";
+				}
+
+				if($j%$_tdCount==0)
+				echo "<tr>\n";
+			?>
+							<td width="50%" height="20" valign="top" align="left" class="pop_2depth"><strong>-</strong>&nbsp;<a href="../main/product_list.html?category_num=<?=$category_num2?>"  style="font-size:13px; line-height:22px; color:#828282"><?=$cate_target_img2?></a>								
+								<?
+								//================== 3차 카테고리 정보를 불러옴 
+								$sql_cate3 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '2' and prevno='$category_num2' and if_hide='0' order by cat_order desc";
+								$res_cate3 = mysql_query($sql_cate3, $dbconn);
+								$total_cate3 = mysql_num_rows($res_cate3);
+								while( $row_cate3 = mysql_fetch_array( $res_cate3 ) ){			
+								?>							
+										<br>
+										&nbsp;&nbsp;<strong>-</strong>&nbsp;<a href="../main/product_list.html?category_num=<?=$row_cate3[category_num]?>"><?=$row_cate3[category_name]?></a>
+								<?
+								}
+								?>
+							</td>
+			<?
+				if($j%$_tdCount==$_tdCount-1)
+					echo "</tr>\n";
+				$j++;
+				
+			}
+			?>
+		  </table>
+		  </td>
+	<?	 
+		if($i%$_tdCount_1==$_tdCount_1-1)
+			echo "</tr>\n";
+		$i++;
+	}
+
+
+
+
+
+	// td를 다 채우지 못했을 경우
+	if($i%$_tdCount_1)
+	{
+		for($j=$i%$_tdCount_1; $j<$_tdCount_1; $j++)
+		{	
+			?>
+	    <td>&nbsp;</td>			
+			<?											
+		}
+		
+	}
+
+
+
+
+
+	?>	
+			</tr>
+   </table>
+		
+<?
+	if( $res_cate ){
+		mysql_free_result( $res_cate );
+	}
+?>
+</div>

@@ -1,0 +1,1492 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+if($cate_num=="63"&&!$_SESSION[UnameSess]){
+?>
+<script>
+alert("포인트몰은 회원만 구매할 수 있습니다");
+location.href="../main/login.html";
+</script>
+<? exit;}
+$receipt_sql = "select * from receipt where mart_id='$mart_id' limit 1";
+$receipt_qry = mysql_query($receipt_sql,$dbconn);
+$receipt_num = mysql_num_rows($receipt_qry);
+if($receipt_num > 0){
+	$receipt_row = mysql_fetch_array($receipt_qry);
+}
+
+/* 전화구매 STR */
+$SQL = "select tel1 from $MartInfoTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if($numRows > 0){
+	$ary = mysql_fetch_array($dbresult);
+	$tel_buy_tel1 = trim($ary["tel1"]);
+}
+/* 전화구매 END */
+
+
+?>
+<?
+// 상품조회수를 업데이트
+$sql = "update $ItemTable set read_num=read_num+1 where mart_id='$mart_id' and item_no='$item_no'";
+mysql_query($sql, $dbconn);
+
+//================== 상품 정보를 불러옴 ==================================================
+$item_sql = "select * from $ItemTable where mart_id='$mart_id' and item_no='$item_no'";
+$item_res = mysql_query($item_sql, $dbconn);
+$item_tot = mysql_num_rows($item_res);
+if($item_tot > 0){
+	$item_row = mysql_fetch_array($item_res);
+
+	$category_num = $item_row[firstno];
+	$category_num1 = $item_row[prevno];
+	$prevno = $category_num1;
+	$cate_num = $item_row[category_num];
+	$category_num2 = $cate_num;
+	$item_name = $item_row[item_name];
+	$item_order  = $item_row[item_order];
+	$first_no_1 = $item_row[firstno];
+	$price  = $item_row[price];
+	$z_price  = $item_row[z_price];
+	$z_price2  = $item_row[z_price2];
+	$z_price3  = $item_row[z_price3];
+	$member_price = $item_row[member_price];
+	$bonus = $item_row[bonus];
+	$bonus2 = $item_row[bonus2];
+	$bonus3 = $item_row[bonus3];
+	$use_bonus = $item_row[use_bonus];
+	$jaego = $item_row[jaego];
+	$opt = $item_row[opt];
+	$opt2 = $item_row[opt2];
+	$opt3 = $item_row[opt3];
+	$opt4 = $item_row[opt4];
+	$opt5 = $item_row[opt5];
+	$opt6 = $item_row[opt6];
+
+	
+	$item_company = $item_row[item_company];
+	$item_code = $item_row[item_code];
+	$use_opt1 = $item_row[use_opt1];
+	$use_opt23 = $item_row[use_opt23];
+	$jaego_use = $item_row[jaego_use];
+	$icon_no = $item_row[icon_no];
+	$item_code = $item_row[item_code];
+	$item_origin = $item_row[item_origin];
+	$item_bestbefore = $item_row[item_bestbefore];
+	$if_cash = $item_row[if_cash];
+	//$use_coupon = $item_row[use_coupon];
+	$provider_id = $item_row[provider_id];
+	$if_hide = $item_row[if_hide];
+	$parcel_price=$item_row[parcel_price];
+	$fee = $item_row[fee];
+
+	$if_opt_jaego = $item_row[if_opt_jaego];
+	$if_opt_jaego2 = $item_row[if_opt_jaego2];
+	$if_opt_jaego3 = $item_row[if_opt_jaego3];
+	$if_opt_jaego4 = $item_row[if_opt_jaego4];
+
+
+
+
+
+	if($fee=="무료배송"){
+		$parcel_price=0;
+	}
+	$if_customer_price = $item_row[if_strike];
+	/*
+	if( $if_hide != 0 ){
+		echo "
+			<script>
+			alert('현재 판매되지 않는 상품입니다');
+			location.href='../../.';
+			</script>
+		";
+		exit;
+	}*/
+
+	//============================== 상점명을 가져옴 =====================================
+	$me_sql = "select * from $MemberTable where mart_id='$mart_id' and username='$provider_id'";
+	$me_res = mysql_query($me_sql, $dbconn);
+	$me_row = mysql_fetch_array($me_res);
+	$in_name = $me_row[name];
+	$me_delivery = $me_row[me_delivery];
+	$me_delivery_price = number_format($parcel_price);
+
+	if( $fee == "착불" ){
+		$me_delivery_str = "$fee (배송업체 : $me_delivery / 비용 : $me_delivery_price)";
+	}else{
+		$me_delivery_str = "$fee";
+	}
+
+	if( !$in_name ){
+		$in_name = "공급사 없음";
+	}
+
+	$img_sml = $item_row[img_sml];
+	$img = $item_row[img];
+	if(!$img){
+		$img = $item_row[img_big];
+	}
+	$img_big = $item_row[img_big];
+	$img_high = $item_row[img_high];
+	$item_explain = $item_row[item_explain];
+	$item_order  = $item_row[item_order];
+	$flash_big_height  = $item_row[flash_big_height];
+	$flash_big_width  = $item_row[flash_big_width];
+	
+	$opts = explode("=", $opt);
+	
+	if(!empty($opt1)){
+		$opt1_1 = explode("^", $opt1);
+		if(!empty($opt1_1[1])){
+			$z_price = $opt1_1[1];
+		}
+		if(!empty($opt1_1[2])){
+			$bonus = $opt1_1[2];
+		}
+		if(!empty($opt1_1[3])){
+			$member_price = $opt1_1[3];
+		}
+	}
+
+
+
+	if(!empty($opt2)){
+		$opt2_1 = explode("^", $opt2);
+		if(!empty($opt2_1[1])){
+			$z_price = $z_price + $opt2_1[1];
+		}
+	}
+	
+	if(!empty($opt3)){
+		$opt3_1 = explode("^", $opt3);
+		if(!empty($opt3_1[1])){
+			$z_price = $z_price + $opt3_1[1];
+		}
+	}
+
+
+	$seller_price = 0;
+	$seller_mem_price = 0;
+	$seller_bonus = 0;
+	$seller_icon_no = '';
+
+	if($seller_price > 0)	$z_price = $seller_price;
+	if($seller_mem_price > 0) $member_price = $seller_mem_price;
+	if($seller_bonus > 0)	$bonus = $seller_bonus;
+	if($seller_icon_no != '')	$icon_no = $seller_icon_no;
+	
+	if($if_member_price == '1' && $if_login == 1){
+		if($member_price == 0)
+			$z_price = round($z_price * $member_price_percent / 100, -2);
+		else
+			$z_price = $member_price;	
+	}
+	$price_str = number_format($price);
+	$z_price_str = number_format($z_price);
+	$bonus_str = number_format($bonus);
+
+	$quan_sql = "select quantity from $Order_ProTable where order_num='$order_num' and mart_id='$mart_id' and item_no='$item_no' and status = '0'";
+	$quan_res = mysql_query($quan_sql, $dbconn);
+	$quan_tot = mysql_num_rows($quan_res);
+	if($quan_tot > 0){
+		$quan_row = mysql_fetch_array($quan_res);
+		$quantity_incart = $quan_row[quantity];
+		$jaego = $jaego - $quantity_incart;
+	}
+	
+	if($jaego_use == 1 && $jaego == 0){
+		$icon_str = "<img src='../image/soldout_icon_s.gif' width='25' height='12'>";
+	}else{
+		if($icon_no == 0) $icon_str = "";
+		if($icon_no == 1) $icon_str = "<img src='../image/hot.gif' width='22' height='13'>";
+		if($icon_no == 2) $icon_str = "<img src='../image/new.gif' width='25' height='14'>";
+		if($icon_no == 3) $icon_str = "<img src='../image/sale.gif' width='22' height='13'>";
+		if($icon_no == 4) $icon_str = "<img src='../image/reserv.gif' width='53' height='12'>";
+	}	
+	
+	/*
+	if($img != "" && file_exists("$Co_img_UP$mart_id/$img")){
+		if (strstr(strtolower(substr($img,-4)),'.jpg') || strstr(strtolower(substr($img,-4)),'.gif')){
+			$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img' width='100%' border='0' class=img>";
+		}
+		if (strstr(strtolower(substr($img,-4)),'.swf')){
+			$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img' width='$view_product_img_width' height='$view_product_img_height'></embed>";
+		}	
+	}else{
+		$img_str = "<img src='../image/noimage_m.gif' border='0' width='100%' border='0' class=img>";
+	}
+	*/
+	
+	$fixed_size = "width='100%'";
+
+	$img = $item_row[img_big];
+	$img2 = $item_row[img_big2];
+	$img3 = $item_row[img_big3];
+	$img4 = $item_row[img_big4];
+	$img5 = $item_row[img_big5];
+	$img_big = $item_row[img_big];
+	$img_big2 = $item_row[img_big2];
+	$img_big3 = $item_row[img_big3];
+	$img_big4 = $item_row[img_big4];
+	$img_big5 = $item_row[img_big5];
+
+
+
+	if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+		if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+			$img_str1 = "<img src='../..$Co_img_DOWN$mart_id/$img_big' border='0'>";
+		}
+	}else{
+		$img_str1 = "";
+	}
+
+	if($img_big2 != "" && file_exists("$Co_img_UP$mart_id/$img_big2")){
+		if (strstr(strtolower(substr($img_big2,-4)),'.jpg') || strstr(strtolower(substr($img_big2,-4)),'.gif')){
+			$img_str2 = "<img src='../..$Co_img_DOWN$mart_id/$img_big2' border='0'>";
+		}
+	}else{
+		$img_str2 = "";
+	}
+
+	if($img_big3 != "" && file_exists("$Co_img_UP$mart_id/$img_big3")){
+		if (strstr(strtolower(substr($img_big3,-4)),'.jpg') || strstr(strtolower(substr($img_big3,-4)),'.gif')){
+			$img_str3 = "<img src='../..$Co_img_DOWN$mart_id/$img_big3' border='0'>";
+		}
+	}else{
+		$img_str3 = "";
+	}
+
+	if($img_big4 != "" && file_exists("$Co_img_UP$mart_id/$img_big4")){
+		if (strstr(strtolower(substr($img_big4,-4)),'.jpg') || strstr(strtolower(substr($img_big4,-4)),'.gif')){
+			$img_str4 = "<img src='../..$Co_img_DOWN$mart_id/$img_big4' border='0'>";
+		}
+	}else{
+		$img_str4 = "";
+	}
+
+	if($img_big5 != "" && file_exists("$Co_img_UP$mart_id/$img_big5")){
+		if (strstr(strtolower(substr($img_big5,-4)),'.jpg') || strstr(strtolower(substr($img_big5,-4)),'.gif')){
+			$img_str5 = "<img src='../..$Co_img_DOWN$mart_id/$img_big5' border='0'>";
+		}
+	}else{
+		$img_str5 = "";
+	}
+
+}
+echo $img_str;
+//================== 1차 카테고리 정보를 불러옴 ==========================================
+$sql = "select * from $CategoryTable where category_num='$category_num' and if_hide='0' and mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$row = mysql_fetch_array( $res );
+$category_prevno = $row[prevno];
+$category_name = $row[category_name];
+//================== 2차 카테고리 정보를 불러옴 ==========================================
+$sql1 = "select * from $CategoryTable where category_num='$category_num1' and if_hide='0' and mart_id='$mart_id'";
+$res1 = mysql_query($sql1, $dbconn);
+$row1 = mysql_fetch_array( $res1 );
+$category_prevno1 = $row1[prevno];
+$category_name1 = $row1[category_name];
+//================== 3차 카테고리 정보를 불러옴 ==========================================
+$sql2 = "select * from $CategoryTable where category_num='$category_num2' and if_hide='0' and mart_id='$mart_id'";
+$res2 = mysql_query($sql2, $dbconn);
+$row2 = mysql_fetch_array( $res2 );
+$category_prevno2 = $row2[prevno];
+$category_name2 = $row2[category_name];
+
+//================== 상품평 정보를 불러옴 ================================================
+if($provider_id == ""){
+	$mart_id_tmp1 = $mart_id;
+}else{
+	$mart_id_tmp1 = $provider_id;
+}
+
+if($page == ""){
+	$page = 1;
+}
+
+$est_qry = "select count(*) from $EstimateTable where item_no='$item_no' and mart_id='$mart_id' and estimate_ok='y'";
+
+$est_result = mysql_query( $est_qry, $dbconn );
+$est_tot = mysql_result( $est_result, 0, 0);
+
+$line = 10;
+$list = 10;
+$total_page = ceil($est_tot/$line);
+$total_list = intval($total_page/$list);
+
+if($total_page%$list == 0){
+	$total_list--;
+}
+
+$curr_list = intval($page/$list);
+
+if($page%$list == 0){
+	$curr_list--;
+}
+
+$start_page = $curr_list*$list+1;
+$prev_list = $start_page - $list;
+$next_list = $start_page + $list;
+
+$olds = $line*($page-1);
+
+$est_sql = "select * from $EstimateTable where item_no='$item_no' and mart_id='$mart_id' and estimate_ok='y' order by est_no desc limit $olds,$line";
+$est_res = mysql_query($est_sql, $dbconn);
+
+//================== 2차 카테고리 정보가 없을때 ==========================================
+if( !$category_num1 ){
+	$nocate_sql2 = "select * from $CategoryTable where category_num='$prevno' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res2 = mysql_query($nocate_sql2, $dbconn);
+	$nocate_row2 = mysql_fetch_array( $nocate_res2 );
+	$category_prevno1 = $nocate_row2[prevno];
+	$category_num1 = $nocate_row2[category_num];
+	$category_name1 = $nocate_row2[category_name];
+}
+
+//================== 3차 카테고리 정보가 없을때 ==========================================
+if( !$category_num2 ){
+	$nocate_sql3 = "select * from $CategoryTable where prevno='$prevno' and category_num='$cate_num' and if_hide='0' and mart_id='$mart_id'";
+	$nocate_res3 = mysql_query($nocate_sql3, $dbconn);
+	$nocate_row3 = mysql_fetch_array( $nocate_res3 );
+	$category_prevno2 = $nocate_row3[prevno];
+	$category_num2 = $nocate_row3[category_num];
+	$category_name2 = $nocate_row3[category_name];
+}
+
+//================== 로그인 했을때 상품평 글쓰기 링크함 ==================================
+if( $UnameSess ){
+	$write_memo = "<a onclick=\"CenterWin('./est_write.html?mart_id=$mart_id&item_no=$item_no','est_write', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=550,height=650');\"><img src='../image/bu_estimate_write.gif' width='70' height='20' border='0' align='absmiddle' style='cursor:hand'></a>";
+}else{
+	$write_memo = "<a onclick=\"login_confirm();\"><img src='../image/bu_estimate_write.gif' width='70' height='20' border='0' align='absmiddle' style='cursor:hand'></a>";
+}
+
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<!DOCTYPE html>
+<? include("../include/header.html");?>
+
+		<script>
+			
+	//셀렉트 박스
+	$(function(){
+		$(".fz_list li").not(".fz_list_th").hover(function(){
+			$(this).addClass('bg_e');
+		}, function(){
+			$(this).removeClass('bg_e');
+			
+		});
+	//	$(".select_box").select_box({useBorderbox:true});
+	});
+		</script>
+		
+			
+
+
+
+<script language="javascript">
+<!--
+$(function(){
+	$("#plusBtn").bind("click",function(){
+		var price=parseInt($("#z_price").val());
+		quantity=parseInt($("#quantity").val());
+		quantity++;
+		price=price*quantity;
+		
+		$("#total-price").html(number_format(price)+"");
+		$("#quantity").val(quantity);
+	});
+	$("#minusBtn").bind("click",function(){
+		var price=parseInt($("#z_price").val());
+		quantity=parseInt($("#quantity").val());
+		quantity--;
+		if(quantity==0){
+			alert("0개는 주문이 안 됩니다.");
+			return;
+		}
+		$("#quantity").val(quantity);
+		$("#total-price").html(number_format(price)+"");
+	});
+	$("#quantity").bind("blur",function(){
+		var quan=parseInt($(this).val());
+		if(quan==0){
+			alert("0개는 주문이 안 됩니다.");
+			$("#quantity").focus();
+			return;
+		}
+	});
+});
+function page_reload() { 
+	document.form.submit();
+}
+function addorder(){
+	var form = document.form;
+	var Digit = '1234567890'
+  <?
+  if($use_opt1 == 't'){
+	 if(!empty($opts[0])){
+		  echo "
+		  	if(form.opt1.value == ''){
+		  		alert(\"옵션을 선택하세요\");
+		  		form.opt1.focus();
+		  		return;
+		  	}	
+		  ";
+	  }
+	}
+  ?>
+  <?
+  if($use_opt23 == 't'){
+	 if(!empty($opts[1])){
+		  echo "
+		  	if(form.opt2.value == ''){
+		  		alert(\"옵션을 선택하세요\");
+		  		form.opt2.focus();
+		  		return;
+		  	}	
+		  ";
+	  }
+	  if(!empty($opts[2])){
+		  echo "
+		  	if(form.opt3.value == ''){
+		  		alert(\"옵션을 선택하세요\");
+		  		form.opt3.focus();
+		  		return;
+		  	}	
+		  ";
+	  }
+  }
+  ?>
+  
+	if(form.quantity.value==''){
+		alert("수량을 입력하세요.");
+		form.quantity.focus();
+		return;
+	}
+	else{
+		var len =form.quantity.value.length;
+		var ret;
+		ret =false;		
+		for(var i=0;i<len;i++){  
+	   	var ch = form.quantity.value.substring(i,i+1);
+	    
+			for (var k=0;k<=Digit.length;k++){				
+			
+				if(Digit.substring(k,k+1) == ch)
+				{					
+					ret = true;
+					break;					
+				}
+			}	
+		 
+			if (!ret){
+				alert("숫자만 입력 하세요");
+				form.quantity.focus();
+				return;
+			} 
+			ret = false;
+		}
+	}
+	<?
+	if($jaego_use == '1'){
+		echo "
+	if(form.quantity.value > $jaego){
+		alert(\"재고량을 초과하여 입력하셨습니다. $jaego 이하로 입력하세요.\");
+		form.quantity.focus();
+		return;
+	}
+		";
+	}	
+	?>
+	form.action='../cart/cart_in.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>';
+	form.target = "_parent"
+	form.submit();
+}
+function direct_submit(){
+	var form			= document.form;
+	var Digit = '1234567890'
+  <?
+  if($use_opt1 == 't'){
+	 if(!empty($opts[0])){
+		  echo "
+		  	if(form.opt1.value == ''){
+		  		alert(\"옵션을 선택하세요\");
+		  		form.opt1.focus();
+		  		return;
+		  	}	
+		  ";
+	  }
+	}
+  ?>
+  <?
+  if($use_opt23 == 't'){
+	 if(!empty($opts[1])){
+		  echo "
+		  	if(form.opt2.value == ''){
+		  		alert(\"옵션을 선택하세요\");
+		  		form.opt2.focus();
+		  		return;
+		  	}	
+		  ";
+	  }
+	  if(!empty($opts[2])){
+		  echo "
+		  	if(form.opt3.value == ''){
+		  		alert(\"옵션을 선택하세요\");
+		  		form.opt3.focus();
+		  		return;
+		  	}	
+		  ";
+	  }
+  }
+  ?>
+  
+	if(form.quantity.value==''){
+		alert("수량을 입력하세요.");
+		form.quantity.focus();
+		return;
+	}
+	else{
+		var len =form.quantity.value.length;
+		var ret;
+		ret =false;		
+		for(var i=0;i<len;i++){  
+	   	var ch = form.quantity.value.substring(i,i+1);
+	    
+			for (var k=0;k<=Digit.length;k++){				
+			
+				if(Digit.substring(k,k+1) == ch)
+				{					
+					ret = true;
+					break;					
+				}
+			}	
+		 
+			if (!ret){
+				alert("숫자만 입력 하세요");
+				form.quantity.focus();
+				return;
+			} 
+			ret = false;
+		}
+	}
+	<?
+	if($jaego_use == '1'){
+		echo "
+	if(form.quantity.value > $jaego){
+		alert(\"재고량을 초과하여 입력하셨습니다. $jaego 이하로 입력하세요.\");
+		form.quantity.focus();
+		return;
+	}
+		";
+	}
+	?>	
+	form.action='../cart/cart_in.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>';
+	form.target = "_parent"
+	form.direct_submit_flag.value='direct_submit';
+	form.submit();
+}
+$(function(){
+	$("img").attr("oncontextmenu","return false");
+	$("img").css("-webkit-touch-callout","none");
+});
+//-->
+</script>
+
+	<body  oncontextmenu="return false" ondragstart="return false" onselectstart="return false" topmargin="0" leftmargin="0">
+		<? include("../include/top.html"); ?>
+ 
+		
+
+ 
+<section id="content">
+			<p class="pro_ti"><?=$category_name?></p> 
+ 
+			<article class="productView">
+                <div class="title"><?=$item_name?></div>
+
+
+<div class="m_rolling_banner">
+          
+              <div id="owl-demo" class="owl-carousel" style="display:block">
+
+                <?php if($img_str1 != ''){ ?><div class="item"><?php echo $img_str1 ?></div><?php } ?>
+                <?php if($img_str2 != ''){ ?><div class="item"><?php echo $img_str2 ?></div><?php } ?>
+                <?php if($img_str3 != ''){ ?><div class="item"><?php echo $img_str3 ?></div><?php } ?>
+                <?php if($img_str4 != ''){ ?><div class="item"><?php echo $img_str4 ?></div><?php } ?>
+				<?php if($img_str5 != ''){ ?><div class="item"><?php echo $img_str5 ?></div><?php } ?>
+
+              </div>
+              <!-- rolling -->   
+			 
+     <script>
+     $(document).ready(function() {
+ 
+     $("#owl-demo").owlCarousel({
+		 
+	  autoPlay : 5000,
+	 // navigation : true,
+      slideSpeed : 300,
+      paginationSpeed : 400,
+      singleItem : true,
+		 
+		 
+		  //autoPlay : 5000,
+          //items : 1,
+          //lazyLoad : true,
+          //navigation : true
+
+      });
+    });
+    </script>
+          
+</div>
+<script type="text/javascript">
+	var total_price=parseInt("<?=$z_price?>");
+	function priceChange(price,bonus){
+		$("#z_price").val(price);
+		total_price=price;
+		$("#opt1").val("").prop("selected",true);
+		$("#opt2").val("").prop("selected",true);
+		$("#opt3").val("").prop("selected",true);
+		$("#opt4").val("").prop("selected",true);
+		$("#opt5").val("").prop("selected",true);
+		$("#opt6").val("").prop("selected",true);
+		$("#total-price").html(number_format(price)+"");
+		$("#bonus").val(bonus);
+		var bonus_str=number_format(parseInt(bonus));
+		quantity=1;
+		$("#quantity").val(1);
+		$("#bonus-str").html("&nbsp;"+bonus_str+" 원");
+	}
+	function number_format(data) 
+	{
+		var tmp = '';
+		var number = '';
+		var cutlen = 3;
+		var comma = ',';
+		var i;
+		var data = String(data);
+		len = data.length;
+	 
+		mod = (len % cutlen);
+		k = cutlen - mod;
+		for (i=0; i<data.length; i++) 
+		{
+			number = number + data.charAt(i);
+			
+			if (i < data.length - 1) 
+			{
+				k++;
+				if ((k % cutlen) == 0) 
+				{
+					number = number + comma;
+					k = 0;
+				}
+			}
+		}
+	 
+		return number;
+	}
+</script>
+
+<!--AceCounter Plus eCommerce Product Start -->
+<script language='javascript'>
+var _AceTM=(_AceTM||{});
+_AceTM.Product={
+        pCode:'<?=$item_no?>',  //제품아이디(필수)
+        pName:'<?=$item_name?>',  //제품이름(필수)
+        pPrice:'<?=($z_price)?>',  //판매가(필수)
+        pCategory:'', //제품 카테고리명(선택)
+		pImageURl:'',//제품이미지url 주소(필수)
+        pLink:'',//제품상세페이지 주소(필수)
+		oItem:[]
+};
+</script>
+<!--AceCounter Plus eCommerce Product End -->
+
+			    <div class="imgbox"><?=$img_str?></div>
+                <div class="spec">
+                <table class="table">
+				<form action='<?=$PHP_SELF?>' name='form' method='post'>
+				<input type='hidden' name='flag' value='addorder' >
+				<input type='hidden' name='item_no' value='<?=$item_no?>'>
+				<input type='hidden' name='item_name' value='<?=$item_name?>'>
+				<input type='hidden' name='item_code' value='<?=$item_code?>'>
+				<input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+				<input type='hidden' name='z_price' id="z_price" value='<?=$z_price?>'>
+				<input type='hidden' name='use_bonus' value='<?=$use_bonus?>'>
+				<input type='hidden' name='direct_submit_flag' value=''>
+				<input type='hidden' name='parcel_price' id="parcel_price" value='<?=$parcel_price?>'>
+				<input type='hidden' name='bonus'  id='bonus' value="<?=$bonus?>">
+				<input type="hidden" name="if_cash" value="<?=$if_cash?>">
+                     <? if($if_customer_price=='1'&&$price>0){ ?>
+                          <tr class="cost">
+                             <td class="t">소비자가</td>
+                             <td align="right"><span class="cost"><?=$price_str?></span> 원</td>
+                          </tr>
+                          <? } ?>
+                          <tr class="cost">
+                             <td class="t">판매가격</td>
+                             <td>
+								<table width="90%">
+									<tr>
+										<td style="padding:5px">기본가격</td>
+										<td style="padding:5px;text-align:right">
+											<? if($z_price2||$z_price3){?>
+											<input type="radio" name="priceKind" value="0" checked onClick="priceChange('<?=$z_price?>','<?=$bonus?>')">
+											<? }?>
+											<?=number_format($z_price)?>원
+										</td>
+									</tr>
+									<!-- 고급 가격-->
+									<? if($z_price2){?>
+									<tr>
+										<td style="padding:5px">고급가격</td>
+										<td style="padding:5px;text-align:right"><input type="radio" name="priceKind" value="1" onClick="priceChange('<?=$z_price2?>','<?=$bonus2?>')"><?=number_format($z_price2)?>원</td>
+									</tr>
+									<? }
+										if($z_price3){
+									?>
+									<!-- 특품 가격-->
+									<tr>
+										<td style="padding:5px">특품가격</td>
+										<td style="padding:5px;text-align:right"><input type="radio" name="priceKind" value="1" onClick="priceChange('<?=$z_price3?>','<?=$bonus3?>')"><?=number_format($z_price3)?>원</td>
+									</tr>
+									<? }?>
+								</table>
+							 </td>
+                          </tr>
+                         
+                          <tr>
+                             <td class="t">포인트</td>
+                             <td align="right" id="bonus-str"><?=$bonus_str?> 원 </td>
+                          </tr>
+                         
+                          
+<?
+if($item_code){
+?>
+						<tr>
+							<td class="t">상품코드</td>
+							<td align="right">
+								<?=$item_code?>
+							</td>
+						</tr>
+<?
+}
+?>
+<?
+if($item_origin){
+?>
+						<tr>
+							<td class="t">제조국</td>
+							<td align="right">
+								<?=$item_origin?>
+							</td>
+						</tr>
+<?
+}
+?>
+<? if($item_company){ ?>
+                          <tr>
+							<td class="t">제조사</td>
+							<td align="right"><?=$item_company?></td>
+						</tr>
+                        <? } ?>
+<?
+if($item_bestbefore){
+?>
+						<tr>
+							<td class="t">유통기한</td>
+							<td align="right">
+								<?=$item_bestbefore?>
+							</td>
+						</tr>
+<?
+}
+?>
+                        <tr>
+							<td class="t">수량선택</td>
+							<td align="right">
+								<!-- - 버튼 -->
+								<button type="button" class="btn" id="minusBtn">-</button>
+								<input type="tel" name='quantity' id='quantity' value='1' style="width:50px" class="input_03" onKeyup="sumCost();">		
+								<!-- + 버튼 -->
+								<button type="button" class="btn" id="plusBtn">+</button>
+							</td>
+						</tr>
+                        <tr class="opt_click">
+							<td class="t">옵션</td>
+							<td align="right">선택&nbsp; <i class="fas fa-angle-down"></i></td>
+                        </tr>
+                        </table>
+                        <script>
+						$(document).ready(function(){
+							$(".opt_tbl").css("display","none");
+                        	$(".opt_click").click(function(){
+								$(this).css("display","none");
+								$(".opt_tbl").css("display","");
+							});
+						});
+                        </script>
+
+                        <!--옵션시작-->
+                        <table class="table opt_tbl" style="display:none">
+                        
+                        <? if($opt&&$opt!="=="){?>
+						<tr>
+							<td class="t"><?=$opt?></td>
+							<td align="right">
+								<span class="">
+								<select name="opt1" id="opt1" onChange="sumCost()" style="text-align:center;width:150px">
+															<option value="">선택</option>
+															<?
+																$sql="select * from $OptionTable where item_no='$item_no' order by opt_order asc";
+																$result=mysql_query($sql);
+																while($rs=mysql_fetch_array($result)){
+																	$opt_text=$rs[opt_name]."(+".$rs[opt_price].")";
+																	$opt_ea=$rs[opt_ea];																	
+																	if($opt_ea < 1 && $if_opt_jaego){
+																		$opt_out1 = "(품절)";
+																	}
+															?>
+															<option value="<?=$rs[opt_no]?>"><?=$opt_text?><?=$opt_out1?></option>
+															<? 
+															$opt_out1="";
+															}?>
+							  </select>	
+                              </span>					
+							</td>
+						</tr>
+													
+													
+							
+                                                    
+													<?
+													}
+													if($opt2){
+													?>
+
+
+						<tr>
+							<td class="t">  <?=$opt2?></td>
+							<td align="right">
+								<span class="">
+								<select name="opt2" id="opt2" onChange="sumCost()" style="text-align:center;width:150px">
+															<option value="">선택</option>
+															<?
+																$sql="select * from $OptionTable2 where item_no='$item_no' order by opt_order asc";
+																$result=mysql_query($sql);
+																while($rs=mysql_fetch_array($result)){
+																	$opt_text=$rs[opt_name]."(+".$rs[opt_price].")";
+																	$opt_ea=$rs[opt_ea];
+																	$if_opt_jaego=$rs[if_opt_jaego];
+																	if($opt_ea < 1 && $if_opt_jaego2){
+																		$opt_out2 = "(품절)";
+																	}															?>
+															<option value="<?=$rs[opt_no]?>"><?=$opt_text?><?=$opt_out2?></option>
+															<?
+															$opt_out2="";
+															}?>
+							  </select>	
+                              </span>						
+							</td>
+						</tr>
+													
+													<? }?>
+													<?
+													if($opt3){
+													?>
+
+																			<tr>
+							<td class="t"><?=$opt3?></td>
+							<td align="right">
+								<span class="">
+								<select name="opt3" id="opt3" onChange="sumCost()" style="text-align:center;width:150px">
+															<option value="">선택</option>
+															<?
+																$sql="select * from $OptionTable3 where item_no='$item_no' order by opt_order asc";
+																$result=mysql_query($sql);
+																while($rs=mysql_fetch_array($result)){
+																	$opt_text=$rs[opt_name]."(+".$rs[opt_price].")";
+																	$opt_ea=$rs[opt_ea];
+																	if($opt_ea < 1 && $if_opt_jaego3){
+																		$opt_out3 = "(품절)";
+																	}
+															?>
+															<option value="<?=$rs[opt_no]?>"><?=$opt_text?><?=$$opt_out3?></option>
+															<?
+															$opt_out3="";
+															}?>
+							  </select>	
+                              </span>						
+							</td>
+						</tr>
+
+
+
+													
+													<? }?>
+
+													<?
+													if($opt4){
+													?>
+
+													<tr>
+														<td class="t"><?=$opt4?></td>
+														<td align="right">
+								<span class="">
+															<select name="opt4" id="opt4" onChange="sumCost()" style="text-align:center;width:150px">
+																						<option value="">선택</option>
+																						<?
+																							$sql="select * from $OptionTable4 where item_no='$item_no' order by opt_order asc";
+																							$result=mysql_query($sql);
+																							while($rs=mysql_fetch_array($result)){
+																								$opt_text=$rs[opt_name]."(+".$rs[opt_price].")";
+																								$opt_ea=$rs[opt_ea];
+																								if($opt_ea < 1 && $if_opt_jaego4){
+																									$opt_out4 = "(품절)";
+																								}															?>
+																						<option value="<?=$rs[opt_no]?>"><?=$opt_text?><?=$opt_out4?></option>
+																						<?
+																						$opt_out4="";
+																						}?>
+														  </select>	
+                                                          </span>						
+														</td>
+													</tr>
+													<? }?>
+													<?
+													if($opt5){
+													?>
+
+													<tr>
+														<td class="t"><?=$opt5?></td>
+														<td align="right">
+								<span class="">
+															<select name="opt5" id="opt5" onChange="sumCost()" style="text-align:center;width:150px">
+																						<option value="">선택</option>
+																						<?
+																							$sql="select * from $OptionTable5 where item_no='$item_no' order by opt_order asc";
+																							$result=mysql_query($sql);
+																							while($rs=mysql_fetch_array($result)){
+																								$opt_text=$rs[opt_name]."(+".$rs[opt_price].")";
+																								$opt_ea=$rs[opt_ea];
+																								if($opt_ea < 1 && $if_opt_jaego5){
+																									$opt_out5 = "(품절)";
+																								}															?>
+																						<option value="<?=$rs[opt_no]?>"><?=$opt_text?><?=$opt_out5?></option>
+																						<?
+																						$opt_out5="";
+																						}?>
+														  </select>	
+                                                          </span>						
+														</td>
+													</tr>
+													<? }?>
+													<?
+													if($opt6){
+													?>
+
+													<tr>
+														<td class="t"><?=$opt6?></td>
+														<td align="right">
+								<span class="">
+															<select name="opt6" id="opt6" onChange="sumCost()" style="text-align:center;width:150px">
+																						<option value="">선택</option>
+																						<?
+																							$sql="select * from $OptionTable6 where item_no='$item_no' order by opt_order asc";
+																							$result=mysql_query($sql);
+																							while($rs=mysql_fetch_array($result)){
+																								$opt_text=$rs[opt_name]."(+".$rs[opt_price].")";
+																								$opt_ea=$rs[opt_ea];
+																								if($opt_ea < 1 && $if_opt_jaego6){
+																									$opt_out6 = "(품절)";
+																								}															?>
+																						<option value="<?=$rs[opt_no]?>"><?=$opt_text?><?=$opt_out6?></option>
+																						<?
+																						$opt_out6="";
+																						}?>
+														  </select>	
+                                                          </span>						
+														</td>
+													</tr>
+													<? }?>
+													<script>		
+													
+													function sumCost() {
+														cost = parseInt($("#z_price").val());
+														
+														nums = document.getElementById("quantity").value;
+														o = 0;
+														<? 
+														if($opt&&$opt!="=="){
+														$sql="select * from $OptionTable where item_no='$item_no' order by opt_order asc";
+														$result=mysql_query($sql);
+														while($rs=mysql_fetch_array($result)){
+															?>
+																o<?=$rs[opt_no]?> = <?=$rs[opt_price]?>;
+															<?
+														}
+														?>
+														opt1 = document.getElementById("opt1").value;
+														opt1_value =  eval("o"+opt1); 
+														<? }else{ ?>
+														opt1_value =  0; 
+														<? } ?>
+														<? 
+														if($opt2){
+														$sql="select * from $OptionTable2 where item_no='$item_no' order by opt_order asc";
+														$result=mysql_query($sql);
+														while($rs=mysql_fetch_array($result)){
+															?>
+																o<?=$rs[opt_no]?> = <?=$rs[opt_price]?>;
+															<?
+														}
+														?>
+														opt2 = document.getElementById("opt2").value;
+														opt2_value =  eval("o"+opt2); 
+														<? }else{ ?>
+														opt2_value =  0; 
+														<? } ?>
+														<? 
+														if($opt3){
+														$sql="select * from $OptionTable3 where item_no='$item_no' order by opt_order asc";
+														$result=mysql_query($sql);
+														while($rs=mysql_fetch_array($result)){
+															?>
+																o<?=$rs[opt_no]?> = <?=$rs[opt_price]?>;
+															<?
+														}
+														?>
+														opt3 = document.getElementById("opt3").value;
+														opt3_value =  eval("o"+opt3); 
+														<? }else{ ?>
+														opt3_value =  0; 
+														<? } ?>
+														<? 
+														if($opt4){
+														$sql="select * from $OptionTable4 where item_no='$item_no' order by opt_order asc";
+														$result=mysql_query($sql);
+														while($rs=mysql_fetch_array($result)){
+															?>
+																o<?=$rs[opt_no]?> = <?=$rs[opt_price]?>;
+															<?
+														}
+														?>
+														opt4 = document.getElementById("opt4").value;
+														opt4_value =  eval("o"+opt4); 
+														<? }else{ ?>
+														opt4_value =  0; 
+														<? } ?>
+														<? 
+														if($opt5){
+														$sql="select * from $OptionTable5 where item_no='$item_no' order by opt_order asc";
+														$result=mysql_query($sql);
+														while($rs=mysql_fetch_array($result)){
+															?>
+																o<?=$rs[opt_no]?> = <?=$rs[opt_price]?>;
+															<?
+														}
+														?>
+														opt5 = document.getElementById("opt5").value;
+														opt5_value =  eval("o"+opt5); 
+														<? }else{ ?>
+														opt5_value =  0; 
+														<? } ?>
+														<? 
+														if($opt6){
+														$sql="select * from $OptionTable6 where item_no='$item_no' order by opt_order asc";
+														$result=mysql_query($sql);
+														while($rs=mysql_fetch_array($result)){
+															?>
+																o<?=$rs[opt_no]?> = <?=$rs[opt_price]?>;
+															<?
+														}
+														?>
+														opt6 = document.getElementById("opt6").value;
+														opt6_value =  eval("o"+opt6); 
+														<? }else{ ?>
+														opt6_value =  0; 
+														<? } ?>
+														var tcosts = 0;
+														var tcost = 0;
+														var tbonus = 0;
+														tcosts = (opt1_value+opt2_value+opt3_value+opt4_value+opt5_value+opt6_value);
+														var tot_price=number_format((total_price*nums)+tcosts);
+
+
+														tcost = number_format(tcosts);
+														//document.getElementById("tcost").innerHTML = tcost;
+
+														tbonus = tcosts * 0.01;
+														//document.getElementById("tbonus").innerHTML = tbonus;
+														//document.getElementById("bonusv").value = tbonus;
+
+														tcosts2 = cost +opt1_value+opt2_value+opt3_value+opt4_value;
+														tbonus2 = tcosts2 * 0.01;
+
+														//document.getElementById("bonuss").value = tbonus2;
+														//$("#total-price").html(tot_price);
+														document.getElementById("total-price").innerHTML=tot_price;
+														
+													
+													}
+
+
+														function number_format(data) 
+														{
+															
+															var tmp = '';
+															var number = '';
+															var cutlen = 3;
+															var comma = ',';
+															var i;
+
+															data = String(data);
+														   
+															len = data.length;
+															
+															mod = (len % cutlen);
+															k = cutlen - mod;
+															for (i=0; i<data.length; i++) 
+															{
+																number = number + data.charAt(i);
+																
+																
+																if (i < data.length - 1) 
+																{
+																	k++;
+																	if ((k % cutlen) == 0) 
+																	{
+																		number = number + comma;
+																		k = 0;
+																	}
+																}
+															}
+
+															return number;
+														}
+
+													</script>
+
+                        
+                     </table>
+                     <table class="table">
+                        
+                        <!--<tr>
+							<td class="t">배송정보</td>
+							<td align="right">
+														<?
+														if($fee == "고객선택"){
+														?>
+															
+															<input type="radio" name="taekbae" value="선불" <?if($taekbae=="선불" || $taekbae==""){echo"checked";}?> onClick="form.parcel_price.value=<?=$parcel_price?>">선불배송		
+															<input type="radio" name="taekbae" value="착불" <?if($taekbae=="착불"){echo"checked";}?> onClick="form.parcel_price.value=0">착불배송
+
+
+														<?
+														}else{
+														?>
+														
+														<?=$me_delivery_str?>
+														
+														<?
+														}
+														?>											
+							</td>
+						</tr>-->
+                         <tr class="cost_t">
+							<td class="t">총 합계금액</td>
+							<td class="cost_t"><span class="cost" id="total-price"><?=number_format($z_price)?></span>원</td>
+						</tr>
+                        </form>
+                     </table>
+                </div>
+                
+                
+                
+                
+                
+				<div class="ac">
+
+<?
+if($if_cash!="2"){
+if( ($jaego_use == 1 && $jaego == 0) || ($z_price==0)  ){
+?>
+					
+				  <?php if($tel_buy_tel1 != ''){ ?>
+                  
+                  	<div class="mm_bigcall"><a href="tel:<?php echo $tel_buy_tel1 ?>">전화구매</a></div>
+                  
+                  <?php } ?>
+
+<?}else{?>
+
+					<ul class="mm_btn">
+                    	<li class="mm_buy"><a href="javascript:direct_submit();" onMouseDown="_AceTM.BuyNow(document.getElementById('quantity').value);">바로구매</a></li>
+                    	<!--<?php if($tel_buy_tel1 != ''){ ?><li class="mm_call"><a href="tel:<?php echo $tel_buy_tel1 ?>">전화구매</a></li><?php } ?>-->
+                        <li class="mm_cart"><a href="javascript:addorder();" onMouseDown="_AceTM.AddCart(document.getElementById('quantity').value);">장바구니</a></li>
+                        <li class="mm_cart"><a href="javascript:;" class="modal" onClick="sharedInfo('[이엘플라워] <?=$item_name?>소개','http://<?=$_SERVER[HTTP_HOST]?>/mobile/main/product_info.html?<?=$QUERY_STRING?>')">공유하기</a></li>
+                    </ul>
+<?}}else{?>					
+				<div class="mm_buy"><a href="javascript:direct_submit();">포인트구매</a></div>
+<? }?>
+
+
+
+<!--
+<?
+if($if_cash!="2"){
+if( ($jaego_use == 1 && $jaego == 0) || ($z_price==0)  ){
+?>
+			
+
+<?}else{?>
+
+					<ul>
+                    	<li><a href="javascript:direct_submit();" onMouseDown="_AceTM.BuyNow(document.getElementById('quantity').value);"><img src="../../market/images/product_info/kakao_order_button.gif"></a></li>
+                    </ul>
+<?}}else{?>					
+				<div class="mm_buy"><a href="javascript:direct_submit();"><img src="../../market/images/product_info/kakao_order_button.gif"></a></div>
+<? }?>
+
+-->
+				</div>
+<div style="margin:0 auto; padding:10px 0; text-align:center;">
+<script type="text/javascript" src="http://pay.naver.com/customer/js/mobile/naverPayButton.js" charset="UTF-8"></script>
+<script type="text/javascript">
+//<![CDATA[
+function buy_nc(url)
+{
+	var form = document.form;
+	var Digit = '1234567890';
+
+	if($('#quantity').val() < 1){
+		alert('최소구매수량 1이상 입력해주세요');
+		return false;
+	}
+
+	function isNumeric(Num) {
+		var result = false;
+		if (!isNaN(Num)){
+			result = true;
+		}
+		return result;
+	}
+
+		
+	if (isNumeric($('#quantity').val()) == false) {
+		$('#quantity').val('1');
+	}
+/*
+	// 옵션1 있을때
+	if($('#opt1').size() > 0){
+		if($('#opt1').val() == ''){
+			alert('<?=$opt?>을(를) 선택해주세요');
+			return false;
+		}
+	}
+
+	// 옵션2 있을때
+	if($('#opt2').size() > 0){
+		if($('#opt2').val() == ''){
+			alert('<?=$opt2?>을(를) 선택해주세요');
+			return false;
+		}
+	}
+
+	// 옵션3 있을때
+	if($('#opt3').size() > 0){
+		if($('#opt3').val() == ''){
+			alert('<?=$opt3?>을(를) 선택해주세요');
+			return false;
+		}
+	}
+
+	// 옵션4 있을때
+	if($('#opt4').size() > 0){
+		if($('#opt4').val() == ''){
+			alert('<?=$opt4?>을(를) 선택해주세요');
+			return false;
+		}
+	}
+*/
+	form.action='../../mobile/cart/naver_pay.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&fee=<?=$fee?>&freight_limit=<?=$freight_limit?>';
+	//form.target = "_blank";
+	form.direct_submit_flag.value='direct_submit';
+	form.submit();
+}
+
+
+function wishlist_nc(url)
+{
+	// 네이버페이로 찜 정보를 등록하는 가맹점 페이지 팝업 창 생성.
+	// 해당 페이지에서 찜 정보 등록 후 네이버페이 찜 페이지로 이동.
+	//window.open("../../market/cart/naver_wishlist.php?item_no=<?=$item_no?>","","scrollbars=yes,width=400,height=267");
+	location.href = "../../mobile/cart/naver_wishlist.php?item_no=<?=$item_no?>";
+	return false;
+}
+
+
+function not_buy_nc()
+{
+	alert("죄송합니다. 네이버페이로 구매가 불가한 상품입니다.");
+	return false;
+}
+//]]>
+</script>
+
+<script type="text/javascript" >
+//<![CDATA[
+	naver.NaverPayButton.apply({
+	BUTTON_KEY: "9A842D9A-1B66-49BC-AC28-CAEB3E07A55A", // 페이에서 제공받은 버튼 인증 키 입력
+	TYPE: "MA", // 버튼 모음 종류 설정
+	COLOR: 1, // 버튼 모음의 색 설정
+	COUNT: 2, // 버튼 개수 설정. 구매하기 버튼만 있으면 1, 찜하기 버튼도 있으면 2를 입력.
+<?php
+if( ($jaego_use == 1 && $jaego == 0) || ($z_price==0)  || $category_num == 36){
+?>
+	ENABLE: "N", // 품절 등의 이유로 버튼 모음을 비활성화할 때에는 "N" 입력
+	BUY_BUTTON_HANDLER: not_buy_nc, // 구매하기 버튼 이벤트 Handler 함수 등록, 품절인 경우 not_buy_nc 함수 사용
+<?php
+}else{
+?>
+	ENABLE: "Y", // 품절 등의 이유로 버튼 모음을 비활성화할 때에는 "N" 입력
+	BUY_BUTTON_HANDLER: buy_nc, // 구매하기 버튼 이벤트 Handler 함수 등록, 품절인 경우 not_buy_nc 함수 사용
+<?php
+}
+?>
+	WISHLIST_BUTTON_HANDLER: wishlist_nc, // 찜하기 버튼 이벤트 Handler 함수 등록
+	"":""
+	});
+//]]>
+</script>
+
+</div>
+
+
+
+<?
+	if($_SESSION[UnameSess]){
+?>
+<!--
+<br/>
+<div style="width:100%;text-align:center">
+<a href="javascript:;" onclick="kakaoPay()">
+ <img src="/market/img/kakaopay.jpg" style="width:90%">
+</a>
+</div>-->
+<script type="text/javascript">
+	function kakaoPay(){
+		var form = document.form;
+	var Digit = '1234567890';
+
+	if($('#quantity').val() < 1){
+		alert('최소구매수량 1이상 입력해주세요');
+		return false;
+	}
+
+	function isNumeric(Num) {
+		var result = false;
+		if (!isNaN(Num)){
+			result = true;
+		}
+		return result;
+	}
+
+		
+	if (isNumeric($('#quantity').val()) == false) {
+		$('#quantity').val('1');
+	}
+
+	form.action='../cart/kakao_pay.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&fee=<?=$fee?>&freight_limit=<?=$freight_limit?>';
+	form.direct_submit_flag.value='direct_submit';
+	form.submit();
+	}
+</script>
+<? }?>
+
+
+
+			</article>
+            <div style="height:30px;"></div>
+            
+			<article id="contentSub0">
+				<ul class="productTab">
+					<li><a class="one on">상세정보</a></li>
+					<li><a class="two">상품평</a></li>
+				</ul>
+			</article>
+			<div id="one"><?php echo $item_row['item_explain'] ?></div>
+			<div id="two" style="display:none;">
+				<iframe width="100%" height="auto" src="../main/product_esti.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>" frameborder="0"></iframe>
+			</div>
+            <div style="height:30px;"></div>
+            <!--배송안내시작-->
+            <div class="">
+                <?
+                    $martintro_sql = "select * from $MartIntroTable where mart_id='$mart_id'";
+                    $martintro_res = mysql_query($martintro_sql, $dbconn);
+                    $martintro_row = mysql_fetch_array($martintro_res);
+                ?>
+                <?=$martintro_row["exchange"]?>
+            </div>
+            <!--배송안내시작-->
+			
+</section>
+<script>
+window.onload = function(){
+	$("#one img").width('100%');
+	$("#one iframe").width('100%');
+
+	var $one = $(".one");
+	var $two = $(".two");
+
+	$one.click(function(){
+		$("#one").css('display','block');
+		$("#two").css('display','none');
+
+		$one.addClass('on');
+		$two.removeClass('on');
+	});
+
+	$two.click(function(){
+		$("#one").css('display','none');
+		$("#two").css('display','block');
+
+		$one.removeClass('on');
+		$two.addClass('on');
+	});
+}
+</script>
+ 
+ 
+	 
+		<? include("../include/bottom.html"); ?>
+<?
+if( ($jaego_use == 1 && $jaego == 0) || ($z_price==0)  ){
+?>
+		<div class="up_buy">
+		</div>
+<?}else{?>
+		<div class="up_buy">
+        	<ul>
+				<? if($if_cash!="2"){?>
+            	<li class="bu"><a href="javascript:direct_submit();" onMouseDown="_AceTM.BuyNow(document.getElementById('quantity').value);">구매하기</a></li>
+                <li><a href="javascript:addorder();" onMouseDown="_AceTM.AddCart(document.getElementById('quantity').value);">장바구니</a></li>
+				<? }else{?>
+				<li class="bu" style="width:100%"><a href="javascript:direct_submit();">포인트구매</a></li>
+				<? }?>
+            </ul>
+        </div>
+<?}?>
+	</body>
+</html>

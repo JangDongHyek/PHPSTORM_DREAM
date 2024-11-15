@@ -1,0 +1,50 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+$table = "bc";
+
+if( !$b_name ){
+	echo("
+		<script>
+		window.alert('인터넷상품 회사명을 입력해 주세요!')
+		history.go(-1)
+		</script>
+	");
+	exit;
+}
+
+$b_explain = str_replace( "\n", "<br>", $b_explain );
+
+//$b_regdate = date('Y-m-d H:i:s');
+
+//============= 최고 uid 값을 찾아서 1을 더해주고 이 uid 값을 insert 시켜줌 ==============
+$sql = "select MAX(b_uid) from $table";
+$res = mysql_query( $sql, $dbconn );
+$row = mysql_fetch_array( $res );
+$b_uid = $row[0] + 1;
+if( $res ){
+	mysql_free_result( $res );
+}
+//----------------------------------------------------------------------------------------
+$query = "insert into $table ( b_uid, b_name ) values ( '$b_uid', '$b_name' )";
+
+$result = mysql_query( $query, $dbconn );
+
+if( $result ){
+	echo("
+		<meta http-equiv='Refresh' content='0; URL=bc_index.html?mode=$mode&select_key=$select_key&input_key=$input_key&page=$page'>
+	");
+}else{
+	echo("
+		<script>
+		window.alert('인터넷상품회사를 등록하는데 실패했습니다!');
+		history.go(-1)
+		</script>
+	");
+	exit;
+}
+
+mysql_close($dbconn);
+
+?>
