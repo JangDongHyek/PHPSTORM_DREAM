@@ -252,7 +252,7 @@ function totalOrderKey($objects,$key,$info) {
                 <th>공급원가</th>
                 <th>판매자할인 / 공제금</th>
                 <th>KCP수수료</th>
-                <th>배송비</th>
+                <th>배송비 (A 별도 월정산)</th>
                 <?php if(false){?>
                 <th>부가세</th>
                 <?php } ?>

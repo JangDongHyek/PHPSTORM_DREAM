@@ -4624,7 +4624,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                             <th rowspan="2">공급원가</th>
                             <th rowspan="2">판매자할인/공제금</th>
 <!--                            <th rowspan="2">고객 결제금액</th>-->
-                            <th colspan="3">선결제배송비</th>
+                            <th colspan="3">선결제배송비(A 별도 월정산)</th>
                             <th colspan="3" style="display: none">부가세금처리</th>
                             <th rowspan="2">정산예정금액</th>
                             <th colspan="3">KCP수수료</th>

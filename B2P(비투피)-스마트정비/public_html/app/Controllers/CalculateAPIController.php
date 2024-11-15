@@ -192,4 +192,56 @@ class CalculateAPIController extends ResourceController {
         var_dump($result);
     }
 
+    public function checkAPI2() {
+        $data['api_method'] = "POST";
+        $data['api_url'] = "https://sa2.esmplus.com/account/v1/settle/getsettledeliveryfee";
+        $data['api_data'] = [];
+        $data['api_type'] = AC;
+        $time_start = date('Y-m-d', strtotime('-60Day'));
+        $time_end = date('Y-m-d', strtotime('+1Day'));
+
+        $data['api_data'] = [
+            "SiteType" => "A",
+            "SrchType" => "D1",
+            "SrchStartDate" => $time_start,
+            "SrchEndDate" => $time_end,
+            "PageNo" => 1,
+            "PageRowCnt" => 1,
+            "PackNo" => "1655893800",
+            "DeliveryGroupNo" => "1425169768",
+        ];
+
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->checkOrder($data);
+
+        var_dump($result);
+        //var_dump($result['body']);
+    }
+
+    public function checkAPI3() {
+        $data['api_method'] = "POST";
+        $data['api_url'] = "https://sa2.esmplus.com/account/v1/settle/getsettledeliveryfee";
+        $data['api_data'] = [];
+        $data['api_type'] = GM;
+        $time_start = date('Y-m-d', strtotime('-60Day'));
+        $time_end = date('Y-m-d', strtotime('+1Day'));
+
+        $data['api_data'] = [
+            "SiteType" => "G",
+            "SrchType" => "D6",
+            "SrchStartDate" => $time_start,
+            "SrchEndDate" => $time_end,
+            "PageNo" => 1,
+            "PageRowCnt" => 0,
+            "PackNo" => "5325628316",
+            "DeliveryGroupNo" => "2806783431",
+        ];
+
+        $apiModel = new GmarketApiModel();
+        $result = $apiModel->checkOrder($data);
+
+        var_dump($result);
+        //var_dump($result['body']);
+    }
+
 }

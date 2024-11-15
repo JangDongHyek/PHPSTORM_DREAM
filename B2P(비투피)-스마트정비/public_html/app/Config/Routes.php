@@ -303,6 +303,8 @@ $routes->group('calculate', ['namespace' => '\App\Controllers' , 'filter' => 'au
 
 $routes->post('/api/calculate/getData', 'CalculateAPIController::getData');
 $routes->get('/api/calculate/checkAPI', 'CalculateAPIController::checkAPI');
+$routes->get('/api/calculate/checkAPI2', 'CalculateAPIController::checkAPI2');
+$routes->get('/api/calculate/checkAPI3', 'CalculateAPIController::checkAPI3');
 
 // 제조사
 $routes->group('jejo', ['namespace' => '\App\Controllers' , 'filter' => 'auth::before'], static function ($routes) {
@@ -536,12 +538,22 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->post('OrderPay', 'PayController::OrderPay');
     $routes->get('OrderPayAutoPage', 'PayController::OrderPayAutoPage');
     $routes->post('OrderPayAutoPage', 'PayController::OrderPayAutoPage');
+    $routes->get('OrderPayAuto/(:segment)', 'PayController::OrderPayAuto/$1');
+    $routes->post('OrderPayAuto/(:segment)', 'PayController::OrderPayAuto/$1');
+    $routes->get('OrderPayAuto', 'PayController::OrderPayAuto');
+    $routes->post('OrderPayAuto', 'PayController::OrderPayAuto');
     $routes->get('OrderPayPop', 'PayController::OrderPayPop');
     $routes->post('OrderPayPop', 'PayController::OrderPayPop');
     $routes->get('OrderPayResult', 'PayController::OrderPayResult');
     $routes->post('OrderPayResult', 'PayController::OrderPayResult');
     $routes->get('OrderPayCancel', 'PayController::OrderPayCancel');
     $routes->post('OrderPayCancel', 'PayController::OrderPayCancel');
+    $routes->get('OrderPayCancelAutoPage', 'PayController::OrderPayCancelAutoPage');
+    $routes->post('OrderPayCancelAutoPage', 'PayController::OrderPayCancelAutoPage');
+    $routes->get('OrderPayCancelAuto/(:segment)', 'PayController::OrderPayCancelAuto/$1');
+    $routes->post('OrderPayCancelAuto/(:segment)', 'PayController::OrderPayCancelAuto/$1');
+    $routes->get('OrderPayCancelAuto', 'PayController::OrderPayCancelAuto');
+    $routes->post('OrderPayCancelAuto', 'PayController::OrderPayCancelAuto');
     $routes->get('OrderPayCancelPop', 'PayController::OrderPayCancelPop');
     $routes->post('OrderPayCancelPop', 'PayController::OrderPayCancelPop');
 
@@ -592,11 +604,6 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->get('OrderPerchaseKcpList/(:segment)', 'PayController::OrderPerchaseKcpList/$1');
     $routes->get('OrderPerchaseKcpList', 'PayController::OrderPerchaseKcpList');
     
-    //주문 결제하는곳
-    $routes->get('OrderPayAuto/(:segment)', 'PayController::OrderPayAuto/$1');
-    $routes->get('OrderPayAuto', 'PayController::OrderPayAuto');
-    $routes->post('OrderPayAuto', 'PayController::OrderPayAuto');
-
     //펌뱅킹 송금요청하는 곳
     $routes->get('OrderGetFirmTransferAutoPage', 'PayController::OrderGetFirmTransferAutoPage');
     $routes->post('OrderGetFirmTransferAutoPage', 'PayController::OrderGetFirmTransferAutoPage');

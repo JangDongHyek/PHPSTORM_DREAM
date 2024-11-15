@@ -185,7 +185,7 @@ class GmarketApiModel extends Model {
                         [
                             "officialNoticeItemelementCode" => "999-5",
                             "value" => "",
-                            "isExtraMark" => false
+                            "isExtraMarkcheckOrder" => false
                         ]
                     ]
                 ],
