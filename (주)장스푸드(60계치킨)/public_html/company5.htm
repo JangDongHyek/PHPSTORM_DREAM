@@ -1,0 +1,95 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>포가드</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+        <script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	
+    
+<section id="content">
+			<article id="sublist">
+			<!--2차메뉴-->
+            <? $page_view = "05"; include '../include/smenu_company.htm'; ?>
+			</article>
+			<!--<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 회사소개 > 인사말 </h2>
+				</div>
+			</article> -->
+			<!--페이지 -->
+    <div class="page">
+<div class="map cf">
+                        <div>
+<!-- * Daum 지도 - 지도퍼가기 -->
+<!-- 1. 지도 노드 -->
+<div id="daumRoughmapContainer1481608749763" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+
+<!--
+	2. 설치 스크립트
+	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
+-->
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="http://dmaps.daum.net/map_js_init/roughmapLoader.js"></script>
+
+<!-- 3. 실행 스크립트 -->
+<script charset="UTF-8">
+	new daum.roughmap.Lander({
+		"timestamp" : "1481608749763",
+		"key" : "eq8y",
+		"mapWidth" : "320",
+		"mapHeight" : "300"
+	}).render();
+</script>
+<div>
+      <dl class="add">
+                            	<dt>주소</dt>
+                                <dd>부산광역시 해운대구 센텀동로 99. 618-2호(재송동, 벽산 e-센텀클래스원)</dd>
+                        </dl>
+                        <dl class="ttl">
+                            	<dt>교통편 안내</dt>
+                                <dd>
+                                <h3>지하철 이용시</h3>
+                                2호선 센텀시티역 4번 출구<strong> → </strong>도보 10분</dd>
+                                <dd>
+                                <br>
+                                <h3>버스 이용시</h3>
+                                115번, 181번, 307번, 급행1002번<strong> → </strong>'센텀중학교'에서 하차
+                                </dd>
+                        </dl>
+                <!--map--></div></div></div>	  </div>
+	<!--페이지 -->
+	</section>
+    
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

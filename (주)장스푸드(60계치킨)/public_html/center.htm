@@ -1,0 +1,50 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>포가드</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+        <script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	
+    
+<section id="content">
+			<article id="sublist">
+	
+			<!--페이지 -->
+  <div class="page"><img src="../../market/images2/center_img.jpg" width="100%"></div>
+	<!--페이지 -->
+	</section>
+    
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

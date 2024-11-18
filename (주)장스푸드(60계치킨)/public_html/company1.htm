@@ -1,0 +1,73 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>포가드</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+        <script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	
+    
+<section id="content">
+			<article id="sublist">
+			<!--2차메뉴-->
+            <? $page_view = "01"; include '../include/smenu_company.htm'; ?>
+			</article>
+			<!--<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 회사소개 > 인사말 </h2>
+				</div>
+			</article> -->
+			<!--페이지 -->
+  <div class="page">
+			<img src="../images/com1_01.jpg" width="100%">
+            <br><br>
+            (주)아이오티플렉스는 기업부설연구소를 보유한 벤처기업으로 
+            GPS위치추적시스템을 전문적으로 연구, 개발, 제조하고 있습니다.<br>
+            부산 해운대 센텀 지식산업단지 내에 본사가 있으며, 
+            전국 여러 지역에 20개 이상의 대리점을 두고 있습니다. <br>
+            <br>
+            2006년 사업을 시작하여 인도네시아에 포가드 제품을 수출하였으며, 
+            현재 동남아 및 중국 시장의 진출을 위해 국제인증 취득 및 특허 출원 등을 진행하고 있습니다.<br><br>
+            벤처기업 등록, 기업부설연구소 설립, ISO 9001인증, KCC인증, 상표등록 등 각종 인정서 취득 및 산업재산권을 보유하였으며, 
+            유망창업기업 선정, 고용창출기업으로 선정되어 인재 창출을 위해 사회적으로 공헌하고 있습니다. <br>
+            이를 바탕으로 하여 GPS위치추적시스템 시장의 핵심으로 꾸준한 성장을 거듭하며 빠르게 발전하고 있습니다.<br><br>
+            (주)아이오티플렉스의 괄목할만한 큰 성장은<br>
+            최고의 제품, 차별화된 서비스, 연구진 및 생산라인의 일에 대한 열정, 전문적인 비즈니스 방식에 토대하고 있으며, 
+            보다 다각적이고 발전적인 기업으로 거듭나기 위하여 지속적인 연구 개발에 매진하고 있습니다.<br><br>
+   		  <img src="../../market/images2/com1_02.jpg" width="100%">    </div>
+	<!--페이지 -->
+	</section>
+    
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>
