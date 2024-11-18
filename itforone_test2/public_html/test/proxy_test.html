@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>테스트</title>
+    <script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script><!-- axios -->
+
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<form name="frm" method="post" onsubmit="return frmSubmit(this);">
+    <ul>
+        <li><input type="text" name="memberId" class="frm_input" value="test01"></li>
+        <li><input type="text" name="memberName" class="frm_input" value="홍길동"></li>
+        <li><input type="text" name="clinicName" class="frm_input" value="홍 한의원"></li>
+        <li><input type="text" name="repName" class="frm_input" value="홍의사"></li>
+        <li><input type="text" name="brno" class="frm_input" value="123-45-67890"></li>
+        <li><input type="password" name="password" class="frm_input" value="0000"></li>
+        <li>사업자파일<input type="file" name="bizRegFile"></li>
+        <li>계약서파일<input type="file" name="contractFile"></li>
+    </ul>
+    <button type="submit">등록</button>
+
+</form>
+
+<script>
+    function frmSubmit(f) {
+        const apiServer = 'http://15.165.92.13:8200/api/signUp';
+        let formData = new FormData(f);
+
+        // axios 요청
+        axios.post(apiServer, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            console.log('통신성공', response);
+            console.log(response.data); // return json data
+
+        }).catch(error => {
+            console.error('통신실패', error);
+
+        });
+
+        // jquery ajax 요청
+        // $.ajax({
+        //     url: apiServer,
+        //     data: formData,
+        //     type: "POST",
+        //     async: false,
+        //     enctype: "multipart/form-data",
+        //     processData: false,
+        //     contentType: false,
+        // }).done(function(response, textStatus, xhr) {
+        //     // let data = JSON.parse(response);
+        //     console.log(response);
+        //
+        // }).fail(function(data, textStatus, errorThrown) {
+        //     console.log("[serverUploadImage] : [error] : ", data);
+        // });
+
+        return false;
+    }
+</script>
+</body>
+</html>
