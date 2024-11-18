@@ -66,7 +66,7 @@ class Jl {
         //throw new \Exception($msg);
     }
 
-    // 5.2에 주로 사용하며 유니코드 형태로 인코드된 한글데이터를 디코딩 함수
+    // 5.2에 주로 사용하며 인코드된 한글데이터를 한글로 변환하는 함수
     function decodeUnicode($str) {
         while (preg_match('/\\\\u([0-9a-fA-F]{4})/', $str, $matches)) {
             $char = pack('H*', $matches[1]); // 16진수 값을 바이너리로 변환

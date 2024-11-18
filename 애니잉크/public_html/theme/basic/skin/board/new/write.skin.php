@@ -1,5 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+include_once(G5_PATH.'/jl/JlConfig.php');
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0);
@@ -419,6 +420,82 @@ if($w == 'u' && $wr_id != ''){
 
 			</td>
 		</tr>
+        <?php if($_SERVER['REMOTE_ADDR'] == "59.19.201.109" || $_SERVER['REMOTE_ADDR'] == "121.140.204.65"){ ?>
+
+        <?php
+            if($w == 'u' && $wr_id != ''){
+                $model = new JlModel(array("table" => "g5_write_new_type2"));
+                $model->where("board_idx",$wr_id);
+                $model->orderBy('priority','ASC');
+                $objects = $model->get();
+            }
+            ?>
+        <tr>
+            <th class="b_th">연결방식 및 IP</th>
+            <td class="b_td" colspan="3">
+
+                    <table class="b_tbl2">
+                        <thead>
+                        <tr>
+                            <th class="b_th_th">연결방식</th>
+                            <th class="b_th_th x200">IP</th>
+                            <th class="b_th_th x70">삭제</th>
+                        </tr>
+                        </thead>
+                        <tbody id="nt_tbody2">
+                        <? if($objects['count']) { ?>
+                            <? foreach($objects['data'] as $o) {?>
+                        <tr class="nt_tr1">
+                            <td class="b_tb_td x110">
+                                <select name="connect_type[]" class="" onchange="">
+                                    <option value="">선택하세요</option>
+                                    <option value="USB" <?if($o['connect_type'] == 'USB') echo 'selected'?>>USB</option>
+                                    <option value="유선네트워크" <?if($o['connect_type'] == '유선네트워크') echo 'selected'?>>유선네트워크</option>
+                                    <option value="무선네트워크" <?if($o['connect_type'] == '무선네트워크') echo 'selected'?>>무선네트워크</option>
+                                    <option value="USB 및 유선네트워크" <?if($o['connect_type'] == 'USB 및 유선네트워크') echo 'selected'?>>USB 및 유선네트워크</option>
+                                    <option value="USB 및 무선네트워크" <?if($o['connect_type'] == 'USB 및 무선네트워크') echo 'selected'?>>USB 및 무선네트워크</option>
+                                    <option value="블루투스" <?if($o['connect_type'] == '블루투스') echo 'selected'?>>블루투스</option>
+                                </select>
+                            </td>
+                            <td class="b_tb_td">
+                                <input type="text" name="ips[]" value="<?=$o['connect_ip']?>">
+                            </td>
+                            <td class="b_tb_td">
+                                <a class="nt_del_btn" onclick="del_act(this)">삭제</a>
+                            </td>
+                        </tr>
+                            <?}?>
+                        <?} else {?>
+                        <tr class="nt_tr1">
+                            <td class="b_tb_td x110">
+                                <select name="connect_type[]" class="" onchange="">
+                                    <option value="">선택하세요</option>
+                                    <option value="USB">USB</option>
+                                    <option value="유선네트워크">유선네트워크</option>
+                                    <option value="무선네트워크">무선네트워크</option>
+                                    <option value="USB 및 유선네트워크">USB 및 유선네트워크</option>
+                                    <option value="USB 및 무선네트워크">USB 및 무선네트워크</option>
+                                    <option value="블루투스">블루투스</option>
+                                </select>
+                            </td>
+                            <td class="b_tb_td">
+                                <input type="text" name="ips[]">
+                            </td>
+                            <td class="b_tb_td">
+                                <a class="nt_del_btn" onclick="del_act(this)">삭제</a>
+                            </td>
+                        </tr>
+                        <?}?>
+                        </tbody>
+                    </table>
+
+                    <div id="nt_add_box"><input type="button" value="추&nbsp;&nbsp;&nbsp;&nbsp;가" id="nt_add_btn2" /></div>
+
+
+
+            </td>
+        </tr>
+        <?php }?>
 		<tr>
 			<th class="b_th">보증금</th>
 			<td class="b_td" colspan="3">
@@ -666,6 +743,32 @@ $(function(){
 
 		datepicker_act();
 	});
+
+    $("#nt_add_btn2").on('click', function(){
+        var list_arr = Array("USB","유선네트워크","무선네트워크","USB 및 유선네트워크","USB 및 무선네트워크","블루투스",);
+
+        var datas = '';
+        datas += '<tr class="nt_tr1">';
+        datas += '<td class="b_tb_td x110">';
+        datas += '<select name="connect_type[]" class="nt_list">';
+        datas += '<option value="">선택하세요</option>';
+        for(var a=0; a<list_arr.length; a++){
+            datas += '<option value="'+list_arr[a]+'">'+list_arr[a]+'</option>';
+        }
+        datas += '</select>';
+        datas += '</td>';
+        datas += '<td class="b_tb_td">';
+        datas += '<input type="text" name="ips[]">';
+        datas += '</td>';
+        datas += '<td class="b_tb_td">';
+        datas += '<a class="nt_del_btn" onclick="del_act(this)">삭제</a>';
+        datas += '</td>';
+        datas += '</tr>';
+
+        $("#nt_tbody2").append(datas);
+
+        datepicker_act();
+    });
 
 	$(".wr_17").on('click', function(){
 		var _idx = $(".wr_17").index(this);

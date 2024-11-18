@@ -1,6 +1,7 @@
 <?php
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 include_once(G5_LIB_PATH.'/thumbnail.lib.php');
+include_once(G5_PATH.'/jl/JlConfig.php');
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0);
@@ -165,6 +166,40 @@ if($t_num > 0){
 
 			</td>
 		</tr>
+
+        <tr>
+            <th class="b_th">연결방식 및 IP</th>
+            <td class="b_td" colspan="3">
+
+                <table class="b_tbl2">
+                    <thead>
+                    <tr>
+                        <th class="b_th_th">연결방식</th>
+                        <th class="b_th_th">IP</th>
+                    </tr>
+                    </thead>
+                    <tbody id="nt_tbody2">
+                    <?
+                    $model = new JlModel(array("table" => "g5_write_new_type2"));
+                    $model->where("board_idx",$wr_id);
+                    $model->orderBy("priority","ASC");
+                    $objects = $model->get();
+                    ?>
+                    <? if($objects['count']) { ?>
+                        <? foreach($objects['data'] as $o) { ?>
+                        <tr>
+                            <td class="b_tb_td"><?=$o['connect_type']?></td>
+                            <td class="b_tb_td"><?=$o['connect_ip']?></td>
+                        </tr>
+                        <? } ?>
+                    <? } else { ?>
+                        <tr><td colspan="3" class="talign_c">등록된 IP가 없습니다.</td></tr>
+                    <? } ?>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
 		<tr>
 			<th class="b_th">보증금</th>
 			<td class="b_td" colspan="3"><?php if($view['wr_19'] != '') echo number_format($view['wr_19']).'원' ?></td>

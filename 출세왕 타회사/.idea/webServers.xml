@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="bf528c41-2369-41f2-84db-6b731c4397fe" name="출세왕 타회사">
-        <fileTransfer rootFolder="/home/successking" accessType="SFTP" host="211.57.201.46" port="22" sshConfigId="fbc1c5b8-9411-4de2-bb64-5d2ae946d34d" sshConfig="successking@211.57.201.46:22 password">
+        <fileTransfer rootFolder="/home/successking" accessType="SFTP" host="211.57.201.46" port="2323" sshConfigId="fbc1c5b8-9411-4de2-bb64-5d2ae946d34d" sshConfig="successking@211.57.201.46:2323 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

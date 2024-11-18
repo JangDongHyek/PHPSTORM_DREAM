@@ -1,7 +1,7 @@
 <?php
 // Define 파일이 제대로 Load 됐는지 확인용
 define("JL_CHECK",true);
-define("JL_Version",1.1);
+define("JL_Version",1);
 
 // 최상단 폴더의 이름
 define("JL_ROOT_DIR","public_html");
@@ -23,13 +23,7 @@ define("JL_COMPONENT","/component");
 
 // DB 설정
 define("JL_HOSTNAME","localhost");
-define("JL_USERNAME","exam");
-define("JL_PASSWORD","pass");
-define("JL_DATABASE","exam");
-
-/*
-업데이트 노트
-1. 5.2에서도 사용가능하게 업데이트
-*/
-
+define("JL_USERNAME","aniink");
+define("JL_PASSWORD","oydep$6e");
+define("JL_DATABASE","aniink");
 ?>
