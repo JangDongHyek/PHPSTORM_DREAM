@@ -174,7 +174,20 @@ if ($sca || $stx) {
 		if($gu != ''){
 			$sql_search .= " and wr_4 like '%{$gu}%'";
 		}
+        if($sch_wr_subject != ''){
+            $sql_search .= " and wr_subject like '%{$sch_wr_subject}%'";
+        }
 	}
+
+    if($bo_table == 'date'){
+        if($sch_wr_subject != ''){
+            $sql_search .= " and wr_subject like '%{$sch_wr_subject}%'";
+        }
+
+        if($sch_nt_model != ''){
+            $sql_search .= " and wr_2 like '%{$sch_nt_model}%'";
+        }
+    }
 
     //$total_count = $board['bo_count_write'];
 	

@@ -55,6 +55,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 					<select name="gu" id="gu" class="sch_sel">
 						<option value="" >구/군(전체)</option>
 					</select>
+                    <input type="text" name="sch_wr_subject" class="frm_input x150" id="sch_wr_subject" value="<?php echo $sch_wr_subject ?>" placeholder="고객명">
 					<input type="submit" value="검색" class="search_btn">
 				</div>
 			</form>

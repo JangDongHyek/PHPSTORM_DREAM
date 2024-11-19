@@ -48,7 +48,6 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 	<fieldset id="bo_sch">
 		<legend>게시물 검색</legend>
 			
-			<?php if($sch_wr_2 != '임대해지'){ ?>
 			<form name="fsearch" method="get">
 				<input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
 				<input type="hidden" name="sca" value="<?php echo $sca ?>">
@@ -59,8 +58,10 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 				<div class="shop_search" width="100%" style="padding-top:8px;">
 					<table class="list_search_tbl">
 					<tbody>
-					<tr>
-						<th class="list_search_th" style="border-radius:7px 0px 0px 0px;">업체명</th>
+                    <?php if($sch_wr_2 != '임대해지'){ ?>
+
+                    <tr>
+						<th class="list_search_th" style="">업체명</th>
 						<td class="list_search_td talign_l x210">
 							<input type="text" name="sch_wr_subject" class="frm_input x150" id="sch_wr_subject" value="<?php echo $sch_wr_subject ?>">
 						</td>
@@ -115,15 +116,42 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 							<input type="text" name="sch_inspection1" class="frm_input x80" id="sch_inspection1" value="<?php echo $sch_inspection1 ?>"> ~ 
 							<input type="text" name="sch_inspection2" class="frm_input x80" id="sch_inspection2" value="<?php echo $sch_inspection2 ?>">
 						</td>
-						<td class="list_search_td talign_c x130" style="border-radius:0px 0px 7px 0px;" colspan="4">
-							<input type="submit" value="검색" class="search_btn">
-						</td>
+                        <th class="list_search_th" style="border-radius:0px 0px 0px 7px;">정기점검미체크확인</th>
+                        <td class="list_search_td talign_l x210">
+                            <select name="check_date">
+                                <option value="">선택해주세요</option>
+                                <? for ($i = 1; $i < 37; $i++) { ?>
+                                <option value="<?=$i?>"><?=$i?>개월</option>
+                                <? } ?>
+                            </select>
+                        </td>
+                        <th class="list_search_th" style="border-radius:0px 0px 0px 7px;">미수금업체</th>
+                        <td class="list_search_td talign_l x210">
+                            <input type="checkbox" name="sch_wr_17" value="미수">
+                        </td>
+
 					</tr>
+                    <tr>
+                        <td class="list_search_td talign_c x130" style="border-radius:0px 0px 7px 0px;" colspan="8">
+                            <input type="submit" value="검색" class="search_btn">
+                        </td>
+                    </tr>
 					</tbody>
-					</table>
+                    <?php }else { ?>
+                        <tr>
+                            <th class="list_search_th" style="">업체명</th>
+                            <td class="list_search_td talign_l x210" colspan="4">
+                                <input type="text" name="sch_wr_subject" class="frm_input x150" id="sch_wr_subject" value="<?php echo $sch_wr_subject ?>">
+                            </td>
+
+                            <td class="list_search_td talign_c x130" style="border-radius:0px 0px 7px 0px;" colspan="4">
+                                <input type="submit" value="검색" class="search_btn">
+                            </td>
+                        </tr>
+                        <?}?>
+                    </table>
 				</div>
 			</form>
-			<?php } ?>
 	</fieldset>
 	<!-- 게시물 검색 끝 } -->
 
@@ -292,7 +320,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 				if($list[$i]['wr_17'] == '수금'){
 					echo '없음';
 				}else if($list[$i]['wr_17'] == '미수'){
-					echo '미수금 : '.number_format($list[$i]['wr_24']).'원';
+					echo '미수금 : '.number_format($list[$i]['wr_24']).'원'." ({$list[$i]['wr_25']}개월)";
 				}
 				?>
 			</td>

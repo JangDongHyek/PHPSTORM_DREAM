@@ -496,11 +496,24 @@ if($w == 'u' && $wr_id != ''){
             </td>
         </tr>
         <?php }?>
+
+        <? $wr_style = ($write['wr_27'] == '완납') ? 'block' : 'none'; ?>
 		<tr>
 			<th class="b_th">보증금</th>
-			<td class="b_td" colspan="3">
+			<td class="b_td">
 				<input type="text" name="wr_19" id="wr_19" value="<?php echo $write['wr_19'] ?>" class="frm_input x130" />
 			</td>
+
+            <th class="b_th">보증금 납부</th>
+            <td class="b_td">
+                <input type="radio" name="wr_27" value="미납" <?=($write['wr_27'] == '미납') ? 'checked' : ''?> >미납
+                <input type="radio" name="wr_27" value="완납" <?=($write['wr_27'] == '완납') ? 'checked' : ''?> >완납
+
+                <div style="display: <?=$wr_style?> " id="wr_28_div">
+                    <span>완납일자</span>
+                    <input type="date" name="wr_28" value="<?=$write['wr_28']?>">
+                </div>
+            </td>
 		</tr>
 		<tr>
 			<th class="b_th">임대금액</th>
@@ -526,7 +539,7 @@ if($w == 'u' && $wr_id != ''){
 		</tr>
 		<tr>
 			<th class="b_th">임대금액 결제방식</th>
-			<td class="b_td" colspan="3">
+			<td class="b_td">
 				<select name="wr_15">
 					<option value="" <?php if($write['wr_15'] == '') echo 'selected'; ?>>선택하세요</option>
 					<option value="통장CMS" <?php if($write['wr_15'] == '통장CMS') echo 'selected'; ?>>통장CMS</option>
@@ -537,6 +550,12 @@ if($w == 'u' && $wr_id != ''){
                     <option value="CMS" <?php if($write['wr_15'] == 'CMS') echo 'selected'; ?>>CMS</option>
 				</select>
 			</td>
+
+            <th class="b_th">추가장당</th>
+            <td class="b_td">
+                흑백<input type="text" name="wr_29" value="<?=$write['wr_29']?>">
+                컬러<input type="text" name="wr_30" value="<?=$write['wr_30']?>">
+            </td>
 		</tr>
 		<tr>
 			<th class="b_th">VAT</th>
@@ -674,6 +693,21 @@ if($w == 'u' && $wr_id != ''){
         <a href="./board.php?bo_table=<?php echo $bo_table ?>" class="btn_cancel">목록보기</a>
     </div>
     </form>
+
+<script>
+    document.querySelectorAll('input[name="wr_27"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            // 선택된 값에 따라 특정 div 보여주기
+            const selectedValue = this.value;
+            const targetDiv = document.getElementById(`wr_28_div`);
+            if (selectedValue == '완납') {
+                targetDiv.style.display = 'block';
+            }else {
+                targetDiv.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 <script>
 function nt_view(obj){

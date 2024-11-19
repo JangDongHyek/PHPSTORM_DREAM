@@ -202,7 +202,12 @@ if($t_num > 0){
 
 		<tr>
 			<th class="b_th">보증금</th>
-			<td class="b_td" colspan="3"><?php if($view['wr_19'] != '') echo number_format($view['wr_19']).'원' ?></td>
+			<td class="b_td"><?php if($view['wr_19'] != '') echo number_format($view['wr_19']).'원' ?></td>
+            <th class="b_th">보증금 납부</th>
+            <td class="b_td">
+                <?=$view['wr_27']?>
+                <? if($view['wr_28']) echo "({$view['wr_28']})"; ?>
+            </td>
 		</tr>
 		<tr>
 			<th class="b_th">임대금액</th>
@@ -217,7 +222,12 @@ if($t_num > 0){
 		</tr>
 		<tr>
 			<th class="b_th">임대금액 결제방식</th>
-			<td class="b_td" colspan="3"><?php echo $view['wr_15'] ?></td>
+			<td class="b_td"><?php echo $view['wr_15'] ?></td>
+
+            <th class="b_th">추가장당</th>
+            <td class="b_td">
+                흑백 <?=$view['wr_29']?> 컬러 <?=$view['wr_30']?>
+            </td>
 		</tr>
 		<tr>
 			<th class="b_th">VAT</th>

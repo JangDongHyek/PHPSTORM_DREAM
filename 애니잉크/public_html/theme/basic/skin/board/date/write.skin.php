@@ -56,84 +56,51 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
     echo $option_hidden;
     ?>
 
-    <div class="tbl_frm01 tbl_wrap">
-        <table>
+    <div class="tbl_wrap">
+        <table class="b_tbl">
         <colgroup>
            <col style="width:15%" />
            <col style="width:auto" />
         </colgroup>
         <tbody>
-        <?php if ($is_name) { ?>
-        <tr>
-            <th scope="row"><label for="wr_name">이름<strong class="sound_only">필수</strong></label></th>
-            <td><input type="text" name="wr_name" value="<?php echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
-        </tr>
-        <?php } ?>
 
-        <?php if ($is_password) { ?>
         <tr>
-            <th scope="row"><label for="wr_password">비밀번호<strong class="sound_only">필수</strong></label></th>
-            <td><input type="password" name="wr_password" id="wr_password" <?php echo $password_required ?> class="frm_input <?php echo $password_required ?>" maxlength="20"></td>
-        </tr>
-        <?php } ?>
-
-        <?php if ($is_email) { ?>
-        <tr>
-            <th scope="row"><label for="wr_email">이메일</label></th>
-            <td><input type="text" name="wr_email" value="<?php echo $email ?>" id="wr_email" class="frm_input email"  maxlength="100"></td>
-        </tr>
-        <?php } ?>
-
-        <?php if ($is_homepage) { ?>
-        <tr>
-            <th scope="row"><label for="wr_homepage">홈페이지</label></th>
-            <td><input type="text" name="wr_homepage" value="<?php echo $homepage ?>" id="wr_homepage" class="frm_input" ></td>
-        </tr>
-        <?php } ?>
-
-        <?php if ($option) { ?>
-        <tr>
-            <th scope="row">옵션</th>
-            <td><?php echo $option ?></td>
-        </tr>
-        <?php } ?>
-
-        <?php if ($is_category) { ?>
-        <tr>
-            <th scope="row"><label for="ca_name">분류<strong class="sound_only">필수</strong></label></th>
-            <td>
-                <select name="ca_name" id="ca_name" required class="required" >
-                    <option value="">선택하세요</option>
-                    <?php echo $category_option ?>
-                </select>
+            <th class="b_th">등록일자</th>
+            <td class="b_td">
+                <input type="date" name="wr_1" id="wr_1" value="<?php echo $write['wr_1'] ?>" class="frm_input x90" />
             </td>
         </tr>
-        <?php } ?>
 
         <tr>
-            <th scope="row"><label for="wr_subject">제목<strong class="sound_only">필수</strong></label></th>
-            <td>
+            <th class="b_th"><label for="wr_name">등록자<strong class="sound_only">필수</strong></label></th>
+            <td class="b_td"><input type="text" name="wr_name" value="<?php echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
+        </tr>
+
+        <tr>
+            <th class="b_th"><label for="wr_password">비밀번호<strong class="sound_only">필수</strong></label></th>
+            <td class="b_td"><input type="password" name="wr_password" id="wr_password" <?php echo $password_required ?> class="frm_input <?php echo $password_required ?>" maxlength="20"></td>
+        </tr>
+
+        <tr>
+            <th class="b_th"><label for="wr_subject">모델<strong class="sound_only">필수</strong></label></th>
+            <td class="b_td">
                 <div id="autosave_wrapper">
                     <input type="text" name="wr_subject" value="<?php echo $subject ?>" id="wr_subject" required class="frm_input required" maxlength="255">
-                    <?php if ($is_member) { // 임시 저장된 글 기능 ?>
-                    <script src="<?php echo G5_JS_URL; ?>/autosave.js"></script>
-                    <?php if($editor_content_js) echo $editor_content_js; ?>
-                    <button type="button" id="btn_autosave" class="btn_frmline">임시 저장된 글 (<span id="autosave_count"><?php echo $autosave_count; ?></span>)</button>
-                    <div id="autosave_pop">
-                        <strong>임시 저장된 글 목록</strong>
-                        <div><button type="button" class="autosave_close"><img src="<?php echo $board_skin_url; ?>/img/btn_close.gif" alt="닫기"></button></div>
-                        <ul></ul>
-                        <div><button type="button" class="autosave_close"><img src="<?php echo $board_skin_url; ?>/img/btn_close.gif" alt="닫기"></button></div>
-                    </div>
-                    <?php } ?>
                 </div>
+            </td>
+        </tr>
+
+        <tr>
+            <th class="b_th">증상내용</th>
+            <td class="b_td">
+                <textarea class="frm_input"  name="wr_2" id="wr_2"><?=$write['wr_2'] ?></textarea>
             </td>
         </tr>
 
         <?php for ($i=0; $is_file && $i<$file_count; $i++) { ?>
         <tr>
-            <th scope="row">증상 첨부파일 #<?php echo $i+1 ?></th>
-            <td>
+            <th class="b_th">증상 첨부파일 #<?php echo $i+1 ?></th>
+            <td class="b_td">
                 <input type="file" name="bf_file[]" title="파일첨부 <?php echo $i+1 ?> : 용량 <?php echo $upload_max_filesize ?> 이하만 업로드 가능" class="frm_file frm_input">
                 <?php if ($is_file_content) { ?>
                 <input type="text" name="bf_content[]" value="<?php echo ($w == 'u') ? $file[$i]['bf_content'] : ''; ?>" title="파일 설명을 입력해주세요." class="frm_file frm_input">
@@ -146,29 +113,30 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
         <?php } ?>
 
         <tr>
-            <th scope="row">해결방법</th>
-            <td>
-                <input type="text" name="" class="frm_file frm_input">
+            <th class="b_th">해결방법</th>
+            <td class="b_td">
+                <textarea class="frm_input" name="wr_3" id="wr_3"><?=$write['wr_3']?></textarea>
             </td>
         </tr>
 
         <?php for ($i=0; $is_file && $i<$file_count; $i++) { ?>
+                <?$ni = $i + 2;?>
             <tr>
-                <th scope="row">해결 관련 첨부파일 #<?php echo $i+1 ?></th>
-                <td>
+                <th class="b_th">해결 관련 첨부파일 #<?php echo $i+1 ?></th>
+                <td class="b_td">
                     <input type="file" name="bf_file[]" title="파일첨부 <?php echo $i+1 ?> : 용량 <?php echo $upload_max_filesize ?> 이하만 업로드 가능" class="frm_file frm_input">
                     <?php if ($is_file_content) { ?>
-                        <input type="text" name="bf_content[]" value="<?php echo ($w == 'u') ? $file[$i]['bf_content'] : ''; ?>" title="파일 설명을 입력해주세요." class="frm_file frm_input">
+                        <input type="text" name="bf_content[]" value="<?php echo ($w == 'u') ? $file[$ni]['bf_content'] : ''; ?>" title="파일 설명을 입력해주세요." class="frm_file frm_input">
                     <?php } ?>
-                    <?php if($w == 'u' && $file[$i]['file']) { ?>
-                        <input type="checkbox" id="bf_file_del<?php echo $i ?>" name="bf_file_del[<?php echo $i;  ?>]" value="1"> <label for="bf_file_del<?php echo $i ?>"><?php echo $file[$i]['source'].'('.$file[$i]['size'].')';  ?> 파일 삭제</label>
+                    <?php if($w == 'u' && $file[$ni]['file']) { ?>
+                        <input type="checkbox" id="bf_file_del<?php echo $i ?>" name="bf_file_del[<?php echo $ni;  ?>]" value="1"> <label for="bf_file_del<?php echo $i ?>"><?php echo $file[$ni]['source'].'('.$file[$ni]['size'].')';  ?> 파일 삭제</label>
                     <?php } ?>
                 </td>
             </tr>
         <?php } ?>
 
         <tr>
-            <th scope="row"><label for="wr_content">비고<strong class="sound_only">필수</strong></label></th>
+            <th class="b_th"><label for="wr_content">비고<strong class="sound_only">필수</strong></label></th>
             <td class="wr_content">
                 <?php if($write_min || $write_max) { ?>
                     <!-- 최소/최대 글자 수 사용 시 -->
@@ -185,8 +153,8 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 
         <?php if ($is_guest) { //자동등록방지  ?>
         <tr>
-            <th scope="row">자동등록방지</th>
-            <td>
+            <th class="b_th">자동등록방지</th>
+            <td class="b_td">
                 <?php echo $captcha_html ?>
             </td>
         </tr>
@@ -194,8 +162,8 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 
         <?php if ($is_orderby) { ?>
         <tr>
-            <th scope="row"><label for="wr_orderby">우선순위</label></th>
-            <td><input type="text" name="wr_orderby" value="<?php echo $wr_orderby ?>" id="wr_orderby" class="frm_input" size="4"></td>
+            <th class="b_th"><label for="wr_orderby">우선순위</label></th>
+            <td class="b_td"><input type="text" name="wr_orderby" value="<?php echo $wr_orderby ?>" id="wr_orderby" class="frm_input" size="4"></td>
         </tr>
         <?php } ?>
 
@@ -294,5 +262,9 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
         return true;
     }
     </script>
+
+
 </section>
+
+
 <!-- } 게시물 작성/수정 끝 -->

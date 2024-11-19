@@ -125,6 +125,7 @@ if($bo_table == 'new'){
 	$add_qry = ", wr_11 = '{$_POST['wr_11']}', wr_12 = '{$_POST['wr_12']}', wr_13 = '{$_POST['wr_13']}', wr_14 = '{$_POST['wr_14']}', wr_15 = '{$_POST['wr_15']}', wr_16 = '{$_POST['wr_16']}', wr_17 = '{$_POST['wr_17']}', wr_17_text = '{$_POST['wr_17_text']}', wr_18 = '{$_POST['wr_18']}', wr_19 = '{$_POST['wr_19']}', wr_20 = '{$_POST['wr_20']}', wr_21 = '{$_POST['wr_21']}', wr_22 = '{$_POST['wr_22']}', wr_23 = '{$_POST['wr_23']}', wr_24 = '{$_POST['wr_24']}', wr_25 = '{$_POST['wr_25']}', wr_26 = '{$_POST['wr_26']}' ";
 
 	$add_qry .= ", wr_27 = '{$_POST['wr_27']}', wr_28 = '{$_POST['wr_28']}' ";
+	$add_qry .= ", wr_29 = '{$_POST['wr_29']}', wr_30 = '{$_POST['wr_30']}' ";
 
 
 }
