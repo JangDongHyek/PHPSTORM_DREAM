@@ -92,6 +92,11 @@ if ($sca || $stx) {
 		if($sch_ldate2 != ''){
 			$sql_search .= " and next_check_date <= '".str_replace('-','',$sch_ldate2)."'";
 		}
+        if($sch_wr_17 != ''){
+            $sql_search .= " and wr_17 = '{$sch_wr_17}'";
+        }
+
+
 		$as_where="";
 		if($sch_inspection1){
 			$as_where.=" and ".strtotime($sch_inspection1)."<=unix_timestamp(wr_3)";
@@ -355,6 +360,7 @@ if($bo_table == 'new'){
 	if($sch_ldate1) $geturl .= '&sch_ldate1='.$sch_ldate1;
 	if($sch_fdate2) $geturl .= '&sch_fdate2='.$sch_fdate2;
 	if($sch_ldate2) $geturl .= '&sch_ldate2='.$sch_ldate2;
+    if($sch_wr_17) $geturl .= '&sch_wr_17='.$sch_wr_17;
 
 
 

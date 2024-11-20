@@ -23,14 +23,7 @@ try {
             $obj = $models[$table]->jsonDecode($_POST['obj']);
 
             //필터링
-            if($obj['primary']) $obj[$models[$table]->primary] = $obj['primary'];
-            if($obj['where_key'] && $obj['where_value']) $models[$table]->where($obj['where_key'],$obj['where_value']);
-            if($obj['between_key'] && $obj['between_value_s'] && $obj['between_value_e']) $models[$table]->between($obj['between_key'],$obj['between_value_s'],$obj['between_value_e']);
-            if($obj['like_key'] && $obj['like_value']) $models[$table]->like($obj['like_key'],$obj['like_value']);
-            if($obj['order_by_desc']) $models[$table]->orderBy($obj['order_by_desc'],"DESC");
-            if($obj['order_by_asc']) $models[$table]->orderBy($obj['order_by_asc'],"ASC");
-            if($obj['not_key'] && $obj['not_value']) $models[$table]->where($obj['not_key'],$obj['not_value'],"AND NOT");
-            if($obj['in_key'] && $obj['in_value']) $models[$table]->in($obj['in_key'],$models[$table]->jsonDecode($obj['in_value']));
+            $models[$table]->setFilter($obj);
 
             //join
             if ($join_table) {
@@ -146,7 +139,7 @@ try {
 
         case "where_delete" :
             $obj = $models[$table]->jsonDecode($_POST['obj'],false);
-            if($obj['in_key'] && $obj['in_value']) $models[$table]->in($obj['in_key'],$models[$table]->jsonDecode($obj['in_value']));
+            $models[$table]->setFilter($obj);
 
             $models[$table]->where($obj)->whereDelete();
             break;
@@ -156,12 +149,7 @@ try {
             $obj = $models[$table]->jsonDecode($_POST['obj']);
 
             //필터 가공
-            foreach ($obj as $key => $value) {
-                if(strpos($key,"primary") !== false) $obj[$models[$table]->primary] = $value;
-                if(strpos($key,"order_by_desc") !== false) $models[$table]->order_by($obj['order_by_desc'],"DESC");
-                if(strpos($key,"order_by_asc") !== false) $models[$table]->order_by($obj['order_by_desc'],"ASC");
-            }
-            if($obj['search_key'] && $obj['search_value']) $models[$table]->like($obj['search_key'],$obj['search_value']);
+            $models[$table]->setFilter($obj);
 
             $object = $models[$table]->where($obj)->get();
 

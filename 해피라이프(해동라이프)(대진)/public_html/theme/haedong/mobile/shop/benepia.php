@@ -11,6 +11,9 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
 
     <section class="s1">
         <div class="container">
+            <?php if($_SERVER['REMOTE_ADDR'] == "59.19.201.109" || $_SERVER['REMOTE_ADDR'] == "121.140.204.65"){ ?>
+                <button type="button" class="preApply_btn wow animate__animated animate__fadeInDown animate__delay-0.5s" style="position:relative; z-index:1;" data-toggle="modal" data-target="#preApplyModal">무료 사전장례상담 신청</button>
+            <?php }?>
             <div class="wow animate__animated animate__fadeInDown animate__delay-0.5s" style="position:relative; z-index:1;">
                 <div class="tit_wrap">
                     <h6 class="color-black">월납입금 없이 바로 이용 가능한</h6>

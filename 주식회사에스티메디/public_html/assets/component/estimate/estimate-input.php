@@ -30,10 +30,7 @@
                         <h5 class="origin">
                             <span>기존 견적 금액</span>
                             <span><b>￦<em class="price-wrapper"><div class="price-slash"></div>{{originTotalPrice().format()}}</em></b></span>
-                            <span class="txt_red txt_bold">&nbsp;<i class="fa-solid fa-down"></i> {{
-                                    isNaN(stTotalPrice() / originTotalPrice())
-                                    ? 0 : ((stTotalPrice() / originTotalPrice()) * 100).toFixed(2)
-                                }}%</span>
+                            <span class="txt_red txt_bold">&nbsp;<i class="fa-solid fa-down"></i> {{getDiscount()}}%</span>
                         </h5>
                         <h5>
                             <span>ST 견적 금액</span>
@@ -186,10 +183,7 @@
                             <tr>
                                 <td>{{(originTotalPrice() - stTotalPrice()).format()}}</td>
                                 <td class="txt_red">
-                                    {{
-                                    isNaN(stTotalPrice() / originTotalPrice())
-                                    ? 0 : ((stTotalPrice() / originTotalPrice()) * 100).toFixed(2)
-                                    }}%
+                                    {{getDiscount()}}%
                                 </td>
                             </tr>
                             </tbody>
@@ -252,6 +246,13 @@
             });
         },
         methods: {
+            getDiscount() {
+                let origin = this.originTotalPrice()
+                let st = this.stTotalPrice();
+                let result = ((origin - st) / origin * 100).toFixed(2)
+                if(isNaN(result)) return 0
+                return result;
+            },
             async postEstimate(type) {
                 let method = this.primary ? "update" : "insert";
 

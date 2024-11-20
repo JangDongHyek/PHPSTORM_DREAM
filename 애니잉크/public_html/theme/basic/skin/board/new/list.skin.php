@@ -127,7 +127,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                         </td>
                         <th class="list_search_th" style="border-radius:0px 0px 0px 7px;">미수금업체</th>
                         <td class="list_search_td talign_l x210">
-                            <input type="checkbox" name="sch_wr_17" value="미수">
+                            <input type="checkbox" name="sch_wr_17" value="미수" <?if($sch_wr_17 == '미수') echo 'checked';?> >
                         </td>
 
 					</tr>

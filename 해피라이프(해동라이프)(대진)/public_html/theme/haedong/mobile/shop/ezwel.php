@@ -21,7 +21,15 @@ $service_info = [
         'cashback_amount' => '200000',
         'logo_image' => 'logo_black.png',
         'product_image' => 'product_benecafe.png'
-    ]
+    ],
+    '현대이지웰' => [
+    'title' => '현대이지웰',
+    'phone_number' => '1555-4439',
+    'service_price' => '259만원',
+    'cashback_amount' => '300000',
+    'logo_image' => 'logo_black.png',
+    'product_image' => 'product_ezwel.png'
+]
 ];
 
 $info = $service_info[$type];
@@ -56,7 +64,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
         <img src="<?php echo G5_THEME_IMG_URL ?>/landing02/s05_bg.png" class="s1_bg">
     </section>
 
-    <!-- Section 6 -->
+    <!-- Section 6
     <section class="s6">
         <div class="container">
             <div class="con_wrap">
@@ -78,7 +86,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                         <li>
                             <strong class="step-num"><span>02.</span></strong>
                             <h5 class="color-red"><?php echo $info['title']; ?> 혜택</h5>
-                            <p>캐쉬백과 함께 더 많은 혜택을 받으세요</p>
+                            <p>적립금과 함께 더 많은 혜택을 받으세요</p>
                         </li>
                         <li>
                             <strong class="step-num"><span>03.</span></strong>
@@ -90,7 +98,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
             </div>
         </div>
     </section>
-
+    -->
     <!-- Section 7 -->
     <section class="s7">
         <div class="container">
@@ -117,7 +125,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                             <li>
                                 <span class="box-num">03.</span>
                                 <h5>해피라이프 이용 후</h5>
-                                <h2><span class="color-red">캐쉬백 <?php echo number_format($info['cashback_amount']); ?></span></h2>
+                                <h2><span class="color-red">적립금 <?php echo number_format($info['cashback_amount']); ?></span></h2>
                             </li>
                         </ul>
                     </div>
@@ -267,13 +275,13 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
     </div>
 
 
-    <!--캐시백 신청폼 모달-->
+    <!--적립금 신청폼 모달-->
     <div class="modal fade" tabindex="-1" role="dialog" id="modal_register">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">캐쉬백 신청하기</h4>
+                    <h4 class="modal-title">적립금 신청하기</h4>
                 </div>
                 <div class="modal-body">
                     <form id="modal_form">
@@ -331,12 +339,12 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                                 </h6>
                                 <ul>
                                     <li>
-                                        <? if($type == "베네피아") { ?>
+                                        <? if($type == "현대이지웰") { ?>
                                                 <textarea class="input_form" disabled>
-- 캐시백 포인트는 신청 후 다음달 15일(공휴일 경우 익영업일)에 적립되며, 유효 기간은 5년 입니다. 다만, 베네피아의 운영 정책에 따라 적립 및 재적립 될 수 있습니다.
-- 적립된 포인트는 베네피아 온라인몰에서 사용할 수 있습니다.
-- 캐시백 포인트로 결제한 주문을 취소할 경우, 환불은 베네피아 포인트로 이루어지며, 환불 규정은 베네피아 이용 약관에 따릅니다.
-- 베네피아 회원을 탈퇴할 경우, 적립된 포인트는 모두 소멸됩니다</textarea>
+▶ 복지관 적립금은 상품 가입 후 익월 말 일괄 적립되며, 유효 기간은 1년 입니다.
+▶ 해당 서비스를 통해 적립된 금액은 복지관에서 상품 구매 시 사용할 수 있습니다.
+▶ 구매 시 적립금 사용 후 주문을 취소하는 경우, 환불은  동일하게 적립금으로 이루어지며, 환불 규정은 이지웰 이용 약관에 따릅니다.
+                                                </textarea>
                                             <?} ?>
 
                                         <input type="checkbox" id="is_agree" name="is_agree" value="Y">
@@ -349,7 +357,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="bttn btn-save" onclick="modal_submit()">캐쉬백 신청하기</button>
+                    <button type="button" class="bttn btn-save" onclick="modal_submit()">적립금 신청하기</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -361,7 +369,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">캐쉬백 신청하기</h4>
+                    <h4 class="modal-title">적립금 신청하기</h4>
                 </div>
                 <div class="modal-body">
                     <h4 id="modal_h4">
@@ -375,7 +383,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <consult-modal :modal="modal" @close="modal = false;" type="베네피아"></consult-modal>
+    <consult-modal :modal="modal" @close="modal = false;" type="현대이지웰"></consult-modal>
 
     <!-- 무료 사전장례상담 신청 -->
     <div class="modal fade preApply" id="preApplyModal" tabindex="-1" aria-labelledby="preApplyModalLabel" aria-hidden="true">
@@ -440,7 +448,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                     <h5 class="modal-title" id="privacyModalLabel">개인정보처리방침</h5>
                 </div>
                 <div class="modal-body">
-                    <p> ▶ 개인정보 제공받는자 : 해피라이프 1877-9950 </p>
+                    <p> ▶ 개인정보 제공받는자 : 해피라이프 1555-4439 </p>
                     <p> ▶ 개인정보 수집범위 : 고객명, 연락처 </p>
                     <p> ▶ 개인정보 수집 및 이용목적 : 해피라이프 상담 활용(전화, SMS,카카오톡)</p>
                     <p> ▶ 개인정보 보유 및 이용기간 : 개인정보는 수집 및 이용 목적 달성시까지보유하며, 이용 목적 달성 되면 파기하는 것을 원칙으로 한다
@@ -452,9 +460,10 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
 <? $jl->vueLoad("benepia_landing");?>
 <? $jl->componentLoad("consult/consult-modal.php");?>
 <? $jl->componentLoad("item");?>
-    <script>
-        Jl_data.modal = false;
-    </script>
+<script>
+    Jl_data.modal = false;
+</script>
+
     <!-- 외부 스크립트 및 마무리 -->
     <script>
         wow = new WOW({

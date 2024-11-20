@@ -38,7 +38,7 @@
                 <tr>
                     <th>No</th>
                     <th>구분</th>
-                    <th>캐쉬백 신청일시</th>
+                    <th>{{version == 1 ? '캐쉬백' : '적립금'}} 신청일시</th>
                     <th>신청인 성명</th>
                     <th>신청인 휴대폰</th>
                     <th>신청인 고객사명</th>
@@ -69,7 +69,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            primary : {type : String, default : ""}
+            primary : {type : String, default : ""},
+            version : {type : String, default : "1"},
         },
         data: function(){
             return {
@@ -82,7 +83,8 @@
                     search_value : "",
                     sdate : "",
                     edate : "",
-                    order_by_desc : "reg_date"
+                    order_by_desc : "reg_date",
+                    version : this.version
                 },
                 required : [
                     {name : "",message : ""},
@@ -152,23 +154,25 @@
         display: flex;
         align-items: center;
         width: 30%;
+        gap: 5px;
     }
 
     .search-select {
         padding: 5px;
         border: 1px solid #ccc;
-        border-radius: 4px 0 0 4px;
+        border-radius: 4px;
         outline: none;
         height: 40px;
         margin: 0;
+        width: fit-content;
     }
 
     .search-input {
         padding: 5px;
         border: 1px solid #ccc;
-        border-left: none;
-        width: 200px;
-        border-radius: 0;
+        width: fit-content;
+        min-width: 150px;
+        border-radius: 4px;
         outline: none;
         margin-top: 0!important;
         height: 40px;
@@ -177,10 +181,9 @@
     .search-button {
         padding: 6px 10px;
         border: 1px solid #ccc;
-        border-left: none;
         background-color: #f8f8f8;
         cursor: pointer;
-        border-radius: 0 4px 4px 0;
+        border-radius: 4px;
         outline: none;
         height: 40px;
     }

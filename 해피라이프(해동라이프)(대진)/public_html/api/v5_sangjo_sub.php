@@ -37,6 +37,9 @@ try {
             if($obj['search_key'] && $obj['search_value']) $model->like($obj['search_key'],$obj['search_value']);
             if($obj['search_key'] && $obj['sdate'] && $obj['edate']) $model->between($obj['search_key'],$obj['sdate'],$obj['edate']);
 
+            if($obj['version'] == "1") $model->add_sql("and type != '현대이지웰'");
+            if($obj['version'] == "2") $model->add_sql("and type = '현대이지웰'");
+
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
 
@@ -158,6 +161,9 @@ try {
             }
             if($obj['search_key'] && $obj['search_value']) $model->like($obj['search_key'],$obj['search_value']);
             if($obj['search_key'] && $obj['sdate'] && $obj['edate']) $model->between($obj['search_key'],$obj['sdate'],$obj['edate']);
+
+            if($obj['version'] == "1") $model->add_sql("and type != '현대이지웰'");
+            if($obj['version'] == "2") $model->add_sql("and type = '현대이지웰'");
 
             $model->where($obj);
             $object = $model->get();

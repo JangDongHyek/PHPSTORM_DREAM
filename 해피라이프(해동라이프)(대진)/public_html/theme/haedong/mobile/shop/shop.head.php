@@ -334,7 +334,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_JS_URL.'/owl.carousel.cs
 
 
 	<? if(defined('_INDEX_')) {?>
-    <? }else if($pid == "benepia" || $pid == "benecafe"){ ?>
+    <? }else if($pid == "benepia" || $pid == "benecafe" || $pid == "ezwel"){ ?>
     <? }else { ?>
 	<div id="wrapper">
     

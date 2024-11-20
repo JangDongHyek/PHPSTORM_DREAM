@@ -522,8 +522,9 @@ function processOrder($order) {
     $calcPrice -= $category_fee_cost;
     $calcPrice -= $totalDiscount;
 
-    $b2p_kcp_price = round($calcPrice * ($b2p_kcp_fee / 100));
-    $b2p_cp_fee_price = round($calcPrice * ($b2p_cp_fee / 100));
+    //kcp 카드 수수료 , 카드 캐시백
+    $b2p_kcp_price = floor($calcPrice * ($b2p_kcp_fee / 100));
+    $b2p_cp_fee_price = floor($calcPrice * ($b2p_cp_fee / 100));
 
     $calcPrice -= ($b2p_kcp_price - $b2p_cp_fee_price);
 

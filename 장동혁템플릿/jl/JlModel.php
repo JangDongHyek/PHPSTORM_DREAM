@@ -161,6 +161,17 @@ class JlModel extends Jl{
         return $array;
     }
 
+    function setFilter($obj) {
+        if($obj['primary']) $this->where($this->primary,$obj['primary']);
+        if($obj['where_key'] && $obj['where_value']) $this->where($obj['where_key'],$obj['where_value']);
+        if($obj['between_key'] && $obj['between_value_s'] && $obj['between_value_e']) $this->between($obj['between_key'],$obj['between_value_s'],$obj['between_value_e']);
+        if($obj['like_key'] && $obj['like_value']) $this->like($obj['like_key'],$obj['like_value']);
+        if($obj['order_by_desc']) $this->orderBy($obj['order_by_desc'],"DESC");
+        if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
+        if($obj['not_key'] && $obj['not_value']) $this->where($obj['not_key'],$obj['not_value'],"AND NOT");
+        if($obj['in_key'] && $obj['in_value']) $this->in($obj['in_key'],$this->jsonDecode($obj['in_value']));
+    }
+
     function getSchema() {
         return $this->schema;
     }
