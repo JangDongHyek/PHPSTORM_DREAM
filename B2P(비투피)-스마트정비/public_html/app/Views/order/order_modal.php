@@ -205,10 +205,12 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             // 카테고리 이용료
             let ServiceFee = 0;
             if (response['result']['SiteType'] == '1'){
-                ServiceFee = response['result']['BasicServiceFee'];
+                ServiceFee = parseInt(response['result']['BasicServiceFee']);
             } else{
-                ServiceFee = response['result']['ServiceFee'];
+                ServiceFee = parseInt(response['result']['ServiceFee']);
             }
+            ServiceFee += parseInt(response['result']['b2p_cost']);
+
 
             if (calc_data) {
                 ServiceFee = calc_data['b2p']['category_fee_cost'];
@@ -2470,12 +2472,15 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
         var code_html = '';
         for (var i = 0; i < listData.length; i++) {
             var idx = listData[i]['idx'];
-            var TakbaeName = $('#orderDeliEdit_companyNo').find("option:selected").data("name");
+            //var TakbaeName = $('#orderDeliEdit_companyNo').find("option:selected").data("name");
             //var TakbaeName = $('#companyNo' + idx).data('name');
+            var TakbaeName = $('#orderDeliEdit_takbaeName_input').val();
+            var companyNo = $('#orderDeliEdit_companyNo_input').val();
+
             var data_arr =
                 {
                     idx: idx,
-                    companyNo: $('#orderDeliEdit_companyNo').val(),
+                    companyNo: companyNo,
                     NoSongjang: $('#orderDeliEdit_InvoiceNo').val(),
                     TakbaeName: TakbaeName
                 };
@@ -2572,6 +2577,11 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
         if (!$('#orderDeliEdit_InvoiceNo').val()) {
             return false;
+        }
+        if ($('#SiteType' + idx).val() == 1) {
+            $('#orderDeliEdit_companyNo').html(delivery_company_list_AC);
+        } else {
+            $('#orderDeliEdit_companyNo').html(delivery_company_list);
         }
 
         //for문
@@ -4148,16 +4158,11 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                                     <div class="input_select">
 
                                         <select class="border_gray" id="orderDeliEdit_companyNo"
-                                                style="width: 200px;">
+                                                style="width: 200px;" onchange="$('#orderDeliEdit_companyNo_input').val(this.value);$('#orderDeliEdit_takbaeName_input').val($('#orderDeliEdit_companyNo option:selected').data('name'))">
                                             <option value="">선택</option>
-                                            <?php
-                                            $delivery_company_list = get_delivery_company_list();
-                                            ?>
-                                            <? foreach ($delivery_company_list as $index => $data): ?>
-                                                <option value="<?= $data['code'] ?>"
-                                                        data-name="<?= $data['name'] ?>"><?= $data['name'] ?></option>
-                                            <? endforeach; ?>
                                         </select>
+                                        <input type="hidden" id="orderDeliEdit_companyNo_input">
+                                        <input type="hidden" id="orderDeliEdit_takbaeName_input">
                                     </div>
                                 </td>
                             </tr>

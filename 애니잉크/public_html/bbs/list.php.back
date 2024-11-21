@@ -57,43 +57,51 @@ if ($sca || $stx) {
     */
 } else {
     $sql_search = "";
+    $join_sql = "";
+    $order_sql = "";
 
 	if($bo_table == 'new'){
 		if($sch_wr_2 == '' || $sch_wr_2 == '임대'){
-			$sql_search .= " and wr_2 = '임대'";
+			$sql_search .= " and origin.wr_2 = '임대'";
 		}
 		if($sch_wr_2 == '임대해지'){
-			$sql_search .= " and wr_2 = '임대해지'";
+			$sql_search .= " and origin.wr_2 = '임대해지'";
 		}
 		if($sch_wr_subject != ''){
-			$sql_search .= " and wr_subject like '%{$sch_wr_subject}%'";
+			$sql_search .= " and origin.wr_subject like '%{$sch_wr_subject}%'";
 		}
 		if($sch_wr_5 != ''){
-			$sql_search .= " and wr_5 like '%{$sch_wr_5}%'";
+			$sql_search .= " and origin.wr_5 like '%{$sch_wr_5}%'";
 		}
 		if($sch_wr_7 != ''){
-			$sql_search .= " and wr_7 like '%{$sch_wr_7}%'";
+			$sql_search .= " and origin.wr_7 like '%{$sch_wr_7}%'";
 		}
 		if($si != ''){
-			$sql_search .= " and wr_10 like '{$si}%'";
+			$sql_search .= " and origin.wr_10 like '{$si}%'";
 		}
 		if($gu != ''){
-			$sql_search .= " and wr_10 like '%{$gu}%'";
+			$sql_search .= " and origin.wr_10 like '%{$gu}%'";
 		}
 		if($sch_fdate1 != ''){
-			$sql_search .= " and wr_1 >= '{$sch_fdate1}'";
+			$sql_search .= " and origin.wr_1 >= '{$sch_fdate1}'";
 		}
 		if($sch_ldate1 != ''){
-			$sql_search .= " and wr_1 <= '{$sch_ldate1}'";
+			$sql_search .= " and origin.wr_1 <= '{$sch_ldate1}'";
 		}
 		if($sch_fdate2 != ''){
-			$sql_search .= " and next_check_date >= '".str_replace('-','',$sch_fdate2)."'";
+			$sql_search .= " and origin.next_check_date >= '".str_replace('-','',$sch_fdate2)."'";
 		}
 		if($sch_ldate2 != ''){
-			$sql_search .= " and next_check_date <= '".str_replace('-','',$sch_ldate2)."'";
+			$sql_search .= " and origin.next_check_date <= '".str_replace('-','',$sch_ldate2)."'";
 		}
         if($sch_wr_17 != ''){
-            $sql_search .= " and wr_17 = '{$sch_wr_17}'";
+            $sql_search .= " and origin.wr_17 = '{$sch_wr_17}'";
+        }
+
+        if($check_date != '') {
+            $join_sql = " JOIN g5_write_as on origin.wr_id = g5_write_as.wr_1 ";
+            $sql_search .= " and g5_write_as.wr_1 IS NULL OR g5_write_as.wr_3 < DATE_SUB(NOW(), INTERVAL 1 MONTH) ";
+            $order_sql = " ORDER BY g5_write_as.wr_1 IS NULL DESC, g5_write_as.wr_3 DESC ";
         }
 
 
@@ -198,9 +206,9 @@ if ($sca || $stx) {
 
 	@include_once($board_skin_path.'/list_search.head.skin.php');
 
-    $sql = " SELECT origin.COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE (1) {$sql_search}";
+    $sql = " SELECT COUNT(DISTINCT origin.`wr_parent`) AS `cnt` FROM {$write_table} as origin $join_sql WHERE (1) {$sql_search}";
 
-
+    echo $sql;
     $row = sql_fetch($sql);
     $total_count = $row['cnt'];
 }
@@ -315,11 +323,15 @@ if($sch_wr_2 == '임대해지'){
     $sql_order = " order by wr_26 desc ";
 }
 
+if($order_sql)  {
+    $sql_order = $order_sql;
+}
+
 
 if ($sca || $stx) {
     $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
 } else {
-    $sql = " select origin.* from {$write_table} as origin where wr_is_comment = 0 {$sql_search}";
+    $sql = " select origin.* from {$write_table} as origin $join_sql where origin.wr_is_comment = 0 {$sql_search}";
     if(!empty($notice_array))
         $sql .= " and wr_id not in (".implode(', ', $notice_array).") ";
     $sql .= " {$sql_order} limit {$from_record}, $page_rows ";
@@ -361,6 +373,7 @@ if($bo_table == 'new'){
 	if($sch_fdate2) $geturl .= '&sch_fdate2='.$sch_fdate2;
 	if($sch_ldate2) $geturl .= '&sch_ldate2='.$sch_ldate2;
     if($sch_wr_17) $geturl .= '&sch_wr_17='.$sch_wr_17;
+    if($check_date) $geturl .= '&check_date='.$check_date;
 
 
 

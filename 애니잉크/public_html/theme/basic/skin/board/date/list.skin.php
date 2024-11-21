@@ -58,17 +58,24 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                 <?php } ?>
                 <div class="shop_search" width="100%" style="padding-top:8px;">
                     <table class="list_search_tbl">
+                        <colgroup>
+                            <col width="">
+                            <col width="">
+                            <col width="">
+                            <col width="">
+                            <col width="20%">
+                        </colgroup>
                         <tbody>
                         <tr>
                             <th class="list_search_th" style="">모델명</th>
-                            <td class="list_search_td talign_l x210">
+                            <td class="list_search_td talign_l">
                                 <input type="text" name="sch_wr_subject" class="frm_input x150" id="sch_wr_subject" value="<?php echo $sch_wr_subject ?>">
                             </td>
                             <th class="list_search_th">증상내용</th>
-                            <td class="list_search_td talign_l x120">
-                                <input type="text" name="sch_nt_model" class="frm_input x110" id="sch_nt_model" value="<?php echo $sch_nt_model ?>">
+                            <td class="list_search_td talign_l">
+                                <input type="text" name="sch_nt_model" class="frm_input" id="sch_nt_model" value="<?php echo $sch_nt_model ?>">
                             </td>
-                            <td class="list_search_td talign_c x130" style="border-radius:0px 0px 7px 0px;" colspan="4">
+                            <td class="list_search_td talign_c" style="border-radius:0px 0px 7px 0px;" colspan="4">
                                 <input type="submit" value="검색" class="search_btn">
                             </td>
                         </tr>
@@ -123,7 +130,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                             <input type="checkbox" id="chkall" onclick="if (this.checked) all_checked(true); else all_checked(false);">
                         </th>
                     <?php } ?>
-                    <th class="l_th_th x130">모델명</th>
+                    <th class="l_th_th x75">모델명</th>
                     <th class="l_th_th">증상내용</th>
                     <th class="l_th_th x150">등록자</th>
                     <th class="l_th_th x75">등록일</th>

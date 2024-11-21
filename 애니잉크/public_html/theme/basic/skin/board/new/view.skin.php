@@ -20,6 +20,7 @@ function type_list($t_row){
 		$datas = '';
 		$datas .= '<tr class="nt_tr1"><td class="b_tb_td x110" rowspan="2">'.$t_row['nt_date'].'</td>';
 		$datas .= '<td class="b_tb_td">'.$t_row['nt_list'].'</td>';
+        $datas .= '<td class="b_tb_td">'.$t_row['connect_type'].'</td>';
 		if($t_row['nt_list'] == '컬러복사기'){
 			$datas .= '<td class="b_tb_td">흑백 : '.$t_row['nt_page1'];
 			$datas .= '&nbsp;&nbsp;&nbsp;&nbsp;컬러 : '.$t_row['nt_page1_2'].'</td>';
@@ -29,6 +30,7 @@ function type_list($t_row){
 		$datas .= '<td class="b_tb_td">'.$t_row['nt_install'].'</td>';
 		$datas .= '</tr><tr class="nt_tr2">';
 		$datas .= '<td class="b_tb_td">'.$t_row['nt_model'].'</td>';
+        $datas .= '<td class="b_tb_td">'.$t_row['connect_ip'].'</td>';
 		if($t_row['nt_list'] == '컬러복사기'){
 			$datas .= '<td class="b_tb_td">흑백 : '.$t_row['nt_page2'];
 			$datas .= '&nbsp;&nbsp;&nbsp;&nbsp;컬러 : '.$t_row['nt_page2_2'].'</td>';
@@ -133,11 +135,13 @@ function type_list($t_row){
 <tr>
 	<th class="b_th_th" rowspan="2">설치일자</th>
 	<th class="b_th_th x200">분류선택</th>
+    <th class="b_th_th x200">연결방식</th>
 	<th class="b_th_th x200">기본장수</th>
 	<th class="b_th_th">설치위치</th>
 </tr>
 <tr>
 	<th class="b_th_th">모델</th>
+    <th class="b_th_th">IP</th>
 	<th class="b_th_th x100">시작장수</th>
 	<th class="b_th_th">첨부파일</th>
 </tr>
@@ -167,38 +171,7 @@ if($t_num > 0){
 			</td>
 		</tr>
 
-        <tr>
-            <th class="b_th">연결방식 및 IP</th>
-            <td class="b_td" colspan="3">
 
-                <table class="b_tbl2">
-                    <thead>
-                    <tr>
-                        <th class="b_th_th">연결방식</th>
-                        <th class="b_th_th">IP</th>
-                    </tr>
-                    </thead>
-                    <tbody id="nt_tbody2">
-                    <?
-                    $model = new JlModel(array("table" => "g5_write_new_type2"));
-                    $model->where("board_idx",$wr_id);
-                    $model->orderBy("priority","ASC");
-                    $objects = $model->get();
-                    ?>
-                    <? if($objects['count']) { ?>
-                        <? foreach($objects['data'] as $o) { ?>
-                        <tr>
-                            <td class="b_tb_td"><?=$o['connect_type']?></td>
-                            <td class="b_tb_td"><?=$o['connect_ip']?></td>
-                        </tr>
-                        <? } ?>
-                    <? } else { ?>
-                        <tr><td colspan="3" class="talign_c">등록된 IP가 없습니다.</td></tr>
-                    <? } ?>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
 
 		<tr>
 			<th class="b_th">보증금</th>

@@ -8,11 +8,13 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/defau
 add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js"></script>', 100);
 
 $list_arr = array('흑백복사기','컬러복사기','잉크젯복합기','잉크젯프린터','컬러레이져복합기','흑백레이져복합기','흑백레이져프린터','컬러레이져프린터');
+$list_arr2 = array('USB','유선네트워크','무선네트워크','USB 및 유선네트워크','USB 및 유선네트워크','블루투스');
 ?>
 
 <?php
 function type_list($t_row){
 	global $list_arr;
+    global $list_arr2;
 
 	if($t_row){
 		$datas = '';
@@ -25,7 +27,21 @@ function type_list($t_row){
 			if($list_arr[$a] == $t_row['nt_list']) $selected = 'selected';
 			$datas .= '<option value="'.$list_arr[$a].'" '.$selected.'>'.$list_arr[$a].'</option>';
 		}
-		$datas .= '</select></td><td class="b_tb_td nt1">';
+
+		$datas .= '</select></td>';
+
+        $datas .= '<td class="b_tb_td">';
+        $datas .= '<select name="connect_type[]" class="" onchange="">';
+        $datas .= '<option value="">선택하세요</option>';
+        for($a=0; $a<count($list_arr2); $a++){
+            $selected = '';
+            if($list_arr2[$a] == $t_row['connect_type']) $selected = 'selected';
+            $datas .= '<option value="'.$list_arr2[$a].'" '.$selected.'>'.$list_arr2[$a].'</option>';
+        }
+        $datas .= '</select>';
+        $datas .= '</td>';
+
+		$datas .= '<td class="b_tb_td nt1">';
 		if($t_row['nt_list'] == '컬러복사기'){
 			$datas .= '<label>흑백 </label>';
 			$datas .= '<input type="text" name="nt_page1[]" class="frm_input x60 nt_page1" value="'.$t_row['nt_page1'].'" />';
@@ -39,6 +55,11 @@ function type_list($t_row){
 		$datas .= '<td class="b_tb_td" rowspan="2"><a class="nt_del_btn" onclick="del_act(this)">삭제</a></td>';
 		$datas .= '</tr><tr class="nt_tr2">';
 		$datas .= '<td class="b_tb_td"><input type="text" name="nt_model[]" class="frm_input x200 nt_model" value="'.$t_row['nt_model'].'" /></td>';
+
+        $datas .= '<td class="b_tb_td">';
+        $datas .= '<input type="text" name="ips[]" value="'.$t_row['connect_ip'].'" class="frm_input x200">';
+        $datas .= '</td>';
+
 		if($t_row['nt_list'] == '컬러복사기'){
 			$datas .= '<td class="b_tb_td nt2"><label>흑백 </label>';
 			$datas .= '<input type="text" name="nt_page2[]" class="frm_input x60 nt_page2" value="'.$t_row['nt_page2'].'" />';
@@ -48,6 +69,9 @@ function type_list($t_row){
 			$datas .= '<td class="b_tb_td nt2"><input type="text" name="nt_page2[]" class="frm_input x60 nt_page2" value="'.$t_row['nt_page2'].'" />';
 			$datas .= '<input type="hidden" name="nt_page2_2[]" class="nt_page2_2" value="'.$t_row['nt_page2_2'].'" /></td>';
 		}
+
+
+
 		$datas .= '<td class="b_tb_td talign_l">';
 		$datas .= '<input type="hidden" name="pre_nt_file[]" class="pre_nt_file" value="'.$t_row['nt_file'].'" />';
 		$datas .= '<input type="file" name="nt_file[]" class="frm_input x200 nt_file frm_file" />';
@@ -282,12 +306,14 @@ if($w == 'u' && $wr_id != ''){
 <tr>
 	<th class="b_th_th" rowspan="2">설치일자</th>
 	<th class="b_th_th x200">분류선택</th>
+    <th class="b_th_th x200">연결방식</th>
 	<th class="b_th_th x200">기본장수</th>
 	<th class="b_th_th">설치위치</th>
 	<th class="b_th_th x70" rowspan="2">삭제</th>
 </tr>
 <tr>
 	<th class="b_th_th">모델</th>
+    <th class="b_th_th">IP</th>
 	<th class="b_th_th x200">시작장수</th>
 	<th class="b_th_th">첨부파일</th>
 </tr>
@@ -321,7 +347,18 @@ if($w == 'u' && $wr_id != ''){
 			?>
 		</select>
 	</td>
-	<td class="b_tb_td nt1">
+    <td class="b_tb_td">
+        <select name="connect_type[]" class="" onchange="">
+            <option value="">선택하세요</option>
+            <option value="USB" <?if($o['connect_type'] == 'USB') echo 'selected'?>>USB</option>
+            <option value="유선네트워크" <?if($o['connect_type'] == '유선네트워크') echo 'selected'?>>유선네트워크</option>
+            <option value="무선네트워크" <?if($o['connect_type'] == '무선네트워크') echo 'selected'?>>무선네트워크</option>
+            <option value="USB 및 유선네트워크" <?if($o['connect_type'] == 'USB 및 유선네트워크') echo 'selected'?>>USB 및 유선네트워크</option>
+            <option value="USB 및 무선네트워크" <?if($o['connect_type'] == 'USB 및 무선네트워크') echo 'selected'?>>USB 및 무선네트워크</option>
+            <option value="블루투스" <?if($o['connect_type'] == '블루투스') echo 'selected'?>>블루투스</option>
+        </select>
+    </td>
+    <td class="b_tb_td nt1">
 		<input type="text" name="nt_page1[]" class="frm_input x60 nt_page1" value="" />
 	</td>
 	<td class="b_tb_td">
@@ -335,6 +372,9 @@ if($w == 'u' && $wr_id != ''){
 	<td class="b_tb_td">
 		<input type="text" name="nt_model[]" class="frm_input x200 nt_model" value="" />
 	</td>
+    <td class="b_tb_td">
+        <input type="text" name="ips[]" value="<?=$o['connect_ip']?>" class="frm_input x200">
+    </td>
 	<td class="b_tb_td nt2">
 		<input type="text" name="nt_page2[]" class="frm_input x60 nt_page2" value="" />
 	</td>
@@ -357,13 +397,15 @@ if($w == 'u' && $wr_id != ''){
 <tr>
 	<th class="b_th_th" rowspan="2">설치일자</th>
 	<th class="b_th_th x200">분류선택</th>
+    <th class="b_th_th x200">연결방식</th>
 	<th class="b_th_th x200">기본장수</th>
 	<th class="b_th_th">설치위치</th>
 	<th class="b_th_th x70" rowspan="2">삭제</th>
 </tr>
 <tr>
 	<th class="b_th_th">모델</th>
-	<th class="b_th_th x200">시작장수</th>
+    <th class="b_th_th">IP</th>
+    <th class="b_th_th x200">시작장수</th>
 	<th class="b_th_th">첨부파일</th>
 </tr>
 </thead>
@@ -385,6 +427,17 @@ if($w == 'u' && $wr_id != ''){
 			?>
 		</select>
 	</td>
+    <td class="b_tb_td">
+        <select name="connect_type[]" class="" onchange="">
+            <option value="">선택하세요</option>
+            <option value="USB">USB</option>
+            <option value="유선네트워크">유선네트워크</option>
+            <option value="무선네트워크">무선네트워크</option>
+            <option value="USB 및 유선네트워크">USB 및 유선네트워크</option>
+            <option value="USB 및 무선네트워크">USB 및 무선네트워크</option>
+            <option value="블루투스">블루투스</option>
+        </select>
+    </td>
 	<td class="b_tb_td nt1">
 		<input type="text" name="nt_page1[]" class="frm_input x60 nt_page1" value="" />
 		<input type="hidden" name="nt_page1_2[]" class="nt_page1_2" value="" />
@@ -400,6 +453,9 @@ if($w == 'u' && $wr_id != ''){
 	<td class="b_tb_td">
 		<input type="text" name="nt_model[]" class="frm_input x200 nt_model" value="" />
 	</td>
+    <td class="b_tb_td">
+        <input type="text" name="ips[]" value="" class="frm_input x200">
+    </td>
 	<td class="b_tb_td nt2">
 		<input type="text" name="nt_page2[]" class="frm_input x60 nt_page2" value="" />
 		<input type="hidden" name="nt_page2_2[]" class="nt_page2_2" value="" />
@@ -458,7 +514,7 @@ if($w == 'u' && $wr_id != ''){
                                 </select>
                             </td>
                             <td class="b_tb_td">
-                                <input type="text" name="ips[]" value="<?=$o['connect_ip']?>">
+                                <input type="text" name="ips[]" value="">
                             </td>
                             <td class="b_tb_td">
                                 <a class="nt_del_btn" onclick="del_act(this)">삭제</a>
@@ -751,6 +807,7 @@ function del_act(obj){
 $(function(){
 	$("#nt_add_btn").on('click', function(){
 		var list_arr = Array('흑백복사기','컬러복사기','잉크젯복합기','잉크젯프린터','컬러레이져복합기','흑백레이져복합기','흑백레이져프린터','컬러레이져프린터');
+        var list_arr2 = Array("USB","유선네트워크","무선네트워크","USB 및 유선네트워크","USB 및 무선네트워크","블루투스",);
 
 		var datas = '';
 		datas += '<tr class="nt_tr1">';
@@ -761,6 +818,14 @@ $(function(){
 			datas += '<option value="'+list_arr[a]+'">'+list_arr[a]+'</option>';
 		}
 		datas += '</select></td>';
+        datas += '<td class="b_tb_td x110">';
+        datas += '<select name="connect_type[]" class="nt_list">';
+        datas += '<option value="">선택하세요</option>';
+        for(var a=0; a<list_arr2.length; a++){
+            datas += '<option value="'+list_arr2[a]+'">'+list_arr2[a]+'</option>';
+        }
+        datas += '</select>';
+        datas += '</td>';
 		datas += '<td class="b_tb_td nt1"><input type="text" name="nt_page1[]" class="frm_input x60 nt_page1" value="" />';
 		datas += '<input type="hidden" name="nt_page1_2[]" class="nt_page1_2" value="" /></td>';
 		datas += '<td class="b_tb_td"><input type="text" name="nt_install[]" class="frm_input x200 nt_install" value="" /></td>';
@@ -768,6 +833,7 @@ $(function(){
 		datas += '</tr>';
 		datas += '<tr class="nt_tr2">';
 		datas += '<td class="b_tb_td"><input type="text" name="nt_model[]" class="frm_input x200 nt_model" value="" /></td>';
+        datas += '<td class="b_tb_td"><input type="text" name="ips[]" value="<?=$o['connect_ip']?>" class="frm_input x200"></td>';
 		datas += '<td class="b_tb_td nt2"><input type="text" name="nt_page2[]" class="frm_input x60 nt_page2" value="" />';
 		datas += '<input type="hidden" name="nt_page2_2[]" class="nt_page2_2" value="" /></td>';
 		datas += '<td class="b_tb_td talign_l"><input type="file" name="nt_file[]" class="frm_input x200 nt_file frm_file" /></td>';

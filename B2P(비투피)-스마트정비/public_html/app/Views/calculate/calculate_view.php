@@ -140,7 +140,7 @@ function totalOrderKey($objects,$key,$info) {
                         <option value="mb_id" <?if($this->data['search_key'] == "mb_id") echo "selected"?>>판매자ID</option>
                         <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
                         <option value="cp_name" <?if($this->data['search_key'] == "cp_name") echo "selected"?>>회사명</option>
-                        <option value="mb_name" <?if($this->data['search_key'] == "mb_name") echo "selected"?>>담당자</option>
+<!--                        <option value="mb_name" --><?//if($this->data['search_key'] == "mb_name") echo "selected"?><!-->담당자</option>-->
                         <?php } ?>
                         <option value="PayNo" <?if($this->data['search_key'] == "PayNo") echo "selected"?>>결제번호</option>
                         <option value="SiteGoodsNo" <?if($this->data['search_key'] == "SiteGoodsNo") echo "selected"?>>상품번호</option>
@@ -200,7 +200,7 @@ function totalOrderKey($objects,$key,$info) {
                     <th>판매자코드/거래처명</th>
                     <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
                     <th>회사명</th>
-                    <th>담당자</th>
+<!--                    <th>담당자</th>-->
                     <?php } ?>
                     <th>주문번호</th>
                     <th>구매자명(아이디)</th>
@@ -221,7 +221,7 @@ function totalOrderKey($objects,$key,$info) {
 
                     <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
                     <td><?=$data['cp_name']?></td>
-                    <td><?=$data['mb_name']?></td>
+<!--                    <td>--><?//=$data['mb_name']?><!--</td>-->
                     <?php } ?>
                     <!--                <td><a data-toggle="modal" data-target="#orderSheetModal">--><?//=$data['OrderNo']?><!--</a></td>-->
                     <td><a><?=$data['OrderNo']?></a></td>

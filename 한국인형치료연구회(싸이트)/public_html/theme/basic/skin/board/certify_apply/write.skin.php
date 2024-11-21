@@ -8,12 +8,15 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 
 $submit_title = "접수하기";
 
+$certifyid = $eduid;
+
 $sql ="select * from g5_write_apply02 where wr_4='{$certifyid}' and mb_id = '{$member['mb_id']}'";
 $cnt_apply = sql_fetch($sql);
 
 $is_write = "F";
 $is_order = "F";
 $readonly = "";
+
 
 if(!empty($cnt_apply)){
     $is_write = "T";

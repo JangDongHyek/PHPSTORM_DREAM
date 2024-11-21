@@ -290,16 +290,16 @@ if ($w == '' || $w == 'r') {
 
 	/* 신규고객 임대기종 등록 STR */
 	if($bo_table == 'new'){
-		if(count($_POST['connect_type'])) {
-			foreach ($_POST['connect_type'] as $index => $connect_type) {
-				$connect_ip = $_POST['ips'][$index];
-
-				$sql = "insert into g5_write_new_type2 set 
-				board_idx = '$wr_id', priority = '$index', connect_type = '$connect_type', connect_ip = '$connect_ip'";
-
-				sql_query($sql);
-			}
-		}
+		//if(count($_POST['connect_type'])) {
+		//	foreach ($_POST['connect_type'] as $index => $connect_type) {
+		//		$connect_ip = $_POST['ips'][$index];
+		//
+		//		$sql = "insert into g5_write_new_type2 set
+		//		board_idx = '$wr_id', priority = '$index', connect_type = '$connect_type', connect_ip = '$connect_ip'";
+		//
+		//		sql_query($sql);
+		//	}
+		//}
 		
 		// 임대기종이 전부 빈값이면 등록을 하지 않은 것으로 판단하여 저장 안함
 		if(count($_POST['nt_cnt']) == 1 && $_POST['nt_date'][0] == '' && $_POST['nt_list'][0] == '' && $_POST['nt_model'][0] == ''){
@@ -322,6 +322,8 @@ if ($w == '' || $w == 'r') {
 					nt_page2 = '{$_POST['nt_page2'][$a]}',
 					nt_page2_2 = '{$_POST['nt_page2_2'][$a]}',
 					nt_install = '{$_POST['nt_install'][$a]}',
+					connect_type = '{$_POST['connect_type'][$a]}',
+					connect_ip = '{$_POST['ips'][$a]}',
 					nt_order = '{$a}'
 					";
 					if(sql_query($nt_sql)){
@@ -534,18 +536,18 @@ if ($w == '' || $w == 'r') {
 
 	/* 신규고객 임대기종 등록/수정/삭제 STR */
 	if($bo_table == 'new'){
-		$sql = "delete from g5_write_new_type2 where board_idx = '$wr_id'";
-		sql_query($sql);
-		if(count($_POST['connect_type'])) {
-			foreach ($_POST['connect_type'] as $index => $connect_type) {
-				$connect_ip = $_POST['ips'][$index];
-
-				$sql = "insert into g5_write_new_type2 set 
-				board_idx = '$wr_id', priority = '$index', connect_type = '$connect_type', connect_ip = '$connect_ip'";
-
-				sql_query($sql);
-			}
-		}
+		//$sql = "delete from g5_write_new_type2 where board_idx = '$wr_id'";
+		//sql_query($sql);
+		//if(count($_POST['connect_type'])) {
+		//	foreach ($_POST['connect_type'] as $index => $connect_type) {
+		//		$connect_ip = $_POST['ips'][$index];
+		//
+		//		$sql = "insert into g5_write_new_type2 set
+		//		board_idx = '$wr_id', priority = '$index', connect_type = '$connect_type', connect_ip = '$connect_ip'";
+		//
+		//		sql_query($sql);
+		//	}
+		//}
 
 		// 임대기종이 전부 빈값이면 등록을 하지 않은 것으로 판단하여 저장 안함
 		if(count($_POST['nt_cnt']) == 1 && $_POST['nt_date'][0] == '' && $_POST['nt_list'][0] == '' && $_POST['nt_model'][0] == ''){
@@ -603,6 +605,8 @@ if ($w == '' || $w == 'r') {
 						nt_page2 = '{$_POST['nt_page2'][$a]}',
 						nt_page2_2 = '{$_POST['nt_page2_2'][$a]}',
 						nt_install = '{$_POST['nt_install'][$a]}',
+					  	connect_type = '{$_POST['connect_type'][$a]}',
+						connect_ip = '{$_POST['ips'][$a]}',
 						nt_order = '{$a}' 
 						where nt_idx='{$_POST['nt_cnt'][$a]}'
 						";
@@ -643,6 +647,8 @@ if ($w == '' || $w == 'r') {
 						nt_page2 = '{$_POST['nt_page2'][$a]}',
 						nt_page2_2 = '{$_POST['nt_page2_2'][$a]}',
 						nt_install = '{$_POST['nt_install'][$a]}',
+						connect_type = '{$_POST['connect_type'][$a]}',
+						connect_ip = '{$_POST['ips'][$a]}',
 						nt_order = '{$a}'
 						";
 						if(sql_query($nt_sql)){
