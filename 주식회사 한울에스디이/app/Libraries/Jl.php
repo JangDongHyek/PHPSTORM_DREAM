@@ -1,7 +1,7 @@
 <?php
 /*
-    해당 모듈은 5.4부터 최적화 되어있습니다.
-    4.* 은 사용이 아예 불가능하고 5.2는 부분적으로 사용가능하나 바꿔줘야할 부분이 꽤 있습니다.
+    해당 모듈은 5.2부터 최적화 되어있습니다.
+    5.2 미만은 사용이 아예 불가능합니다.
 
     CI3
     CI3 에 적용시킬려면 namespace 를 사용하지않고 컨트롤러 상위에
@@ -24,7 +24,7 @@ class Jl {
 
 
     protected $PHP;                         // JlFile 에서 사용
-    private $DEV = false;                   //해당값이 false 이면 로그가 안찍힙니다. INIT()에서 자동으로 바뀝니다.
+    public $DEV = false;                   //해당값이 false 이면 로그가 안찍힙니다. INIT()에서 자동으로 바뀝니다.
     private $DEV_IP = array();
     public  $ROOT;
     public  $DB;
@@ -61,9 +61,24 @@ class Jl {
             }
         }
 
-        echo json_encode($er,JSON_UNESCAPED_UNICODE,JSON_UNESCAPED_SLASHES);
+        echo $this->jsonEncode($er);
         die();
         //throw new \Exception($msg);
+    }
+
+    // 5.2에 주로 사용하며 유니코드 형태로 인코드된 한글데이터를 디코딩 함수
+    function decodeUnicode($str) {
+        while (preg_match('/\\\\u([0-9a-fA-F]{4})/', $str, $matches)) {
+            $char = pack('H*', $matches[1]); // 16진수 값을 바이너리로 변환
+            $utf8Char = mb_convert_encoding($char, 'UTF-8', 'UCS-2BE'); // UCS-2를 UTF-8로 변환
+            $str = str_replace($matches[0], $utf8Char, $str); // 변환된 문자열 대체
+        }
+        return $str;
+    }
+
+    function jsonEncode($data) {
+        if($this->isVersion()) return json_encode($data,JSON_UNESCAPED_UNICODE);
+        else return $this->decodeUnicode(json_encode($data));
     }
 
     function jsonDecode($origin_json,$encode = true) {
@@ -96,8 +111,8 @@ class Jl {
         if($encode) {
             // PHP 버전에 따라 decode가 다르게 먹히므로 PHP단에서 Object,Array,Boolean encode처리
             foreach ($obj as $key => $value) {
-                if (is_array($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
-                if (is_object($obj[$key])) $obj[$key] = json_encode($obj[$key], JSON_UNESCAPED_UNICODE);
+                if (is_array($obj[$key])) $obj[$key] = $this->jsonEncode($obj[$key]);
+                if (is_object($obj[$key])) $obj[$key] = $this->jsonEncode($obj[$key]);
             }
         }
 
@@ -286,12 +301,24 @@ class Jl {
         }
     }
 
+    // 5.3 이상일시 true 반환 그 이하는 false 를 반환한다
+    function isVersion() {
+        $phpVersion = phpversion();
+
+        if (version_compare($phpVersion, '5.3.0', '>=')) return true;
+
+        return false;
+    }
+
     function INIT() {
-        // namespace 가 있는지 확인 존재한다면 CI를 사용한다고 인식
-        $reflection = new \ReflectionClass($this);
-        if ($reflection->getNamespaceName()) {
-            $this->CI = true;
+        if ($this->isVersion()) {
+            // namespace 가 있는지 확인 존재한다면 CI를 사용한다고 인식
+            $reflection = new \ReflectionClass($this);
+            if ($reflection->getNamespaceName()) {
+                $this->CI = true;
+            }
         }
+
 
         // 개발 허용 IP 확인
         if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;

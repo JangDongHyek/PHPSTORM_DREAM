@@ -1,6 +1,6 @@
 <?php
 namespace App\Libraries;
-include_once("Jl.php");
+require_once("Jl.php");
 
 class JlModel extends Jl{
     //Database 설정
@@ -38,11 +38,11 @@ class JlModel extends Jl{
         //connect전 필수 정보확인
         if(!$this->DB["hostname"]) $this->error("JlModel construct() : hostname를 입력해주세요.");
         $this->hostname = $this->DB["hostname"];
-        if(!$this->DB["username"]) $this->error("JlModel construct() : username를 입력해주세요.");
+        if(!$this->DB["username"] || $this->DB["username"] == "exam") $this->error("JlModel construct() : username를 입력해주세요.");
         $this->username = $this->DB["username"];
-        if(!$this->DB["password"]) $this->error("JlModel construct() : password를 입력해주세요.");
+        if(!$this->DB["password"] || $this->DB["username"] == "pass") $this->error("JlModel construct() : password를 입력해주세요.");
         $this->password = $this->DB["password"];
-        if(!$this->DB["database"]) $this->error("JlModel construct(): database를 입력해주세요.");
+        if(!$this->DB["database"] || $this->DB["username"] == "exam") $this->error("JlModel construct(): database를 입력해주세요.");
         $this->database = $this->DB["database"];
 
         //DB Connection
@@ -71,14 +71,14 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }
@@ -106,12 +106,12 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            if(!$row = mysqli_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysqli_fetch_assoc($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            if(!$row = mysql_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysql_fetch_assoc($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }
 
         return $row;
@@ -124,14 +124,14 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 $array[$row['COLUMN_NAME']] = $row;
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 $array[$row['COLUMN_NAME']] = $row;
             }
         }
@@ -146,19 +146,30 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($array, $row['COLUMN_NAME']);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($array, $row['COLUMN_NAME']);
             }
         }
 
         return $array;
+    }
+
+    function setFilter($obj) {
+        if($obj['primary']) $this->where($this->primary,$obj['primary']);
+        if($obj['where_key'] && $obj['where_value']) $this->where($obj['where_key'],$obj['where_value']);
+        if($obj['between_key'] && $obj['between_value_s'] && $obj['between_value_e']) $this->between($obj['between_key'],$obj['between_value_s'],$obj['between_value_e']);
+        if($obj['like_key'] && $obj['like_value']) $this->like($obj['like_key'],$obj['like_value']);
+        if($obj['order_by_desc']) $this->orderBy($obj['order_by_desc'],"DESC");
+        if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
+        if($obj['not_key'] && $obj['not_value']) $this->where($obj['not_key'],$obj['not_value'],"AND NOT");
+        if($obj['in_key'] && $obj['in_value']) $this->in($obj['in_key'],$this->jsonDecode($obj['in_value']));
     }
 
     function getSchema() {
@@ -184,14 +195,14 @@ class JlModel extends Jl{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->error(mysqli_error($this->connect));
 
-            while($row = mysqli_fetch_array($result)){
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($array, $row);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($array, $row);
             }
         }
@@ -759,8 +770,8 @@ class JlModel extends Jl{
     function escape($_param) {
         $param = array();
         foreach($_param as $key => $value){
-            if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-            if (is_object($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            if (is_array($value)) $value = $this->jsonEncode($value);
+            if (is_object($value)) $value = $this->jsonEncode($value);
 
             if($this->mysqli) {
                 $param[$key] = mysqli_real_escape_string($this->connect, $value);

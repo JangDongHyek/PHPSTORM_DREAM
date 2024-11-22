@@ -198,7 +198,7 @@ if ($sca || $stx) {
 
 	@include_once($board_skin_path.'/list_search.head.skin.php');
 
-    $sql = " SELECT origin.COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE (1) {$sql_search}";
+    $sql = " SELECT COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE (1) {$sql_search}";
 
 
     $row = sql_fetch($sql);
@@ -319,7 +319,7 @@ if($sch_wr_2 == '임대해지'){
 if ($sca || $stx) {
     $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
 } else {
-    $sql = " select origin.* from {$write_table} as origin where wr_is_comment = 0 {$sql_search}";
+    $sql = " select * from {$write_table} where wr_is_comment = 0 {$sql_search}";
     if(!empty($notice_array))
         $sql .= " and wr_id not in (".implode(', ', $notice_array).") ";
     $sql .= " {$sql_order} limit {$from_record}, $page_rows ";
