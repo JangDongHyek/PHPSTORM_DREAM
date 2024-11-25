@@ -37,9 +37,8 @@
                         <div class="time">오후 4:08</div>
                     </div>
                 </div>
-
-                <!--받은메세지(나)-->
-                <div class="send">
+                        <!--받은메세지(나)-->
+                        <div class="send">
                     <div class="area_msg">
                         <div class="cont_wrap">
                             <div class="cont_box">안녕하세요. 견적금액 문의드립니다.</div>

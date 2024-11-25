@@ -36,7 +36,8 @@ $big_ctg = ctg_list2();
                                     <div class="area_icon"></div>
                                     <h3><?=$big_ctg[$i]["name"]?></h3>
                                 </a>
-                                <ul class="mgnb_2dul">
+                                <div class="mgnb_2dul">
+                                    <ul class="flex">
                                     <?php
                                     $small_ctg = ctg_list2($big_ctg[$i]["idx"]);
                                     for ($a = 0; $a< count($small_ctg); $a++){ ?>
@@ -44,7 +45,8 @@ $big_ctg = ctg_list2();
                                             <?=$small_ctg[$a]["name"]?>
                                         </a></li>
                                     <?php } ?>
-                                </ul>
+                                    </ul>
+                                </div>
                             </li>
                         <?php } ?>
                     </ul>
@@ -56,21 +58,23 @@ $big_ctg = ctg_list2();
 
     </div>
 </nav>
-
+<style>
+    #navtoggle #gnb2 .mgnb_2dul{display: none;}
+</style>
 <script>
 $(document).ready(function() {
 	// 모바일 트리메뉴 .gnb .d1 h3를 클릭
 	$("#navtoggle .mgnb_1dli .mgnb_1da").click(function(){
-		var dp = $(this).siblings("ul.mgnb_2dul").css("display");
+		var dp = $(this).siblings(".mgnb_2dul").css("display");
 		if(dp=="none"){
 			$("#navtoggle .mgnb_1dli .mgnb_1da").removeClass("on");
 			$(this).addClass("on");
 			$("#navtoggle .mgnb_1dli ul.mgnb_2dul").slideUp(500);
-			$(this).siblings("ul.mgnb_2dul").slideDown(500);
+			$(this).siblings(".mgnb_2dul").slideDown(500);
 			}
 		if(dp=="block"){
 			$("#navtoggle .mgnb_1dli .mgnb_1da").removeClass("on");
-			$("#navtoggle .mgnb_1dli ul.mgnb_2dul").slideUp(500);
+			$("#navtoggle .mgnb_1dli .mgnb_2dul").slideUp(500);
 			}
 		return false;
 	});

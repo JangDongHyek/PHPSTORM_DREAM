@@ -13,6 +13,7 @@ include_once('./_head.php');
 
     <div id="area_mypage" class="bunker">
 		<div class="inr">
+            <?php include('./mypage_banner.php'); ?>
 
 			<?php include_once('./mypage_info.php'); ?> 
 			

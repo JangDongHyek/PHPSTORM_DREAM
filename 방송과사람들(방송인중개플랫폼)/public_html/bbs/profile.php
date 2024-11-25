@@ -257,6 +257,21 @@ $pid = "profile";
                     </section>
                     <section id="area_portfolio">
                         <h3>포트폴리오</h3>
+                        <!--디자인 변경-->
+                        <?php if($_SERVER['REMOTE_ADDR'] == "59.19.201.109" || $_SERVER['REMOTE_ADDR'] == "121.140.204.65"){ ?>
+                            <div class="portfolio_list">
+                                <ul>
+                                    <li>
+                                        <div>
+
+                                            <button>더보기</button>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        <?php }?>
+                        <!--//디자인 변경-->
+
                         <div class="swiper ftSwiper">
                             <ul id="product_list" class="swiper-wrapper">
                                 <li class="swiper-slide">

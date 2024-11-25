@@ -7,6 +7,40 @@ $jl = new JL();
 $g5['title'] = '리스트';
 include_once('./_head.php');
 ?>
+
+<!--서브 상단 배너-->
+<div class="swiper subSwiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <img src="<?php echo G5_THEME_IMG_URL ?>/app/visual01.jpg">
+        </div>
+        <div class="swiper-slide">
+            <img src="<?php echo G5_THEME_IMG_URL ?>/app/visual01.jpg">
+        </div>
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+<script>
+    var swiper = new Swiper('.subSwiper', {
+        spaceBetween: 0,
+        loop: true,
+        centeredSlides: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+<!--//서브 상단 배너-->
+
 <!-- 순서 모달팝업 -->
 <div id="basic_modal">
     <!-- Modal -->
@@ -36,6 +70,17 @@ include_once('./_head.php');
     </div>
 
 
+    <div class="inr">
+        <!--서브 하단 배너-->
+        <div class="swiper subFtSwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/app/visual01.jpg">
+                </div>
+            </div>
+        </div>
+        <!--//서브 상단 배너-->
+    </div>
 <?php
 $jl->vueLoad("app");
 $jl->includeDir("/component/product");

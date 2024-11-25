@@ -136,5 +136,23 @@ include_once('./_tail.php');
      $('#fchatting').submit();
  }
 
+    //상품서비스 상세 포트폴리오
+    $(document).ready(function() {
+        $('button[name="btnToggle"]').click(function() {
+            var $portConts = $(this).siblings('.port_conts');
+
+            // 포트폴리오 내용을 확장/축소
+            $portConts.toggleClass('expanded');
+
+            // 버튼 텍스트와 아이콘 변경
+            if ($portConts.hasClass('expanded')) {
+                $(this).text('접기'); // 'html' 대신 'text'를 사용하는 것이 좋습니다.
+            } else {
+                $(this).text('더보기'); // 'html' 대신 'text'를 사용하는 것이 좋습니다.
+            }
+        });
+    });
+
+
 
 </script>

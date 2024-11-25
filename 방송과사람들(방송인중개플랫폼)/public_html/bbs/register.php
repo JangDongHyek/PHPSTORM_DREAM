@@ -8,7 +8,7 @@ if ($is_member) {
 
 // 세션을 지웁니다.
 set_session("ss_mb_reg", "");
-goto_url(G5_URL."/bbs/register_expert_form.php?level=2");
+goto_url(G5_URL."/bbs/register_form.php");
 $g5['title'] = '회원가입 유형';
 include_once('./_head.php');
 

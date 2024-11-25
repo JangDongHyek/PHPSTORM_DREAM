@@ -1,6 +1,7 @@
 <!-- 마이페이지에만 나오는 메뉴 -->
 <div id="mypage_menu">
-	<h3>마이메뉴</h3>
+    <?php include('./mypage_banner.php'); ?>
+    <h3>마이메뉴</h3>
 	<ul class="menu_list">
 		<li><a href="<?php echo G5_BBS_URL ?>/chat_list.php">문의채팅</a></li>
 		<!-- 일반인만 보이는 메뉴-->

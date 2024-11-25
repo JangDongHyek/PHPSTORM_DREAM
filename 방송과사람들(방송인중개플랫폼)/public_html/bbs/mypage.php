@@ -17,9 +17,9 @@ $jl = new JL();
 <style>
 
 </style>
-
     <div id="area_mypage">
 		<div class="inr">
+            <?php include('./mypage_banner.php'); ?>
 			<div id="mypage_wrap">
 				<?php include_once('./mypage_info.php'); ?>
 
