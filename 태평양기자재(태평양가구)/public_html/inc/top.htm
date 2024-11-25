@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<table width="980" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="803" height="41" background="../images/main_2.jpg">&nbsp;</td>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><img src="../images/main_3.gif" width="177" height="14" /></td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="50"><a href="../main/start.htm"><img src="../images/main_5.gif" width="50" height="27" border="0" /></a></td>
+                <td width="54"><a href="../bbs/list.php?bbs_id=noticee"><img src="../images/main_6.gif" width="54" height="27" border="0" /></a></td>
+                <td><? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?><a href="../bbs/mb_logout.php?url=../main/start.htm"><img src="../images/btn_logout.gif" width="73" height="27" border="0" /></a><?}else{ //로그아웃 상태일때?><a href="../bbs/mb_login.php"><img src="../images/main_7.gif" width="73" height="27" border="0" /></a><?}?></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="322"><a href="../main/start.htm"><img src="../images/main_8.gif" width="322" height="71" border="0" /></a></td>
+        <td><img src="../images/main_9.gif" width="658" height="71" border="0" usemap="#menu" /></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+<map name="menu" id="menu"><area shape="rect" coords="60,16,166,44" href="../main/start.htm" />
+<area shape="rect" coords="173,16,276,44" href="../main/greet1.htm" /><area shape="rect" coords="283,10,392,48" href="../bbs/list.php?bbs_id=pro_gal01" />
+<area shape="rect" coords="400,16,498,44" href="../bbs/list.php?bbs_id=qnaa" />
+<area shape="rect" coords="505,16,617,44" href="../bbs/list.php?bbs_id=noticee" />
+</map></body>
+</html>
