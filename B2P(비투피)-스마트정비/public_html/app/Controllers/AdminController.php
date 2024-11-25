@@ -199,15 +199,15 @@ class AdminController extends BaseController {
         $model->where("ReturnStatus","0");
         $model->addSql(" and order_settle_list.BuyDecisonDate <= DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND order_settle_list.BuyDecisonDate != '0000-00-00'");
 
-
+        $day_type = $this->data['day_type'] ? : "OrderDate";
         // 모든 데이터
         //검색 조건문
         if($this->data['start_day'] && $this->data['end_day']) {
             $start_day = $this->data['start_day'];
             $end_day = $this->data['end_day'];
-            $model->between("OrderDate",$start_day,$end_day);
+            $model->between($day_type,$start_day,$end_day);
         }else {
-            $model->between("OrderDate",date('Y')."-01-01",date('Y')."-12-31");
+            $model->between($day_type,date('Y')."-01-01",date('Y')."-12-31");
         }
         // 전 필드의 데이터값이 문자열이라 해줬던 내용
         //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
@@ -250,7 +250,7 @@ class AdminController extends BaseController {
             $start_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'], 1, $this->data['year']));
             $end_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'] + 1, 0, $this->data['year']));
         }
-        $model->between("OrderDate",$start_day,$end_day);
+        $model->between($day_type,$start_day,$end_day);
         // 전 필드의 데이터값이 문자열이라 해줬던 내용
         //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
         // 정산 예정일이 없으면 안나오게 하는구문인데 왜 있는지 기억이안남

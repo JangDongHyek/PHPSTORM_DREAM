@@ -100,15 +100,15 @@ function totalOrderKey($objects,$key,$info) {
         <div>
             <p>일자구분</p>
             <div class="input_date">
-                <!--                <div class="input_select w150px">-->
-                <!--                    <select class="border_gray">-->
-                <!--                        <option value="D1" selected="">입금확인일</option>-->
-                <!--                        <option value="D3">매출기준일</option>-->
-                <!--                        <option value="D7">구매결정일</option>-->
-                <!--                        <option value="D4">환불일</option>-->
-                <!--                        <option value="D6">정산완료일</option>-->
-                <!--                    </select>-->
-                <!--                </div>-->
+                                <div class="input_select w150px">
+                                    <select class="border_gray" id="day_type" name="day_type">
+                                        <option value="OrderDate" <? if($this->data['day_type'] == 'OrderDate') echo 'selected' ?> >주문일</option>
+<!--                                        <option value="D3">매출기준일</option>-->
+                                        <option value="BuyDecisionDate" <? if($this->data['day_type'] == 'BuyDecisionDate') echo 'selected' ?> >구매결정일</option>
+<!--                                        <option value="D4">환불일</option>-->
+<!--                                        <option value="D6">정산완료일</option>-->
+                                    </select>
+                                </div>
                 <div class="input_select">
                     <!--i class="fa-duotone fa-calendar"></i-->
                     <input type="date" class="border_gray" id="start_day" name="start_day" <?if($this->data['start_day']) echo "value='{$this->data['start_day']}'"?>>
@@ -196,6 +196,7 @@ function totalOrderKey($objects,$key,$info) {
                 <tr>
                     <th>No.</th>
                     <th>판매일자</th>
+                    <th>구매결정일자</th>
                     <th>구분</th>
                     <th>판매자코드/거래처명</th>
                     <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
@@ -214,6 +215,7 @@ function totalOrderKey($objects,$key,$info) {
 
                     <td><?=$data['data_page_no']?></td>
                     <td><?=$data['OrderDate']?></td>
+                    <td><?=$data['BuyDecisionDate']?></td>
                     <td>
                         <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
                     </td>
@@ -251,8 +253,8 @@ function totalOrderKey($objects,$key,$info) {
                 <th>카테고리 수수료</th>
                 <th>공급원가</th>
                 <th>판매자할인 / 공제금</th>
-                <th>KCP수수료</th>
                 <th>배송비 (A 별도 월정산)</th>
+                <th>KCP수수료</th>
                 <?php if(false){?>
                 <th>부가세</th>
                 <?php } ?>
@@ -289,17 +291,7 @@ function totalOrderKey($objects,$key,$info) {
                             </dl>
                         </details>
                     </td>
-                    <td class="text_right">
-                        <details>
-                            <summary>총 <?=number_format($order['b2p']['new_b2p_kcp_price'] - $order['b2p']['new_b2p_cp_fee_price'])?>원</summary>
-                            <dl>
-                                <dt>KCP수수료</dt>
-                                <dd><?=number_format($order['b2p']['new_b2p_kcp_price'])?>원</dd>
-                                <dt>KCP수수료(캐시백이벤트)</dt>
-                                <dd style="text-decoration: line-through"><?=number_format($order['b2p']['new_b2p_cp_fee_price'])?>원</dd>
-                            </dl>
-                        </details>
-                    </td>
+
                     <td class="text_right">
                         <details>
                             <summary>총 <?=number_format($order['b2p']['dl_DelFeeAmt'] - $order['b2p']['dl_DelFeeCommission'] + $order['b2p']['b2p_shipping_fee'])?>원</summary>
@@ -311,6 +303,19 @@ function totalOrderKey($objects,$key,$info) {
                             </dl>
                         </details>
                     </td>
+
+                    <td class="text_right">
+                        <details>
+                            <summary>총 <?=number_format($order['b2p']['new_b2p_kcp_price'] - $order['b2p']['new_b2p_cp_fee_price'])?>원</summary>
+                            <dl>
+                                <dt>KCP수수료</dt>
+                                <dd><?=number_format($order['b2p']['new_b2p_kcp_price'])?>원</dd>
+                                <dt>KCP수수료(캐시백이벤트)</dt>
+                                <dd style="text-decoration: line-through"><?=number_format($order['b2p']['new_b2p_cp_fee_price'])?>원</dd>
+                            </dl>
+                        </details>
+                    </td>
+
                     <?php if(false){?>
                     <td class="text_right">
                         <details>
@@ -453,7 +458,8 @@ function totalOrderKey($objects,$key,$info) {
             start_day : start_day,
             search_key : $('#search_key').val(),
             search_value : $('#search_value').val(),
-            SiteType : $('#SiteType').val()
+            SiteType : $('#SiteType').val(),
+            day_type : $('#day_type').val()
         }
 
         objectHref(object);
@@ -493,7 +499,8 @@ function totalOrderKey($objects,$key,$info) {
             end_day : $('#end_day').val(),
             search_key : $('#search_key').val(),
             search_value : $('#search_value').val(),
-            SiteType : $('#SiteType').val()
+            SiteType : $('#SiteType').val(),
+            day_type : $('#day_type').val()
         }
 
         objectHref(object)
@@ -519,7 +526,8 @@ function totalOrderKey($objects,$key,$info) {
             start_day : start_day,
             end_day : end_day,
             search_key : search_key,
-            search_value : search_value
+            search_value : search_value,
+            day_type : $('#day_type').val()
         }
 
         objectHref(object)

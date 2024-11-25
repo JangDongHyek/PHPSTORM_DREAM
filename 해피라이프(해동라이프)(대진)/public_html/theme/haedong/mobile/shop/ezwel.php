@@ -1,5 +1,6 @@
 <?php
 include_once(G5_PATH."/jl/JlConfig.php");
+include_once(G5_PATH."/api_test/class.crypto.php");
 // 공통 코드 포함
 //include_once('./_common.php');
 //include_once(G5_THEME_MSHOP_PATH.'/shop.head.php');
@@ -33,6 +34,21 @@ $service_info = [
 ];
 
 $info = $service_info[$type];
+$crypto = new Crypto();
+
+$token = $_GET['token'];
+$aa = $crypto->decrypt($token);
+$token = json_decode($aa,true);
+
+//$userNm = $crypto->decrypt($token['userNm']);
+//$authkey = $crypto->decrypt($token['authkey']);
+$userKey = $crypto->decrypt($token['userKey']);
+//$ezMilUse = $crypto->decrypt($token['ezMilUse']);
+//$isReserveUse = $crypto->decrypt($token['isReserveUse']);
+//$cspCd = $crypto->decrypt($token['cspCd']);
+//$clientCd = $crypto->decrypt($token['clientCd']);
+
+//echo "1 : ".$crypto->decrypt($token['userNm']);
 
 add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landing.css?ver='.date('Y h:i:s A').'">', 10);
 ?>
@@ -286,6 +302,20 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                 <div class="modal-body">
                     <form id="modal_form">
                         <input type="hidden" id="type" name="type" value="<?=$type?>">
+                        <input type="hidden" id="userNm" name="userNm" value="">
+                        <input type="hidden" id="authkey" name="authkey" value="">
+                        <input type="hidden" id="userKey" name="userKey" value="">
+                        <input type="hidden" id="ezMilUse" name="ezMilUse" value="">
+                        <input type="hidden" id="isReserveUse" name="isReserveUse" value="">
+                        <input type="hidden" id="cspCd" name="cspCd" value="">
+                        <input type="hidden" id="clientCd" name="clientCd" value="">
+
+
+
+
+
+
+
                         <div id="cashback_form">
                             <dl class="">
                                 <dt>
@@ -508,6 +538,14 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                 $(this).val('');
             });
             $("#type").val("<?=$type?>");
+            $("#userNm").val("<?=$userNm?>");
+            $("#authkey").val("<?=$authkey?>");
+            $("#userKey").val("<?=$userKey?>");
+            $("#ezMilUse").val("<?=$ezMilUse?>");
+            $("#isReserveUse").val("<?=$isReserveUse?>");
+            $("#cspCd").val("<?=$cspCd?>");
+            $("#clientCd").val("<?=$clientCd?>");
+            //$("#token").val("<?//=$_GET['token']?>//");
             $("#modal_register").modal("show");
         }
 

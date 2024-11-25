@@ -248,6 +248,7 @@ class Jl {
         this.log(obj[key])
     }
 
+    // vue에서 파일업로드시 지정된 오브젝트 key에 파일 데이터 반환해주는 함수
     changeFile(event,obj,key,permission = []) {
         this.commonFile(event.target.files,obj,key,permission)
         this.log(obj[key])

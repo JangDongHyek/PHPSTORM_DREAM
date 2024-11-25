@@ -114,13 +114,13 @@ for( $k = 0; $fav_row = mysql_fetch_array($fav_res); $k++ ){
 					if($if_strike=='1'&&$price>0){
 					?>
 							<tr>
-								<td align=center><span class="text_main1_ss"><strike>\<?=$price_str?>원</strike></span></td>
+								<td align=center><span class="text_main1_ss"><strike><?=$price_str?>원</strike></span></td>
 							</tr>
 					<?
 					}
 					?>
 							<tr>
-								<td align=center><span class="text_main1_s">\<?=$z_price?>원</span></td>
+								<td align=center><span class="text_main1_s"><?=$z_price?>원</span></td>
 							</tr>
 							<?if($bonus_ok == 't'){?>
 							<?php if($fav_row1[bonus] > 0){ ?>

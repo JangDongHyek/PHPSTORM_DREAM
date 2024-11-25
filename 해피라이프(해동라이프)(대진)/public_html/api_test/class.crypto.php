@@ -5,7 +5,7 @@ class Crypto
 	private $block= 16; 
 
 	//TEST대칭키 입니다. EZWEL과 연동 전 EZWEL에 문의하여 대칭키를 받으셔야 합니다.(16자리 고정)
-	public $pbUserKey	= 'jam20131218XXXXX'; 
+	public $pbUserKey	= 'u+xzUDA;93E6]Fmt';
 
 
 	private $paddingValue = 0;
@@ -18,7 +18,8 @@ class Crypto
 
 	public function encrypt($str)
 	{
-		$str = iconv("EUC-KR", "UTF-8", $str);
+		//$str = iconv("EUC-KR", "UTF-8", $str);
+        $str = iconv("UTF-8", "EUC-KR", $str);
 		
 		$planBytes = array_slice(unpack('c*',$str), 0);  
 		if (count($planBytes) == 0) {
@@ -56,7 +57,8 @@ class Crypto
 
 	public function decrypt($str)
 	{
-		$str = iconv("EUC-KR", "UTF-8", $str);
+        //$str = iconv("EUC-KR", "UTF-8", $str);
+        $str = iconv("UTF-8", "EUC-KR", $str);
 		$str =  base64_decode($str);
 		
 		$planBytes = array_slice(unpack('c*',$str), 0); // 평문을 바이트 배열로 변환  

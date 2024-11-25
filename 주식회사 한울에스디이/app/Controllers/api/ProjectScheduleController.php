@@ -1,26 +1,28 @@
 <?php
 namespace App\Libraries;
 
-namespace App\Controllers\app;
+namespace App\Controllers\api;
 use App\Controllers\BaseController;
 
 use App\Libraries\Jl;
 use App\Libraries\JlModel;
 use App\Libraries\JlFile;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 /*
  주의사항
  use Exception 을 하는순간 try catch 문 작동 안합니다.
  */
 
-class example extends BaseController
+class ProjectScheduleController extends BaseController
 {
     public $models = [];
     public $jl_response = array("message" => ""); // BaseController 내 response 란 객체가 존재해 변수명 변경
     public $join_table = '';
     public $get_tables = [];
 
-    public $table = "example";
+    public $table = "project_schedule";
     public $file_use = false;
     public $file;
 
@@ -55,6 +57,11 @@ class example extends BaseController
             }
             case "delete" : {
                 $this->delete();
+                break;
+            }
+
+            case "csv_insert" : {
+                $this->csv_insert();
                 break;
             }
 
@@ -172,6 +179,18 @@ class example extends BaseController
         $this->models[$this->table]->delete($obj);
 
         $this->jl_response['success'] = true;
+        echo json_encode($this->jl_response);
+    }
+
+    public function csv_insert() {
+        $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
+
+        if(!count($_FILES)) $this->models[$this->table]->error("파일이없습니다.");
+
+
+        $this->jl_response['success'] = true;
+        $this->jl_response['$obj'] = $obj;
+        $this->jl_response['$_FILES'] = $_FILES;
         echo json_encode($this->jl_response);
     }
 

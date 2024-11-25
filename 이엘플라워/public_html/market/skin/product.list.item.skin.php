@@ -72,7 +72,7 @@
 
                     <tr>
                       <td height="30" align="center" bgcolor="#ffffff"><?=$new_tar4?>
-                          <span class="price" style="line-height:33px;">\
+                          <span class="price" style="line-height:33px;">
                           <span style="font-family:Tahoma, Geneva, sans-serif"><?=$z_price_str?></span> <?if($z_price_str != 0){?>¿ø<?}?>
                           </span>
 							<?if($bonus_ok == 't'){?>

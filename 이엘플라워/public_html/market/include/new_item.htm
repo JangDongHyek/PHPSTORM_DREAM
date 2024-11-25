@@ -101,13 +101,13 @@ for( $k = 0; $new_row = mysql_fetch_array($new_res); $k++ ){
 					if($if_strike=='1'&&$price>0){
 					?>
 							<tr>
-								<td align=center><span class="text_main1_ss"><strike>\<?=$price_str?></strike></span></td>
+								<td align=center><span class="text_main1_ss"><strike><?=$price_str?></strike></span></td>
 							</tr>
 					<?
 					}
 					?>
 							<tr>
-								<td align=center><span class="text_main1_s">\<?=$z_price?></span></td>
+								<td align=center><span class="text_main1_s"><?=$z_price?></span></td>
 							</tr>
 
 							<?if($bonus_ok == 't'){?>

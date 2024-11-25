@@ -9,13 +9,13 @@
             <!-- body -->
             <template v-slot:default>
                 <div>
-                    <input type="file">
+                    <input type="file" @change="jl.changeFile($event,data,'upfile')">
                 </div>
             </template>
 
 
             <template v-slot:footer>
-                <button>업로드</button>
+                <button @click="postData()">업로드</button>
             </template>
         </item-bs-modal>
     </div>
@@ -37,7 +37,7 @@
                     {name : "",message : ""},
                 ],
                 data : {
-
+                    upfile : "",
                 },
             };
         },
@@ -54,15 +54,14 @@
         },
         methods: {
             async postData() {
-                let method = this.primary ? "update" : "insert";
                 let options = {required : this.required};
                 try {
                     //if(this.data.change_user_pw != this.data.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
 
-                    let res = await this.jl.ajax(method,this.data,"/api/user",options);
+                    let res = await this.jl.ajax('csv_insert',this.data,"/api/project_schedule",options);
 
-                    alert("완료 되었습니다");
-                    window.location.reload();
+                    //alert("완료 되었습니다");
+                    //window.location.reload();
                 }catch (e) {
                     alert(e.message)
                 }
