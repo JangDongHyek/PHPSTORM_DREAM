@@ -3,6 +3,7 @@ include_once('./_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 include_once(G5_LIB_PATH.'/register.lib.php');
 include_once(G5_LIB_PATH.'/mailer.lib.php');
+include_once(G5_PATH.'/jl/JlModel.php');
 
 // 리퍼러 체크
 referer_check();
@@ -71,6 +72,8 @@ $mb_addr2       = clean_xss_tags($mb_addr2);
 $mb_addr3       = clean_xss_tags($mb_addr3);
 $mb_addr_jibeon = preg_match("/^(N|R)$/", $mb_addr_jibeon) ? $mb_addr_jibeon : '';
 
+$mb_interest = isset($_POST['mb_interest']) ? json_encode($_POST['mb_interest'],JSON_UNESCAPED_UNICODE) : "[]";
+
 if ($w == '' || $w == 'u') {
 
     if ($msg = empty_mb_id($mb_id))         alert($msg, "", true, true); // alert($msg, $url, $error, $post);
@@ -84,9 +87,9 @@ if ($w == '' || $w == 'u') {
 
     if ($msg = reserve_mb_id($mb_id))       alert($msg, "", true, true);
 //    if($mb_level == 3) {
-        if ($msg = empty_mb_email($mb_email)) alert($msg, "", true, true);
-        if ($msg = valid_mb_email($mb_email)) alert($msg, "", true, true);
-        if ($msg = prohibit_mb_email($mb_email)) alert($msg, "", true, true);
+//        if ($msg = empty_mb_email($mb_email)) alert($msg, "", true, true);
+//        if ($msg = valid_mb_email($mb_email)) alert($msg, "", true, true);
+//        if ($msg = prohibit_mb_email($mb_email)) alert($msg, "", true, true);
 //    }
 
     // 휴대폰 필수입력일 경우 휴대폰번호 유효성 체크
@@ -127,7 +130,7 @@ if ($w == '' || $w == 'u') {
         $old_email = $member['mb_email'];
     }
 
-    if ($msg = exist_mb_email($mb_email, $mb_id))   alert($msg, "", true, true);
+    //if ($msg = exist_mb_email($mb_email, $mb_id))   alert($msg, "", true, true);
 }
 
 // 사용자 코드 실행
@@ -216,6 +219,12 @@ if ($w == '') {
                      mb_8 = '{$mb_8}',
                      mb_9 = '{$mb_9}',
                      mb_10 = '{$mb_10}',
+                     
+                     mb_sex = '$mb_sex',
+                     mb_birth = '$mb_birth',
+                     mb_job = '$mb_job',
+                     mb_interest = '$mb_interest',
+                     
                      mb_join_division = '{$_REQUEST['mb_join_division']}'
                      {$sql_certify} ";
 
@@ -320,6 +329,12 @@ if ($w == '') {
                     mb_8 = '{$mb_8}',
                     mb_9 = '{$mb_9}',
                     mb_10 = '{$mb_10}',
+                    
+                     mb_sex = '$mb_sex',
+                     mb_birth = '$mb_birth',
+                     mb_job = '$mb_job',
+                     mb_interest = '$mb_interest',
+                    
                     mb_join_division = '{$_REQUEST['mb_join_division']}'
                     {$sql_password}
                     {$sql_nick_date}
@@ -344,35 +359,36 @@ $msg = "";
 // 아이콘 업로드
 $mb_icon = '';
 if (isset($_FILES['mb_icon']) && is_uploaded_file($_FILES['mb_icon']['tmp_name'])) {
-    if (preg_match("/(\.gif)$/i", $_FILES['mb_icon']['name'])) {
-        // 아이콘 용량이 설정값보다 이하만 업로드 가능
-        if ($_FILES['mb_icon']['size'] <= $config['cf_member_icon_size']) {
-            @mkdir($mb_dir, G5_DIR_PERMISSION);
-            @chmod($mb_dir, G5_DIR_PERMISSION);
-            $dest_path = $mb_dir.'/'.$mb_id.'.gif';
-            move_uploaded_file($_FILES['mb_icon']['tmp_name'], $dest_path);
-            chmod($dest_path, G5_FILE_PERMISSION);
-            if (file_exists($dest_path)) {
-                //=================================================================\
-                // 090714
-                // gif 파일에 악성코드를 심어 업로드 하는 경우를 방지
-                // 에러메세지는 출력하지 않는다.
-                //-----------------------------------------------------------------
-                $size = getimagesize($dest_path);
-                if ($size[2] != 1) // gif 파일이 아니면 올라간 이미지를 삭제한다.
-                    @unlink($dest_path);
-                else
-                // 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
-                if ($size[0] > $config['cf_member_icon_width'] || $size[1] > $config['cf_member_icon_height'])
-                    @unlink($dest_path);
-                //=================================================================\
-            }
-        } else {
-            $msg .= '회원아이콘을 '.number_format($config['cf_member_icon_size']).'바이트 이하로 업로드 해주십시오.';
-        }
+// 회원 아이콘 삭제 후 넣기
+    @unlink(G5_DATA_PATH . '/file/member/' . $mb_id . '.jpg');
 
-    } else {
-        $msg .= $_FILES['mb_icon']['name'].'은(는) gif 파일이 아닙니다.';
+// 아이콘 업로드
+
+    if (is_uploaded_file($_FILES['mb_icon']['tmp_name'])) {
+        $model = new JlModel(array("table" => "g5_member"));
+        $user = $model->where("mb_id", $mb_id)->get()['data'][0];
+        $mb_no = $user['mb_no'];
+        $mb_dir = substr($mb_id, 0, 2);
+
+        // 디렉토리가 없다면 생성합니다. (퍼미션도 변경하구요.)
+        @mkdir(G5_DATA_PATH . '/file/member/', G5_DIR_PERMISSION);
+        @chmod(G5_DATA_PATH . '/file/member/', G5_DIR_PERMISSION);
+
+        $arr_name = explode('.', $_FILES['mb_icon']['name']);
+        $file_ext = array_pop($arr_name); //확장자 추출 (array_pop : 배열의 마지막 원소를 빼내어 반환)
+
+        $file_type = $_FILES['mb_icon']['type'];
+        $check_ext = array('jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'); //확장자 체크를 위한 선언부
+
+
+        if (!in_array($file_ext, $check_ext)) {
+            echo "허용되지 않는 확장자입니다";
+            exit;
+
+        }
+        $dest_path = G5_DATA_PATH . '/file/member/' . $mb_no . '.jpg';
+        move_uploaded_file($_FILES['mb_icon']['tmp_name'], $dest_path) or die($_FILES['mb_img']['error'][0]);
+
     }
 }
 

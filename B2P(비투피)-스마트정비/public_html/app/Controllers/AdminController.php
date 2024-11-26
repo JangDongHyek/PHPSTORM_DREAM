@@ -205,9 +205,11 @@ class AdminController extends BaseController {
         if($this->data['start_day'] && $this->data['end_day']) {
             $start_day = $this->data['start_day'];
             $end_day = $this->data['end_day'];
-            $model->between($day_type,$start_day,$end_day);
+            if($day_type == 'OrderDate') $model->between($day_type,$start_day,$end_day);
+            else $model->between($day_type,$start_day,$end_day,"AND","order_settle_list");
         }else {
-            $model->between($day_type,date('Y')."-01-01",date('Y')."-12-31");
+            if($day_type == 'OrderDate') $model->between($day_type,date('Y')."-01-01",date('Y')."-12-31");
+            else $model->between($day_type,date('Y')."-01-01",date('Y')."-12-31","AND","order_settle_list");
         }
         // 전 필드의 데이터값이 문자열이라 해줬던 내용
         //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
@@ -224,7 +226,7 @@ class AdminController extends BaseController {
                 "sql" => true,
                 "select" => array(
                     "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
+                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","BuyDecisonDate"
                 )
             )
         );
@@ -250,7 +252,8 @@ class AdminController extends BaseController {
             $start_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'], 1, $this->data['year']));
             $end_day = date('Y-m-d', mktime(0, 0, 0, $this->data['month'] + 1, 0, $this->data['year']));
         }
-        $model->between($day_type,$start_day,$end_day);
+        if($day_type == 'OrderDate') $model->between($day_type,$start_day,$end_day);
+        else $model->between($day_type,$start_day,$end_day,"and","order_settle_list");
         // 전 필드의 데이터값이 문자열이라 해줬던 내용
         //$model->addSql("AND  STR_TO_DATE(order_settle_list.SettleExpectDate, '%Y-%m-%dT%H:%i:%s.%fZ') BETWEEN '2020-01-01 00:00:00' AND '$today_end'");
         // 정산 예정일이 없으면 안나오게 하는구문인데 왜 있는지 기억이안남
@@ -274,14 +277,14 @@ class AdminController extends BaseController {
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","BuyDecisonDate"
             )
         ));
         $this->data['search_all_orders'] = $model->get(array(
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","BuyDecisonDate"
             )
         ));
 

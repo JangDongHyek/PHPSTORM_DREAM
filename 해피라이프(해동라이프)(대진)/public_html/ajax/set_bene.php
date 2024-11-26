@@ -18,6 +18,10 @@ $userKey = trim($_POST['userKey']);
 
 $is_agree = isset($_POST['is_agree']) ? trim($_POST['is_agree']) : '';
 
+if($type == "현대이지웰" && !$userKey) {
+    die(json_encode(array("code"=>"-1","msg"=>"복지몰에서 들어와주세요.")));
+}
+
 
 if(empty($mb_name)){
     die(json_encode(array("code"=>"-1","msg"=>"신청자 이름을 확인해주세요.")));

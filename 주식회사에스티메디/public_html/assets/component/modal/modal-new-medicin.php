@@ -10,7 +10,7 @@
 
             <template v-slot:default>
                 <div class="search">
-                    <input type="search" v-model="filter.like_value" @keyup.enter="filter.page = 1; getData()" placeholder="원하시는 제품을 검색하세요" value=""/>
+                    <input type="search" v-model="filter.group_like_value" @keyup.enter="filter.page = 1; getData()" placeholder="원하시는 제품을 검색하세요" value=""/>
                     <button type="button" class="btn" @click="filter.page = 1; getData();"><i class="fa-regular fa-magnifying-glass"></i></button>
                 </div>
 
@@ -80,8 +80,8 @@
 
                     del_yn : "N",
                     use_yn : "Y",
-                    like_key : "PRODUCT_NM",
-                    like_value : "",
+                    group_like_key : "PRODUCT_NM",
+                    group_like_value : "",
                 },
                 required : [
                     {name : "",message : ""},
@@ -175,7 +175,11 @@
             },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/bs_product");
+                    let filter = this.filter
+                    filter.group_like_key2 = "keyword";
+                    filter.group_like_value2 = filter.group_like_value;
+
+                    let res = await this.jl.ajax("get",filter,"/api/bs_product");
                     this.products = res.data
                     this.filter.count = res.count;
                     this.search = true;

@@ -44,6 +44,7 @@
                     <th>신청인 고객사명</th>
                     <th>해피라이프 이용일자</th>
                     <th>이용인 성명</th>
+                    <th v-if="version == 2">유저키</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -56,6 +57,7 @@
                     <td>{{item.mb_company}}</td>
                     <td>{{item.use_date}}</td>
                     <td>{{item.use_name}}</td>
+                    <td v-if="version == 2">{{item.userKey}}</td>
                 </tr>
                 </tbody>
             </table>

@@ -66,7 +66,20 @@ class BsProductController extends CI_Controller {
         if($obj['order_by_asc']) $this->models[$this->table]->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key1'] && $obj['not_value1']) $this->models[$this->table]->where($obj['not_key1'],$obj['not_value1'],"AND NOT");
         if($obj['in_key1'] && $obj['in_value1']) $this->models[$this->table]->in($obj['in_key1'],$this->models[$this->table]->jsonDecode($obj['in_value1']));
+
+
         if($obj['like_key'] && $obj['like_value']) $this->models[$this->table]->like($obj['like_key'],$obj['like_value']);
+
+        if($obj['group_like_key'] && $obj['group_like_value']) {
+            $this->models[$this->table]->groupStart();
+
+            $this->models[$this->table]->like($obj['group_like_key'],$obj['group_like_value'],"OR");
+            $this->models[$this->table]->like($obj['group_like_key2'],$obj['group_like_value2'],"OR");
+
+            $this->models[$this->table]->groupEnd();
+        }
+
+
 
         //join
         if ($this->join_table) {
@@ -128,7 +141,10 @@ class BsProductController extends CI_Controller {
         $this->jl_response['data'] = $object['data'];
         $this->jl_response['count'] = $object['count'];
         $this->jl_response['filter'] = $object['filter'];
+        $this->jl_response['sql'] = $object['sql'];
+        $this->jl_response['obj'] = $obj;
         $this->jl_response['success'] = true;
+
         echo json_encode($this->jl_response);
     }
 

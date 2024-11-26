@@ -104,7 +104,7 @@ function totalOrderKey($objects,$key,$info) {
                                     <select class="border_gray" id="day_type" name="day_type">
                                         <option value="OrderDate" <? if($this->data['day_type'] == 'OrderDate') echo 'selected' ?> >주문일</option>
 <!--                                        <option value="D3">매출기준일</option>-->
-                                        <option value="BuyDecisionDate" <? if($this->data['day_type'] == 'BuyDecisionDate') echo 'selected' ?> >구매결정일</option>
+                                        <option value="BuyDecisonDate" <? if($this->data['day_type'] == 'BuyDecisonDate') echo 'selected' ?> >구매결정일</option>
 <!--                                        <option value="D4">환불일</option>-->
 <!--                                        <option value="D6">정산완료일</option>-->
                                     </select>
@@ -215,7 +215,7 @@ function totalOrderKey($objects,$key,$info) {
 
                     <td><?=$data['data_page_no']?></td>
                     <td><?=$data['OrderDate']?></td>
-                    <td><?=$data['BuyDecisionDate']?></td>
+                    <td><?=$data['BuyDecisonDate']?></td>
                     <td>
                         <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
                     </td>

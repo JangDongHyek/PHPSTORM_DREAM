@@ -170,6 +170,20 @@ class JlModel extends Jl{
         if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key'] && $obj['not_value']) $this->where($obj['not_key'],$obj['not_value'],"AND NOT");
         if($obj['in_key'] && $obj['in_value']) $this->in($obj['in_key'],$this->jsonDecode($obj['in_value']));
+
+        if($obj['group_like_key'] && $obj['group_like_value']) {
+            $this->groupStart();
+            $this->like($obj['group_like_key'],$obj['group_like_value']);
+            $this->like($obj['group_like_key2'],$obj['group_like_value2'],$obj['group_like_operator2']);
+            $this->groupEnd();
+        }
+
+        if($obj['group_where_key'] && $obj['group_where_value']) {
+            $this->groupStart();
+            $this->where($obj['group_where_key'],$obj['group_where_value']);
+            $this->where($obj['group_where_key2'],$obj['group_where_value2'],$obj['group_where_operator2']);
+            $this->groupEnd();
+        }
     }
 
     function getSchema() {
