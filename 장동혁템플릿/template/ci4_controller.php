@@ -8,6 +8,9 @@ use App\Libraries\Jl;
 use App\Libraries\JlModel;
 use App\Libraries\JlFile;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+
 /*
  주의사항
  use Exception 을 하는순간 try catch 문 작동 안합니다.
@@ -55,6 +58,11 @@ class example extends BaseController
             }
             case "delete" : {
                 $this->delete();
+                break;
+            }
+
+            case "csv_insert" : {
+                $this->csv_insert();
                 break;
             }
 
@@ -172,6 +180,62 @@ class example extends BaseController
         $this->models[$this->table]->delete($obj);
 
         $this->jl_response['success'] = true;
+        echo json_encode($this->jl_response);
+    }
+
+    public function csv_insert() {
+        $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
+
+        if(!count($_FILES)) $this->models[$this->table]->error("파일이없습니다.");
+
+        $file = $_FILES['upfile']['tmp_name'];
+
+        try {
+            // PHPSpreadsheet 네임스페이스 로드
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
+
+            $headers = ["group_a","group_b","group_c",
+                "category_b",
+                "content","schedule_start_date","schedule_end_date",
+                "memo"
+            ];
+
+            foreach ($spreadsheet->getSheetNames() as $sheetIndex => $sheetName) {
+                $sheet = $spreadsheet->getSheet($sheetIndex);
+
+                // 데이터 읽기
+                foreach ($sheet->getRowIterator() as $row) {
+                    $currentRowIndex = $row->getRowIndex();
+                    if($currentRowIndex == 1) continue;
+                    $rowData = [];
+                    foreach ($row->getCellIterator() as $cell) {
+                        $value = $cell->getValue();
+                        if (Date::isDateTime($cell)) {
+                            $value = Date::excelToDateTimeObject($value)->format('Y-m-d'); // 원하는 포맷
+                        }
+                        $rowData[] = $value;
+                    }
+
+                    $data = array_combine($headers,$rowData);
+                    $data['category_a'] = $sheetName;
+                    $data['project_idx'] = $obj['project_idx'];
+                    $this->models[$this->table]->insert($data);
+                }
+            }
+
+
+
+
+
+            $this->jl_response['success'] = true;
+            $this->jl_response['$obj'] = $obj;
+            $this->jl_response['$_FILES'] = $_FILES;
+            $this->jl_response['$datas'] = $datas;
+        } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+            $this->jl_response['success'] = false;
+            $this->jl_response['error'] = "엑셀 파일을 읽는 도중 에러가 발생했습니다: " . $e->getMessage();
+        }
+
         echo json_encode($this->jl_response);
     }
 

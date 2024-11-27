@@ -31,8 +31,7 @@
                                         <a class="btn btn_blue" @click="event.preventDefault(); addCart(item)">제품문의</a>
                                     </template>
                                     <template v-else>
-                                        <p class="p_price" v-if="INSU_CHECK == 'Y'">{{parseInt(item.INSU_PRICE).format()}}원</p>
-                                        <p class="p_price" v-if="INSU_CHECK == 'N'">{{parseInt(item.UNIT_PRICE).format()}}원</p>
+                                        <p class="p_price">{{getPrice(item)}}원</p>
                                     </template>
                                 </div>
                             </label>
@@ -102,7 +101,22 @@
             });
         },
         methods: {
+            getPrice(item) {
+                let price;
+                if(this.INSU_CHECK == "Y") {
+                    price =item.INSU_PRICE
+                }else {
+                    price = item.prod_price
+                }
 
+                if (typeof price === 'string' && price.includes(',')) {
+                    return price; // ','가 있으면 그대로 반환
+                }
+
+                price = parseInt(price)
+
+                return price.format();
+            },
             async postRequest(product = null) {
                 let content;
                 if(product) {

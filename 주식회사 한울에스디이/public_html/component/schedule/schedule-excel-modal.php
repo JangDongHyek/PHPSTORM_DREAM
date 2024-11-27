@@ -27,6 +27,7 @@
         props: {
             modal : {type : Boolean, default : false},
             primary : {type : String, default : ""},
+            project_idx : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -38,6 +39,7 @@
                 ],
                 data : {
                     upfile : "",
+                    project_idx : this.project_idx,
                 },
             };
         },
@@ -60,8 +62,8 @@
 
                     let res = await this.jl.ajax('csv_insert',this.data,"/api/project_schedule",options);
 
-                    //alert("완료 되었습니다");
-                    //window.location.reload();
+                    alert("완료 되었습니다");
+                    window.location.reload();
                 }catch (e) {
                     alert(e.message)
                 }

@@ -8,7 +8,7 @@ if ($_SESSION['ss_mb_id']) {
             if ($_SERVER['HTTP_HOST'] == "itforone.com") {
                 $profileUrl = "/~broadcast" . $profileUrl;
             }
-            alert("프로필 입력을 해야 이용가능합니다.", $profileUrl);
+            //alert("프로필 입력을 해야 이용가능합니다.", $profileUrl);
         }
     }
 }

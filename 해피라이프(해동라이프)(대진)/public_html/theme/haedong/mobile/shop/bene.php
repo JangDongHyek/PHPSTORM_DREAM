@@ -43,6 +43,9 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                     <p>무료 사전장례상담 신청</p>
                     <span>* 장례지도사 + 3년이상 유경험</span>
                 </button>
+                <div class="text-center mt10 wow animate__animated animate__fadeInDown animate__delay-0.5s">
+                    <?php echo $info['phone_number']; ?>으로 언제든 편안하게 상담하실 수 있습니다.</div>
+
             <div class="wow animate__animated animate__fadeInDown animate__delay-0.5s" style="position:relative; z-index:1;">
                 <div class="tit_wrap">
                     <h6 class="color-black">월납입금 없이 바로 이용 가능한</h6>
@@ -266,6 +269,9 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
         <a href="tel:<?php echo $info['phone_number']; ?>" class="btn btn-white">전화 <?php echo $info['phone_number']; ?></a>
     </div>
 
+    <consult-modal :modal="modal" @close="modal = false;" type="베네피아" tel="1877-9950"></consult-modal>
+
+</div>
 
     <!--캐시백 신청폼 모달-->
     <div class="modal fade" tabindex="-1" role="dialog" id="modal_register">
@@ -375,7 +381,6 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <consult-modal :modal="modal" @close="modal = false;" type="베네피아"></consult-modal>
 
     <!-- 무료 사전장례상담 신청 -->
     <div class="modal fade preApply" id="preApplyModal" tabindex="-1" aria-labelledby="preApplyModalLabel" aria-hidden="true">
@@ -384,6 +389,8 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/benepia_landin
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
                     <h5 class="modal-title" id="preApplyModalLabel">무료 사전장례상담 신청</h5>
+                    <div class="text-center mt10">
+                        <?php echo $info['phone_number']; ?>으로 언제든 편안하게 상담하실 수 있습니다.</div>
                 </div>
                 <div class="modal-body">
                     <dl class="">

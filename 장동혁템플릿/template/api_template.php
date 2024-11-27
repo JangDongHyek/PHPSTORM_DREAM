@@ -142,6 +142,21 @@ try {
             $models[$table]->setFilter($obj);
 
             $models[$table]->where($obj)->whereDelete();
+            $response['success'] = true;
+            break;
+
+        case "distinct" :
+            $obj = $models[$table]->jsonDecode($_POST['obj'],false);
+            $models[$table]->setFilter($obj);
+
+            $data = $models[$table]->distinct($obj);
+
+            $response['data'] = $data;
+            $response['success'] = true;
+            break;
+
+        case "csv_insert" :
+
             break;
 
         //csv 파일 만들고 다운받는 처리

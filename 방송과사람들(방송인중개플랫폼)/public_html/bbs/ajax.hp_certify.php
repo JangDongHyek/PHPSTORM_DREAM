@@ -16,7 +16,7 @@ if ($mode == "send") {
 
         // 중복체크
         if($mb['mb_id'] != ''){
-            echo json_encode(array('msg' => "이미 해당 휴대폰 번호로 가입한 내역이 있습니다. 비밀번호 찾기를 이용해주세요.", "code" => "-1"));
+            echo json_encode(array('msg' => "이미 해당 휴대폰 번호로 가입한 내역이 있습니다. 비밀번호 찾기를 이용해주세요.", "code" => "-1"),JSON_UNESCAPED_UNICODE);
             exit;
         }
 
@@ -32,7 +32,7 @@ if ($mode == "send") {
         $member_result = sql_fetch($sql);
 
         if ($member_result['cnt'] == 0) {
-            echo json_encode(array('swal_msg' => "해당 정보로 가입한 회원이 없습니다."));
+            echo json_encode(array('swal_msg' => "해당 정보로 가입한 회원이 없습니다."),JSON_UNESCAPED_UNICODE);
             exit;
         }
 
@@ -43,7 +43,7 @@ if ($mode == "send") {
 
     set_session("hp_certify", $random);
 
-    echo json_encode(array( 'msg' => "인증번호를 발송하였습니다." ,'code' => '1'));
+    echo json_encode(array( 'msg' => "인증번호를 발송하였습니다." ,'code' => '1'),JSON_UNESCAPED_UNICODE);
     exit;
 
 }else if ($mode == "check"){
@@ -51,10 +51,10 @@ if ($mode == "send") {
     $hp_certify = get_session("hp_certify");
 
     if($cert_no != $hp_certify){
-        echo json_encode(array('msg' => "문자로 전송한 인증번호와 일치하지 않습니다. 인증번호를 확인해주세요.", 'code' => '-1' ));
+        echo json_encode(array('msg' => "문자로 전송한 인증번호와 일치하지 않습니다. 인증번호를 확인해주세요.", 'code' => '-1' ),JSON_UNESCAPED_UNICODE);
         exit;
     } else {
-        echo json_encode(array('msg' => "인증에 성공 하였습니다.", 'code' => '1' ));
+        echo json_encode(array('msg' => "인증에 성공 하였습니다.", 'code' => '1' ),JSON_UNESCAPED_UNICODE);
         exit;
     }
 

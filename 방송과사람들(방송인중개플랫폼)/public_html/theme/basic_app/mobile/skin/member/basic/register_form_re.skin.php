@@ -80,7 +80,6 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                                 </dl>
                             <?php } ?>
 
-                            <?/*
                              <dl class="row">
                                  <dt>이메일<i class="fa-solid fa-asterisk"></i></dt>
                                  <dd>
@@ -100,13 +99,12 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                                      </div>
                                      <?php if($w == "") { ?>
                                          <div class="input cert">
-                                             <input type="text" style="background-color: #f9f9f9 !important;" name="cert_no" value="" id="cert_no" disabled class="regist-input" placeholder="인증번호를 입력해 주세요." maxlength="6" onkeyup="only_number(this);">
+                                             <input type="text" style="background-color: #f9f9f9 !important;" name="cert_no" value="" id="cert_no" disabled class="regist-input" placeholder="인증번호를 입력해 주세요." maxlength="6">
                                          </div>
                                      <?php } ?>
                                  </dd>
                                  <dd class="error col-xs-12"></dd>
                              </dl>
-                            */?>
                         </div>
 
                         <?php if ($w !== 'u') { ?>
@@ -219,10 +217,10 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                             <dl class="row">
                                 <dt>현재직업</dt>
                                 <dd>
-                                    <div class="input">
+                                    <div class="box_in grid">
                                         <?php foreach($jobs as $index => $job) {?>
                                             <input type="radio" id="mb_job_<?=$index?>" value="<?=$job?>" name="mb_job" <?=$member['mb_job'] == $job ? 'checked' : ''?> >
-                                            <label for="'mb_job_<?=$index?>"><?=$job?></label>
+                                            <label for="mb_job_<?=$index?>"><?=$job?></label>
                                         <?php } ?>
                                     </div>
                                 </dd>
@@ -231,12 +229,14 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                             <dl class="row">
                                 <dt>관심분야</dt>
                                 <dd>
+                                    <div class="box_in grid">
                                     <?php foreach($interests as $index => $item) {?>
                                         <input type="checkbox" id="mb_interest_<?=$index?>" value="<?=$item?>" name="mb_interest[]"
                                                <? if(in_array($item,$member_interest)) echo "checked";?>
                                         />
-                                        <label for="'mb_interest_<?=$index?>"><?=$item?></label>
+                                        <label for="mb_interest_<?=$index?>"><?=$item?></label>
                                     <?php } ?>
+                                    </div>
                                 </dd>
                                 <dd class="error col-xs-12"></dd>
                             </dl>
@@ -264,9 +264,44 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
 
 <script src="<?=G5_URL ?>/js/jquery.register_form.js"></script>
 <script>
+    // 인증번호 발송
+    function hpCertify() {
+        if($.trim($('#reg_mb_hp').val()) == '') {
+            swal('휴대폰번호를 입력해 주세요.');
+            return false;
+        }
+        if($.trim($('#reg_mb_hp').val()).length != 13) {
+            swal('휴대폰번호를 확인해 주세요.');
+            return false;
+        }
+
+        $.ajax({
+            url: './ajax.hp_certify.php',
+            type: 'post',
+            dataType: 'json', // 응답 데이터 타입(JSON)
+            data: {hp: $('#reg_mb_hp').val(), mode: 'send', type:'register'},
+            success: function(data) {
+                if(data.code == '1') {
+                    swal(data.msg)
+                        .then(()=>{
+                            $('#reg_mb_hp').prop('readonly', true);
+                            $('#cert_no').attr('disabled', false);
+                            $('#cert_no').css('background-color', 'unset');
+                            $('#cert_no').focus();
+                        });
+                }
+                else if(data.code != '1') {
+                    swal(data.msg);
+                    return false;
+                }
+            },
+        });
+    }
+
     let id_check = true;
     let pw_check = true;
     let nick_check = true;
+    let certify_check = true;
 
     function ag_check(obj){
         if(obj.value == "0"){
@@ -277,7 +312,52 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
     }
 
     $(function (){
-        // 약관동의 전체체크
+        // 인증번호 확인
+        $('#cert_no').keyup(function() {
+            // 공백제거
+            $(this).val($(this).val().replace(/ /gi, ''));
+            var state = $(this).parents(".row").find(".status_ico");
+            var err = $(this).parents(".row").find(".error");
+
+            if($.trim($("#cert_no").val()).length != 0) {
+                $.ajax({
+                    url: './ajax.hp_certify.php',
+                    type: 'post',
+                    data: {hp: $('#reg_mb_hp').val(), cert_no: $('#cert_no').val(), mode: 'check'},
+                    dataType : "json",
+                    success: function(data) {
+                        certify_check = true;
+                        if (data.code == "1") {
+                            certify_check = false
+                            $('#cert_no').removeClass('chk_err');
+                            $('#cert_no').addClass('chk_pas');
+                        } else {
+                            $('#cert_no').removeClass('chk_pas');
+                            $('#cert_no').addClass('chk_err');
+                        }
+                    },
+                });
+            }
+            else {
+                err.html("");
+            }
+        });
+
+        $('#reg_mb_hp').on('keyup', function () {
+            // 공백 제거 및 숫자만 추출
+            let value = $(this).val().replace(/\D/g, '');
+
+            // 형식 변환: 000-0000-0000
+            if (value.length <= 3) {
+                $(this).val(value);
+            } else if (value.length <= 7) {
+                $(this).val(`${value.slice(0, 3)}-${value.slice(3)}`);
+            } else {
+                $(this).val(`${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`);
+            }
+
+        });
+
         $("#all_chk").click(function() {
             if($("#all_chk").prop("checked")) {
                 $("input[name^='reg_req']").prop("checked",true);
@@ -327,10 +407,11 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
         $("#reg_mb_password").keyup(function () {
             var mb_password = $(this);
             var mb_password_re = $("#reg_mb_password_re");
+            const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]).{8,}$/;
             var state = mb_password.parents(".row").find(".status_ico");
             var err = mb_password.parents(".row").find(".error");
 
-            if (mb_password.val().length < 8) {
+            if (!passwordRegex.test(mb_password.val())) {
                 state.removeClass("pas").addClass("err");
                 err.addClass("on").html("비밀번호는 8자 이상 문자와 숫자 조합으로 입력해 주세요.");
                 pw_check = true
@@ -427,7 +508,7 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
             }
 
         }
-        
+
         if(!mb_sex) {
             alert("성별을 확인해주세요.");
             return false;
@@ -463,6 +544,8 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
         let pass2 = $("#reg_mb_password_re").val();
         let reg_req1 = $("#reg_req1").val();
         let reg_req2 = $("#reg_req2").val();
+        let reg_mb_email = $("#reg_mb_email").val();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if(id_check) {
             alert("아이디를 확인해주세요.");
@@ -479,6 +562,11 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
             return false;
         }
 
+        if(!emailRegex.test(reg_mb_email)) {
+            alert("이메일을 확인해주세요.");
+            return false;
+        }
+
         if(reg_req1 == 0) {
             alert("이용약관 동의 체크는 필수입니다.");
             return false;
@@ -486,6 +574,11 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
 
         if(reg_req2 == 0) {
             alert("개인정보처리방침 동의 체크는 필수입니다.");
+            return false;
+        }
+
+        if(certify_check) {
+            alert("인증번호를 확인해주세요.");
             return false;
         }
 
@@ -521,12 +614,6 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
         currentStep--;
         document.getElementById('step' + currentStep).classList.add('active');
     }
-
-    document.getElementById('signupForm').addEventListener('submit', function (e) {
-        e.preventDefault(); // 폼 제출 방지
-        alert('회원가입이 완료되었습니다!');
-        // 서버로 데이터 전송 로직 추가 가능
-    });
 
 
     // 선택된 이미지를 미리 보기로 표시하는 함수

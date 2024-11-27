@@ -87,9 +87,9 @@ if ($w == '' || $w == 'u') {
 
     if ($msg = reserve_mb_id($mb_id))       alert($msg, "", true, true);
 //    if($mb_level == 3) {
-//        if ($msg = empty_mb_email($mb_email)) alert($msg, "", true, true);
-//        if ($msg = valid_mb_email($mb_email)) alert($msg, "", true, true);
-//        if ($msg = prohibit_mb_email($mb_email)) alert($msg, "", true, true);
+        if ($msg = empty_mb_email($mb_email)) alert($msg, "", true, true);
+        if ($msg = valid_mb_email($mb_email)) alert($msg, "", true, true);
+        if ($msg = prohibit_mb_email($mb_email)) alert($msg, "", true, true);
 //    }
 
     // 휴대폰 필수입력일 경우 휴대폰번호 유효성 체크
@@ -100,12 +100,14 @@ if ($w == '' || $w == 'u') {
     if ($w=='') {
         if ($msg = exist_mb_id($mb_id))     alert($msg);
 
-        if (get_session('ss_check_mb_id') != $mb_id  || get_session('ss_check_mb_email') != $mb_email) {
-            set_session('ss_check_mb_id', '');
-            set_session('ss_check_mb_email', '');
-
-            alert('올바른 방법으로 이용해 주십시오.');
-        }
+        //if (get_session('ss_check_mb_id') != $mb_id  || get_session('ss_check_mb_email') != $mb_email) {
+        //    set_session('ss_check_mb_id', '');
+        //    set_session('ss_check_mb_email', '');
+        //
+        //    //alert('올바른 방법으로 이용해 주십시오.');
+        //    echo get_session('ss_check_mb_email');
+        //    die();
+        //}
 
         // 본인확인 체크
         if($config['cf_cert_use'] && $config['cf_cert_req']) {
@@ -130,7 +132,7 @@ if ($w == '' || $w == 'u') {
         $old_email = $member['mb_email'];
     }
 
-    //if ($msg = exist_mb_email($mb_email, $mb_id))   alert($msg, "", true, true);
+    if ($msg = exist_mb_email($mb_email, $mb_id))   alert($msg, "", true, true);
 }
 
 // 사용자 코드 실행
@@ -170,13 +172,13 @@ if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
         $sql_certify .= " , mb_sex = '' ";
     }
 } else {
-    if (get_session("ss_reg_mb_name") != $mb_name || get_session("ss_reg_mb_hp") != $mb_hp) {
-    //    $sql_certify .= " , mb_hp = '{$mb_hp}' ";
-        $sql_certify .= " , mb_certify = '' ";
-        $sql_certify .= " , mb_adult = 0 ";
-        $sql_certify .= " , mb_birth = '' ";
-        $sql_certify .= " , mb_sex = '' ";
-    }
+    //if (get_session("ss_reg_mb_name") != $mb_name || get_session("ss_reg_mb_hp") != $mb_hp) {
+    ////    $sql_certify .= " , mb_hp = '{$mb_hp}' ";
+    //    $sql_certify .= " , mb_certify = '' ";
+    //    $sql_certify .= " , mb_adult = 0 ";
+    //    $sql_certify .= " , mb_birth = '' ";
+    //    $sql_certify .= " , mb_sex = '' ";
+    //}
 }
 //===============================================================
 
@@ -231,6 +233,7 @@ if ($w == '') {
     // 이메일 인증을 사용하지 않는다면 이메일 인증시간을 바로 넣는다
     if (!$config['cf_use_email_certify'])
         $sql .= " , mb_email_certify = '".G5_TIME_YMDHIS."' ";
+
     sql_query($sql);
 
     // 회원가입 포인트 부여

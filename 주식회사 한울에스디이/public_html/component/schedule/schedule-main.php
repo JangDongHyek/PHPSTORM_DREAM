@@ -14,11 +14,11 @@
         <div class="grid grid2">
             <schedule-list></schedule-list>
 
-            <schedule-calendar :project="project"></schedule-calendar>
+            <schedule-calendar :project="project" :schedule="schedule"></schedule-calendar>
 
         </div>
 
-        <schedule-excel-modal :modal="modal" @close="modal = false;"></schedule-excel-modal>
+        <schedule-excel-modal :modal="modal" @close="modal = false;" :project_idx="project_idx"></schedule-excel-modal>
     </div>
 </script>
 
@@ -39,6 +39,7 @@
                     {name : "",message : ""},
                 ],
                 project : {},
+                schedule : [],
 
                 modal : false,
             };
@@ -48,6 +49,7 @@
             this.component_idx = this.jl.generateUniqueId();
 
             this.getProject();
+            this.getSchedule();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -55,6 +57,17 @@
             });
         },
         methods: {
+            async getSchedule() {
+                try {
+                    let filter = {
+                        project_idx : this.project_idx,
+                    }
+                    let res = await this.jl.ajax("get",filter,"/api/project_schedule");
+                    this.schedule = res.data
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             async getProject() {
                 try {
                     let res = await this.jl.ajax("get",this.filter,"/api/project_base");

@@ -5,6 +5,8 @@
             <template v-slot:header>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
                 <h5 class="modal-title">무료 사전장례상담 신청</h5>
+                    <div class="text-center mt10">
+                       {{ tel}} 으로 언제든 편안하게 상담하실 수 있습니다.</div>
             </template>
 
             <!-- body -->
@@ -62,6 +64,7 @@
             modal : {type : Boolean, default : false},
             type : {type : String, default : ""},
             primary : {type : String, default : ""},
+            tel : {type : String, default : ""},
         },
         data: function(){
             return {

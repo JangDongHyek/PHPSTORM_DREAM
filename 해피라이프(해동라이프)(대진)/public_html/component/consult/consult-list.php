@@ -172,34 +172,36 @@
         display: flex;
         align-items: center;
         width: 30%;
+        gap: 5px;
     }
 
     .search-select {
         padding: 5px;
         border: 1px solid #ccc;
-        border-radius: 4px 0 0 4px;
+        border-radius: 4px;
         outline: none;
         height: 40px;
         margin: 0;
+        width: fit-content;
     }
 
     .search-input {
         padding: 5px;
         border: 1px solid #ccc;
-        border-left: none;
-        width: 200px;
-        border-radius: 0;
+        width: fit-content;
+        min-width: 170px;
+        border-radius: 4px;
         outline: none;
         margin-top: 0!important;
+        height: 40px;
     }
 
     .search-button {
         padding: 6px 10px;
         border: 1px solid #ccc;
-        border-left: none;
         background-color: #f8f8f8;
         cursor: pointer;
-        border-radius: 0 4px 4px 0;
+        border-radius: 4px;
         outline: none;
         height: 40px;
     }

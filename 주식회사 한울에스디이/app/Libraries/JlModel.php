@@ -170,6 +170,20 @@ class JlModel extends Jl{
         if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
         if($obj['not_key'] && $obj['not_value']) $this->where($obj['not_key'],$obj['not_value'],"AND NOT");
         if($obj['in_key'] && $obj['in_value']) $this->in($obj['in_key'],$this->jsonDecode($obj['in_value']));
+
+        if($obj['group_like_key'] && $obj['group_like_value']) {
+            $this->groupStart();
+            $this->like($obj['group_like_key'],$obj['group_like_value']);
+            $this->like($obj['group_like_key2'],$obj['group_like_value2'],$obj['group_like_operator2']);
+            $this->groupEnd();
+        }
+
+        if($obj['group_where_key'] && $obj['group_where_value']) {
+            $this->groupStart();
+            $this->where($obj['group_where_key'],$obj['group_where_value']);
+            $this->where($obj['group_where_key2'],$obj['group_where_value2'],$obj['group_where_operator2']);
+            $this->groupEnd();
+        }
     }
 
     function getSchema() {
@@ -285,6 +299,35 @@ class JlModel extends Jl{
         }
 
         return $total_count ? $total_count : 0;
+    }
+
+    function distinct($_param){
+        if(!isset($_param['column'])) $this->error("JlModel distinct() : column 값이 없습니다..");
+        // Summary Query
+        $sql = $this->getSql(array("distinct" => true, "column" => $_param['column']));
+
+        $data = array();
+
+        if($this->mysqli) {
+            $result = mysqli_query($this->connect, $sql);
+            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
+
+            while($row = mysqli_fetch_assoc($result)){
+
+                array_push($data, $row[$_param['column']]);
+            }
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) $this->error(mysql_error());
+
+            while($row = mysql_fetch_assoc($result)){
+                array_push($data, $row[$_param['column']]);
+            }
+        }
+
+
+
+        return $data;
     }
 
     function get($_param = array()) {
@@ -441,7 +484,14 @@ class JlModel extends Jl{
         $other = $source == $this->table ? $this->join_table : $this->table;
         $scope = $_param['count'] ? $source == $this->table ? $this->primary : $this->join_primary : "*";
 
+        $distinct = "";
+
         $select = "";
+
+        if($_param['distinct']) {
+            $scope = $_param['column'];
+            $distinct = "distinct";
+        }
 
         if($_param['select']) {
             if($_param['select'] == "*") {
@@ -459,7 +509,7 @@ class JlModel extends Jl{
             }
         }
 
-        $sql = "SELECT $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
+        $sql = "SELECT $distinct $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
         $sql .= $this->sql;
         $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
         $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : " ORDER BY $this->primary DESC";

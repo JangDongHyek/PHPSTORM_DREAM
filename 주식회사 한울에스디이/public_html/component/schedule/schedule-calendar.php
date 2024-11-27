@@ -17,26 +17,20 @@
 
         </div>
         <div class="gant_cont">
-            <template v-for="date in dates">
+            <template v-for="YM in dates">
                 <div class="column_wrap">
-                    <div class="section_title">101동</div>
-                    <div class="day">
-                        <ul>
-                            <li v-for="item in getDaysInMonth(date)" :class="{'weekend' : isWeekend(date,item)}">
-                                <p>1</p>
-                                <p>2</p>
-                            </li>
-                        </ul>
+                    <template v-for="title in titles">
+                        <div class="section_title">{{title}}</div>
+                        <div class="day">
+                            <ul>
+                                <li v-for="D in getDaysInMonth(YM)" :class="{'weekend' : isWeekend(YM,D)}">
+                                    <p>{{getItem(YM,D,title,'memo')}}</p>
+                                </li>
+                            </ul>
 
-                    </div>
+                        </div>
+                    </template>
 
-                    <div class="section_title">102동</div>
-                    <div class="day">
-                        <ul>
-                            <li v-for="item in getDaysInMonth(date)" :class="{'weekend' : isWeekend(date,item)}"></li>
-                        </ul>
-
-                    </div>
                 </div>
             </template>
 
@@ -48,7 +42,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            project : { type : Object, default : {} }
+            project : { type : Object, default : {} },
+            schedule : { type : Array, default : [] },
         },
         data: function(){
             return {
@@ -64,13 +59,14 @@
                 data : [],
                 modal : false,
                 dates : [],
+                titles : [],
             };
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            //this.getData();
+            this.getTitle();
 
         },
         mounted: function(){
@@ -81,6 +77,34 @@
             });
         },
         methods: {
+            getItem(YM,D,title,key) {
+                D = String(D);
+                let day = D.padStart(2,"0");
+                let date = YM + "-" + day;
+                let data;
+                for(let i =0; i<this.schedule.length; i++) {
+                    let schedule = this.schedule[i];
+
+                    if(schedule.schedule_start_date == date && schedule.group_a == title) data = schedule;
+                }
+
+                if(data) return data[key];
+
+                return '';
+            },
+            async getTitle() {
+                try {
+                    let filter = {
+                        project_idx : this.project.idx,
+                        column : "group_a",
+                        order_by_asc: "group_a",
+                    }
+                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
+                    this.titles = res.data
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             getMonthsBetween(startDate, endDate) {
                 const start = new Date(startDate); // 시작 날짜 객체
                 const end = new Date(endDate); // 끝 날짜 객체
