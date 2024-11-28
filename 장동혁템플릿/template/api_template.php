@@ -149,9 +149,10 @@ try {
             $obj = $models[$table]->jsonDecode($_POST['obj'],false);
             $models[$table]->setFilter($obj);
 
-            $data = $models[$table]->distinct($obj);
+            $object = $models[$table]->distinct($obj);
 
-            $response['data'] = $data;
+            $response['data'] = $object['data'];
+            $response['sql'] = $object['sql'];
             $response['success'] = true;
             break;
 

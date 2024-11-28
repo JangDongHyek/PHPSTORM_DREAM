@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="grid grid2">
-            <schedule-list></schedule-list>
+            <schedule-list :project="project" :schedule="schedule"></schedule-list>
 
             <schedule-calendar :project="project" :schedule="schedule"></schedule-calendar>
 

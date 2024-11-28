@@ -197,7 +197,7 @@ class AdminController extends BaseController {
         if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
         $model->where("CancelStatus","0");
         $model->where("ReturnStatus","0");
-        $model->addSql(" and order_settle_list.BuyDecisonDate <= DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND order_settle_list.BuyDecisonDate != '0000-00-00'");
+        $model->addSql(" and order_settle_list.RemitDate <= DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND order_settle_list.RemitDate != '0000-00-00'");
 
         $day_type = $this->data['day_type'] ? : "OrderDate";
         // 모든 데이터
@@ -226,7 +226,7 @@ class AdminController extends BaseController {
                 "sql" => true,
                 "select" => array(
                     "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","BuyDecisonDate"
+                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate"
                 )
             )
         );
@@ -243,7 +243,7 @@ class AdminController extends BaseController {
         if($this->data['member']['mb_id'] != "lets080" && $this->data['member']['mb_id'] != "admin") $model->where("mb_id",$this->data['member']['mb_id']);
         $model->where("CancelStatus","0");
         $model->where("ReturnStatus","0");
-        $model->addSql(" and order_settle_list.BuyDecisonDate <= DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND order_settle_list.BuyDecisonDate != '0000-00-00'");
+        $model->addSql(" and order_settle_list.RemitDate <= DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND order_settle_list.RemitDate != '0000-00-00'");
 
         if($this->data['start_day'] && $this->data['end_day']) {
             $start_day = $this->data['start_day'];
@@ -277,14 +277,14 @@ class AdminController extends BaseController {
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","BuyDecisonDate"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate"
             )
         ));
         $this->data['search_all_orders'] = $model->get(array(
             "sql" => true,
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","BuyDecisonDate"
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate"
             )
         ));
 

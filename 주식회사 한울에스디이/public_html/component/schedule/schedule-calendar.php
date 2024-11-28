@@ -1,6 +1,6 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <section class="schedule_gant">
+    <section class="schedule_gant" id="gantCont">
         <div class="gant_header">
             <template v-for="date in dates">
                 <div class="period_wrap">
@@ -16,15 +16,15 @@
             </template>
 
         </div>
-        <div class="gant_cont">
+        <div class="gant_cont" >
             <template v-for="YM in dates">
                 <div class="column_wrap">
                     <template v-for="title in titles">
-                        <div class="section_title">{{title}}</div>
+                        <div class="section_title">{{title.group_a}}</div>
                         <div class="day">
                             <ul>
-                                <li v-for="D in getDaysInMonth(YM)" :class="{'weekend' : isWeekend(YM,D)}">
-                                    <p>{{getItem(YM,D,title,'memo')}}</p>
+                                <li v-for="D in getDaysInMonth(YM)" :class="getClass(YM,D,title.group_a)">
+                                    <!--<p>{{getItem(YM,D,title,'memo')}}</p>-->
                                 </li>
                             </ul>
 
@@ -72,11 +72,66 @@
         mounted: function(){
             this.$nextTick(() => {
                 //this.fillDays()
-
+                this.enableDragScroll();
 
             });
         },
         methods: {
+            enableDragScroll() {
+                const gantCont = document.getElementById("gantCont");
+                let isDragging = false;
+                let startX;
+                let scrollLeft;
+
+                // 마우스 누름 이벤트
+                gantCont.addEventListener("mousedown", (e) => {
+                    isDragging = true;
+                    startX = e.pageX - gantCont.offsetLeft;
+                    scrollLeft = gantCont.scrollLeft;
+                    gantCont.style.cursor = "grabbing";
+                });
+
+                // 마우스 이동 이벤트
+                gantCont.addEventListener("mousemove", (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault(); // 기본 동작 방지 (선택 방지)
+                    const x = e.pageX - gantCont.offsetLeft;
+                    const walk = (x - startX); // 움직인 거리 계산
+                    gantCont.scrollLeft = scrollLeft - walk;
+                });
+
+                // 마우스 놓음/나감 이벤트
+                gantCont.addEventListener("mouseup", () => {
+                    isDragging = false;
+                    gantCont.style.cursor = "grab";
+                });
+
+                gantCont.addEventListener("mouseleave", () => {
+                    isDragging = false;
+                    gantCont.style.cursor = "grab";
+                });
+            },
+            getClass(YM,D,title,key) {
+                let day = String(D);
+                day = day.padStart(2,"0");
+                let date = YM + "-" + day;
+                let target_date = new Date(date);
+
+                let data;
+                for(let i =0; i<this.schedule.length; i++) {
+                    let schedule = this.schedule[i];
+                    let start_date = new Date(schedule.schedule_start_date);
+                    let end_date = new Date(schedule.schedule_end_date);
+
+                    if(target_date >= start_date && target_date <= end_date && schedule.group_a == title) data = schedule;
+                }
+
+                if(data) return 'active';
+
+                let weekend = this.isWeekend(YM,D);
+
+                if(weekend) return 'weekend';
+            },
             getItem(YM,D,title,key) {
                 D = String(D);
                 let day = D.padStart(2,"0");

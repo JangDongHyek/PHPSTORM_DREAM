@@ -310,19 +310,19 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
             code_html += '<td>' + AddComma(dl_DelFeeAmt) + '</td>';     // 배송비
             code_html += '<td>-' + AddComma(dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 수수료
-            code_html += '<td>' + AddComma(dl_DelFeeAmt -dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 합계
+            code_html += '<td>' + AddComma(dl_DelFeeAmt - dl_DelFeeCommission + b2p_shipping_fee) + '</td>';   // 배송비 합계
 
             //code_html += '<td>' + AddComma(surTax) + '</td>';     // 부가세 -> B2P 부가세
             //code_html += '<td>' + AddComma(b2p_surTax) + '</td>';     // b2p부가세 -> 셀러 부가세
             //code_html += '<td>' + AddComma(refund) + '</td>';     // 환급금 -> 차액
 
-            code_html += '<td>' + AddComma(SettlementPrice + total_fee) + '</td>';  //정산예정금액
+            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';  //정산예정금액
 
             code_html += '<td>-' + AddComma(KCPServiceFee) + '</td>';    // kcp 수수료
             code_html += '<td>' + AddComma(KCPPayBack) + '</td>'; // kcp 캐시백
             code_html += '<td>' + AddComma(total_fee) + '</td>';    // kcp 합계
             
-            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';  //최종정산예정금액
+            code_html += '<td>' + AddComma(SettlementPrice + total_fee) + '</td>';  //최종정산예정금액
             //code_html += response['body']['Message'] + '<br>';
             code_html += '</tr>';
 
@@ -2101,7 +2101,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             $('#modal_SiteGoodsNo').html(data.SiteGoodsNo);
             $('#modal_OrderNo').html(data.OrderNo);
 
-            if (data.order_b2pAutoCar) {
+            if (data.order_b2pAutoT == 'T' && data.carNo) {
                 $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' + '<br>' + data.GoodsName);
             } else {
                 $('#modal_GoodsName').html(data.GoodsName);
@@ -2200,7 +2200,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             $('#modal_SiteGoodsNo').html(data.SiteGoodsNo);
             $('#modal_OrderNo').html(data.OrderNo);
 
-            if (data.order_b2pAutoCar) {
+            if (data.order_b2pAutoT == 'T' && data.carNo) {
                 $('#modal_GoodsName').html('(' + data.carNo + ',' + data.repairName + ',' + data.carName + ')' + '<br>' + data.GoodsName);
             } else {
                 $('#modal_GoodsName').html(data.GoodsName);
@@ -4631,9 +4631,9 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 <!--                            <th rowspan="2">고객 결제금액</th>-->
                             <th colspan="3">선결제배송비(A 별도 월정산)</th>
                             <th colspan="3" style="display: none">부가세금처리</th>
-                            <th rowspan="2">정산예정금액</th>
+                            <th rowspan="2">정산예정금액(A 배송비 제외)</th>
                             <th colspan="3">KCP수수료</th>
-                            <th rowspan="2">최종정산예정금액</th>
+                            <th rowspan="2">최종정산예정금액(A 배송비 제외)</th>
 
                         </tr>
                         <tr>
@@ -4688,7 +4688,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                     <p style="display: none"><b>셀러 부가세</b> <br><span class="color-blue" id="modal_b2p_surTax_total">0</span>원</p>
                     <p style="display: none"><b>차액</b> <br><span class="color-blue" id="modal_refund_total">0</span>원</p>
                     </div>
-                    <p class="total"><b>정산예정금액</b> <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
+                    <p class="total"><b>정산예정금액(A 배송비 제외)</b> <br><span class="color-blue" id="modal_SettlementPrice_total">0</span>원</p>
                 </div>
             </div>
         </div>

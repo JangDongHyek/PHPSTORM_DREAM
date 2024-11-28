@@ -304,30 +304,32 @@ class JlModel extends Jl{
     function distinct($_param){
         if(!isset($_param['column'])) $this->error("JlModel distinct() : column 값이 없습니다..");
         // Summary Query
+        if($this->isJson($_param['column'])) {
+            $_param['column'] = $this->jsonDecode($_param['column']);
+        }
+
         $sql = $this->getSql(array("distinct" => true, "column" => $_param['column']));
 
         $data = array();
 
         if($this->mysqli) {
             $result = mysqli_query($this->connect, $sql);
+
             if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
 
             while($row = mysqli_fetch_assoc($result)){
-
-                array_push($data, $row[$_param['column']]);
+                array_push($data, $row);
             }
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
             while($row = mysql_fetch_assoc($result)){
-                array_push($data, $row[$_param['column']]);
+                array_push($data, $row);
             }
         }
 
-
-
-        return $data;
+        return array("data" => $data,"sql" => $sql);
     }
 
     function get($_param = array()) {
@@ -485,11 +487,20 @@ class JlModel extends Jl{
         $scope = $_param['count'] ? $source == $this->table ? $this->primary : $this->join_primary : "*";
 
         $distinct = "";
-
         $select = "";
 
         if($_param['distinct']) {
-            $scope = $_param['column'];
+            if (is_string($_param['column'])) {
+                $scope = $_param['column'];
+            }
+
+            if (is_array($_param['column'])) {
+                $scope = "";
+                foreach($_param['column'] as $d) {
+                    if($scope != "") $scope .= ", ".$source.".";
+                    $scope .= $d;
+                }
+            }
             $distinct = "distinct";
         }
 

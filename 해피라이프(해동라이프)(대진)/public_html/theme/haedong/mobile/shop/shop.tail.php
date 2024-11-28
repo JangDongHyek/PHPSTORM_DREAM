@@ -229,14 +229,14 @@ $(document).ready(function(){
 
 	<? if(defined('_INDEX_')) {?>
 <a href="#" id="ft_to_top">TOP</a>
-<a href="tel:18338881" id="ft_to_call"><i class="fas fa-phone"></i></a>
+<a href="tel:<?=str_replace("-","",$info['phone_number'])?>" id="ft_to_call"><i class="fas fa-phone"></i></a>
 <a href="mailto:Happylife00@happylife1004.shop" id="ft_to_mail"><i class="fas fa-envelope"></i></a>
 
     <? }else if($pid == "benepia" || $pid == "benecafe"){ ?>
     
     <? }else { ?>
 <a href="#" id="ft_to_top">TOP</a>
-<a href="tel:18338881" id="ft_to_call"><i class="fas fa-phone"></i></a>
+<a href="tel:<?=$info['phone_number']?>" id="ft_to_call"><i class="fas fa-phone"></i></a>
 <a href="mailto:Happylife00@happylife1004.shop" id="ft_to_mail"><i class="fas fa-envelope"></i></a>
     
     <? } ?> 

@@ -104,7 +104,7 @@ function totalOrderKey($objects,$key,$info) {
                                     <select class="border_gray" id="day_type" name="day_type">
                                         <option value="OrderDate" <? if($this->data['day_type'] == 'OrderDate') echo 'selected' ?> >주문일</option>
 <!--                                        <option value="D3">매출기준일</option>-->
-                                        <option value="BuyDecisonDate" <? if($this->data['day_type'] == 'BuyDecisonDate') echo 'selected' ?> >구매결정일</option>
+                                        <option value="RemitDate" <? if($this->data['day_type'] == 'RemitDate') echo 'selected' ?> >정산일자</option>
 <!--                                        <option value="D4">환불일</option>-->
 <!--                                        <option value="D6">정산완료일</option>-->
                                     </select>
@@ -196,7 +196,7 @@ function totalOrderKey($objects,$key,$info) {
                 <tr>
                     <th>No.</th>
                     <th>판매일자</th>
-                    <th>구매결정일자</th>
+                    <th>정산일자</th>
                     <th>구분</th>
                     <th>판매자코드/거래처명</th>
                     <?php if($this->data['member']['mb_id'] == 'lets080' || $this->data['member']['mb_id'] == 'admin') {?>
@@ -215,7 +215,7 @@ function totalOrderKey($objects,$key,$info) {
 
                     <td><?=$data['data_page_no']?></td>
                     <td><?=$data['OrderDate']?></td>
-                    <td><?=$data['BuyDecisonDate']?></td>
+                    <td><?=explode(" ",$data['RemitDate'])[0]?></td>
                     <td>
                         <div class="box__flag box__flag--<?=$data['SiteType'] == "1" ? "auction" : "gmarket" ?>"></div>
                     </td>
@@ -258,7 +258,7 @@ function totalOrderKey($objects,$key,$info) {
                 <?php if(false){?>
                 <th>부가세</th>
                 <?php } ?>
-                <th>최종정산금액</th>
+                <th>최종정산금액(A 배송비 제외)</th>
             </tr>
             </thead>
             <tbody>
@@ -271,7 +271,7 @@ function totalOrderKey($objects,$key,$info) {
                     <td>카드결제</td>
                     <td class="text_right"><?=number_format($order['b2p']['OrderAmount'])?>원</td>
                     <td class="text_right"><?=number_format($order['b2p']['category_fee_cost'])?>원</td>
-                    <td class="text_right"><?=number_format($order['OrderAmount']  - $order['b2p']['category_fee_cost'])?>원</td>
+                    <td class="text_right"><?=number_format($order['b2p']['OrderAmount']  - $order['b2p']['category_fee_cost'])?>원</td>
                     <td class="text_right">
                         <details>
                             <summary>총 <?=number_format($order['b2p']['totalDiscount'])?>원</summary>

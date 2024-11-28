@@ -497,6 +497,7 @@ function processOrder($order) {
     $dl_DelFeeAmt = $order['ShippingFee'];
     $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
     $b2p_shipping_fee = $dl_DelFeeAmt * 0;
+    $dl_DelTotal = floor($dl_DelFeeAmt - $dl_DelFeeCommission - $b2p_shipping_fee);
 
     // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
     if($order['SiteType'] == 1) {
@@ -518,9 +519,13 @@ function processOrder($order) {
 
     $totalCommission = $category_fee_cost + $totalDiscount + $dl_DelFeeCommission + $b2p_shipping_fee;
 
-    $calcPrice = ($OrderAmount + ($dl_DelFeeAmt - $dl_DelFeeCommission - $b2p_shipping_fee));
+    $calcPrice = $OrderAmount;
     $calcPrice -= $category_fee_cost;
     $calcPrice -= $totalDiscount;
+    // 옥션이 아니라면 정산금액에 배송비 포함
+    if($order['SiteType'] == 2) {
+        $calcPrice += $dl_DelTotal;
+    }
 
     //kcp 카드 수수료 , 카드 캐시백
     $b2p_kcp_price = floor($calcPrice * ($b2p_kcp_fee / 100));

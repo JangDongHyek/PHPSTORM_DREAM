@@ -76,6 +76,26 @@ class Jl {
         return $str;
     }
 
+    //해당 문자열이 jsonDecode가 가능하면 true를 반환
+    function isJson($string) {
+        // 정규식 패턴 정의
+        $pattern = '/^\s*(\{.*\}|\[.*\])\s*$/';
+
+        // 문자열이 비어있으면 false
+        if (empty($string)) {
+            return false;
+        }
+
+        // 정규식 검사
+        if (!preg_match($pattern, $string)) {
+            return false;
+        }
+
+        // json_decode로 실제 JSON 유효성 확인
+        json_decode($string);
+        return (json_last_error() === JSON_ERROR_NONE);
+    }
+
     function jsonEncode($data) {
         if($this->isVersion()) return json_encode($data,JSON_UNESCAPED_UNICODE);
         else return $this->decodeUnicode(json_encode($data));

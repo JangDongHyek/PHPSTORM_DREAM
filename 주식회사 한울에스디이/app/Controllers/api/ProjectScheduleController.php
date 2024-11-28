@@ -192,12 +192,14 @@ class ProjectScheduleController extends BaseController
         $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
 
         $this->models[$this->table]->setFilter($obj);
-        
+
         //$obj['column'] 값으로 가져옴
         $data = $this->models[$this->table]->distinct($obj);
 
         $this->jl_response['success'] = true;
-        $this->jl_response['data'] = $data;
+        $this->jl_response['data'] = $data['data'];
+        $this->jl_response['sql'] = $data['sql'];
+        $this->jl_response['obj'] = $obj;
         echo json_encode($this->jl_response);
     }
 
