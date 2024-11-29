@@ -102,7 +102,9 @@ class Jl {
     }
 
     function jsonDecode($origin_json,$encode = true) {
-        $str_json = stripslashes($origin_json);
+        $str_json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
+        $str_json = stripslashes($str_json);
+        $str_json = str_replace('###NEWLINE###', '\\n', $str_json);
 
         $obj = json_decode($str_json, true);
 

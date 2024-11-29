@@ -12,162 +12,46 @@
         </div>
         <template v-for="category,index in categoriesA">
             <div class="section_title" @click="toggleContent(index)">
-                <i class="fa-solid fa-caret-down"></i> {{category.category_a}}
+                <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !visibleContents[index]}"></i> {{category.category_a}}
             </div>
-            <div class="section_content" v-show="visibleContents[index]" v-for="group in groups">
+            <div class="section_content" v-show="visibleContents[index]" v-for="group,index2 in groups">
                 <div class="task_content_dl">
-                    <div class="zone_title">
-                        {{group.group_a}} [{{group.group_b}}] {{group.group_c}}
+                    <div class="zone_title" @click="toggleContent2(index2)">
+                        <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !visibleContents2[index2]}"></i> {{group.group_a}} [{{group.group_b}}] {{group.group_c}}
                     </div>
-                    <dl class="dropdown_dl">
-                        <dt class="colgroup">
-                            <div class="border task_title"><i class="fa-light fa-angle-down"></i> 거푸집</div>
-                            <div class="border"><input class="inputPm" type="text" name="" id="" placeholder="담당자 지정" value="김설주" data-toggle="modal" data-target="#pmSearchModal"/></div>
-                            <div class="border">
-                                <select class="statusSelect blue">
-                                    <option value="gray">예정</option>
-                                    <option value="green">진행</option>
-                                    <option value="blue" selected>완료</option>
-                                    <option value="black">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                        </dt>
-                        <dd class="colgroup">
-                            <div class="border task_item">현장 준비 및 기초 작업</div>
+                    <dl class="dropdown_dl" v-show="visibleContents2[index2]">
+                        <!--<dt class="colgroup">-->
+                        <!--    <div class="border task_title"><i class="fa-light fa-angle-down"></i> 거푸집</div>-->
+                        <!--    <div class="border"><input class="inputPm" type="text" name="" id="" placeholder="담당자 지정" value="김설주" data-toggle="modal" data-target="#pmSearchModal"/></div>-->
+                        <!--    <div class="border">-->
+                        <!--        <select class="statusSelect blue">-->
+                        <!--            <option value="gray">예정</option>-->
+                        <!--            <option value="green">진행</option>-->
+                        <!--            <option value="blue" selected>완료</option>-->
+                        <!--            <option value="black">보류</option>-->
+                        <!--        </select>-->
+                        <!--    </div>-->
+                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
+                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
+                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
+                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
+                        <!--</dt>-->
+                        <dd class="colgroup" v-for="item in schedule" v-if="checkGroup(group,item)">
+                            <div class="border task_item"><span style="font-weight: bold; font-size: 15px;">{{item.category_b}}</span>  {{item.content}}</div>
                             <div class="border"></div>
                             <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray">예정</option>
-                                    <option value="green">진행</option>
-                                    <option value="blue" selected>완료</option>
-                                    <option value="black">보류</option>
+                                <select class="statusSelect" :class="getClass(item)" v-model="item.status">
+                                    <option value="">예정</option>
+                                    <option value="진행">진행</option>
+                                    <option value="완료">완료</option>
+                                    <option value="보류">보류</option>
                                 </select>
                             </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
+                            <div class="border"><input type="text" class="datePicker" v-model="item.schedule_start_date" placeholder="-"/></div>
+                            <div class="border"><input type="text" class="datePicker" v-model="item.schedule_end_date" placeholder="-"/></div>
+                            <div class="border"><input type="text" class="datePicker" v-model="item.start_date" placeholder="-"/></div>
+                            <div class="border"><input type="text" class="datePicker" v-model="item.end_date" placeholder="-"/></div>
                         </dd>
-                        <dd class="colgroup">
-                            <div class="border task_item">거푸집 설치 및 보강</div>
-                            <div class="border"></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray">예정</option>
-                                    <option value="green">진행</option>
-                                    <option value="blue" selected>완료</option>
-                                    <option value="black">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                        </dd>
-                        <dd class="colgroup">
-                            <div class="border task_item">관통부 및 매립물 설치</div>
-                            <div class="border"></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray">예정</option>
-                                    <option value="green">진행</option>
-                                    <option value="blue" selected>완료</option>
-                                    <option value="black">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                        </dd>
-                    </dl>
-                    <dl class="dropdown_dl">
-                        <dt class="colgroup">
-                            <div class="border task_title"><i class="fa-light fa-angle-down"></i> 철근</div>
-                            <div class="border"><input class="inputPm" type="text" name="" id="" placeholder="담당자 지정" value="조민석" data-toggle="modal" data-target="#pmSearchModal"/></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray">예정</option>
-                                    <option value="green" selected>진행</option>
-                                    <option value="blue">완료</option>
-                                    <option value="black">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                        </dt>
-                        <dd class="colgroup">
-                            <div class="border task_item">철근 배치 및 체크</div>
-                            <div class="border"></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray">예정</option>
-                                    <option value="green" selected>진행</option>
-                                    <option value="blue">완료</option>
-                                    <option value="black">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                        </dd>
-                        <dd class="colgroup">
-                            <div class="border task_item">철근 연결 및 보강</div>
-                            <div class="border"></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray" selected>예정</option>
-                                    <option value="green">진행</option>
-                                    <option value="blue">완료</option>
-                                    <option value="black">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                        </dd>
-                        <dd class="colgroup">
-                            <div class="border task_item">철근 검수 및 조정</div>
-                            <div class="border"></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray" selected>예정</option>
-                                    <option value="green">진행</option>
-                                    <option value="blue">완료</option>
-                                    <option value="black">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                        </dd>
-                    </dl>
-                    <dl class="dropdown_dl">
-                        <dt class="colgroup">
-                            <div class="border task_title"><i class="fa-light fa-angle-right"></i> 레미콘</div>
-                            <div class="border"><input class="inputPm" type="text" name="" id="" placeholder="담당자 지정" value="" data-toggle="modal" data-target="#pmSearchModal"/></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="gray">예정</option>
-                                    <option value="green">진행</option>
-                                    <option value="blue">완료</option>
-                                    <option value="black" selected>보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" name="" id="" value="" placeholder="-"/></div>
-                        </dt>
                     </dl>
                 </div>
             </div>
@@ -200,7 +84,8 @@
                 categoriesA : [],
                 groups : [],
 
-                visibleContents : []
+                visibleContents : [],
+                visibleContents2 : []
             };
         },
         created: function(){
@@ -216,6 +101,20 @@
             });
         },
         methods: {
+            getClass(item) {
+                if(item.status == '') return 'gray'
+                if(item.status == '진행') return 'green'
+                if(item.status == '완료') return 'blue'
+                if(item.status == '보류') return 'black'
+            },
+            checkGroup(group,item) {
+                if(group.group_a == item.group_a && group.group_b == item.group_b && group.group_c == item.group_c) return true
+                return false;
+            },
+            toggleContent2(index) {
+                // 클릭한 항목의 가시성 상태를 토글
+                this.$set(this.visibleContents2, index, !this.visibleContents2[index]);
+            },
             toggleContent(index) {
                 // 클릭한 항목의 가시성 상태를 토글
                 this.$set(this.visibleContents, index, !this.visibleContents[index]);
@@ -229,6 +128,8 @@
                     }
                     let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
                     this.groups = res.data
+
+                    this.visibleContents2 = this.groups.map(() => true);
                 }catch (e) {
                     alert(e.message)
                 }

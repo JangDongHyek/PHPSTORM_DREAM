@@ -55,6 +55,11 @@
                         <button class="delete-button" aria-label="삭제" @click="deleteData(item)">
                             <i class="far fa-trash-alt"></i>
                         </button>
+
+                        <button class="delete-button" aria-label="수정" @click="modal_idx = item.idx; modal = true">
+                            <i class="far fa-edit"></i>
+                        </button>
+
                     </td>
                 </tr>
                 </tbody>
@@ -63,8 +68,8 @@
 
             <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
 
-            <slot-modal v-if="modal" @close="modal = false;">
-                <consult-input></consult-input>
+            <slot-modal v-if="modal" @close="modal = false; modal_idx = '';">
+                <consult-input :primary="modal_idx"></consult-input>
             </slot-modal>
         </div>
     </div>
@@ -98,6 +103,7 @@
 
 
                 modal : false,
+                modal_idx : ""
             };
         },
         created: function(){

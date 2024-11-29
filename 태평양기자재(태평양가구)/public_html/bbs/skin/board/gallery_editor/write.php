@@ -73,8 +73,54 @@
 include_once('./editor/func_editor.php');
 $content = "$rg_content";
 ?>
+<script src="../bbs/editor/easyEditor.js"></script>
+<script>
+    function chkForm(f)
+    {
+
+        var rg_content = ed.getHtml(); //대체한 textarea에 작성한HTML값 전달
+
+        if(rg_content=="")
+        {
+            alert("내용을 적어주세요!");
+            ed.focus();
+            return false;
+        }
+        //금지 단어 방지 스크립트
+        var obj_Deny=document.getElementById("bbs_deny_word").value;
+        var obj_Title=document.getElementById("rg_title").value;
+        var obj_Content=document.getElementById("rg_content").innerHTML;
+        var obj_DenyArr=obj_Deny.split(",");
+        if(obj_Deny){
+            for(var i=0;i<obj_DenyArr.length;i++){
+                var chk1=obj_Title.match(obj_DenyArr[i].toString());
+                var chk2=obj_Content.match(obj_DenyArr[i].toString());
+
+                if(chk1==obj_DenyArr[i]){
+                    alert("제목에 "+chk1+"는(은) 사용할 수 없는 단어입니다.");
+                    return false;
+                    break;
+                }
+                if(chk2==obj_DenyArr[i]){
+                    alert("내용에 "+chk2+"는(은) 사용할 수 없는 단어입니다.");
+                    return false;
+                    break;
+                }
+            }
+        }
+        var rg_spam1=document.getElementById("rg_spam1").value;
+        if(rg_spam1){
+            var rg_spam2=document.getElementById("rg_spam2").value;
+            if(rg_spam1!=rg_spam2){
+                alert("스팸방지 번호가 맞지 않습니다.");
+                return false;
+            }
+        }
+
+    }
+</script>
 <TABLE cellSpacing=0 cellPadding=0 width="<?=$width?>"  border=0>
-<form name=form_write method=post action='<?=$u_action?>' enctype='multipart/form-data' onSubmit="return editor_wr_ok();">
+<form name=form_write method=post action='<?=$u_action?>' enctype='multipart/form-data' onSubmit="return chkForm();">
 <input type=hidden name=act value='ok'>
 <input type=hidden name=old_password value='<?=$old_password?>'>
 <TR>
@@ -220,10 +266,9 @@ $content = "$rg_content";
 			<TD height="50">
 				<TABLE width="100%" height="100" border="0" cellPadding=1 cellSpacing=1 bordercolor="#ffffff">
 					<TR> 
-						<TD width=131 align=right bgColor=#fafafa class="bbs" onclick="document.form_write.rg_content.rows=document.form_write.rg_content.rows+2" style=cursor:hand>* 내용 ▼<B>&nbsp;</B></TD>
-						<TD align=left height="100" bgcolor="#fafafa"> 
-						<?=myEditor(1,'./editor','form_write','rg_content','100%','200');?>
-						</TD>
+						<TD width=131 align=right bgColor=#fafafa class="bbs" onclick="document.form_write.rg_content.rows=document.form_write.rg_content.rows+2" style=cursor:hand>* 내2용 ▼<B>&nbsp;</B></TD>
+                        <TD align=left height="100" bgcolor="#fafafa"><textarea name="rg_content" id="rg_content"><?=$rg_content?>
+						</textarea></TD>
 					</TR>
 				</TABLE>
 			</TD>
@@ -392,6 +437,10 @@ $content = "$rg_content";
 	</TD>
 </TR>
 </form>
+    <script>
+        var ed = new easyEditor("rg_content"); //초기화 id속성값
+        ed.init(); //웹에디터 삽입
+    </script>
 </TABLE>
 <br>
 <br>

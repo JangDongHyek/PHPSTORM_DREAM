@@ -82,9 +82,15 @@ class Jl {
                     let req = options.required[i];
                     if(req.name == "") continue;
 
-                    if(object[req.name].trim() == "") {
-                        reject(new Error(req.message));
-                        return false;
+                    if(typeof object[req.name] === "string") {
+                        if(object[req.name].trim() == "") {
+                            reject(new Error(req.message));
+                            return false;
+                        }
+                    }
+
+                    if(typeof object[req.name] === "number") {
+
                     }
                 }
             }

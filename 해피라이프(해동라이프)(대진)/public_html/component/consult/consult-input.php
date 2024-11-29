@@ -66,7 +66,7 @@
                 data : {
                     type : "",
                     name : "",
-                    phone : ["","",""],
+                    phone : ["010","",""],
                     company : "",
                     content : ""
                 },
@@ -93,6 +93,7 @@
                 }
 
                 let data = this.jl.copyObject(this.data);
+                console.log(data);
                 data.phone = data.phone.join("-");
                 try {
                     let res = await this.jl.ajax(method,data,"/api/consult.php",options);
@@ -108,8 +109,10 @@
                 let filter = {primary: this.primary}
 
                 try {
-                    let res = this.jl.ajax("get",filter,"/api/example.php");
+                    let res = await this.jl.ajax("get",filter,"/api/consult.php");
+                    res.data[0].phone = res.data[0].phone.split("-");
                     this.data = res.data[0]
+
                 }catch (e) {
                     alert(e.message)
                 }

@@ -61,6 +61,7 @@
                 try {
                     let filter = {
                         project_idx : this.project_idx,
+                        order_by_asc : "schedule_start_date"
                     }
                     let res = await this.jl.ajax("get",filter,"/api/project_schedule");
                     this.schedule = res.data

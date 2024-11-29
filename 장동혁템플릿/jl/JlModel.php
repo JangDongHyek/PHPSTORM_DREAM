@@ -247,6 +247,13 @@ class JlModel extends Jl{
                     else continue;
                 }
             }
+            if($info['DATA_TYPE'] == "date") {
+                if($value == '') {
+                    if($info['IS_NULLABLE'] == "NO") $value = '0000-00-00';
+                    else continue;
+                }
+            }
+
             if($column == 'insert_date') $value = 'now()';
 
             if(!empty($columns)) $columns .= ", ";

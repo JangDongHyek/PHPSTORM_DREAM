@@ -55,6 +55,10 @@
                         <button class="delete-button" aria-label="삭제" @click="deleteData(item)">
                             <i class="far fa-trash-alt"></i>
                         </button>
+
+                        <button class="delete-button" aria-label="수정" @click="modal_idx = item.idx; modal = true">
+                            <i class="far fa-edit"></i>
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -62,8 +66,8 @@
 
             <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
 
-            <slot-modal v-if="modal" @close="modal = false;">
-                <use-input></use-input>
+            <slot-modal v-if="modal" @close="modal = false; modal_idx = '';">
+                <use-input :primary="modal_idx"></use-input>
             </slot-modal>
         </div>
     </div>
@@ -97,6 +101,7 @@
 
 
                 modal : false,
+                modal_idx : "",
             };
         },
         created: function(){
@@ -161,34 +166,36 @@
         display: flex;
         align-items: center;
         width: 30%;
+        gap: 5px;
     }
 
     .search-select {
         padding: 5px;
         border: 1px solid #ccc;
-        border-radius: 4px 0 0 4px;
+        border-radius: 4px;
         outline: none;
         height: 40px;
         margin: 0;
+        width: fit-content;
     }
 
     .search-input {
         padding: 5px;
         border: 1px solid #ccc;
-        border-left: none;
-        width: 200px;
-        border-radius: 0;
+        width: fit-content;
+        min-width: 170px;
+        border-radius: 4px;
         outline: none;
         margin-top: 0!important;
+        height: 40px;
     }
 
     .search-button {
         padding: 6px 10px;
         border: 1px solid #ccc;
-        border-left: none;
         background-color: #f8f8f8;
         cursor: pointer;
-        border-radius: 0 4px 4px 0;
+        border-radius: 4px;
         outline: none;
         height: 40px;
     }

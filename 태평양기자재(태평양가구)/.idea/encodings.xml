@@ -3,9 +3,11 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/public_html/bbs/admin/login.php" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/data/db.inc.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/editor/easyEditor.js" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/editor/editor.htm" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/editor/func_editor.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/editor/gmEditor.js" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/editor/upload_image.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/include/bbs.lib.inc.php" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/include/config.inc.php" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/include/func.inc.php" charset="EUC-KR" />

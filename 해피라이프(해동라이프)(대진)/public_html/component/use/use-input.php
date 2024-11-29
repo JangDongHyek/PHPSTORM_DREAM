@@ -66,7 +66,7 @@
                 data : {
                     type : "",
                     name : "",
-                    phone : ["","",""],
+                    phone : ["010","",""],
                     company : "",
                     content : ""
                 },
@@ -103,6 +103,18 @@
                     alert(e.message)
                 }
 
+            },
+            getData: async function () {
+                let filter = {primary: this.primary}
+
+                try {
+                    let res = await this.jl.ajax("get",filter,"/api/use.php");
+                    res.data[0].phone = res.data[0].phone.split("-");
+                    this.data = res.data[0]
+
+                }catch (e) {
+                    alert(e.message)
+                }
             }
         },
         computed: {
