@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="16626267-264c-43eb-9d75-4b545ec3f5c0" name="제이앤지케이(JNGK)-드림포원-단독서버" url="http://14.48.175.177">
+        <fileTransfer host="14.48.175.177" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
