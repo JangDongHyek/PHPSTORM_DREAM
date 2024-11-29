@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/public_html/bbs/admin/login.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/data/db.inc.php" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/editor/editor.htm" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/editor/func_editor.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/editor/gmEditor.js" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/include/bbs.lib.inc.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/include/config.inc.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/include/func.inc.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/include/lib.inc.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/include/mysql.inc.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/mb_login.php" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/skin/board/gallery_editor/write.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/write.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/index.htm" charset="EUC-KR" />
   </component>
 </project>

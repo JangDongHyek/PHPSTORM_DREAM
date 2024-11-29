@@ -121,29 +121,82 @@ $data = getDispatchInfo($dispatch_idx);
         </div>
     </div>
     <? if($jl->DEV) {?>
-        <p>일련번호 : <?=$new_data['product_pk']?> </p>
-        <p>용차공통 : ?? </p>
+        <div class="recipt2">
+            <h1>인수증</h1>
 
-        <h1>공급자</h1>
-        <p>등록번호 : <?=$client['mb_company_number']?> </p>
-        <p>상호 : <?=$client['mb_company_name']?> </p>
-        <p>주소 : <?=$client['mb_addr']?> <?=$client['mb_addr_detail']?> <?=$client['mb_zip_code']?> </p>
-        <p>성명 : <?=$client['mb_name']?> </p>
+            <div class="sign">
+                <h2>인수자 서명</h2>
+                <div class="img">
+                    <img src="<?=getSignPadUrl($dispatch_idx)?>">
+                </div>
+            </div>
 
-        <h1>공급받는자</h1>
-        <p>등록번호 : <?=$customer['mb_company_number']?> </p>
-        <p>상호 : <?=$customer['mb_company_name']?> </p>
-        <p>주소 : <?=$customer['mb_addr']?> <?=$customer['mb_addr_detail']?> <?=$customer['mb_zip_code']?> </p>
-        <p>성명 : <?=$customer['mb_name']?> </p>
+            <!--<div class="flex ai-c jc-sb">-->
+            <!--    <p>일련번호 : --><?//=$new_data['product_pk']?><!--</p>-->
+            <!--    <p>용차공통 : ??</p>-->
+            <!--</div>-->
+            <div class="table">
+            <table width="100%" border="1">
+                <tbody>
+                <tr>
+                    <th rowspan="3" class="vertical">공급자</th>
+                    <th>등록번호</th>
+                    <td colspan="3"><?=$client['mb_company_number']?></td>
+                    <th rowspan="3" class="vertical">공급받는자</th>
+                    <th>등록번호</th>
+                    <td colspan="3"><?=$customer['mb_company_number']?></td>
+                </tr>
+                <tr>
+                    <th>상호</th>
+                    <td><?=$client['mb_company_name']?></td>
+                    <th>성명</th>
+                    <td><?=$client['mb_name']?></td>
+                    <th>상호</th>
+                    <td><?=$customer['mb_company_name']?></td>
+                    <th>성명</th>
+                    <td><?=$customer['mb_name']?></td>
+                </tr>
+                <tr>
+                    <th>주소</th>
+                    <td colspan="3"><?=$client['mb_addr']?> <?=$client['mb_addr_detail']?> <?=$client['mb_zip_code']?></td>
+                    <th>주소</th>
+                    <td colspan="3"><?=$customer['mb_addr']?> <?=$customer['mb_addr_detail']?> <?=$customer['mb_zip_code']?></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
 
-        <h1>명세내역</h1>
-        <div>
-            <? foreach($new_data['product_full_string'] as $p) {?>
-            <p>년월일 : <?=$p['WADAT']?></p>
-            <p>품목 : <?=$p['MAKTX']?></p>
-            <p>규격 : EA</p>
-            <p>수량 : <?=$p['LFIMG']?></p>
-            <?}?>
+            <h2>명세내역</h2>
+            <div class="table">
+            <table width="100%" border="1">
+                <thead>
+                <tr>
+                    <th>년월일</th>
+                    <th>품목</th>
+                    <th>규격</th>
+                    <th>수량</th>
+                </tr>
+                </thead>
+                <tbody>
+                <? foreach($new_data['product_full_string'] as $p) {?>
+                <tr>
+                    <td><?=$p['WADAT']?></td>
+                    <td><?=$p['MAKTX']?></td>
+                    <td>EA</td>
+                    <td><?=$p['LFIMG']?></td>
+                </tr>
+                <?}?>
+                </tbody>
+            </table>
+            </div>
+
+            <button class="btn" onclick="printPage()">출력</button>
+
+            <script>
+                function printPage() {
+                    window.print();
+                }
+            </script>
         </div>
     <? }?>
 </div>
