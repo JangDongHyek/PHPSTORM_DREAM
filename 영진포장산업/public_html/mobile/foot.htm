@@ -1,0 +1,109 @@
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="css/m_style.css" />
+        <div id="footer">
+       		 <div class="call_banner"><img src="../mobile/images/call_banner.gif"></div><!--.call_banner-->
+        <? if($mobile_app != 1) { ?>
+			<div class="menu">
+				<dl>
+					<dd><? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?><a href="../bbs/mb_logout.php?url=../mobile/">로그아웃</a><? } else{ //로그아웃 상태일때 ?><a href="../bbs/mobile_mb_login.php?url=../mobile/">로그인</a><? } ?></dd>
+					<dd><a href="tel:0519419370">전화하기 </a></dd>
+<!--					<dd><a href="sms:01095007757">문자전송 </a></dd>
+-->                <dd style="border:0px;" class="last"><a href="../main/start.htm" target="_blank">PC버전 </a></dd>				
+                </dl>
+            </div><!--.menu-->
+         <?}?>
+            <div class="copy">
+			  <p>영진수출포장 | 부산시 강서구 과학산단 2로 19번길 100-68 <br>Tel : 051-941-9370 | Fax : 051-941-9372<br>사업자등록번호 : 606-10-63383 | 대표자명 : 엄장영</p>
+			</div><!--.copy-->
+			<div class="copyright">copyright(c)2007. All rights reserved.</div>
+		</div><!--.footer-->
+
+
+<?
+/****************************************** 하단배너관리 STR ******************************************/
+
+if($mobile_app != 1){	// 앱이 아닐 경우 하단배너광고 체크
+	$files = @file("../bbs/data/db.inc.php");
+	if(trim($files[4]) != ""){	// 계정명 파일의 4번째줄 값이 공백이 아닐때
+		$ad_id = trim($files[4]);	// 계정명값
+
+		$check_connection = mysql_connect("211.51.221.181","ktlove004","kt8910088");
+		mysql_select_db("ktlove004", $check_connection);
+		
+		// 계정값이 같은 업체리스트를 불러옴
+		$check_sql = "select * from manager where banner_ad='use' and banner_ad_info='$ad_id' limit 0,1";
+		$check_qry = mysql_query($check_sql,$check_connection);
+		$check_num = mysql_num_rows($check_qry);
+		if($check_num > 0){	// 하단배너광고 사용할때
+			$now_ad_date = date("Y-m-d");	// 시작일 , 종료일 조건값(현재날짜)
+			if(number_format(date("H")) >= 0 && number_format(date("H")) < 12){	// 현재시간이 오전일때
+				$ad_time = 1;
+			}else{	// 현재시간이 오후일때
+				$ad_time = 2;
+			}
+			$AdInfo_sql = "select * from AdInfo where visible='1' and startdate<='$now_ad_date' and enddate>='$now_ad_date' and (time='0' || time='$ad_time') order by rand()";
+			$AdInfo_qry = mysql_query($AdInfo_sql,$check_connection);
+			$AdInfo_num = mysql_num_rows($AdInfo_qry);
+			if($AdInfo_num > 0){
+?>
+<style type="text/css">
+li	{display:block;}
+</style>
+<script src="http://manager.lets080.co.kr/jquery.min.js"></script>
+<script src="http://manager.lets080.co.kr/jquery.bxslider.js"></script>
+<div style="width:100%;line-height:50px; height:50px;">&nbsp;</div>
+<div style="margin:0px; padding:0px 0px 0px 0px; position:fixed; bottom:0px; left:0px; width:100%;">
+	<center>
+	<div id="banner" style="width:300px; height:50px; text-align:center; overflow:hidden;">
+	<ul id="bxslider" style="margin:0px; padding:0px 0px 0px 0px; height:50px; list-style:none; position:relative;">
+<?
+				for($AdInfoi==0; $AdInfoi<$AdInfo_num; $AdInfoi++){
+					$AdInfo_row = mysql_fetch_array($AdInfo_qry);
+					//$AdImg_arr[$AdInfoi] = $AdInfo_row[image];
+					//$AdLink_arr[$AdInfoi] = $AdInfo_row[link];
+?>
+		<li style="margin:0px; padding:0px 0px 0px 0px; list-style:none; width:300px; height:50px; float:none; position:relative;"><a href="<?=$AdInfo_row[link]?>" target="_blank"><img src="http://manager.lets080.co.kr/ad/<?=$AdInfo_row[image]?>" width="100%" border=0></img></a></li>
+<?
+				}
+?>
+	</ul>
+	</div>
+	</center>
+</div>
+<script>
+$("#bxslider").bxSlider({
+  mode: 'vertical',
+  slideMargin: 0,	// 슬라이드 사이 (margin 0 = 기본)
+  useCSS: false,
+  touchEnabled: false,	// 터치사용 (false = 사용안함)
+  pager: false,
+  controls: false,
+  speed: 1000,	// 슬라이드시간 (1000 = 1초)
+  pause: 5000,	// 대기시간 (1000 = 1초)
+  auto: true,
+  autoControls: false
+});
+
+/*
+var ad_count = <?=count($AdImg_arr)?>;
+var now_count = 0;
+
+function ad_rolling(){
+	if(now_count < ad_count){
+		now_count++;
+	}else{
+		now_count = 0;
+	}
+}
+*/
+
+//var ad_timer = setInterval(ad_rolling,5000);
+</script>
+<?
+			}
+		}
+	}
+}
+
+/****************************************** 하단배너관리 END ******************************************/
+?>
