@@ -8,14 +8,17 @@
 
             <!-- body -->
             <template v-slot:default>
-                <div>
-                    <input type="file" @change="jl.changeFile($event,data,'upfile')">
+                <div class="flex ai-c">
+                    <label class="btn btn_mini btn_line" for="file_btn">파일 선택</label>&nbsp;
+                    <span class="file_info" v-if="data.upfile">{{data.upfile.name}}</span>
+                    <span class="file_info" v-else>선택된 파일 없음</span>
                 </div>
+                <input type="file" v-show="false" id="file_btn" @change="jl.changeFile($event, data, 'upfile')">
             </template>
 
 
             <template v-slot:footer>
-                <button @click="postData()">업로드</button>
+                <button class="btn btn-primary" @click="postData()">업로드</button>
             </template>
         </item-bs-modal>
     </div>

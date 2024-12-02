@@ -33,7 +33,7 @@ class ProjectScheduleController extends BaseController
             $this->file = new JlFile("/jl/jl_resource/{$this->table}");
         }
 
-        //array_push($this->get_tables,array("table"=> "user", "get_key" => "user_idx" ));
+        array_push($this->get_tables,array("table"=> "user", "get_key" => "user_idx" ));
     }
 
     public function method() {
@@ -108,12 +108,15 @@ class ProjectScheduleController extends BaseController
                 "table" => $info['table'],
             ));
 
+
+
             foreach ($object["data"] as $index => $data) {
+                if(!$data[$info['get_key']]) continue;
                 $joinModel->where($joinModel->primary, $data[$info['get_key']]);
                 $join_data = $joinModel->get()['data'][0];
 
                 //Join시 변수명은 무조건 대문자로 진행 데이터 업데이트시 문제발생함 대문자 필드 삭제 처리는 JS에 있음
-                $object["data"][$index][strtoupper($info['table'])] = $join_data;
+                $object["data"][$index]["$".$info['table']] = $join_data;
             }
         }
 

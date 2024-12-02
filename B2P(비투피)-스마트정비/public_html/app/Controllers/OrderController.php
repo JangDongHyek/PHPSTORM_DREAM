@@ -87,6 +87,9 @@ class OrderController extends BaseController
         $this->data['order_data'] = $orderModel->getList($getData);
         $this->data['order_data'] = $orderModel->getMemberDataList($this->data['order_data']); //회원정보 넣어주는곳
 
+        $jungbiModel = new JungbiModel();
+        $this->data['order_data'] = $jungbiModel->getReservDataList($this->data['order_data']);
+
         // 스프레드시트 객체 생성
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -118,8 +121,8 @@ class OrderController extends BaseController
                 $data2_count = 1;
                 foreach ($data2 as $ItemOptionSelectList){
                     $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionValue ? ' ' . $data2_count . '.' . $ItemOptionSelectList->ItemOptionValue . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
+                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '' : '';
+                    //$ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
                     $ItemOptionSelectList_html .= PHP_EOL;
                     $data2_count++;
                 }
@@ -270,6 +273,9 @@ class OrderController extends BaseController
         $this->data['order_data'] = $orderModel->getList($getData);
         $this->data['order_data'] = $orderModel->getMemberDataList($this->data['order_data']); //회원정보 넣어주는곳
 
+        $jungbiModel = new JungbiModel();
+        $this->data['order_data'] = $jungbiModel->getReservDataList($this->data['order_data']);
+
         // 스프레드시트 객체 생성
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -302,8 +308,8 @@ class OrderController extends BaseController
                 $data2_count = 1;
                 foreach ($data2 as $ItemOptionSelectList){
                     $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionValue ? ' ' . $data2_count . '.' . $ItemOptionSelectList->ItemOptionValue . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
+                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '' : '';
+                    //$ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
                     $ItemOptionSelectList_html .= PHP_EOL;
                     $data2_count++;
                 }
@@ -464,6 +470,9 @@ class OrderController extends BaseController
         $this->data['order_data'] = $orderModel->getJoinlList($getData, 'order_exchange_list');
         $this->data['order_data'] = $orderModel->getMemberDataList($this->data['order_data']); //회원정보 넣어주는곳
 
+        $jungbiModel = new JungbiModel();
+        $this->data['order_data'] = $jungbiModel->getReservDataList($this->data['order_data']);
+
         // 스프레드시트 객체 생성
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -500,8 +509,8 @@ class OrderController extends BaseController
                 $data2_count = 1;
                 foreach ($data2 as $ItemOptionSelectList){
                     $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionValue ? ' ' . $data2_count . '.' . $ItemOptionSelectList->ItemOptionValue . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
+                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '' : '';
+                    //$ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
                     $ItemOptionSelectList_html .= PHP_EOL;
                     $data2_count++;
                 }
@@ -531,7 +540,7 @@ class OrderController extends BaseController
                 $OrderStatus[$row['OrderStatus']], // 구분상태
                 get_dateformat($row['TransDate']), // 발송일자
                 $OrderStatus[$row['OrderStatus']], // 배송상태
-                $row['orderNo'], // 주문번호
+                $row['OrderNo'], // 주문번호
                 $row['BuyerName'], // 구매자명
                 $row['BuyerId'], // 구매자ID
                 $row['ReceiverName'], // 수령인명
@@ -666,13 +675,16 @@ class OrderController extends BaseController
         $orderModel = new OrderModel();
         $this->data['order_data'] = $orderModel->getList($getData);
 
+        $jungbiModel = new JungbiModel();
+        $this->data['order_data'] = $jungbiModel->getReservDataList($this->data['order_data']);
+
         // 스프레드시트 객체 생성
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         // 엑셀 시트의 헤더 설정
         $headers = [
-            '회사명','담당자명','셀러ID', '구분', '구분상태', '구매결정일자', '정산상태', '주문번호', '구매자명',
+            '회사명','담당자명','셀러ID', '구분', '구분상태', '구매결정일자', '정산상태','정산예정일','정산완료일', '주문번호', '구매자명',
             '구매자ID', '수령인명', '상품번호', '상품명', '수량', '주문옵션', '추가구성',
             '사은품', '사은품 관리코드', '덤', '덤 관리코드', '판매단가', '판매금액',
             '판매자 관리코드', '정산예정금액', '서비스이용료', '판매자쿠폰할인', '구매쿠폰적용금액',
@@ -698,8 +710,8 @@ class OrderController extends BaseController
                 $data2_count = 1;
                 foreach ($data2 as $ItemOptionSelectList){
                     $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionValue ? ' ' . $data2_count . '.' . $ItemOptionSelectList->ItemOptionValue . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
+                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '' : '';
+                    //$ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
                     $ItemOptionSelectList_html .= PHP_EOL;
                     $data2_count++;
                 }
@@ -722,6 +734,32 @@ class OrderController extends BaseController
             $now = date('Y-m-d'); // 현재 날짜 (형식: YYYY-MM-DD)
             $futureDate = date('Y-m-d', strtotime($row['BuyDecisionDate'] . ' +4 days'));
 
+            //정산예정,완료 날짜 계산식
+            $buyDecisionDate = $row['BuyDecisionDate']; // 'Y-m-d' 형식의 날짜 문자열이라고 가정
+            $startDate = new \DateTime($buyDecisionDate);
+
+            // 4일 동안 포함된 주말 수 계산
+            $weekendCount = 0;
+            $tempDate = new \DateTime($buyDecisionDate);
+
+            $tempDate->modify('+4 day');
+
+            if ($tempDate->format('N') == 6) { // 6 = 토요일, 7 = 일요일
+                $weekendCount++;
+                $weekendCount++;
+            }
+            if ($tempDate->format('N') == 7) { // 6 = 토요일, 7 = 일요일
+                $weekendCount++;
+            }
+
+            // 기본적으로 4일을 더함
+            $startDate->modify('+4 days');
+
+            // 주말이 포함되었으면 추가로 2일 더함
+            if ($weekendCount > 0) {
+                $startDate->modify('+' . $weekendCount . ' days');
+            }
+
             $data = [
                 $row['cp_name'], // 회사명
                 $row['mb_name'], // 담당자명
@@ -730,6 +768,8 @@ class OrderController extends BaseController
                 $OrderStatus[$row['OrderStatus']], // 구분상태
                 get_dateformat($row['BuyDecisionDate']), // 구매결정일자
                 $futureDate > $now ? '정산예정' : '정산완료', // 정산상태
+                $startDate->format('Y-m-d'), // 정산예정일
+                $startDate->format('Y-m-d H:i:s'), // 정산완료일
                 $row['OrderNo'], // 주문번호
                 $row['BuyerName'], // 구매자명
                 $row['BuyerId'], // 구매자ID
@@ -854,6 +894,9 @@ class OrderController extends BaseController
         $this->data['cancel_data'] = $orderModel->getJoinlList($getData, 'order_cancel_list');
         $this->data['cancel_data'] = $orderModel->getMemberDataList($this->data['cancel_data']); //회원정보 넣어주는곳
 
+        $jungbiModel = new JungbiModel();
+        $this->data['cancel_data'] = $jungbiModel->getReservDataList($this->data['order_data']);
+
         // 스프레드시트 객체 생성
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -890,8 +933,8 @@ class OrderController extends BaseController
                 $data2_count = 1;
                 foreach ($data2 as $ItemOptionSelectList){
                     $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionValue ? ' ' . $data2_count . '.' . $ItemOptionSelectList->ItemOptionValue . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
+                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '' : '';
+                    //$ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
                     $ItemOptionSelectList_html .= PHP_EOL;
                     $data2_count++;
                 }
@@ -1050,6 +1093,9 @@ class OrderController extends BaseController
         $this->data['return_data'] = $orderModel->getJoinlList($getData, 'order_return_list');
         $this->data['return_data'] = $orderModel->getMemberDataList($this->data['return_data']); //회원정보 넣어주는곳
 
+        $jungbiModel = new JungbiModel();
+        $this->data['return_data'] = $jungbiModel->getReservDataList($this->data['order_data']);
+
         // 스프레드시트 객체 생성
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -1096,8 +1142,8 @@ class OrderController extends BaseController
                 $data2_count = 1;
                 foreach ($data2 as $ItemOptionSelectList){
                     $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionValue ? ' ' . $data2_count . '.' . $ItemOptionSelectList->ItemOptionValue . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
+                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '' : '';
+                    //$ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
                     $ItemOptionSelectList_html .= PHP_EOL;
                     $data2_count++;
                 }
@@ -1266,9 +1312,8 @@ class OrderController extends BaseController
         $this->data['exchange_data'] = $orderModel->getJoinlList($getData, 'order_exchange_list');
         $this->data['exchange_data'] = $orderModel->getMemberDataList($this->data['exchange_data']); //회원정보 넣어주는곳
 
-        // 스프레드시트 객체 생성
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $jungbiModel = new JungbiModel();
+        $this->data['exchange_data'] = $jungbiModel->getReservDataList($this->data['order_data']);
 
         // 스프레드시트 객체 생성
         $spreadsheet = new Spreadsheet();
@@ -1316,8 +1361,8 @@ class OrderController extends BaseController
                 $data2_count = 1;
                 foreach ($data2 as $ItemOptionSelectList){
                     $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionValue ? ' ' . $data2_count . '.' . $ItemOptionSelectList->ItemOptionValue . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '/' : '';
-                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
+                    $ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionOrderCnt ? $ItemOptionSelectList->ItemOptionOrderCnt . '' : '';
+                    //$ItemOptionSelectList_html .= $ItemOptionSelectList->ItemOptionCode ? $ItemOptionSelectList->ItemOptionCode : '';
                     $ItemOptionSelectList_html .= PHP_EOL;
                     $data2_count++;
                 }
@@ -1449,8 +1494,6 @@ class OrderController extends BaseController
             'page' => $this->data['page'],
             'SiteType' => $this->data['SiteType'],
             'list_sql' => $this->data['list_sql'],
-            'list_category' => 'new_list',
-            'Kind' => 1,
             'items_per_page' => $this->data['items_per_page'] ? $this->data['items_per_page'] : 10
         ];
 
@@ -1581,7 +1624,7 @@ class OrderController extends BaseController
         $resultData['result'] = $orderModel->getOrderInfoByIdx($idx);
 
         $jungbiModel = new JungbiModel();
-        $resultData['result'] = $jungbiModel->getReservData( $resultData['result']);
+        $resultData['result'] = $jungbiModel->getReservData($resultData['result']);
 
 
         if ($this->response === null) {
@@ -1977,20 +2020,22 @@ class OrderController extends BaseController
         if ($api_type == 'GM') {
             $this->data['api_type'] = GM;
             $this->data['api_data']['siteType'] = 'G';
+
+            $SiteType = 2;
         } else if ($api_type == 'AC') {
             $this->data['api_type'] = AC;
             $this->data['api_data']['siteType'] = 'A';
+            $SiteType = 1;
         }
 
         $apiModel = new GmarketApiModel();
         $result = $apiModel->getOrder($this->data);
         $orderModel = new OrderModel();
-
         $esm_category_list = get_esm_category();
 
         //log_message('alert','cron : GetSettleOrder :  $result - ' . print_r($result,true));
         if ($result['body']['Data'][0]) {
-            $SiteType = $result['body']['Data']['SiteType'];
+
             $ResultCode = $result['body']['Data']['ResultCode'];
             $Message = $result['body']['Data']['Message'];
             foreach ($result['body']['Data'] as $get_data) {

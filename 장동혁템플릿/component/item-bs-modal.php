@@ -1,7 +1,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <div class="modal fade more_modal" :id="component_idx" tabindex="-1" aria-labelledby="accountFormModalLabel" aria-hidden="true">
+        <div class="modal fade more_modal" :id="component_idx" tabindex="-1" aria-labelledby="accountFormModalLabel" :aria-hidden="modal">
             <div class="modal-dialog wide">
                 <div class="modal-content">
                     <div class="modal-header">

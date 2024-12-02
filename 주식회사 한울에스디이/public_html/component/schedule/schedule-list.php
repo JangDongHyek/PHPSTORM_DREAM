@@ -38,25 +38,35 @@
                         <!--</dt>-->
                         <dd class="colgroup" v-for="item in schedule" v-if="checkGroup(group,item)">
                             <div class="border task_item"><span style="font-weight: bold; font-size: 15px;">{{item.category_b}}</span>  {{item.content}}</div>
-                            <div class="border"></div>
+                            <div class="border flex ai-c jc-c">
+                                <template v-if="item.user_idx">
+                                    <button class="btn_none" @click="manager_modal = true; manager_idx = item.idx">{{item.$user.company_person}}</button>
+                                </template>
+
+                                <template v-else>
+                                    <button class="btn btn_mini btn_black" @click="manager_modal = true; manager_idx = item.idx">지정</button>
+                                </template>
+                                
+                            </div>
                             <div class="border">
-                                <select class="statusSelect" :class="getClass(item)" v-model="item.status">
+                                <select class="statusSelect" :class="getClass(item)" v-model="item.status" @change="updateData(item)">
                                     <option value="">예정</option>
                                     <option value="진행">진행</option>
                                     <option value="완료">완료</option>
                                     <option value="보류">보류</option>
                                 </select>
                             </div>
-                            <div class="border"><input type="text" class="datePicker" v-model="item.schedule_start_date" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" v-model="item.schedule_end_date" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" v-model="item.start_date" placeholder="-"/></div>
-                            <div class="border"><input type="text" class="datePicker" v-model="item.end_date" placeholder="-"/></div>
+                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_start_date"/></div>
+                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_end_date"/></div>
+                            <div class="border"><input type="date" class="datePicker" v-model="item.start_date" @change="updateData(item)"/></div>
+                            <div class="border"><input type="date" class="datePicker" v-model="item.end_date"/></div>
                         </dd>
                     </dl>
                 </div>
             </div>
         </template>
 
+        <schedule-manager :modal="manager_modal" :project="project" @designate="designate" @close="manager_modal = false;"></schedule-manager>
     </section>
 </script>
 
@@ -85,7 +95,10 @@
                 groups : [],
 
                 visibleContents : [],
-                visibleContents2 : []
+                visibleContents2 : [],
+
+                manager_modal : false,
+                manager_idx : "",
             };
         },
         created: function(){
@@ -101,6 +114,24 @@
             });
         },
         methods: {
+            async updateData(data) {
+                try {
+                    let res = await this.jl.ajax("update",data,"/api/project_schedule");
+                    this.$emit('updateSchedule');
+
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            designate(user) {
+                let data = {
+                    idx : this.manager_idx,
+                    user_idx : user.idx
+                }
+
+                this.updateData(data);
+                this.manager_modal = false;
+            },
             getClass(item) {
                 if(item.status == '') return 'gray'
                 if(item.status == '진행') return 'green'

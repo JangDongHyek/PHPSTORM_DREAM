@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="grid grid2">
-            <schedule-list :project="project" :schedule="schedule"></schedule-list>
+            <schedule-list :project="project" :schedule="schedule" @updateSchedule="getSchedule()"></schedule-list>
 
             <schedule-calendar :project="project" :schedule="schedule"></schedule-calendar>
 
@@ -33,7 +33,7 @@
                 jl : null,
                 component_idx : "",
                 filter : {
-                    idx : this.project_idx
+                    idx : this.project_idx,
                 },
                 required : [
                     {name : "",message : ""},

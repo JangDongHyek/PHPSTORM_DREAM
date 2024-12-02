@@ -124,6 +124,7 @@ class UserController extends BaseController
         $this->jl_response['data'] = $object['data'];
         $this->jl_response['count'] = $object['count'];
         $this->jl_response['filter'] = $object['filter'];
+        $this->jl_response['obj'] = $obj;
         $this->jl_response['success'] = true;
         echo json_encode($this->jl_response);
     }

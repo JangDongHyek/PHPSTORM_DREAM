@@ -29,17 +29,35 @@
                     page : 0,
                     limit : 0,
                     count : 0,
-                    search_key1 : "",
-                    search_value1_1 : "",
-                    search_value1_2 : "",
-                    search_like_key1 : "",
-                    search_like_value1 : "",
-                    not_key1 : "",
-                    not_value1 : "",
-                    in_key1 : "",
-                    in_value : [],
                     order_by_desc : "insert_date",
-                    order_by_asc : "",
+
+                    exam : "",
+
+                    where : [
+                        {key : "", value : ""}
+                    ],
+
+                    like : [
+                        {key : "", value : ""}
+                    ],
+
+                    between : [
+                        {key : "", start : "", end: ""}
+                    ],
+
+                    in : [
+                        {key : "", array : [] }
+                    ],
+
+                    group_where : [
+                        {key : "", value : ""},
+                        {key : "", value : ""},
+                    ],
+
+                    group_like : [
+                        {key : "", value : ""},
+                        {key : "", value : ""},
+                    ],
                 },
                 required : [
                     {name : "",message : ""},

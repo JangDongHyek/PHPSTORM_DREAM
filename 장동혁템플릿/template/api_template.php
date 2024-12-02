@@ -50,6 +50,7 @@ try {
                 ));
 
                 foreach ($object["data"] as $index => $data) {
+                    if(!$data[$info['get_key']]) continue;
                     $joinModel->where($joinModel->primary, $data[$info['get_key']]);
                     $join_data = $joinModel->get()['data'][0];
 

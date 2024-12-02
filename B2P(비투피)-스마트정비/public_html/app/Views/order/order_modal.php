@@ -2112,7 +2112,8 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             var option_html = '';
             //console.log(option);
             for (var i = 0; i < option.length; i++) {
-                option_html += option[i]['ItemOptionValue'] + ' ' + option[i]['ItemOptionOrderCnt'] + ' ' + option[i]['ItemOptionCode'];
+                //option_html += option[i]['ItemOptionValue'] + ' ' + option[i]['ItemOptionOrderCnt'] + ' ' + option[i]['ItemOptionCode'];
+                option_html += option[i]['ItemOptionValue'] + ' ' + option[i]['ItemOptionOrderCnt'];
                 option_html += '</br>';
             }
             $('#modal_ItemOptionSelectList').html(option_html);

@@ -82,6 +82,8 @@ $routes->group('goods', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     $routes->get('/', 'GoodsController::goodsList');
     $routes->get('goods_form', 'GoodsController::goodsForm');
     $routes->get('goods_form2', 'GoodsController::goodsForm2');
+    $routes->get('eventFee', 'GoodsController::eventFee');
+    $routes->get('eventFeeForm', 'GoodsController::eventFeeForm');
 
     // 제품관리 아작스
     $routes->post('getCategory', 'GoodsController::getCategory');
@@ -381,7 +383,7 @@ $routes->group('user', ['namespace' => '\App\Controllers'], static function ($ro
     $routes->get('reserv', 'UserController::reserv_list', ['filter' => 'auth']);
     $routes->get('reserv_view', 'UserController::reserv_view', ['filter' => 'auth']);
 
-
+    $routes->get('damaged', 'UserController::damaged_list', ['filter' => 'auth']);
 
     $routes->post('ajax_check_order', 'UserController::ajax_check_order');
     $routes->get('getStore', 'UserController::getStoreByRegionFromDb');
@@ -540,6 +542,10 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->post('OrderPayAutoPage', 'PayController::OrderPayAutoPage');
     $routes->get('OrderPayAuto/(:segment)', 'PayController::OrderPayAuto/$1');
     $routes->post('OrderPayAuto/(:segment)', 'PayController::OrderPayAuto/$1');
+    $routes->get('OrderPayAuto_cron', 'PayController::OrderPayAuto_cron');
+    $routes->post('OrderPayAuto_cron', 'PayController::OrderPayAuto_cron');
+    $routes->get('OrderPayAuto_cron/(:segment)', 'PayController::OrderPayAuto_cron/$1');
+    $routes->post('OrderPayAuto_cron/(:segment)', 'PayController::OrderPayAuto_cron/$1');
     $routes->get('OrderPayAuto', 'PayController::OrderPayAuto');
     $routes->post('OrderPayAuto', 'PayController::OrderPayAuto');
     $routes->get('OrderPayPop', 'PayController::OrderPayPop');
@@ -552,6 +558,10 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->post('OrderPayCancelAutoPage', 'PayController::OrderPayCancelAutoPage');
     $routes->get('OrderPayCancelAuto/(:segment)', 'PayController::OrderPayCancelAuto/$1');
     $routes->post('OrderPayCancelAuto/(:segment)', 'PayController::OrderPayCancelAuto/$1');
+    $routes->get('OrderPayCancelAuto_cron', 'PayController::OrderPayCancelAuto_cron');
+    $routes->post('OrderPayCancelAuto_cron', 'PayController::OrderPayCancelAuto_cron');
+    $routes->get('OrderPayCancelAuto_cron/(:segment)', 'PayController::OrderPayCancelAuto_cron/$1');
+    $routes->post('OrderPayCancelAuto_cron/(:segment)', 'PayController::OrderPayCancelAuto_cron/$1');
     $routes->get('OrderPayCancelAuto', 'PayController::OrderPayCancelAuto');
     $routes->post('OrderPayCancelAuto', 'PayController::OrderPayCancelAuto');
     $routes->get('OrderPayCancelPop', 'PayController::OrderPayCancelPop');
@@ -611,10 +621,18 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->get('GetFirmBalance', 'PayController::GetFirmBalance');
     $routes->post('GetFirmBalance', 'PayController::GetFirmBalance');
     //펌뱅킹 지급이체(송금)
-    $routes->get('GetFirmTransfer/(:segment)', 'PayController::GetFirmTransfer/$1');
-    $routes->post('GetFirmTransfer/(:segment)', 'PayController::GetFirmTransfer/$1');
     $routes->get('GetFirmTransfer', 'PayController::GetFirmTransfer');
     $routes->post('GetFirmTransfer', 'PayController::GetFirmTransfer');
+    $routes->get('GetFirmTransfer2', 'PayController::GetFirmTransfer2');
+    $routes->post('GetFirmTransfer2', 'PayController::GetFirmTransfer2');
+    $routes->get('GetFirmTransfer/(:segment)', 'PayController::GetFirmTransfer/$1');
+    $routes->post('GetFirmTransfer/(:segment)', 'PayController::GetFirmTransfer/$1');
+
+    $routes->get('GetFirmTransfer_cron', 'PayController::GetFirmTransfer_cron');
+    $routes->post('GetFirmTransfer_cron', 'PayController::GetFirmTransfer_cron');
+    $routes->get('GetFirmTransfer_cron/(:segment)', 'PayController::GetFirmTransfer_cron/$1');
+    $routes->post('GetFirmTransfer_cron/(:segment)', 'PayController::GetFirmTransfer_cron/$1');
+
     //펌뱅킹 지급이체확인
     $routes->get('OrderGetFirmTransferCheckAutoPage', 'PayController::OrderGetFirmTransferCheckAutoPage');
     $routes->post('OrderGetFirmTransferCheckAutoPage', 'PayController::OrderGetFirmTransferCheckAutoPage');
@@ -623,6 +641,10 @@ $routes->group('pay', ['namespace' => '\App\Controllers'], static function ($rou
     $routes->post('GetFirmTransferCheck/(:segment)', 'PayController::GetFirmTransferCheck/$1');
     $routes->get('GetFirmTransferCheck', 'PayController::GetFirmTransferCheck');
     $routes->post('GetFirmTransferCheck', 'PayController::GetFirmTransferCheck');
+
+    $routes->get('GetFirmTransferCheck_cron', 'PayController::GetFirmTransferCheck_cron');
+    $routes->post('GetFirmTransferCheck_cron', 'PayController::GetFirmTransferCheck_cron');
+
     //펌뱅킹 원화명세통지
     $routes->get('SetDoznNoti', 'PayController::SetDoznNoti');
     $routes->post('SetDoznNoti', 'PayController::SetDoznNoti');

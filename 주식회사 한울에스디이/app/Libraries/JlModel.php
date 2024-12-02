@@ -163,25 +163,74 @@ class JlModel extends Jl{
 
     function setFilter($obj) {
         if($obj['primary']) $this->where($this->primary,$obj['primary']);
-        if($obj['where_key'] && $obj['where_value']) $this->where($obj['where_key'],$obj['where_value']);
-        if($obj['between_key'] && $obj['between_value_s'] && $obj['between_value_e']) $this->between($obj['between_key'],$obj['between_value_s'],$obj['between_value_e']);
-        if($obj['like_key'] && $obj['like_value']) $this->like($obj['like_key'],$obj['like_value']);
         if($obj['order_by_desc']) $this->orderBy($obj['order_by_desc'],"DESC");
         if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
-        if($obj['not_key'] && $obj['not_value']) $this->where($obj['not_key'],$obj['not_value'],"AND NOT");
-        if($obj['in_key'] && $obj['in_value']) $this->in($obj['in_key'],$this->jsonDecode($obj['in_value']));
 
-        if($obj['group_like_key'] && $obj['group_like_value']) {
+        if(isset($obj['where'])) {
+            $arrays = $this->jsonDecode($obj['where']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->where($item['key'],$item['value'],$operator,$source);
+            }
+        }
+
+        if(isset($obj['like'])) {
+            $arrays = $this->jsonDecode($obj['like']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->like($item['key'],$item['value'],$operator,$source);
+            }
+        }
+
+        if(isset($obj['between'])) {
+            $arrays = $this->jsonDecode($obj['between']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->between($item['key'],$item['start'],$item['end'],$operator,$source);
+            }
+        }
+
+        if(isset($obj['in'])) {
+            $arrays = $this->jsonDecode($obj['in']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->in($item['key'],$this->jsonDecode($item['array']),$operator,$source);
+            }
+        }
+
+        if(isset($obj['group_where'])) {
+            $arrays = $this->jsonDecode($obj['group_where']);
             $this->groupStart();
-            $this->like($obj['group_like_key'],$obj['group_like_value']);
-            $this->like($obj['group_like_key2'],$obj['group_like_value2'],$obj['group_like_operator2']);
+
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->where($item['key'],$item['value'],$operator,$source);
+            }
+
             $this->groupEnd();
         }
 
-        if($obj['group_where_key'] && $obj['group_where_value']) {
+        if(isset($obj['group_like'])) {
+            $arrays = $this->jsonDecode($obj['group_like']);
             $this->groupStart();
-            $this->where($obj['group_where_key'],$obj['group_where_value']);
-            $this->where($obj['group_where_key2'],$obj['group_where_value2'],$obj['group_where_operator2']);
+
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->like($item['key'],$item['value'],$operator,$source);
+            }
+
             $this->groupEnd();
         }
     }

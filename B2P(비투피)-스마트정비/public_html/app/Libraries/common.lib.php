@@ -443,8 +443,9 @@ function goSms($reserv_phone, $Contents, $Subject="")
 
 }
 
-// 정산데이터 가공
+// 정산데이터 가공 정산 데이터가 없을경우 originalOrder 함수로 이동
 function processOrder($order) {
+
     //데이터 재선언
     // 빈값 및 소수점 절사를 위한 데이터 재 선언
     $order['SellerCashbackMoney'] = $order['SellerCashbackMoney'] ? (int)$order['SellerCashbackMoney'] : 0;
@@ -468,7 +469,7 @@ function processOrder($order) {
     //b2p 수수료
     $b2p_cost = $order['b2p_cost'];
     // 카테고리 수수료
-    $category_fee_cost = $order['TotCommission'] - $order['DeductTaxPrice'] + $b2p_cost;
+    $category_fee_cost = $order['TotCommission'] + $b2p_cost;
     //b2p 카드 수수료 퍼센트
     $b2p_kcp_fee = $order['b2p_kcp_fee'] ? : 0;
     //b2p 셀러별 카드 페이백 퍼센트
@@ -482,9 +483,10 @@ function processOrder($order) {
 
     // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
     if($order['SiteType'] == 1) {
-        $category_fee_cost += $order['DeductTaxPrice'];
     }else {
         $category_fee_cost -= $order['SellerCashbackMoney'];;
+        $category_fee_cost += $order['DeductTaxPrice'];
+
         $totalDiscount += $order['SellerCashbackMoney'];
         $totalDiscount += $order['SellerFundingDiscountPrice'];
 
@@ -552,6 +554,156 @@ function processOrder($order) {
 
     $order['b2p'] = $b2p;
 
+    return $order;
+}
+
+// 정산데이터 가공 정산 데이터가 없을경우 originalOrder 함수로 이동
+function processOrder2($order) {
+    if(!isset($order['ContrNo'])) {
+        $item = originalOrder($order);
+        return $item;
+    }
+
+    $B2P_Goods = 0;
+    $B2P_GoodsCost = 0; //B2P 판매자 정산요청가
+    $B2P_Option = 0;
+    $B2P_OptionCost = 0; //B2P 옵션상품 정산요청가
+    $B2P_SettlementPrice = 0; //B2P 판매자 최종정산금
+    $B2P_TotCommission = 0; //B2P 기본 서비스 이용료
+    $B2P_ServiceFee = 0; //B2P 서비스이용료
+
+    ////////////////
+    $SellerDiscountPrice = $order['SiteType'] == 1 ? abs($order['SellerDiscountTotalPrice']) : abs($order['SellerDiscountPrice']); // 쿠폰할인
+    $totalDiscount = $SellerDiscountPrice; // 판매자 할인금액
+
+    //1 옥션 2지마켓
+    $category_fee_cost = abs($order['TotCommission']) + abs($order['b2p_cost']);
+    if($order['SiteType'] == 2) {
+        $category_fee_cost -= abs($order['SellerCashbackMoney']);
+        $category_fee_cost -= abs($order['DeductTaxPrice']);
+
+        $totalDiscount += $order['DeductTaxPrice'];
+    }
+
+    $B2P_Goods = ($order['OrderUnitPrice']*1 * abs($order['OrderQty'])); //판매자 정산요청가
+    $B2P_GoodsCost = round($B2P_Goods - $category_fee_cost); //B2P 판매자 정산요청가
+
+    $B2P_Option = ($order['OptSelPrice']*1 + $order['OptAddPrice']*1); //옵션상품 정산요청가
+
+    $B2P_GoodsCost_fee = ($B2P_Goods * ( $order['category_fee']/100 )); //B2P 판매자 정산요청가 수수료율
+    $B2P_OptionCost_fee = ($B2P_Option * ( $order['category_fee']/100 )); //B2P 옵션상품 정산요청가 수수료율
+
+
+    if($order['SiteType'] == 1) {
+        $B2P_OptionCost = ($B2P_Option - $category_fee_cost); //B2P 옵션상품 정산요청가
+        $B2P_TotCommission = $category_fee_cost + abs($order['OutsidePrice']) + abs($order['SellerPcsFee']); //B2P 기본 서비스 이용료
+        $B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs(round($B2P_TotCommission)) - abs($order['OutsidePrice']); //B2P 판매자 최종정산금
+    }else {
+        $B2P_OptionCost = round($B2P_Option - $category_fee_cost); //B2P 옵션상품 정산요청가
+        $B2P_TotCommission = $category_fee_cost  + abs($order['SellerPcsFee']) ; //B2P 기본 서비스 이용료
+        $B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs($B2P_TotCommission)
+            - abs($order['SellerDiscountPrice1']) - abs($order['SellerCashbackMoney']) - abs($order['SellerFundingDiscountPrice']); //B2P 판매자 최종정산금
+    }
+
+    $B2P_ServiceFee = $B2P_GoodsCost_fee + $B2P_OptionCost_fee - abs($order['FeeDiscountPrice']) + abs($order['DeductTaxPrice']); //B2P 서비스이용료
+
+
+
+    //주문금액
+    $OrderAmount = (int)$order['SellOrderPrice'] + (int)$order['OptionPrice'];
+    //b2p 수수료
+    $b2p_cost = $order['b2p_cost'];
+    // 카테고리 수수료
+    $category_fee_cost = $order['TotCommission'] + $b2p_cost;
+    //b2p 카드 수수료 퍼센트
+    $b2p_kcp_fee = $order['b2p_kcp_fee'] ? : 0;
+    //b2p 셀러별 카드 페이백 퍼센트
+    $b2p_cp_fee = $order['b2p_cp_fee'] ? : 0;
+
+    //판매자 할인 / 공제금
+    $SellerDiscountPrice = $order['SiteType'] == 1 ? $order['SellerDiscountTotalPrice'] : $order['SellerDiscountPrice'];
+    $totalDiscount = 0;
+    $totalDiscount += $SellerDiscountPrice;
+
+
+    // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
+    if($order['SiteType'] == 1) {
+    }else {
+        $category_fee_cost -= $order['SellerCashbackMoney'];;
+        $category_fee_cost += $order['DeductTaxPrice'];
+
+        $totalDiscount += $order['SellerCashbackMoney'];
+        $totalDiscount += $order['SellerFundingDiscountPrice'];
+
+        $totalDiscount += $order['DeductTaxPrice'];
+    }
+
+
+
+    // 배송비 및 배송비 수수료 관련
+    $dl_DelFeeAmt = $order['ShippingFee'];
+    $dl_DelFeeCommission = $dl_DelFeeAmt * 0.033;
+    $b2p_shipping_fee = $dl_DelFeeAmt * 0;
+    $dl_DelTotal = floor($dl_DelFeeAmt - $dl_DelFeeCommission - $b2p_shipping_fee);
+
+    // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
+    if($order['SiteType'] == 1) {
+        $b2p_shipping_fee = round($b2p_shipping_fee);
+        $dl_DelFeeCommission = round($dl_DelFeeCommission);
+    }else {
+        $b2p_shipping_fee = ceil($b2p_shipping_fee);
+        $dl_DelFeeCommission = ceil($dl_DelFeeCommission);
+    }
+
+    //부가세
+    $surTax = round($order['BuyerPayAmt'] / 11);// B2P 부가세 = 고객 결제금 / 11
+    $b2p_surTax = round($calcPrice / 11);// 셀러 부가세 = 정산예정금액 / 11
+    $b2p_surTax = ceil($b2p_surTax);
+    $refund = $surTax - $b2p_surTax;
+
+
+
+
+    $totalCommission = $category_fee_cost + $totalDiscount + $dl_DelFeeCommission + $b2p_shipping_fee;
+
+    $calcPrice = $OrderAmount;
+    $calcPrice -= $category_fee_cost;
+    $calcPrice -= $totalDiscount;
+    // 옥션이 아니라면 정산금액에 배송비 포함
+    if($order['SiteType'] == 2) {
+        $calcPrice += $dl_DelTotal;
+    }
+
+    //kcp 카드 수수료 , 카드 캐시백
+    $b2p_kcp_price = floor($calcPrice * ($b2p_kcp_fee / 100));
+    $b2p_cp_fee_price = floor($calcPrice * ($b2p_cp_fee / 100));
+
+    $calcPrice -= ($b2p_kcp_price - $b2p_cp_fee_price);
+
+    $b2p = array(
+        "B2P_Goods" => $B2P_Goods,                      // 판매자 정산요청가 || 주문금액
+        "category_fee_cost" => $category_fee_cost,      // 카테고리 수수료
+        "totalDiscount" => $totalDiscount,              // 판매자 할인금액
+        "SellerDiscountPrice" => $SellerDiscountPrice,  // 쿠폰할인
+        "calcPrice" => $calcPrice,                      // 정산 금액
+        "dl_DelFeeAmt" => $dl_DelFeeAmt,                // 배송금액
+        "dl_DelFeeCommission" => $dl_DelFeeCommission,  // 배송비 수수료
+        "b2p_shipping_fee" => $b2p_shipping_fee,        // b2p 배송비 수수료
+        "surTax" => $surTax,                            // 부가세
+        "b2p_surTax" => $b2p_surTax,                    // b2p 부가세
+        "refund" => $refund,                            // 총부가세
+        "totalCommission" => $totalCommission,          // 카테고리,판매자 할인총금액,배송비수수료
+        "new_b2p_kcp_price" => $b2p_kcp_price,          // 새로 바뀐 카드수수료
+        "new_b2p_cp_fee_price" => $b2p_cp_fee_price,    // 새로 바뀌 카드 페이백
+    );
+
+    $order['b2p'] = $b2p;
+
+    return $order;
+}
+
+//정산데이터가없는 주문데이터 b2p식으로 가공후 반환
+function originalOrder($order) {
     return $order;
 }
 
