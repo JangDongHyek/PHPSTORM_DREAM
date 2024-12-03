@@ -225,8 +225,9 @@ class AdminController extends BaseController {
         $this->data['all_orders'] = $model->get(array(
                 "sql" => true,
                 "select" => array(
-                    "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate"
+                    "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission","ContrNo",
+                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate",
+                    "OrderUnitPrice","OrderQty"
                 )
             )
         );
@@ -276,15 +277,17 @@ class AdminController extends BaseController {
             "reset" => false,
             "sql" => true,
             "select" => array(
-                "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate"
+                "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission","ContrNo",
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate",
+                "OrderUnitPrice","OrderQty"
             )
         ));
         $this->data['search_all_orders'] = $model->get(array(
             "sql" => true,
             "select" => array(
-                "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate"
+                "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission","ContrNo",
+                "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate",
+                "OrderUnitPrice","OrderQty"
             )
         ));
 
@@ -293,6 +296,12 @@ class AdminController extends BaseController {
         return view('calculate/calculate_view',$this->data);
     }
 
+
+    public function dashboard()
+    {
+        $this->data['pid'] = 'dashboard';
+        return view('admin/dashboard',$this->data);
+    }
 
 //    고객센터
 //      공지사항

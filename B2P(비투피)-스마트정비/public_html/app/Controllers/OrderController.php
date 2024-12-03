@@ -2226,14 +2226,20 @@ class OrderController extends BaseController
         $data = $model->get(array(
                 "sql" => true,
                 "select" => array(
-                    "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission",
-                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost"
+                    "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission","ContrNo",
+                    "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate",
+                    "OrderUnitPrice","OrderQty"
                 )
             )
         );
 
         $order = null;
-        if($data['count']) $order = processOrder($data['data'][0]);
+        if(!$data['count']) {
+            $model->where("OrderNo",$OrderNo);
+            $data = $model->get();
+        }
+
+        $order = processOrder($data['data'][0]);
 
 
         if ($this->response === null) {

@@ -173,6 +173,8 @@ $routes->group('admin', ['namespace' => '\App\Controllers' , 'filter' => 'auth::
     // 정산리스트
     $routes->get('calcul_list', 'AdminController::calcul_list');
 
+    // dashboard
+    $routes->get('/', 'AdminController::dashboard');
     // 공지사항
     $routes->get('notice', 'AdminController::notice_list');
     $routes->get('noticeWrite', 'AdminController::notice_write');

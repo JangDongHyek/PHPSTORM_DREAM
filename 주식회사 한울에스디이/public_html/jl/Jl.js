@@ -502,8 +502,10 @@ class Jl {
             function_name = name
         }
 
-        console.group('%c' + function_name,
-            `background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
+        console.group(
+            `%c${function_name} %c(${this.name})`,
+            `background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`,
+            'color: gray; font-size: 12px; margin-left: 5px;'
         );
         console.log(obj);
         console.groupEnd();

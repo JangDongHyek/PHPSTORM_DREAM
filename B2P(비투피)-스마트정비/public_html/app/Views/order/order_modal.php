@@ -191,118 +191,37 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
 
             var OrderNo = response['result']['OrderNo'];
             var response2 = await fetchData(`/order/GetCalc/${OrderNo}`);
-            var calc_data = null;
-            console.log(response2);
-            if (response2) {
-                calc_data = response2;
-            }
+            console.log(response2)
+            let order = response2;
 
-            let style = calc_data ? "" : "class='color-red';";
+            let style = order['ContrNo'] ? "" : "class='color-red';";
 
             // 판매금액
-            var OrderAmount = calc_data ? calc_data['b2p']['OrderAmount'] : response['result']['OrderAmount']
-
+            var OrderAmount = order['b2p']['OrderAmount'];
             // 카테고리 이용료
-            let ServiceFee = 0;
-            if (response['result']['SiteType'] == '1'){
-                ServiceFee = parseInt(response['result']['BasicServiceFee']);
-            } else{
-                ServiceFee = parseInt(response['result']['ServiceFee']);
-            }
-            ServiceFee += parseInt(response['result']['b2p_cost']);
+            let category_fee_cost = order['b2p']['category_fee_cost'];
+            // 판매자할인 / 공제금
+            let totalDiscount = order['b2p']['totalDiscount'];
+            //배송비 수수료
+            let dl_DelFeeAmt = order['b2p']['dl_DelFeeAmt'];
+            let dl_DelFeeCommission = order['b2p']['dl_DelFeeCommission'];
+            let b2p_shipping_fee = order['b2p']['b2p_shipping_fee'];
+            //kcp
+            let new_b2p_kcp_price = order['b2p']['new_b2p_kcp_price'];
+            let new_b2p_cp_fee_price = order['b2p']['new_b2p_cp_fee_price'];
+            let kcpSum = new_b2p_kcp_price - new_b2p_cp_fee_price;
+            //정산금액
+            let B2P_SettlementPrice = order['b2p']['B2P_SettlementPrice'];
+
+            let CostPrice = parseInt(OrderAmount) - parseInt(category_fee_cost);
 
 
-            if (calc_data) {
-                ServiceFee = calc_data['b2p']['category_fee_cost'];
-            }
-
-
-            // 카드 수수료
-            var BuyerPayAmt = response['result']['AcntMoney']; //구매자 결제금액
-            var KCPServiceFee = response['result']['b2p_kcp_price'] // 카드 수수료
-            var KCPPayBack = response['result']['b2p_cp_fee_price'] // 카드 페이백
-
-            if (calc_data) {
-                KCPServiceFee = calc_data['b2p']['new_b2p_kcp_price'];
-                KCPPayBack = calc_data['b2p']['new_b2p_cp_fee_price'];
-            }
-
-
-            var total_fee = KCPServiceFee - KCPPayBack;// 자체 수수료 (판매금액의 5퍼센트)
-
-
-            // 판매자 할인/공제금 정산데이터 없을때
-            let totalDiscount = 0;
-            let SellerDiscountPrice = response['result']['SellerDiscountPrice'] ? response['result']['SellerDiscountPrice'] : 0;
-            let SellerCashbackMoney = response['result']['SellerCashbackMoney'] ? response['result']['SellerCashbackMoney'] : 0;
-            let DirectDiscountPrice = response['result']['DirectDiscountPrice'] ? response['result']['DirectDiscountPrice'] : 0;
-            let SellerFundingDiscountPrice = response['result']['SellerFundingDiscountPrice'] ? response['result']['SellerFundingDiscountPrice'] : 0;
-            SellerFundingDiscountPrice = Math.abs(SellerFundingDiscountPrice);
-
-            console.log(`ServiceFee : ${ServiceFee}`);
-            console.log(`SellerCashbackMoney : ${SellerCashbackMoney}`);
-
-            totalDiscount += parseInt(SellerDiscountPrice);
-            totalDiscount += parseInt(SellerCashbackMoney);
-            if (response['result']['SiteType'] == '1') totalDiscount += parseInt(DirectDiscountPrice); // 옥션
-            else totalDiscount += parseInt(SellerFundingDiscountPrice); // 지마켓
-
-            let OutsidePrice = Math.abs(response['result']['OutsidePrice']) // 판매자할인 / 공제금 토탈값
-
-            //if (totalDiscount != OutsidePrice) {
-            //    let rest = OutsidePrice - totalDiscount
-            //    totalDiscount += rest;
-            //}
-
-            // 판매자할인 / 공제금 정산데이터있을때
-            if(calc_data) {
-                totalDiscount = calc_data['b2p']['totalDiscount'];
-            }
-
-
-
-            //배송비 수수료 정산데이터 없을때
-            let dl_DelFeeAmt = parseInt(response['result']['ShippingFee']);
-            let dl_DelFeeCommission = dl_DelFeeAmt * 0.033;
-            let b2p_shipping_fee = dl_DelFeeAmt * 0;
-
-            //배송비 수수료 정산데이터 있을떄
-            // 장바구니로 한번에 계산했을시 정산은 두개의 데이터에 배송비가 오고 주문쪽은 한개쪽에 제대로 붙기때문에 주문데이터로만 이용
-            //if(calc_data) {
-            //    dl_DelFeeAmt = calc_data['dl_DelFeeAmt'];
-            //    dl_DelFeeCommission = calc_data['dl_DelFeeCommission'];
-            //    b2p_shipping_fee = dl_DelFeeAmt * 0.03;
-            //}
-
-            // b2p배송비수수료 옥션이면 반올림 g마켓이면 올림
-            if (response['result']['SiteType'] == '1') {
-                b2p_shipping_fee = Math.round(b2p_shipping_fee);
-                dl_DelFeeCommission = Math.round(dl_DelFeeCommission);
-            }else {
-                b2p_shipping_fee = Math.ceil(b2p_shipping_fee);
-                dl_DelFeeCommission = Math.ceil(dl_DelFeeCommission);
-            }
-
-            var SettlementPrice = calc_data ? calc_data['b2p']['calcPrice'] : response['result']['SettlementPrice']
-            let CostPrice = parseInt(OrderAmount) - parseInt(ServiceFee);
-            //SettlementPrice = SettlementPrice - b2p_fee - total_fee - dl_DelFeeCommission - b2p_shipping_fee;
-
-            let surTax = Math.round(BuyerPayAmt / 11);  // B2P 부가세 = 고객 결제금 / 11
-            let b2p_surTax = Math.round(SettlementPrice / 11); // 셀러 부가세 = 정산예정금액 / 11
-            b2p_surTax = Math.ceil(b2p_surTax) // b2p 부가세 올림처리
-            let refund = surTax*1 - b2p_surTax*1; // 차액
-
-            if(calc_data) {
-                surTax = calc_data['b2p']['surTax']
-                b2p_surTax = calc_data['b2p']['b2p_surTax']
-                refund = calc_data['b2p']['refund']
-            }
 
             code_html += `<tr ${style}>`;
             code_html += '<td>' + response['result']['OrderNo'] + '</td>'; // 주문번호
             code_html += '<td>' + response['result']['GoodsName'] + '</td>'; // 상품명
             code_html += '<td>' + AddComma(OrderAmount) + '</td>';  // 판매금액
-            code_html += '<td>-' + AddComma(ServiceFee) + '</td>';   // 기본 서비스 이용료
+            code_html += '<td>-' + AddComma(category_fee_cost) + '</td>';   // 기본 서비스 이용료
             code_html += '<td>' + AddComma(CostPrice) + '</td>';    // 공급원가
             //code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(totalDiscount) + '</td>';    // 판매자할인/공제금
@@ -316,30 +235,26 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             //code_html += '<td>' + AddComma(b2p_surTax) + '</td>';     // b2p부가세 -> 셀러 부가세
             //code_html += '<td>' + AddComma(refund) + '</td>';     // 환급금 -> 차액
 
-            code_html += '<td>' + AddComma(SettlementPrice) + '</td>';  //정산예정금액
+            code_html += '<td>' + AddComma(B2P_SettlementPrice + new_b2p_kcp_price - new_b2p_cp_fee_price) + '</td>';  //정산예정금액
 
-            code_html += '<td>-' + AddComma(KCPServiceFee) + '</td>';    // kcp 수수료
-            code_html += '<td>' + AddComma(KCPPayBack) + '</td>'; // kcp 캐시백
-            code_html += '<td>' + AddComma(total_fee) + '</td>';    // kcp 합계
+            code_html += '<td>-' + AddComma(new_b2p_kcp_price) + '</td>';    // kcp 수수료
+            code_html += '<td>' + AddComma(new_b2p_cp_fee_price) + '</td>'; // kcp 캐시백
+            code_html += '<td>' + AddComma(new_b2p_kcp_price-new_b2p_cp_fee_price) + '</td>';    // kcp 합계
             
-            code_html += '<td>' + AddComma(SettlementPrice + total_fee) + '</td>';  //최종정산예정금액
+            code_html += '<td>' + AddComma(B2P_SettlementPrice - new_b2p_kcp_price + new_b2p_cp_fee_price) + '</td>';  //최종정산예정금액
             //code_html += response['body']['Message'] + '<br>';
             code_html += '</tr>';
 
             OrderAmount_total += (OrderAmount) * 1;
-            ServiceFee_total += (ServiceFee) * 1;
-            KCPServiceFee_total += (KCPServiceFee) * 1;
-            KCPServiceFeeEvent_total += (KCPPayBack) * 1;
-            CostPrice_total += (CostPrice) * 1;
-            SellerDiscountPrice_total += (totalDiscount) * 1;
-            SettlementPrice_total += (SettlementPrice) * 1;
+            ServiceFee_total += (category_fee_cost) * 1;
+            KCPServiceFee_total += (new_b2p_kcp_price) * 1;
+            KCPServiceFeeEvent_total += new_b2p_cp_fee_price;
+            CostPrice_total += CostPrice;
+            SellerDiscountPrice_total += totalDiscount * 1;
+            SettlementPrice_total += B2P_SettlementPrice * 1;
 
             dl_DelFeeAmt_total += dl_DelFeeAmt;
             dl_DelFeeCommission_total += (dl_DelFeeCommission + b2p_shipping_fee)
-
-            surTax_total += (surTax);
-            b2p_surTax_total += (b2p_surTax);
-            refund_total += (refund);
 
         }
 
@@ -376,9 +291,9 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
         $('#modal_dl_DelFeeAmt_total').html(AddComma(dl_DelFeeAmt_total));
         $('#modal_dl_DelFeeCommission_total').html('-'+AddComma(dl_DelFeeCommission_total));
 
-        $('#modal_surTax_total').html(AddComma(surTax_total));
-        $('#modal_b2p_surTax_total').html(AddComma(b2p_surTax_total));
-        $('#modal_refund_total').html(AddComma(refund_total));
+        //$('#modal_surTax_total').html(AddComma(surTax_total));
+        //$('#modal_b2p_surTax_total').html(AddComma(b2p_surTax_total));
+        //$('#modal_refund_total').html(AddComma(refund_total));
 
         if (card_event) {
             $('#modal_KCPServiceFeeEvent_total').html(AddComma(KCPServiceFeeEvent_total));

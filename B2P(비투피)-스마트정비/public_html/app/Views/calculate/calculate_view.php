@@ -42,7 +42,7 @@ function sortMonthOrder($month,$objects,$info) {
             $order = processOrder($data);
 
 
-            $result += $order['b2p']['calcPrice'];
+            $result += $order['b2p']['B2P_SettlementPrice'];
 
         }
     }
@@ -65,7 +65,7 @@ function totalOrderKey($objects,$key,$info) {
 
         $total_order += $order['b2p']['OrderAmount'];
         $total_commission += $order['b2p']['totalCommission'];
-        $total_calc += $order['b2p']['calcPrice'];
+        $total_calc += $order['b2p']['B2P_SettlementPrice'];
     }
 
     switch ($key) {
@@ -331,7 +331,7 @@ function totalOrderKey($objects,$key,$info) {
                         </details>
                     </td>
                     <?php } ?>
-                    <td class="text_right"><?=number_format($order['b2p']['calcPrice'])?>원</td>
+                    <td class="text_right"><?=number_format($order['b2p']['B2P_SettlementPrice'])?>원</td>
                 </tr>
             <?php }?>
 

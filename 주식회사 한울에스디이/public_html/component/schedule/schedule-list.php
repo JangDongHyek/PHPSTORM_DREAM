@@ -46,7 +46,7 @@
                                 <template v-else>
                                     <button class="btn btn_mini btn_black" @click="manager_modal = true; manager_idx = item.idx">지정</button>
                                 </template>
-                                
+
                             </div>
                             <div class="border">
                                 <select class="statusSelect" :class="getClass(item)" v-model="item.status" @change="updateData(item)">
@@ -165,6 +165,21 @@
                     alert(e.message)
                 }
             },
+            async getGroupB(item) {
+                try {
+                    let filter = {
+                        project_idx : this.project.idx,
+                        category_a : item.category_a,
+                        column : "group_a",
+                        order_by_asc: "group_a",
+                    }
+                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
+
+                    return res.data
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             async getCategoryA() {
                 try {
                     let filter = {
@@ -173,9 +188,56 @@
                         order_by_asc: "category_a",
                     }
                     let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
-                    this.categoriesA = res.data
+                    let categoriesA = res.data
+
+                    for (let i = 0; i < categoriesA.length; i++) {
+                        categoriesA[i]['groupA'] = await this.getGroupA(categoriesA[i])
+                    }
+
+                    console.log(categoriesA);
+
+                    this.categoriesA = categoriesA;
 
                     this.visibleContents = this.categoriesA.map(() => true);
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getGroupA(item) {
+                try {
+                    let filter = {
+                        project_idx : this.project.idx,
+                        category_a : item.category_a,
+                        column : "group_a",
+                        order_by_asc: "group_a",
+                    }
+                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
+
+                    let groupA = res.data
+
+                    for (let i = 0; i < groupA.length; i++) {
+                        groupA[i]['groupB'] = await this.getGroupB(item.category_a,groupA[i]);
+                    }
+
+                    return groupA
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getGroupB(category_a,item) {
+                try {
+                    let filter = {
+                        project_idx : this.project.idx,
+                        category_a : category_a,
+                        group_a : item.group_a,
+                        column : "group_b",
+                        order_by_asc: "group_b",
+                    }
+                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
+
+                    let groupB = res.data;
+
+                    return groupB
                 }catch (e) {
                     alert(e.message)
                 }
