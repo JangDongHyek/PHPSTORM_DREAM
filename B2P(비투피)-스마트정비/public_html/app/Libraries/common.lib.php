@@ -610,27 +610,35 @@ function processOrder($order) {
     $B2P_GoodsCost = round($B2P_Goods - $category_fee_cost); //B2P 판매자 정산요청가 || 공급원가
 
     $B2P_Option = ($order['OptSelPrice']*1 + $order['OptAddPrice']*1); //옵션상품 정산요청가
+    $B2P_OptionCost = ($B2P_Option * ( 1 - $order['category_fee']/100 )); //B2P 옵션상품 정산요청가
 
-    $B2P_GoodsCost_fee = $order['b2p_cost']; //B2P 판매자 정산요청가 수수료율 || 비투피 상품 수수료
+    $B2P_GoodsCost_fee = ($B2P_Goods * ( $order['category_fee']/100 )); //B2P 판매자 정산요청가 수수료율 || 비투피 상품 수수료
     $B2P_OptionCost_fee = ($B2P_Option * ( $order['category_fee']/100 )); //B2P 옵션상품 정산요청가 수수료율 || 비투피 옵션 수수료
+
 
     $OrderAmount = $B2P_Goods + $B2P_Option; // 주문금액
 
     // *****************
+    //1 옥션 2지마켓
     if($order['SiteType'] == 1) {
-        $B2P_OptionCost = ($B2P_Option - $category_fee_cost); //B2P 옵션상품 정산요청가
         $B2P_TotCommission = $category_fee_cost + abs($order['OutsidePrice']) + abs($order['SellerPcsFee']); //B2P 기본 서비스 이용료
-        $B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs(round($B2P_TotCommission)) - abs($order['OutsidePrice']); //B2P 판매자 최종정산금
+        $B2P_ServiceFee = $B2P_GoodsCost_fee + $B2P_OptionCost_fee ; //B2P 서비스이용료
+
+        $B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs(round($B2P_ServiceFee)) - abs($order['OutsidePrice']) - abs($order['DeductTaxPrice']) ; //B2P 판매자 최종정산금
+        //$B2P_ServiceFee = $B2P_GoodsCost_fee + $B2P_OptionCost_fee - abs($order['FeeDiscountPrice']) + abs($order['DeductTaxPrice']); //B2P 서비스이용료
+
+        //echo $B2P_Goods + $B2P_Option.'<br>';
+        //echo $B2P_ServiceFee.'<br>';
+        //echo $order['OutsidePrice'].'<br>';
+        //echo $order['DeductTaxPrice'];
     }else {
-        $B2P_OptionCost = round($B2P_Option - $category_fee_cost); //B2P 옵션상품 정산요청가
+        $B2P_OptionCost = round($B2P_OptionCost); //B2P 옵션상품 정산요청가
         $B2P_TotCommission = $category_fee_cost  + abs($order['SellerPcsFee']) ; //B2P 기본 서비스 이용료
         $B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs($B2P_TotCommission)
-            - abs($order['SellerDiscountPrice1']) - abs($order['SellerCashbackMoney']) - abs($order['SellerFundingDiscountPrice']); //B2P 판매자 최종정산금
+            - abs($order['SellerDiscountPrice1']) - abs($order['SellerCashbackMoney']) - abs($order['SellerFundingDiscountPrice']) + abs($order['DeductTaxPrice']); //B2P 판매자 최종정산금
+        $B2P_ServiceFee = $B2P_TotCommission - abs($order['FeeDiscountPrice']) - abs($order['SellerCashbackMoney']);
     }
-
-    $B2P_ServiceFee = $B2P_GoodsCost_fee + $B2P_OptionCost_fee - abs($order['FeeDiscountPrice']) + abs($order['DeductTaxPrice']); //B2P 서비스이용료
     // *****************
-
 
     // 배송비 및 배송비 수수료 관련
     $dl_DelFeeAmt = $order['ShippingFee'];
@@ -649,7 +657,6 @@ function processOrder($order) {
 
     $totalCommission = $category_fee_cost + $totalDiscount + $dl_DelFeeCommission + $b2p_shipping_fee;
 
-
     // 옥션이 아니라면 정산금액에 배송비 포함
     if($order['SiteType'] == 2) {
         $B2P_SettlementPrice += $dl_DelTotal;
@@ -659,15 +666,20 @@ function processOrder($order) {
     $b2p_kcp_price = floor($B2P_SettlementPrice * ($b2p_kcp_fee / 100));
     $b2p_cp_fee_price = floor($B2P_SettlementPrice * ($b2p_cp_fee / 100));
 
-    $B2P_SettlementPrice -= ($b2p_kcp_price - $b2p_cp_fee_price);
+    //$B2P_SettlementPrice -= ($b2p_kcp_price - $b2p_cp_fee_price);
 
     $b2p = array(
-        "OrderAmount" => $OrderAmount,                      // 판매자 정산요청가 || 주문금액
+        "B2P_Goods" => $B2P_Goods,
+        "B2P_Option" => $B2P_Option,
+        "OrderAmount" => $OrderAmount,                  // 판매자 정산요청가 || 주문금액
         "category_fee_cost" => $category_fee_cost,      // 카테고리 수수료
         "totalDiscount" => $totalDiscount,              // 판매자 할인금액
         "SellerDiscountPrice" => $SellerDiscountPrice,  // 쿠폰할인
-        "B2P_SettlementPrice" => $B2P_SettlementPrice,                      // 정산 금액
-        "B2P_TotCommission" => $B2P_TotCommission,                      // B2P 기본 서비스 이용료
+        "B2P_SettlementPrice" => $B2P_SettlementPrice,  // 정산 금액
+        "B2P_TotCommission" => $B2P_TotCommission,      // B2P 기본 서비스 이용료
+        "B2P_GoodsCost" => $B2P_GoodsCost,              // 판매자 정산요청가(구. 공급원가)
+        "B2P_OptionCost" => $B2P_OptionCost,            // 필수/추가구성정산요청가
+        "B2P_ServiceFee" => $B2P_ServiceFee,            // B2P 서비스이용료
         "dl_DelFeeAmt" => $dl_DelFeeAmt,                // 배송금액
         "dl_DelFeeCommission" => $dl_DelFeeCommission,  // 배송비 수수료
         "b2p_shipping_fee" => $b2p_shipping_fee,        // b2p 배송비 수수료

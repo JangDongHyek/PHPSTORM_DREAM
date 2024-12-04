@@ -10,57 +10,91 @@
             <div class="border">시작일</div>
             <div class="border">마감일</div>
         </div>
-        <template v-for="category,index in categoriesA">
-            <div class="section_title" @click="toggleContent(index)">
-                <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !visibleContents[index]}"></i> {{category.category_a}}
+
+        <template v-for="category_a,index in category_a">
+            <div class="section_title" @click="category_a.visible = !category_a.visible">
+                <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !category_a.visible}"></i> {{category_a.category_a}}
             </div>
-            <div class="section_content" v-show="visibleContents[index]" v-for="group,index2 in groups">
+            <!-- group_a 반복 -->
+            <div class="section_content" v-show="category_a.visible" v-for="group_a,index2 in category_a.group_a">
                 <div class="task_content_dl">
-                    <div class="zone_title" @click="toggleContent2(index2)">
-                        <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !visibleContents2[index2]}"></i> {{group.group_a}} [{{group.group_b}}] {{group.group_c}}
+                    <div class="zone_title" @click="group_a.visible = !group_a.visible">
+                        <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_a.visible}"></i> {{group_a.group_a}}
                     </div>
-                    <dl class="dropdown_dl" v-show="visibleContents2[index2]">
-                        <!--<dt class="colgroup">-->
-                        <!--    <div class="border task_title"><i class="fa-light fa-angle-down"></i> 거푸집</div>-->
-                        <!--    <div class="border"><input class="inputPm" type="text" name="" id="" placeholder="담당자 지정" value="김설주" data-toggle="modal" data-target="#pmSearchModal"/></div>-->
-                        <!--    <div class="border">-->
-                        <!--        <select class="statusSelect blue">-->
-                        <!--            <option value="gray">예정</option>-->
-                        <!--            <option value="green">진행</option>-->
-                        <!--            <option value="blue" selected>완료</option>-->
-                        <!--            <option value="black">보류</option>-->
-                        <!--        </select>-->
-                        <!--    </div>-->
-                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
-                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
-                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
-                        <!--    <div class="border"><input type="text" class="datePicker" name="" id="" value="2024-05-02" placeholder="-"/></div>-->
-                        <!--</dt>-->
-                        <dd class="colgroup" v-for="item in schedule" v-if="checkGroup(group,item)">
-                            <div class="border task_item"><span style="font-weight: bold; font-size: 15px;">{{item.category_b}}</span>  {{item.content}}</div>
-                            <div class="border flex ai-c jc-c">
-                                <template v-if="item.user_idx">
-                                    <button class="btn_none" @click="manager_modal = true; manager_idx = item.idx">{{item.$user.company_person}}</button>
-                                </template>
+                    <dl class="dropdown_dl">
+                        <!-- group_b 반복 -->
+                        <div class="section_content" v-show="group_a.visible" v-for="group_b,index3 in group_a.group_b">
+                            <div class="task_content_dl">
+                                <div class="zone_title" @click="group_b.visible = !group_b.visible">
+                                    <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_b.visible}"></i> {{group_b.group_b}}
+                                </div>
+                                <dl class="dropdown_dl">
 
-                                <template v-else>
-                                    <button class="btn btn_mini btn_black" @click="manager_modal = true; manager_idx = item.idx">지정</button>
-                                </template>
+                                    <!-- group_c 반복 -->
+                                    <div class="section_content" v-show="group_b.visible" v-for="group_c,index4 in group_b.group_c">
+                                        <div class="task_content_dl">
+                                            <div class="zone_title" @click="group_c.visible = !group_c.visible">
+                                                <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_c.visible}"></i> {{group_c.group_c}}
+                                            </div>
+                                            <dl class="dropdown_dl">
 
+                                                <!-- category_b 반복 -->
+                                                <div class="section_content" v-show="group_c.visible" v-for="category_b,index5 in group_c.category_b">
+                                                    <div class="task_content_dl" @click="category_b.visible = !category_b.visible">
+                                                        <div class="zone_title">
+                                                            <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !category_b.visible}"></i> {{category_b.category_b}}
+                                                        </div>
+                                                        <dl class="dropdown_dl">
+
+                                                            <!-- data 반복 -->
+                                                            <div class="section_content" v-show="category_b.visible">
+                                                                <div class="task_content_dl">
+                                                                    <div class="zone_title">
+                                                                    </div>
+                                                                    <dl class="dropdown_dl">
+
+                                                                        <dd class="colgroup"  v-for="item,index4 in category_b.data">
+                                                                            <div class="border task_item">  {{item.content}}</div>
+                                                                            <div class="border flex ai-c jc-c">
+                                                                                <template v-if="item.user_idx">
+                                                                                    <button class="btn_none" @click="manager_modal = true; manager_idx = item.idx">{{item.$user.company_person}}</button>
+                                                                                </template>
+
+                                                                                <template v-else>
+                                                                                    <button class="btn btn_mini btn_black" @click="manager_modal = true; manager_idx = item.idx">지정</button>
+                                                                                </template>
+
+                                                                            </div>
+                                                                            <div class="border">
+                                                                                <select class="statusSelect" :class="getClass(item)" v-model="item.status" @change="updateData(item)">
+                                                                                    <option value="">예정</option>
+                                                                                    <option value="진행">진행</option>
+                                                                                    <option value="완료">완료</option>
+                                                                                    <option value="보류">보류</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_start_date"/></div>
+                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_end_date"/></div>
+                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.start_date" @change="updateData(item)"/></div>
+                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.end_date"/></div>
+                                                                        </dd>
+
+                                                                    </dl>
+                                                                </div>
+                                                            </div>
+
+                                                        </dl>
+                                                    </div>
+                                                </div>
+
+                                            </dl>
+                                        </div>
+                                    </div>
+
+                                </dl>
                             </div>
-                            <div class="border">
-                                <select class="statusSelect" :class="getClass(item)" v-model="item.status" @change="updateData(item)">
-                                    <option value="">예정</option>
-                                    <option value="진행">진행</option>
-                                    <option value="완료">완료</option>
-                                    <option value="보류">보류</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_start_date"/></div>
-                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_end_date"/></div>
-                            <div class="border"><input type="date" class="datePicker" v-model="item.start_date" @change="updateData(item)"/></div>
-                            <div class="border"><input type="date" class="datePicker" v-model="item.end_date"/></div>
-                        </dd>
+                        </div>
+
                     </dl>
                 </div>
             </div>
@@ -91,11 +125,14 @@
                 data : [],
                 modal : false,
 
-                categoriesA : [],
+                category_a : [],
                 groups : [],
 
                 visibleContents : [],
                 visibleContents2 : [],
+                visibleContents3 : [],
+                visibleContents4 : [],
+
 
                 manager_modal : false,
                 manager_idx : "",
@@ -106,7 +143,6 @@
             this.component_idx = this.jl.generateUniqueId();
 
             this.getCategoryA();
-            this.getGroup();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -138,48 +174,6 @@
                 if(item.status == '완료') return 'blue'
                 if(item.status == '보류') return 'black'
             },
-            checkGroup(group,item) {
-                if(group.group_a == item.group_a && group.group_b == item.group_b && group.group_c == item.group_c) return true
-                return false;
-            },
-            toggleContent2(index) {
-                // 클릭한 항목의 가시성 상태를 토글
-                this.$set(this.visibleContents2, index, !this.visibleContents2[index]);
-            },
-            toggleContent(index) {
-                // 클릭한 항목의 가시성 상태를 토글
-                this.$set(this.visibleContents, index, !this.visibleContents[index]);
-            },
-            async getGroup() {
-                try {
-                    let filter = {
-                        project_idx : this.project.idx,
-                        column : ["group_a","group_b","group_c"],
-                        order_by_asc: "group_a",
-                    }
-                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
-                    this.groups = res.data
-
-                    this.visibleContents2 = this.groups.map(() => true);
-                }catch (e) {
-                    alert(e.message)
-                }
-            },
-            async getGroupB(item) {
-                try {
-                    let filter = {
-                        project_idx : this.project.idx,
-                        category_a : item.category_a,
-                        column : "group_a",
-                        order_by_asc: "group_a",
-                    }
-                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
-
-                    return res.data
-                }catch (e) {
-                    alert(e.message)
-                }
-            },
             async getCategoryA() {
                 try {
                     let filter = {
@@ -187,57 +181,15 @@
                         column : "category_a",
                         order_by_asc: "category_a",
                     }
-                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
-                    let categoriesA = res.data
-
-                    for (let i = 0; i < categoriesA.length; i++) {
-                        categoriesA[i]['groupA'] = await this.getGroupA(categoriesA[i])
-                    }
-
-                    console.log(categoriesA);
-
-                    this.categoriesA = categoriesA;
-
-                    this.visibleContents = this.categoriesA.map(() => true);
-                }catch (e) {
-                    alert(e.message)
-                }
-            },
-            async getGroupA(item) {
-                try {
-                    let filter = {
-                        project_idx : this.project.idx,
-                        category_a : item.category_a,
-                        column : "group_a",
-                        order_by_asc: "group_a",
-                    }
-                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
-
-                    let groupA = res.data
-
-                    for (let i = 0; i < groupA.length; i++) {
-                        groupA[i]['groupB'] = await this.getGroupB(item.category_a,groupA[i]);
-                    }
-
-                    return groupA
-                }catch (e) {
-                    alert(e.message)
-                }
-            },
-            async getGroupB(category_a,item) {
-                try {
-                    let filter = {
-                        project_idx : this.project.idx,
-                        category_a : category_a,
-                        group_a : item.group_a,
-                        column : "group_b",
-                        order_by_asc: "group_b",
-                    }
-                    let res = await this.jl.ajax("distinct",filter,"/api/project_schedule");
-
-                    let groupB = res.data;
-
-                    return groupB
+                    let res = await this.jl.ajax("group_category",filter,"/api/project_schedule");
+                    //
+                    //for (let i = 0; i < categoriesA.length; i++) {
+                    //    categoriesA[i]['groupA'] = await this.getGroupA(categoriesA[i])
+                    //}
+                    //
+                    //console.log(categoriesA);
+                    //
+                    this.category_a = res.data
                 }catch (e) {
                     alert(e.message)
                 }

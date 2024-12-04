@@ -385,6 +385,8 @@ class JlModel extends Jl{
             }
         }
 
+        $this->reset();
+
         return array("data" => $data,"sql" => $sql);
     }
 

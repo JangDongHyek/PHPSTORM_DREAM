@@ -150,7 +150,7 @@ try {
             $obj = $models[$table]->jsonDecode($_POST['obj'],false);
             $models[$table]->setFilter($obj);
 
-            $object = $models[$table]->distinct($obj);
+            $object = $models[$table]->where($obj)->distinct($obj);
 
             $response['data'] = $object['data'];
             $response['sql'] = $object['sql'];

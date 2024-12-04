@@ -29,6 +29,7 @@ class ProjectScheduleController extends BaseController
 
     public function __construct() {
         $this->models[$this->table] = new JlModel(array("table" => $this->table));
+        $this->models['user'] = new JlModel(array("table" => 'user'));
         if($this->file_use) {
             $this->file = new JlFile("/jl/jl_resource/{$this->table}");
         }
@@ -63,6 +64,11 @@ class ProjectScheduleController extends BaseController
 
             case "distinct" : {
                 $this->distinct();
+                break;
+            }
+
+            case "group_category" : {
+                $this->groupCategory();
                 break;
             }
 
@@ -197,11 +203,108 @@ class ProjectScheduleController extends BaseController
         $this->models[$this->table]->setFilter($obj);
 
         //$obj['column'] 값으로 가져옴
-        $data = $this->models[$this->table]->distinct($obj);
+        $data = $this->models[$this->table]->where($obj)->distinct($obj);
 
         $this->jl_response['success'] = true;
         $this->jl_response['data'] = $data['data'];
         $this->jl_response['sql'] = $data['sql'];
+        $this->jl_response['obj'] = $obj;
+        echo json_encode($this->jl_response);
+    }
+
+    public function groupCategory() {
+        $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
+        $this->models[$this->table]->setFilter($obj);
+
+        $category_a = $this->models[$this->table]->where($obj)->distinct($obj)['data'];
+
+        foreach ($category_a as $ca_index => $ca) {
+            $filter = array(
+                "project_idx" => $obj['project_idx'],
+                "category_a" => $ca['category_a'],
+                "column" => "group_a",
+                "order_by_asc" => "group_a"
+            );
+            $this->models[$this->table]->setFilter($filter);
+            $group_a = $this->models[$this->table]->where($filter)->distinct($filter)['data'];
+            $category_a[$ca_index]['visible'] = true;
+            $category_a[$ca_index]['group_a'] = $group_a;
+
+            foreach ($group_a as $ga_index => $ga) {
+                $filter = array(
+                    "project_idx" => $obj['project_idx'],
+                    "category_a" => $ca['category_a'],
+                    "group_a" => $ga['group_a'],
+                    "column" => "group_b",
+                    "order_by_asc" => "group_b"
+                );
+                $this->models[$this->table]->setFilter($filter);
+                $group_b = $this->models[$this->table]->where($filter)->distinct($filter)['data'];
+                $category_a[$ca_index]['group_a'][$ga_index]['visible'] = true;
+                $category_a[$ca_index]['group_a'][$ga_index]['group_b'] = $group_b;
+
+                foreach ($group_b as $gb_index => $gb) {
+                    $filter = array(
+                        "project_idx" => $obj['project_idx'],
+                        "category_a" => $ca['category_a'],
+                        "group_a" => $ga['group_a'],
+                        "group_b" => $gb['group_b'],
+                        "column" => "group_c",
+                        "order_by_asc" => "group_c"
+                    );
+                    $this->models[$this->table]->setFilter($filter);
+                    $group_c = $this->models[$this->table]->where($filter)->distinct($filter)['data'];
+                    $category_a[$ca_index]['group_a'][$ga_index]['group_b'][$gb_index]['visible'] = true;
+                    $category_a[$ca_index]['group_a'][$ga_index]['group_b'][$gb_index]['group_c'] = $group_c;
+
+                    foreach ($group_c as $gc_index => $gc) {
+                        $filter = array(
+                            "project_idx" => $obj['project_idx'],
+                            "category_a" => $ca['category_a'],
+                            "group_a" => $ga['group_a'],
+                            "group_b" => $gb['group_b'],
+                            "group_c" => $gc['group_c'],
+                            "column" => "category_b",
+                            "order_by_asc" => "category_b"
+                        );
+                        $this->models[$this->table]->setFilter($filter);
+                        $category_b = $this->models[$this->table]->where($filter)->distinct($filter)['data'];
+                        $category_a[$ca_index]['group_a'][$ga_index]['group_b'][$gb_index]['group_c'][$gc_index]['visible'] = true;
+                        $category_a[$ca_index]['group_a'][$ga_index]['group_b'][$gb_index]['group_c'][$gc_index]['category_b'] = $category_b;
+
+                        foreach ($category_b as $cb_index => $cb) {
+                            $filter = array(
+                                "project_idx" => $obj['project_idx'],
+                                "category_a" => $ca['category_a'],
+                                "group_a" => $ga['group_a'],
+                                "group_b" => $gb['group_b'],
+                                "group_c" => $gc['group_c'],
+                                "category_b" => $cb['category_b'],
+                                "order_by_asc" => "idx"
+                            );
+                            $this->models[$this->table]->setFilter($filter);
+                            $data = $this->models[$this->table]->where($filter)->get()['data'];
+
+                            foreach ($data as $data_index => $d) {
+                                if(!$d['user_idx']) continue;
+
+                                $user = $this->models['user']->where($this->models['user']->primary,$d['user_idx'])->get()['data'][0];
+                                $data[$data_index]['$user'] = $user;
+                            }
+
+
+                            $category_a[$ca_index]['group_a'][$ga_index]['group_b'][$gb_index]['group_c'][$gc_index]['category_b']
+                            [$cb_index]['visible'] = true;
+                            $category_a[$ca_index]['group_a'][$ga_index]['group_b'][$gb_index]['group_c'][$gc_index]['category_b']
+                                [$cb_index]['data'] = $data;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->jl_response['success'] = true;
+        $this->jl_response['data'] = $category_a;
         $this->jl_response['obj'] = $obj;
         echo json_encode($this->jl_response);
     }
