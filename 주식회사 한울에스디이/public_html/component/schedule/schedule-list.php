@@ -18,14 +18,14 @@
             <!-- group_a 반복 -->
             <div class="section_content" v-show="category_a.visible" v-for="group_a,index2 in category_a.group_a">
                 <div class="task_content_dl">
-                    <div class="zone_title" @click="group_a.visible = !group_a.visible">
+                    <div class="zone_title c1" @click="group_a.visible = !group_a.visible">
                         <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_a.visible}"></i> {{group_a.group_a}}
                     </div>
                     <dl class="dropdown_dl">
                         <!-- group_b 반복 -->
                         <div class="section_content" v-show="group_a.visible" v-for="group_b,index3 in group_a.group_b">
                             <div class="task_content_dl">
-                                <div class="zone_title" @click="group_b.visible = !group_b.visible">
+                                <div class="zone_title c2" @click="group_b.visible = !group_b.visible">
                                     <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_b.visible}"></i> {{group_b.group_b}}
                                 </div>
                                 <dl class="dropdown_dl">
@@ -33,15 +33,16 @@
                                     <!-- group_c 반복 -->
                                     <div class="section_content" v-show="group_b.visible" v-for="group_c,index4 in group_b.group_c">
                                         <div class="task_content_dl">
-                                            <div class="zone_title" @click="group_c.visible = !group_c.visible">
+                                            <div class="zone_title c3" @click="group_c.visible = !group_c.visible">
+                                                
                                                 <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_c.visible}"></i> {{group_c.group_c}}
                                             </div>
                                             <dl class="dropdown_dl">
 
                                                 <!-- category_b 반복 -->
                                                 <div class="section_content" v-show="group_c.visible" v-for="category_b,index5 in group_c.category_b">
-                                                    <div class="task_content_dl" @click="category_b.visible = !category_b.visible">
-                                                        <div class="zone_title">
+                                                    <div class="task_content_dl" >
+                                                        <div class="zone_title c4" @click="category_b.visible = !category_b.visible">
                                                             <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !category_b.visible}"></i> {{category_b.category_b}}
                                                         </div>
                                                         <dl class="dropdown_dl">
@@ -49,8 +50,7 @@
                                                             <!-- data 반복 -->
                                                             <div class="section_content" v-show="category_b.visible">
                                                                 <div class="task_content_dl">
-                                                                    <div class="zone_title">
-                                                                    </div>
+                                                                    <!--<div class="zone_title"></div>-->
                                                                     <dl class="dropdown_dl">
 
                                                                         <dd class="colgroup"  v-for="item,index4 in category_b.data">
@@ -73,8 +73,8 @@
                                                                                     <option value="보류">보류</option>
                                                                                 </select>
                                                                             </div>
-                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_start_date"/></div>
-                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_end_date"/></div>
+                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_start_date" @change="updateData(item)"/></div>
+                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_end_date" @change="updateData(item)"/></div>
                                                                             <div class="border"><input type="date" class="datePicker" v-model="item.start_date" @change="updateData(item)"/></div>
                                                                             <div class="border"><input type="date" class="datePicker" v-model="item.end_date"/></div>
                                                                         </dd>

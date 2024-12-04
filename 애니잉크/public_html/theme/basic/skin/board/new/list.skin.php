@@ -121,7 +121,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                             <select name="check_date">
                                 <option value="">선택해주세요</option>
                                 <? for ($i = 1; $i < 37; $i++) { ?>
-                                <option value="<?=$i?>"><?=$i?>개월</option>
+                                <option value="<?=$i?>" <?if($_GET['check_date'] == $i) echo 'selected';?> ><?=$i?>개월</option>
                                 <? } ?>
                             </select>
                         </td>

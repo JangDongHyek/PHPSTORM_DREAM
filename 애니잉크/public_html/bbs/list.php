@@ -96,6 +96,19 @@ if ($sca || $stx) {
             $sql_search .= " and wr_17 = '{$sch_wr_17}'";
         }
 
+        if($check_date != ''){
+            $sql_search .= " and  (
+SELECT COUNT( wr_id )
+FROM g5_write_as
+WHERE g5_write_as.wr_1 = g5_write_new.wr_id
+AND g5_write_as.wr_3
+BETWEEN DATE_SUB( CURDATE( ) , INTERVAL $check_date
+MONTH )
+AND CURDATE( )
+) =0
+";
+        }
+
 
 		$as_where="";
 		if($sch_inspection1){
@@ -361,6 +374,7 @@ if($bo_table == 'new'){
 	if($sch_fdate2) $geturl .= '&sch_fdate2='.$sch_fdate2;
 	if($sch_ldate2) $geturl .= '&sch_ldate2='.$sch_ldate2;
     if($sch_wr_17) $geturl .= '&sch_wr_17='.$sch_wr_17;
+    if($check_date) $geturl .= '&check_date='.$check_date;
 
 
 

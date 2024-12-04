@@ -190,16 +190,21 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             var response = await fetchData(`/order/GetOrder`, {idx});
 
             var OrderNo = response['result']['OrderNo'];
-            var response2 = await fetchData(`/order/GetCalc/${OrderNo}`);
-            console.log(response2)
-            let order = response2;
+            //var response2 = await fetchData(`/order/GetCalc/${OrderNo}`);
+            var response2 = await fetchData(`/order/GetSettleOrderByOrderNo/${OrderNo}`); //GetOrderByOrderNo
+            //         $order = processOrder($data['data'][0]);
 
+            let order = response2['result'];
+            console.log(order);
             let style = order['ContrNo'] ? "" : "class='color-red';";
 
             // 판매금액
             var OrderAmount = order['b2p']['OrderAmount'];
-            // 카테고리 이용료
+            // 기본서비스 이용료
             let category_fee_cost = order['b2p']['category_fee_cost'];
+            let B2P_TotCommission = order['b2p']['B2P_TotCommission'];
+
+
             // 판매자할인 / 공제금
             let totalDiscount = order['b2p']['totalDiscount'];
             //배송비 수수료
@@ -213,15 +218,16 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             //정산금액
             let B2P_SettlementPrice = order['b2p']['B2P_SettlementPrice'];
 
-            let CostPrice = parseInt(OrderAmount) - parseInt(category_fee_cost);
+            let CostPrice = parseInt(OrderAmount) - parseInt(B2P_TotCommission);
 
 
 
+            console.log(B2P_SettlementPrice);
             code_html += `<tr ${style}>`;
             code_html += '<td>' + response['result']['OrderNo'] + '</td>'; // 주문번호
             code_html += '<td>' + response['result']['GoodsName'] + '</td>'; // 상품명
             code_html += '<td>' + AddComma(OrderAmount) + '</td>';  // 판매금액
-            code_html += '<td>-' + AddComma(category_fee_cost) + '</td>';   // 기본 서비스 이용료
+            code_html += '<td>-' + AddComma(B2P_TotCommission) + '</td>';   // 기본 서비스 이용료
             code_html += '<td>' + AddComma(CostPrice) + '</td>';    // 공급원가
             //code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(totalDiscount) + '</td>';    // 판매자할인/공제금
@@ -246,7 +252,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             code_html += '</tr>';
 
             OrderAmount_total += (OrderAmount) * 1;
-            ServiceFee_total += (category_fee_cost) * 1;
+            ServiceFee_total += (B2P_TotCommission) * 1;
             KCPServiceFee_total += (new_b2p_kcp_price) * 1;
             KCPServiceFeeEvent_total += new_b2p_cp_fee_price;
             CostPrice_total += CostPrice;
@@ -630,7 +636,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
         }
 
         if ($("input[name='OrderClaimRelease_ClaimCancelType']:checked").val() == 1) {
-            if (!$('#OrderClaimRelease_DeliveryCompCode').val()) {
+            if (!$('#OrderClaimRelease_DeliveryCompCode_input').val()) {
                 Swal.fire({
                     text: "택배사를 선택해주세요."
                 });
@@ -662,7 +668,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             var data_arr =
                 {
                     idx: idx,
-                    DeliveryCompCode: $('#OrderClaimRelease_DeliveryCompCode').val(),
+                    DeliveryCompCode: $('#OrderClaimRelease_DeliveryCompCode_input').val(),
                     InvoiceNo: $('#OrderClaimRelease_InvoiceNo').val(),
                     ClaimCancelType: $("input[name='OrderClaimRelease_ClaimCancelType']:checked").val(),
                     CancelComment: $("#OrderClaimRelease_CancelComment").val()
@@ -4132,13 +4138,14 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                                 <td>
                                     <div class="input_select">
                                         <select class="border_gray" id="OrderClaimRelease_DeliveryCompCode"
-                                                name="selDeliveryComp">
+                                                name="selDeliveryComp" onchange="$('#OrderClaimRelease_DeliveryCompCode_input').val(this.value);">
                                             <option value="">선택</option>
                                             <? foreach ($delivery_company_list as $index => $data): ?>
                                                 <option value="<?= $data['code'] ?>"
                                                         data-name="<?= $data['name'] ?>" <?= get_selected($shippingArr['companyNo'], $data['code']) ?>><?= $data['name'] ?></option>
                                             <? endforeach; ?>
                                         </select>
+                                        <input type="hidden" id="OrderClaimRelease_DeliveryCompCode_input">
                                     </div>
                                 </td>
                             </tr>
