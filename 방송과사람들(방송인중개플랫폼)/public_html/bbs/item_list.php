@@ -1,8 +1,6 @@
 <?
 include_once('./_common.php');
-include_once("../class/Lib.php");
-
-$jl = new JL();
+include_once("../jl/JlConfig.php");
 
 $g5['title'] = '리스트';
 include_once('./_head.php');

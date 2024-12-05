@@ -1,6 +1,6 @@
 <?php
 //namespace App\Libraries;
-include_once("Jl.php");
+require_once("Jl.php");
 class JlFile extends Jl{
 
     private $path;
@@ -132,7 +132,7 @@ class JlFile extends Jl{
                 $this->resize_image($file['src'],$file['resize_src'],200,100);
             }
 
-            return json_encode($file,JSON_UNESCAPED_UNICODE);
+            return $this->jsonEncode($file);
         }
     }
 
@@ -153,7 +153,7 @@ class JlFile extends Jl{
             array_push($datas,json_decode($data));
         }
 
-        return json_encode($datas,JSON_UNESCAPED_UNICODE);
+        return $this->jsonEncode($datas);
     }
 
     function resize_image($file, $newfile, $w, $h) {

@@ -1,8 +1,7 @@
 <?
 include_once('./_common.php');
-include_once("../class/Lib.php");
+include_once(G5_PATH."/jl/JlConfig.php");
 
-$jl = new JL();
 $name = "cmypage";
 $g5['title'] = '서비스관리';
 include_once('./_head.php');

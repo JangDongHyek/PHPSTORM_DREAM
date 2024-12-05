@@ -178,7 +178,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getSchool();
             this.getCertify();
         },
@@ -188,28 +188,22 @@
             });
         },
         methods: {
-            deleteSchool : function(idx) {
+            async deleteSchool(idx) {
                 var method = "delete";
                 var filter = {idx : idx }
 
-                var objs = {_method: method};
-                objs = this.jl.processObject(objs,filter);
-                console.log(objs);
-                var res = ajax("/api/member_school.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/member_school.php");
 
                 if(res) {
                     this.jl.log(res);
                     this.getSchool();
                 }
             },
-            postSchool : function() {
+            async postSchool() {
                 var method = this.school.idx ? "update" : "insert";
                 var obj = this.jl.copyObject(this.school);
 
-                var objs = {_method: method};
-                objs = this.jl.processObject(objs,obj);
-
-                var res = ajax("/api/member_school.php", objs);
+                var res = await this.jl.ajax(method,obj,"/api/member_school.php";
                 if (res) {
                     this.jl.log(res)
                     alert("추가되었습니다.")
@@ -227,28 +221,22 @@
                     this.school.upfile = '';
                 }
             },
-            deleteCertify : function(idx) {
+            async deleteCertify(idx) {
                 var method = "delete";
                 var filter = {idx : idx }
 
-                var objs = {_method: method};
-                objs = this.jl.processObject(objs,filter);
-                console.log(objs);
-                var res = ajax("/api/member_certify.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/member_certify.php";
 
                 if(res) {
                     this.jl.log(res);
                     this.getCertify();
                 }
             },
-            postCertify : function() {
+            async postCertify() {
                 var method = this.certify.idx ? "update" : "insert";
                 var obj = this.jl.copyObject(this.certify);
 
-                var objs = {_method: method};
-                objs = this.jl.processObject(objs,obj);
-
-                var res = ajax("/api/member_certify.php", objs);
+                var res = await this.jl.ajax(method,obj,"/api/member_certify.php");
                 if (res) {
                     this.jl.log(res)
                     alert("추가되었습니다.")
@@ -266,29 +254,21 @@
                     this.certify.upfile = '';
                 }
             },
-            getSchool: function () {
+            async getSchool() {
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
-
-                var res = ajax("/api/member_school.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/member_school.php");
                 if (res) {
                     this.jl.log(res)
                     this.schools = res.response.data
                 }
             },
-            getCertify: function () {
+            async getCertify() {
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));
 
-                var objs = {_method: method};
-                objs = this.jl.processObject(objs,filter);
-
-                var res = ajax("/api/member_certify.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/member_certify.php");
                 if (res) {
                     this.jl.log(res)
                     this.certifies = res.response.data

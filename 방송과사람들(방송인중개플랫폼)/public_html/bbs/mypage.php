@@ -4,8 +4,7 @@ $name = "cmypage";
 $pid = "mypage";
 $g5['title'] = '마이페이지';
 include_once('./_head.php');
-include_once("../class/Lib.php");
-$jl = new JL();
+include_once(G5_PATH."/jl/JlConfig.php");
 ?>
 
 <? if($name=="cmypage") { ?>

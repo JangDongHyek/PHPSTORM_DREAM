@@ -42,7 +42,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
         },
         mounted: function(){
             this.$nextTick(() => {

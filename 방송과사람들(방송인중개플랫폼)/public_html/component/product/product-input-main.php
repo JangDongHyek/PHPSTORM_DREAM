@@ -79,7 +79,7 @@
             };
         },
         created: function () {
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
         },
         mounted: function () {
             this.$nextTick(() => {
@@ -91,7 +91,7 @@
             });
         },
         methods: {
-            postData: function () {
+            async postData() {
                 if(this.data.portfolios.length > 5) {
                     alert("포트폴리오는 5개까지만 가능합니다.");
                     return false;
@@ -199,16 +199,16 @@
                 this.$refs.tab2.$refs.naverEditor.connectData(this.data,'service')
 
                 var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method, this.data, "/api/member_product.php");
+                var res = await this.jl.ajax(method, this.data, "/api/member_product.php");
 
                 if (res) {
                     alert("완료하였습니다.");
                     window.location.href= `${this.jl.root}/bbs/mypage_item.php`
                 }
             },
-            getData: function () {
+            async getData() {
                 var filter = {primary: this.primary}
-                var res = this.jl.ajax("get", filter, "/api/member_product.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_product.php");
 
                 if (res) {
                     this.data = res.response.data[0]

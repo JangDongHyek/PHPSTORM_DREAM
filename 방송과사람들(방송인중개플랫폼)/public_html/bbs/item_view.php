@@ -1,11 +1,9 @@
 <?
 include_once('./_common.php');
-include_once("../class/Lib.php");
+include_once(G5_PATH."/jl/JlConfig.php");
 $g5['title'] = '상세뷰';
 include_once('./_head.php');
 $name = "item_view";
-
-$jl = new JL();
 
 $idx = $_REQUEST['idx'];
 $sql = "select * from new_item where i_idx = '{$idx}' ";

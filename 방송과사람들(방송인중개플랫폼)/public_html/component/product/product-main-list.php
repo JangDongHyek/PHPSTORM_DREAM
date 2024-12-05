@@ -47,7 +47,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.filter[this.order_by_key] = this.order_by_value;
 
             this.getData();
@@ -69,36 +69,28 @@
             checkLike : function(product_idx) {
                 return this.likes.some(obj => obj.product_idx == product_idx)
             },
-            getLike : function() {
+            async getLike() {
                 var filter = {member_idx : this.member_idx}
-                var res = this.jl.ajax("get", filter, "/api/member_product_like.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_product_like.php");
 
                 if (res) {
                     this.likes = res.response.data
                 }
             },
-            postLike : function(product_idx) {
+            async postLike(product_idx) {
                 var data = {
                     member_idx : this.member_idx,
                     product_idx : product_idx
                 };
 
-                var res = this.jl.ajax("like", data, "/api/member_product_like.php");
+                var res = await this.jl.ajax("like", data, "/api/member_product_like.php");
 
                 if (res) {
                     this.getLike();
                 }
             },
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
-
-                if(res) {
-
-                }
-            },
-            getData: function () {
-                var res = this.jl.ajax("get",this.filter,"/api/member_product.php");
+            async getData() {
+                var res = await this.jl.ajax("get",this.filter,"/api/member_product.php");
 
                 if(res) {
                     this.data = res.response.data

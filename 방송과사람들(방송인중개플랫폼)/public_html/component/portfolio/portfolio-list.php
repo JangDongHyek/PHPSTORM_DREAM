@@ -61,7 +61,7 @@
             };
         },
         created: function () {
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getData();
             this.getLike();
         },
@@ -71,13 +71,13 @@
             });
         },
         methods: {
-            deleteLike : function(portfolio_idx) {
+            async deleteLike(portfolio_idx) {
                 var method = "sql_delete";
                 var data = {
                     member_idx : this.mb_no,
                     portfolio_idx : portfolio_idx
                 }
-                var res = this.jl.ajax(method, data, "/api/member_portfolio_like.php");
+                var res = await this.jl.ajax(method, data, "/api/member_portfolio_like.php");
 
                 if (res) {
                     this.getLike();
@@ -86,45 +86,37 @@
             checkLike : function(portfolio_idx) {
                 return this.likes.some(obj => obj.portfolio_idx == portfolio_idx)
             },
-            getLike : function() {
+            async getLike() {
                 var filter = {member_idx : this.mb_no}
-                var res = this.jl.ajax("get", filter, "/api/member_portfolio_like.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_portfolio_like.php");
 
                 if (res) {
                     this.likes = res.response.data
                 }
             },
-            postLike : function(portfolio_idx) {
+            async postLike(portfolio_idx) {
                 var method = "insert";
                 var data = {
                     member_idx : this.mb_no,
                     portfolio_idx : portfolio_idx
                 }
-                var res = this.jl.ajax(method, data, "/api/member_portfolio_like.php");
+                var res = await this.jl.ajax(method, data, "/api/member_portfolio_like.php");
 
                 if (res) {
                     this.getLike();
                 }
             },
-            postData: function () {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method, this.data, "/api/example.php");
-
-                if (res) {
-
-                }
-            },
-            getData: function () {
+            async getData() {
                 var filter = {member_idx : this.mb_no}
-                var res = this.jl.ajax("get", filter, "/api/member_portfolio.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_portfolio.php");
 
                 if (res) {
                     this.data = res.response.data
                 }
             },
-            deleteData: function (item) {
+            async deleteData(item) {
                 if(confirm('삭제하시겠습니까?')) {
-                    var res = this.jl.ajax("delete", item, "/api/member_portfolio.php");
+                    var res = await this.jl.ajax("delete", item, "/api/member_portfolio.php");
 
                     if (res) {
                         alert("완료되었습니다")

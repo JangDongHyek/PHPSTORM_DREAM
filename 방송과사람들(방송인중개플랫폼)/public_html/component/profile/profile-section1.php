@@ -91,7 +91,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -99,21 +99,7 @@
             });
         },
         methods: {
-            getData: function () {
-                var method = "get";
-                var filter = JSON.parse(JSON.stringify(this.filter));
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
-
-                var res = ajax("/api/example.php", objs);
-                if (res) {
-                    this.jl.log(res)
-                    this.data = res.response.data
-                }
-            }
         },
         computed: {
 

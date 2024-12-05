@@ -1,14 +1,12 @@
 <?php
-include_once("../class/Model.php");
+include_once(G5_PATH."/jl/JlConfig.php");
 
 $model_config = array(
-    "table" => "member_product_like",
-    "primary" => "idx",
+    "table" => "member_product_like"
 );
 
-$member_product_like = new Model($model_config);
-$model_config['table'] = "member_order";
-$member_order = new Model($model_config);
+$member_product_like = new JlModel(array("table" => "member_product_like"));
+$member_order = new JlModel(array("table" => "member_order"));
 
 // 상품 찜
 $member_product_like->where("member_idx",$member['mb_no']);

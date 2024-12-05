@@ -459,7 +459,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getCategory();
             this.getPortfolio();
         },
@@ -469,31 +469,19 @@
             });
         },
         methods: {
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
-
-                if(res) {
-
-                }
-            },
-            getPortfolio: function () {
+            async getPortfolio() {
                 var filter = {member_idx: this.mb_no}
-                var res = this.jl.ajax("get",filter,"/api/member_portfolio.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_portfolio.php");
 
                 if(res) {
                     this.portfolios = res.response.data
                 }
             },
-            getCategory: function () {
+            async getCategory() {
                 var method = "get";
                 var filter = { parent_idx : "" };
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
 
-                var res = ajax("/api/category.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/category.php");
                 if (res) {
                     console.log(res)
                     this.categories = res.response.data;

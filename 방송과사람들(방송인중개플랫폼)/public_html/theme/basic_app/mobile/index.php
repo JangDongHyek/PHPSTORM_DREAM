@@ -1,11 +1,10 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 include_once('./_common.php');
+include_once(G5_PATH."/jl/JlConfig.php");
 include_once(G5_THEME_MOBILE_PATH.'/head.php');
-include_once("../../../class/Lib.php");
-include_once("../../../jl/JlConfig.php");
 
-$jl = new JL();
+
 //신규 재능 상품
 $sql = "select * from new_item order by i_idx desc limit 8";
 $new_result = sql_query($sql);
@@ -301,6 +300,78 @@ $big_ctg = ctg_list(0);
 		
 	</div>
 </div>
+
+<!--온보딩 페이지 작업-->
+<?php if (!$is_member) { ?>
+    <div id="onboarding">
+        <div class="onboarding">
+            <div class="onboarding-container">
+                <div class="swiper onboardingSwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="page">
+                                <h1><span>01</span>전문가 찾기</h1>
+                                <p>다양한 방송 전문가들을 확인하고, <br>간편하게 의뢰해 보세요!</p>
+                                <div class="img">
+                                    <img src="<?php echo G5_THEME_IMG_URL ?>/onboarding_img01.png" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="page">
+                                <h1><span>02</span>전문가 등록</h1>
+                                <p>방송전문가로서 나의 재능을 판매하고, <br>커리어를 쌓아가세요!</p>
+                                <div class="img">
+                                    <img src="<?php echo G5_THEME_IMG_URL ?>/onboarding_img02.png" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="page">
+                                <h1><span>03</span>프로젝트 의뢰</h1>
+                                <p>방송전문가로서 나의 재능을 판매하고, <br>커리어를 쌓아가세요!</p>
+                                <div class="img">
+                                    <img src="<?php echo G5_THEME_IMG_URL ?>/onboarding_img03.png" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="page">
+                                <h1><span>04</span>포인트 증정</h1>
+                                <p>방송과사람들 신규 가입하신 모든 분들께, <br><strong>50,000포인트</strong>를 드립니다!</p>
+                                <div class="img">
+                                    <img src="<?php echo G5_THEME_IMG_URL ?>/onboarding_img04.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+            <div class="navigation">
+                <button onclick="location.href='<?php echo G5_BBS_URL ?>/login.php'">로그인</button>
+                <a class="onboarding_close">로그인 전에 어플둘러보기</a>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<script>
+    var swiper = new Swiper(".onboardingSwiper", {
+        pagination: {
+            el: ".swiper-pagination",
+        },
+    });
+     document.addEventListener("DOMContentLoaded", function() {
+        const closeButton = document.querySelector(".onboarding_close");
+        const onboardingElement = document.getElementById("onboarding");
+
+        closeButton.addEventListener("click", function() {
+        onboardingElement.style.display = "none";
+    });
+    });
+
+</script>
+
 
 <?php
 $jl->vueLoad("content");

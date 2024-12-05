@@ -93,7 +93,7 @@
                                         <input type="text" :value="product.PRODUCT_NM" readonly>
                                     </td>
                                     <td alt="규격단가" class="text_right">
-                                        <input type="number" v-model="product.standard_price" @keydown="jl.isNumberKey">
+                                        <input type="number" v-model="product.new_standard_price" @keydown="jl.isNumberKey">
                                     </td>
                                     <td alt="수량">
                                         <div class="number_controller">
@@ -104,7 +104,7 @@
                                     </td>
 
                                     <td alt="기존합계" class="text_right">
-                                        <p><b><em>기존합계</em>{{(getPrice(product) * product.new_amount).format()}}</b></p>
+                                        <p><b><em>기존합계</em>{{(product.new_standard_price * product.new_amount).format()}}</b></p>
                                     </td>
                                     <td alt="대체의약품">
                                         <p>
@@ -120,7 +120,7 @@
                                     </td>
                                     <td alt="절감금액" class="text_right">
                                         <p class="txt_red"><em>절감금액</em><b>
-                                                {{ ((getPrice(product) * product.new_amount) - (getPrice(getReplace(product)) * product.new_amount)).format() }}
+                                                {{ ((product.new_standard_price * product.new_amount) - (getPrice(getReplace(product)) * product.new_amount)).format() }}
                                             </b></p>
                                     </td>
                                 </tr>
@@ -298,7 +298,7 @@
 
                 for(let product of this.carts) {
                     if(product === 1 || typeof product !== 'object') continue;
-                    price += this.getPrice(product) * product.new_amount;
+                    price += product.new_standard_price * product.new_amount;
                 }
 
                 return price;

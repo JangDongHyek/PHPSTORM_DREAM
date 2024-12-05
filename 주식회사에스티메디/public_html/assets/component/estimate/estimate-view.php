@@ -79,14 +79,14 @@
                                             {{product.PRODUCT_NM}}
                                         </td>
                                         <td alt="규격단가" class="text_right">
-                                            <p><em>규격단가</em>{{product.standard_price}}</p>
+                                            <p><em>규격단가</em>{{product.new_standard_price}}</p>
                                         </td>
                                         <td alt="수량">
                                             {{product.new_amount}}
                                         </td>
 
                                         <td alt="기존합계" class="text_right">
-                                            <p><b><em>기존합계</em>{{(getPrice(product) * product.new_amount).format()}}</b></p>
+                                            <p><b><em>기존합계</em>{{(product.new_standard_price * product.new_amount).format()}}</b></p>
                                         </td>
                                         <td alt="대체품목">
                                             <p>
@@ -102,7 +102,7 @@
                                         </td>
                                         <td alt="절감금액" class="text_right">
                                             <p class="txt_red"><em>절감금액</em><b>
-                                                    {{ ((getPrice(product) * product.new_amount) - (getPrice(getReplace(product)) * product.new_amount)).format() }}
+                                                    {{ ((product.new_standard_price * product.new_amount) - (getPrice(getReplace(product)) * product.new_amount)).format() }}
                                                 </b></p>
                                         </td>
                                     </tr>
@@ -158,10 +158,7 @@
                                 <tr>
                                     <td>{{(originTotalPrice() - stTotalPrice()).format()}}</td>
                                     <td class="txt_red">
-                                        {{
-                                        isNaN(stTotalPrice() / originTotalPrice())
-                                        ? 0 : ((stTotalPrice() / originTotalPrice()) * 100).toFixed(2)
-                                        }}%
+                                        {{getDiscount()}}%
                                     </td>
                                 </tr>
                                 </tbody>
@@ -212,6 +209,13 @@
             });
         },
         methods: {
+            getDiscount() {
+                let origin = this.originTotalPrice()
+                let st = this.stTotalPrice();
+                let result = ((origin - st) / origin * 100).toFixed(2)
+                if(isNaN(result)) return 0
+                return result;
+            },
             stTotalPrice() {
                 let price = 0;
 
@@ -228,7 +232,7 @@
 
                 for(let product of this.data.contents) {
                     if(product === 1 || typeof product !== 'object') continue;
-                    price += this.getPrice(product) * product.new_amount;
+                    price += product.new_standard_price * product.new_amount;
                 }
 
                 return price;

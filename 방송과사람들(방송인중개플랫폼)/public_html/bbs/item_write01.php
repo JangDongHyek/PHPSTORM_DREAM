@@ -1,11 +1,9 @@
 <?
 include_once('./_common.php');
-include_once("../class/Lib.php");
+include_once(G5_PATH."/jl/JlConfig.php");
 $g5['title'] = '서비스등록';
 include_once('./_head.php');
 $name = "item_write";
-
-$jl = new JL();
 
 //재능정보
 $idx = $_REQUEST['idx'];

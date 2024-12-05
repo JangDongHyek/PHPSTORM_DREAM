@@ -5,7 +5,7 @@
             <dl>
                 <dt><i class="fa-brands fa-elementor"></i>{{category.parent ? category.parent.name : category.name}}</dt>
                 <dd>
-                    <a :href="JL_base_url + '/bbs/item_list.php?ctg=' + item.idx" v-for="item in (category.parent ? category.parent.childs : category.childs)">
+                    <a :href="Jl_base_url + '/bbs/item_list.php?ctg=' + item.idx" v-for="item in (category.parent ? category.parent.childs : category.childs)">
                         {{item.name}}
                     </a>
                 </dd>
@@ -85,7 +85,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getCategory();
             this.getProduct();
             this.getLike();
@@ -106,48 +106,42 @@
             checkLike : function(product_idx) {
                 return this.likes.some(obj => obj.product_idx == product_idx)
             },
-            getLike : function() {
+            async getLike() {
                 var filter = {member_idx : this.member_idx}
-                var res = this.jl.ajax("get", filter, "/api/member_product_like.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_product_like.php");
 
                 if (res) {
                     this.likes = res.response.data
                 }
             },
-            postLike : function(product_idx) {
+            async postLike(product_idx) {
                 var data = {
                     member_idx : this.member_idx,
                     product_idx : product_idx
                 };
 
-                var res = this.jl.ajax("like", data, "/api/member_product_like.php");
+                var res = await this.jl.ajax("like", data, "/api/member_product_like.php");
 
                 if (res) {
                     this.getLike();
                 }
             },
-            getProduct : function() {
+            async getProduct() {
                 var parent_idx = this.category_idx ? '' : this.ctg;
                 var category_idx = this.ctg;
 
                 var filter = {parent_idx : parent_idx, category_idx : category_idx}
 
-                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_product.php");
                 if(res){
                     this.products = res.response.data;
                     this.products_count = res.response.count;
                 }
             },
-            getCategory: function () {
+            async getCategory() {
                 var method = "get";
-                var filter = JSON.parse(JSON.stringify(this.filter));
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
-
-                var res = ajax("/api/category.php", objs);
+                var res = await this.jl.ajax(method,this.filter,"/api/category.php");
                 if (res) {
                     this.jl.log(res)
                     this.category = res.response.data[0]

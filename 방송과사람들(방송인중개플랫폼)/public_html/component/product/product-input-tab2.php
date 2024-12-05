@@ -132,7 +132,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
 
         },
         mounted: function(){
@@ -140,23 +140,7 @@
             });
         },
         methods: {
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
 
-                if(res) {
-
-                }
-            },
-            getData: function () {
-                var filter = {primary: this.primary}
-                var res = this.jl.ajax("get",filter,"/api/example.php");
-
-                if(res) {
-                    this.data = res.response.data
-
-                }
-            }
         },
         computed: {
 

@@ -160,6 +160,9 @@
             emitProduct(product) {
                 //if(!confirm("해당 상품을 선택 하시겠습니까?")) return false;
                 this.$set(product,'new_amount',1);
+                this.$set(product,'new_standard_price',0);
+
+                product.new_standard_price = product.INSU_PRICE / product.ACC_UNIT;
                 let bool = false
                 let carts = this.carts
                 let index = 0;
@@ -177,6 +180,7 @@
                     index++;
                 }
 
+                console.log(product)
                 if(!bool) this.carts.push(product);
 
                 this.$emit('close')

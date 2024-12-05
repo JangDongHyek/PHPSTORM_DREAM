@@ -202,7 +202,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             var OrderAmount = order['b2p']['OrderAmount'];
             // 기본서비스 이용료
             let category_fee_cost = order['b2p']['category_fee_cost'];
-            let B2P_TotCommission = order['b2p']['B2P_TotCommission'];
+            //let B2P_TotCommission = order['b2p']['B2P_TotCommission'];
 
 
             // 판매자할인 / 공제금
@@ -216,18 +216,17 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             let new_b2p_cp_fee_price = order['b2p']['new_b2p_cp_fee_price'];
             let kcpSum = new_b2p_kcp_price - new_b2p_cp_fee_price;
             //정산금액
-            let B2P_SettlementPrice = order['b2p']['B2P_SettlementPrice'];
+            //let B2P_SettlementPrice = order['b2p']['B2P_SettlementPrice'];
 
-            let CostPrice = parseInt(OrderAmount) - parseInt(B2P_TotCommission);
-
-
+            let CostPrice = parseInt(OrderAmount) - parseInt(category_fee_cost);
+            let B2P_SettlementPrice = CostPrice - parseInt(totalDiscount);
 
             console.log(B2P_SettlementPrice);
             code_html += `<tr ${style}>`;
             code_html += '<td>' + response['result']['OrderNo'] + '</td>'; // 주문번호
             code_html += '<td>' + response['result']['GoodsName'] + '</td>'; // 상품명
             code_html += '<td>' + AddComma(OrderAmount) + '</td>';  // 판매금액
-            code_html += '<td>-' + AddComma(B2P_TotCommission) + '</td>';   // 기본 서비스 이용료
+            code_html += '<td>-' + AddComma(category_fee_cost) + '</td>';   // 기본 서비스 이용료
             code_html += '<td>' + AddComma(CostPrice) + '</td>';    // 공급원가
             //code_html += '<td>' + '-' + '</td>';
             code_html += '<td>' + AddComma(totalDiscount) + '</td>';    // 판매자할인/공제금
@@ -252,7 +251,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             code_html += '</tr>';
 
             OrderAmount_total += (OrderAmount) * 1;
-            ServiceFee_total += (B2P_TotCommission) * 1;
+            ServiceFee_total += (category_fee_cost) * 1;
             KCPServiceFee_total += (new_b2p_kcp_price) * 1;
             KCPServiceFeeEvent_total += new_b2p_cp_fee_price;
             CostPrice_total += CostPrice;

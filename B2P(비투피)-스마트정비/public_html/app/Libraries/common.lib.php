@@ -468,8 +468,6 @@ function processOrderOld($order) {
     $OrderAmount = (int)$order['SellOrderPrice'] + (int)$order['OptionPrice'];
     //b2p 수수료
     $b2p_cost = $order['b2p_cost'];
-    // 카테고리 수수료
-    $category_fee_cost = $order['TotCommission'] + $b2p_cost;
     //b2p 카드 수수료 퍼센트
     $b2p_kcp_fee = $order['b2p_kcp_fee'] ? : 0;
     //b2p 셀러별 카드 페이백 퍼센트
@@ -480,7 +478,9 @@ function processOrderOld($order) {
     $totalDiscount = 0;
     $totalDiscount += $SellerDiscountPrice;
 
-
+    //1 옥션 2지마켓
+    $category_fee_cost = abs($order['TotCommission']);
+    
     // 쿠폰할인 옥션은 쿠폰할인의 값이 판매자할인에 들어옴
     if($order['SiteType'] == 1) {
     }else {
@@ -489,11 +489,13 @@ function processOrderOld($order) {
 
         $totalDiscount += $order['SellerCashbackMoney'];
         $totalDiscount += $order['SellerFundingDiscountPrice'];
-
         $totalDiscount += $order['DeductTaxPrice'];
     }
 
-
+    $b2p_cost = round(( $order['SalePrice'] * $order['ContrAmount']) * ( 5.5 / 100));
+    $category_fee_cost2 = $category_fee_cost;
+    $category_fee_cost2 +=  abs($b2p_cost);//옵션가 뺀거
+    $category_fee_cost +=   abs($order['b2p_cost']);// 옵션가 포함한거
 
     // 배송비 및 배송비 수수료 관련
     $dl_DelFeeAmt = $order['ShippingFee'];
@@ -524,9 +526,9 @@ function processOrderOld($order) {
     $calcPrice = $OrderAmount;
     $calcPrice -= $category_fee_cost;
     $calcPrice -= $totalDiscount;
-    // 옥션이 아니라면 정산금액에 배송비 포함
+    // g마켓은 정산금액에 배송비 포함
     if($order['SiteType'] == 2) {
-        $calcPrice += $dl_DelTotal;
+        //$calcPrice += $dl_DelTotal;
     }
 
     //kcp 카드 수수료 , 카드 캐시백
@@ -536,8 +538,10 @@ function processOrderOld($order) {
     $calcPrice -= ($b2p_kcp_price - $b2p_cp_fee_price);
 
     $b2p = array(
+        "B2P_Goods" => $OrderAmount,                  // 주문금액
         "OrderAmount" => $OrderAmount,                  // 주문금액
         "category_fee_cost" => $category_fee_cost,      // 카테고리 수수료
+        "category_fee_cost2" => $category_fee_cost2,      // 카테고리 수수료 옵션가뺀거
         "totalDiscount" => $totalDiscount,              // 판매자 할인금액
         "SellerDiscountPrice" => $SellerDiscountPrice,  // 쿠폰할인
         "calcPrice" => $calcPrice,                      // 정산 금액
@@ -550,6 +554,7 @@ function processOrderOld($order) {
         "totalCommission" => $totalCommission,          // 카테고리,판매자 할인총금액,배송비수수료
         "new_b2p_kcp_price" => $b2p_kcp_price,          // 새로 바뀐 카드수수료
         "new_b2p_cp_fee_price" => $b2p_cp_fee_price,    // 새로 바뀌 카드 페이백
+        "dl_DelTotal" => $dl_DelTotal,    // 배송비
     );
 
     $order['b2p'] = $b2p;
@@ -598,16 +603,21 @@ function processOrder($order) {
     $b2p_cp_fee = $order['b2p_cp_fee'] ? : 0; //b2p 셀러별 카드 페이백 퍼센트
 
     //1 옥션 2지마켓
-    $category_fee_cost = abs($order['TotCommission']) + abs($order['b2p_cost']);
+    $category_fee_cost = abs($order['TotCommission']);
     if($order['SiteType'] == 2) {
         $category_fee_cost -= abs($order['SellerCashbackMoney']);
         $category_fee_cost -= abs($order['DeductTaxPrice']);
 
         $totalDiscount += $order['DeductTaxPrice'];
     }
-
+    $b2p_cost = round(( $order['SalePrice'] * $order['ContrAmount']) * ( 5.5 / 100));
+    $category_fee_cost2 = $category_fee_cost;
+    $category_fee_cost2 +=  abs($b2p_cost);//옵션가 뺀거
+    $category_fee_cost +=   abs($order['b2p_cost']);// 옵션가 포함한거
+    
     $B2P_Goods = ($order['OrderUnitPrice']*1 * abs($order['OrderQty'])); //판매자 정산요청가
     $B2P_GoodsCost = round($B2P_Goods - $category_fee_cost); //B2P 판매자 정산요청가 || 공급원가
+    //$B2P_GoodsCost = round($B2P_Goods * ( 1 - $order['category_fee']/100 )); //B2P 옵션상품 정산요청가
 
     $B2P_Option = ($order['OptSelPrice']*1 + $order['OptAddPrice']*1); //옵션상품 정산요청가
     $B2P_OptionCost = ($B2P_Option * ( 1 - $order['category_fee']/100 )); //B2P 옵션상품 정산요청가
@@ -633,10 +643,20 @@ function processOrder($order) {
         //echo $order['DeductTaxPrice'];
     }else {
         $B2P_OptionCost = round($B2P_OptionCost); //B2P 옵션상품 정산요청가
-        $B2P_TotCommission = $category_fee_cost  + abs($order['SellerPcsFee']) ; //B2P 기본 서비스 이용료
-        $B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs($B2P_TotCommission)
-            - abs($order['SellerDiscountPrice1']) - abs($order['SellerCashbackMoney']) - abs($order['SellerFundingDiscountPrice']) + abs($order['DeductTaxPrice']); //B2P 판매자 최종정산금
+        $B2P_TotCommission = $category_fee_cost  + abs($order['DeductTaxPrice']) ; //B2P 기본 서비스 이용료
+        //$B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs($B2P_TotCommission) - abs($order['SellerDiscountPrice1']) - abs($order['SellerCashbackMoney']) - abs($order['SellerFundingDiscountPrice']) + abs($order['DeductTaxPrice']); //B2P 판매자 최종정산금
+        $B2P_SettlementPrice = $B2P_Goods + $B2P_Option - abs($B2P_TotCommission) - abs($order['SellerFundingDiscountPrice']); //B2P 판매자 최종정산금
         $B2P_ServiceFee = $B2P_TotCommission - abs($order['FeeDiscountPrice']) - abs($order['SellerCashbackMoney']);
+
+
+
+
+        //echo $B2P_GoodsCost.'<br>';
+        //echo $category_fee_cost.'<br>';
+        //echo $order['SiteType'].'<br>';
+        //echo $B2P_Goods + $B2P_Option.'<br>';
+        //echo $B2P_TotCommission.'<br>';
+        //echo $order['SellerFundingDiscountPrice'];
     }
     // *****************
 
@@ -657,9 +677,9 @@ function processOrder($order) {
 
     $totalCommission = $category_fee_cost + $totalDiscount + $dl_DelFeeCommission + $b2p_shipping_fee;
 
-    // 옥션이 아니라면 정산금액에 배송비 포함
+    // g마켓이면 배송비추가
     if($order['SiteType'] == 2) {
-        $B2P_SettlementPrice += $dl_DelTotal;
+        //$B2P_SettlementPrice += $dl_DelTotal;
     }
 
     //kcp 카드 수수료 , 카드 캐시백
@@ -673,6 +693,7 @@ function processOrder($order) {
         "B2P_Option" => $B2P_Option,
         "OrderAmount" => $OrderAmount,                  // 판매자 정산요청가 || 주문금액
         "category_fee_cost" => $category_fee_cost,      // 카테고리 수수료
+        "category_fee_cost2" => $category_fee_cost2,      // 카테고리 수수료 옵션가 뺸거
         "totalDiscount" => $totalDiscount,              // 판매자 할인금액
         "SellerDiscountPrice" => $SellerDiscountPrice,  // 쿠폰할인
         "B2P_SettlementPrice" => $B2P_SettlementPrice,  // 정산 금액
@@ -686,6 +707,7 @@ function processOrder($order) {
         "totalCommission" => $totalCommission,          // 카테고리,판매자 할인총금액,배송비수수료
         "new_b2p_kcp_price" => $b2p_kcp_price,          // 새로 바뀐 카드수수료
         "new_b2p_cp_fee_price" => $b2p_cp_fee_price,    // 새로 바뀌 카드 페이백
+        "dl_DelTotal" => $dl_DelTotal,    // 배송비
     );
 
     $order['b2p'] = $b2p;

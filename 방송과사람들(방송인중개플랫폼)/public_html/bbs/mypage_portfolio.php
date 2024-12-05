@@ -3,8 +3,7 @@ include_once('./_common.php');
 $name = "cmypage";
 $g5['title'] = '포트폴리오관리';
 include_once('./_head.php');
-include_once("../class/Lib.php");
-$jl = new JL();
+include_once(G5_PATH."/jl/JlConfig.php");
 
 
 $sql_common = " from new_item ";

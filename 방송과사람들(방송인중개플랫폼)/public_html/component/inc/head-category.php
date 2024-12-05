@@ -8,10 +8,10 @@
                     <a href="#" class="gnb_1da"><i class="fa-light fa-bars"></i> 전체메뉴</a>
                     <ul class="gnb_2dul">
                         <li class="gnb_2dli" v-for="item in data">
-                            <a :href="`${JL_base_url}/bbs/item_list.php?ctg=${item.idx}`" class="gnb_2da">{{item.name}}</a>
+                            <a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${item.idx}`" class="gnb_2da">{{item.name}}</a>
                             <div class="gnb_2dli_list" style="display:none">
                                 <ul class="gnb_2dul ver02" style="display:none">
-                                    <li class="gnb_2dli" v-for="child in item.childs"><a :href="`${JL_base_url}/bbs/item_list.php?ctg=${child.idx}&category_idx=${item.idx}`" class="gnb_2da">{{child.name}}</a></li>
+                                    <li class="gnb_2dli" v-for="child in item.childs"><a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${child.idx}&category_idx=${item.idx}`" class="gnb_2da">{{child.name}}</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -25,7 +25,7 @@
                         <a :href="`${jl.root}/bbs/item_list.php?ctg=${category_idx}`" class="gnb_1da">전체<span></span></a>
                     </li>
                     <li class="gnb_1dli single_menu" v-for="item in categories">
-                        <a :href="`${JL_base_url}/bbs/item_list.php?ctg=${item.idx}&category_idx=${item.parent_idx}`" class="gnb_1da">
+                        <a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${item.idx}&category_idx=${item.parent_idx}`" class="gnb_1da">
                             {{item.name}}<span></span>
                         </a>
                         <!-- Uncomment and adjust if you want to include child items -->
@@ -105,7 +105,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
 
             this.getData();
             this.getCategory()
@@ -142,7 +142,7 @@
             });
         },
         methods: {
-            getCategory : function() {
+            async getCategory() {
                 var filter = {
                     parent_idx : this.category_idx
                 }
@@ -151,7 +151,7 @@
                     filter: JSON.stringify(filter)
                 };
 
-                var res = ajax("/api/category.php", objs);
+                var res = await this.jl.ajax("get",this.filter,"/api/category.php");
 
                 if(res) {
                     this.jl.log(res,arguments.callee.name)
@@ -159,7 +159,7 @@
 
                 }
             },
-            getData: function () {
+            async getData() {
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));
 
@@ -168,7 +168,7 @@
                     filter: JSON.stringify(filter)
                 };
 
-                var res = ajax("/api/category.php", objs);
+                var res = await this.jl.ajax(method,this.filter,"/api/category.php");
                 if (res) {
                     this.jl.log(res,arguments.callee.name)
                     this.data = res.response.data

@@ -111,7 +111,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
 
             if(this.member_idx) this.getData();
         },
@@ -121,9 +121,9 @@
             });
         },
         methods: {
-            getReview : function() {
+            async getReview() {
                 let filter = {product_idx : this.select_item.product_idx, member_idx : this.member_idx}
-                var res = this.jl.ajax("get",filter,"/api/product_review.php");
+                var res = await this.jl.ajax("get",filter,"/api/product_review.php");
 
                 if(res) {
                     if(res.data[0]) {
@@ -132,19 +132,19 @@
                     }
                 }
             },
-            postReview : function() {
+            async postReview() {
                 var method = this.review.idx ? "update" : "insert";
                 this.review.product_idx = this.select_item.product_idx;
-                var res = this.jl.ajax(method,this.review,"/api/product_review.php");
+                var res = await this.jl.ajax(method,this.review,"/api/product_review.php");
 
                 if(res) {
                     alert("완료되었습니다.")
                     this.modal = false;
                 }
             },
-            checkFile : function(file) {
+            async checkFile(file) {
                 var filter = {file : file};
-                var res = this.jl.ajax("check_file",filter,"/api/common.php");
+                var res = await this.jl.ajax("check_file",filter,"/api/common.php");
 
                 if(res) {
                     return res.result;
@@ -164,17 +164,9 @@
                         return "";
                 }
             },
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
-
-                if(res) {
-
-                }
-            },
-            getData: function () {
+            async getData() {
                 var filter = {}
-                var res = this.jl.ajax("get",this.filter,"/api/member_order.php");
+                var res = await this.jl.ajax("get",this.filter,"/api/member_order.php");
 
                 if(res) {
                     this.data = res.response.data

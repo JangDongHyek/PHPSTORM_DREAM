@@ -78,7 +78,7 @@ class JlModel extends Jl{
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($this->schema['tables'], $row['TABLE_NAME']);
             }
         }
@@ -111,7 +111,7 @@ class JlModel extends Jl{
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            if(!$row = mysql_fetch_array($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysql_fetch_assoc($result)) $this->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }
 
         return $row;
@@ -131,7 +131,7 @@ class JlModel extends Jl{
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 $array[$row['COLUMN_NAME']] = $row;
             }
         }
@@ -153,12 +153,86 @@ class JlModel extends Jl{
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($array, $row['COLUMN_NAME']);
             }
         }
 
         return $array;
+    }
+
+    function setFilter($obj) {
+        if($obj['primary']) $this->where($this->primary,$obj['primary']);
+        if($obj['order_by_desc']) $this->orderBy($obj['order_by_desc'],"DESC");
+        if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
+
+        if(isset($obj['where'])) {
+            $arrays = $this->jsonDecode($obj['where']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->where($item['key'],$item['value'],$operator,$source);
+            }
+        }
+
+        if(isset($obj['like'])) {
+            $arrays = $this->jsonDecode($obj['like']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->like($item['key'],$item['value'],$operator,$source);
+            }
+        }
+
+        if(isset($obj['between'])) {
+            $arrays = $this->jsonDecode($obj['between']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->between($item['key'],$item['start'],$item['end'],$operator,$source);
+            }
+        }
+
+        if(isset($obj['in'])) {
+            $arrays = $this->jsonDecode($obj['in']);
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->in($item['key'],$this->jsonDecode($item['array']),$operator,$source);
+            }
+        }
+
+        if(isset($obj['group_where'])) {
+            $arrays = $this->jsonDecode($obj['group_where']);
+            $this->groupStart();
+
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->where($item['key'],$item['value'],$operator,$source);
+            }
+
+            $this->groupEnd();
+        }
+
+        if(isset($obj['group_like'])) {
+            $arrays = $this->jsonDecode($obj['group_like']);
+            $this->groupStart();
+
+            foreach($arrays as $item) {
+                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
+                $source = isset($item['source']) ? $item['source'] : '';
+
+                $this->like($item['key'],$item['value'],$operator,$source);
+            }
+
+            $this->groupEnd();
+        }
     }
 
     function getSchema() {
@@ -191,7 +265,7 @@ class JlModel extends Jl{
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->error(mysql_error());
 
-            while($row = mysql_fetch_array($result)){
+            while($row = mysql_fetch_assoc($result)){
                 array_push($array, $row);
             }
         }
@@ -222,6 +296,13 @@ class JlModel extends Jl{
                     else continue;
                 }
             }
+            if($info['DATA_TYPE'] == "date") {
+                if($value == '') {
+                    if($info['IS_NULLABLE'] == "NO") $value = '0000-00-00';
+                    else continue;
+                }
+            }
+
             if($column == 'insert_date') $value = 'now()';
 
             if(!empty($columns)) $columns .= ", ";
@@ -274,6 +355,37 @@ class JlModel extends Jl{
         }
 
         return $total_count ? $total_count : 0;
+    }
+
+    function distinct($_param){
+        if(!isset($_param['column'])) $this->error("JlModel distinct() : column 값이 없습니다..");
+        // Summary Query
+        if($this->isJson($_param['column'])) {
+            $_param['column'] = $this->jsonDecode($_param['column']);
+        }
+
+        $sql = $this->getSql(array("distinct" => true, "column" => $_param['column']));
+
+        $data = array();
+
+        if($this->mysqli) {
+            $result = mysqli_query($this->connect, $sql);
+
+            if(!$result) $this->error(mysqli_error($this->connect)."\n $sql");
+
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($data, $row);
+            }
+        }else {
+            $result = @mysql_query($sql, $this->connect);
+            if(!$result) $this->error(mysql_error());
+
+            while($row = mysql_fetch_assoc($result)){
+                array_push($data, $row);
+            }
+        }
+
+        return array("data" => $data,"sql" => $sql);
     }
 
     function get($_param = array()) {
@@ -430,7 +542,23 @@ class JlModel extends Jl{
         $other = $source == $this->table ? $this->join_table : $this->table;
         $scope = $_param['count'] ? $source == $this->table ? $this->primary : $this->join_primary : "*";
 
+        $distinct = "";
         $select = "";
+
+        if($_param['distinct']) {
+            if (is_string($_param['column'])) {
+                $scope = $_param['column'];
+            }
+
+            if (is_array($_param['column'])) {
+                $scope = "";
+                foreach($_param['column'] as $d) {
+                    if($scope != "") $scope .= ", ".$source.".";
+                    $scope .= $d;
+                }
+            }
+            $distinct = "distinct";
+        }
 
         if($_param['select']) {
             if($_param['select'] == "*") {
@@ -448,7 +576,7 @@ class JlModel extends Jl{
             }
         }
 
-        $sql = "SELECT $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
+        $sql = "SELECT $distinct $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
         $sql .= $this->sql;
         $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
         $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : " ORDER BY $this->primary DESC";
@@ -759,8 +887,8 @@ class JlModel extends Jl{
     function escape($_param) {
         $param = array();
         foreach($_param as $key => $value){
-            if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-            if (is_object($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            if (is_array($value)) $value = $this->jsonEncode($value);
+            if (is_object($value)) $value = $this->jsonEncode($value);
 
             if($this->mysqli) {
                 $param[$key] = mysqli_real_escape_string($this->connect, $value);

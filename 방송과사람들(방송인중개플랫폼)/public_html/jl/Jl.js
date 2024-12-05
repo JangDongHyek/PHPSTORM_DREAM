@@ -1,4 +1,24 @@
+function vueLoad(app_name) {
+    Vue[app_name] = new Vue({
+        el: "#" + app_name,
+        data: Jl_data,
+        methods: Jl_methods,
+        watch: Jl_watch,
+        components: Jl_components,
+        computed: Jl_computed,
+        created: function(){
+            this.jl = new Jl(app_name,"#42B883");
+        },
+        mounted: function(){
 
+        }
+    });
+}
+
+Number.prototype.format = function (n, x) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
 
 class Jl {
     constructor(name = "Jl.js",background = "#35495e") {
@@ -62,9 +82,15 @@ class Jl {
                     let req = options.required[i];
                     if(req.name == "") continue;
 
-                    if(object[req.name].trim() == "") {
-                        reject(new Error(req.message));
-                        return false;
+                    if(typeof object[req.name] === "string") {
+                        if(object[req.name].trim() == "") {
+                            reject(new Error(req.message));
+                            return false;
+                        }
+                    }
+
+                    if(typeof object[req.name] === "number") {
+
                     }
                 }
             }
@@ -228,6 +254,7 @@ class Jl {
         this.log(obj[key])
     }
 
+    // vue에서 파일업로드시 지정된 오브젝트 key에 파일 데이터 반환해주는 함수
     changeFile(event,obj,key,permission = []) {
         this.commonFile(event.target.files,obj,key,permission)
         this.log(obj[key])
@@ -424,7 +451,7 @@ class Jl {
         return !/[^0-9]/.test(str);
     }
 
-    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)"
+    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey"
     isNumberKey(event) {
         const charCode = event.keyCode || event.which;
         // 숫자 키 코드 (0-9 및 숫자 키패드 0-9)와 백스페이스, Delete 키만 허용
@@ -481,8 +508,10 @@ class Jl {
             function_name = name
         }
 
-        console.group('%c' + function_name,
-            `background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`
+        console.group(
+            `%c${function_name} %c(${this.name})`,
+            `background: ${background}; color: ${color}; font-weight: bold; font-size: 12px; padding: 5px; border-radius: 1px; margin-left : 10px;`,
+            'color: gray; font-size: 12px; margin-left: 5px;'
         );
         console.log(obj);
         console.groupEnd();

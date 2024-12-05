@@ -1,4 +1,5 @@
 <?php
+include_once(G5_PATH."/jl/JlConfig.php");
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 if ($_SESSION['ss_mb_id']) {
@@ -201,8 +202,6 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
 <?php } ?>
 
 <?php
-include_once(G5_PATH . "/class/Lib.php");
-$jl = new JL();
 $jl->vueLoad("vue_head");
 $jl->includeDir("/component/inc");
 ?>

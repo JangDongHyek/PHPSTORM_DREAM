@@ -82,7 +82,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getData();
         },
         mounted: function(){
@@ -91,7 +91,7 @@
             });
         },
         methods: {
-            checkNick : function() {
+            async checkNick() {
                 if(this.data.mb_nick.trim() == "") {
                     alert("닉네임을 입력해주세요.")
                     return false;
@@ -99,12 +99,7 @@
                 var method = "get";
                 var filter = {mb_nick : this.data.mb_nick};
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
-
-                var res = ajax("/api/g5_member.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/g5_member.php");
                 if (res) {
                     this.jl.log(res)
                     if(res.response.count > 0 && this.origin_nick != this.data.mb_nick) {
@@ -115,7 +110,7 @@
                     return true
                 }
             },
-            updateData : function() {
+            async updateData() {
                 if(!this.checkNick()) {
                     return false;
                 }
@@ -145,26 +140,17 @@
                 var method = "update";
                 var obj = JSON.parse(JSON.stringify(this.data));
 
-                var objs = {
-                    _method: method,
-                    obj: JSON.stringify(obj)
-                };
-
-                var res = ajax("/api/g5_member.php", objs);
+                var res = await this.jl.ajax(method,obj,"/api/g5_member.php");
                 if (res) {
                     alert("완료되었습니다.");
                 }
             },
-            getData: function () {
+            async getData() {
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
 
-                var res = ajax("/api/g5_member.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/g5_member.php");
                 if (res) {
                     this.jl.log(res)
                     this.data = res.response.data[0]

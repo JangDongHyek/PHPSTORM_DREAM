@@ -101,7 +101,7 @@
             };
         },
         created: function () {
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getCategory()
         },
         mounted: function () {
@@ -142,16 +142,11 @@
 
                 this.modal2 = false;
             },
-            getCategory: function () {
+            async getCategory() {
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));
 
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
-
-                var res = ajax("/api/category.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/category.php");
                 if (res) {
                     this.jl.log(res)
                     this.categories = res.response.data

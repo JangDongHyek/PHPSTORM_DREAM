@@ -143,7 +143,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             if(this.product.package) this.tab = 'standard'
             this.getLike();
         },
@@ -153,14 +153,14 @@
             });
         },
         methods: {
-            postChatRoom : function() {
+            async postChatRoom() {
                 if(this.member_idx) {
                     let obj = {
                         buyer_idx : this.member_idx,
                         seller_idx : this.product.member_idx
                     }
 
-                    var res = this.jl.ajax("insert", obj, "/api/member_chat_room.php");
+                    var res = await this.jl.ajax("insert", obj, "/api/member_chat_room.php");
 
                     window.location.href = `${this.jl.root}/bbs/chat.php?idx=${res.data.idx}`
                 }else {
@@ -174,7 +174,7 @@
 
                 return Math.round(score * 2) / 2 / 10;
             },
-            postOrder : function() {
+            async postOrder() {
                 if(!this.member_idx) {
                     alert("로그인이 필요한 기능입니다.");
                     return false;
@@ -192,7 +192,7 @@
                     status : "진행대기"
                 }
 
-                var res = this.jl.ajax("insert", order, "/api/member_order.php");
+                var res = await this.jl.ajax("insert", order, "/api/member_order.php");
 
                 if (res) {
                     alert("구매가 완료되었습니다.");
@@ -201,48 +201,32 @@
             checkLike : function(product_idx) {
                 return this.likes.some(obj => obj.product_idx == product_idx)
             },
-            getLike : function() {
+            async getLike() {
                 var filter = {member_idx : this.member_idx}
-                var res = this.jl.ajax("get", filter, "/api/member_product_like.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_product_like.php");
 
                 if (res) {
                     this.likes = res.response.data
                 }
             },
-            postLike : function(product_idx) {
+            async postLike(product_idx) {
                 var data = {
                     member_idx : this.member_idx,
                     product_idx : product_idx
                 };
 
-                var res = this.jl.ajax("like", data, "/api/member_product_like.php");
+                var res = await this.jl.ajax("like", data, "/api/member_product_like.php");
 
                 if (res) {
                     this.getLike();
                 }
             },
-            checkFile : function(file) {
+            async checkFile(file) {
                 var filter = {file : file};
-                var res = this.jl.ajax("check_file",filter,"/api/common.php");
+                var res = await this.jl.ajax("check_file",filter,"/api/common.php");
 
                 if(res) {
                     return res.result;
-                }
-            },
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
-
-                if(res) {
-
-                }
-            },
-            getData: function () {
-                var filter = {primary: this.primary}
-                var res = this.jl.ajax("get",filter,"/api/example.php");
-
-                if(res) {
-                    this.data = res.response.data[0]
                 }
             }
         },

@@ -268,6 +268,7 @@ class JlModel extends Jl{
 
         $object["data"] = array();
         $object["count"] = $this->count($_param);
+        $object['total_page'] = $limit ? ceil($object["count"] / $limit) : 0;
         if($_param['sql']) $object["sql"] = $sql;
 
         $index = 1;

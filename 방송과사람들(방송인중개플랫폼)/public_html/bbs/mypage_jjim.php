@@ -1,7 +1,6 @@
 <?
 include_once('./_common.php');
-include_once("../class/Lib.php");
-$jl = new JL();
+include_once(G5_PATH."/jl/JlConfig.php");
 
 $name = "cmypage";
 $pid = "mypage_jjim";

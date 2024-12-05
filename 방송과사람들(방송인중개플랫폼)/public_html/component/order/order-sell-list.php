@@ -82,7 +82,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
 
             if(this.member_idx) this.getData();
         },
@@ -106,32 +106,24 @@
                         return "";
                 }
             },
-            checkFile : function(file) {
+            async checkFile(file) {
                 var filter = {file : file};
-                var res = this.jl.ajax("check_file",filter,"/api/common.php");
+                var res = await this.jl.ajax("check_file",filter,"/api/common.php");
 
                 if(res) {
                     return res.result;
                 }
             },
-            putData : function(status) {
+            async putData(status) {
                 this.select_item.status = status
-                var res = this.jl.ajax("update",this.select_item,"/api/member_order.php");
+                var res = await this.jl.ajax("update",this.select_item,"/api/member_order.php");
 
                 if(res) {
 
                 }
             },
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
-
-                if(res) {
-
-                }
-            },
-            getData: function () {
-                var res = this.jl.ajax("get",this.filter,"/api/member_order.php");
+            async getData() {
+                var res = await this.jl.ajax("get",this.filter,"/api/member_order.php");
 
                 if(res) {
                     this.data = res.response.data;

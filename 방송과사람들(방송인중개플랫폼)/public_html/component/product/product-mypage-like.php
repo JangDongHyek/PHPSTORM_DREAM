@@ -53,7 +53,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getLike();
             this.getData();
         },
@@ -80,15 +80,7 @@
 
                 return result;
             },
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
-
-                if(res) {
-
-                }
-            },
-            getData: function () {
+            async getData() {
                 let likes = [];
 
                 this.likes.forEach((item) => {
@@ -98,7 +90,7 @@
                 if(likes.length == 0) return false;
 
                 var filter = {group_ors :likes,member_idx : this.mb_no}
-                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_product.php");
 
                 if(res) {
                     this.data = res.response.data
@@ -107,28 +99,28 @@
             checkLike : function(product_idx) {
                 return this.likes.some(obj => obj.product_idx == product_idx)
             },
-            postLike : function(product_idx) {
+            async postLike(product_idx) {
                 var data = {member_idx : this.mb_no,product_idx : product_idx}
-                var res = this.jl.ajax("insert",data,"/api/member_product_like.php");
+                var res = await this.jl.ajax("insert",data,"/api/member_product_like.php");
 
                 if(res) {
                     this.getLike();
                 }
             },
-            deleteLike : function(product_idx) {
+            async deleteLike(product_idx) {
                 var data = {
                     member_idx : this.mb_no,
                     product_idx : product_idx
                 }
 
-                var res = this.jl.ajax("sql_delete", data, "/api/member_product_like.php");
+                var res = await this.jl.ajax("sql_delete", data, "/api/member_product_like.php");
 
                 if (res) {
                     this.getLike();
                 }
             },
-            getLike : function() {
-                var res = this.jl.ajax("get",this.filter,"/api/member_product_like.php");
+            async getLike() {
+                var res = await this.jl.ajax("get",this.filter,"/api/member_product_like.php");
 
                 if(res) {
                     this.likes = res.response.data

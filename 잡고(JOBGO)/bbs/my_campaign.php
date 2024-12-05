@@ -208,6 +208,7 @@ if($member['mb_no']) {
                                 <?}?>
                             </div><!--list-->
                         </div><!--in-->
+                        <?php echo get_paging(G5_IS_MOBILE ? 8 : 8, $page, $like_data['total_page'], '?tab='.$tab.'&amp;page='); ?>
 
                     </div><!--my_goods-->
                 </div>
@@ -278,6 +279,8 @@ if($member['mb_no']) {
                                 <?php } ?>
 
 
+
+
                             </div><!--list-->
                             <?if(!$request_data['count']) {?>
                             <div class="text-center empty">
@@ -286,6 +289,7 @@ if($member['mb_no']) {
                             </div>
                             <?}?>
                         </div><!--in-->
+                        <?php echo get_paging(G5_IS_MOBILE ? 8 : 8, $page, $request_data['total_page'], '?tab='.$tab.'&amp;page='); ?>
 
                     </div><!--my_goods-->
                 </div>
@@ -365,10 +369,13 @@ if($member['mb_no']) {
 
                             </div><!--list-->
                         </div><!--in-->
+
+                        <?php echo get_paging(G5_IS_MOBILE ? 8 : 8, $page, $ok_data['total_page'], '?tab='.$tab.'&amp;page='); ?>
                     </div>
                 </div>
 
                 </div><!--//tabs-->
+
             </div>
         </section>
     </article>

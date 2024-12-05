@@ -101,7 +101,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getData();
         },
         mounted: function(){
@@ -114,18 +114,13 @@
                 this.user.job_skills = this.data.job_skills;
                 this.modal = false;
             },
-            getData: function () {
+            async getData() {
                 var method = "get";
                 var filter = {
                     parent_idx : "jl_null"
                 }
 
-                var objs = {
-                    _method: method,
-                    obj: JSON.stringify(filter)
-                };
-
-                var res = ajax("/api/skills.php", objs);
+                var res = await this.jl.ajax(method,filter,"/api/skills.php");
                 if (res) {
                     this.tabs = res.data;
                     console.log(res);

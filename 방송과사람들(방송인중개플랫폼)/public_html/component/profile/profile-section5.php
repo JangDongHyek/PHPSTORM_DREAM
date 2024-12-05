@@ -184,7 +184,7 @@
             };
         },
         created: function () {
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getCareer();
         },
         mounted: function () {
@@ -193,21 +193,18 @@
             });
         },
         methods: {
-            deleteCareer : function(career) {
-                var res = this.jl.ajax("delete",career,"/api/member_career.php");
+            async deleteCareer(career) {
+                var res = await this.jl.ajax("delete",career,"/api/member_career.php");
 
                 if(res) {
                     this.getCareer();
                 }
             },
-            postCareer : function() {
+            async postCareer() {
                 var method = this.primary ? "update" : "insert";
                 var obj = this.jl.copyObject(this.career);
 
-                var objs = {_method: method};
-                objs = this.jl.processObject(objs,obj);
-
-                var res = ajax("/api/member_career.php", objs);
+                var res = await this.jl.ajax(method,obj,"/api/member_career.php");
 
                 if (res) {
                     console.log(res)
@@ -218,8 +215,8 @@
                     this.modal = false;
                 }
             },
-            getCareer: function () {
-                var res = this.jl.ajax("get",this.filter,"/api/member_career.php");
+            async getCareer() {
+                var res = await this.jl.ajax("get",this.filter,"/api/member_career.php");
 
                 if (res) {
                     this.careers = res.response.data

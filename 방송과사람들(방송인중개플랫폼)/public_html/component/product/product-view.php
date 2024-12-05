@@ -328,14 +328,13 @@
             };
         },
         created: function () {
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
 
             if(this.primary) this.getData();
             this.getCategory();
             this.getReview();
             this.getPortfolio();
             this.getProduct();
-            this.postProductLog();
             this.getProductLog();
         },
         mounted: function () {
@@ -344,7 +343,7 @@
             });
         },
         methods: {
-            getLogProduct(arrays) {
+            async getLogProduct(arrays) {
                 let filter = {
                     page : 1,
                     limit : 6,
@@ -353,18 +352,18 @@
                 };
 
 
-                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_product.php");
                 if(res) {
                     this.products_log = res.response.data;
                 }
             },
-            getProductLog : function() {
+            async getProductLog() {
                 if(!this.member_idx) return false;
                 let filter = {
                     member_idx : this.member_idx,
                 }
 
-                var res = this.jl.ajax("get",filter,"/api/member_product_log.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_product_log.php");
                 if(res) {
                     let arrays = [];
 
@@ -375,7 +374,7 @@
                     this.getLogProduct(arrays)
                 }
             },
-            postProductLog : function() {
+            async postProductLog() {
                 if(!this.member_idx) return false;
 
                 let obj = {
@@ -383,7 +382,10 @@
                     product_idx : this.data.idx
                 }
 
-                var res = this.jl.ajax("insert",obj,"/api/member_product_log.php");
+                console.log(77)
+                console.log(obj)
+
+                var res = await this.jl.ajax("insert",obj,"/api/member_product_log.php");
             },
             calcReview : function(item) {
                 if(item.review_count == 0) return 0;
@@ -392,7 +394,7 @@
 
                 return Math.round(score * 2) / 2 / 10;
             },
-            getProduct() {
+            async getProduct() {
                 let filter = {
                     order_by_desc : "review_score",
                     page : 1,
@@ -402,27 +404,27 @@
                     category_idx : this.data.category_idx,
                 };
 
-                var res = this.jl.ajax("get",filter,"/api/member_product.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_product.php");
                 if(res) {
                     this.products = res.response.data;
                 }
             },
-            getPortfolio() {
+            async getPortfolio() {
                 let filter = {
                     member_idx : this.member_idx,
                     page : 1,
                     limit : 5
                 }
 
-                var res = this.jl.ajax("get",filter,"/api/member_portfolio.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_portfolio.php");
                 if(res) {
                     this.portfolios = res.response.data;
                 }
 
             },
-            checkFile : function(file) {
+            async checkFile(file) {
                 var filter = {file : file};
-                var res = this.jl.ajax("check_file",filter,"/api/common.php");
+                var res = await this.jl.ajax("check_file",filter,"/api/common.php");
 
                 if(res) {
                     return res.result;
@@ -435,41 +437,33 @@
 
                 return Math.round(score * 2) / 2 / 10;
             },
-            getReview : function() {
+            async getReview() {
                 var filter = {
                     product_idx : this.data.idx,
                     page : this.page,
                     limit:this.limit
                 };
-                var res = this.jl.ajax("get", filter, "/api/product_review.php");
+                var res = await this.jl.ajax("get", filter, "/api/product_review.php");
 
                 if (res) {
                     this.reviews = res.data
                     this.reviews_count = res.count
                 }
             },
-            postData: function () {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method, this.data, "/api/example.php");
-
-                if (res) {
-
-                }
-            },
             findCategory : function(idx) {
                 return this.categories.find(object => object['idx'] == idx);
             },
-            getCategory : function() {
+            async getCategory() {
                 var filter = {}
-                var res = this.jl.ajax("get", filter, "/api/category.php");
+                var res = await this.jl.ajax("get", filter, "/api/category.php");
 
                 if (res) {
                     this.categories = res.response.data
                 }
             },
-            getData: function () {
+            async getData() {
                 var filter = {primary: this.primary}
-                var res = this.jl.ajax("get", filter, "/api/member_product.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_product.php");
 
                 if (res) {
                     this.data = res.response.data[0]
@@ -477,7 +471,11 @@
             }
         },
         computed: {},
-        watch: {}
+        watch: {
+           data() {
+               this.postProductLog();
+           }
+        }
     });
 </script>
 
