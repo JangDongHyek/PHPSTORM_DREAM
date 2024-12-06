@@ -110,6 +110,7 @@
 
                     del_yn : "N",
                     use_yn : "Y",
+                    USE_GU_YN : "Y",
                     like_key : "PRODUCT_NM",
                     like_value : ""
                 },

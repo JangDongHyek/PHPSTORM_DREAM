@@ -162,7 +162,13 @@
                 this.$set(product,'new_amount',1);
                 this.$set(product,'new_standard_price',0);
 
-                product.new_standard_price = product.INSU_PRICE / product.ACC_UNIT;
+                console.log(11)
+                console.log(product)
+                let insu_price = product.INSU_PRICE
+                if(typeof insu_price === "string") insu_price = parseInt(insu_price.replace(/,/g, "").split(".")[0], 10);
+                console.log(22)
+
+                product.new_standard_price = insu_price / product.ACC_UNIT;
                 let bool = false
                 let carts = this.carts
                 let index = 0;

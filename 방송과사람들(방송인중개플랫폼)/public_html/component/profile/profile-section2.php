@@ -111,11 +111,14 @@
         },
         methods: {
             findCategory : function(parent,child = "") {
-                var first = this.categories.find(item => item['idx'] === parent);
+                if(this.categories.length == 0) return {name : ''};
+
+                var first = this.categories.find(item => item['idx'] == parent);
                 if(child) {
-                    var second = first.childs.find(item => item['idx'] === child);
+                    var second = first.childs.find(item => item['idx'] == child);
                     return second
                 }
+                console.log(first);
                 return first;
             },
             handleCategory: function (idx) {

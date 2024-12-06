@@ -21,17 +21,17 @@ try {
     switch (strtolower($_method)) {
         case "get":
         {
-            $filter = $model->jsonDecode($_POST['filter']);
+            $obj = $model->jsonDecode($_POST['obj']);
 
             //필터 가공
-            foreach ($filter as $key => $value) {
-                if(strpos($key,"primary") !== false) $filter[$model->primary] = $value;
+            foreach ($obj as $key => $value) {
+                if(strpos($key,"primary") !== false) $obj[$model->primary] = $value;
                 if(strpos($key,"search_key") !== false) $column = $value;
-                if(strpos($key,"search_value") !== false) $filter[$column] = $value;
+                if(strpos($key,"search_value") !== false) $obj[$column] = $value;
             }
 
-            $model->where($filter);
-            $object = $model->get($filter["page"], $filter["limit"]);
+            $model->where($obj);
+            $object = $model->get($obj["page"], $obj["limit"]);
 
             if ($join_table) {
                 $deletes = array();
@@ -62,7 +62,7 @@ try {
             }
 
             $response['response'] = $object;
-            $response['filter'] = $filter;
+            $response['filter'] = $obj;
             $response['success'] = true;
             break;
         }

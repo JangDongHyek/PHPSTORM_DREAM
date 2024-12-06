@@ -21,7 +21,7 @@ try {
     switch (strtolower($_method)) {
         case "get":
         {
-            $filter = $model->jsonDecode($_POST['filter']);
+            $filter = $model->jsonDecode($_POST['obj']);
 
             //필터 가공
             foreach ($filter as $key => $value) {

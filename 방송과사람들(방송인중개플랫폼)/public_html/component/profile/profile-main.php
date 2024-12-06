@@ -149,6 +149,7 @@
                 var method = "get";
                 var filter = JSON.parse(JSON.stringify(this.filter));
 
+                console.log(filter)
 
                 var res = await this.jl.ajax(method,filter,"/api/g5_member.php");
                 if (res) {

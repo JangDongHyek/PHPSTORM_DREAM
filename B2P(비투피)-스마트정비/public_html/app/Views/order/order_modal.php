@@ -216,10 +216,10 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
             let new_b2p_cp_fee_price = order['b2p']['new_b2p_cp_fee_price'];
             let kcpSum = new_b2p_kcp_price - new_b2p_cp_fee_price;
             //정산금액
-            //let B2P_SettlementPrice = order['b2p']['B2P_SettlementPrice'];
+            let B2P_SettlementPrice = order['b2p']['B2P_SettlementPrice'];
 
             let CostPrice = parseInt(OrderAmount) - parseInt(category_fee_cost);
-            let B2P_SettlementPrice = CostPrice - parseInt(totalDiscount);
+            //let B2P_SettlementPrice = CostPrice - parseInt(totalDiscount);
 
             console.log(B2P_SettlementPrice);
             code_html += `<tr ${style}>`;
@@ -668,6 +668,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                 {
                     idx: idx,
                     DeliveryCompCode: $('#OrderClaimRelease_DeliveryCompCode_input').val(),
+                    DeliveryCompName: $('#OrderClaimRelease_DeliveryCompName_input').val(),
                     InvoiceNo: $('#OrderClaimRelease_InvoiceNo').val(),
                     ClaimCancelType: $("input[name='OrderClaimRelease_ClaimCancelType']:checked").val(),
                     CancelComment: $("#OrderClaimRelease_CancelComment").val()
@@ -4137,7 +4138,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                                 <td>
                                     <div class="input_select">
                                         <select class="border_gray" id="OrderClaimRelease_DeliveryCompCode"
-                                                name="selDeliveryComp" onchange="$('#OrderClaimRelease_DeliveryCompCode_input').val(this.value);">
+                                                name="selDeliveryComp" onchange="$('#OrderClaimRelease_DeliveryCompCode_input').val(this.value);$('#OrderClaimRelease_DeliveryCompName_input').val($('#OrderClaimRelease_DeliveryCompCode option:selected').data('name'));">
                                             <option value="">선택</option>
                                             <? foreach ($delivery_company_list as $index => $data): ?>
                                                 <option value="<?= $data['code'] ?>"
@@ -4145,6 +4146,7 @@ $delivery_company_list_AC = get_delivery_company_list_AC();
                                             <? endforeach; ?>
                                         </select>
                                         <input type="hidden" id="OrderClaimRelease_DeliveryCompCode_input">
+                                        <input type="hidden" id="OrderClaimRelease_DeliveryCompName_input">
                                     </div>
                                 </td>
                             </tr>

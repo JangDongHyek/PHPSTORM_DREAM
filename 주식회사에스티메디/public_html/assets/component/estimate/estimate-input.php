@@ -318,7 +318,7 @@
                 //if(product.prod_price == 0) return product.INSU_PRICE;
                 //
                 //return product.prod_price;
-
+                console.log(product)
                 return product.standard_price;
             },
             async getData() {

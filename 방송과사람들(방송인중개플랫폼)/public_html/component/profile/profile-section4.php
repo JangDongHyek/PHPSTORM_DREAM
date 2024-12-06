@@ -203,7 +203,7 @@
                 var method = this.school.idx ? "update" : "insert";
                 var obj = this.jl.copyObject(this.school);
 
-                var res = await this.jl.ajax(method,obj,"/api/member_school.php";
+                var res = await this.jl.ajax(method,obj,"/api/member_school.php");
                 if (res) {
                     this.jl.log(res)
                     alert("추가되었습니다.")
@@ -225,7 +225,7 @@
                 var method = "delete";
                 var filter = {idx : idx }
 
-                var res = await this.jl.ajax(method,filter,"/api/member_certify.php";
+                var res = await this.jl.ajax(method,filter,"/api/member_certify.php");
 
                 if(res) {
                     this.jl.log(res);
