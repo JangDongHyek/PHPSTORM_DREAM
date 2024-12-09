@@ -487,6 +487,8 @@ class OrderModel extends CI_Model
             }
         }
 
+        $sqlCommon .= "AND agency_fee2 != 0 ";
+
         // 시작일,종료일
         if (!empty($param['sdt'])) $sqlCommon .= "AND DATE(reg_date) >= '{$param['sdt']}' ";
         if (!empty($param['edt'])) $sqlCommon .= "AND DATE(reg_date) <= '{$param['edt']}' ";

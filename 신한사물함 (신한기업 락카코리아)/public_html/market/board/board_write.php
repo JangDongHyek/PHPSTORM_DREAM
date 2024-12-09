@@ -193,7 +193,8 @@ if( $board_class != 0 && $if_use_secret == '1'){
 							<td width="10"></td>
 							<td ><input name="email" value='<?=$MemberEmail?>' type="text" class="input_03" size="30" style='ime-mode:inactive'></td>
 						</tr>
-<?if($bbs_no==5){?>
+                        <?//if($bbs_no==5){?>
+                        <?if(false){?>
 						<tr>
 						  <td bgcolor="E1E1E1" height="1" colspan="4"></td>
 						</tr>
@@ -212,13 +213,15 @@ if( $board_class != 0 && $if_use_secret == '1'){
 							<td width="10"></td>
 							<td ><input name="address" value='' type="text" class="input_03" size="50" style='ime-mode:inactive'></td>
 						</tr>
-<?}?>
+                        <?}?>
+                        <?if($bbs_no!=5){?>
 						<tr>
 							<td bgcolor="E1E1E1" height="1" colspan="4"></td>
 						</tr>
+                        <?}?>
 <?
 if( $board_class == 0 ){
-	if(!$Mall_Admin_ID&&$MemberLevel!=1){ 
+	if(!$Mall_Admin_ID&&$MemberLevel!=1 && $bbs_no != 5){
 ?>
 						<tr>
 							<td height="30" align="center"><img src="../image/helpdesk/view_pass.gif" width="60" height="30"></td>

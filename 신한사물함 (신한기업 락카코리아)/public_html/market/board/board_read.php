@@ -387,7 +387,8 @@ if($if_use_secret == '1' && $if_secret=='1' && $passwd != $user_pass && !$Mall_A
 							<td width="10"></td>
 							<td><?=$member_img?></td>
 						</tr>
-						<?if($bbs_no==5){?>
+						<?//if($bbs_no==5){?>
+                        <?if(false){?>
 						<tr>
 							<td bgcolor="E1E1E1" height="1" colspan="4"></td>
 						</tr>
@@ -407,6 +408,7 @@ if($if_use_secret == '1' && $if_secret=='1' && $passwd != $user_pass && !$Mall_A
 							<td><?=$address ?></td>
 						</tr>
 						<?}?>
+                        <?if($bbs_no!=5){?>
 						<tr>
 							<td bgcolor="E1E1E1" height="1" colspan="4"></td>
 						</tr>
@@ -416,6 +418,7 @@ if($if_use_secret == '1' && $if_secret=='1' && $passwd != $user_pass && !$Mall_A
 							<td width="10"></td>
 							<td><?=$email?></td>
 						</tr>
+                        <?}?>
 		<?
 		if($bbs_no != 8){
 		?>
