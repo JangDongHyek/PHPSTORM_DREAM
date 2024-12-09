@@ -8,42 +8,45 @@ $g5_member = new JlModel(array("table" => "g5_member"));
 $new_data = $model->where("idx",$_GET['idx'])->get()['data'][0];
 
 $customer = $g5_member->where('mb_id',$new_data['company_mb_id'])->get()['data'][0];
+$client = $g5_member->where("shipment_id",$new_data['shipment_id'])->get()['data'][0];
 
-//울산
-if($new_data['shipping_point'] == "1100") {
-    $client = array(
-        "mb_company_number" => "620-85-00816",
-        "mb_company_name" => "오제이씨 주식회사 울산공장",
-        "mb_addr" => "울산광역시 북구 책골길 59, 1층(연암동)",
-        "mb_name" => "송성근",
-    );
-}
-//전주
-else if($new_data['shipping_point'] == "1200") {
-    $client = array(
-        "mb_company_number" => "402-85-07773",
-        "mb_company_name" => "오제이씨(주) 전주공장",
-        "mb_addr" => "전라북도 완주군 봉동읍 용암리 794",
-        "mb_name" => "이재열",
-    );
-}
+////울산
+//if($new_data['shipping_point'] == "1100") {
+//    $client = array(
+//        "mb_company_number" => "620-85-00816",
+//        "mb_company_name" => "오제이씨 주식회사 울산공장",
+//        "mb_addr" => "울산광역시 북구 책골길 59, 1층(연암동)",
+//        "mb_name" => "송성근",
+//    );
+//}
+////전주
+//else if($new_data['shipping_point'] == "1200") {
+//    $client = array(
+//        "mb_company_number" => "402-85-07773",
+//        "mb_company_name" => "오제이씨(주) 전주공장",
+//        "mb_addr" => "전라북도 완주군 봉동읍 용암리 794",
+//        "mb_name" => "이재열",
+//    );
+//}
 
 
 $dispatch_idx = $_GET['idx'];
 $data = getDispatchInfo($dispatch_idx);
 ?>
+<meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=10, user-scalable=yes">
 <style>
     body {
         background: #F5F5F5;
         height: 100vh;
     }
+    #container{min-width: fit-content; width: 100%;}
 </style>
 
 <div id="header" class="ty2">
 </div>
 
 <div id="container">
-
+<?/*
     <div class="recipt">
 
         <table class="date" border="0" width="100%">
@@ -120,8 +123,8 @@ $data = getDispatchInfo($dispatch_idx);
             </table>
         </div>
     </div>
-    <? if($jl->DEV) {?>
-        <div class="recipt2">
+*/?>
+<div class="recipt2">
             <h1>인수증</h1>
 
             <div class="sign">
@@ -198,7 +201,6 @@ $data = getDispatchInfo($dispatch_idx);
                 }
             </script>
         </div>
-    <? }?>
 </div>
 
 <?

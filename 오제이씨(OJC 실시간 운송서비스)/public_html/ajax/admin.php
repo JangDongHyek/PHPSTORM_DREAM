@@ -362,7 +362,12 @@ switch($_POST['mode']){
         $product_full_string = $_POST['product_full_string'];
         $product_pk = $_POST['product_pk'];
         $product_name = $_POST['product_name'];
-        $product_cnt = $_POST['product_cnt'];        
+        $product_cnt = $_POST['product_cnt'];
+
+        // 이전 로직이 꼬일수도있어 여기서 처리
+        $shipment_id = "";
+        if($shipping_point == "1100") $shipment_id = "OJC_os";
+        else if($shipping_point == "1200") $shipment_id = "OJC_jj";
         
         $company_mb_id = $_POST['company_mb_id'];
         $real_company_name = $_POST['real_company_name'];
@@ -403,6 +408,7 @@ switch($_POST['mode']){
                         
             request_date = '{$request_date}',
             shipping_point = '{$shipping_point}',
+            shipment_id = '{$shipment_id}',
             product_string = '{$product_string}',
             product_full_string = '{$product_full_string}',
             product_pk = '{$product_pk}',
