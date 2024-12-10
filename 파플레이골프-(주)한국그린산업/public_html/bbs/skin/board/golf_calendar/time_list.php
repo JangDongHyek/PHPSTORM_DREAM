@@ -53,7 +53,7 @@
 					$result=mysql_query($sql);
 					$i=0;
 					while($rs=mysql_fetch_array($result)){
-
+                        if($rs['cat_name'] == "16:10" || $rs['cat_name'] == "16:20" || $rs['cat_name'] == "16:30") continue;
 						$cat_num=$rs[cat_num];
 						$sql="select * from $bbs_table where (rg_cat_num='$rs[cat_num]' OR rg_cat_num2='$rs[cat_num]' OR rg_cat_num3='$rs[cat_num]' OR rg_cat_num4='$rs[cat_num]') and rg_ext5='$book'";
 				

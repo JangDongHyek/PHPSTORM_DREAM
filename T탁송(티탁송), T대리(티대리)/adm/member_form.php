@@ -67,7 +67,7 @@ include_once('./admin.head.php');
 
 // add_javascript('js 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 // add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
-
+$ccm = $tab == "3" ? "T" : "F";
 ?>
 <style>
     #bank_img img {max-height: 70px; padding-top: 5px;}
@@ -87,6 +87,7 @@ include_once('./admin.head.php');
     <input type="hidden" name="token" value="">
     <input type="hidden" name="mode" value="member">
     <input type="hidden" name="tab" value="<?=$tab?>">
+    <input type="hidden" name="is_ccm" value="<?=$ccm?>">
 
     <!-- 로그인용 아이디 (자동생성) -->
     <? if ($tab != 3) { ?>
@@ -215,6 +216,11 @@ include_once('./admin.head.php');
                             <option value="빌라" <?=get_selected($mb['mb_house'], "빌라")?>>빌라</option>
                             <option value="원룸" <?=get_selected($mb['mb_house'], "원룸")?>>원룸</option>
                         </select>
+                    </td>
+
+                    <th scope="row"><label for="">주소<strong class="sound_only">필수</strong></label></th>
+                    <td>
+                        <?=$mb['mb_addr1']?> <?=$mb['mb_addr2']?>
                     </td>
                 </tr>
                 <tr>

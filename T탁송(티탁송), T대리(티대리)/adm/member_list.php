@@ -223,7 +223,7 @@ include_once('./admin.head.php');
                 <?php if ($tab != "3") { ?><th>포인트<br>자동차감</th><?php } ?>
                 <th>가입일</th>
                 <th>관리</th>
-                <?php if ($tab == "2") {?><th>계약서</th><?php }?>
+                <?php if ($tab == "2" || $tab == "3") {?><th>계약서</th><?php }?>
             </tr>
             </thead>
             <tbody>
@@ -301,6 +301,10 @@ include_once('./admin.head.php');
 
                     <?php if ($tab == "2") {?>
                         <td><a href="javascript:void(0)" onclick="openContract('<?=$mb_id?>')">보기</a></td>
+                    <?php }?>
+
+                    <?php if ($tab == "3") {?>
+                        <td><a href="javascript:void(0)" onclick="openContract2('<?=$mb_id?>')">보기</a></td>
                     <?php }?>
                 </tr>
                 <?php
@@ -381,6 +385,15 @@ echo get_paging($config['cf_write_pages'], $page, $total_page, '?'.$paging_param
             top = Math.floor((window.innerHeight - pop_h) / 2);
 
         child = window.open(g5_admin_url + "/member_contract.php?mb_id=" + mb_id, "기사 계약서", "width="+pop_w+"px,height="+pop_h+"px,top="+top+",left="+left+",scrollbars=yes");
+    }
+
+    function openContract2(mb_id) {
+        var pop_w = 500,
+            pop_h = 700,
+            left = Math.floor((window.innerWidth - pop_w) / 2),
+            top = Math.floor((window.innerHeight - pop_h) / 2);
+
+        child = window.open(g5_admin_url + "/member_contract2.php?mb_id=" + mb_id, "기사 계약서", "width="+pop_w+"px,height="+pop_h+"px,top="+top+",left="+left+",scrollbars=yes");
     }
 </script>
 

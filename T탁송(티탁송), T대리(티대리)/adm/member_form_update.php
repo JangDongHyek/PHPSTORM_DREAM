@@ -35,7 +35,8 @@ $sql_common = " mb_name = '{$_POST['mb_name']}',
 				mb_recommend = '{$mb_recommend}',
 				mb_1 = '".preg_replace("/[^0-9]*/s", "", $_POST['mb_1'])."',
 				mb_3 = '{$mb_3}',
-				mb_4 = '{$mb_4}'
+				mb_4 = '{$mb_4}',
+				is_ccm = '{$is_ccm}'
 			  ";
 
 // 은행정보추가
