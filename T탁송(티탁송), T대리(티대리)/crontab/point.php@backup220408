@@ -1,0 +1,121 @@
+<?php
+//!#/usr/local/php -q
+header('Content-Type: text/html; charset=UTF-8');
+
+$hostName = "localhost";
+$userName = "tdaeri2";
+$password = "7p0weqkw";
+$database = "tdaeri2";
+$connect = mysqli_connect($hostName,$userName,$password,$database);
+mysqli_select_db($connect,$database);
+
+// echo "매월1일 차감";
+
+
+$sql = "SELECT * FROM g5_member WHERE at_point_type ";
+if ((int)date("d") == 1) $sql .= "IN (1,2) "; // 매월 1일 : 월/일 차감 체크
+else $sql .= "= '1' "; // 1일 외 : 일차감 체크
+$sql .= "ORDER BY mb_no ASC";
+$result = mysqli_query($connect, $sql);
+
+while($member = mysqli_fetch_array($result)) {
+    $mb_id = $member['mb_id'];                      // 회원아이디
+    $at_point = $member['at_point'];                // 자동차감 포인트
+    $at_point_type = $member['at_point_type'];      // 차감방식 (1:일, 2:월)
+    $mb_point = getMemberPoint($mb_id);             // 회원 누적포인트
+    $remain_point = (int)$mb_point - (int)$at_point; // 잔여포인트
+    //echo "회원아이디:".$mb_id."<br>";
+
+    // 포인트 중복차감 확인
+    if ($at_point_type == "1") {
+        $po_auto_date = date("Y-m-d");
+        $po_rel_action = "auto_point_day";
+
+    } else if ($at_point_type == "2") {
+        $po_auto_date = date("Y-m-01");
+        $po_rel_action = "auto_point_month";
+
+    } else {
+        return false;
+    }
+
+    $sql2 = "SELECT COUNT(*) AS cnt FROM g5_point 
+            WHERE mb_id = '{$mb_id}' AND po_rel_action = '{$po_rel_action}' AND po_auto_date = '{$po_auto_date}'";
+    $result2 = mysqli_query($connect, $sql2);
+    $point = mysqli_fetch_assoc($result2);
+
+    if ($point['cnt'] == 0) {
+        //echo "차감하기 {$at_point_type}<br>";
+        minusMemberPoint($mb_id, $at_point_type, $at_point, $remain_point);
+
+    } else {
+        //echo "차감함<br>";
+    }
+
+}
+
+
+// 회원 누적포인트
+function getMemberPoint($mb_id) {
+    global $connect;
+
+    // 회원 포인트 조회
+    $sql = "SELECT po_mb_point FROM g5_point WHERE mb_id = '{$mb_id}' ORDER BY po_id DESC LIMIT 0,1";
+    $result = mysqli_query($connect, $sql);
+    $point = mysqli_fetch_assoc($result);
+
+    return $point['po_mb_point']; // 누적포인트
+}
+
+
+// 회원 포인트 차감
+function minusMemberPoint($mb_id, $at_type, $use_point, $remain_point)
+{
+    global $connect;
+
+    $content = "포인트 자동차감 ";
+    $action = "auto_point";
+    $po_auto_date = "";
+
+    if ($at_type == "1") {
+        $content .= "(일/".date("Y.m.d").")";
+        $action .= "_day";
+        $po_auto_date = date("Y-m-d");
+
+    } else if ($at_type == "2") {
+        $content .= "(월/".date("Y.m").")";
+        $action .= "_month";
+        $po_auto_date = date("Y-m-01");
+
+    } else {
+        return;
+    }
+
+    // 포인트차감 DB 등록
+    $sql = "insert into g5_point set 
+            mb_id = '{$mb_id}',
+            po_datetime = '" . date("Y-m-d H:i:s") . "',
+            po_content = '" . addslashes($content) . "',
+            po_point = '0',
+            po_use_point = '{$use_point}',
+            po_mb_point = '{$remain_point}',
+            po_expired = '0',
+            po_expire_date = '9999-12-31',
+            po_rel_table = '',
+            po_rel_id = '',
+            po_rel_action = '{$action}',
+            po_rel_tid = '',
+            po_auto_date = '{$po_auto_date}'
+            ";
+    $insert_res = mysqli_query($connect, $sql);
+    //echo ($insert_res)? "성공" : "실패";
+
+    if ($insert_res) {
+        // 회원 잔여포인트 UPDATE
+        $sql = " update g5_member set mb_point = '{$remain_point}' where mb_id = '{$mb_id}'";
+        mysqli_query($connect, $sql);
+    }
+
+}
+
+die();

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="4660e42b-8cc1-4cef-a613-920f020ba1ad" name="T탁송(티탁송), T대리(티대리)">
+        <fileTransfer rootFolder="/home/tdaeri2/www" accessType="SFTP" host="183.111.204.96" port="22222" sshConfigId="fa95e2bd-15ed-45df-a8b8-7f81a8b1244e" sshConfig="root@183.111.204.96:22222 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
