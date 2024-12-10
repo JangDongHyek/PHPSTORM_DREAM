@@ -1,0 +1,121 @@
+<?
+   $site_path = "/home/farplay/public_html/bbs/";
+   $site_url = "../bbs/";
+   require_once($site_path."include/lib.inc.php");
+?>
+
+<?
+$num=1;
+$sub=1;
+?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>도심속의 골프랜드 ▒파플레이 골프클럽▒</title>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다.
+
+if ( getCookie( "Notice5" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요.
+	noticeWindow  =  window.open('../pop/pop_1.htm','Notice5','left=0, top=0, width=400,height=460');
+	noticeWindow.opener = self;
+}
+
+if ( getCookie( "Notice2" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요.
+	//noticeWindow  =  window.open('../pop/pop_2.htm','Notice2','left=200, top=0, width=450,height=420');
+	//noticeWindow.opener = self;
+}
+
+if ( getCookie( "Notice3" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요.
+	noticeWindow  =  window.open('../pop/pop_3.htm','Notice3','left=400, top=0, width=480,height=589');
+	noticeWindow.opener = self;
+}
+
+
+// -->
+</SCRIPT>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+-->
+</style></head>
+
+<body bgcolor="#ffffff">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="90" align="center" valign="top"><? include("../inc/navi.htm"); ?></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="595" align="center" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" valign="top" style="background-repeat:repeat; background-position:100% 0" background="../images/bg01.jpg">&nbsp;</td>
+        <td width="1000" height="595" align="center" valign="top" background="../images/index_06.jpg"><img src="../images/main_img.jpg" width="1000" height="595"></td>
+        <td align="center" valign="top" background="../images/bg02.jpg">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" valign="top" background="../images/middle_bg.jpg"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><a href="../bbs/list.php?bbs_id=notice" onFocus="blur();"><img src="../images/index_10.jpg" width="235" height="43" border="0"></a></td>
+          </tr>
+          <tr>
+            <td style="padding-top:10px;"><?=rg_lastest('default','notice','공지사항',3,28, '...')?></td>
+          </tr>
+        </table></td>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><a href="sub4-1.htm" onFocus="blur();"><img src="../images/index_11.jpg" width="281" height="147" border="0"></a></td>
+          </tr>
+        </table></td>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><a href="sub3-2.htm" onFocus="blur();"><img src="../images/index_12.jpg" width="217" height="147" border="0"></a></td>
+          </tr>
+        </table></td>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><a href="sub2-2.htm" onFocus="blur();"><img src="../images/index_13.jpg" width="267" height="147" border="0"></a></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<? include("../inc/copy.htm"); ?>
+</body>
+</html>

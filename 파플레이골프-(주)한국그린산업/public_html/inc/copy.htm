@@ -1,0 +1,33 @@
+<?
+if($_SESSION['ss_mb_id']){ //로그인 상태일때
+?>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" bgcolor="#1D330D"><img src="../images/index_17out.jpg" width="1000" height="88" border="0" usemap="#in" /></td>
+  </tr>
+</table>
+
+<?
+}
+else{ //로그아웃 상태일때
+?>
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" bgcolor="#1D330D"><img src="../images/index_17.jpg" width="1000" height="88" border="0" usemap="#out" /></td>
+  </tr>
+</table>
+<?
+}
+?>
+
+<map name="in">
+<area shape="rect" coords="114,52,166,75"  onfocus="blur();" href="../bbs/mb_logout.php">
+<area shape="rect" coords="3,54,112,74" onfocus="blur();" href="http://www.itforu.co.kr/" target="_blank">
+</map>
+<map name="out">
+<area shape="rect" coords="2,53,112,74"  onfocus="blur();" href="http://www.itforu.co.kr/" target="_blank">
+<area shape="rect" coords="114,54,165,74" onfocus="blur();" href="../bbs/mb_login.php">
+</map>

@@ -1,0 +1,208 @@
+<script type="text/JavaScript">
+<!--
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+//-->
+</script>
+
+<!--메뉴스크립트-->
+<script type="text/javascript">
+$(document).ready(function() {
+$(".main-navigation li.menu1").hover(function() {
+    var itemwidth = $(this).width(); /* Getting the LI width */
+	$(this).prepend("<div class='hover'></div>"); /* Inserting a blank div into within li above the <a> tag*/
+	$(this).find("div").fadeIn('10').css({ 'width' : itemwidth}); /* Using the itemwidth for the div to display properly*/
+	$(this).find("ul").fadeIn('0').slideDown('0').css("display", "block");
+  
+
+} , function() {
+	$(this).find("div").slideUp('10').fadeOut('10');/* sliding up and fading out the hover div */
+	$(this).find("div").remove('10');/* removing the <div> code from html at every mouseout event*/
+	$(this).find("ul").fadeOut('10'); /* fading out the sub menu */
+});
+
+
+});
+</script>
+
+<style type="text/css">
+
+/*메뉴css*/
+.main-navigation{
+	margin:0px auto;
+    width:777px;
+    height:auto;
+	*background:url(../images/new/menu_bg.gif) no-repeat left top;
+	box-sizing:border-box;
+    }
+  
+.main-navigation ul{
+    margin:0px 0 6px;
+    padding:0px;
+	margin-left:50px;
+    list-style:none;
+  
+    }
+  
+.main-navigation ul:after{ display:block; content:""; clear:both;}
+.main-navigation li.menu1{ float:left; position:relative; text-align:center; *background:url(../images/new/menu_line.png) no-repeat right center;}
+  
+  
+li .hover{
+    color:#004ed0;
+    text-decoration:none;
+    position:absolute;
+    background:url(../images/hover-bg.png) top left no-repeat;
+    top:0;
+    left:0;
+    z-index:0;
+    height:36px;
+    display:none;
+    }
+  
+.main-navigation li.menu1 a.menu1_1a{
+    display:block;
+    color:#000;
+	font-weight:bold;
+    text-decoration:none;
+    padding:0px 22px;
+	line-height:43px;
+    position:relative;
+	font-size:14px;
+	font-weight:800;
+    font-family: 'Nanum Gothic';
+	letter-spacing:0px;
+    }
+.main-navigation li.menu1 a.menu1_1a:hover{color:#2b7115;}	
+  
+ul li ul.menu2{
+    position:absolute;
+	display:none;
+    top:39px;
+	float:left;
+	left:0;
+	background-color:#2b7115;
+	font-weight:900;
+	padding:4px 18px;
+	border-radius:0px 0px;
+	box-shadow:3px 3px 3px #e8e8e8;
+	
+    }
+	
+.main-navigation li.menu1:first-child ul.menu2 {margin-left:-15px; 	width:250px;}
+.main-navigation li.menu1:nth-child(2) ul.menu2 {margin-left:-40px; width:170px;}
+.main-navigation li.menu1:nth-child(3) ul.menu2 {margin-left:-20px; width:115px;}
+.main-navigation li.menu1:nth-child(4) ul.menu2 {margin-left:-25px; width:115px;}
+.main-navigation li.menu1:nth-child(5) ul.menu2 {margin-left:-20px; width:115px;}
+.main-navigation li.menu1:nth-child(6) ul.menu2 {margin-left:-91px; width:170px;}
+
+
+  
+ul li:hover ul{
+    display:block;
+    }
+  
+ul li ul.menu2 li{
+	float:left;
+    display:inline-block;
+    position:relative;
+    }
+  
+ul li ul.menu2 li a{
+	font-size:11.5px;
+	font-family:'Malgun Gothic', Dotum, sans-serif;
+	letter-spacing:-1px;
+	line-height:25px;
+    display:block;
+    color:#a1dd8e;
+    text-decoration:none;
+    z-index:1000;
+    position:relative;
+	padding:0 7px;
+    }
+	
+ul li ul.menu2 li a:hover{ color:#fff; font-weight:bold;}
+</style>
+
+
+
+
+<table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="90" align="center"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td height="90"><a href="../main/"><img src="../images/logo.jpg" /></a></td>
+		  
+          <td width="777" background="../images/menu_bg.jpg">
+		  <div class="main-navigation">
+              <ul>
+	
+                <li class="menu1"><a href="../main/sub1-1.htm"  class="menu1_1a">파플레이 골프클럽</a>
+                    <ul class="menu2">
+                        <li><a href="../main/sub1-1.htm">대표인사말</a></li>
+                        <li><a href="../main/sub2-1.htm">파플레이골프 개요</a></li>
+                        <li><a href="../main/sub1-2.htm">찾아오시는 길</a></li>
+                    </ul>
+				</li>
+				
+                <li class="menu1"><a href="../main/sub2-3.htm" class="menu1_1a">PAR3 골프장</a>
+                    <ul class="menu2">
+                        <li><a href="../main/sub2-3.htm">이용안내</a></li>
+                        <li><a href="../main/sub4-1.htm">코스소개</a></li>
+                        <li><a href="../main/sub2-4.htm">이용요금</a></li>
+                    </ul>
+                </li>
+				
+                <li class="menu1"><a href="../main/sub3-3.htm" class="menu1_1a">이용요금</a>
+                    <ul class="menu2">
+                        <li><a href="../main/sub3-3.htm">이용안내</a></li>
+                        <li><a href="../main/sub3-2.htm">이용요금</a></li>
+                    </ul>
+				</li>
+				
+                <li class="menu1"><a href="../main/sub4-2.htm" class="menu1_1a">시설안내</a>
+                    <ul class="menu2">
+                        <li><a href="../main/sub4-2.htm">시설안내</a></li>
+                        <li><a href="../main/sub2-2.htm">부대시설</a></li>
+                    </ul>
+				</li>
+				
+                <li class="menu1"><a href="../bbs/list.php?bbs_id=golf" class="menu1_1a">PAR3골프장예약</a>
+				 <ul class="menu2">
+                        <li><a href="../bbs/list.php?bbs_id=golf">예약하기</a></li>
+                        <li><a href="../bbs/list2.php?bbs_id=golf">예약확인</a></li>
+                    </ul>
+				</li>
+              
+			   
+			    <li class="menu1"><a href="../bbs/list.php?bbs_id=qna" class="menu1_1a">커뮤니티</a>
+				  <ul class="menu2">
+                        <li><a href="../bbs/list.php?bbs_id=qna">온라인상담</a></li>
+                        <li><a href="../bbs/list.php?bbs_id=pro_gall">갤러리</a></li>
+					    <li><a href="../bbs/list.php?bbs_id=notice">공지사항</a></li
+                    ></ul>
+				</li>
+		
+				
+            </ul>
+        </div>
+		
+		
+		
+		</td>
+        </tr>
+    </table></td>
+  </tr>
+</table>

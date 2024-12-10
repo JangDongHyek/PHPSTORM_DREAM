@@ -1,0 +1,21 @@
+<?
+if($_SERVER['SERVER_NAME'] == "m.parplaygolf.kr"){
+        echo "<script>location.href='http://m.parplaygolf.kr/mobile/';</script>";
+}
+?>
+<html>
+<META name="keywords" contents="">
+<head>
+<script type="text/javascript">
+var ua = window.navigator.userAgent.toLowerCase();
+if ( /iphone/.test(ua) || /android/.test(ua) || /opera/.test(ua) || /bada/.test(ua) ) {
+document.location.replace('http://m.parplaygolf.kr/mobile/');
+}
+</script>
+<title>도심속의 골프랜드 ▒파플레이 골프클럽▒</title>
+<FRAMESET ROWS=0%,100% border=0>
+  <FRAME SRC="music.htm">
+  <FRAME SRC="./main/index.htm">
+</FRAMESET><noframes></noframes>
+</head>
+</html>

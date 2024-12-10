@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<title>파플레이골프</title>
+<link rel="stylesheet" type="text/css" href="b.css"/>
+</head>
+<body>
+
+
+<style type="text/css">
+<!--
+#divpop {
+	position:absolute;
+	left:5%;
+	top:50px;
+	width:90%;
+	height:auto;
+	z-index:2000;
+	border:0px solid #000000;
+	visibility: visible;
+}
+#divpop2 {
+	position:absolute;
+	left:5%;
+	top:50px;
+	width:90%;
+	height:auto;
+	z-index:2000;
+	border:0px solid #000000;
+	visibility: visible;
+}
+
+#divpop3 {
+	position:absolute;
+	left:5%;
+	top:50px;
+	width:90%;
+	height:auto;
+	z-index:2000;
+	visibility: visible;
+}
+
+#pop_link {color: #fff; font-size:11px}
+#pop_link a{color: #fff;}
+#pop_link a:hover {color:#FF0000;}
+
+.contents {
+	color: #fff;
+	font-weight: bold;
+	text-shadow: 1px 1px 0px #000;
+	text-align:left;
+	padding-left:20px;
+	padding-top:10px;
+	
+}
+-->
+
+</style>
+
+
+
+
+
+<SCRIPT language=JavaScript>
+<!--
+
+<!--
+
+//시간설정
+function startTime(){
+var time= new Date();
+hours= time.getHours();
+mins= time.getMinutes();
+secs= time.getSeconds();
+closeTime=hours*3600+mins*60+secs;
+closeTime+=10; //시간설정 (초)
+Timer();
+}
+
+//타이머
+function Timer(){
+var time= new Date();
+hours= time.getHours();
+mins= time.getMinutes();
+secs= time.getSeconds();
+curTime=hours*3600+mins*60+secs
+if (curTime>=closeTime){
+document.all['divpop'].style.visibility = "hidden";
+}
+else{
+window.setTimeout("Timer()",7200)}
+}
+
+//쿠키설정
+function setCookie( name, value, expiredays ) { 
+var todayDate = new Date(); 
+todayDate.setDate( todayDate.getDate() + expiredays ); 
+document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+} 
+
+//창닫기(레이어)
+function closeWin() { 
+if ( document.notice_form.chkbox.checked ){ 
+setCookie( "maindiv", "done" , 2 ); 
+} 
+document.all['divpop'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+
+//창닫기(레이어)
+function closeWin2() { 
+if ( document.notice_form2.chkbox2.checked ){ 
+setCookie( "maindiv2", "done" , 2 ); 
+} 
+document.all['divpop2'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+
+//창닫기(레이어)
+function closeWin3() { 
+if ( document.notice_form3.chkbox3.checked ){ 
+setCookie( "maindiv3", "done" , 2 ); 
+} 
+document.all['divpop3'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+//--> 
+
+
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+-->
+//-->
+</SCRIPT>
+
+
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function showLayer() {
+document.all.divpopS.style.visibility = "visible";
+}
+
+function hideLayer() {
+document.all.divpop.style.visibility = "hidden";
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+
+
+<!--레이어팝업-->
+<div id="divpop"  class="layer_popup1">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../pop/pop_golf.gif" width="100%" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="24" bgcolor="#3F3F3F"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form" id="notice_form">
+                        <tr>
+                          <td height="24" align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox" />
+                              <span id="pop_link">오늘 하루 열지 않습니다.&nbsp;&nbsp;<a href="javascript:closeWin();">[ X CLOSE ]</a></span></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+			
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+<div id="divpop2"  class="layer_popup2" *style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#48b214">
+                  <tr>
+                    <td valign="top" class="handler"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td height="50" align="center" style="font-size:2.1em; color:#fff; font-weight:900; text-shadow:1px 1px 1px #000">[ 파 스크린 골프 요금표 ]</td>
+        </tr>
+        <tr>
+          <td><table width="98%" border="0" align="center" cellpadding="5" cellspacing="1" bgcolor="#3D8521" style="border:1px solid #006633">
+            <tr>
+              <td align="center" bgcolor="#E2F1DC"><strong>요일별</strong></td>
+              <td colspan="2" align="center" bgcolor="#E2F1DC"><strong>시간대별</strong></td>
+              <td align="center" bgcolor="#E2F1DC"><strong>9홀</strong></td>
+              <td align="center" bgcolor="#E2F1DC"><p><strong>18홀</strong></p>                </td>
+              <td align="center" bgcolor="#E2F1DC"><strong>영업 시간 </strong></td>
+            </tr>
+            <tr>
+              <td rowspan="2" align="center" bgcolor="#FCFDFB"><strong>평일</strong></td>
+              <td rowspan="2" align="center" bgcolor="#FCFDFB">14:00</td>
+              <td height="40" align="center" bgcolor="#FCFDFB">이전</td>
+              <td align="center" bgcolor="#FCFDFB"><strong>11,000</strong></td>
+              <td align="center" bgcolor="#FCFDFB"><strong>13,000</strong></td>
+              <td rowspan="2" align="center" bgcolor="#FCFDFB">09:00<br>
+                ~ 22:00 </td>
+            </tr>
+            <tr>
+              <td height="40" align="center" bgcolor="#FCFDFB">이후</td>
+              <td align="center" bgcolor="#FCFDFB"><strong>12,000</strong></td>
+              <td align="center" bgcolor="#FCFDFB"><strong>15,000</strong></td>
+            </tr>
+            
+            <tr>
+              <td rowspan="2" align="center" bgcolor="#FCFDFB"><strong>주말<br>
+                (공휴일)</strong></td>
+              <td rowspan="2" align="center" bgcolor="#FCFDFB">14:00</td>
+              <td height="40" align="center" bgcolor="#FCFDFB">이전</td>
+              <td align="center" bgcolor="#FCFDFB"><strong>12,000</strong></td>
+              <td align="center" bgcolor="#FCFDFB"><strong>15,000</strong></td>
+              <td rowspan="2" align="center" bgcolor="#FCFDFB">09:00<br>
+                ~ 21:00 </td>
+            </tr>
+            <tr>
+              <td height="40" align="center" bgcolor="#FCFDFB">이후</td>
+              <td align="center" bgcolor="#FCFDFB"><strong>13,000</strong></td>
+              <td align="center" bgcolor="#FCFDFB"><strong>17,000</strong></td>
+              </tr>
+          </table></td>
+        </tr>
+        <tr>
+          <td height="40" align="center"><div class="contents">
+            · 10분 초과 시 마다 1,000원 부과 / 포섬은 9홀 기준 요금<br>
+            · 로그인 시간을 기준 / 1인 18홀 60분 / 9홀 30분<br>
+            · 오픈 기념 8월 15일까지 20% 할인<br>
+            · 문의 및 예약 전화 : 055-311-7200<br>
+            <br>
+            <br>
+            ※ 실내 음주와 흡연은 금하며 이용해주셔서 감사합니다.
+          </div></td>
+        </tr>
+        <tr>
+          <td height="14" align="center">&nbsp;</td>
+        </tr>
+    </table></td>
+                  </tr>
+                  <tr>
+                    <td height="24" bgcolor="#3F3F3F"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form2" id="notice_form2">
+                        <tr>
+                          <td height="24"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox2" />
+                             <span id="pop_link">오늘 하루 열지 않습니다.&nbsp;&nbsp;<a href="javascript:closeWin2();">[ X CLOSE ]</a></span></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv2=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop2'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+<div id="divpop3"  class="layer_popup3" style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../pop/pop_event_2.gif" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="30" bgcolor="#3F3F3F"><table width="300" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form3" id="notice_form3">
+                        <tr>
+                          <td height="30"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox3" />
+                                <span id="pop_link">오늘 하루 열지 않습니다.&nbsp;&nbsp;<a href="javascript:closeWin3();">[ X CLOSE ]</a></span></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv3=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop3'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+<div id="ht">
+ <? include('../mobile/top.htm');?>
+</div>
+<div class="mb"><img src="../mobile/images/main_05.jpg" width="310" height="293" border="0" /></div>
+<div id="foot">
+	<? include('../mobile/foot.htm');?>   
+</div>
+</body>
+</html>

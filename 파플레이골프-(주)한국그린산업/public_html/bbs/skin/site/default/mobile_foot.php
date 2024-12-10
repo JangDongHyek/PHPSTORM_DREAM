@@ -1,0 +1,50 @@
+</div>
+	<!-- 게시판 리스트 끝-->
+</div>
+<div class="foot">
+	<div><img src="../mobile/images/copy.jpg" width="300" height="146" border="0" usemap="#copy"/></div>
+</div>
+<!-- 탑메뉴 끝-->
+
+<!--
+<div id="ht">
+<div class="mb">
+        <div class="ml"><img src="images/top.jpg" border="0" usemap="#Map2" /></div>
+	  <div class="ml"><img src="images/logo_main.gif" width="300" height="53" border="0" usemap="#Map"/></div>
+</div> 
+		<div class="mb" style="width:100%; height:342px; z-index:-1; top:116px; left:0; position:absolute;">
+<img src="images/p_t1.gif" width="300" height="46" style="width:300; height:46;border-box; max-width:100% !important;"></div>
+		<div class="mb" style="width:100%; height:342px; z-index:1; top:165px; left:0; position:absolute;">
+		  <iframe src="../bbs/list.php?bbs_id=online" width="300" height="300" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+		</div>
+</div>
+    </div>
+</div>
+<div id="hb6">
+	  <div class="mbottom"></div>
+	  <div class="mbottom"><img src="images/bottom.jpg" width="300" height="192" border="0" usemap="#copy"/></div>
+</div>
+-->
+<map name="Map" id="Map">
+  <area shape="rect" coords="3,2,51,29" href="../mobile/sub1_1.htm" />
+  <area shape="rect" coords="51,4,108,28" href="../mobile/sub2_1.htm"/>
+  <area shape="rect" coords="109,4,158,28" href="../mobile/sub3_2.htm" />
+  <area shape="rect" coords="160,4,216,27" href="../mobile/sub4_2.htm" />
+  <area shape="rect" coords="217,4,257,28" href="../bbs/mobile_list.php?bbs_id=pro_gall" />
+  <area shape="rect" coords="257,1,307,28" href="../bbs/mobile_list.php?bbs_id=notice" />
+</map>
+<map name="qna" id="Map2">
+  <area shape="rect" coords="2,4,129,54" href="../mobile/" />
+  <area shape="poly" coords="217,15" href="#" />
+  <area shape="rect" coords="230,16,305,41" href="#"/>
+  <area shape="rect" coords="158,16,230,41" href="../mobile/sub4_1.htm" />
+</map>
+
+
+ <map name="copy" id="copy">
+  <area shape="rect" coords="183,115,243,139" href="../main/index.htm" />
+  <area shape="rect" coords="243,115,310,140" href="../mobile/sub1_1.htm" />
+  <area shape="rect" coords="150,5,306,32" href="../bbs/mobile_list.php?bbs_id=pro_gall" />
+  <area shape="rect" coords="5,4,150,31" href="../bbs/mobile_list.php?bbs_id=notice" />
+  <area shape="rect" coords="231,37,305,66" href="tel:0553117200" />
+</map>
