@@ -12,15 +12,12 @@
 
                         <div class="area_photo">
                             <div class="photo basic" id="img_area" onclick="file_click();">
-                                <?php
-                                $icon_file = G5_DATA_PATH.'/file/member/'.$member['mb_no'].'.jpg';
-                                if (file_exists($icon_file)) {
-                                    $icon_url = G5_DATA_URL.'/file/member/'.$member['mb_no'].'.jpg';
-                                    echo '<img src="'.$icon_url.'" alt="">';
-                                }else{
-                                    echo '<img src="'.G5_IMG_URL .'/img_smile.jpg">';
-                                }
-                                ?>
+                                <template v-if="data.profile_image">
+                                    <img :src="jl.root+'/data/file/member/' + data.mb_no + '.jpg'">
+                                </template>
+                                <template v-else>
+                                    <img :src="jl.root+'/img/img_smile.jpg'">
+                                </template>
                             </div>
                             <span class="upload"><i class="fa-solid fa-camera-retro"></i></span>
                         </div>
@@ -53,7 +50,7 @@
 
 
                 <br>
-                <div class="btn_confirm">
+                <div class="btn_confirm" v-if="!admin">
                     <input type="button" class="btn_submit ft_btn" id="pay_submit" value="프로필 등록 및 수정" accesskey="s" @click="updateData">
                 </div>
 
@@ -68,7 +65,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            mb_no : {type : String, default : ""}
+            mb_no : {type : String, default : ""},
+            admin : {type : Boolean, default : false},
         },
         data: function(){
             return {

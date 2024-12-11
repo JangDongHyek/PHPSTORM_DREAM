@@ -33,6 +33,12 @@ try {
             $model->where($obj);
             $object = $model->get($obj["page"], $obj["limit"]);
 
+            //프로필 사진 있나 체크
+            foreach ($object["data"] as $index => $data) {
+
+                $object["data"][$index]['profile_image'] = $model->isFileExists("/data/file/member/{$data['mb_no']}.jpg");
+            }
+
             if ($join_table) {
                 $deletes = array();
                 $joinModel = new Model(array(

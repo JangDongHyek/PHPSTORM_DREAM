@@ -57,6 +57,7 @@ try {
             if($data["u_date"] != "0000-00-00 00:00:00") throw new Exception("이미 승인이 완료된 건입니다.");
 
             $user["mb_level"] = 3;
+            $user["mb_join_division"] = 3;
             $user_model->put($user);
 
             $data["permit"] = "true";

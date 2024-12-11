@@ -109,6 +109,7 @@ $pgAppTime     	= $pgAppTime;
 $pgTid         	= $pgTid;
 $approvalAmt   	= $approvalAmt;
 $approvalNo    	= $approvalNo;
+$new_car_wash_dix = $new_car_wash_dix;
 
 
 if($payMethod == '01'){

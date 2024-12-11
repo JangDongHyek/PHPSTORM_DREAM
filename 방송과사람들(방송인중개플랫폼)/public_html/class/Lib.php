@@ -12,6 +12,14 @@ class JL {
         $this->INIT();
     }
 
+    // 파일이 있는지 없는지 확인하는 함수
+    function isFileExists($path) {
+        if(strpos($path,$this->ROOT) !== false) $file = $path;
+        else $file = $this->ROOT.$path;
+
+        return file_exists($file);
+    }
+
     function jsonDecode($json,$encode = true) {
         // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
         $json = addslashes($json);

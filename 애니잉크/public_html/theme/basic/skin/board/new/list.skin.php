@@ -116,17 +116,9 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 							<input type="text" name="sch_inspection1" class="frm_input x80" id="sch_inspection1" value="<?php echo $sch_inspection1 ?>"> ~ 
 							<input type="text" name="sch_inspection2" class="frm_input x80" id="sch_inspection2" value="<?php echo $sch_inspection2 ?>">
 						</td>
-                        <th class="list_search_th" style="border-radius:0px 0px 0px 7px;">정기점검미체크확인</th>
-                        <td class="list_search_td talign_l x210">
-                            <select name="check_date">
-                                <option value="">선택해주세요</option>
-                                <? for ($i = 1; $i < 37; $i++) { ?>
-                                <option value="<?=$i?>" <?if($_GET['check_date'] == $i) echo 'selected';?> ><?=$i?>개월</option>
-                                <? } ?>
-                            </select>
-                        </td>
+
                         <th class="list_search_th" style="border-radius:0px 0px 0px 7px;">미수금업체</th>
-                        <td class="list_search_td talign_l x210">
+                        <td class="list_search_td talign_l x210" colspan="4">
                             <input type="checkbox" name="sch_wr_17" value="미수" <?if($sch_wr_17 == '미수') echo 'checked';?> >
                         </td>
 

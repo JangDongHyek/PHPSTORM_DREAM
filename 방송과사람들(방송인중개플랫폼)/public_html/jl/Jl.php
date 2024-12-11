@@ -96,11 +96,13 @@ class Jl {
         return (json_last_error() === JSON_ERROR_NONE);
     }
 
+    //jsonEncode 한글깨짐 방지설정넣은
     function jsonEncode($data) {
         if($this->isVersion()) return json_encode($data,JSON_UNESCAPED_UNICODE);
         else return $this->decodeUnicode(json_encode($data));
     }
 
+    //상황에 필요한 로직들을 넣은 Jsondecode 함수
     function jsonDecode($origin_json,$encode = true) {
         $str_json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
         $str_json = stripslashes($str_json);
@@ -141,6 +143,7 @@ class Jl {
         return $obj;
     }
 
+    // 필요한 파일들을 로드하고 변수를 선언하는 기본함수
     function jsLoad() {
         //js파일 찾기
         if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
@@ -165,6 +168,7 @@ class Jl {
         echo "</script>";
     }
 
+    // vue 사용할시 vue에 필요한 파일들을 로드하고 JS 필수함수를 실행시키는 함수
     function vueLoad($app_name = "app",$plugins = array()) {
         if(!self::$LOAD) {
             $this->jsLoad();
@@ -182,7 +186,7 @@ class Jl {
         echo "}, false);";
         echo "</script>";
     }
-
+    // Vue 컴포넌트를 로드하는 함수
     function componentLoad($path) {
         if($path[0] != "/") $path = "/".$path;
         $path = $this->ROOT.$this->COMPONENT.$path;
@@ -204,6 +208,15 @@ class Jl {
         foreach ($files as $file) include_once($file);
     }
 
+    // 파일이 있는지 없는지 확인하는 함수
+    function isFileExists($path) {
+        if(strpos($path,$this->ROOT) !== false) $file = $path;
+        else $file = $this->ROOT.$path;
+
+        return file_exists($file);
+    }
+
+    // 연관 배열인지 확인하는 함수
     function isAssociativeArray(array $array) {
         // 배열이 비어 있는 경우, 연관 배열이 아닌 것으로 간주합니다.
         if (empty($array)) {

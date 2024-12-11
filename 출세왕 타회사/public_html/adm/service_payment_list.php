@@ -510,6 +510,7 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                     }else{
                         data["shop_order_id"] = card_moid;
                         console.log(data);
+                        data['new_car_wash_idx'] = idx;
 
                         //DB저장
                         $.ajax({

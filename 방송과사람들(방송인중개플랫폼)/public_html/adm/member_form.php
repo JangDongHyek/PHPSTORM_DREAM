@@ -1,6 +1,7 @@
 <?php
 $sub_menu = "200100";
 include_once('./_common.php');
+include_once(G5_PATH."/jl/JlConfig.php");
 
 auth_check($auth[$sub_menu], 'w');
 
@@ -134,7 +135,7 @@ include_once('./admin.head.php');
 // add_javascript('js 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 ?>
-
+<link rel="stylesheet" href="<?=G5_URL?>/theme/basic_app/css/sub.css?ver=0.4">
 <form name="fmember" id="fmember" action="./member_form_update.php" onsubmit="return fmember_submit(this);" method="post" enctype="multipart/form-data">
 <input type="hidden" name="w" value="<?php echo $w ?>">
 <input type="hidden" name="sfl" value="<?php echo $sfl ?>">
@@ -150,7 +151,8 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 <input type="hidden" name="mb_<?php echo $i ?>" value="<?php echo $mb['mb_'.$i] ?>" id="mb_<?php echo $i ?>">
 <?php } ?>
 
-
+<?php $member = $mb;
+?>
 <div class="tbl_frm01 tbl_wrap">
     <table>
     <caption><?php echo $g5['title']; ?></caption>
@@ -179,12 +181,54 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
         <td><input type="text" name="mb_hp" value="<?php echo $mb['mb_hp'] ?>" id="mb_hp" class="frm_input" size="15" maxlength="20"></td>
     </tr>
     <tr>
+        <th scope="row"><label for="mb_hp">닉네임</label></th>
+        <td>
+            <input type="text" name="mb_nick" value="<?=$mb['mb_nick']?>">
+        </td>
         <th scope="row"><label for="mb_hp">회원가입구분</label></th>
         <td>
             <select name="mb_join_division">
                 <option value="2">의뢰인</option>
                 <option value="3">전문인</option>
             </select>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row"><label for="mb_hp">프사</label></th>
+        <td>
+            <?if($jl->isFileExists("/data/file/member/{$mb['mb_no']}.jpg")){?>
+                <img src="<?=G5_URL?>/data/file/member/<?=$mb['mb_no']?>.jpg" style="height: 100px; width: 100px;">
+            <?}?>
+        </td>
+    </tr>
+
+    <tr>
+        <th scope="row"><label for="mb_hp">성별</label></th>
+        <td>
+            <input type="radio" name="mb_sex" value="M" <?if($mb['mb_sex'] == 'M') echo "checked";?> >남성
+            <input type="radio" name="mb_sex" value="W" <?if($mb['mb_sex'] == 'W') echo "checked";?> >여성
+        </td>
+
+        <th scope="row"><label for="mb_hp">생년월일</label></th>
+        <td>
+            <input type="date" value="<?=$mb['mb_birth']?>">
+        </td>
+    </tr>
+
+    <tr>
+        <th scope="row"><label for="mb_hp">현재직업</label></th>
+        <td>
+            <p><?=$mb['mb_job']?></p>
+        </td>
+
+        <th scope="row"><label for="mb_hp">관심분야</label></th>
+        <td>
+            <?
+            $mb_interest = $jl->jsonDecode($mb['mb_interest']);
+            foreach ($mb_interest as $d) {
+            ?>
+                <p><?=$d?></p>
+            <?}?>
         </td>
     </tr>
 
@@ -325,12 +369,21 @@ this.form.mb_leave_date.value=this.value; } else { this.form.mb_leave_date.value
     </table>
 </div>
 
+<div id="vueApp">
+    <?if($mb['mb_join_division'] == 3) {?>
+    <profile-main mb_no="<?=$mb['mb_no']?>" admin="true"></profile-main>
+    <? } ?>
+</div>
+
 <div class="btn_confirm01 btn_confirm">
     <input type="submit" value="확인" class="btn_submit" accesskey='s'>
     <a href="./member_list.php?<?php echo $qstr ?>">목록</a>
 </div>
 </form>
 
+<?php $jl->vueLoad("vueApp");?>
+
+<?php $jl->componentLoad("profile");?>
 <script>
 $(document).ready(function () {
     $("[name='mb_join_division']").val('<?= $mb['mb_join_division']?>');

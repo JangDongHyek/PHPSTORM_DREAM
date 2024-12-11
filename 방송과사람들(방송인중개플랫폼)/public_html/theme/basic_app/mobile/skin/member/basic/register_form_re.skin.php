@@ -47,6 +47,7 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                 <input type="hidden" name="sns" value="<?=$sns?>">
                 <input type="hidden" name="sns_id" value="<?=$id?>">
 
+                <input type="hidden" name="mb_join_division" value="2">
                 <input type="hidden" name="mb_profile" value="1">
 
                 <!-- Step 1 -->
@@ -155,6 +156,29 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                         <h2>프로필</h2>
                         <div class="box-body">
                             <dl class="row">
+                                <dt>프로필사진</dt>
+                                <dd>
+                                    <form id="imgfrm">
+                                        <!-- 숨겨진 파일 입력 요소 -->
+                                        <input type="file" name="mb_icon" id="mb_icon" onchange="getImgPrev(this);" accept="image/*" style="display: none;">
+
+                                        <!-- 프로필 사진 영역 -->
+                                        <div class="area_photo basic" onclick="document.getElementById('mb_icon').click();" style="cursor: pointer;">
+                                            <?php
+                                            $icon_file = G5_DATA_PATH . '/file/member/' . $member['mb_no'] . '.jpg';
+                                            if (file_exists($icon_file)) {
+                                                $icon_url = G5_URL . '/data/file/member/' . $member['mb_no'] . '.jpg';
+                                                echo '<img id="profileImg" src="' . $icon_url . '" alt="Profile Photo">';
+                                            } else {
+                                                echo '<img id="profileImg" src="' . G5_IMG_URL . '/img_smile.jpg" alt="Default Profile Photo">';
+                                            }
+                                            ?>
+                                        </div>
+                                    </form>
+                                </dd>
+                            </dl>
+
+                            <dl class="row">
                                 <dt>닉네임<i class="fa-solid fa-asterisk"></i></dt>
                                 <dd>
                                     <input type="text" name="mb_nick" value="<?=$member['mb_nick']?>" id="reg_mb_nick" class="regist-input required"
@@ -181,34 +205,12 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                                 <dd class="error col-xs-12"></dd>
                             </dl>
 
-                            <dl class="row">
-                                <dt>프로필사진</dt>
-                                <dd>
-                                    <form id="imgfrm">
-                                        <!-- 숨겨진 파일 입력 요소 -->
-                                        <input type="file" name="mb_icon" id="mb_icon" onchange="getImgPrev(this);" accept="image/*" style="display: none;">
-
-                                        <!-- 프로필 사진 영역 -->
-                                        <div class="area_photo basic" onclick="document.getElementById('mb_icon').click();" style="cursor: pointer;">
-                                            <?php
-                                            $icon_file = G5_DATA_PATH . '/file/member/' . $member['mb_no'] . '.jpg';
-                                            if (file_exists($icon_file)) {
-                                                $icon_url = G5_URL . '/data/file/member/' . $member['mb_no'] . '.jpg';
-                                                echo '<img id="profileImg" src="' . $icon_url . '" alt="Profile Photo">';
-                                            } else {
-                                                echo '<img id="profileImg" src="' . G5_IMG_URL . '/img_smile.jpg" alt="Default Profile Photo">';
-                                            }
-                                            ?>
-                                        </div>
-                                    </form>
-                                </dd>
-                            </dl>
 
                             <?php
                             $jobs = ["직장인", "프리랜서", "자영업자", "대학생", "배우", "뮤지션", "성우", "모델", "디자이너",
                                 "아트디렉터", "방송스탭", "PD", "작가", "강사", "쇼호스트", "트레이너", "크리에이터", "뷰티업종", "IT", "요식업", "무직", "기타"];
                             $interests = ["배우·연기", "모델", "영상·사진·음향", "영상디자인·편집", "방송마케팅", "행사·MC·이벤트",
-                                "방송 스태프", "시나리오· 작가", "뷰티·패션", "레슨", "심리상담", "기타", "선택안함"];
+                                "방송 스태프", "시나리오· 작가", "뷰티·패션", "레슨", "심리상담", "기타"];
 
                             $m_jobs = $member ? $member['mb_job'] : [];
 
@@ -247,12 +249,12 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
 
                         </div>
                     </div>
-                    <?php if ($w == 'u') { ?>
-                        <a href="javascript:member_leave();" class="btn_cancel">회원탈퇴</a>
-                    <?php } else { ?>
-                        <button type="button"  class="btn_cancel" onclick="prevStep()">이전</button>
-                    <?php } ?>
                     <div class="btn_confirm">
+                        <?php if ($w == 'u') { ?>
+                            <a href="javascript:member_leave();" class="btn_cancel">회원탈퇴</a>
+                        <?php } else { ?>
+                            <button type="button"  class="btn_cancel" onclick="prevStep()">이전</button>
+                        <?php } ?>
                         <input type="submit" class="btn_submit ft_btn" id="pay_submit" value="<?php echo $w==''?'회원가입':'정보수정'; ?>" accesskey="s">
                     </div>
                 </div>

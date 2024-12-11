@@ -210,7 +210,7 @@ $sheet = $_GET['sheet'] ? $_GET['sheet'] : 'MS,SS';
                                 </div>
                                 <!-- Footer -->
                                 <div class="modal-footer">
-                                    <a href="https://www.dreamforone.com:443/~jjcatering/jl/jl_resource/sample.xlsx" class="btn btn-info" style="float:left; color: #FFF !important;" target="_blank">엑셀양식다운</a>
+                                    <a href="https://www.dreamforone.com:443/~jjcatering/jl/jl_resource/sample2.xlsx" class="btn btn-info" style="float:left; color: #FFF !important;" target="_blank">엑셀양식다운</a>
                                     <button type="button" onclick="uploadExcel()" class="btn btn-primary">등록</button>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
                                 </div>
