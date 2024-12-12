@@ -220,7 +220,8 @@ $ccm = $tab == "3" ? "T" : "F";
 
                     <th scope="row"><label for="">주소<strong class="sound_only">필수</strong></label></th>
                     <td>
-                        <?=$mb['mb_addr1']?> <?=$mb['mb_addr2']?>
+                        <p><input type="text" name="mb_addr1" value="<?=$mb['mb_addr1']?>" placeholder="주소"></p>
+                        <p><input type="text" name="mb_addr2" value="<?=$mb['mb_addr2']?>" placeholder="상세주소"></p>
                     </td>
                 </tr>
                 <tr>

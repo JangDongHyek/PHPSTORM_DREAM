@@ -2,10 +2,9 @@
 include_once('./_common.php');
 $g5['title'] = '포트폴리오 상세';
 include_once('./_head.php');
-include_once("../class/Lib.php");
+include_once(G5_PATH."/jl/JlConfig.php");
 $name = "portfolio";
 $pid = "portfolio";
-$jl = new JL();
 ?>
 
         <style>

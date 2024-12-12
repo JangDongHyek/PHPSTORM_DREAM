@@ -1,5 +1,6 @@
 <?php
-
+include_once APPPATH.'libraries/Jl.php';
+include_once APPPATH.'libraries/JlModel.php';
 // 주어진 날짜에서 년도만 추출
 $startYear = (int)date("Y", strtotime($minDate));
 
@@ -11,6 +12,7 @@ if (!$minDate) {
     $startYear = $currentYear;
 }
 
+$bs_agency_fee = new JlModel(array("table" => "bs_agency_fee"));
 
 ?>
 <!--에이전시-정산-->
@@ -141,7 +143,7 @@ if (!$minDate) {
                 $totalCnt = 0;
                 foreach ($listData as $list3) {
                     $totalPrice += $list3['order_price'] * 1;
-                    $agency_fee_totalPrice += $list3['agency_fee2'] * 1;
+                    //$agency_fee_totalPrice += $list3['agency_fee2'] * 1;
                     $totalCnt++;
                 }
                 ?>
@@ -162,8 +164,8 @@ if (!$minDate) {
                     <td colspan="2"><strong>합계</strong></td>
 
                     <td colspan="2" class="text_right txt_blue txt_bold"><?= number_format($totalPrice) ?>원</td>
-                    <td colspan="3" class="text_right txt_blue txt_bold"><?= number_format($agency_fee_totalPrice, 1) ?>
-                        원
+                    <td colspan="3" class="text_right txt_blue txt_bold">
+                        <span id="agency_total"><?= number_format($agency_fee_totalPrice, 1) ?>원</span>
                     </td>
                 </tr>
 
@@ -218,16 +220,30 @@ if (!$minDate) {
                         <td class="text_right price"><?= number_format($list['order_price']) ?>원</td>
 
                         <td class="item text_left">
-                            <?php $count2 = 0; ?>
-                            <?php foreach ($orderItemData as $orderItem) { ?>
-                                <p><?= $agency_fee_arr[$count2] ? $agency_fee_arr[$count2] : 0 ?>
-                                    %<span> <?= number_format($orderItem['item_price'] * $orderItem['item_cnt'] * ($agency_fee_arr[$count2] / 100), 1) ?>원 </span>
+                            <? $order_total_price = 0;?>
+                            <?php foreach ($orderItemData as $orderItem) {
+                                $bs_agency_fee->where('product_idx',$orderItem['product_idx']);
+                                $bs_agency_fee->where('mb_id',$_GET['agency']);
+                                $agency_data = $bs_agency_fee->get();
+                                if($agency_data['count']) {
+                                    $ad = $agency_data['data'][0];
+                                    $percent = $ad['fee'];
+                                    $price = ($orderItem['item_price'] * $orderItem['item_cnt']) * ($percent / 100);
+                                }else {
+                                    $percent = 0;
+                                    $price = 0;
+                                }
+
+                                $agency_fee_totalPrice += $price;
+                                $order_total_price += $price;
+                            ?>
+                                <p><?=$percent?>%
+                                    <span><?=number_format($price)?>원 </span>
                                 </p>
-                                <?php $count2++; ?>
                             <?php } ?>
                         </td>
-                        <td class="text_right price"><?= $orderData['agency_fee2'] ? number_format($orderData['agency_fee2'], 1) : 0 ?>
-                            원
+                        <td class="text_right price">
+                            <?=number_format($order_total_price)?>원
                         </td>
                     </tr>
                     <?php
@@ -323,7 +339,15 @@ if (!$minDate) {
 	</div>
     <? include_once VIEWPATH . 'component/pagination.php'; // 페이징?>
 </section>
+<?php
+$jl = new Jl();
+$jl->jsLoad();
+?>
 <script>
+    let agency_total = <?=$agency_fee_totalPrice?>;
+    document.getElementById('agency_total').innerHTML = agency_total.format() + "원";
+
+
     const searchFrm = document.searchFrm; // 검색 폼
 
     // 검색

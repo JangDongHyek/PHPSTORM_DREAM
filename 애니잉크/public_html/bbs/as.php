@@ -18,10 +18,11 @@ SELECT *
             FROM g5_write_as
             WHERE g5_write_as.wr_1 = g5_write_new.wr_id
             AND g5_write_as.wr_3
-            BETWEEN DATE_SUB( CURDATE( ) , INTERVAL 1 MONTH )
+            BETWEEN DATE_SUB( CURDATE( ) , INTERVAL $check_date MONTH )
             AND CURDATE( )
         ) = 0
     AND wr_id < $wr_id
+    AND wr_2 != '임대해지'
     ORDER BY `g5_write_new`.`wr_id` DESC
     LIMIT $limit
 ";
@@ -29,7 +30,7 @@ SELECT *
 
 $data = $g5_write_new->query($sql);
 
-$g5['title'] = 'A/S';
+$g5['title'] = '정기점검미체크';
 include_once(G5_THEME_PATH.'/head.php');
 add_stylesheet('<link rel="stylesheet" href="'.G5_CSS_URL.'/as.css">', 0);
 ?>
@@ -140,11 +141,22 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_CSS_URL.'/as.css">', 0);
         </div>
     </form>
 
-    <div>
-        <span onclick="changePage(page-1)">이전</span>
-        <?=$page?>
-        <span onclick="changePage(page+1)">다음</span>
+    <div class="paging">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" onclick="changePage(page-1)">
+                    <a class="page-link" href="javascript:void(0);">이전</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0);"><?=$page?></a>
+                </li>
+                <li class="page-item" onclick="changePage(page+1)">
+                    <a class="page-link" href="javascript:void(0);">다음</a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
 </div>
 
 <script>

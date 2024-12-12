@@ -234,7 +234,7 @@ class Jl {
 
         foreach ($files as $file) include_once($file);
     }
-
+    
     // 파일이 있는지 없는지 확인하는 함수
     function isFileExists($path) {
         if(strpos($path,$this->ROOT) !== false) $file = $path;
@@ -362,7 +362,7 @@ class Jl {
             return $_SERVER['REMOTE_ADDR'];
         }
     }
-
+    
     //현재 시간 반환하는 함수
     function getTime() {
         // 현재 시간 반환

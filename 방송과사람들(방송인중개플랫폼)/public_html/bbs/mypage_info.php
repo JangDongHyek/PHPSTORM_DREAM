@@ -43,7 +43,11 @@ $order_count = $member_order->count();
         </div>
 
 <!--		<a class="btn_type" onclick="change_member_type()"><span>--><?//= ($member["mb_level"] > '2') ? "의뢰인" : "전문가" ?><!--로 전환</span></a>-->
-        <a class="btn_type" onclick="request_conversion()"><span><?= ($member["mb_level"] > '2') ? "의뢰인" : "전문가" ?>로 전환</span></a>
+        <?php if($member["mb_level"] > '2') {?>
+        <a class="btn_type" onclick="request_conversion(2)"><span>의뢰인으로 전환</span></a>
+        <?php } else {?>
+            <a class="btn_type" onclick="request_conversion(3)"><span>전문가로 전환</span></a>
+        <?php } ?>
 	</div>
 	<ul class="my_qna">
 		<li><em>찜한 서비스</em><a href="<?=G5_BBS_URL.'/mypage_jjim.php'?>"><?=$product_likes?></a></li>
@@ -63,7 +67,7 @@ $order_count = $member_order->count();
     //    });
     //}
 
-    function request_conversion() {
+    function request_conversion(level) {
         $.ajax({
             url : "ajax_member_request_conversion.php",
             method : "post",
@@ -72,12 +76,14 @@ $order_count = $member_order->count();
             cache : false,
             data : {
                 "_method" : "post",
+                "level" :level
             },
             dataType : "json",
             success: function(res){
                 if(!res.success) alert(res.message);
                 else {
-                    alert("신청이 완료되었습니다.")
+                    alert("완료되었습니다.");
+                    window.location.reload();
                 }
             }
         });

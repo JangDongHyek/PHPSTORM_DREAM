@@ -96,6 +96,7 @@ class AdmMemberController extends CI_Controller
             'paging' => $resultData['paging'],
             'agencyMember' => $mbIds,
             'minDate' => $resultData['minDate'],
+            "sql" => $resultData['sql'],
         ];
 
         render('adm/agency_fee', $data, true);

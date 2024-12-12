@@ -93,7 +93,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         </tr>
 
         <tr>
-            <th scope="row"><label for="wr_1">메모</label></th>
+            <th scope="row"><label for="wr_1">관리자 메모</label></th>
             <td><textarea id="wr_8" name="wr_8" class="wr_8" style="line-height: 1.7;"><?=$write['wr_8']?></textarea></td>
         </tr>
 

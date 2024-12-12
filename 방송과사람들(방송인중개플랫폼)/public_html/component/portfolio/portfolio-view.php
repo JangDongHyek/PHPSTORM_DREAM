@@ -126,7 +126,7 @@
             };
         },
         created: function(){
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             console.log(this.primary)
             if(this.primary) this.getData();
             this.getMember();
@@ -139,13 +139,13 @@
             });
         },
         methods: {
-            deleteLike : function(portfolio_idx) {
+            async deleteLike(portfolio_idx) {
                 var method = "sql_delete";
                 var data = {
                     member_idx : this.mb_no,
                     portfolio_idx : portfolio_idx
                 }
-                var res = this.jl.ajax(method, data, "/api/member_portfolio_like.php");
+                var res = await this.jl.ajax(method, data, "/api/member_portfolio_like.php");
 
                 if (res) {
                     this.getLike();
@@ -154,67 +154,55 @@
             checkLike : function(portfolio_idx) {
                 return this.likes.some(obj => obj.portfolio_idx == portfolio_idx)
             },
-            getLike : function() {
+            async getLike() {
                 var filter = {member_idx : this.mb_no}
-                var res = this.jl.ajax("get", filter, "/api/member_portfolio_like.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_portfolio_like.php");
 
                 if (res) {
                     this.likes = res.response.data
                 }
             },
-            postLike : function(portfolio_idx) {
+            async postLike(portfolio_idx) {
                 var method = "insert";
                 var data = {
                     member_idx : this.mb_no,
                     portfolio_idx : portfolio_idx
                 }
-                var res = this.jl.ajax(method, data, "/api/member_portfolio_like.php");
+                var res = await this.jl.ajax(method, data, "/api/member_portfolio_like.php");
 
                 if (res) {
                     this.getLike();
                 }
             },
-            checkFile : function(file) {
+            async checkFile(file) {
                 var filter = {file : file};
-                var res = this.jl.ajax("check_file",filter,"/api/common.php");
+                var res = await this.jl.ajax("check_file",filter,"/api/common.php");
 
                 if(res) {
                     return res.result;
                 }
             },
-            postData : function() {
-                var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method,this.data,"/api/example.php");
-
-                if(res) {
-
-                }
-            },
-            getMember : function() {
+            async getMember() {
                 var method = "get";
                 var filter = {primary : this.mb_no};
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
 
-                var res = ajax("/api/g5_member.php", objs);
+                var res = await this.jl.ajax("get",filter,"/api/g5_member.php");
                 if (res) {
                     console.log(res)
                     this.member = res.response.data[0];
                 }
             },
-            getData: function () {
+            async getData() {
                 var filter = {primary: this.primary}
-                var res = this.jl.ajax("get",filter,"/api/member_portfolio.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_portfolio.php");
 
                 if(res) {
                     this.data = res.response.data[0];
                 }
             },
-            getPortfolios: function () {
+            async getPortfolios() {
                 var filter = {exclusion : this.primary,member_idx : this.mb_no}
-                var res = this.jl.ajax("get",filter,"/api/member_portfolio.php");
+                var res = await this.jl.ajax("get",filter,"/api/member_portfolio.php");
 
                 if(res) {
                     this.portfolios = res.response.data;

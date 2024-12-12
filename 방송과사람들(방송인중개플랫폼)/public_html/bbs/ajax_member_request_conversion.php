@@ -11,6 +11,7 @@ $_method = $_POST["_method"];
 //$obj = str_replace('\\','',$_POST['obj']);
 //$obj = json_decode($obj);
 $model = new Model("member_request_conversion");
+$g5_member = new Model("g5_member","mb_no");
 try {
     switch (strtolower($_method)) {
         case "gets":
@@ -29,12 +30,22 @@ try {
         {
             if($_SESSION['ss_mb_id']) {
                 $check = $model->get(array("member_idx" => $member["mb_no"]));
-                if($check) throw new Exception("이미 신청하였습니다.");
 
-                $data["member_idx"] = $member["mb_no"];
-                $data["permit"] = "false";
+                if($check) {
+                    if($check['permit'] == 'false') throw new Exception("이미 신청하였습니다.");
 
-                $_idx = $model->post($data);
+                    $member["mb_join_division"] = $_POST['level'];
+                    $member["mb_level"] = $_POST['level'];
+
+                    $g5_member->put($member);
+                }
+                else {
+                    $data["member_idx"] = $member["mb_no"];
+                    $data["permit"] = "false";
+
+                    $_idx = $model->post($data);
+                }
+
             }else {
                 throw new Exception("잘못된 경로입니다. 로그인한 회원만 이용 가능합니다.");
             }

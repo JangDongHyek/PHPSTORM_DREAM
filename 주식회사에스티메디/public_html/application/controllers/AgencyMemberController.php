@@ -127,6 +127,7 @@ class AgencyMemberController extends CI_Controller
             'paging' => $resultData['paging'],
             'agencyMember' => $mbIds,
             'minDate' => $resultData['minDate'],
+            "member" => $member
         ];
 
         render('agency/account', $data, 'agency');
