@@ -1,0 +1,164 @@
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function openTarget(objForm, strFeatures, strWindowName){
+	strWindowName = 'formTarget' + (new Date().getTime());
+	objForm.target = strWindowName;
+	open('', strWindowName, strFeatures);
+}
+
+//-->
+</SCRIPT>
+<TABLE cellSpacing=0 cellPadding=0 width="<?=$width?>" border=0>
+<form name="form_view" method="post" action="<?=$skin_board_url?>form_print.html" onsubmit="openTarget(this,'width=645,height=750,resizable=1,scrollbars=1'); return true;">
+<TR> 
+	<TD align=right>
+    <?=$show_prev_begin?><?=$a_prev?><img src="<?=$skin_board_url?>images/prev.gif" border=0></a><?=$show_prev_end?>
+    <?=$show_next_begin?><?=$a_next?><img src="<?=$skin_board_url?>images/next.gif" border=0></a><?=$show_next_end?>
+	</TD>
+</TR>
+<TR>
+	<TD bgColor=#CCCCCC>
+	
+		<TABLE cellSpacing=0 cellPadding=0 width="<?=$width?>"  border=0>
+          <tr>
+            <td align="center">
+			<!--////////////////////// 구직신청폼시작 //////////////////////////////////-->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="40"><table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="#D3CEC0">
+                    <tr>
+                      <td bgcolor="#FFFFFF">
+					  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+<input type="hidden" name="rg_name" value="<?=$rg_name?>">
+<input type="hidden" name="rg_ext1" value="<?=$rg_ext1?>">
+<input type="hidden" name="rg_ext2" value="<?=$rg_ext2?>">
+<input type="hidden" name="rg_ext3" value="<?=$rg_ext3?>">
+<input type="hidden" name="rg_title" value="<?=$rg_title?>">
+<input type="hidden" name="rg_ext4" value="<?=$rg_ext4?>">
+<input type="hidden" name="rg_ext5" value="<?=$rg_ext5?>">
+<input type="hidden" name="rg_ext6" value="<?=$rg_ext6?>">
+<input type="hidden" name="rg_ext7" value="<?=$rg_ext7?>">
+<input type="hidden" name="rg_ext8" value="<?=$rg_ext8?>">
+<input type="hidden" name="rg_ext9" value="<?=$rg_ext9?>">
+<input type="hidden" name="rg_ext10" value="<?=$rg_ext10?>">
+<input type="hidden" name="rg_ext11" value="<?=$rg_ext11?>">
+<input type="hidden" name="rg_ext12" value="<?=$rg_ext12?>">
+<input type="hidden" name="rg_ext13" value="<?=$rg_ext13?>">
+<input type="hidden" name="rg_ext14" value="<?=$rg_ext14?>">
+<input type="hidden" name="rg_ext15" value="<?=$rg_ext15?>">
+<input type="hidden" name="rg_ext16" value="<?=$rg_ext16?>">
+<input type="hidden" name="rg_ext17" value="<?=$rg_ext17?>">
+<input type="hidden" name="rg_ext18" value="<?=$rg_ext18?>">
+<input type="hidden" name="rg_ext19" value="<?=$rg_ext19?>">
+<input type="hidden" name="rg_content" value="<?=$rg_content?>">
+                        <tr>
+                          <td width="80%" height="40"><strong><font color="#CC0000">※등록한 신청서는 다른 사람에게는 공개되지 않으며 관리자만 볼 수 있습니다.</font></strong>
+						  </td>
+						  <td width="20%" align="right">
+						  <input type="image" src="<?=$skin_board_url?>images/btn_print.gif" width="94" height="21" border="0">
+						  </td>
+                        </tr>
+</form>
+                      </table>
+                        <table width="100%" border="1" cellpadding="5" cellspacing="1" bordercolor="#FFFFFF" bgcolor="#B5B4A6">
+						<form name=form_write method=post action='<?=$u_action?>' enctype='multipart/form-data'>
+						<input type=hidden name=act value='ok'>
+						<input type=hidden name=old_password value='<?=$old_password?>'>
+                          <tr>
+                            <td width="20%" align="center" bgcolor="#EDECE9"><font color="#5B5A55">이름</font></td>
+                            <td width="80%" colspan="2" bgcolor="#FFFFFF"><? if($rg_name){ echo $rg_name; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">성별</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_ext1){ echo $rg_ext1; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">나이</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_ext2){ echo $rg_ext2; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">주소</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_ext3){ echo $rg_ext3; }else{ echo "&nbsp;"; } ?></td>
+                            </tr>
+
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">보유자격증</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_title){ echo $rg_title; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무지역</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><?=$rg_ext4?>구
+							<?=$rg_ext5?>동
+
+                             <?=$rg_ext6?>
+							 <? if(!$rg_ext4 && !$rg_ext5 && !$rg_ext6){ echo "&nbsp;"; } ?>
+							 </td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무직종</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_ext7){ echo $rg_ext7; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무처</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_ext8){ echo $rg_ext8; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">경력</font></td>
+                            <td bgcolor="#FFFFFF"><?=$rg_ext9?>
+                                있음【근무처(<?=$rg_ext10?>), <?=$rg_ext11?>년 <?=$rg_ext12?>개월】
+								<? if(!$rg_ext9 && !$rg_ext10 && !$rg_ext11 && !$rg_ext12){ echo "&nbsp;"; } ?>
+								</td>
+                            </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">근무가능시기 </font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><?=$rg_ext13?>년  <?=$rg_ext14?>월  <?=$rg_ext15?>일 부터 가능함
+							<? if(!$rg_ext13 && !$rg_ext14 && !$rg_ext15){ echo "&nbsp;"; } ?>
+							</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">최종학력 </font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_ext16){ echo $rg_ext16; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">전공</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_ext17){ echo $rg_ext17; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">연락처</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF">일반전화
+                              <?=$rg_ext18?>
+                              휴대폰 <?=$rg_ext19?>
+							  <? if(!$rg_ext18 && !$rg_ext19){ echo "&nbsp;"; } ?>
+							  </td>
+                          </tr>
+                          
+
+                          <tr>
+                            <td height="36" align="center" bgcolor="#EDECE9"><font color="#5B5A55">남기고 싶은 말이나 간단한 본인 소개</font></td>
+							<?
+								if($rg_content=="본인 소개를 입력하십시오"){
+									$rg_content="";
+								}
+							?>
+                            <td colspan="2" bgcolor="#FFFFFF"><? if($rg_content){ echo $rg_content; }else{ echo "&nbsp;"; } ?></td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                  </table></td>
+              </tr>
+
+
+            </table>
+			<!--///////////////////// 구직신청 폼 끝 ///////////////////////////////////-->
+			
+			</td>
+          </tr>
+		  </form>
+
+        </table>
+	</TD>
+</TR>
+<TR>
+	<TD height=5></TD>
+</TR>

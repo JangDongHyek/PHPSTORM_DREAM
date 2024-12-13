@@ -1,0 +1,167 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<link href="./style2.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="./flash.js"></script>
+<title>수강신청서 인쇄</title></head>
+<body onLoad='window.print()';> 
+<table width="100%" border="0" cellspacing="0" cellpadding="10">
+<!--
+    <tr>
+      <td height="35"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td><strong><font color="#006699"><img src="" width="3" height="10" alt="" style="background-color: #006699" /> 아래의 수강신청서를 빠짐없이 작성하여 주시기 바랍니다. </font></strong></td>
+          <td align="right">&nbsp;</td>
+        </tr>
+      </table></td>
+    </tr>
+-->
+    <tr>
+      <td height="124"><table width="100%" style="border:1px solid #858585" cellpadding="6" cellspacing="1">
+        <tr>
+          <td bgcolor="#FFFFFF"><TABLE width="100%" cellpadding="5" cellspacing="0" bgcolor="#FFFFFF" >
+            <TR>
+              <TD style="border:1px solid #858585" width="102"  rowspan="9" align="center" bgcolor="#E2DFDA" ><strong><font color="#837867">신청인</font></strong></TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" width="208" align="center" bgcolor="#F2F1EE"  ><p> 성명 </p></TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" width="279" bgcolor="#FFFFFF"  ><?=$rg_name?></TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" width="130" align="center" bgcolor="#F2F1EE"  >생년월일</TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" width="214" bgcolor="#FFFFFF"  ><?=$rg_jumin?></TD>
+            </TR>
+            <TR>
+			  <TD style="border-right:1px solid #858585; border-top:1px solid #858585" align="center" bgcolor="#F2F1EE"  ><p> 주소 </TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" colspan="3" bgcolor="#FFFFFF"  ><?=$rg_address?>
+			  </TD>
+            </TR>
+            <TR>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" align="center" bgcolor="#F2F1EE"  ><p> 전화번호 </TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" bgcolor="#FFFFFF"  ><?=$rg_tel?></TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" align="center" bgcolor="#F2F1EE"  >핸드폰</TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" bgcolor="#FFFFFF"  ><?=$rg_phone?></TD>
+            </TR>
+			<!--
+            <TR>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" align="center" bgcolor="#F2F1EE"  ><p> 이메일 </TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" colspan="3" bgcolor="#FFFFFF"  ><?=$rg_email?></TD>
+            </TR>
+			-->
+            <TR>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" height="44" align="center" bgcolor="#F2F1EE"  ><p> 수업형태 </TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" colspan="3" bgcolor="#FFFFFF"  ><font color="#666666">
+                <?
+				if($rg_level1){
+				echo $rg_level1;
+				}else{
+				echo "&nbsp;";
+				}
+				?>
+				</font></TD>
+            </TR>
+            <TR>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" height="70" align="center" bgcolor="#F2F1EE"  >자격/면허소지자</TD>
+              <TD style="border-right:1px solid #858585; border-top:1px solid #858585" colspan="3" bgcolor="#FFFFFF"  ><font color="#666666">
+				<? if($rg_jakyuk1){echo $rg_jakyuk1."<br>";}?>
+				<? if($rg_jakyuk2){echo $rg_jakyuk2."<br>";}?>
+				<? if($rg_jakyuk3){echo $rg_jakyuk3."<br>";}?>
+				<? if($rg_jakyuk4){echo $rg_jakyuk4."<br>";}?>
+				<? if($rg_jakyuk5){echo $rg_jakyuk5."<br>";}?>
+				<?
+					if(!$rg_jakyuk1 && !$rg_jakyuk2 && !$rg_jakyuk3 && !$rg_jakyuk4 && !$rg_jakyuk5){
+						echo "&nbsp;";
+					}
+				?>
+				</font></TD>
+            </TR>
+            <TR>
+              <TD style="border-bottom:1px solid #858585; border-right:1px solid #858585; border-top:1px solid #858585" height="44" align="center" bgcolor="#F2F1EE"  ><p>최종학력</TD>
+              <TD style="border-bottom:1px solid #858585; border-right:1px solid #858585; border-top:1px solid #858585" colspan="3" bgcolor="#FFFFFF"  ><font color="#666666">
+                <?
+				if($rg_school){
+					echo $rg_school;
+				}else{
+					echo "&nbsp;";
+				}
+				?></font> </TD>
+            </TR>
+			<tr>
+						<td  style="border-bottom:1px solid #858585; border-right:1px solid #858585; " height="44" align="center" bgcolor="#F2F1EE"><p>내일배움카드</p>
+						</td>
+						<td colspan="3" bgcolor="#FFFFFF" style="border-bottom:1px solid #858585; border-right:1px solid #858585;">
+						<font color="#666666">
+						  <?=$rg_tommorow?>
+						</font>
+						</td>
+					  </tr>
+          </TABLE>
+                <table width="100%" height="5" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td></td>
+                  </tr>
+                </table>
+            <TABLE width="100%" border="0" cellpadding="5" cellspacing="0" style="border:1px solid #858585;">
+							<TR>
+							  <TD style="border-right:1px solid #858585;" width="220" height="37" rowspan="2" align="center" bgcolor="#E2DFDA" align="center"><font color="#837867"><strong>금회 신청 교육</strong></font>
+							  </TD>
+							  <TD style="border-right:1px solid #858585;" width="160" rowspan="2" bgcolor="#FFFFFF" align="center">
+							  <?=$rg_date?>&nbsp;개설
+							  </TD>
+			
+							  <TD style="border-right:1px solid #858585;" width="150" align="center" bgcolor="#F2F1EE">교육시간<br>
+							  </TD>
+							  <TD style="border-right:1px solid #858585;" width="200" bgcolor="#FFFFFF" align="center">
+							  <font color="#666666">
+								<?
+								if($rg_edu_ju){
+									echo $rg_edu_ju;
+								}else{
+									echo "&nbsp;";
+								}
+								?>
+							  </font>
+							  </TD>
+								<TD style="border-right:1px solid #858585;" width="140" bgcolor="#FFFFFF" valign="middle" align="center">
+							  <font color="#666666">
+								<?
+								if($rg_edu_time){
+									echo $rg_edu_time;
+								}else{
+									echo "&nbsp;";
+								}
+								?>
+							  </font>
+							  </TD>
+							  <TD width="100" rowspan="2" align="center" bgcolor="#FFFFFF" >
+							  <?=$rg_title?>&nbsp;기
+							  </TD>
+							</TR>
+
+						</TABLE>
+            <table width="100%" height="5" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" bordercolor="#858585" style="border-collapse:collapse" cellpadding="5" cellspacing="0" style="border:1px solid #858585;">
+              <tr>
+                <td style="border-right:1px solid #858585;" width="115" height="37" align="center" bgcolor="#E2DFDA" ><font color="#837867"><strong>남기고싶은말</strong></font></td>
+                <td align="center" bgcolor="#FFFFFF"  ><? if($rg_content){echo $rg_content;}else{echo "&nbsp;";} ?></td>
+              </tr>
+            </table></td>
+        </tr>
+      </table>
+          <table width="100%" border="0" cellspacing="0" cellpadding="7">
+            <tr>
+              <td><img src="<?=$skin_board_url?>images/s3_text.gif" width="597" height="121"></td>
+            </tr>
+          </table>
+        <table width="100%" height="5" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td></td>
+            </tr>
+        </table>
+      </td>
+    </tr>
+
+</table>
+</body>
+</html>

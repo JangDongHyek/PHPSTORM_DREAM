@@ -1,0 +1,246 @@
+<? 
+   $site_path = "/home/jeangam/public_html/bbs/"; 
+   $site_url = "http://www.jamins.co.kr/bbs/"; 
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<?
+if($mode == "ok"){
+
+//$to = "oksun1103@nate.com";
+
+$to="jam2601@naver.com";
+
+$toname = "관리자";
+$subject = "온라인 수강신청서가 왔습니다.";
+
+if($email){
+	$from = $email;
+}else{
+	$from = "aaa@aaa.com";
+}
+$fromName = "$name";
+
+$comment = "
+<table width='90%' border='0' cellspacing='0' cellpadding='0'>
+  <tr>
+    <td height='124'>
+	
+	
+	
+	
+	
+	<table width='100%' border='0' cellpadding='6' cellspacing='1' bgcolor='#D3CEC0'>
+      <tr>
+        <td bgcolor='#FFFFFF'>
+		
+		
+		
+		
+		<TABLE width='100%' border='0' cellpadding='5' cellspacing='1' bgcolor='#B5B4A6'>
+          <TR>
+            <TD width='54'  rowspan='8' align='center' bgcolor='#E2DFDA' ><p> <strong><font color='#837867'>신청인</font></strong> </TD>
+            <TD width='115' align='center' bgcolor='#F2F1EE'  ><p> 성명 </TD>
+            <TD width='131' bgcolor='#FFFFFF'  >$name </TD>
+            <TD align='center' bgcolor='#F2F1EE'  >주민등록번호</TD>
+            <TD bgcolor='#FFFFFF'  >$jumin1 - $jumin2 </TD>
+          </TR>
+          <TR>
+            <TD rowspan='2' align='center' bgcolor='#F2F1EE'  ><p> 주소 </TD>
+            <TD colspan='3' bgcolor='#FFFFFF'  >[ $rg_post ]</TD>
+          </TR>
+          <TR>
+            <TD colspan='3' bgcolor='#FFFFFF'  >$rg_address1 <BR> $rg_address2 </TD>
+          </TR>
+          <TR>
+            <TD align='center' bgcolor='#F2F1EE'  ><p> 전화번호 </TD>
+            <TD bgcolor='#FFFFFF'  >$tel </TD>
+            <TD width='96' align='center' bgcolor='#F2F1EE'  >휴대폰</TD>
+            <TD width='146' bgcolor='#FFFFFF'  >$mobile </TD>
+          </TR>
+          <TR>
+            <TD align='center' bgcolor='#F2F1EE'  ><p> 이메일 </TD>
+            <TD colspan='3' bgcolor='#FFFFFF'  >$email </TD>
+          </TR>
+          <TR>
+            <TD height='44' align='center' bgcolor='#F2F1EE'  ><p> 경력사항 </TD>
+            <TD colspan='3' bgcolor='#FFFFFF'  ><font color='#666666'>
+            $level </font></TD>
+          </TR>
+          <TR>
+            <TD height='70' align='center' bgcolor='#F2F1EE'  >자격/면허소지자</TD>
+            <TD colspan='3' bgcolor='#FFFFFF'  >$jakyuk1 $jakyuk2 $jakyuk3 $jakyuk4 $jakyuk5 </font></TD>
+          </TR>
+          <TR>
+            <TD height='44' align='center' bgcolor='#F2F1EE'  ><p>최종학력</TD>
+            <TD colspan='3' bgcolor='#FFFFFF'  ><font color='#666666'>
+              $school </font> </TD>
+          </TR>
+        </TABLE>
+
+
+
+
+
+
+              <table width='100%' height='5' border='0' cellpadding='0' cellspacing='0'>
+                <tr>
+                  <td></td>
+                </tr>
+              </table>
+
+
+
+
+          <TABLE width='100%' border='0' cellpadding='5' cellspacing='1' bgcolor='#B5B4A6'>
+                <TR>
+                  <TD height='37' rowspan='2' align='center' bgcolor='#E2DFDA' ><font color='#837867'><strong>금회 신청 교육</strong></font></TD>
+                  <TD width='149' rowspan='2' align='center' bgcolor='#FFFFFF'  >
+					$kumhoi_year 년 &nbsp; $kumhoi_month 월 &nbsp; $kumhoi_day 일 개설 </TD>
+                  <TD width='71' align='center' bgcolor='#F2F1EE'  >교육시간<br></TD>
+                  <TD width='99' rowspan='2' bgcolor='#FFFFFF'  ><font color='#666666'>
+                    $edu_time1 <BR> $edu_time2 <BR> $edu_time3 <BR> $edu_time4 <BR> $edu_time5
+                  </font></TD>
+                  <TD width='66' rowspan='2' align='center' bgcolor='#FFFFFF'  >$gi 기</TD>
+                </TR>
+                <TR>
+                  <TD bgcolor='#FFFFFF'  ><font color='#666666'>
+                   $edu_ju1 <BR>$edu_ju2 <BR>$edu_ju3 <BR> $edu_ya <BR> $edu_to </TD>
+                </TR>
+                 <TR>
+                  <TD width='157' height='44' align='center' bgcolor='#E2DFDA' ><p> <strong><font color='#837867'>남기실말씀</font></strong> </TD>
+                  <TD colspan='4' align='center' bgcolor='#FFFFFF'  >
+					<textarea cols=65 rows=10 style='border:0;'>$textarea2</textarea>
+
+				   </TD>
+                </TR>
+		  </TABLE>
+				
+				
+				
+				
+				</td>
+      </tr>
+</td>
+  </tr>
+</table>
+
+
+
+<BR><BR>
+
+";
+
+$content = $comment;            // 내용
+
+
+		function sendMail($type, $to, $to_name, $from, $from_name, $subject, $comment, $cc="", $bcc="")
+		{
+			$recipient = "$to_name <$to>";
+			$headers = "From: $from_name <$from>\n";
+			$headers .= "X-Sender: <$from>\n";
+			$headers .= "X-Mailer: PHP ".phpversion()."\n";
+			$headers .= "X-Priority: 1\n";
+			$headers .= "Return-Path: <$from>\n";
+
+			if(!$type) $headers .= "Content-Type: text/plain; ";
+			else $headers .= "Content-Type: text/html; ";
+			$headers .= "charset=euc-kr\n";
+
+			if($cc)  $headers .= "cc: $cc\n";
+			if($bcc)  $headers .= "bcc: $bcc";
+
+			$comment = stripslashes($comment);
+			$comment = str_replace("\n\r","\n", $comment);
+
+			return mail($recipient , $subject, $comment, $headers);
+		}
+		$return = sendMail("1", $to, $toName, $from, $fromName, $subject, $comment);
+		flush();
+
+
+ 		echo "<script>alert('접수 되었습니다')</script>";
+		echo "<script>location.href=('http://www.jamins.co.kr/html/s3_2.html');</script>";
+		exit;
+
+
+ 
+
+
+}
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<link href="../html/style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="../html/flash.js"></script>
+<script type="text/javascript">
+<!--
+	function IDcheck(){
+		var f=document.form_write;
+		if (f.name.value == "") {
+		alert("성명을 입력하세요");
+		f.name.focus();
+		return false;
+		}
+		if (f.jumin1.value == "") {
+		alert("주민번호 앞자리를 입력하세요");
+		f.jumin1.focus();
+		return false;
+		}
+		if (f.jumin2.value == "") {
+		alert("주민번호 뒷자리를 입력하세요");
+		f.jumin2.focus();
+		return false;
+		}
+		if (f.tel.value == "" && f.mobile.value == "") {
+		alert("전화번호 또는 휴대폰을 입력하세요");
+		f.tel.focus();
+		return false;
+		}
+	  return true;
+}
+//-->
+</script>
+</head>
+<body>
+<?include ('../inc/menu.html');?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/sub_img_bg.gif"><img src="../images/sub_img.jpg" width="937" height="178"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="30" valign="top"><img src="../images/s_l.gif" width="30" height="389"></td>
+    <td width="220" valign="top"><?include ('../inc/s1_menu.html');?>
+    <?include ('../inc/s_tel.html');?></td>
+    <td width="687" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="28" align="right" background="../images/s_title_bg.gif" class="t11" style="padding-right:20; padding-top:5"><font color="#AFAFAF">HOME &gt; 수강안내 &gt;<strong> 온라인수강신청 </strong> </font></td>
+      </tr>
+      <tr>
+        <td valign="top"><img src="../images/s9_title05.gif" width="275" height="54"></td>
+      </tr>
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="55">&nbsp;</td>
+            <td align="center"><?include ('../inc/form.html');?></td>
+            <td width="20">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="438" background="../images/s_r.gif">&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<?include ('../inc/s_copy.html');?>
+</body>
+</html>

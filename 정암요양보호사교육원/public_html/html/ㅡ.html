@@ -1,0 +1,56 @@
+<? 
+   $site_path = "/home/startcobalt/public_html/bbs/"; 
+   $site_url = "http://www.startcobalt.kr/bbs/"; 
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<link href="../html/style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="../html/flash.js"></script>
+
+</head>
+<body>
+<?include ('../inc/menu.html');?><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="1000" height="363"><script language="javascript">flash('1000','363','../bbs/swf/main.swf')</script></td>
+    <td background="../bbs/img/main_f_bg.gif">&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="30" valign="top">&nbsp;</td>
+    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="715" valign="top"><table width="715" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="2"><img src="../bbs/img/main_bbs_title.gif" width="715" height="26" border="0" usemap="#bbstitle"></td>
+            </tr>
+          <tr>
+            <td width="53%" height="101" valign="top"><span style="padding-top:5">
+              <?=rg_lastest('default','notice','공지사항',4,35, '...')?>
+            </span></td>
+            <td width="47%" valign="top"><span style="padding-top:5">
+              <?=rg_lastest('default','qa','질문',4,35, '...')?>
+            </span></td>
+          </tr>
+        </table></td>
+        <td rowspan="2" valign="top"><img src="../bbs/img/main_tel.gif" width="213" height="299"></td>
+      </tr>
+      <tr>
+        <td valign="top"><img src="../bbs/img/main_product.gif" width="715" height="172"></td>
+        </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td bgcolor="E2E2E2"><img src="../bbs/img/copyright.gif" width="958" height="109"></td>
+  </tr>
+</table>
+
+<map name="bbstitle"><area shape="rect" coords="289,3,334,24" href="/bbs/list.php?bbs_id=notice" onfocus='this.blur()'>
+<area shape="rect" coords="662,4,714,21" href="/bbs/list.php?bbs_id=qa" onfocus='this.blur()'>
+</map></body>
+</html>

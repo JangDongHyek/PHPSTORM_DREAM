@@ -1,0 +1,193 @@
+<? 
+   $site_path = "/home/jeangam/public_html/bbs/"; 
+   $site_url = "http://www.jamins.co.kr/bbs/"; 
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<link href="../html/style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="../html/flash.js"></script>
+</head>
+<body>
+<?include ('../inc/menu.html');?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/sub_img_bg.gif"><img src="../images/sub_img.jpg" width="937" height="178"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="30" valign="top"><img src="../images/s_l.gif" width="30" height="389"></td>
+    <td width="220" valign="top"><?include ('../inc/s1_menu.html');?>
+    <?include ('../inc/s_tel.html');?></td>
+    <td width="687" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="28" align="right" background="../images/s_title_bg.gif" class="t11" style="padding-right:20; padding-top:5"><font color="#AFAFAF">HOME &gt; 정암요양보호사교육원 &gt; 구인/구직 &gt; <strong>구직신청서</strong></font></td>
+      </tr>
+      <tr>
+        <td valign="top"><img src="../images/s7_title02.gif" width="275" height="54"></td>
+      </tr>
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="50">&nbsp;</td>
+            <td align="center">
+			<!--////////////////////// 구직신청폼시작 //////////////////////////////////-->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+
+              <tr>
+                <td height="40"><table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="#D3CEC0">
+                    <tr>
+                      <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td height="40"><strong><font color="#CC0000">※등록한 신청서는 다른 사람에게는 공개되지 않으며 관리자만 볼 수 있습니다.</font></strong></td>
+                        </tr>
+                      </table>
+                        <table width="100%" border="1" cellpadding="5" cellspacing="1" bordercolor="#FFFFFF" bgcolor="#B5B4A6">
+                          <tr>
+                            <td width="20%" align="center" bgcolor="#EDECE9"><font color="#5B5A55">이름</font></td>
+                            <td width="80%" colspan="2" bgcolor="#FFFFFF"><input name="textfield" type="text" class="input" size="30"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">성별</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="radiobutton" type="radio" value="radiobutton">
+                              남
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                여</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">나이</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="textfield2" type="text" class="input" size="4"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">주소</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="textfield3" type="text" class="input" size="75"></td>
+                            </tr>
+
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">보유자격증</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="radiobutton" type="radio" value="radiobutton">
+                              요양보호사
+                              <input name="radiobutton" type="radio" value="radiobutton">
+                              사회복지사
+                              <input name="radiobutton" type="radio" value="radiobutton">
+                              간호사
+                              <input name="radiobutton" type="radio" value="radiobutton">
+                              간호조무사
+                              <input name="radiobutton" type="radio" value="radiobutton">
+                              물리치료사 </td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무지역</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="textfield222" type="text" class="input" value="                    구                   동" size="30">
+                              <input name="radiobutton" type="radio" value="radiobutton">지역상관 없음</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무직종</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="radiobutton" type="radio" value="radiobutton">
+                              요양보호사       
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                사회복지사        
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                간호사  
+                                <br>
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                간호조무사       
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                물리치료사        
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                직종상관 없음</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무처</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="radiobutton" type="radio" value="radiobutton">
+                              요양시설(요양원)  
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                노인요양병원       
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                방문요양<br>
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                주야간보호        
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                아무 곳이나 괜찮다</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">경력</font></td>
+                            <td bgcolor="#FFFFFF"><input name="radiobutton" type="radio" value="radiobutton">
+                              없음              
+                                <input name="radiobutton" type="radio" value="radiobutton">
+                                있음【근무처(              
+                                <input name="textfield22" type="text" class="input" size="15">
+                                ),      
+                                <input name="textfield23" type="text" class="input" size="4">
+                                년   
+                                <input name="textfield24" type="text" class="input" size="4">
+                                개월】</td>
+                            </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">근무가능시기 </font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="textfield223" type="text" class="input" value="              년          월          일 부터 가능함" size="60"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">최종학력 </font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="textfield32223" type="text" class="input" size="15"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">전공</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="textfield322222" type="text" class="input" size="30"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">연락처</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF">일반전화
+                              <input name="textfield3222222" type="text" class="input" size="20"> 
+                              휴대폰
+                              <input name="textfield3222223" type="text" class="input" size="20"></td>
+                          </tr>
+                          
+
+                          <tr>
+                            <td height="36" align="center" bgcolor="#EDECE9"><font color="#5B5A55">남기고 싶은 말이나 간단한 본인 소개</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><textarea name="textarea" cols="70" rows="8"></textarea></td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                  </table>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td height="67" align="center"><input name="image" type="image" src="../images/btn_ok.gif" width="95" height="44">
+                              &nbsp;<img src="../images/btn_ce.gif" width="95" height="44" onClick="javascript:reset();" style="cursor:hand;"></td>
+                          </tr>
+                        </table></td>
+                      </tr>
+                    </table>
+                    <p> <BR>
+                  </p></td>
+              </tr>
+
+
+            </table>
+			<!--///////////////////// 구직신청 폼 끝 ///////////////////////////////////-->
+			
+			</td>
+            <td width="20">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="438" background="../images/s_r.gif">&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<?include ('../inc/s_copy.html');?>
+</body>
+</html>

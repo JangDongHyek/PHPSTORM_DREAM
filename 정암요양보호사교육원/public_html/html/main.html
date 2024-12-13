@@ -1,0 +1,100 @@
+<? 
+   $site_path = "/home/jeangam/public_html/bbs/"; 
+   $site_url = "../bbs/"; 
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<link href="../html/style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="../html/flash.js"></script>
+<script type="text/JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+  window.open(theURL,winName,features);
+}
+//-->
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+
+if ( getCookie( "Notice" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	noticeWindow  =  window.open('../pop/popp.htm','notice','left=0, top=0, width=515,height=690,scrollbars=yes');
+	noticeWindow.opener = self;
+} 
+
+
+
+
+
+
+//if ( getCookie( "Notice7" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop1000.htm','notice7','left=0, top=0, width=550,height=820,scrollbars=no');
+	//noticeWindow.opener = self;
+//} 
+
+// -->
+</SCRIPT>
+</head>
+<body>
+<?include ('../inc/menu.html');?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="390" valign="top"><img src="../images/main_img.jpg" width="390" height="659"></td>
+    <td width="560" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="2"><img src="../images/m_t01.jpg" width="560" height="289" border="0" usemap="#job_map"></td>
+            </tr>
+          <tr>
+            <td><img src="../images/m_t02.gif" width="375" height="180"></td>
+            <td><a href="../bbs/write.php?bbs_id=soogang" onfocus='this.blur()'><img src="../images/qna.gif" width="185" height="180" border="0"></a></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td valign="top"><img src="../images/main_img04.gif" width="560" height="190" border="0" usemap="#main_b"></td>
+      </tr>
+    </table></td>
+    <td valign="top" background="../images/main_img05.gif">&nbsp;</td>
+  </tr>
+</table>
+<?include ('../inc/s_copy.html');?>
+
+<map name="main_b">
+  <area shape="rect" coords="342,130,527,168" href="s1_2.html">
+  <area shape="rect" coords="17,139,133,179" href="http://cafe.daum.net/jeong-am2601" target="_blank">
+<area shape="rect" coords="133,141,218,178" href="http://cafe.daum.net/jamecho" target="_blank">
+<area shape="rect" coords="218,138,297,178" href="http://cafe.daum.net/withwjddka" target="_blank">
+</map>
+
+<map name="job_map">
+  <area shape="rect" coords="379,20,549,64" href="../bbs/write.php?bbs_id=gujik"><area shape="rect" coords="206,20,376,64" href="../bbs/list.php?bbs_id=guin">
+</map>
+</body>
+</html>

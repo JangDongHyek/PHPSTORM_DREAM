@@ -1,0 +1,58 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<link href="../html/style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="../html/flash.js"></script>
+<script language="JavaScript"> 
+function setCookie( name, value, expiredays ) 
+{ 
+var todayDate = new Date(); 
+todayDate.setDate( todayDate.getDate() + expiredays ); 
+document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+} 
+function closeWin() {
+{ 
+if ( document.cnjform.notice2.checked ) 
+setCookie("CookieName", "no" , 1); 
+} 
+top.close();
+}
+</script>
+<style type="text/css">
+<!--
+.style1 {font-size: 11px; font-family: "돋움";}
+-->
+</style>
+<title>방문요양서비스 이용하실분 모집</title></head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/s_r.gif" style="background-repeat:no-repeat; background-position:top;"><table width="460" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left"><img src="pop3.jpg" width="460" height="260"></td>
+      </tr>
+      
+      <tr>
+        <td align="center"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  </table>
+             
+      </tr>
+      
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="10%">&nbsp;</td>
+            <td width="72%">
+			<form name="cnjform"> 
+			<input type="checkbox" name="notice2" onClick="closeWin()">
+              <font color="#7B6F7B"><span class="style1">오늘 하루 이 창을 띄우지 않습니다.</span></font></form></td>
+            <td width="18%"><a href="#" ONCLICK="self.close();return false"><img src="btn_close.gif" width="60" height="26" border="0"></a></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

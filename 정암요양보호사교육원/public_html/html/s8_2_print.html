@@ -1,0 +1,129 @@
+<? 
+   $site_path = "/home/jeangam/public_html/bbs/"; 
+   $site_url = "http://www.jamins.co.kr/bbs/"; 
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<link href="../html/style.css" rel="stylesheet" type="text/css">
+<table width="100%" border="0" cellpadding="1" cellspacing="1" bgcolor="#D3CEC0">
+      <tr>
+        <td valign="top" bgcolor=#ffffff align=left><img src="../images/s7_title02.gif" width="275" height="54"></td>
+      </tr>
+</table>
+<table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="#D3CEC0">
+                    <tr>
+                      <td bgcolor="#FFFFFF">
+                        <table width="100%" border="1" cellpadding="5" cellspacing="1" bordercolor="#FFFFFF" bgcolor="#B5B4A6">
+                          <tr>
+                            <td width="20%" align="center" bgcolor="#EDECE9"><font color="#5B5A55">이름</font></td>
+                            <td width="80%" colspan="2" bgcolor="#FFFFFF"><input name="value1" type="text" class="input" id="value1" size="30"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">성별</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value2" type="radio" value="남" >
+                              남
+                                <input name="value2" type="radio" value="여">
+                                여</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">나이</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value3" type="text" class="input" id="value3" size="4"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">주소</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value4" type="text" class="input" id="value4" size="75"></td>
+                            </tr>
+
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">보유자격증</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value5" type="radio" value="요양보호사" >
+                              요양보호사
+                              <input name="value5" type="radio" value="사회복지사">
+                              사회복지사
+                              <input name="value5" type="radio" value="간호사">
+                              간호사
+                              <input name="value5" type="radio" value="간호조무사">
+                              간호조무사
+                              <input name="value5" type="radio" value="물리치료사">
+                              물리치료사 </td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무지역</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value6" type="text" class="input" id="value6" value="                    구                   동" size="30">
+                              <input name="value7" type="checkbox" value="지역상관 없음">
+                              지역상관 없음</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무직종</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value8" type="radio" value="요양보호사" >
+                              요양보호사       
+                                <input name="value8" type="radio" value="사회복지사">
+                                사회복지사        
+                                <input name="value8" type="radio" value="간호사">
+                                간호사  
+                                <br>
+                                <input name="value8" type="radio" value="간호조무사">
+                                간호조무사       
+                                <input name="value8" type="radio" value="물리치료사">
+                                물리치료사        
+                                <input name="value8" type="radio" value="직종상관 없음">
+                                직종상관 없음</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">희망근무처</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value9" type="radio" value="요양시설(요양원)" >
+                              요양시설(요양원)  
+                                <input name="value9" type="radio" value="노인요양병원">
+                                노인요양병원       
+                                <input name="value9" type="radio" value="방문요양">
+                                방문요양<br>
+                                <input name="value9" type="radio" value="주야간보호">
+                                주야간보호        
+                                <input name="value9" type="radio" value="아무 곳이나 괜찮다">
+                                아무 곳이나 괜찮다</td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">경력</font></td>
+                            <td bgcolor="#FFFFFF"><input name="value10" type="radio" value="없음" >
+                              없음              
+                                <input name="value10" type="radio" value="있음">
+                                있음【근무처(              
+                                <input name="value11" type="text" class="input" id="value11" size="15">
+                                ),      
+                                <input name="value12" type="text" class="input" id="value12" size="4">
+                                년   
+                                <input name="value13" type="text" class="input" id="value13" size="4">
+                                개월】</td>
+                            </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">근무가능시기 </font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value14" type="text" class="input" id="value14" value="              년          월          일 부터 가능함" size="60"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">최종학력 </font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value15" type="text" class="input" id="value15" size="15"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">종교</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><input name="value16" type="text" class="input" id="value16" size="30"></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#EDECE9"><font color="#5B5A55">연락처</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF">일반전화
+                              <input name="value17" type="text" class="input" id="value17" size="20"> 
+                              휴대폰
+                              <input name="value18" type="text" class="input" id="value18" size="20"></td>
+                          </tr>
+                          
+
+                          <tr>
+                            <td height="36" align="center" bgcolor="#EDECE9"><font color="#5B5A55">남기고 싶은 말이나 간단한 본인 소개</font></td>
+                            <td colspan="2" bgcolor="#FFFFFF"><textarea name="value19" cols="70" rows="8" id="value19"></textarea></td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                  </table>
+				  <SCRIPT LANGUAGE="JavaScript">
+				  <!--
+					window.print();
+				  //-->
+				  </SCRIPT>

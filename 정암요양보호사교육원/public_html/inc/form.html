@@ -1,0 +1,288 @@
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+	function popup_zip(frm_name, dir, frm_zip1, frm_zip2, frm_addr1, frm_addr2)
+	{
+			url = dir+'../bbs/confirm_zip.php?frm_name='+frm_name+'&frm_zip1='+frm_zip1+'&frm_zip2='+frm_zip2+'&frm_addr1='+frm_addr1+'&frm_addr2='+frm_addr2;
+			opt = 'scrollbars=yes,width=500,height=300';
+			window.open(url, "mbzip", opt);
+	}
+//-->
+</SCRIPT>
+<script type="text/JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+  window.open(theURL,winName,features);
+}
+//-->
+</script>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<FORM name=form_write action="<?=$PHP_SELF?>" method=post onSubmit="return IDcheck();" enctype="multipart/form-data">
+<input type="hidden" name="mode" value="ok">
+  <tr>
+    <td height="35"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><strong><font color="#006699"><img src="" width="3" height="10" alt="" style="background-color: #006699" /> 아래의 수강신청서를 작성후 완료버튼을 클릭하시면 수강신청이 접수됩니다.</font></strong></td>
+        <td align="right"><a href="javascript:;" onclick="MM_openBrWindow('../inc/form_print.html','','scrollbars=yes,width=645,height=650')"><img src="../images/btn_print.gif" width="94" height="21" border="0" /></a></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="124"><table width="100%" border="0" cellpadding="6" cellspacing="1" bgcolor="#D3CEC0">
+      <tr>
+        <td bgcolor="#FFFFFF"><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#B5B4A6">
+          <tr>
+            <td width="54"  rowspan="8" align="center" bgcolor="#E2DFDA" ><p> <strong><font color="#837867">신청인</font></strong> </p></td>
+            <td width="115" align="center" bgcolor="#F2F1EE"  ><p> 성명 </p></td>
+            <td width="131" bgcolor="#FFFFFF"  ><input name="name" type="text" class="input" id="name" size="15" /></td>
+            <td align="center" bgcolor="#F2F1EE"  >주민등록번호</td>
+            <td bgcolor="#FFFFFF"  ><input name="jumin1" type="text" class="input" id="jumin1" size="8" />
+              -
+              <input name="jumin2" type="text" class="input" id="jumin2" size="8" /></td>
+          </tr>
+          <tr>
+            <td rowspan="2" align="center" bgcolor="#F2F1EE"  ><p> 주소 </p></td>
+            <td colspan="3" bgcolor="#FFFFFF"  ><input type="text" name='rg_post' size="8" maxlength="7" readonly="readonly" class="input" />
+                <img src="../images/btn_zip.gif" width="57" height="18" align="absmiddle" onclick="popup_zip('form_write', './', 'rg_post', '', 'rg_address1', 'rg_address2');" style="cursor:hand;" /></td>
+          </tr>
+          <tr>
+            <td colspan="3" bgcolor="#FFFFFF"  ><input name='rg_address1' type="text" id="rg_address12" style='width:40%' value='<?=$rg_address1?>' readonly="readonly" class="input" />
+                <br />
+              <input name='rg_address2' type="text" id="rg_address23" value='<?=$rg_address2?>' size="35" class="input" />
+                <font color="#993300">상세주소 입력</font></td>
+          </tr>
+          <tr>
+            <td align="center" bgcolor="#F2F1EE"  ><p> 전화번호 </p></td>
+            <td bgcolor="#FFFFFF"  ><input name="tel" type="text" class="input" id="tel" size="20" /></td>
+            <td width="96" align="center" bgcolor="#F2F1EE"  >휴대폰</td>
+            <td width="146" bgcolor="#FFFFFF"  ><input name="mobile" type="text" class="input" id="mobile" size="20" /></td>
+          </tr>
+          <tr>
+            <td align="center" bgcolor="#F2F1EE"  ><p> 이메일 </p></td>
+            <td colspan="3" bgcolor="#FFFFFF"  ><input name="email" type="text" class="input" id="email" size="35" /></td>
+          </tr>
+          <tr>
+            <td height="44" align="center" bgcolor="#F2F1EE"  ><p> 경력사항 </p></td>
+            <td colspan="3" bgcolor="#FFFFFF"  ><font color="#666666">
+              <input name="level" type="radio" value="신입" />
+              신입
+              <input name="level" type="radio" value="1년이상" />
+              1년이상 </font></td>
+          </tr>
+          <tr>
+            <td height="70" align="center" bgcolor="#F2F1EE"  >자격/면허소지자</td>
+            <td colspan="3" bgcolor="#FFFFFF"  ><font color="#666666">
+              <input type="checkbox" name="jakyuk1" value="사회복지사" />
+              사회복지사
+              <input type="checkbox" name="jakyuk2" value="간호사" />
+              간호사
+              <input type="checkbox" name="jakyuk3" value="간호조무사" />
+              간호조무사 <br />
+              <input type="checkbox" name="jakyuk4" value="물리치료사" />
+              물리치료사
+              <input type="checkbox" name="jakyuk5" value="작업치료사" />
+              작업치료사 </font></td>
+          </tr>
+          <tr>
+            <td height="44" align="center" bgcolor="#F2F1EE"  ><p>최종학력</p></td>
+            <td colspan="3" bgcolor="#FFFFFF"  ><font color="#666666">
+              <input type="radio" name="school" value="고졸이하" />
+              고졸이하
+              <input type="radio" name="school" value="고졸" />
+              고졸
+              <input type="radio" name="school" value="전문대졸" />
+              전문대졸
+              <input type="radio" name="school" value="대학교졸" />
+              대학교졸
+              <input type="radio" name="school" value="대학원이상" />
+              대학원이상 </font> </td>
+          </tr>
+        </table>
+        <table width="100%" height="5" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td></td>
+                </tr>
+              </table>
+          <TABLE width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#B5B4A6">
+                <!--<TR>
+                  <TD width="157" height="44" align="center" bgcolor="#E2DFDA" ><p> <strong><font color="#837867">희망
+                    교육일</font></strong> </TD>
+                  <TD colspan="4" align="center" bgcolor="#FFFFFF"  >
+				  <?
+				  $year = date("Y");
+				  ?>
+				  <select name="heemang_year">
+					<?
+					for($i=$year;$i <= $year+1;$i++){
+					?>
+						<option value="<?=$i?>"><?=$i?></option>
+					<?
+					}
+					?>
+				  </select>
+				  년
+                    <select name="heemang_month">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                      </select>
+                    월 
+                    &nbsp;
+                                                 <select name="select2">
+                                                   <option>평일주간</option>
+                                                   <option>평일야간</option>
+                                                   <option>토/일요일</option>
+                                                   <option>무 관</option>
+                                               </select></TD>
+                </TR>-->
+                <TR>
+                  <TD width="260" height="37" rowspan="2" align="center" bgcolor="#E2DFDA" ><font color="#837867"><strong>금회 신청 교육</strong></font></TD>
+                  <TD width="162" rowspan="2" bgcolor="#FFFFFF"  >
+
+				  &nbsp;&nbsp;
+				  <select name="kumhoi_year">
+					<?
+					for($i=$year;$i <= $year+1;$i++){
+					?>
+						<option value="<?=$i?>"><?=$i?></option>
+					<?
+					}
+					?>
+				  </select>
+				  년<br />
+					<br>
+                    &nbsp;&nbsp;
+                    <select name="kumhoi_month">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>                    월<br />
+                    &nbsp;&nbsp;
+                    <select name="kumhoi_day">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                         <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>                    일 
+                    
+                  개설 </TD>
+                  <TD width="196" align="center" bgcolor="#F2F1EE"  >교육시간<br></TD>
+                  <TD width="200" rowspan="2" bgcolor="#FFFFFF"  ><font color="#666666">
+                    <input type="checkbox" name="edu_time1" value="신규" />
+                    </font>신규<br>
+                    <font color="#666666">
+                    <input type="checkbox" name="edu_time2" value="경력자" />
+                    </font>경력자<br>
+                    <font color="#666666">
+                    <input type="checkbox" name="edu_time3" value="사회복지사" />
+                    </font>사회복지사<br>
+                    <font color="#666666">
+                    <input type="checkbox" name="edu_time4" value="간호조무사외" />
+                    </font>간호조무사외<br>
+                    <font color="#666666">
+                    <input type="checkbox" name="edu_time5" value="간호사" />
+                  </font>간호사</TD>
+                  <TD width="115" rowspan="2" align="center" bgcolor="#FFFFFF"  ><input name="gi" type="text" class="input" id="gi" size="2" />
+                  기</TD>
+                </TR>
+                <TR>
+                  <TD bgcolor="#FFFFFF"  ><font color="#666666">
+                    <input name="edu_ju1" type="checkbox" id="edu_ju1" value="주간(종일)" />
+					</font>주간(종일)<br />
+
+					<font color="#666666">
+					<input name="edu_ju2" type="checkbox" id="edu_ju2" value="주간(오전)" />
+                    </font>주간(오전)<br />
+
+                    <font color="#666666">
+                    <input name="edu_ju3" type="checkbox" id="edu_ju3" value="주간(오후)" />
+                    </font>주간(오후)<br>
+
+                    <font color="#666666">
+                    <input type="checkbox" name="edu_ya" value="야간" />
+                    </font>야간<br>
+
+                    <font color="#666666">
+                    <input type="checkbox" name="edu_to" value="토/일" />
+                  </font>토/일</TD>
+                </TR>
+            </TABLE>
+          <table width="100%" height="5" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td></td>
+            </tr>
+          </table>
+          <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#B5B4A6">
+            <tr>
+              <td width="157" height="37" align="center" bgcolor="#E2DFDA" ><font color="#837867"><strong>남기고싶은말</strong></font></td>
+              <td align="center" bgcolor="#FFFFFF"  ><textarea name="textarea2" cols="65" rows="7"></textarea></td>
+            </tr>
+          </table></td>
+      </tr>
+    </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="7">
+          <tr>
+            <td><img src="../images/s3_text.gif" width="597" height="121"></td>
+          </tr>
+        </table>
+      <table width="100%" height="5" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center"><input type="image" src="../images/btn_ok.gif" width="95" height="44">&nbsp;<img src="../images/btn_ce.gif" width="95" height="44" onclick="javascript:reset();" style="cursor:hand;"></td>
+          </tr>
+        </table>
+      <p><br>
+            <br>
+      </p></td>
+  </tr>
+</form>
+</table>
