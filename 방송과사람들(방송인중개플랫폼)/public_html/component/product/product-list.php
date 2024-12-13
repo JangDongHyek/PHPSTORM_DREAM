@@ -131,6 +131,7 @@
                 var category_idx = this.ctg;
 
                 var filter = {parent_idx : parent_idx, category_idx : category_idx}
+                console.log(filter);
 
                 var res = await this.jl.ajax("get",filter,"/api/member_product.php");
                 if(res){

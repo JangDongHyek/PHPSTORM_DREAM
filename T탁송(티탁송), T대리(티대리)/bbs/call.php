@@ -658,7 +658,20 @@ function serviceCall(f) {
     var total_price = parseInt(unComma(f.call_total_price.value));
     var my_point = parseInt("<?=$member['mb_point']?>");
     var chk_paytype = f.querySelector('input[name="call_payment"]:checked').value;
-    var prfx = (document.pressed == 0)? "탁송" : "대리";
+    var prfx = "";
+
+    switch(document.pressed) {
+        case 0 :
+            prfx = "탁송";
+            break;
+        case 1 :
+            prfx = "대리";
+            break;
+        case 2 :
+            prfx = "퀵";
+            break;
+
+    }
 
     // 포인트결제시 포인트확인
     if (chk_paytype == "P") {
@@ -921,8 +934,9 @@ function goPay(f) {
 
       <br>
 	<div class="btn_half">
-		<button class="btn" type="submit" onclick="document.pressed=0" *style="width:100%">탁송 요청하기</button>
+		<button class="btn" type="submit" onclick="document.pressed=0" *style="width:100%" style="margin-bottom : 4px;">탁송 요청하기</button>
 		<button class="btn" type="submit" onclick="document.pressed=1">대리 요청하기</button>
+        <button class="btn" type="submit" onclick="document.pressed=2">퀵 요청하기</button>
 	</div>
   </div>
 </div>

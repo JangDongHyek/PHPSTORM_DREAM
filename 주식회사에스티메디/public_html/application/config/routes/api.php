@@ -61,6 +61,7 @@ $route['api/registerComment']['post'] = 'MallBoardController/postRegisterBoardCo
 // 게시판 코멘트 삭제
 $route['api/deleteComment']['post'] = 'MallBoardController/postDeleteBoardComment';
 
+$route['api/updateToken']['get'] = 'AdmProductController/postUpdateApiAccessToken';
 
 $route['api/bs_comparative']['post'] = 'BsComparativeController/method';
 $route['api/bs_product']['post'] = 'BsProductController/method';

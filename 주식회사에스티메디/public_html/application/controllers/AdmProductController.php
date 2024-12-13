@@ -318,9 +318,9 @@ class AdmProductController extends CI_Controller
         //1.엑세스토큰받기 ACCESS_TOKEN 얻기
         $url = "https://openapi.ssart.co.kr/api/v1/oAuth/";
         $uid = $post['apiId'];
-        //$uid = 'stmedi';
+        $uid = 'stmedi';
         $pwd = $post['apiPass'];
-        //$pwd = '6318702972';
+        $pwd = '6318702972';
         $ready_array = array(
             'uid' => $uid
             ,'pwd' => $pwd

@@ -17,6 +17,7 @@ SELECT *
         SELECT COUNT( wr_id )
             FROM g5_write_as
             WHERE g5_write_as.wr_1 = g5_write_new.wr_id
+            AND g5_write_as.wr_2 = '정기점검'
             AND g5_write_as.wr_3
             BETWEEN DATE_SUB( CURDATE( ) , INTERVAL $check_date MONTH )
             AND CURDATE( )

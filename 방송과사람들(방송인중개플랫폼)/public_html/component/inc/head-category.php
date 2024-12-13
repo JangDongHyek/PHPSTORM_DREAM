@@ -7,10 +7,10 @@
                 <li class="gnb_1dli all_menu">
                     <a href="#" class="gnb_1da"><i class="fa-light fa-bars"></i> 전체메뉴</a>
                     <ul class="gnb_2dul">
-                        <li class="gnb_2dli" v-for="item in data">
-                            <a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${item.idx}`" class="gnb_2da">{{item.name}}</a>
-                            <div class="gnb_2dli_list" style="display:none">
-                                <ul class="gnb_2dul ver02" style="display:none">
+                        <li class="gnb_2dli" v-for="item in data" v-if="item.parent_idx == 0">
+                            <a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${item.idx}`" class="gnb_2da" @mouseover="over_idx = item.idx">{{item.name}}</a>
+                            <div class="gnb_2dli_list" style="display: none">
+                                <ul class="gnb_2dul ver02" style="display: none">
                                     <li class="gnb_2dli" v-for="child in item.childs"><a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${child.idx}&category_idx=${item.idx}`" class="gnb_2da">{{child.name}}</a></li>
                                 </ul>
                             </div>
@@ -24,7 +24,7 @@
                     <li class="gnb_1dli single_menu">
                         <a :href="`${jl.root}/bbs/item_list.php?ctg=${category_idx}`" class="gnb_1da">전체<span></span></a>
                     </li>
-                    <li class="gnb_1dli single_menu" v-for="item in categories">
+                    <li class="gnb_1dli single_menu" v-for="item in categories" v-if="item.parent_idx == category_idx">
                         <a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${item.idx}&category_idx=${item.parent_idx}`" class="gnb_1da">
                             {{item.name}}<span></span>
                         </a>
@@ -49,41 +49,7 @@
 <script>
     //상단 메뉴 슬라이드
         document.addEventListener('DOMContentLoaded', function() {
-        const menuWrapper = document.querySelector('.menu-wrapper');
-        let isDragging = false;
-        let startX;
-        let scrollLeft;
 
-        menuWrapper.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.pageX - menuWrapper.offsetLeft;
-        scrollLeft = menuWrapper.scrollLeft;
-        menuWrapper.style.cursor = 'grabbing';
-    });
-
-        menuWrapper.addEventListener('mouseleave', () => {
-        isDragging = false;
-        menuWrapper.style.cursor = 'grab';
-    });
-
-        menuWrapper.addEventListener('mouseup', () => {
-        isDragging = false;
-        menuWrapper.style.cursor = 'grab';
-    });
-
-        menuWrapper.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - menuWrapper.offsetLeft;
-        const walk = (x - startX) * 3; // 스크롤 속도 조절
-        menuWrapper.scrollLeft = scrollLeft - walk;
-    });
-
-        // 마우스 휠 이벤트 추가
-        menuWrapper.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        menuWrapper.scrollLeft += e.deltaY;
-    });
     });
 
 </script>
@@ -102,6 +68,7 @@
                 },
                 data : {},
                 categories : [],
+                over_idx : "",
             };
         },
         created: function(){
@@ -138,6 +105,42 @@
                     $('ul.gnb_2dul', this).slideUp(200);
                     $('ul.gnb_2dul', this).css('display','none');
                     //$(this).children('a:first').removeClass("hov");
+                });
+
+                const menuWrapper = document.querySelector('.menu-wrapper');
+                let isDragging = false;
+                let startX;
+                let scrollLeft;
+
+                menuWrapper.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.pageX - menuWrapper.offsetLeft;
+                    scrollLeft = menuWrapper.scrollLeft;
+                    menuWrapper.style.cursor = 'grabbing';
+                });
+
+                menuWrapper.addEventListener('mouseleave', () => {
+                    isDragging = false;
+                    menuWrapper.style.cursor = 'grab';
+                });
+
+                menuWrapper.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    menuWrapper.style.cursor = 'grab';
+                });
+
+                menuWrapper.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const x = e.pageX - menuWrapper.offsetLeft;
+                    const walk = (x - startX) * 3; // 스크롤 속도 조절
+                    menuWrapper.scrollLeft = scrollLeft - walk;
+                });
+
+                // 마우스 휠 이벤트 추가
+                menuWrapper.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    menuWrapper.scrollLeft += e.deltaY;
                 });
             });
         },

@@ -1,6 +1,6 @@
 <?
 include_once('./_common.php');
-include_once("../jl/JlConfig.php");
+include_once(G5_PATH."/jl/JlConfig.php");
 
 $g5['title'] = '리스트';
 include_once('./_head.php');

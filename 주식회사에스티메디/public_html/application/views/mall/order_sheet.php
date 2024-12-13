@@ -107,11 +107,13 @@
                                                 <div>
                                                     <dl>
                                                         <dt><!--기본옵션--></dt>
-                                                        <dd>
+                                                        <dd class="flex">
                                                             <!--<input type="button" value="-">-->
                                                             <!--<div class="number">--><?//=number_format($count)?><!--개</div>-->
-                                                            <div class="number"><input type="number" id="new_count" value="<?=$count?>" onkeyup="jl.isNumberKey(event)"></input>개</div>
-                                                            <input type="button" value="수정" onclick="updateCount(<?=$list['cart_idx']?>)">
+                                                            <div class="number flex ai-c"><input type="number" class="w50px" id="new_count" value="<?=$count?>" onkeyup="jl.isNumberKey(event)">개</div>
+                                                            <input type="button" class="btn btn_black btn_mini btn_h40" value="수정" onclick="updateCount(<?=$list['cart_idx']?>)">
+                                                        </dd>
+                                                        <dd>
                                                             <p class="p_price"><?=number_format($price)?>원</p>
                                                         </dd>
                                                     </dl>
