@@ -356,6 +356,47 @@
 
 		}
 
+		if($bbs_id == "boedu_board") {
+			$dbqry="
+				INSERT INTO `$bbs_table`
+				( `rg_doc_num` , `rg_top_num` , `rg_parent_num` ,
+				 	`rg_sequence` , `rg_depth` , `rg_next_num` ,
+					`rg_cat_num` , `rg_mb_num` , `rg_name` ,
+					`rg_password` , `rg_email` , `rg_home_url` ,
+					`rg_home_hit` , `rg_link1_url` , `rg_link2_url` ,
+					`rg_link1_hit` , `rg_link2_hit` , `rg_file1_name` ,
+					`rg_file2_name` , `rg_file1_size` , `rg_file2_size` ,
+					`rg_file1_hit` , `rg_file2_hit` , `rg_vote_yes` ,
+					`rg_vote_no` , `rg_doc_hit` , `rg_cmt_count` ,
+					`rg_title` , `rg_content` , `rg_html_use` ,
+					`rg_reg_date` , `rg_modi_date` , `rg_reg_ip` ,
+					`rg_modi_ip` , `rg_deleted` , `rg_secret` ,
+					`rg_vote_ip` , `rg_notice` , `rg_reply_mail` ,
+					`rg_agree` , `rg_ext1` , `rg_ext2` ,
+					`rg_ext3` , `rg_ext4` , `rg_ext5` $admin_orderby_query1 $add_query1 ,
+					`birth`,`address1`,`address2`,`belong`,`phone`,`work_type`,`request_date`,`work_time`
+				)
+			VALUES 
+				( '$rg_doc_num', '$rg_top_num', '$rg_parent_num',
+					'$rg_sequence', '$rg_depth', '$rg_next_num', 
+					'$rg_cat_num', '$rg_mb_num', '$rg_name', 
+					'$rg_password', '$rg_email', '$rg_home_url', 
+					'$rg_home_hit', '$rg_link1_url', '$rg_link2_url', 
+					'$rg_link1_hit', '$rg_link2_hit', '$rg_file1_name', 
+					'$rg_file2_name', '$rg_file1_size', '$rg_file2_size', 
+					'$rg_file1_hit', '$rg_file2_hit', '$rg_vote_yes', 
+					'$rg_vote_no', '$rg_doc_hit', '$rg_cmt_count', 
+					'$rg_title', '$rg_content', '$rg_html_use', 
+					'$rg_reg_date', '$rg_modi_date', '$rg_reg_ip', 
+					'$rg_modi_ip', '$rg_deleted', '$rg_secret', 
+					'$rg_vote_ip', '$rg_notice', '$rg_reply_mail', 
+					'$rg_agree', '$rg_ext1', '$rg_ext2', 
+					'$rg_ext3', '$rg_ext4', '$rg_ext5' $admin_orderby_query2 $add_query2,
+				 	'$birth','$address1','$address2','$belong','$phone','$work_type','$request_date','$work_time'
+				)
+			";
+		}
+
 		query($dbqry,$dbcon);
 
 		$rg_doc_num = mysql_insert_id();

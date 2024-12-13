@@ -139,92 +139,19 @@
     <TD height="1" colspan="4"></TD>
   </TR>
   <TR bgcolor=#FFFFFF> <TD colspan=4 style='padding:15;' class="bbs" style='word-break:break-all' id="contents">
-    <?=$show_ext1_begin?>
-    <?=$show_ext1_title?>
-    : 
-    <?=$rg_ext1?>
-    <br>
-    <?=$show_ext1_end?>
-    <?=$show_ext2_begin?>
-    <?=$show_ext2_title?>
-    : 
-    <?=$rg_ext2?>
-    <br>
-    <?=$show_ext2_end?>
-    <?=$show_ext3_begin?>
-    <?=$show_ext3_title?>
-    : 
-    <?=$rg_ext3?>
-    <br>
-    <?=$show_ext3_end?>
-    <?=$show_ext4_begin?>
-    <?=$show_ext4_title?>
-    : 
-    <?=$rg_ext4?>
-    <br>
-    <?=$show_ext4_end?>
-    <?=$show_ext5_begin?>
-    <?=$show_ext5_title?>
-    : 
-    <?=$rg_ext5?>
-    <br>
-    <?=$show_ext5_end?>
-    <script language="JavaScript" type="text/JavaScript">
-var img1_width = 0;
-var img2_width = 0;
-var img1_exist = false;
-var img2_exist = false;
 
-function set_img_init() {
-	if(img1_exist) setInterval(set_img1, 100);
-	if(img2_exist) setInterval(set_img2, 100);
-	if(old_onload) old_onload();
-}
+        <p>성명 : <?=$data['rg_name']?> </p>
+        <p>생년월일 : <?=$data['birth']?> </p>
+        <p>주소 : <?=$data['address1']?> <?=$data['address2']?> </p>
+        <p>소속 기관명 : <?=$data['belong']?> </p>
+        <p>휴대폰 : <?=$data['phone']?> </p>
+        <p>근무형태 : <?=$data['work_type']?> </p>
+        <p>신청 교육일 : <?=$data['request_date']?> </p>
+        <p>교육시간 : <?=$data['work_time']?> </p>
+        <p>남기고 싶은말 : <?=$data['rg_content']?> </p>
 
-function set_img(name,org_width,view_width) {
-  var img = eval((navigator.appName == 'Netscape') ? nsdoc+'.'+name : 'document.all.'+name);
-  if (img) {
-	  if(org_width>view_width) {
-			img.width=view_width;
-		} else if(org_width < view_width) {
-			img.width=org_width;
-		}
-	}
-}
 
-if(onload)
-	var old_onload=onload;
-onload=set_img_init;
-</script>
-    <?=$show_file1_view_begin?>
-    <img src="<?=$rg_file1_url?>" border="0" onerror="this.src='<?=$skin_board_url?>images/blank_.gif'" onclick="img_new_window('<?=urlencode($rg_file1_url)?>','<?=urlencode($rg_title)?>')" style="cursor:hand;" id=img_file1> 
-    <script language="JavaScript" type="text/JavaScript">
-img1_exist = true;
-function set_img1() {
-	if(img1_width==0) {
-		img1_width = img_file1.width;
-	}
-	set_img('img_file1',img1_width,contents.offsetWidth)
-}
-</script>
-    <br>
-    <?=$show_file1_view_end?>
-    <?=$show_file2_view_begin?>
-    <img src="<?=$rg_file2_url?>" border="0" onerror="this.src='<?=$skin_board_url?>images/blank_.gif'" onclick="img_new_window('<?=urlencode($rg_file2_url)?>','<?=urlencode($rg_title)?>')" style="cursor:hand;" id=img_file2> 
-    <script language="JavaScript" type="text/JavaScript">
-img2_exist = true;
-function set_img2() {
-	if(img2_width==0) {
-		img2_width = img_file2.width;
-	}
-	set_img('img_file2',img2_width,contents.offsetWidth)
-}
-</script>
-    <br>
-    <?=$show_file2_view_end?>
-    <?=$rg_content?>
-    <br>
-    <TR bgcolor=#e7e7e7> 
+    <TR bgcolor=#e7e7e7>
     <TD height="1" colspan="4"></TD>
   </TR>
     <?=$show_signature_begin?>
