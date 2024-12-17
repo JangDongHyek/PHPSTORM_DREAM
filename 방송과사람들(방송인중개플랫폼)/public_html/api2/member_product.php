@@ -13,7 +13,7 @@ try {
 
     $join_table = "";
     $get_tables = [];
-    //array_push($get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
+    array_push($get_tables,array("table"=> "g5_member", "get_key" => "member_idx" ));
 
     $file_use = false;
     $file = new JlFile("/jl/jl_resource/$table");

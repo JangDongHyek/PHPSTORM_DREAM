@@ -48,10 +48,10 @@
             // 장치 유형에 따라 리디렉션
             if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
                 // iOS 장치
-                helperLink('http://pf.kakao.com/_wggun/chat');
+                helperLink('http://pf.kakao.com/_QLxgdn');
             } else {
                 // iOS가 아닌 장치
-                window.location.href = "http://pf.kakao.com/_wggun/chat";
+                window.location.href = "http://pf.kakao.com/_QLxgdn";
             }
         }
     }

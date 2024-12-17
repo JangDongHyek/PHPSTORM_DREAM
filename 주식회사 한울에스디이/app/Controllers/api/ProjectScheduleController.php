@@ -333,6 +333,7 @@ class ProjectScheduleController extends BaseController
                 foreach ($sheet->getRowIterator() as $row) {
                     $currentRowIndex = $row->getRowIndex();
                     if($currentRowIndex == 1) continue;
+
                     $rowData = [];
                     foreach ($row->getCellIterator() as $cell) {
                         $value = $cell->getValue();
@@ -340,6 +341,13 @@ class ProjectScheduleController extends BaseController
                             $value = Date::excelToDateTimeObject($value)->format('Y-m-d'); // 원하는 포맷
                         }
                         $rowData[] = $value;
+
+
+                    }
+
+                    // 빈 데이터 행 건너뛰기
+                    if (empty(array_filter($rowData))) {
+                        continue;
                     }
 
                     $data = array_combine($headers,$rowData);

@@ -97,6 +97,11 @@
                     return false;
                 }
 
+                if(!(this.data.name.length >= 10 && this.data.name.length <= 35)) {
+                    alert("제목은 10자이상 35자 이하입니다.");
+                    return false;
+                }
+
                 if(this.data.keywords.length > 5) {
                     alert("검색 키워드는 5개까지만 가능합니다.");
                     return false;
@@ -172,6 +177,11 @@
                         alert("가격정보의 수정 횟수는 필수값입니다.");
                         return false;
                     }
+                }
+
+                if(this.data.questions.length > 5) {
+                    alert("자주 묻는 질문은 최대 5개입니다.");
+                    return false;
                 }
 
                 if(!this.data.main_image_array.length) {

@@ -55,7 +55,7 @@
                     
                     
                     <div class="box_write02">
-                        <h4>자주 묻는 질문</h4>
+                        <h4>자주 묻는 질문<em><i class="point" name="subpoint">{{ product.questions.length }}</i>/5</em></h4>
                         <div class="cont faq">
                             <div class="faq_active">
                                 <dl class="box_gray" v-for="item,index in product.questions">

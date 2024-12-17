@@ -205,7 +205,7 @@ class AdmProductController extends CI_Controller
                 'INSU_CD' => trim($_POST['INSU_CD']), //보험코드
                 'STANDARD_CD' => trim($_POST['STANDARD_CD']), //표준코드
                 'PRODUCT_STANDARD' => trim($_POST['PRODUCT_STANDARD']), //규격
-                'standard_price' => trim($_POST['standard_price']), //규격 단가
+                'standard_price' => extractNumbers($_POST['standard_price']), //규격 단가
                 'PRODUCT_UNIT' => trim($_POST['PRODUCT_UNIT']), //단위
                 'STOCK_QTY' => trim($_POST['STOCK_QTY']), //재고수량
                 'ACC_UNIT' => trim($_POST['ACC_UNIT']), //계산단위

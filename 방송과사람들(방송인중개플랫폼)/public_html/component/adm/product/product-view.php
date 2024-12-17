@@ -1,21 +1,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <item-bs-modal :modal="modal" @close="$emit('close')">
-            <template v-slot:header>
 
-            </template>
-
-            <!-- body -->
-            <template v-slot:default>
-
-            </template>
-
-
-            <template v-slot:footer>
-
-            </template>
-        </item-bs-modal>
     </div>
 </script>
 
@@ -70,7 +56,7 @@
             },
             async getData() {
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
+                    let res = await this.jl.ajax("get",this.filter,"/api2/member_product.php");
                     this.data = res.data[0]
                 }catch (e) {
                     alert(e.message)

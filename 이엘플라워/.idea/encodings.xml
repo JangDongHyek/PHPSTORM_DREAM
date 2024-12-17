@@ -8,5 +8,6 @@
     <file url="file://$PROJECT_DIR$/public_html/market/include/new_item.htm" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/market/include/rec_item.htm" charset="EUC-KR" />
     <file url="file://$PROJECT_DIR$/public_html/market/skin/product.list.item.skin.php" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/public_html/mobile/cart/order_ok.html" charset="EUC-KR" />
   </component>
 </project>

@@ -28,7 +28,7 @@
                         <ul>
                             <li><a href="" @click="event.preventDefault(); section = 1;" :class="{'active' : section == 1}">기본정보</a></li>
                             <li><a href="" @click="event.preventDefault(); section = 2;" :class="{'active' : section == 2}">전문/상세분야</a></li>
-                            <li><a href="" @click="event.preventDefault(); section = 3;" :class="{'active' : section == 3}">보유기술</a></li>
+<!--                            <li><a href="" @click="event.preventDefault(); section = 3;" :class="{'active' : section == 3}">보유기술</a></li>-->
                             <li><a href="" @click="event.preventDefault(); section = 4;" :class="{'active' : section == 4}">학력 전공/자격증</a></li>
                             <li><a href="" @click="event.preventDefault(); section = 5;" :class="{'active' : section == 5}">경력기간/사항</a></li>
                             <li><a href="" @click="event.preventDefault(); section = 6;" :class="{'active' : section == 6}">희망 시급</a></li>
@@ -40,7 +40,7 @@
                 <div class="tab_cont">
                     <profile-section1 v-if="section == 1" :user="data"></profile-section1>
                     <profile-section2 v-if="section == 2" :user="data"></profile-section2>
-                    <profile-section3 v-if="section == 3" :user="data"></profile-section3>
+<!--                    <profile-section3 v-if="section == 3" :user="data"></profile-section3>-->
                     <profile-section4 v-if="section == 4" :user="data"></profile-section4>
                     <profile-section5 v-if="section == 5" :user="data"></profile-section5>
                     <profile-section6 v-if="section == 6" :user="data"></profile-section6>

@@ -108,7 +108,7 @@
                 var filter = JSON.parse(JSON.stringify(this.filter));
                 var objs = {
                     _method: method,
-                    filter: JSON.stringify(filter)
+                    obj: JSON.stringify(filter)
                 };
 
                 var res = ajax("/api/category.php", objs);

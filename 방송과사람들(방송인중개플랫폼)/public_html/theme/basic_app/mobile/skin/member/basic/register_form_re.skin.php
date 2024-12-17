@@ -302,6 +302,7 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
 
     let id_check = true;
     let pw_check = true;
+    let email_check = false;
     let nick_check = true;
     let certify_check = true;
 
@@ -403,6 +404,33 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                 id_check = true
                 state.removeClass("pas").addClass("err");
                 err.addClass("on").html("아이디는 영문 소문자와 숫자, 3 ~ 15자리까지 가능합니다.");
+            }
+        });
+
+        // 이메일 체크
+        $("#reg_mb_email").keyup(function (){
+            var mb_email = $(this).val();
+            var state = $(this).parents(".row").find(".status_ico");
+            var err = $(this).parents(".row").find(".error");
+
+            // 아이디 정규표현식
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailRegex.test(mb_email)){
+                var msg = reg_mb_email_check();
+                if (msg) {
+                    email_check = true;
+                    state.removeClass("pas").addClass("err");
+                    err.addClass("on").html(msg);
+                } else {
+                    email_check = false
+                    state.removeClass("err").addClass("pas");
+                    err.html("");
+                }
+            }else{
+                email_check = true
+                state.removeClass("pas").addClass("err");
+                err.addClass("on").html("이메일을 확인해주세요.");
             }
         });
 
@@ -566,6 +594,11 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
 
         if(!emailRegex.test(reg_mb_email)) {
             alert("이메일을 확인해주세요.");
+            return false;
+        }
+        
+        if(email_check) {
+            alert("이미 사용중인 이메일입니다.");
             return false;
         }
 

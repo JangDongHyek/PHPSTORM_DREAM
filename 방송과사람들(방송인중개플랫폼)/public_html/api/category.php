@@ -28,7 +28,7 @@ try {
         case "get":
         {
             // PHP 버전에 따라 json_decode가 다르게 먹힘. 버전방지
-            $filter = str_replace('\\', '', $_POST['filter']);
+            $filter = str_replace('\\', '', $_POST['obj']);
             $filter = json_decode($filter, true);
 
             //필터 가공

@@ -479,7 +479,7 @@
             },
             async getCategory() {
                 var method = "get";
-                var filter = { parent_idx : "" };
+                var filter = { parent_idx : 0 };
 
                 var res = await this.jl.ajax(method,filter,"/api/category.php");
                 if (res) {

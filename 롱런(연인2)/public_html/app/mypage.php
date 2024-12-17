@@ -101,7 +101,7 @@ $heart_cnt = $row['mb_heart'];
     function confirmAction() {
         var confirmed = confirm("회원 탈퇴를 하시겠습니까?\n(탈퇴를 위해 카카오톡 채널로 연결이됩니다.)");
         if (confirmed) {
-            window.location.href = "http://pf.kakao.com/_idhdn/chat";
+            window.location.href = "http://pf.kakao.com/_fpxgdn";
         }
     }
 </script>

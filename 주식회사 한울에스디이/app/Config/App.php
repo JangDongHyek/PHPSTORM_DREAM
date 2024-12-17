@@ -199,4 +199,6 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+
+    public $sessionExpiration = 7200; // 세션 만료 시간 (초 단위, 2시간)
 }
