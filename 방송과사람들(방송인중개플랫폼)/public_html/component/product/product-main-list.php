@@ -39,6 +39,7 @@
                 filter : {
                     page : 1,
                     limit : 8,
+                    approval : true
                 },
                 data : {
 

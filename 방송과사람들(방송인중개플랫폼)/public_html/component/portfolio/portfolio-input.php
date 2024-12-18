@@ -33,7 +33,12 @@
                     </div>
                 <div class="box_content">
 					<div class="box_write02">
-						<h4 class="b_tit">메인이미지등록 <em><i class="point" name="point">{{ data.main_image_array.length }}</i>/1</em></h4>
+						<h4 class="b_tit">메인이미지등록
+                            <em>
+                                <i class="point" name="point">{{ data.main_image_array.length }}</i>/1
+                            </em>
+<!--                            <span style="color : red;">메인 이미지는 최대 1장입니다.</span>-->
+                        </h4>
 						<div class="cont">
 							<div class="area_box">
 
@@ -185,7 +190,7 @@
             };
         },
         created: function () {
-            this.jl = new JL('<?=$componentName?>');
+            this.jl = new Jl('<?=$componentName?>');
             this.getCategory();
             console.log(this.primary)
             console.log(this.mb_no)
@@ -197,12 +202,7 @@
             });
         },
         methods: {
-            postData: function () {
-                var object = this.jl.copyObject(this.data);
-
-                var objects = {_method : "11"};
-                objects = this.jl.processObject(objects,object);
-
+            async postData() {
                 if(!this.data.name) {
                     alert("제목을 입력해주세요.");
                     return false;
@@ -237,16 +237,16 @@
                 }
 
                 var method = this.primary ? "update" : "insert";
-                var res = this.jl.ajax(method, this.data, "/api/member_portfolio.php");
+                var res = await this.jl.ajax(method, this.data, "/api/member_portfolio.php");
 
                 if (res) {
                     alert("완료 되었습니다.");
                     window.location.href = `${this.jl.root}/bbs/mypage_portfolio.php`;
                 }
             },
-            getData: function () {
+            async getData() {
                 var filter = {primary : this.primary}
-                var res = this.jl.ajax("get", filter, "/api/member_portfolio.php");
+                var res = await this.jl.ajax("get", filter, "/api/member_portfolio.php");
 
                 if (res) {
                     this.bool = false;
@@ -254,15 +254,10 @@
                     this.parent_category_idx = this.data.CATEGORY.data[0].parent_idx;
                 }
             },
-            getCategory: function () {
-                var method = "get";
+            async getCategory() {
                 var filter = { parent_idx : "" };
-                var objs = {
-                    _method: method,
-                    filter: JSON.stringify(filter)
-                };
 
-                var res = ajax("/api/category.php", objs);
+                var res = await this.jl.ajax("get",filter,"/api/category.php");
                 if (res) {
                     console.log(res)
                     this.categories = res.response.data;

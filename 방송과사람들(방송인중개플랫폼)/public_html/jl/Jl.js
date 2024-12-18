@@ -328,16 +328,6 @@ class Jl {
         return objs;
     }
 
-    changeFile(event,obj,key) {
-        const file = event.target.files[0];
-        console.log(file)
-        if (file) {
-            obj[key] = file;
-        } else {
-            obj[key]  = '';
-        }
-    }
-
     copyObject(obj) {
         // 파일 객체는 복사하지 않고 그대로 반환
         if (obj instanceof File) {

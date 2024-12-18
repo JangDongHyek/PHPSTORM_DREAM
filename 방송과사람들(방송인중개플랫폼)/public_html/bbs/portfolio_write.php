@@ -3,8 +3,7 @@ include_once('./_common.php');
 $g5['title'] = '포트폴리오등록';
 include_once('./_head.php');
 $name = "item_write";
-include_once ("../class/Lib.php");
-$jl = new JL();
+include_once(G5_PATH."/jl/JlConfig.php");
 
 //재능정보
 $idx = $_REQUEST['idx'];

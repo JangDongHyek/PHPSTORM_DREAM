@@ -3,16 +3,16 @@
     <div>
 
             <product-input-tab1 v-show="tab == 1" ref="tab1" @change="parent_category = $event" @addOption="data.options.push(createOption('','custom'))"
-                                :product="data" :mb_no="mb_no" @changeTab="tab = $event"
+                                :product="data" :mb_no="mb_no" @changeTab="tab = $event" :admin="admin"
             ></product-input-tab1>
 
             <product-input-tab2 v-show="tab == 2" ref="tab2"
                                 :product="data" :mb_no="mb_no" @changeTab="tab = $event" :default_content="default_content"
-                                :tab="tab"
+                                :tab="tab" :admin="admin"
             ></product-input-tab2>
 
             <product-input-tab3 v-show="tab == 3"
-                                :product="data" :mb_no="mb_no" @changeTab="tab = $event" @postData="postData();"
+                                :product="data" :mb_no="mb_no" @changeTab="tab = $event" @postData="postData();" :admin="admin"
             ></product-input-tab3>
 
     </div>
@@ -23,7 +23,8 @@
         template: "#<?=$componentName?>-template",
         props: {
             primary: {type: String, default: ""},
-            mb_no: {type: String, default: ""}
+            mb_no: {type: String, default: ""},
+            admin : {type : Boolean, default : false},
         },
         data: function () {
             return {
@@ -53,7 +54,7 @@
                     types: [],
                     styles: [],
                     keywords: [],
-                    package : false,
+                    package : true,
                     basic : {name : "",description : "",price : "",work : "", modify : ""},
                     standard : {name : "",description : "",price : "",work : "", modify : ""},
                     deluxe : {name : "",description : "",price : "",work : "", modify : ""},
@@ -290,6 +291,8 @@
                 window.scrollTo(0, 0)
             },
             parent_category : function() {
+                return false
+                // 추가옵션 기능 삭제요청 24-12-18
                 if(this.render) {
                     this.data.options = [];
 

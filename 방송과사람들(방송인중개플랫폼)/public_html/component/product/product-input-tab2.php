@@ -70,7 +70,7 @@
                                     </dd>
                                 </dl>
                             </div>
-                            <button class="btn_add" @click="product.questions.push({})"><i class="fa-light fa-plus"></i> 질문 추가</button>
+                            <button class="btn_add" @click="product.questions.push({})"><i class="fa-light fa-plus" v-if="!admin"></i> 질문 추가</button>
                         </div>
                     </div>
                     <div class="box_write02">
@@ -115,6 +115,7 @@
             name : {type : String, default : ""},
             tab : {type : Number, default : 0},
             primary : {type : String, default : ""},
+            admin : {type : Boolean, default : false},
         },
         data: function(){
             return {

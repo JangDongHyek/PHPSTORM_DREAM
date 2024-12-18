@@ -73,7 +73,6 @@
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
-
             this.getData();
             this.getCategory()
         },
@@ -154,7 +153,7 @@
                     filter: JSON.stringify(filter)
                 };
 
-                var res = await this.jl.ajax("get",this.filter,"/api/category.php");
+                var res = await this.jl.ajax("get",filter,"/api/category.php");
 
                 if(res) {
                     this.jl.log(res,arguments.callee.name)
@@ -171,7 +170,7 @@
                     filter: JSON.stringify(filter)
                 };
 
-                var res = await this.jl.ajax(method,this.filter,"/api/category.php");
+                var res = await this.jl.ajax(method,filter,"/api/category.php");
                 if (res) {
                     this.jl.log(res,arguments.callee.name)
                     this.data = res.response.data

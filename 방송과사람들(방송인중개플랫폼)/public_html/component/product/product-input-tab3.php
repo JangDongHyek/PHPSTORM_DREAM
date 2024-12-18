@@ -38,24 +38,27 @@
                                         <li class="file_1" v-for="item,index in product.main_image_array">
                                             <div class="area_img">
                                                 <img :src="item.preview ? item.preview : jl.root+item.src">
-                                                <div class="area_delete" @click="product.main_image_array.splice(index,1)"><span class="sound_only">삭제</span></div>
+                                                <div class="area_delete" @click="product.main_image_array.splice(index,1)" v-if="!admin"><span class="sound_only">삭제</span></div>
                                             </div>
                                         </li>
                                     </ul>
                                     <!-- //이미지 미리보기 -->
 
-                                    <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
-                                           ref="main_image_array" @change="jl.changeFile($event,product,'main_image_array')">
-                                    <div id="fileDrag" class="img_wrap" @click="$refs.main_image_array.click();"
-                                         @drop.prevent="jl.dropFile($event,product,'main_image_array')" @dragover.prevent @dragleave.prevent>
-                                        <div class="area_txt">
-                                            <div class="area_img"><img
-                                                    :src="`${jl.root}/theme/basic_app/img/app/icon_upload.svg`"></div>
-                                            <span class="w">마우스로 드래그해서 파일을 추가하세요.</span>
-                                            <span class="m">파일을 추가하세요.</span>
+                                    <template v-if="!admin">
+
+                                        <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
+                                               ref="main_image_array" @change="jl.changeFile($event,product,'main_image_array')">
+                                        <div id="fileDrag" class="img_wrap" @click="$refs.main_image_array.click();"
+                                             @drop.prevent="jl.dropFile($event,product,'main_image_array')" @dragover.prevent @dragleave.prevent>
+                                            <div class="area_txt">
+                                                <div class="area_img"><img
+                                                            :src="`${jl.root}/theme/basic_app/img/app/icon_upload.svg`"></div>
+                                                <span class="w">마우스로 드래그해서 파일을 추가하세요.</span>
+                                                <span class="m">파일을 추가하세요.</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+                                        <em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -72,24 +75,26 @@
                                         <li class="file_1" v-for="item,index in product.content_image_array">
                                             <div class="area_img">
                                                 <img :src="item.preview ? item.preview : jl.root+item.src">
-                                                <div class="area_delete" @click="product.content_image_array.splice(index,1)"><span class="sound_only">삭제</span></div>
+                                                <div class="area_delete" @click="product.content_image_array.splice(index,1)" v-if="!admin"><span class="sound_only">삭제</span></div>
                                             </div>
                                         </li>
                                     </ul>
                                     <!-- //이미지 미리보기 -->
 
-                                    <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
-                                           ref="content_image_array" @change="jl.changeFile($event,product,'content_image_array')">
-                                    <div id="fileDrag" class="img_wrap" @click="$refs.content_image_array.click();"
-                                         @drop.prevent="jl.dropFile($event,product,'content_image_array')" @dragover.prevent @dragleave.prevent>
-                                        <div class="area_txt">
-                                            <div class="area_img"><img
-                                                    :src="`${jl.root}/theme/basic_app/img/app/icon_upload.svg`"></div>
-                                            <span class="w">마우스로 드래그해서 파일을 추가하세요.</span>
-                                            <span class="m">파일을 추가하세요.</span>
+                                    <template v-if="!admin">
+                                        <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
+                                               ref="content_image_array" @change="jl.changeFile($event,product,'content_image_array')">
+                                        <div id="fileDrag" class="img_wrap" @click="$refs.content_image_array.click();"
+                                             @drop.prevent="jl.dropFile($event,product,'content_image_array')" @dragover.prevent @dragleave.prevent>
+                                            <div class="area_txt">
+                                                <div class="area_img"><img
+                                                            :src="`${jl.root}/theme/basic_app/img/app/icon_upload.svg`"></div>
+                                                <span class="w">마우스로 드래그해서 파일을 추가하세요.</span>
+                                                <span class="m">파일을 추가하세요.</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+                                        <em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +123,7 @@
                                             <dd><input type="text" placeholder="등록하고자하는 동영상 링크를 입력해주세요" v-model="product.movie_link[index]"></dd>
                                             <a class="del" href="" @click="event.preventDefault(); product.movie_link.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>
                                         </dl>
-                                        <button class="btn_add" @click="product.movie_link.push('')"><i class="fa-light fa-plus"></i> 링크 추가</button>
+                                        <button class="btn_add" @click="product.movie_link.push('')" v-if="!admin"><i class="fa-light fa-plus"></i> 링크 추가</button>
                                     </div>
                                 </div>
                             </div>
@@ -128,8 +133,8 @@
                     <div></div>
                 </div>
                 <div id="area_btn" class="col02">
-                    <a class="btn_prev" href="" @click="event.preventDefault(); $emit('changeTab',3)">이전</a>
-                    <a class="btn_next" href="" @click="event.preventDefault(); $emit('postData')">등록완료</a>
+                    <a class="btn_prev" href="" @click="event.preventDefault(); $emit('changeTab',2)">이전</a>
+                    <a class="btn_next" href="" @click="event.preventDefault(); $emit('postData')" v-if="!admin">등록완료</a>
                 </div>
             </div>
         </div>
@@ -141,7 +146,8 @@
         template: "#<?=$componentName?>-template",
         props: {
             primary : {type : String, default : ""},
-            product : {type : Object, default : null}
+            product : {type : Object, default : null},
+            admin : {type : Boolean, default : false},
         },
         data: function(){
             return {
