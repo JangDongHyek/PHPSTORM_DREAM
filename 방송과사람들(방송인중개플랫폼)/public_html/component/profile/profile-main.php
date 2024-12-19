@@ -8,13 +8,13 @@
                 </div>
 
                 <ul class="nav">
-                    <li class="nav-item"><a class="nav-link" href="#step-1" @click="section = getHashValue('step-1')"><div class="num">1</div> <span>기본정보</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-2" @click="section = getHashValue('step-2')"><div class="num">2</div> <span>전문/상세분야</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="section = getHashValue('step-3')"><div class="num">3</div> <span>학력 전공/자격증</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-4" @click="section = getHashValue('step-4')"><div class="num">4</div> <span>경력기간/사항</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-5" @click="section = getHashValue('step-5')"><div class="num">5</div> <span>희망 시급</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-6" @click="section = getHashValue('step-6')"><div class="num">6</div> <span>상주 여부</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-7" @click="section = getHashValue('step-7')"><div class="num">7</div> <span>프로젝트 이력</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-1" @click="navEvent('step-1',$event)"><div class="num">1</div> <span>기본정보</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-2" @click="navEvent('step-2',$event)"><div class="num">2</div> <span>전문/상세분야</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">3</div> <span>학력 전공/자격증</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-4" @click="navEvent('step-4',$event)"><div class="num">4</div> <span>경력기간/사항</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-5" @click="navEvent('step-5',$event)"><div class="num">5</div> <span>희망 시급</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-6" @click="navEvent('step-6',$event)"><div class="num">6</div> <span>상주 여부</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-7" @click="navEvent('step-7',$event)"><div class="num">7</div> <span>프로젝트 이력</span></a></li>
                 </ul>
 
                 <div id="profile_form" class="tab-content">
@@ -29,8 +29,13 @@
                 </div>
 
                 <div class="btn_confirm">
-                    <button class="btn btn-prev" @click="changeStep('prev')">이전</button>
-                    <button id="next-btn" class="btn_submit" @click="changeStep('next')">저장하고 다음</button>
+                    <button class="btn btn-prev" type="button" @click="changeStep('prev')">이전</button>
+                    <button id="next-btn" type="button" class="btn_submit" @click="changeStep('next')">
+                        <template v-if="!admin">
+                            저장<span v-if="section != 'step-7'">하고 다음</span>
+                        </template>
+                        <template v-else>다음</template>
+                    </button>
                 </div>
             </div>
         </div>
@@ -53,6 +58,8 @@
                 data : {},
                 section : "step-1",
                 origin_nick : "",
+
+                reload : false,
             };
         },
         created: function(){
@@ -82,13 +89,24 @@
 
             });
 
-            this.section = this.getHashValue();
+
             console.log(this.section);
 
         },
+        updated : function() {
+            console.log('update');
+            if(!this.reload) {
+                this.section = this.getHashValue();
+                this.reload = true;
+            }
+        },
         methods: {
+            navEvent(step,event) {
+                let cl = Array.from(event.currentTarget.classList);
+                if(cl.includes('done')) this.section = step;
+            },
             async changeStep(change) {
-                if(change == "next") {
+                if(change == "next" && !this.admin) {
                     if(!await this.updateData()) return false;
                 }
                 $('#smartwizard').smartWizard(change)
@@ -123,6 +141,7 @@
                 }
             },
             async updateData() {
+                let msg = "";
                 switch (this.section) {
                     case "step-1" : {
                         if(!await this.checkNick()) {
@@ -217,5 +236,43 @@
 </script>
 
 <style>
+    @media screen and (max-width:1024px) {
+        #area_my{display: none;}
+        #ft{display: none;}
+    }
 
+    /*프로필 스텝위자드*/
+    #profile_form.tab-content{margin: 0; padding: 0;}
+    .sw>.progress{margin-bottom: 4px;}
+    .sw>.progress>.progress-bar{background: #0c0cba;}
+
+    .sw-theme-basic{border: 0;}
+    .sw-theme-basic>.nav .nav-link{margin-right: 0; display: flex;align-items: center; padding: 1rem;}
+    .sw>.nav .nav-link>span{line-height: 1.2em;}
+    .sw-theme-basic>.nav .nav-link.active{background:#0c0cba; color: #fff!important;}
+    .sw-theme-basic>.nav .nav-link.active::after{background:#0c0cba!important;}
+    .sw-theme-basic>.nav .nav-link.done{color: #ccc!important; background: #eee;}
+    .sw-theme-basic>.nav .nav-link.done::after{background: #ddd;}
+
+    .sw>.tab-content>.tab-pane{visibility:visible; min-height: 200px; padding: 2rem;}
+    .sw>.tab-content>.tab-pane{}
+
+    #smartwizard .btn_confirm{display: flex; gap: 4px; padding: 0.5em 1em;}
+    #smartwizard .btn_confirm button{width: 100%; height: auto}
+    #smartwizard .btn_confirm .btn_submit{width: 100%; border-radius: 5px!important; padding:13px 10px; font-size: 15px!important; letter-spacing:-0.2px!important; font-weight: 500; background: #0c0cba}
+
+    @media screen and (max-width:1024px) {
+        #smartwizard .btn_confirm{position: fixed; background: #fff; width: 100%; left: 0; bottom: 0; z-index: 998;}
+
+    }
+    @media screen and (max-width: 640px){
+        .sw>.nav{flex-direction: unset!important; flex-wrap:nowrap;}
+        .sw>.nav .nav-link>span{display: none;}
+        .sw-theme-basic>.nav .nav-link{margin-right: 0; text-align: center;}
+        .sw>.nav .nav-link>.num {
+            font-size: 1em;
+            text-align: center;
+            width: 100%;
+        }
+    }
 </style>

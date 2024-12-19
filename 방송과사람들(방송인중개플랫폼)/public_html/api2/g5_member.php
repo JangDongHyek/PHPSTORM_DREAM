@@ -59,10 +59,13 @@ try {
                 }
             }
 
-            //불러들인 데이터에 임의값을 추가할떄 사용하는 로직
-            //foreach ($object['data'] as $index => $data) {
-            //    $object['data'][$index]['example'] = "example";
-            //}
+            foreach ($object['data'] as $index => $data) {
+                if($jl->isFileExists("/data/file/member/{$data['mb_no']}.jpg")) {
+                    $object['data'][$index]['profile_image'] = $jl->URL."/data/file/member/{$data['mb_no']}.jpg";
+                }else {
+                    $object['data'][$index]['profile_image'] = $jl->URL."/img/img_smile.jpg";
+                }
+            }
 
             $response['data'] = $object['data'];
             $response['count'] = $object['count'];

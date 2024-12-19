@@ -109,37 +109,37 @@
                 }
 
                 if(this.data.package) {
-                    if(!this.data.standard.name || !this.data.deluxe.name || !this.data.premium.name) {
+                    if(!this.data.standard.name || !this.data.basic.name || !this.data.premium.name) {
                         alert("가격정보의 제목은 필수값입니다.");
                         return false;
                     }
 
-                    if(this.data.standard.name.length > 20 || this.data.deluxe.name.length > 20 || this.data.premium.name.length > 20) {
+                    if(this.data.standard.name.length > 20 || this.data.basic.name.length > 20 || this.data.premium.name.length > 20) {
                         alert("가격정보의 제목은 20글자까지 가능합니다.");
                         return false;
                     }
 
-                    if(!this.data.standard.description || !this.data.deluxe.description || !this.data.premium.description) {
+                    if(!this.data.standard.description || !this.data.basic.description || !this.data.premium.description) {
                         alert("가격정보의 설명은 필수값입니다.");
                         return false;
                     }
 
-                    if(this.data.basic.name.description > 60 || this.data.basic.name.description > 60 || this.data.basic.name.description > 60) {
+                    if(this.data.standard.name.description > 60 || this.data.basic.name.description > 60 || this.data.premium.name.description > 60) {
                         alert("가격정보의 내용은 60글자까지 가능합니다.");
                         return false;
                     }
 
-                    if(!this.data.standard.price || !this.data.deluxe.price || !this.data.premium.price) {
+                    if(!this.data.standard.price || !this.data.basic.price || !this.data.premium.price) {
                         alert("가격정보의 가격은 필수값입니다.");
                         return false;
                     }
 
-                    if(!this.data.standard.work || !this.data.deluxe.work || !this.data.premium.work) {
+                    if(!this.data.standard.work || !this.data.basic.work || !this.data.premium.work) {
                         alert("가격정보의 작업 기간은 필수값입니다.");
                         return false;
                     }
 
-                    if(!this.data.standard.modify || !this.data.deluxe.modify || !this.data.premium.modify) {
+                    if(!this.data.standard.modify || !this.data.basic.modify || !this.data.premium.modify) {
                         alert("가격정보의 수정 횟수는 필수값입니다.");
                         return false;
                     }
@@ -193,6 +193,11 @@
                     alert("메인 이미지는 1장까지 가능합니다");
                     return false;
                 }
+                if(this.data.main_image_array[0].size > 2097152) {
+                    alert("메인 이미지의 크기 제한은 2MB 입니다.");
+                    return false;
+                }
+
                 if(this.data.content_image_array.length > 10) {
                     alert("상세 이미지는 10장까지 가능합니다");
                     return false;

@@ -78,6 +78,9 @@
 
             });
         },
+        updated : function() {
+
+        },
         methods: {
             async postData() {
                 let method = this.primary ? "update" : "insert";

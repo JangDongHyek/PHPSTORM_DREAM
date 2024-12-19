@@ -3,6 +3,9 @@ $menu['menu200'] = array (
     array('200000', '회원관리', G5_ADMIN_URL.'/member_list.php', 'member'),
     array('200100', '회원관리', G5_ADMIN_URL.'/member_list.php', 'member'),
     array('200200', '전문가 전환 신청', G5_ADMIN_URL.'/member_request_conversion_list.php', 'member'),
+    array('200300', '학력 전공 증빙자료', G5_ADMIN_URL.'/member_school_list.php', 'member'),
+    array('200400', '자격증 증빙자료', G5_ADMIN_URL.'/member_certify_list.php', 'member'),
+    array('200500', '경력 증빙자료', G5_ADMIN_URL.'/member_career_list.php', 'member'),
  /*
 	array('200100', '회원관리', G5_ADMIN_URL.'/member_list.php', 'mb_list'),
     array('200300', '회원메일발송', G5_ADMIN_URL.'/mail_list.php', 'mb_mail'),

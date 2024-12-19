@@ -58,6 +58,11 @@ try {
                     $object["data"][$index]["$".$info['table']] = $join_data;
                 }
             }
+            
+            //불러들인 데이터에 임의값을 추가할떄 사용하는 로직
+            //foreach ($object['data'] as $index => $data) {
+            //    $object['data'][$index]['example'] = "example";
+            //}
 
             $response['data'] = $object['data'];
             $response['count'] = $object['count'];

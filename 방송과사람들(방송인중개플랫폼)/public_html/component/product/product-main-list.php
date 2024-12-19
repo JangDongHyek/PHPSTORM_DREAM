@@ -10,8 +10,7 @@
                         <img :src="jl.root+item.main_image_array[0].src">
                     </div>
                     <div class="area_txt">
-
-                        <span>업체명</span><!-- 업체명 -->
+                        <span></span><!-- 업체명 -->
                         <h3>{{item.name}}</h3> <!-- 제목 -->
                         <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
                         <div class="price">{{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원 </div> <!-- 가격 -->

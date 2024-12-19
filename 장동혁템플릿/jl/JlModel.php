@@ -168,7 +168,8 @@ class JlModel extends Jl{
 
         if(isset($obj['where'])) {
             $arrays = $this->jsonDecode($obj['where']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -178,7 +179,8 @@ class JlModel extends Jl{
 
         if(isset($obj['like'])) {
             $arrays = $this->jsonDecode($obj['like']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -188,7 +190,8 @@ class JlModel extends Jl{
 
         if(isset($obj['between'])) {
             $arrays = $this->jsonDecode($obj['between']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -198,7 +201,8 @@ class JlModel extends Jl{
 
         if(isset($obj['in'])) {
             $arrays = $this->jsonDecode($obj['in']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -210,7 +214,8 @@ class JlModel extends Jl{
             $arrays = $this->jsonDecode($obj['group_where']);
             $this->groupStart();
 
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -224,7 +229,8 @@ class JlModel extends Jl{
             $arrays = $this->jsonDecode($obj['group_like']);
             $this->groupStart();
 
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
 

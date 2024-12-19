@@ -1,21 +1,26 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div>
-        <item-bs-modal :modal="modal" @close="$emit('close')">
-            <template v-slot:header>
+    <div class="swiper ftSwiper" :id="'swiper'+component_idx">
+        <ul id="product_list" class="swiper-wrapper">
+            <li class="swiper-slide">
+                <i onclick="heart_click(15,this)" class="heart"></i>
+                <a href="https://itforone.com/~broadcast/bbs/item_view.php?idx=8">
+                    <div class="area_img">
+                        <img src="https://itforone.com/~broadcast/data/member_product/66c83b781058149/66c83b781058149.png">
+                    </div>
+                    <div class="area_txt">
+                        <span></span> <h3>ㅊㅋㅊㅋㄴㅊ</h3>
+                        <div class="price">
+                            111,111원
+                        </div>
+                        <div class="star">
+                            <i></i><em>0</em>
+                        </div>
+                    </div>
+                </a>
+            </li>
 
-            </template>
-
-            <!-- body -->
-            <template v-slot:default>
-
-            </template>
-
-
-            <template v-slot:footer>
-
-            </template>
-        </item-bs-modal>
+        </ul>
     </div>
 </script>
 
@@ -47,7 +52,32 @@
         },
         mounted: function(){
             this.$nextTick(() => {
-
+                let swiper = new Swiper(`#swiper${this.component_idx}`, {
+                    slidesPerView: 2.5,
+                    spaceBetween: 10,
+                    grabCursor: true,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        // 화면 너비가 1200px 이상일 때
+                        1200: {
+                            slidesPerView: 3.5,
+                            spaceBetween: 20
+                        },
+                        // 화면 너비가 992px 이상일 때
+                        950: {
+                            slidesPerView: 3.5,
+                            spaceBetween: 20
+                        },
+                        // 화면 너비가 768px 이상일 때
+                        768: {
+                            slidesPerView: 2.5,
+                            spaceBetween: 15
+                        },
+                    }
+                });
             });
         },
         updated : function() {

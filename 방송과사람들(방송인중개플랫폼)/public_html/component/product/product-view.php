@@ -223,17 +223,16 @@
                             <div>
                                 <h3>포트폴리오</h3>
                                 <div class="swiper ftSwiper">
-                                    <ul id="product_list" class="swiper-wrapper">
+                                    <ul id="product_list" class="swiper-wrapper portfolio_list">
                                         <li class="swiper-slide" v-for="item in portfolios">
                                             <i class="heart " onclick="heart_click(15,this)"></i>
-                                            <a href="https://itforone.com:443/~broadcast/bbs/item_view.php?idx=15">
+                                            <a :href="jl.root + '/bbs/portfolio_view.php?idx=' + item.idx">
+                                                <h3>{{ item.name }}</h3> <!-- 제목 -->
                                                 <div class="area_img">
                                                     <img :src="`${jl.root}${item.main_image_array[0].src}`" title="">
                                                 </div>
                                                 <div class="area_txt">
-
                                                     <span></span><!-- 업체명 -->
-                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
                                                     <div class="price">50,000원</div> <!-- 가격 -->
                                                     <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
                                                 </div>
@@ -255,6 +254,7 @@
                                                     <img :src="jl.root+item.main_image_array[0].src">
                                                 </div>
                                                 <div class="area_txt">
+                                                    <span class="icon">카테고리</span><!--카테고리-->
                                                     <span></span><!-- 업체명 -->
                                                     <h3>{{ item.name }}</h3> <!-- 제목 -->
                                                     <div class="price">

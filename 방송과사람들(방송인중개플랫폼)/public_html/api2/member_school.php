@@ -12,7 +12,7 @@ try {
 
     $join_table = "";
     $get_tables = [];
-    //array_push($get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
+    array_push($get_tables,array("table"=> "g5_member", "get_key" => "member_idx" ));
 
     $file_use = false;
     $file = new JlFile("/jl/jl_resource/$table");
@@ -58,11 +58,6 @@ try {
                     $object["data"][$index]["$".$info['table']] = $join_data;
                 }
             }
-
-            //불러들인 데이터에 임의값을 추가할떄 사용하는 로직
-            //foreach ($object['data'] as $index => $data) {
-            //    $object['data'][$index]['example'] = "example";
-            //}
 
             $response['data'] = $object['data'];
             $response['count'] = $object['count'];

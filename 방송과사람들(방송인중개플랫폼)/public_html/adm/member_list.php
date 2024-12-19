@@ -205,7 +205,7 @@ if ($stx == '0'){
             $list_no = $total_count - ($list_rows * ($page - 1));
             for ($i=0; $row=sql_fetch_array($result); $i++) {
 
-                $s_mod = '<a href="./member_form.php?'.$qstr.'&amp;w=u&amp;mb_id='.$row['mb_id'].'">보기/수정</a>';
+                $s_mod = '<a href="./member_form.php?'.$qstr.'&amp;w=u&amp;mb_id='.$row['mb_id'].'#step-7">보기/수정</a>';
 
 
                 $mb_id = $row['mb_id'];

@@ -30,6 +30,7 @@ if($mb == null) alert("로그인 해주세요", G5_URL);
     .sw>.progress{margin-bottom: 4px;}
     .sw>.progress>.progress-bar{background: #0c0cba;}
 
+    .sw-theme-basic{border: 0;}
     .sw-theme-basic>.nav .nav-link{margin-right: 0; display: flex;align-items: center; padding: 1rem;}
     .sw>.nav .nav-link>span{line-height: 1.2em;}
     .sw-theme-basic>.nav .nav-link.active{background:#0c0cba; color: #fff!important;}

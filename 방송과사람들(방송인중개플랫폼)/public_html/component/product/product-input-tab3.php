@@ -57,7 +57,7 @@
                                                 <span class="m">파일을 추가하세요.</span>
                                             </div>
                                         </div>
-                                        <em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+                                        <em>※이미지 권장 비율(4:3)</em>
                                     </template>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@
                                                 <span class="m">파일을 추가하세요.</span>
                                             </div>
                                         </div>
-                                        <em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+                                        <em>※이미지 권장 사이즈: 800 x 3200px</em>
                                     </template>
                                 </div>
                             </div>

@@ -64,7 +64,7 @@
 										<span class="m">파일을 추가하세요.</span>
 									</div>
 								</div>
-								<em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+								<em>※이미지 권장 비율(4:3)</em>
 							</div>
 						</div>
 					</div>
@@ -97,7 +97,7 @@
 										<span class="m">파일을 추가하세요.</span>
 									</div>
 								</div>
-								<em>※이미지 권장 사이즈: 652 x 488px (4:3 비율)</em>
+
 							</div>
 						</div>
 					</div>
@@ -145,7 +145,7 @@
 						<h4>약관 동의</h4>
 						<div class="cont">
 							<div class="box_gray">
-								<p><input type="checkbox" id="agree" name="agree" v-model="agree"><label
+								<p class="chkBox"><input type="checkbox" id="agree" name="agree" v-model="agree"><label
                                             for="agree">아래 내용에 모두 동의 합니다.</label></p>
 							</div>
 
@@ -207,6 +207,12 @@
                     alert("제목을 입력해주세요.");
                     return false;
                 }
+
+                if(!(this.data.name.length >= 5 && this.data.name.length <= 35)) {
+                    alert("제목은 5자이상 35자 이하입니다.");
+                    return false;
+                }
+
                 if(!this.data.category_idx) {
                     alert("카테고리를 2차까지 선택해주세요.");
                     return false;
@@ -219,10 +225,24 @@
                     alert("메인 이미지는 1장까지 가능합니다");
                     return false;
                 }
+
+                if(this.data.main_image_array[0].size > 2097152) {
+                    alert("메인 이미지의 크기 제한은 2MB 입니다.");
+                    return false;
+                }
+
                 if(this.data.content_image_array.length > 10) {
                     alert("상세 이미지는 10장까지 가능합니다");
                     return false;
                 }
+
+                for (let i = 0; i < this.data.content_image_array.length; i++) {
+                    if(this.data.content_image_array[i].size > 5242880) {
+                        alert("상세 이미지의 크기 제한은 5MB입니다.");
+                        return false;
+                    }
+                }
+
                 if(this.data.movie_file_array.length > 8) {
                     alert("동영상 등록은 8개까지 가능합니다");
                     return false;

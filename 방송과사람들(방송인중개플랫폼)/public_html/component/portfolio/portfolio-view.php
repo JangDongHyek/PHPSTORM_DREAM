@@ -27,6 +27,7 @@
                         <template v-for="item in member.mb_interest">
                             <i class="cate">{{item}}</i> &nbsp;<!--전문분야-->
                         </template>
+                        <span class="icon">{{data.CATEGORY.data[0].name}}</span>
                         <h2>{{ data.name }}</h2>
                         <div id="area_btn">
                             <a href="" class="box_btn">문의하기</a>
@@ -57,15 +58,13 @@
                             <div>
                                 <h3>{{ member.mb_nick }}님의 다른 포트폴리오</h3>
                                 <div class="swiper ftSwiper">
-                                    <ul id="product_list" class="swiper-wrapper">
+                                    <ul id="product_list" class="swiper-wrapper portfolio_list">
                                         <li class="swiper-slide" v-for="item in portfolios">
                                             <i class="heart" :class="{'on' : checkLike(item.idx)}" @click="checkLike(item.idx) ? deleteLike(item.idx) : postLike(item.idx)"></i>
                                             <a :href="`${jl.root}/bbs/portfolio_view.php?idx=${item.idx}`">
+                                                <h3>{{ item.name }}</h3> <!-- 제목 -->
                                                 <div class="area_img">
                                                     <img :src="`${jl.root}${item.main_image_array[0].src}`" title="">
-                                                </div>
-                                                <div class="area_txt">
-                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
                                                 </div>
                                             </a>
                                         </li>

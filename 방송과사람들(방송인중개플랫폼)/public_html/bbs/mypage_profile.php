@@ -27,39 +27,7 @@ if($mb == null) alert("로그인 해주세요", G5_URL);
     }
 
 
-    /*프로필 스텝위자드*/
-    #profile_form.tab-content{margin: 0; padding: 0;}
-    .sw>.progress{margin-bottom: 4px;}
-    .sw>.progress>.progress-bar{background: #0c0cba;}
 
-    .sw-theme-basic>.nav .nav-link{margin-right: 0; display: flex;align-items: center; padding: 1rem;}
-    .sw>.nav .nav-link>span{line-height: 1.2em;}
-    .sw-theme-basic>.nav .nav-link.active{background:#0c0cba; color: #fff!important;}
-    .sw-theme-basic>.nav .nav-link.active::after{background:#0c0cba!important;}
-    .sw-theme-basic>.nav .nav-link.done{color: #ccc!important; background: #eee;}
-    .sw-theme-basic>.nav .nav-link.done::after{background: #ddd;}
-
-    .sw>.tab-content>.tab-pane{visibility:visible; min-height: 200px; padding: 2rem;}
-    .sw>.tab-content>.tab-pane{}
-
-    #smartwizard .btn_confirm{display: flex; gap: 4px; padding: 0.5em 1em;}
-    #smartwizard .btn_confirm button{width: 100%; height: auto}
-    #smartwizard .btn_confirm .btn_submit{width: 100%; border-radius: 5px!important; padding:13px 10px; font-size: 15px!important; letter-spacing:-0.2px!important; font-weight: 500; background: #0c0cba}
-
-    @media screen and (max-width:1024px) {
-        #smartwizard .btn_confirm{position: fixed; background: #fff; width: 100%; left: 0; bottom: 0; z-index: 998;}
-
-    }
-    @media screen and (max-width: 640px){
-        .sw>.nav{flex-direction: unset!important; flex-wrap:nowrap;}
-        .sw>.nav .nav-link>span{display: none;}
-        .sw-theme-basic>.nav .nav-link{margin-right: 0; text-align: center;}
-        .sw>.nav .nav-link>.num {
-            font-size: 1em;
-            text-align: center;
-            width: 100%;
-        }
-    }
 </style>
 
     <div id="area_mypage" class="profile">

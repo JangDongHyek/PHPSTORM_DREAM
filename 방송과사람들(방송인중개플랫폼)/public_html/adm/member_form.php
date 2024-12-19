@@ -134,8 +134,9 @@ include_once('./admin.head.php');
 
 // add_javascript('js 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
+add_stylesheet('<link rel="stylesheet" href="'.G5_URL.'/theme/basic_app/css/sub.css?ver=0.4">', 0);
 ?>
-<link rel="stylesheet" href="<?=G5_URL?>/theme/basic_app/css/sub.css?ver=0.4">
+<!--<link rel="stylesheet" href="<?/*=G5_URL*/?>/theme/basic_app/css/sub.css?ver=0.4">-->
 <form name="fmember" id="fmember" action="./member_form_update.php" onsubmit="return fmember_submit(this);" method="post" enctype="multipart/form-data">
 <input type="hidden" name="w" value="<?php echo $w ?>">
 <input type="hidden" name="sfl" value="<?php echo $sfl ?>">
@@ -399,6 +400,7 @@ $(document).ready(function () {
     return true;
 }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
 
 <?php
 include_once('./admin.tail.php');

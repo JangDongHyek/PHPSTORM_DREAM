@@ -53,6 +53,9 @@
                     <div class="portfolio text-right" v-if="!admin">
                         <button class="btn" @click="modal = true"><i class="fa-regular fa-arrow-down-to-line"></i> 포트폴리오 불러오기</button>
                     </div>
+                    <br>
+                    <p class="text-center txt_blue">나의 포트폴리오를 불러와서 빠르게 상품을 등록해보세요!</p>
+
                     
                     <slot-modal :modal="modal" title="포트폴리오 불러오기" @close="modal = false">
                         <ul id="product_list">
@@ -351,7 +354,7 @@
                             </div>
                         </div>
                         <div class="box_write02">
-                            <h4>추가옵션</h4>
+                            <h4>맞춤옵션</h4>
                             <div class="cont">
                                 <div class="box_ck">
                                     <ul class="area_filter" id="area_filter">
