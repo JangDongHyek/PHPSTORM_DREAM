@@ -94,7 +94,7 @@
                         </section>
                         <section id="area_service">
                             <h3>서비스</h3>
-                            <part-member-product></part-member-product>
+                            <part-member-product :mb_no="mb_no" :login_mb_no="login_mb_no"></part-member-product>
                         </section>
 
                         <section id="area_portfolio">
@@ -113,12 +113,12 @@
                                 </div>
                             <?php }?>
                             <!--//디자인 변경-->
-                            <part-member-portfolio></part-member-portfolio>
+                            <part-member-portfolio :mb_no="mb_no" :login_mb_no="login_mb_no"></part-member-portfolio>
                         </section>
 
                         <section id="area_review">
                             <h3>받은 평가</h3>
-                            <part-member-review></part-member-review>
+                            <part-member-review :mb_no="mb_no" :login_mb_no="login_mb_no"></part-member-review>
                         </section>
                     </div>
 
@@ -134,6 +134,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            login_mb_no : {type : String, default : ""},
             modal : {type : Boolean, default : false},
             mb_no : {type : String, default : ""},
         },

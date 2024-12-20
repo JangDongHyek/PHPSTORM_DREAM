@@ -15,9 +15,19 @@ function vueLoad(app_name) {
     });
 }
 
+// int일경우 자동으로 컴마가 붙는 프로토타입
 Number.prototype.format = function (n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
+// Date 타입의 변수 자동으로 포맷팅 YYYY-MM-DD 로 반환됌
+Date.prototype.format = function () {
+    const year = this.getFullYear();
+    const month = String(this.getMonth() + 1).padStart(2, '0');
+    const day = String(this.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
 };
 
 class Jl {
@@ -256,6 +266,9 @@ class Jl {
 
     // vue에서 파일업로드시 지정된 오브젝트 key에 파일 데이터 반환해주는 함수
     changeFile(event,obj,key,permission = []) {
+        console.log("aa");
+        console.log(event.target.files);
+        console.log("bb");
         this.commonFile(event.target.files,obj,key,permission)
         this.log(obj[key])
     }
@@ -270,7 +283,7 @@ class Jl {
     }
 
     /*
-    프로퍼티 값이 대문자인지 확인하는 함수
+    매개변수 값이 대문자인지 확인하는 함수
      */
     isUpperCase(str) {
         return str === str.toUpperCase();
@@ -373,7 +386,7 @@ class Jl {
         return result;
     }
 
-    // 프로퍼티 날짜타입의 데이터를 한글식 날로 변경
+    // 매개변수 날짜타입의 데이터를 한글식 날로 변경
     dateToKorean(dateString,time = false) {
         if (!dateString || dateString === '0000-00-00' || dateString === '0000-00-00 00:00:00') {
             return '유효하지 않은 날짜';
@@ -397,6 +410,29 @@ class Jl {
         }
 
         return formattedDate;
+    }
+
+    // 문자형식의 날짜를 매개변수 로 삽입시 년월 몇번째주 인지 반환하는함수
+    dateToWeekly(dateString) {
+        // 입력받은 문자열을 Date 객체로 변환
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+            return '유효하지 않은 날짜';
+        }
+
+        const year = date.getFullYear(); // 연도
+        const month = date.getMonth() + 1; // 월 (0부터 시작하므로 +1)
+        const day = date.getDate(); // 날짜 (1일부터 시작)
+
+        // 해당 월의 첫 번째 날과 첫째 날의 요일 (0: 일요일, ..., 6: 토요일)
+        const firstDayOfMonth = new Date(year, date.getMonth(), 1);
+        const firstDayWeekday = firstDayOfMonth.getDay(); // 요일 (0 ~ 6)
+
+        // 첫 주가 시작되는 기준: 첫째 날의 요일을 보정하여 주 계산 시작
+        const adjustedDay = day + firstDayWeekday - 1; // 요일 보정
+        const week = Math.ceil(adjustedDay / 7); // 주 계산
+
+        return `${year}년 ${month}월 ${week}번째 주`;
     }
 
     // 숫자와 문자가섞인 문자열데이터를 숫자만 가져오는 정규식
@@ -433,6 +469,23 @@ class Jl {
             bigUnitIndex++;
         }
 
+        return result;
+    }
+
+    //Objects 들중 매개변수에 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
+    getObjectsToKey(array, key) {
+        // 결과 값을 저장할 배열
+        const result = [];
+
+        // 배열 순회
+        array.forEach(obj => {
+            // 객체에 키가 존재하면 값 추가
+            if (obj.hasOwnProperty(key)) {
+                result.push(obj[key]);
+            }
+        });
+
+        // 값이 담긴 배열 반환
         return result;
     }
 

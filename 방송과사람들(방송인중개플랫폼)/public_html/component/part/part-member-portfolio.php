@@ -2,72 +2,17 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div class="swiper ftSwiper" :id="'swiper'+component_idx">
         <ul id="product_list" class="swiper-wrapper">
-            <li class="swiper-slide">
-                <i class="heart " onclick="heart_click(15,this)"></i>
-                <a href="<? echo G5_BBS_URL ?>/portfolio_view.php">
+            <li class="swiper-slide" v-for="portfolio in portfolios">
+                <i class="heart" :class="getClass(portfolio)" @click="postHeart(portfolio)"></i>
+                <a :href="jl.root + '/bbs/portfolio_view.php?idx=' + portfolio.idx">
                     <div class="area_img">
-                        <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg" title="">
+                        <img :src="jl.root + portfolio.main_image_array[0].src" title="">
                     </div>
                     <div class="area_txt">
 
                         <span></span><!-- 업체명 -->
-                        <h3>영상제작</h3> <!-- 제목 -->
+                        <h3>{{portfolio.name}}</h3> <!-- 제목 -->
                     </div>
-
-                </a>
-            </li>
-            <li class="swiper-slide">
-                <i class="heart " onclick="heart_click(15,this)"></i>
-                <a href="<? echo G5_BBS_URL ?>/portfolio_view.php">
-                    <div class="area_img">
-                        <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg" title="">
-                    </div>
-                    <div class="area_txt">
-
-                        <span></span><!-- 업체명 -->
-                        <h3>영상제작</h3> <!-- 제목 -->
-                    </div>
-
-                </a>
-            </li>
-            <li class="swiper-slide">
-                <i class="heart " onclick="heart_click(15,this)"></i>
-                <a href="<? echo G5_BBS_URL ?>/portfolio_view.php">
-                    <div class="area_img">
-                        <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg" title="">
-                    </div>
-                    <div class="area_txt">
-
-                        <span></span><!-- 업체명 -->
-                        <h3>영상제작</h3> <!-- 제목 -->
-                    </div>
-
-                </a>
-            </li>
-            <li class="swiper-slide">
-                <i class="heart " onclick="heart_click(15,this)"></i>
-                <a href="<? echo G5_BBS_URL ?>/portfolio_view.php">
-                    <div class="area_img">
-                        <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg" title="">
-                    </div>
-                    <div class="area_txt">
-
-                        <span></span><!-- 업체명 -->
-                        <h3>영상제작</h3> <!-- 제목 -->
-                    </div>
-
-                </a>
-            </li>
-            <li class="swiper-slide">
-                <i class="heart " onclick="heart_click(15,this)"></i>
-                <a href="<? echo G5_BBS_URL ?>/portfolio_view.php">
-                    <div class="area_img">
-                        <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg" title="">
-                    </div>
-                    <div class="area_txt">
-
-                        <span></span><!-- 업체명 -->
-                        <h3>영상제작</h3> <!-- 제목 --></div>
 
                 </a>
             </li>
@@ -79,8 +24,9 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            login_mb_no : {type : String, default : ""},
             modal : {type : Boolean, default : false},
-            primary : {type : String, default : ""},
+            mb_no : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -93,13 +39,17 @@
                     {name : "",message : ""},
                 ],
                 data : {},
+
+                portfolios : [],
+                likes : [],
             };
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.getData();
+            this.getPortfolio();
+            this.getLike();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -135,25 +85,49 @@
 
         },
         methods: {
-            async postData() {
-                let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
+            async postHeart(portfolio) {
+                let method = "insert";
+
+                let data =  {
+                    table : "member_portfolio_like",
+                    member_idx : this.login_mb_no,
+                    portfolio_idx : portfolio.idx
+                }
+                if(this.getClass(portfolio) == 'on') method = "where_delete";
+
+
                 try {
-                    //if(this.data.change_user_pw != this.data.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
+                    let res = await this.jl.ajax(method,data,"/jl/JlApi.php");
 
-                    let res = await this.jl.ajax(method,this.data,"/api/user",options);
-
-                    alert("완료 되었습니다");
-                    window.location.reload();
+                    await this.getLike();
                 }catch (e) {
                     alert(e.message)
                 }
 
             },
-            async getData() {
+            getClass(portfolio) {
+                if(this.likes.includes(portfolio.idx)) return "on";
+            },
+            async getLike() {
+                let filter = {
+                    table : "member_portfolio_like",
+                    member_idx : this.login_mb_no
+                }
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
-                    this.data = res.data[0]
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
+                    this.likes = this.jl.getObjectsToKey(res.data,"portfolio_idx");
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getPortfolio() {
+                let filter = {
+                    table : "member_portfolio",
+                    member_idx : this.mb_no,
+                }
+                try {
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
+                    this.portfolios = res.data
                 }catch (e) {
                     alert(e.message)
                 }

@@ -2,16 +2,16 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div class="swiper ftSwiper" :id="'swiper'+component_idx">
         <ul id="product_list" class="swiper-wrapper">
-            <li class="swiper-slide">
-                <i onclick="heart_click(15,this)" class="heart"></i>
-                <a href="https://itforone.com/~broadcast/bbs/item_view.php?idx=8">
+            <li class="swiper-slide" v-for="product in products">
+                <i @click="postHeart(product)" class="heart" :class="getClass(product)"></i>
+                <a :href="jl.root + '/bbs/item_view.php?idx=' + product.idx">
                     <div class="area_img">
-                        <img src="https://itforone.com/~broadcast/data/member_product/66c83b781058149/66c83b781058149.png">
+                        <img :src="jl.root + product.main_image_array[0].src">
                     </div>
                     <div class="area_txt">
-                        <span></span> <h3>ㅊㅋㅊㅋㄴㅊ</h3>
+                        <span></span> <h3>{{product.name}}</h3>
                         <div class="price">
-                            111,111원
+                            {{parseInt(product.basic.price).format()}}원
                         </div>
                         <div class="star">
                             <i></i><em>0</em>
@@ -28,8 +28,10 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            login_mb_no : {type : String, default : ""},
             modal : {type : Boolean, default : false},
             primary : {type : String, default : ""},
+            mb_no : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -42,13 +44,16 @@
                     {name : "",message : ""},
                 ],
                 data : {},
+                products : [],
+                likes : [],
             };
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.getData();
+            this.getProduct();
+            this.getLike();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -84,25 +89,47 @@
 
         },
         methods: {
-            async postData() {
-                let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
+            async postHeart(product) {
+                let method = "insert";
+
+                let data =  {
+                    member_idx : this.login_mb_no,
+                    product_idx : product.idx
+                }
+                if(this.getClass(product) == 'on') method = "where_delete";
+
+
                 try {
-                    //if(this.data.change_user_pw != this.data.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
+                    let res = await this.jl.ajax(method,data,"/api2/member_product_like.php");
 
-                    let res = await this.jl.ajax(method,this.data,"/api/user",options);
-
-                    alert("완료 되었습니다");
-                    window.location.reload();
+                    await this.getLike();
                 }catch (e) {
                     alert(e.message)
                 }
 
             },
-            async getData() {
+            getClass(product) {
+                if(this.likes.includes(product.idx)) return "on";
+            },
+            async getLike() {
+                let filter = {
+                    member_idx : this.login_mb_no
+                }
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
-                    this.data = res.data[0]
+                    let res = await this.jl.ajax("get",filter,"/api2/member_product_like.php");
+                    this.likes = this.jl.getObjectsToKey(res.data,"product_idx");
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getProduct() {
+                let filter = {
+                    member_idx : this.mb_no,
+                    approval : "1",
+                }
+                try {
+                    let res = await this.jl.ajax("get",filter,"/api2/member_product.php");
+                    this.products = res.data
                 }catch (e) {
                     alert(e.message)
                 }

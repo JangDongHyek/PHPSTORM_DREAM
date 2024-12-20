@@ -70,7 +70,7 @@
                                     </dd>
                                 </dl>
                             </div>
-                            <button class="btn_add" @click="product.questions.push({})"><i class="fa-light fa-plus" v-if="!admin"></i> 질문 추가</button>
+                            <button class="btn_add" @click="addQuestion()"><i class="fa-light fa-plus" v-if="!admin"></i> 질문 추가</button>
                         </div>
                     </div>
                     <div class="box_write02">
@@ -141,7 +141,13 @@
             });
         },
         methods: {
-
+            addQuestion() {
+                if(this.product.questions.length >= 5) {
+                    alert("자주 묻는 질문은 최대 5개까지입니다.");
+                    return false;
+                }
+                this.product.questions.push({})
+            }
         },
         computed: {
 

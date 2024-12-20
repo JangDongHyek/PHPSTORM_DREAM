@@ -59,6 +59,7 @@
                     standard : {name : "",description : "",price : "",work : "", modify : ""},
                     deluxe : {name : "",description : "",price : "",work : "", modify : ""},
                     premium : {name : "",description : "",price : "",work : "", modify : ""},
+                    tax_invoice : "false",
                     options : [],
 
                     //tab2

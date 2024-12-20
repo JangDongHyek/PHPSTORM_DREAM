@@ -469,6 +469,23 @@ class Jl {
         return result;
     }
 
+    //Objects 들중 매개변수에 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
+    getObjectsToKey(array, key) {
+        // 결과 값을 저장할 배열
+        const result = [];
+
+        // 배열 순회
+        array.forEach(obj => {
+            // 객체에 키가 존재하면 값 추가
+            if (obj.hasOwnProperty(key)) {
+                result.push(obj[key]);
+            }
+        });
+
+        // 값이 담긴 배열 반환
+        return result;
+    }
+
     // 참조값이 숫자만으로 이러우져있는지 확인하는 함수
     isNumber(str) {
         return !/[^0-9]/.test(str);

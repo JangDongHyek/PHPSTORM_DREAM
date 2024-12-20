@@ -15,7 +15,7 @@ $pid = "profile";
         </style>
 
 <div id="app">
-    <profile-view mb_no="<?=$_GET['mb_no']?>"></profile-view>
+    <profile-view mb_no="<?=$_GET['mb_no']?>" login_mb_no="<?=$member['mb_no']?>"></profile-view>
 </div>
 
 <?php $jl->vueLoad("app")?>

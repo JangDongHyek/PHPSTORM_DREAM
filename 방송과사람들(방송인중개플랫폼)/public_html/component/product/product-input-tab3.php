@@ -29,7 +29,10 @@
                 <div class="box_list">
                     <div class="box_content">
                         <div class="box_write02">
-                            <h4 class="b_tit">메인이미지등록 <em><i class="point" name="point">{{ product.main_image_array.length }}</i>/1</em></h4>
+                            <h4 class="b_tit">메인이미지등록
+                                <em><i class="point" name="point">{{ product.main_image_array.length }}</i>/1</em>
+                                <span v-if="product.main_image_array.length > 1" style="color : red;">메인 이미지는 최대 1장입니다.</span>
+                            </h4>
                             <div class="cont">
                                 <div class="area_box">
 
@@ -66,7 +69,10 @@
 
                     <div class="box_content">
                         <div class="box_write02">
-                            <h4 class="b_tit">상세이미지등록 <em><i class="point" name="subpoint">{{ product.content_image_array.length }}</i>/10</em></h4>
+                            <h4 class="b_tit">상세이미지등록
+                                <em><i class="point" name="subpoint">{{ product.content_image_array.length }}</i>/10</em>
+                                <span v-if="product.content_image_array.length > 10" style="color : red;">상세이미지는 최대 10장입니다.</span>
+                            </h4>
                             <div class="cont">
                                 <div class="area_box">
 
@@ -123,7 +129,7 @@
                                             <dd><input type="text" placeholder="등록하고자하는 동영상 링크를 입력해주세요" v-model="product.movie_link[index]"></dd>
                                             <a class="del" href="" @click="event.preventDefault(); product.movie_link.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>
                                         </dl>
-                                        <button class="btn_add" @click="product.movie_link.push('')" v-if="!admin"><i class="fa-light fa-plus"></i> 링크 추가</button>
+                                        <button class="btn_add" @click="addMovie()" v-if="!admin"><i class="fa-light fa-plus"></i> 링크 추가</button>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +175,13 @@
             });
         },
         methods: {
-
+            addMovie() {
+                if(this.product.movie_link.length >= 10) {
+                    alert("동영상 등록은 최대 10개까지입니다.");
+                    return false;
+                }
+                this.product.movie_link.push('');
+            }
         },
         computed: {
 
