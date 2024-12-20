@@ -491,20 +491,28 @@ class Jl {
         return !/[^0-9]/.test(str);
     }
 
-    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey"
+    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey" 아래 형제함수도 추가해줘야함
     isNumberKey(event) {
         const charCode = event.keyCode || event.which;
-        // 숫자 키 코드 (0-9 및 숫자 키패드 0-9)와 백스페이스, Delete 키만 허용
+        // 숫자 키(0-9), 백스페이스, Delete, 화살표 키만 허용
         if (
-            (charCode >= 48 && charCode <= 57) ||
-            (charCode >= 96 && charCode <= 105) ||
-            charCode === 8 ||
-            charCode === 46
+            (charCode >= 48 && charCode <= 57) || // 상단 숫자 키
+            (charCode >= 96 && charCode <= 105) || // 숫자 키패드
+            charCode === 8 || // 백스페이스
+            charCode === 46 || // Delete
+            (charCode >= 37 && charCode <= 40) // 화살표 키
         ) {
-            return true;
+            return true; // 입력 허용
         }
-        event.preventDefault(); // 숫자가 아닌 경우 입력 차단
+        event.preventDefault(); // 입력 차단
         return false;
+    }
+
+    // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
+    isNumberKeyInput(event) {
+        const sanitizedValue = event.target.value.replace(/[^0-9]/g, '');
+        event.target.value = sanitizedValue;
+
     }
 
     formatNumber(value,comma = false) {

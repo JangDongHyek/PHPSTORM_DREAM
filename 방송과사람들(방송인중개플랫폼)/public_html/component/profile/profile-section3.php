@@ -2,15 +2,15 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <section id="profile03">
         <div>
-            <h4>보유기술을 선택해 주세요</h4>
+            <h4>전문기술을 선택해 주세요</h4>
             <dl>
                 <dd>
-                    <button class="select openModalBtn" data-modal="modal3" @click="data.job_skills = jl.copyObject(user.job_skills); modal = true">보유기술</button>
+                    <button class="select openModalBtn" data-modal="modal3" @click="data.job_skills = jl.copyObject(user.job_skills); modal = true">전문기술</button>
 
                     <div id="modal3" class="modal" :style="{display : modal ? 'block' : 'none'}">
                         <div class="modal-content">
                             <div class="modal-title">
-                                <h5>보유기술을 선택해 주세요</h5>
+                                <h5>전문기술을 선택해 주세요</h5>
                                 <span class="close" @click="data.job_skills = jl.copyObject(user.job_skills); modal = false;"><i class="fa-light fa-xmark"></i></span>
                             </div>
                             <div class="modal-search">
@@ -44,7 +44,7 @@
                 <dd>(*최대 20개를 선택해 주세요)</dd>
             </dl>
             <dl>
-                <dt class="flex"><strong>보유기술</strong><a class="del" href="" @click="event.preventDefault(); user.job_skills=[]">전체삭제</a></dt>
+                <dt class="flex"><strong>전문기술</strong><a class="del" href="" @click="event.preventDefault(); user.job_skills=[]">전체삭제</a></dt>
                 <dd class="tag">
                     <template v-for="item,index in user.job_skills">
                         <span>
@@ -56,7 +56,7 @@
             </dl>
 
             <div class="warning-message1AA2" v-if="user.job_skills.length > 20">
-                보유기술은 최대 20개까지입니다.
+                전문기술은 최대 20개까지입니다.
             </div>
         </div>
     </section>

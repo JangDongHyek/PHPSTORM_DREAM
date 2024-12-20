@@ -118,7 +118,10 @@
                 <dd>(*최대 20개를 선택해 주세요)</dd>
             </dl>
             <dl>
-                <dt class="flex"><strong>보유기술</strong><a class="del" href="" @click="event.preventDefault(); user.job_skills=[]">전체삭제</a></dt>
+                <dt class="flex"><strong>보유기술</strong>
+                    <i class="point" name="point">{{ user.job_skills.length }}</i>/20
+                    <a class="del" href="" @click="event.preventDefault(); user.job_skills=[]">전체삭제</a>
+                </dt>
                 <dd class="tag">
                     <template v-for="item,index in user.job_skills">
                         <span>

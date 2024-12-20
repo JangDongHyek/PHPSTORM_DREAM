@@ -340,7 +340,7 @@ if ($w == '' || $w == 'r') {
 		$wr_1=str_replace("-","/",substr($wr_1,5,strlen($wr_1)));
 		$wr_2=str_replace("-","/",substr($wr_2,5,strlen($wr_2)));
 		$msg=$wr_subject."\n".$wr_name."\n".$wr_1."\n".$wr_2;
-		goSms($wr_3,"010-6604-5191",$msg);
+		goSms($wr_3,"0519733888",$msg);
 		if($wr_subject=="경남주차장"){
 			$msg=$wr_subject."- 부산광역시 강서구 공항앞길 221번길 45 유니티주차장입니다.";
 		}else if($wr_subject=="유카주차장"){

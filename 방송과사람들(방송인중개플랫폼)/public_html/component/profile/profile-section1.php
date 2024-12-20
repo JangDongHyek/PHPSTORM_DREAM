@@ -4,16 +4,12 @@
         <div>
             <h4>기본정보</h4>
             <dl>
-                <dt>닉네임</dt>
-                <dd><input type="text" id="mb_nick" placeholder="활동명 or 회사명" v-model="user.mb_nick"></dd>
-            </dl>
-            <dl>
-                <dt>연락 가능한 번호</dt>
-                <dd><input type="text" id="" placeholder="000-0000-0000" v-model="user.job_phone" @input="user.job_phone = jl.formatPhone(user.job_phone)"></dd>
+                <dt>자기 소개 문구</dt>
+                <dd><textarea placeholder="자기소개문구를 입력해주세요" v-model="user.self_content"></textarea></dd>
             </dl>
 
             <dl>
-                <dt>연락 가능 시간 설정</dt>
+                <dt>채팅 가능 시간 설정</dt>
                 <dd>
                     <div class="flex">
                         <select name="call_hour_1" class="select text-center" v-model="user.job_sdate" title="시간">
@@ -23,45 +19,25 @@
                         <select name="call_hour_2" class="select text-center" v-model="user.job_edate" title="시간">
                             <option :value="item.toString().padStart(2,'0')" v-for="item in 24">{{item.toString().padStart(2,'0')}}시</option>
                         </select>
-
+                </dd>
+            </dl>
+            <dl><dt class="flex"><strong>근무지역 (*최대 3개까지 선택가능)</strong> <a href="" class="del">전체삭제</a></dt>
+                <dd class="flex">
+                    <input type="text" v-model="temp" placeholder="지역입력후 추가 버튼을 눌러주세요">
+                    <button class="btn btn_blue2" @click="addArea()">추가</button>
+                </dd>
+                <dd class="tag">
+                    <span v-for="item,index in user.work_area">{{item}}<a class="del" @click="user.work_area.splice(index,1)"><i class="fa-light fa-xmark"></i></a></span>
                 </dd>
             </dl>
             <dl>
-                <dt>안심번호</dt>
-                <dd><input type="text" placeholder="서비스를 등록하시면 자동으로 부여됩니다." disabled></dd>
-            </dl>
-            <dl>
-                <dt>안심번호 공개여부</dt>
-                <dd class="select">
-                    <input type="radio" id="only_clients" name="security_number" disabled>
-                    <label for="only_clients">내 서비스를 결제한 의뢰인에게만 공개</label>
-                    <input type="radio" id="all_members" name="security_number" disabled>
-                    <label for="all_members">미결제 회원에게도 공개</label>
-                </dd>
-            </dl>
-        </div>
-        <div>
-            <h4>인증정보</h4>
-            <dl>
-                <dt>실명</dt>
-                <dd><input type="text" id="" placeholder="실명 입력" v-model="user.mb_name"></dd>
-            </dl>
-            <dl>
-                <dt>주민등록번호</dt>
-                <dd><input type="text" id="" maxlength="13" v-model="user.regi_number" placeholder="주민등록번호 입력"></dd>
-            </dl>
-            <dl>
-                <dt>은행</dt>
+                <dt>상주 여부</dt>
                 <dd>
-                    <select v-model="user.bank_name">
-                        <option>토스뱅크</option>
-                    </select>
+                    <input type="radio" id="available" name="residence" v-model="user.work_stay" value="true"><label for="available">가능</label>
+                    <input type="radio" id="not-available" name="residence" v-model="user.work_stay" value="false"><label for="not-available">불가능</label>
                 </dd>
             </dl>
-            <dl>
-                <dt>수입금 출금 계좌</dt>
-                <dd><input type="text" id="" v-model="user.bank_number" maxlength="13" placeholder="수입금 출금 계좌 입력"></dd>
-            </dl>
+
         </div>
     </section>
 </script>
@@ -78,16 +54,9 @@
                 filter : {
 
                 },
-                data : {
-                    mb_nick : "",
-                    job_phone : "",     //new
-                    job_sdate : "",     //new
-                    job_edate : "",     //new
-                    mb_name : "",
-                    regi_number : "",   //new
-                    bank_name : "",     //new
-                    bank_number : "",   //new
-                },
+                data : {},
+
+                temp : "",
             };
         },
         created: function(){
@@ -99,7 +68,20 @@
             });
         },
         methods: {
+            addArea() {
+                if(this.temp.trim() == "") {
+                    alert("근무 지역을 입력해주세요.");
+                    return false;
+                }
 
+                if(this.user.work_area.length >= 3) {
+                    alert("근무지역은 최대 3개까지입니다.");
+                    return false;
+                }
+
+                this.user.work_area.push(this.temp);
+                this.temp = "";
+            }
         },
         computed: {
 

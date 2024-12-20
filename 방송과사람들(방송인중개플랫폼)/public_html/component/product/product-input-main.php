@@ -99,8 +99,8 @@
                     return false;
                 }
 
-                if(!(this.data.name.length >= 10 && this.data.name.length <= 35)) {
-                    alert("제목은 10자이상 35자 이하입니다.");
+                if(this.data.name.length < 7) {
+                    alert("제목은 7자이상이여야 합니다.");
                     return false;
                 }
 

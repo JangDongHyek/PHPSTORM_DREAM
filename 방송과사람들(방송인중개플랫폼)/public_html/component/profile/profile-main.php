@@ -9,23 +9,24 @@
 
                 <ul class="nav">
                     <li class="nav-item"><a class="nav-link" href="#step-1" @click="navEvent('step-1',$event)"><div class="num">1</div> <span>기본정보</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-2" @click="navEvent('step-2',$event)"><div class="num">2</div> <span>전문/상세분야</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">3</div> <span>학력 전공/자격증</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-4" @click="navEvent('step-4',$event)"><div class="num">4</div> <span>경력기간/사항</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-5" @click="navEvent('step-5',$event)"><div class="num">5</div> <span>희망 시급</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-6" @click="navEvent('step-6',$event)"><div class="num">6</div> <span>상주 여부</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-7" @click="navEvent('step-7',$event)"><div class="num">7</div> <span>프로젝트 이력</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-2" @click="navEvent('step-2',$event)"><div class="num">2</div> <span>전문 분야/기술</span></a></li>
+<!--                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">3</div> <span>전문기술</span></a></li>-->
+                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">4</div> <span>학력 및 자격증</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-4" @click="navEvent('step-4',$event)"><div class="num">5</div> <span>경력사항</span></a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" href="#step-6" @click="navEvent('step-5',$event)"><div class="num">6</div> <span>희망 시급</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-7" @click="navEvent('step-6',$event)"><div class="num">7</div> <span>상주 여부</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-8" @click="navEvent('step-7',$event)"><div class="num">8</div> <span>프로젝트 이력</span></a></li>-->
                 </ul>
 
                 <div id="profile_form" class="tab-content">
                     <profile-section1 v-if="section == 'step-1'" :user="data"></profile-section1>
                     <profile-section2 v-if="section == 'step-2'" :user="data"></profile-section2>
-                    <!--                    <profile-section3 v-if="section == 3" :user="data"></profile-section3>-->
+<!--                    <profile-section3 v-if="section == 'step-3'" :user="data"></profile-section3>-->
                     <profile-section4 v-if="section == 'step-3'" :user="data"></profile-section4>
                     <profile-section5 v-if="section == 'step-4'" :user="data"></profile-section5>
-                    <profile-section6 v-if="section == 'step-5'" :user="data"></profile-section6>
-                    <profile-section7 v-show="section == 'step-6'" :user="data" ref="section6"></profile-section7>
-                    <profile-section8 v-if="section == 'step-7'" :user="data"></profile-section8>
+                    <!--<profile-section6 v-if="section == 'step-6'" :user="data"></profile-section6>
+                    <profile-section7 v-show="section == 'step-7'" :user="data" ref="section6"></profile-section7>
+                    <profile-section8 v-if="section == 'step-8'" :user="data"></profile-section8>-->
                 </div>
 
                 <div class="btn_confirm">
@@ -223,6 +224,12 @@
                     this.jl.log(res)
                     this.data = res.response.data[0]
                     this.origin_nick = res.response.data[0].mb_nick;
+
+                    if(!this.data.work_area) this.data.work_area = [];
+                    if(!this.data.job_categories) this.data.job_categories = [];
+                    if(!this.data.job_skills) this.data.job_skills = [];
+                    if(!this.data.job_work_form) this.data.job_work_form = [];
+                    if(!this.data.job_project) this.data.job_project = [];
                 }
             }
         },

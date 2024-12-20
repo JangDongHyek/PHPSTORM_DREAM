@@ -11,19 +11,19 @@
                 <div class="snb">
                     <ul class="list_step">
                     <li id="" class="active">
-                        <a href="" @click="event.preventDefault(); $emit('changeTab',1);">
+                        <a href="" @click="event.preventDefault();">
                             <em>1</em>
                             <span>기본정보</span>
                         </a>
                     </li>
                     <li id="">
-                        <a href="" @click="event.preventDefault(); $emit('changeTab',2);">
+                        <a href="" @click="event.preventDefault();">
                             <em>2</em>
                             <span>서비스 설명</span>
                         </a>
                     </li>
                     <li id="">
-                        <a href="" @click="event.preventDefault(); $emit('changeTab',3);">
+                        <a href="" @click="event.preventDefault();">
                             <em>3</em>
                             <span>이미지 등록</span>
                         </a>
@@ -84,7 +84,7 @@
                     <div class="box_write">
                         <h4>제목</h4>
                         <div class="cont">
-                            <input name="i_title" id="i_title" type="text" placeholder="제목을 입력해 주세요." v-model="product.name">
+                            <input name="i_title" id="i_title" type="text" maxlength="30" placeholder="7자이상 30자 이하." v-model="product.name">
                         </div>
                     </div>
                     <div class="box_write">
@@ -221,7 +221,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" placeholder="0" required v-model="product.basic.price"><label>원</label>
+                                                            <input type="text" class="text-right" placeholder="0" @keydown="jl.isNumberKey" @input="jl.isNumberKeyInput" required v-model="product.basic.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -266,7 +266,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" placeholder="0" required v-model="product.standard.price"><label>원</label>
+                                                            <input type="text" class="text-right" @keydown="jl.isNumberKey" @input="jl.isNumberKeyInput" placeholder="0" required v-model="product.standard.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -311,7 +311,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" placeholder="0" required v-model="product.premium.price"><label>원</label>
+                                                            <input type="text" class="text-right" placeholder="0" @keydown="jl.isNumberKey" @input="jl.isNumberKeyInput" required v-model="product.premium.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -379,7 +379,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="area_btn"><a class="btn_next" href="" @click="event.preventDefault(); $emit('changeTab',2)">다음</a></div>
+                <div id="area_btn"><a class="btn_next" href="" @click="event.preventDefault(); changeTap()">다음</a></div>
             </div>
         </div>
     </span>
@@ -425,6 +425,13 @@
             });
         },
         methods: {
+            changeTap() {
+                if(this.product.name.length < 7) {
+                    alert("제목은 7자이상이여야 합니다.");
+                    return false;
+                }
+                this.$emit('changeTab',2)
+            },
             addKeyword() {
                 if(this.temp.trim() == "") {
                     alert("키워드를 입력해주세요.");

@@ -10,7 +10,7 @@
                     <div class="box_write">
                         <h4>제목</h4>
                         <div class="cont">
-                            <input name="i_title" id="i_title" type="text" placeholder="제목을 입력해 주세요." v-model="data.name">
+                            <input name="i_title" id="i_title" type="text" maxlength="30" placeholder="7자이상 30자 이하" v-model="data.name">
                         </div>
                     </div>
                     <div class="box_write">
@@ -218,8 +218,8 @@
                     return false;
                 }
 
-                if(!(this.data.name.length >= 5 && this.data.name.length <= 35)) {
-                    alert("제목은 5자이상 35자 이하입니다.");
+                if(this.data.name.length < 7 ) {
+                    alert("제목은 7자이상이여야 합니다.");
                     return false;
                 }
 

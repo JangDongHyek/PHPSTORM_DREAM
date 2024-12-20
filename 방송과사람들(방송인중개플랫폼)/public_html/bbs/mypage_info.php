@@ -23,6 +23,7 @@ $order_count = $member_order->count();
                 <input type="file" name="mb_icon" id="mb_icon" onchange="getImgPrev(this);" accept="image/*" style="display: none">
 
                 <div class="area_photo basic">
+                    <a href="<?php echo G5_BBS_URL ?>/profile.php?mb_no=<?=$member['mb_no']?>">
                     <?php
                     $icon_file = G5_DATA_PATH.'/file/member/'.$member['mb_no'].'.jpg';
                     if (file_exists($icon_file)) {
@@ -32,6 +33,7 @@ $order_count = $member_order->count();
                         echo '<img src="'.G5_IMG_URL .'/img_smile.jpg">';
                     }
                     ?>
+                    </a>
                 </div>
             </form>
 		</div>

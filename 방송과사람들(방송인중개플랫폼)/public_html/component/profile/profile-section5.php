@@ -36,16 +36,36 @@
                     </ul>
                 </div>
             </div>
-
             <br><br>
-
-
-            <label for="">경력사항을 작성해주세요</label>
-            <input type="text" name="" id="" placeholder="추가해주세요" @click="modal = true;"/>
-
+            <!--<label for="">경력사항을 작성해주세요</label>
+            <input type="text" name="" id="" placeholder="추가해주세요" @click="modal = true;"/>-->
+            <dl>
+                <dt>경력사항</dt>
+                <dd><input type="text" id="" v-model="career.content" placeholder="회사명 및 이력 입력"></dd>
+            </dl>
+            <dl>
+                <dt>경력기간</dt>
+                <dd class="flex"><input type="date" v-model="career.start_date"> ~ <input type="date" v-model="career.end_date"></dd>
+            </dl>
+            <dl>
+                <dt>근무지역</dt>
+                <dd><input type="text" id="" placeholder="근무지역" v-model="career.address"></dd>
+            </dl>
+            <dl>
+                <dt>증빙자료 첨부(선택)</dt>
+                <dd>
+                    <div id="addFile" class="addFile">
+                        <label class="btn" for="school_file">파일 첨부</label>
+                        <span>{{career.upfile ? career.upfile.name : '증빙자료 파일 첨부'}}</span>
+                        <input type="file" id="school_file" style="display: none;" @change="jl.changeFile($event,career,'upfile')">
+                    </div>
+                </dd>
+            </dl>
+            <br>
+            <!--
             <div class="modal fade" :class="{'in' : modal}" id="educationModal" tabindex="-1"
                  :style="{display : modal ? 'block' : 'none'}" @click.self="modal = false;">
-                <div class="modal-dialog" role="document" style="width: 1000px">
+                <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"
@@ -115,16 +135,18 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
                             <button type="button" class="btn btn-primary" @click="postCareer()">적용</button>
                         </div>
                     </div>
                 </div>
             </div>
+            -->
+            <button class="btn btn_middle btn_blue2" @click="postCareer()">등록 및 추가</button>
 
+            <br>
             <div class="tag">
                 <template v-for="item in careers">
-                    <span>{{item.name}}·{{item.dept}}·{{item.position}}·{{item.address}}·{{item.year}} {{item.month}}
+                    <span>{{item.content}}·{{item.start_date}}·{{item.end_date}}·{{item.address}}
                         <i class="fa-light fa-paperclip" v-if="item.upfile"></i>
                         <a class="del" href="" @click="event.preventDefault(); deleteCareer(item);"><i class="fa-light fa-xmark"></i></a>
                     </span>
