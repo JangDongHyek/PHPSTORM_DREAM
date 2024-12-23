@@ -128,7 +128,6 @@ if ($req_tx == "pay")													// 거래 구분 : 승인
 }else if ($req_tx == "mod")											// 거래 구분 : 취소/매입
 {
 }
-
 if( $paymethod == 'byaccount'){
 	$all_sql = "update $Order_BuyTable set status='$status', field3 = '$bank_name', field5='$res_msg', payment_date='$app_time', field1 ='$tno', card_paid='$card_paid' where order_num='$order_num' and mart_id='$mart_id'";
 		//echo $all_sql."<br>";
@@ -301,7 +300,13 @@ if($order_tot > 0){
 	$field3 = $order_row[field3];
 	$field4 = $order_row[field4];
 	$field5 = $order_row[field5];
-	
+
+	$order_card_paid = $order_row['card_paid'];
+
+	if($order_card_paid == 'f') {
+		$order_str = "결제가 실패되었습니다.";
+	}
+
 	if( !$message ){
 		$message = "요청사항 없음";
 	}
