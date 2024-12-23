@@ -191,9 +191,9 @@
                                     <TD>
                                         <TABLE cellSpacing=1 cellPadding=1 width="100%" border=0>
                                             <TR>
-                                                <TD width=131 align=right bgColor=#F6F7E3 class="bbs">积斥岿老<B> &nbsp; </B></TD>
+                                                <TD width=131 align=right bgColor=#F6F7E3 class="bbs">免积斥档<B> &nbsp; </B></TD>
                                                 <TD bgcolor="#FFFFFF">
-                                                    <input type="date" name="birth">
+                                                    <input type="text" name="birth">
                                             </TR>
                                         </TABLE>
                                     </TD>
@@ -206,11 +206,12 @@
                                                 <TD width=131 align=right bgColor=#F6F7E3 class="bbs">* 林家<B>
                                                         &nbsp; </B></TD>
                                                 <TD align=left class="bbs" bgcolor="#FFFFFF">
-                                                    <input id="address1" name='address1' type="text" style=width:90%;height:22; class="b_input" readonly onclick="openPostCode()" placeholder="林家"/>
-                                                    <input name='address2' type="text" style=width:90%;height:22; class="b_input" placeholder="惑技林家"/>
-                                                    <br>
-                                                    <button onclick="openPostCode()">林家茫扁</button>
-                                                    &nbsp;</TD>
+                                                    <!--<input id="address1" name='address1' type="text" style=width:90%;height:22; class="b_input" readonly onclick="openPostCode()" placeholder="林家"/>-->
+                                                    <!--<input name='address2' type="text" style=width:90%;height:22; class="b_input" placeholder="惑技林家"/>-->
+                                                    <!--<br>-->
+                                                    <!--<button onclick="openPostCode()">林家茫扁</button>-->
+                                                    <input id="address1" name='address1' type="text" style=width:90%;height:22; class="b_input"/>
+                                                &nbsp;</TD>
                                             </TR>
                                         </TABLE>
                                     </TD>

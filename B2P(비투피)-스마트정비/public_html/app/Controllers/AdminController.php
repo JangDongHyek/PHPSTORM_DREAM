@@ -227,7 +227,7 @@ class AdminController extends BaseController {
                 "select" => array(
                     "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission","ContrNo",
                     "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate",
-                    "OrderUnitPrice","OrderQty"
+                    "OrderUnitPrice","OrderQty","OptionCost","category_fee"
                 )
             )
         );
@@ -279,7 +279,7 @@ class AdminController extends BaseController {
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission","ContrNo",
                 "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate",
-                "OrderUnitPrice","OrderQty"
+                "OrderUnitPrice","OrderQty","OptionCost","category_fee"
             )
         ));
         $this->data['search_all_orders'] = $model->get(array(
@@ -287,7 +287,7 @@ class AdminController extends BaseController {
             "select" => array(
                 "SellOrderPrice","OptionPrice","SellerDiscountTotalPrice","TotCommission","ContrNo",
                 "dl_DelFeeAmt","dl_DelFeeCommission","DeductTaxPrice","BuyerPayAmt","category_fee_cost","GoodsCost","RemitDate",
-                "OrderUnitPrice","OrderQty"
+                "OrderUnitPrice","OrderQty","OptionCost","category_fee"
             )
         ));
 
@@ -389,5 +389,11 @@ class AdminController extends BaseController {
     {
         $this->data['pid'] = 'delivery_info_write';
         return view('admin/delivery_info_write',$this->data);
+    }
+
+    public function b2p_cs()
+    {
+        $this->data['pid'] = 'b2p_cs';
+        return view('admin/b2p_cs',$this->data);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 // Define 파일이 제대로 Load 됐는지 확인용
 define("JL_CHECK",true);
-define("JL_Version",1.1);
+define("JL_Version",1.2);
 
 // 최상단 폴더의 이름
 define("JL_ROOT_DIR","public_html");
@@ -30,6 +30,7 @@ define("JL_DATABASE","exam");
 /*
 업데이트 노트
 1. 5.2에서도 사용가능하게 업데이트
+1.2 JlApi 추가
 */
 
 ?>

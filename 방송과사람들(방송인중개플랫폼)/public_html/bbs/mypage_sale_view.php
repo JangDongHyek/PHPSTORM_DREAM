@@ -1,10 +1,9 @@
 <?
 include_once('./_common.php');
-include_once('../class/Lib.php');
 $name = "cmypage";
 $g5['title'] = '상세내역';
 include_once('./_head.php');
-$jl = new JL();
+include_once(G5_PATH."/jl/JlConfig.php");
 ?>
 
 <? if($name=="cmypage") { ?>

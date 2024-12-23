@@ -140,10 +140,11 @@ if ($w == '' || $w == 'u') {
         if ($msg = valid_mb_hp($mb_hp))     alert($msg, "", true, true);
     }
     // 휴대폰 번호 체크 추가 23-12-28
-    if ($msg = exist_hp($mb_hp))     alert($msg);
 
     if ($w=='') {
         if ($msg = exist_mb_id($mb_id))     alert($msg);
+        if ($msg = exist_hp($mb_hp))     alert($msg);
+
 
         if (get_session('ss_check_mb_id') != $mb_id  ) {
             set_session('ss_check_mb_id', '');

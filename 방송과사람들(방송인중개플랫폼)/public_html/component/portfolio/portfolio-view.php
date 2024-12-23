@@ -53,6 +53,23 @@
                                 <h3>포트폴리오 설명</h3>
                                 <div class="conts">{{ data.description }}</div>
                             </section>
+
+                            <section>
+                                <template v-for="link in data.movie_link" v-if="jl.extractYoutube(link)">
+                                    <div>
+                                        <iframe
+                                                width="560"
+                                                height="315"
+                                                :src="'https://www.youtube.com/embed/' + jl.extractYoutube(link)"
+                                                title="YouTube video player"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                </template>
+                            </section>
+
                         </div>
                         <div class="area_ft_list">
                             <div>

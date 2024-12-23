@@ -51,6 +51,21 @@
                             </div>
                         </nav>
                         <div class="tab_cont">
+                            <section>
+                                <template v-for="link in data.movie_link" v-if="jl.extractYoutube(link)">
+                                    <div>
+                                        <iframe
+                                                width="560"
+                                                height="315"
+                                                :src="'https://www.youtube.com/embed/' + jl.extractYoutube(link)"
+                                                title="YouTube video player"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                </template>
+                            </section>
                             <section id="area_service">
                                 <h3>서비스설명</h3>
                                 <div class="embed-container" v-html="data.service"></div>
@@ -156,6 +171,10 @@
                                 </dl>
 
                             </section>
+
+
+
+
                             <section id="area_review">
                                 <h3>서비스 평가</h3>
                                 <div class="box">
@@ -227,12 +246,19 @@
                                         <li class="swiper-slide" v-for="item in portfolios">
                                             <i class="heart " onclick="heart_click(15,this)"></i>
                                             <a :href="jl.root + '/bbs/portfolio_view.php?idx=' + item.idx">
-                                                <h3>{{ item.name }}</h3> <!-- 제목 -->
+                                                <!--<span class="icon">카테고리</span>-->
                                                 <div class="area_img">
                                                     <img :src="`${jl.root}${item.main_image_array[0].src}`" title="">
                                                 </div>
                                                 <div class="area_txt">
                                                     <span></span><!-- 업체명 -->
+                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
+                                                    <div class="profile_box">
+                                                        <div class="profile">
+                                                            <img src="https://itforone.com/~broadcast/data/file/member/36.jpg">
+                                                        </div>
+                                                        <div class="profile_info">czczscs</div>
+                                                    </div>
                                                     <div class="price">50,000원</div> <!-- 가격 -->
                                                     <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
                                                 </div>
@@ -254,7 +280,7 @@
                                                     <img :src="jl.root+item.main_image_array[0].src">
                                                 </div>
                                                 <div class="area_txt">
-                                                    <span class="icon">카테고리</span><!--카테고리-->
+                                                    <!--<span class="icon">카테고리</span>-->
                                                     <span></span><!-- 업체명 -->
                                                     <h3>{{ item.name }}</h3> <!-- 제목 -->
                                                     <div class="price">

@@ -508,6 +508,13 @@ class Jl {
         return false;
     }
 
+    extractYoutube(url) {
+        const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
+        const match = url.match(regex);
+        return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
+    }
+
+
     // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
     isNumberKeyInput(event) {
         const sanitizedValue = event.target.value.replace(/[^0-9]/g, '');

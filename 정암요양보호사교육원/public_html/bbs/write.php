@@ -107,7 +107,7 @@
 				require_once("_footer.php");
 				exit;
 			}
-			if($bbs_id != "gujik"){
+			if($bbs_id != "gujik" && $bbs_id != "boedu_board"){
 			if(($rg_password=='') && !$mb) {  // 로그인되어 있지 않고 암호도 없다면
 				$error_msg = '암호을 입력해주세요.';
 				require_once("_header.php");
@@ -357,6 +357,7 @@
 		}
 
 		if($bbs_id == "boedu_board") {
+
 			$dbqry="
 				INSERT INTO `$bbs_table`
 				( `rg_doc_num` , `rg_top_num` , `rg_parent_num` ,
