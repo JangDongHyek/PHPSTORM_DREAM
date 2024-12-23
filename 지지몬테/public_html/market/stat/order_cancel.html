@@ -1,0 +1,99 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+if($flag == "cancel"){
+	// SMS 발송
+	/**include "../../admin/sms/class.sms.php";
+	$SMS = new SMS;
+	$SMS->SMS_Login($sms_user,$sms_passwd);
+	
+	if($if_order_cancel_msg == '1'){	
+		$SQL = "select tel2,name from $Order_BuyTable where order_num = '$order_num_query'";
+		$dbresult = mysql_query($SQL, $dbconn);
+		$numRows = mysql_num_rows($dbresult);
+		if($numRows > 0){
+			$tel2_tmp = mysql_result($dbresult,0,0);
+			$name_tmp = mysql_result($dbresult,0,1);
+		}
+
+		$callback = "$callback_num1$callback_num2$callback_num3";		
+		$order_cancel_msg_tmp = str_replace('[SHOP_NAME]',$mart_name,$order_cancel_msg); 
+		$order_cancel_msg_tmp = str_replace('[MEM_NAME]',$name_tmp,$order_cancel_msg_tmp); 
+		$sms_client_num = str_replace('-','',$tel2_tmp); 
+		
+		$SMS->Add($sms_client_num,"$callback","$mart_name","$order_cancel_msg_tmp","");
+	}
+	if($if_order_cancel_msg_admin == '1'){
+		$SQL = "select name from $Order_BuyTable where order_num = '$order_num_query'";
+		$dbresult = mysql_query($SQL, $dbconn);
+		$numRows = mysql_num_rows($dbresult);
+		if($numRows > 0){
+			$name_tmp = mysql_result($dbresult,0,0);
+		}
+		$callback = "$callback_num1$callback_num2$callback_num3";		
+		$admin_num = "$admin_num1$admin_num2$admin_num3";
+		$order_cancel_msg_admin_tmp = str_replace('[SHOP_NAME]',$mart_name,$order_cancel_msg_admin); 
+		$order_cancel_msg_admin_tmp = str_replace('[MEM_NAME]',$name_tmp,$order_cancel_msg_admin_tmp); 
+		
+		$SMS->Add($admin_num,"$callback","$mart_name","$order_cancel_msg_admin_tmp","");
+	}		
+	
+	if($if_order_cancel_msg == '1' || $if_order_cancel_msg_admin == '1'){
+		$result = $SMS->Send();
+		if ($result) {
+			$success = $fail = 0;
+			foreach($SMS->Result as $result) {
+				list($phone,$code)=explode(":",$result);
+				if ($code=="Error") {
+					//echo $phone.'로 발송하는데 에러가 발생했습니다.<br>';
+					$fail++;
+				} else {
+					//echo $phone."로 전송했습니다. (메시지번호:".$code.")<br>";
+					$success++;
+				}
+			}
+			//echo $success.'건을 전송했으며'.$fail.'건을 보내지 못했습니다.';
+			$SMS->Init(); // 보관하고 있던 결과값을 지웁니다.
+		}
+		else echo "에러: SMS 서버와 통신이 불안정합니다.<br>";
+	}**/
+			
+	//사용한 보너스 복구
+	$SQL = "select id, use_bonus_tot from $Order_BuyTable where order_num = '$order_num_query' and mart_id='$mart_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+	$numRows = mysql_num_rows($dbresult);
+	
+	$SQL1 = "select * from $BonusTable where order_num='$order_num_query' and bonus<0 and mart_id='$mart_id'";
+	$dbresult1 = mysql_query($SQL1, $dbconn);
+	$numRows1 = mysql_num_rows($dbresult1);
+	
+	if($numRows > 0 &&$numRows1>0){
+		$id = mysql_result($dbresult,0,0);
+		$use_bonus_tot = mysql_result($dbresult,0,1);
+		
+		if(!empty($id)&&!empty($use_bonus_tot)){
+			//회원테이블에서 보너스 총액 복구
+			$SQL = "update $Mart_Member_NewTable set bonus_total=bonus_total+$use_bonus_tot where username='$id' and mart_id='$mart_id'";
+			//echo "sql=$SQL";
+			$dbresult = mysql_query($SQL, $dbconn);
+			
+			//보너스 테이블에 취소된 주문의 사용포인트 다시입력
+			//$SQL = "delete from $BonusTable where order_num='$order_num_query' and bonus<0 and mart_id='$mart_id'";
+			$write_date = date("Ymd H:i:s");
+			$SQL = "insert into $BonusTable (mart_id, id, write_date, bonus, content, order_num, mode) values ('$mart_id', '$UnameSess', '$write_date', $use_bonus_tot, '주문번호 : $order_num_query 주문취소', '$order_num_query', 'c')";
+
+			$dbresult = mysql_query($SQL, $dbconn);
+		}	
+	}
+	
+	$SQL = "update $Order_BuyTable set status='8', field5='결제가 취소되었습니다.' where order_num = '$order_num_query' and mart_id = '$mart_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+	if ($dbresult == false) echo "쿼리 실행 실패!";
+	$SQL = "update $Order_ProTable set status='5' where order_num = '$order_num_query' and mart_id = '$mart_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+	if ($dbresult == false) echo "쿼리 실행 실패!";
+	echo "<meta http-equiv='refresh' content='0; URL=$target?mart_id=$mart_id&order_num=$order_num'>";
+}
+
+mysql_close($dbconn);
+?>

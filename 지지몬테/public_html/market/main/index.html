@@ -1,0 +1,397 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+
+
+<style type="text/css">
+<!--
+#divpop {
+	position:absolute;
+	left:0px;
+	top:150px;
+	width:auto;
+	height:auto;
+	height:auto;
+	z-index:2000;
+	border:1px solid #000000;
+	visibility: visible;
+}
+#divpop2 {
+	position:absolute;
+	left:400px;
+	top:150px;
+	width:auto;
+	height:auto;
+	z-index:2000;
+	border:1px solid #000000;
+	visibility: visible;
+}
+
+#divpop3 {
+	position:absolute;
+	left:400px;
+	top:590px;
+	width:460px;
+	height:572px;
+	z-index:2000;
+	visibility: visible;
+}
+
+.product2 a{color: #fff;}
+
+
+-->
+
+</style>
+
+
+
+
+
+<SCRIPT language=JavaScript>
+<!--
+
+<!--
+
+//시간설정
+function startTime(){
+var time= new Date();
+hours= time.getHours();
+mins= time.getMinutes();
+secs= time.getSeconds();
+closeTime=hours*3600+mins*60+secs;
+closeTime+=10; //시간설정 (초)
+Timer();
+}
+
+//타이머
+function Timer(){
+var time= new Date();
+hours= time.getHours();
+mins= time.getMinutes();
+secs= time.getSeconds();
+curTime=hours*3600+mins*60+secs
+if (curTime>=closeTime){
+document.all['divpop'].style.visibility = "hidden";
+}
+else{
+window.setTimeout("Timer()",7200)}
+}
+
+//쿠키설정
+function setCookie( name, value, expiredays ) { 
+var todayDate = new Date(); 
+todayDate.setDate( todayDate.getDate() + expiredays ); 
+document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+} 
+
+//창닫기(레이어)
+function closeWin() { 
+if ( document.notice_form.chkbox.checked ){ 
+setCookie( "maindiv", "done" , 2 ); 
+} 
+document.all['divpop'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+
+//창닫기(레이어)
+function closeWin2() { 
+if ( document.notice_form2.chkbox2.checked ){ 
+setCookie( "maindiv2", "done" , 2 ); 
+} 
+document.all['divpop2'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+
+//창닫기(레이어)
+function closeWin3() { 
+if ( document.notice_form3.chkbox3.checked ){ 
+setCookie( "maindiv3", "done" , 2 ); 
+} 
+document.all['divpop3'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+//--> 
+
+
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+-->
+//-->
+</SCRIPT>
+
+
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function showLayer() {
+document.all.divpopS.style.visibility = "visible";
+}
+
+function hideLayer() {
+document.all.divpop.style.visibility = "hidden";
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+</head>
+
+
+<!--레이어팝업-->
+<div id="divpop"  class="layer_popup1" style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../pop/pop_event.jpg" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="30" bgcolor="#3F3F3F"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form" id="notice_form">
+                        <tr>
+                          <td height="30"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox" />
+                              <span class="product2">오늘 하루 열지 않습니다.&nbsp;&nbsp;<a href="javascript:closeWin();">[ X CLOSE ]</span></a></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+			
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+<div id="divpop2"  class="layer_popup2" style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../pop/chrome_session.gif" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="30" bgcolor="#3F3F3F"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form2" id="notice_form2">
+                        <tr>
+                          <td height="30"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox2" />
+                             <span class="product2">오늘 하루 열지 않습니다.&nbsp;&nbsp;<a href="javascript:closeWin2();">[ X CLOSE ]</span></a></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv2=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop2'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+<div id="divpop3"  class="layer_popup3" style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../pop/pop_event_2.gif" width="500" height="476" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="30" bgcolor="#3F3F3F"><table width="300" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form3" id="notice_form3">
+                        <tr>
+                          <td height="30"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox3" />
+                                <span class="product2">오늘 하루 열지 않습니다.&nbsp;&nbsp;<a href="javascript:closeWin3();">[ X CLOSE ]</span></a></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv3=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop3'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+<script language='JavaScript' src='../printEmbed.js'></script>
+<? if($Mall_Admin_ID&&$MemberLevel==1){ ?>
+<body topmargin="0" leftmargin="0">
+<?}else{?>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false" topmargin="0" leftmargin="0"> 
+<?}?>
+
+
+
+<? include("../include/top_main.htm"); ?>
+<div id="main_slider_wrap">
+    	<div class="main_slider">
+   			<a href="../main/product_list.html?&flag=&category_num=51"><div class="simg s1">
+   				<div class="sinner1"></div><!--.sinner문구들어갈것임-->
+   			</div></a><!--.simg s1-->
+        	<a href="../main/product_list.html?&flag=&category_num=49"><div class="simg s2">
+   				<div class="sinner2"></div><!--.sinner문구들어갈것임-->
+				</div></a><!--.simg s2-->
+         
+   		</div><!--.main_slider-->
+</div><!--#main_slider_wrap-->
+<div style="height:30px;"></div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1200" valign="top"><table width="1200" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td><a href="../main/product_list.html?&flag=&category_num=50"><img src="../images2/banner_20_1.jpg" width="194" border="0"></a></td>
+          <td><a href="../main/product_list.html?&flag=&category_num=50"><img src="../images2/banner_20_2.jpg" width="194" border="0"></a><a href="../main/product_list.html?&flag=&category_num=45"></a></td>
+          <td width="18">&nbsp;</td>
+          <td><a href="../main/product_list.html?category_num=31"><img src="../images2/banner00.jpg" width="194" border="0"></a><a href="../main/product_list.html?&flag=&category_num=43"></a><a href="../main/product_list.html?&flag=&category_num=39"></a></td>
+          <td><a href="../main/product_list.html?category_num=31"><img src="../images2/banner00_2.jpg" width="194" border="0"></a><a href="../main/product_list.html?&flag=&category_num=44"></a><a href="../main/product_list.html?&flag=&category_num=42"></a></td>
+          <td width="18">&nbsp;</td>
+          <td><a href="../board/board_list.php?bbs_no=5"><img src="../images2/banner01.jpg" width="194" border="0"></a><a href="../main/product_list.html?&flag=&category_num=39"></a><a href="../main/product_list.html?&flag=&category_num=38"></a></td>
+          <td><a href="../board/board_list.php?bbs_no=5"><img src="../images2/banner02.jpg" width="194" border="0"></a><a href="../main/product_list.html?&flag=&category_num=42"></a><a href="../main/product_list.html?&flag=&category_num=41"></a></td>
+        </tr>
+      </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<div style="height:30px;"></div>
+<!--제품추출-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1200" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center"><img src="../images2/pro_title01.jpg" alt="코디네이터 bestof best" title="코디네이터 bestof best"></td>
+      </tr>
+      <tr>
+        <td align="center" valign="top" style="padding-top:45px;"><? include "../include/fav_item.htm" ?></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<div style="height:75px;"></div>
+<!--제품추출2-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1200" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center"><img src="../images2/pro_title02.jpg" alt="간호사복 bestof best" title="간호사복 bestof best"></td>
+      </tr>
+      <tr>
+        <td align="center" valign="top" style="padding-top:45px;"><?include("../include/rec_item.htm");?></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<div style="height:75px;"></div>
+<!--제품추출3-->
+<!--<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1200" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center"><img src="../images2/pro_title03.gif" alt="새로운상품" title="새로운상품"></td>
+      </tr>
+      <tr>
+        <td align="center" valign="top" style="padding-top:45px;"><? include "../include/new_item.htm" ?></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>-->
+<div style="height:20px;"></div>
+
+<? include("../include/bottom.htm"); ?>
+
+
+</body>
+</html>
+
+
+<map name="main_center_map">
+  <area shape="rect" coords="794,2,987,148" href="../main/product_list.html?&flag=&category_num=38">
+  <area shape="rect" coords="589,2,782,148" href="../main/product_list.html?&flag=&category_num=42">
+  <area shape="rect" coords="397,2,590,148" href="../main/product_list.html?&flag=&category_num=39">
+  <area shape="rect" coords="196,2,389,148" href="../main/product_list.html?&flag=&category_num=44">
+  <area shape="rect" coords="3,2,196,148" href="../main/product_list.html?&flag=&category_num=43">
+</map>

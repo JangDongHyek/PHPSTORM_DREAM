@@ -1,0 +1,134 @@
+<?
+$SQL = "select * from $Domain_forwardTable where mart_id='$mart_id' and if_confirm = '1'";
+$dbresult = mysql_query($SQL, $dbconn);
+if ($dbresult == false) echo "쿼리 실행 실패!";
+$numRows = mysql_num_rows($dbresult);
+if($numRows > 0){
+	$page_title = mysql_result($dbresult, 0, "title");
+}
+?>
+<script>
+document.title = "<?php echo $page_title ?>";
+</script>
+	<script type="text/javascript">
+	//<[CDATA[
+		var currentMenuId = '';
+		
+		function showSubMenu(menuId) {
+			
+			if(currentMenuId != "") {
+				$(".iconSet"+currentMenuId+" .subCategory").toggle();
+				if($(".iconSet"+currentMenuId+" .toggleBullet").is(".btnOn")) {
+					$(".iconSet"+currentMenuId+" .toggleBullet").removeClass("btnOn").addClass("btnOut");
+				}
+			}
+			
+			if(currentMenuId != menuId) {
+				$(".iconSet"+menuId+" .subCategory").slideDown();
+				$(".iconSet"+menuId+" .toggleBullet").removeClass("btnOut").addClass("btnOn");
+				currentMenuId = menuId;
+			} else {
+				currentMenuId = "";
+			}
+		}
+	//]]>
+
+    </script>
+<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/JavaScript" src="../js/owl.carousel.js"></script>
+<header>
+     <div id="top">
+          <h1 id="logo"><a href="../main/"><img src="../../market/images2/logo.png" / alt="패션지지몬테"></a></h1>
+          <!--<div class="home"><a href="../main/"><img src="../images/home.png"  border="0" /></a></div> -->
+          <!--<div class="phone"><a href="tel:0512663607"><img src="../images/phone.png" border="0" /></a></div> -->
+          <div class="my"><a href="../main/mypage.html"><img src="../images/my.png" border="0" /></a></div>
+          <div class="cate"><a href="javascript:menuView()" id="allmenu"><img src="../images/cate.png" border="0" /></a></div>
+     </div>
+		   <div class="topSearch">
+				<form name="searchForm" method="post" action='../main/search.html' onsubmit="check_submit(); return false;">
+				<input type='hidden' name='select_key' value='item_name'>
+				<input type='hidden' name='mode' value='search'>
+				<input type="text" name="searchTerm" /> <input type="submit" class="smit" value="검색"/></form>
+		   </div> 
+			<nav>
+            <img src="../images/more_icon.png" class="icon">
+				<div class="menu">
+		            <!--<dl>
+		              	<dd><a href="javascript:alert('준비중입니다');">회사소개</a></dd>
+			            <dd><a href="../main/category.html">제품소개</a></dd>
+						<dd><a href="../board/board.html">커뮤니티</a></dd>
+			            <dd style="border:0px;"><a href="../main/mypage.html">마이페이지</a></dd>
+                   </dl> -->
+                   <!--카테고리시작-->
+                <dl class="iconSetCategory">
+					<dd><a href="../main/greet01.htm" class="off">COMPANY</a></dd>
+                <!--<ul> -->
+                <?
+                $sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide='0' and category_num > 28 order by cat_order desc";
+                $res_cate = mysql_query($sql_cate, $dbconn);
+                $total_cate = mysql_num_rows($res_cate);
+                $i = 0;
+                while( $row_cate = mysql_fetch_array( $res_cate ) ){
+                    $i++;
+                    $category_numa = $row_cate[category_num];
+                    $category_namea = $row_cate[category_name];
+                
+                    $sql_cate3 = "select * from $ItemTable where mart_id='$mart_id' and firstno='$category_numa' and if_hide='0'";
+                    $res_cate3 = mysql_query($sql_cate3, $dbconn);
+                    $total_cate3 = mysql_num_rows($res_cate3);
+                
+                    $sql_cate4 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$category_numa' and if_hide='0' order by cat_order desc";
+                    $res_cate4 = mysql_query($sql_cate4, $dbconn);
+                    $total_cate4 = mysql_num_rows($res_cate4);
+                
+                ?>
+
+
+
+					<dd class="iconSet<?=$i?>">
+					<?if($total_cate4>0){?>
+						<a href="../main/product_list.html?category_num=<?=$category_numa?>"><?=$category_namea?></a>
+					<?}else{?>
+						<a href="../main/product_list.html?category_num=<?=$category_numa?>"><?=$category_namea?></a>
+					<?}?>
+					</dd>
+				<?}?>
+					<dd><a href="../board/board.html" class="off">COMMUNITY</a></dd>
+				</dl>
+
+                   <!--카테고리끝-->
+				</div>
+			</nav>
+		</header>
+        
+		<script language="javascript">
+		/*애니메이션 메뉴*/
+	     function menuView(){
+		//var FullScreenWidth=$(window).width();
+		//if(FullScreenWidth>450){
+		//$("#cate").css("width","450");
+		//}
+		$("#cate").animate({"left":"0%"},"fast");
+		//$("#cate").css("top",$(window).scrollTop());
+		$("#cate").css("height","100%");
+		$("#left_menu").css("height","100%");
+		$("#lay").css("opacity","0.7");
+		$("#lay").css("display","block");
+		//$("#wrap").css({overflow:'hidden',position:'fixed'})
+		//$("#wrap").css({overflow:'hidden'}).bind('touchmove', function(e){e.preventDefault()}); 
+		//팝업 애니메이션 시 스크롤을 막음 (활성화 시)
+    	}
+	    function menuClose(){
+		$("#cate").animate({"left":"-90%"},"fast");
+		$("#lay").css("display","none");
+		//$("#wrap").css({overflow:'scroll',position:'relative'})
+		//$("#wrap").unbind('touchmove');
+	   }
+
+       </script>
+
+
+       <div id="cate" style="position:absolute;left:-100%;width:70%;z-index:10; height:100%; top:0; background:#414141; position:fixed;">
+             <? include "../main/category.html";?>
+       </div>
+       <div id="lay"></div>

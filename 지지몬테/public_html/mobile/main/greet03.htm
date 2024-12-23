@@ -1,0 +1,68 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title></title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	
+    
+  <section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 회사소개 > 제품공정 </h2>
+				</div>
+			</article>
+			<article id="sublist">
+			<!--2차메뉴-->
+			<div class="subm">
+		<dl>
+			<dd><a href="../main/greet01.htm">인사말</a></dd>
+			<dd><a href="../main/greet02.htm">회사연혁·조직도</a></dd>
+			<dd><a href="../main/greet03.htm" class="on">제품공정</a></dd>
+			<dd style="border:0px;" class="last"><a href="../main/greet05.htm">오시는 길</a></dd>
+		</dl>
+</div> 
+			<!--페이지 -->
+						<div class="contents">
+							<div >
+								<img src="../images/greet04.jpg" alt="제품공정" width="100%;">
+							</div>
+						</div>
+
+			<!--페이지 -->
+			</article>
+		</section>
+    
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

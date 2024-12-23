@@ -1,0 +1,216 @@
+
+									<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td background="../image/product/info_title_2_bg.gif"><img src="../image/product/info_title_7.gif" width="130" height="50"></td>
+										</tr>
+										<tr>
+											<td>
+												<table width="100%"  border="0" cellspacing="0" cellpadding="10">
+													<tr>
+														<td>
+															<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+																<tr>
+																	<td width="30" height="30" align="center"><img src="../image/product/qna_1.gif" width="20" height="30"></td>
+																	<td height="30" align="center"><img src="../image/product/qna_2.gif" width="25" height="30"></td>
+																	<td width="100" align="center"><img src="../image/product/qna_3.gif" width="30" height="30"></td>
+																	<td width="100" align="center" class="search_type"><img src="../image/product/qna_4.gif" width="30" height="30"></td>
+																</tr>
+																<tr>
+																	<td height="1" colspan="4" bgcolor="E2E2E2"></td>
+																</tr>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function span_sw( str ) {
+	if (str.style.display == "none") 
+	str.style.display = ""; // Show
+	else
+	str.style.display = "none"; // Hidden
+}
+//-->
+</SCRIPT>
+
+<?
+$bbs_no = "6";
+$SQL1 = "select count(*) from $New_BoardTable where bbs_no='$bbs_no' and area='$item_no' and mart_id='$mart_id' "; 
+$SQL2 = "and binary $keyset like '%$searchword%' ";
+$SQL2_1 = "and (binary writer like '%$searchword%' or binary subject_new like '%$searchword%' or binary content like '%$searchword%') ";
+$SQL3 = "";
+
+if(isset($keyset)&&($keyset!="")&&isset($searchword)&&($searchword!="")&&($keyset != "all"))
+	$SQL=$SQL1.$SQL2.$SQL3;
+elseif(isset($keyset)&&($keyset!="")&&isset($searchword)&&($searchword!="")&&($keyset == "all"))
+	$SQL=$SQL1.$SQL2_1.$SQL3;
+else
+	$SQL=$SQL1.$SQL3;
+
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows_tot = mysql_result($dbresult,0,0);
+
+$SQL1 = "select * from $New_BoardTable where bbs_no='$bbs_no' and area='$item_no' and mart_id='$mart_id' "; 
+$SQL2 = "and binary $keyset like '%$searchword%' ";
+$SQL2_1 = "and (binary writer like '%$searchword%' or binary subject_new like '%$searchword%' or binary content like '%$searchword%') ";
+$SQL3 = "order by ansno asc";
+
+if(isset($keyset)&&($keyset!="")&&isset($searchword)&&($searchword!="")&&($keyset != "all")){
+	$SQL=$SQL1.$SQL2.$SQL3;
+}elseif(isset($keyset)&&($keyset!="")&&isset($searchword)&&($searchword!="")&&($keyset == "all")){
+	$SQL=$SQL1.$SQL2_1.$SQL3;
+}else{
+	$SQL=$SQL1.$SQL3;
+}
+
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+
+for ($i=0; $i < $numRows; $i++){
+	$row = mysql_fetch_array( $dbresult );
+
+	$index_no = $row[index_no];
+	$writer = $row[writer];
+	$user_id = $row[username];
+	$write_date = $row[write_date];
+	$read_num = $row[read_num];
+	$subject_new = $row[subject_new];
+	$step = $row[step];
+	$if_secret = $row[if_secret];
+	$content = $row[content];
+
+	$write_date_tmp = substr($write_date,0,8);
+	$today_tmp = date("Ymd");
+
+	if(strlen($subject_new) > 50){
+		$subject_new = substr($subject_new, 0, 50);
+		preg_match('/^([\x00-\x7e]|.{2})*/', $subject_new, $subject_new_tmp);
+		$subject_new_tmp[0] .= '..';
+		$subject_new = $subject_new_tmp[0];
+	}
+
+	//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ==============
+	if( $user_id ){
+		//========================= 관리자 아이콘이 있으면 아이콘을 작성자에 표시 ========
+		$sql0 = "select admin_img from $MemberTable where username='$user_id'";
+		$res0 = mysql_query( $sql0 , $dbconn );
+		$row0 = mysql_fetch_array( $res0 );
+		if( $row0[admin_img] ){
+			$member_img = "<img src='../../up/$mart_id/$row0[admin_img]' border='0' align='absmiddle' height='20'>";
+		}else{
+			$member_img = $writer;
+		}
+		
+		if( !$row0[admin_img] ){
+			//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ======
+			$sql1 = "select member_img from $Mart_Member_NewTable where username='$user_id'";
+			$res1 = mysql_query( $sql1 , $dbconn );
+			$row1 = mysql_fetch_array( $res1 );
+			if( $row1[member_img] ){
+				$member_img = "<img src='../../up/$mart_id/$row1[member_img]' border='0' align='absmiddle' height='20'>";
+			}else{
+				$member_img = $writer;
+			} 
+		}
+	}else{
+		$member_img = $writer;
+	}
+
+	if($mart_id == 'pdazzle' && $bbs_no == '1'){
+		$new_string = "";
+	}else{
+		if($write_date_tmp == $today_tmp){
+			$new_string = "<img src='../../admin/images/new.gif'>";
+		}else{
+			$new_string = "";
+		}
+	}
+
+	$k = $numRows_tot - $i;
+	$write_date_str = substr($write_date,0,4)."-".substr($write_date,4,2)."-".substr($write_date,6,2);
+	
+	$j_str = "";
+	for ($j=0; $j < $step; $j++) {
+		$j_str = $j_str."&nbsp;";
+	}
+	if($step > 0){
+		$j_str = $j_str."<img src='../images/re.gif'  align='absmiddle'>";
+	}
+	if($if_use_secret == '1' && $if_secret == '1'){
+		$secret_str = "<img src='../images/key.gif'>";
+	}else{
+		$secret_str = '';
+	}
+?>
+<?
+	if($step == 0){
+?>
+																<tr height="30" bgcolor='#FFF9F1'>
+																	<td width='30' align="center"><img src="../image/product/q.gif" width="18" height="18" border='0' align='absmiddle'></td>
+																	<td height="30"><A HREF="javascript:span_sw( show<?=$k?> );"><?=$subject_new?></a></td>
+																	<td align="center"><?=$member_img?></td>
+																	<td align="center" class="search_type"><?=$write_date_str?></td>
+																</tr>
+																<tr>
+																	<td height="1" colspan="4" bgcolor="#F8ECD9"></td>
+																</tr>
+																<tr>
+																	<td colspan='4'>
+																		<span id='show<?=$k?>' style="display: none;">
+																		<table width="100%"  border="0" cellspacing="0" cellpadding="0" bgcolor='#FFFFFF'>
+																			<tr>
+																				<td width='30' align="center"></td>
+																				<td><?=nl2br($content)?></td>
+																			</tr>
+																			<tr>
+																				<td height="1" colspan="2" bgcolor="F8ECD9"></td>
+																			</tr>
+																		</table>
+																		</span>
+																	</td>
+																</tr>
+<?
+	}else{
+?>
+																<tr height="30" bgcolor='#FFF9F1'>
+																	<td width='30' align="center"><img src="../image/product/a.gif" width="18" height="18" border='0' align='absmiddle'></td>
+																	<td height="30"><A HREF="javascript:span_sw( show<?=$k?> );"><?=$subject_new?></a></td>
+																	<td align="center"><?=$member_img?></td>
+																	<td align="center" class="search_type"><?=$write_date_str?></td>
+																</tr>
+																<tr>
+																	<td height="1" colspan="4" bgcolor="#F8ECD9"></td>
+																</tr>
+																<tr>
+																	<td colspan='4'>
+																		<span id='show<?=$k?>' style="display: none;">
+																		<table width="100%"  border="0" cellspacing="0" cellpadding="0" bgcolor='#FFFFFF'>
+																			<tr>
+																				<td width='30' align="center"></td>
+																				<td><?=nl2br($content)?></td>
+																			</tr>
+																			<tr>
+																				<td height="1" colspan="2" bgcolor="F8ECD9"></td>
+																			</tr>
+																		</table>
+																		</span>
+																	</td>
+																</tr>
+<?
+	}
+?>
+<?     				
+}
+?>
+															</table>
+															<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+																<tr>
+																	<td height="40" align='right'><a onclick="CenterWin('../board/board_write.php?mart_id=<?=$mart_id?>&bbs_no=6&item_no=<?=$item_no?>&return=product','qna_write', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=700,height=500');" style='cursor:hand'><img src="../image/bu_counsel3.gif" width="60" height="20" border="0" align="absmiddle"></a></td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td height="20"><a name="value" id="value"></a></td>
+										</tr>
+									</table>

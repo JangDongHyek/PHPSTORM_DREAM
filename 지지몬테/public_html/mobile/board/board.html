@@ -1,0 +1,98 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+ 
+ 
+ 
+ 
+ 
+ 
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title></title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+	
+	<script type="text/javascript">
+	//<[CDATA[
+		var currentMenuId = '';
+		
+		function showSubMenu(menuId) {
+			
+			if(currentMenuId != "") {
+				$(".iconSet"+currentMenuId+" .subCategory").toggle();
+				if($(".iconSet"+currentMenuId+" .toggleBullet").is(".btnOn")) {
+					$(".iconSet"+currentMenuId+" .toggleBullet").removeClass("btnOn").addClass("btnOut");
+				}
+			}
+			
+			if(currentMenuId != menuId) {
+				$(".iconSet"+menuId+" .subCategory").slideDown();
+				$(".iconSet"+menuId+" .toggleBullet").removeClass("btnOut").addClass("btnOn");
+				currentMenuId = menuId;
+			} else {
+				currentMenuId = "";
+			}
+		}
+	//]]>
+	</script>
+ 
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+ 
+		
+ 
+ 
+  <section id="content">
+			<article id="contentSubTitle">
+				<div class="cate_list">
+					<h2>&nbsp;&nbsp;<a href="../">HOME</a> >  COMMUNITY</h2>
+				</div>
+			</article>
+			<article id="sublist">
+				<ul class="iconSetCategory">
+					<li class="iconSet"><a href="board_list.html?bbs_no=1"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;NOTICE&nbsp;</a></li>
+					<li class="iconSet"><a href="board_list.html?bbs_no=3"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;Q&amp;A&nbsp;</a></li>
+					<li class="iconSet"><a href="board_list.html?bbs_no=5"><span style="display:inline-block;width:0px;height:35px;margin:0 0px 0 10px;vertical-align:middle;"></span>&nbsp;&nbsp;CATALOG &amp;SAMPLE&nbsp;</a></li>
+                 </ul>
+			</article>
+		</section>
+ 
+ 
+ 
+ 
+	<? include("../include/bottom.html"); ?>
+	</body>
+</html>

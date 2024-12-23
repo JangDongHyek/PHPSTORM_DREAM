@@ -1,0 +1,51 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+$table = "mc";
+
+if( !$m_name ){
+	echo("
+		<script>
+		window.alert('인터넷상품명을 입력해 주세요!')
+		history.go(-1)
+		</script>
+	");
+	exit;
+}
+
+//========================================================================================
+for($i=0; $i<sizeof($aaa) ; $i++){
+	if($aaa[$i]){
+		$num = $aaa[$i];
+		$name = $m_name[$i];
+		$no = $m_no[$i];
+		
+		//m_no 값을 수정안할때는 업데이트를 시키지 않음.
+		if( $m_no ){
+			$query = "update $table set m_name='$name', m_no='$no' where m_uid='$num'";
+		}else{
+			$query = "update $table set m_name='$name' where m_uid='$num'";
+		}
+
+		$result = mysql_query( $query, $dbconn );
+	}
+}
+
+if( $result ){
+	echo("
+		<meta http-equiv='Refresh' content='0; URL=mc_index.html?mode=$mode&select_key=$select_key&input_key=$input_key&page=$page'>
+	");
+}else{
+	echo("
+		<script>
+		window.alert('인터넷상품을 수정하는데 실패했습니다!');
+		history.go(-1)
+		</script>
+	");
+	exit;
+}
+
+mysql_close($dbconn);
+
+?>

@@ -1,0 +1,110 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000"><? include "../include/company_menu.htm" ?></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top">
+    			<div class="article">
+<p class="map">
+
+<div id="daumRoughmapContainer1599718977660" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+
+<!-- 3. 실행 스크립트 -->
+<script charset="UTF-8">
+	new daum.roughmap.Lander({
+		"timestamp" : "1599718977660",
+		"key" : "2zyfy",
+		"mapWidth" : "1000",
+		"mapHeight" : "400"
+	}).render();
+</script>
+</p>
+<table class="map_table">
+	  <tbody>
+      <tr>
+	    <th>주소</th>
+		<td>서울특별시 서초구 잠원동 33-3 대성빌딩 4층 </td>
+	  </tr>
+	  <tr>
+	    <th>문의전화</th>
+		<td>051-643-4852 / 051-643-4859</td>
+	  </tr>
+      <tr>
+	    <th>Mobile</th>
+		<td>010-8545-5813</td>
+	  </tr>
+	    <tr>
+        <th>이메일</th>
+		<td>missen13@hanmail.net</td>
+	  </tr>
+	</tbody>
+</table>
+                  </div><!--.article-->
+
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

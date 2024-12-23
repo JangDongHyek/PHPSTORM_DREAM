@@ -1,0 +1,434 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+?>
+<?
+$SQL = "select * from $MemberTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$perms = mysql_result($dbresult, 0, "perms");
+if($perms == "4") {
+	echo ("		
+	<script>
+		alert('미등록 쇼핑몰입니다.');
+		history.go(-1);
+	</script>
+	");
+	exit;
+}
+include( '../include/getmartinfo.php' );
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+<title><?=$page_title?></title>
+<style type="text/css">
+<!--
+.aa {  font-size: 9pt; line-height: 12pt; color: #000000}
+.bb {   font-size: 9pt; color: #6B6B6B}
+.cc {  font-size: 9pt; color: #F78C00}
+.dd {  font-size: 9pt; color: #ffffff}
+.ee {  font-size: 9pt; color: #057BB1}
+A            {font-size: 9pt;text-decoration: none;color: #000000 }  
+ A:hover      {text-decoration: none;  }  -->
+</style>
+<script langauage="Javascript">
+<!-- 
+  function hidestatus(){ 
+  window.status='' 
+  return true 
+  } 
+
+  if (document.layers) 
+  document.captureEvents(Event.MOUSEOVER | Event.MOUSEOUT) 
+
+  document.onmouseover=hidestatus 
+  document.onmouseout=hidestatus 
+//--> 
+</script> 
+</head>
+
+<?
+if(strstr($icon_module,"icon7")!=false || strstr($icon_module,"icon8")!=false){
+	if(strstr($icon_module,"icon7")!=false){
+		if($top_out_img != "") $tmp_body_background = "$Co_img_DOWN$mart_id/design2/$top_out_img";
+		else $tmp_body_background == "";
+		echo ("
+<body topmargin='0' bgcolor='$top_out_color' link='#B9B6BD' vlink='#B9B6BD' alink='#B9B6BD' background='$tmp_body_background'>
+		");
+	}
+	else {
+		if($top_out_img != "") $tmp_body_background = "$Co_img_DOWN$mart_id/design2/temp2/$top_out_img";
+		else $tmp_body_background == "";
+		echo ("
+<body topmargin='0' bgcolor='$top_out_color' link='#B9B6BD' vlink='#B9B6BD' alink='#B9B6BD' background='$tmp_body_background'>
+		");
+	}
+}
+if(strstr($icon_module,"icon9")!=false){
+	// 탑메뉴 배경이미지
+	if($top_bg_img_all != "") $tmp_background = "$Co_img_DOWN$mart_id/design2/temp3/$top_bg_img_all";
+	else $tmp_background = "";
+	echo ("
+<body topmargin='0' bgcolor='$top_bg_color_all' background='$tmp_background' link='#CECBCE' vlink='#CECBCE' alink='#CECBCE' leftmargin='0'>
+	");
+}
+if(strstr($icon_module,"icon10")!=false){
+	if($top_bg_color_all != "") $tmp_top_bg_color_all = $top_bg_color_all;
+	else{
+		if($icon_module == 'icon10_1') $tmp_top_bg_color_all = "#E3E3E3";
+		if($icon_module == 'icon10_2') $tmp_top_bg_color_all = "#FFFFFF";
+		if($icon_module == 'icon10_3') $tmp_top_bg_color_all = "#FFFFFF";
+		if($icon_module == 'icon10_4') $tmp_top_bg_color_all = "#FFFFFF";
+		if($icon_module == 'icon10_5') $tmp_top_bg_color_all = "#FFFFFF";
+		if($icon_module == 'icon10_6') $tmp_top_bg_color_all = "#FFFFFF";
+		if($icon_module == 'icon10_7') $tmp_top_bg_color_all = "#E3E3E3";
+		if($icon_module == 'icon10_8') $tmp_top_bg_color_all = "#E0EEFC";
+		if($icon_module == 'icon10_9') $tmp_top_bg_color_all = "#9A9A9A";
+		if($icon_module == 'icon10_10') $tmp_top_bg_color_all = "#9A9A9A";
+	}
+	if($top_bg_img_all != "") $tmp_top_bg_img_all = "$Co_img_DOWN$mart_id/design2/temp4/$top_bg_img_all";
+	else $tmp_top_bg_img_all = "../images/template4/$icon_module/bg.gif";
+	echo ("
+	<body bgcolor='$tmp_top_bg_color_all' topmargin='0' link='#000000' vlink='#000000' alink='#000000' background='$tmp_top_bg_img_all'>
+	");
+}
+if(strstr($icon_module,"icon11")!=false){
+	echo ("
+<body $leftmargin_str topmargin='0' bgcolor='$top_out_color' link='#B9B6BD' vlink='#B9B6BD' alink='#B9B6BD' background='$Co_img_DOWN$mart_id/design2/temp5/$top_out_img'>
+	");
+}
+if(strstr($icon_module,"icon7")!=false) include( '../include/topmenu.inc' );
+if(strstr($icon_module,"icon8")!=false) include( '../include/topmenu_template2.inc' );
+if(strstr($icon_module,"icon11")!=false) include( '../include/topmenu_template5.inc' );
+if(strstr($icon_module,"icon9")!=false) {
+	if($onestep != 10) include( '../include/topmenu_template3.inc' );
+	else include( '../include/topmenu_template3_1024.inc' );
+}
+if(strstr($icon_module,"icon10")!=false) include( '../include/topmenu_template4.inc' );
+?>
+<table border="0" width="<?echo $middle_width?>" cellspacing="0" cellpadding="0">
+<tr>
+   	<?
+	if(strstr($icon_module,"icon7")!=false) include( '../include/leftmenu.inc' );
+	if(strstr($icon_module,"icon8")!=false) include( '../include/leftmenu_template2.inc' );
+	if(strstr($icon_module,"icon9")!=false) include( '../include/leftmenu_template3.inc' );
+	if(strstr($icon_module,"icon10")!=false) include( '../include/leftmenu_template4.inc' );
+	if(strstr($icon_module,"icon11")!=false) include( '../include/leftmenu_template5.inc' );
+	?>
+	<td width="609" valign="top" bgcolor='#ffffff'>
+    	<div align="center"><center>
+    	<table border="0" width="500">
+      	<tr>
+        	<td width="100%" height="15"></td>
+      	</tr>
+      	<tr>
+        	<td width="100%">
+        		<img src="../images/guide-title.gif" WIDTH="89" HEIGHT="27"></td>
+      	</tr>
+      	<tr>
+        	<td width="100%">
+        	<?
+        	if($ti_line_img != '' && file_exists("$Co_img_UP$mart_id/design2/$ti_line_img")){
+        		echo "	
+        	<img src='$Co_img_DOWN$mart_id/design2/$ti_line_img' WIDTH='571' HEIGHT='12'>
+        		";
+        	}
+        	else{
+        		echo "
+        	<img src='../images/line.gif' WIDTH='571' HEIGHT='12'>
+        		";
+        	}
+        	?></td>
+      	</tr>
+      	<tr>
+        	<td width="100%" height="10"></td>
+      	</tr>
+      	<tr>
+        	<td width="100%">
+        		<div align="center"><center>
+        		
+        		<table border="0" width="95%">
+          		<?
+          		$SQL = "select * from $MartInfoTable where mart_id ='$mart_id'";
+				//echo "sql=$SQL";
+				$dbresult = mysql_query($SQL, $dbconn);
+				if(mysql_num_rows($dbresult)>0){
+					$shopname = mysql_result($dbresult, 0, "shopname");
+					$name = mysql_result($dbresult, 0, "name");
+					$passport = mysql_result($dbresult, 0, "passport");
+					$tel1 = mysql_result($dbresult, 0, "tel1");
+					$tel2 = mysql_result($dbresult, 0, "tel2");
+					$email = mysql_result($dbresult, 0, "email");
+					$place = mysql_result($dbresult, 0, "place");
+				}
+				if($member_confirm == 0){
+					$member_confirm_str = "즉시";
+				}
+				if($member_confirm == 1){
+					$member_confirm_str = "승인후";
+				}
+				?>
+				
+				<tr>
+            		<td width="5%" height="11"><p align="left">
+            			<img src="../images/q.gif" align="absmiddle" WIDTH="15" HEIGHT="16">
+            		</td>
+            		<td width="95%" height="11"><span class="bb"><strong>회원가입/수정/탈퇴는 
+            			어떻게 하나요?</strong></span>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width="5%" height="5"></td>
+            		<td width="95%" height="5"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top">
+            			<span class="aa">
+            			<img src="../images/a.gif" align="absmiddle" WIDTH="15" HEIGHT="16"></span></td>
+            		<td width="95%" height="6">
+            			<span class="bb">저희 <?echo $shopname?>쇼핑몰의 회원가입과 
+            			이용은 무료이며, 회원ID는 <?echo $member_confirm_str?> 사용가능합니다.<br>
+            			회원으로 가입하시면 쇼핑몰에서 상품을 구매할 경우 구매자의 
+            			정보를 재차 입력하지 않아서 편리하게 쇼핑하실 수 있으며 
+            			쇼핑몰에서 제공하는 다양한 이메일정보와 마일리지서비스를 <br>
+            			받으실 수 있습니다.<br>
+            			<br>
+            			회원정보변경은 상단메뉴의 &quot;회원가입/변경&quot;에서 
+            			로그인하신 후 변경하시면 되고,<br>
+            			회원탈퇴는 <a href="<?echo $email?>"><?echo $email?></a> 
+            			로 메일주시면 탈퇴처리하여 드립니다.</span>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width="100%" valign="top" colspan="2" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top"></td>
+            		<td width="95%" height="1" background="../images/left_dot.gif"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="10"></td>
+            		<td width="95%" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" height="11">
+            			<p align="left">
+            			<img src="../images/q.gif" align="absmiddle" WIDTH="15" HEIGHT="16">
+            			</td>
+            		<td width="95%" height="11">
+            			<span class="bb"><strong>상품 주문은 어떻게 하며, 
+            			주문 취소는 어떻게 하나요?</strong></span></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="5"></td>
+            		<td width="95%" height="5"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top">
+            			<span class="aa">
+            			<img src="../images/a.gif" align="absmiddle" WIDTH="15" HEIGHT="16"></span></td>
+            		<td width="95%" height="6"><span class="bb">상품선택 ▷장바구니에 담기 
+            			▷주문하기 ▷결제방법 선택/ 결제및 배송정보입력 ▷최종결제</span> 
+            			<br>
+            			<br>
+            			<span class="bb">주문하신 상품을 취소할 경우, 주문현황에서 주문을 
+            			클릭하면 삭제가능하며, 배송중 메세지가 있을 경우에는 취소할 수 
+            			없습니다.</span>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width="100%" valign="top" colspan="2" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top"></td>
+            		<td width="95%" height="1" background="../images/left_dot.gif"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="10"></td>
+            		<td width="95%" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" height="11">
+            			<p align="left">
+            			<img src="../images/q.gif" align="absmiddle" WIDTH="15" HEIGHT="16">
+            			</td>
+            		<td width="95%" height="11">
+            			<span class="bb">
+            			<strong>결제방법 및 입금확인에 
+            			소요되는 시간은 얼마나 걸리나요?</strong></span></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="5"></td>
+            		<td width="95%" height="5"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top">
+            			<span class="aa">
+            			<img src="../images/a.gif" align="absmiddle" WIDTH="15" HEIGHT="16"></span></td>
+            		<td width="95%" height="6"><span class="bb">
+            			<?
+            			if($card_yes == 't'){
+            			?>
+            			결제방법은 크게 온라인입금과 
+            			신용카드 결제로 나뉘어집니다.<br>
+            			신용카드 결제의 경우엔 128비트 SSL암호체계를 사용하여 보안에 
+            			만전을 기하고 있으며 <br>
+            			국내 모든 신용카드가 다 사용가능하며 3.5%의 수수료가 발생합니다.<br>
+            			<?
+            			}
+            			?>
+            			<br>
+            			입금확인은 매일 1시에 확인됩니다. 주문하신 후 1시 이전에 
+            			입금하시면 더 빨리 상품을 받아보실 수 있습니다. 또한 주문하실 
+            			때의 입금자명, 입금인 전화번호, 입금은행과 계좌번호, 입금액이 
+            			일치하여야 합니다. 혹시 틀릴 경우엔 담당자가 개별적으로 
+            			확인후에 처리를 하기 때문에 약간의 시간이 좀 더 소요됩니다. <br>
+            			궁금하신 사항은&nbsp; ☎ <?echo $tel1?>로 문의하시면 됩니다.</span>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width="100%" valign="top" colspan="2" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top"></td>
+            		<td width="95%" background="../images/left_dot.gif" height="1"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="10"></td>
+            		<td width="95%" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" height="11">
+            			<p align="left">
+            			<img src="../images/q.gif" align="absmiddle" WIDTH="15" HEIGHT="16">
+            			</td>
+            		<td width="95%" height="11"><span class="bb"><strong>온라인입금의 경우 입금할 
+            			계좌를 알려주세요.</strong></span></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="5"></td>
+            		<td width="95%" height="5"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top">
+            			<span class="aa">
+            			<img src="../images/a.gif" align="absmiddle" WIDTH="15" HEIGHT="16"></span></td>
+            		<td width="95%" height="6">
+            			<span class="bb">
+            			<?
+						$SQL = "select * from $BankTable where mart_id='$mart_id' order by account_no desc";
+						$dbresult = mysql_query($SQL, $dbconn);
+						$numRows = mysql_num_rows($dbresult);
+						for ($i=0; $i<$numRows; $i++) {
+							mysql_data_seek($dbresult,$i);
+							$ary = mysql_fetch_array($dbresult);
+							$account_no = $ary["account_no"];
+							$bank_name = $ary["bank_name"];
+							$bank_number = $ary["bank_number"];
+							$owner_name = $ary["owner_name"];
+						
+							if($bank_name != ""&&$bank_number != ""&&$owner_name != ""){
+								echo ("
+								$bank_name $bank_number 예금주: $owner_name<br>
+								
+								");
+							}
+						}
+						?>
+						</span>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width="100%" valign="top" colspan="2" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="1"></td>
+            		<td width="95%" height="1" background="../images/left_dot.gif"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="10"></td>
+            		<td width="95%" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" height="11">
+            			<p align="left">
+            			<img src="../images/q.gif" align="absmiddle" WIDTH="15" HEIGHT="16">
+            			</td>
+            		<td width="95%" height="11"><span class="bb"><strong>배송시 걸리는 기간과 
+            			배송방법, 배송료에 대해 알고 싶어요.</strong></span></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="5"></td>
+            		<td width="95%" height="5"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top"><span class="aa">
+            			<img src="../images/a.gif" align="absmiddle" WIDTH="15" HEIGHT="16"></span></td>
+            		<td width="95%" height="6">
+            			<span class="bb">
+            			배송기간은 각 상품의 재고현황과 
+            			배송지역에 따라 다소 차이는 있지만 결제완료 후 <br>
+            			서울/수도권은 2~3일이내, 지방은 3~4일이내에 받아 보실수 있습니다. 
+            			<br>
+            			또한 배송과정을 주문현황에서 확인하실 수 있습니다.<br>
+            			<br>
+            			배송방법은 택배를 이용하여 배송되고 있으며, 배송료는 1회 
+            			주문금액의 <?echo number_format($freight_limit)?>원이상이면 <br>
+            			전국 어디든지 무료배송되며,<?echo number_format($freight_limit)?>원이하일 경우에는 <?echo number_format($freight_cost)?>원의 
+            			배송료가 별도로 부과됩니다.</span>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width="100%" valign="top" colspan="2" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top"></td>
+            		<td width="95%" background="../images/left_dot.gif"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="10"></td>
+            		<td width="95%" height="10"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" height="11">
+            			<p align="left">
+            			<img src="../images/q.gif" align="absmiddle" WIDTH="15" HEIGHT="16">
+            			</td>
+            		<td width="95%" height="11"><span class="bb"><strong>반품 및 교환, 환불에 대해 
+            			알고 싶어요.</strong></span></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top" height="5"></td>
+            		<td width="95%" height="5"></td>
+          		</tr>
+          		<tr>
+            		<td width="5%" valign="top">
+            			<span class="aa">
+            			<img src="../images/a.gif" align="absmiddle" WIDTH="15" HEIGHT="16"></span></td>
+            		<td width="95%" height="6"><span class="bb">주문하신 상품을 받으신 후 
+            			반품이나 교환을 원하실 때에는 ☎ <?echo $tel1?>로 문의하시면 <br>
+            			됩니다.<br>
+            			반품/교환 신청은 상품 수취 후 30일이내에 가능하며 의류의 경우 
+            			세탁을 하신 경우는 반품,<br>
+            			교환이 불가능하며 이물질이 묻지 않도록 주의해 주시기 바랍니다.</span>
+            		</td>
+          		</tr>
+          		<tr>
+            		<td width="100%" valign="top" colspan="2" height="10"></td>
+          		</tr>
+        		</table>
+        		</center></div>
+        	</td>
+      	</tr>
+    	</table>
+    	</center></div>
+    </td>
+</tr>
+</table>
+<?
+include( '../include/bottom.inc' );
+mysql_close($dbconn);
+?>
+</body>
+</html>

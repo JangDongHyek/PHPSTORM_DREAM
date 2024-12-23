@@ -1,0 +1,142 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+$SQL = "select * from $Member_WelcomeTable where mart_id ='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$doctype = mysql_result($dbresult, 0, "doctype");
+$message = mysql_result($dbresult, 0, "message");
+$bg_img = mysql_result($dbresult, 0, "bg_img");
+//$message = nl2br($message);
+?>
+<?
+$bonus_sql = "select * from $BonusTable where id='$UnameSess'";
+$bonus_res = mysql_query($bonus_sql, $dbconn);
+$bonus_tot = mysql_num_rows( $bonus_res );
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="1000" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="100%" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td height="8"></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                             <tr>
+                                <td>
+
+								
+								
+			<table width="80%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="20"><img src="../image/table_1.gif" width="20" height="20"></td>
+                  <td background="../image/table_1_bg.gif">&nbsp;</td>
+                  <td width="20"><img src="../image/table_2.gif" width="20" height="20"></td>
+                </tr>
+                <tr>
+                  <td background="../image/table_4_bg.gif">&nbsp;</td>
+                  <td height="150"><table width="80%" border="0" align="center" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+                      <tr>
+                        <td height="100" align="center" bgcolor="#FFFFFF" class="text_14_s2"><p>
+                          <?=$message?>
+                        </p></td>
+                      </tr>
+                  </table></td>
+                  <td background="../image/table_2_bg.gif">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td height="20"><img src="../image/table_4.gif" width="20" height="20"></td>
+                  <td background="../image/table_3_bg.gif">&nbsp;</td>
+                  <td><img src="../image/table_3.gif" width="20" height="20"></td>
+                </tr>
+              </table>							
+								
+								
+								
+								</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="10"></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+<!-- This script is for AceCounter START -->
+<script language='javascript'>
+var _jn = 'join' ;          //  가입탈퇴 ( 'join','withdraw' ) 
+var _jid = 'member' ;			// 가입시입력한 ID
+</script>
+<!-- AceCounter END -->
+
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>

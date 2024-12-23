@@ -1,0 +1,675 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+
+<script language="javascript">
+function CouponWin(pid){ // 쿠폰사용 할 수 있는 창을 오픈함 
+	var url = "http://www.mocoupon.co.kr/onlineShop/useCoupon.php?_PID="+pid+"&_SHOPID=<?=$mart_id?>&_SHOPGROUP=bluecart&url=<?=$url?>";
+	window.open(url,'Coupon','scrollbars=no,toolbar=no,location=no,directories=no,width=280,height=180,resizable=no,mebar=no,left=250,top=65');
+}
+
+function UseCoupon(pid,cpntype,rate){  // 쿠폰 사용창에서 결과를 호출할 때 사용
+	//alert("PID:"+pid+", CPNTYPE:"+cpntype+", RATE:"+rate); // 예시 : 제대로 쿠폰사용정보를 받는지 보기위한 것임. Cpntype 1:정율 2:정액 3:사은품, rate : 할인율/할인금액/사은품내역
+
+	// 받은 정보를 가공하여 상품가격을 변경시키는 루틴삽입, 각 사이트마다
+	// 자신의 사이트에 맞는 방법을 사용
+	//window.location.href='cart_in.php?mart_id=<?=$mart_id?>&flag=coupon_update&item_no='+pid+'&cpntype='+cpntype+'&rate='+rate;
+}
+</script>
+<script>
+function next_send(f){
+	var f = document.form1
+	f.submit();
+}
+
+function go_order_sheet(){
+	var f = document.form1
+	f.submit();	//window.location.href='order.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>'
+}
+function really(){
+	if(confirm("삭제하시겠습니까?")) return true;
+	else return false;
+}
+
+function re_count(f){
+	var f = document.form1
+	var Digit = '1234567890'
+	
+	if(f.quantityid.length == null){
+		if (f.quantityid.value==""){
+			alert("수량을 입력하세요");
+			f.quantityid.focus();
+			return;
+		}
+		else{
+			var len =f.quantityid.value.length;
+			var ret;
+			ret =false;		
+			for(var i=0;i<len;i++){
+				var ch = f.quantityid.value.substring(i,i+1);
+				
+				for (var k=0;k<=Digit.length;k++){				
+					if(Digit.substring(k,k+1) == ch)
+					{					
+						ret = true;
+						break;					
+					}
+				}	
+				
+				if (!ret){
+						alert("숫자만 입력 하세요");
+						f.quantityid.focus();
+						return false;
+				}
+				ret = false;
+			}	
+		}
+		
+		if(f.quantityid.value <= 0){
+			f.quantityid.focus();
+    	alert("1이상의 값을 입력하세요.");
+    	return;
+		}	
+	}
+	else{
+		for(i=0;i<f.quantityid.length;i++){
+	  	if (f.quantityid[i].value==""){
+				alert("수량을 입력하세요");
+				f.quantityid[i].focus();
+				return;
+			}
+			else{
+				var len =f.quantityid[i].value.length;
+				var ret;
+				ret =false;		
+				
+				for(var j=0;j<len;j++){
+					
+					var ch = f.quantityid[i].value.substring(j,j+1);
+					
+					for (var k=0;k<=Digit.length;k++){				
+						if(Digit.substring(k,k+1) == ch)
+						{					
+							ret = true;
+							break;					
+						}
+					}	
+					
+					if (!ret){
+							alert("숫자만 입력 하세요");
+							f.quantityid[i].focus();
+							return false;
+					}
+					ret = false;
+				}	
+			}
+			
+	  	
+	  	if(f.quantityid[i].value <= 0){
+	    	f.quantityid[i].focus();
+	    	alert("1이상의 값을 입력하세요.");
+	      return;
+	    }
+	 	}
+	}
+	f.action = "cart_in.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>";
+	f.mode.value="update";
+	f.submit();
+}
+
+function cart_del(f){
+	var f = document.form1;
+	var msg = "장바구니를 비우시겠습니까?";
+	if (confirm(msg)==false){
+		return;
+	}else{
+		window.location.href='cart_in.php?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>&mode=cart_del';
+	}
+
+}
+function pur_limit_warn(t){
+	alert(t+"원 이하는 주문접수가 되지 않습니다.");
+	return;	
+}
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+
+<!-- AceCounter eCommerce (Cart_Inout) v7.5 Start -->
+<!-- Function and Variables Definition Block Start -->
+<script language='javascript'>
+var _JV="AMZ2013010701";//script Version
+var _UD='undefined';var _UN='unknown';
+var _ace_countvar = 0;
+function _IDV(a){return (typeof a!=_UD)?1:0}
+var _CRL='http://'+'gtc10.acecounter.com:8080/';
+var _GCD='AS4A41028768549';
+if( document.URL.substring(0,8) == 'https://' ){ _CRL = 'https://gtc10.acecounter.com/logecgather/' ;};
+if(!_IDV(_A_i)) var _A_i = new Image() ;if(!_IDV(_A_i0)) var _A_i0 = new Image() ;if(!_IDV(_A_i1)) var _A_i1 = new Image() ;if(!_IDV(_A_i2)) var _A_i2 = new Image() ;if(!_IDV(_A_i3)) var _A_i3 = new Image() ;if(!_IDV(_A_i4)) var _A_i4 = new Image() ;
+function _RP(s,m){if(typeof s=='string'){if(m==1){return s.replace(/[#&^@,]/g,'');}else{return s.replace(/[#&^@]/g,'');} }else{return s;} };
+function _RPS(a,b,c){var d=a.indexOf(b),e=b.length>0?c.length:1; while(a&&d>=0){a=a.substring(0,d)+c+a.substring(d+b.length);d=a.indexOf(b,d+e);}return a};
+function AEC_F_D(pd,md,cnum){var i=0,amt=0,num=0;var cat='',nm='';num=cnum;md=md.toLowerCase();if(md=='b'||md=='i'||md=='o'){for(i=0;i<_A_pl.length;i++){if(_A_pl[i]==pd){nm=_RP(_A_pn[i]);amt=(parseInt(_RP(_A_amt[i],1))/parseInt(_RP(_A_nl[i],1)))*num;cat=_RP(_A_ct[i]);var _A_cart=_CRL+'?cuid='+_GCD;_A_cart+='&md='+md+'&ll='+_RPS(escape(cat+'@'+nm+'@'+amt+'@'+num+'^&'),'+','%2B');break;};};if(_A_cart.length>0)_A_i.src=_A_cart+"rn="+String(new Date().getTime());setTimeout("",2000);};};
+function AEC_D_A(){ var i = 0,_AEC_str= ''; var ind = 0; for( i = 0 ; i < _A_pl.length ; i ++ ){ _AEC_str += _RP(_A_ct[i])+'@'+_RP(_A_pn[i])+'@'+_RP(_A_amt[i],1)+'@'+_RP(_A_nl[i],1)+'^'; if(  escape(_AEC_str).length > 800 ){ if(ind > 4) ind = 0; _AEC_str = _RPS(escape(_AEC_str),'+','%2B')+'&cmd=on' ; AEC_S_F(_AEC_str , 'o', ind) ; _AEC_str = '' ; ind++; }; }; if( _AEC_str.length > 0 ){ if(ind+1 > 4) ind = 0; AEC_S_F(_RPS(escape(_AEC_str),'+','%2B'), 'o', ind+1) ; }; };
+function AEC_B_A(){var i=0,_AEC_str='',_A_cart='';var ind = 0;_A_cart = _CRL+'?cuid='+_GCD+'&md=b';for( i = 0 ; i < _A_pl.length ; i ++ ){ _AEC_str += ACE_REPL(_A_ct[i])+'@'+ACE_REPL(_A_pn[i])+'@'+ACE_REPL(_A_amt[i],1)+'@'+ACE_REPL(_A_nl[i],1)+'^';if(escape(_AEC_str).length > 800 ){if(ind > 4) ind = 0;_AEC_str = _RPS(escape(_AEC_str),'+','%2B')+'&cmd=on';AEC_S_F(_AEC_str,'b',ind); _AEC_str = '' ;ind++;};}; if( _AEC_str.length > 0 ){if(ind+1 > 4) ind = 0; AEC_S_F(_RPS(escape(_AEC_str),'+','%2B'),'b',ind+1);};};
+function AEC_U_V(pd,bnum){ var d_cnt = 0 ; var A_amt = 0 ; var A_md = 'n' ;var _AEC_str = '' ; for( j = 0 ; j < _A_pl.length; j ++ ){ if( _A_pl[j] == pd ){ d_cnt = 0; if( _A_nl[j] != bnum ){ d_cnt = bnum - parseInt(_RP(_A_nl[j],1)) ; A_amt = Math.round( parseInt(_RP(_A_amt[j],1)) / parseInt(_RP(_A_nl[j],1))); if( d_cnt > 0 ){ A_md = 'i' ; }else{ A_md = 'o' ;};_A_amt[j] = A_amt*Math.abs(d_cnt) ; _A_nl[j] = Math.abs(d_cnt);_AEC_str += _RP(_A_ct[j])+'@'+_RP(_A_pn[j])+'@'+_RP(_A_amt[j],1)+'@'+_RP(_A_nl[j],1)+'^';};};};if( _AEC_str.length > 0 ){ AEC_S_F(_RPS(escape(_AEC_str),'+','%2B') ,A_md, 0);};};
+function AEC_S_F(str,md,idx){var i=0,_A_cart='';var k=eval('_A_i'+idx);if(md=='I')md='i';if(md=='O')md='o';if(md=='B')md='b';if(md=='b'||md=='i'||md=='o'){_A_cart=_CRL+'?cuid='+_GCD;_A_cart+='&md='+md+'&ll='+(str)+'&';k.src=_A_cart+"rn="+String(new Date().getTime());window.setTimeout('',2000);};};
+if(!_IDV(_A_pl)) var _A_pl = Array(1) ;
+if(!_IDV(_A_nl)) var _A_nl = Array(1) ;
+if(!_IDV(_A_ct)) var _A_ct = Array(1) ;
+if(!_IDV(_A_pn)) var _A_pn = Array(1) ;
+if(!_IDV(_A_amt)) var _A_amt = Array(1) ;
+</script>
+<!-- Function and Variables Definition Block End-->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="1000" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                            
+                                 <tr>
+                                  	<td>&nbsp;</td>
+                                 </tr>
+                              <tr>
+                                <td height="40"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td height="15"><img src="../images2/mypage/baguni_t1.gif"></td>
+                                    <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <span class="text_14_s2"><a href="../main/index.html">홈</a> &gt; 마이페이지 &gt; 장바구니</span></div></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="8"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td width="7"><img src="../images/mypage/order_view_1.gif" width="7" height="58" /></td>
+                                            <td background="../images/mypage/order_view_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title1_over.gif" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title2.gif" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title3.gif" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title4.gif" /></div></td>
+                                                </tr>
+                                            </table></td>
+                                            <td width="7"><img src="../images/mypage/order_view_2.gif" width="7" height="58" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><div align="center">
+
+
+
+
+
+
+
+
+
+
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="680">
+                            <!---------------------- 장바구니 테이블 시작 ------------>
+                            <?
+if($order_num){
+	$cart_sql = "select * from $Order_ProTable where mart_id='$mart_id' and order_num='$order_num' and status = '0' order by order_pro_no desc";
+	$cart_res = mysql_query($cart_sql, $dbconn);
+	$cart_tot = mysql_num_rows($cart_res);
+}else{
+	$cart_tot = 0;
+}
+if($cart_tot > 0){
+?>
+                            <form id='form1' action='order.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>' name='form1'>
+                              <input type='hidden' name='mode'>
+                              <input type='hidden' name='item_no' value='<?=$item_no?>'>
+                              <table width="100%"  border="0" cellpadding="0" cellspacing="0" class="to_table">
+                                <tr align="center" bgcolor="FBEFEE">
+                                  <td height="30" class="title">상품</td>
+                                  <td width="80" class="title">가격</td>
+                                  <td width="50" class="title">수량</td>
+                                  <td width="80" class="title">합계</td>
+                                  <td width="" class="title">배송정보</td>
+                                  <td width="50" class="title">삭제</td>
+                                </tr>
+                                <?
+	$mon_tot = 0;
+	$i = 0;
+	while($cart_row = mysql_fetch_array($cart_res)){
+		$i++;
+		$order_pro_no = $cart_row[order_pro_no];
+		$mart_id = $cart_row[mart_id];
+		$item_no_coupon = $cart_row[item_no];
+		if($i == 0){
+			$item_no_tmp = $cart_row[item_no]; //제일 나중 구매한 상품
+		}
+
+		$item_name = $cart_row[item_name];
+		$opt = $cart_row[opt];
+		$opt2 = $cart_row[opt2];
+		$opt3 = $cart_row[opt3];
+		$opt4 = $cart_row[opt4];
+
+
+		$z_price = $cart_row[z_price];
+		$bonus = $cart_row[bonus];
+		$coupon_used = $cart_row[coupon_used];
+		$item_no_forcash = $cart_row[item_no];
+	
+		$z_price_str = number_format($z_price);
+		$bonus_str = number_format($bonus);
+		
+		$use_bonus = $cart_row[use_bonus];
+		$status = $cart_row[status];
+		$quantity = $cart_row[quantity];
+
+		$opt_price = $cart_row[opt_price];
+		$opt_price2 = $cart_row[opt_price2];
+		$opt_price3 = $cart_row[opt_price3];
+		$opt_price4 = $cart_row[opt_price4];
+		//옵션 가격 추가
+		//옵션1
+		if($opt){
+			$sql="select * from $OptionTable where opt_no='$opt'";
+			$result=mysql_query($sql);
+			$rs=mysql_fetch_array($result);
+			
+			$opt_name=$rs[opt_name];
+			
+		}else{}
+		//옵션2
+		if($opt2){
+			$sql="select * from $OptionTable2 where opt_no='$opt2'";
+			$result=mysql_query($sql);
+			$rs=mysql_fetch_array($result);
+			
+			$opt_name2=$rs[opt_name];
+			
+		}else{}
+		//옵션3
+		if($opt3){
+			$sql="select * from $OptionTable3 where opt_no='$opt3'";
+			$result=mysql_query($sql);
+			$rs=mysql_fetch_array($result);
+			
+			$opt_name3=$rs[opt_name];
+			
+		}else{}
+		//옵션4
+		if($opt4){
+			$sql="select * from $OptionTable4 where opt_no='$opt4'";
+			$result=mysql_query($sql);
+			$rs=mysql_fetch_array($result);
+			
+			$opt_name4=$rs[opt_name];
+			
+		}else{}
+		$sum = ($z_price*$quantity)+(($opt_price+$opt_price2+$opt_price3+$opt_price4)*$quantity);
+		$sum_str = number_format($sum);	
+		$mon_tot += $sum;
+		
+		$cart_sql1 = "select * from $ItemTable where item_no='$item_no_coupon'";
+		$cart_res1 = mysql_query($cart_sql1, $dbconn);
+		$cart_row1 = mysql_fetch_array($cart_res1);
+
+		$prevno = $cart_row1[prevno];
+		$cate_num = $cart_row1[category_num];
+		$use_coupon = $cart_row1[use_coupon];
+		$provider_id = $cart_row1[provider_id];
+		$img_sml = $cart_row1[img_sml];
+		$img = $cart_row1[img];
+		$img_big = $cart_row1[img_big];
+		$img_high = $cart_row1[img_high];
+		$fee = $cart_row1[fee];
+		if($fee == "무료배송" || $fee == "착불")
+			$freight_free = true;
+			
+		$short_explain = $cart_row1[short_explain];
+		$short_explain = han_cut($short_explain,28);
+
+		//============================== 상점명을 가져옴 =====================================
+		$me_sql = "select * from $MemberTable where mart_id='$mart_id'";
+		$me_res = mysql_query($me_sql, $dbconn);
+		$me_row = mysql_fetch_array($me_res);
+		$in_name = $me_row[name];
+		$me_delivery = $me_row[me_delivery];
+		$me_delivery_price = number_format($me_row[me_delivery_price]);
+		if( $fee == "착불" ){
+			$me_delivery_str = "$fee";
+		}else{
+			$me_delivery_str = "$fee";
+		}
+		
+		if($use_coupon == '1' && $coupon_used=='0'){ 
+			$coupon_str = "<a href=\"javascript:CouponWin('$item_no_coupon')\"><img src='http://www.mocoupon.co.kr/onlineShop/img/button-u8.gif' border='0'></a>";	
+		}else{
+			$coupon_str = '';
+		}
+	  
+		$if_cash_str = '';
+		$SQL_T = "select if_cash,mart_id from item where item_no='$item_no_forcash'";
+		$dbresult_T = mysql_query($SQL_T, $dbconn);
+		$if_cash = mysql_result($dbresult_T,0,0);
+		$mart_id_tmp = mysql_result($dbresult_T,0,1);
+		
+		if($mart_id == $mart_id_tmp){
+			if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' width='46' height='15' absalign='middle'>";
+		}
+		else{
+			$SQL_T = "select if_cash from gnt_item where seller_id='$mart_id' and item_no='$item_no_forcash'";
+			$dbresult_T = mysql_query($SQL_T, $dbconn);
+			$numRows_T = mysql_num_rows($dbresult_T);
+			if($numRows_T > 0)
+			$if_cash = mysql_result($dbresult_T,0,0);
+			if($if_cash == '1') $if_cash_str = "<img src='../images/cash.gif' width='46' height='15' absalign='middle'>";
+		}
+
+		//============================ 상품 이미지 =======================================
+		if($img_sml != "" && file_exists("$Co_img_UP$mart_id/$img_sml")){
+			if (strstr(strtolower(substr($img_sml,-4)),'.jpg') || strstr(strtolower(substr($img_sml,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_sml' border='0' width='50' height='50' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_sml,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_sml' width='50' height='50'></embed>";
+			}
+		}else if($img != "" && file_exists("$Co_img_UP$mart_id/$img")){
+			if (strstr(strtolower(substr($img,-4)),'.jpg') || strstr(strtolower(substr($img,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img' border='0' width='50' height='50' border='0'>";
+			}
+			if (strstr(strtolower(substr($img,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img' width='50' height='50'></embed>";
+			}
+		}else if($img_big != "" && file_exists("$Co_img_UP$mart_id/$img_big")){
+			if (strstr(strtolower(substr($img_big,-4)),'.jpg') || strstr(strtolower(substr($img_big,-4)),'.gif')){
+				$img_str = "<img src='../..$Co_img_DOWN$mart_id/$img_big' border='0' width='50' height='50' border='0'>";
+			}
+			if (strstr(strtolower(substr($img_big,-4)),'.swf')){
+				$img_str = "<embed src='../..$Co_img_DOWN$mart_id/$img_big' width='50' height='50'></embed>";
+			}
+		}else{
+			$img_str = "<img src='../image/noimage_ss.gif' border='0' width='50' height='50' border='0'>";
+		}
+?>
+                                <input type='hidden' name='order_pro_no[]' value='<?=$order_pro_no?>'>
+                                <tr>
+                                  <td class="left"><table width="100%" border="0" cellspacing="0" cellpadding="0" class="bo_table">
+                                    <tr>
+                                      <td width="60" height="60" align="center" valign="top"><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no_forcash?>'><?=$img_str?></a></td>
+                                      <td>
+                                      	<span class="text_red"><a href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no_forcash?>'>[
+													<?=$item_name?>
+													]</a></span>
+												<?=$if_cash_str?>
+												<?=$coupon_str?>
+												<br>
+												<span class="text_14_s2">
+												<?=$short_explain?>
+												</span>
+                                      </td>
+                                      <td align="right">
+                                      <span>
+												<?
+													if(isset($opt)&&$opt!=""){
+												?>
+												옵션:
+												<?=$opt_name?>-<?=$opt_price?>원
+												<?}?>
+												<? if(isset($opt2)&&$opt2!=""){?><br>
+												<?=$opt_name2?>-<?=$opt_price2?>원
+												<? }?>
+												<? if(isset($opt3)&&$opt3!=""){?><br>
+												<?=$opt_name3?>-<?=$opt_price3?>원
+												<? }?>
+												<? if(isset($opt4)&&$opt4!=""){?><br>
+												<?=$opt_name4?>-<?=$opt_price4?>원
+												<? }?>
+												</span>
+                                      </td>
+                                    </tr>
+                                  </table></td>
+                                  <td align="center"><?=$z_price_str?>
+                                    원</td>
+                                  <td align="center"><input type="text" class="input_03" size="3" id='quantityid' name='quantity[]' value='<?=$quantity?>'>
+                                    개</td>
+                                  <td align="center"><span class="price">
+                                    <?=$sum_str?>
+                                    원</span></td>
+                                  <td align="center"><?=$me_delivery_str?></td>
+                                  <td align="center"><a href='cart_in.php?mode=del&order_pro_no=<?=$order_pro_no?>&mart_id=<?=$mart_id?>&provider_id=<?=$provider_id?>&item_no_forcash=<?=$item_no_forcash?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>'><img src="../image/bu_del.gif" border="0" onclick='return really()'></a></td>
+                                </tr>
+								
+
+<!-- AceCounter eCommerce (Product_Detail) v7.5 Start -->
+<!-- Data Allocation (Product_Detail) -->
+<script language='javascript'>
+	_A_amt[_ace_countvar]='<?=$sum_str?>'.replace(/[^0-9]/g,'');
+	_A_nl[_ace_countvar]='<?=$quantity?>';
+	_A_pl[_ace_countvar]='<?=$order_pro_no?>';
+	_A_pn[_ace_countvar]='<?=$item_name?>';
+	_A_ct[_ace_countvar]='<?=$cate_num?>';
+	_ace_countvar++;
+</script>
+<!-- AceCounter eCommerce (Cart_InOut) v7.5 Start -->
+
+								
+                                <?
+		if( $i < $cart_tot ){
+?>
+
+                                <?
+		}
+?>
+                                <?
+	}
+?>
+                                <?
+if($mon_tot >= $freight_limit){		// 배송료설정
+	$freight_fee = 0;
+}else if($freight_free){
+		$freight_fee = 0;
+}else{
+	$freight_fee = $freight_cost;
+}
+
+$mon_tot_freight = $mon_tot + $freight_fee;
+?>
+                              </table>
+                              <!---------------------- 장바구니 테이블 끝 --------------------------------------------->
+                              <!---------------------- 총합계 버튼 시작 ----------------------------------------------->
+                              <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td height="40" align="right" bgcolor="F4F4F4">총합계 : <span class="product">
+                                    <?=number_format($mon_tot_freight)?>
+                                    원</span>
+<? if($freight_fee){ ?>
+                                      <span class="text_red">[ 배송료 <?=number_format($freight_fee)?>원 ]</span>  
+                                      
+<? } ?>
+									  <a onClick="re_count(this.form)" style='cursor:hand'><img src="../image/bu_account.gif" hspace="5" border="0" align="absmiddle"></a>								    </td>
+                                </tr>
+                              </table>
+							  <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+<? if($freight_fee){ ?>
+							    <!-- <tr>
+							      <td height="40" align="right"><?=number_format($freight_limit)?>
+							        원 미만의 결제금액은 배송료
+                                      <?=number_format($freight_cost)?>
+                                    원이 부과됩니다.</td>
+							      </tr> -->
+<? } ?>
+										<tr>
+											<td align="right"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+													<tr>
+														<td height="70"><a onClick="cart_del(this.form)" style='cursor:hand'><img src="../images/mypage/shop_btn2.gif" onMouseDown="javascript:AEC_D_A();" /></a>
+                                          <?
+	if($item_no){
+?>
+                             <img src="../images/mypage/shop_btn1.gif" border="0" style='cursor:hand' onClick="location.href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>'">
+                                          <?
+	}else{
+?>
+                             <img src="../images/mypage/shop_btn1.gif" border="0" style='cursor:hand' 	onclick="history.back();">
+                                          <?
+	}
+?>                              </td>
+                              <td align="right">
+							  <img src="../images/mypage/shop_btn3.gif" border="0" style='cursor:hand' onClick="javascript:go_order_sheet()">
+							  <!--<?
+	if($mon_tot >= $pur_limit){
+?>
+	                              <img src="../images/mypage/shop_btn3.gif" border="0" style='cursor:hand' onClick="javascript:go_order_sheet()">
+                                          <?
+	}else{
+?>
+                                <img src="../images/mypage/shop_btn3.gif" border="0" style='cursor:hand' onClick="pur_limit_warn('<?=$pur_limit?>')">
+                                          <?
+	}
+?>-->                            </td>
+                          </tr>
+												</table></td>
+                     </tr>
+							  </table>
+
+
+
+                              <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                <?
+	$martintro_sql = "select * from $MartIntroTable where mart_id='$mart_id'";
+	$martintro_res = mysql_query($martintro_sql, $dbconn);
+	$martintro_row = mysql_fetch_array($martintro_res);
+?>
+                                <!---------------------- 배송안내 시작 --------------------->
+		
+                              <tr>
+                                <td height="10"></td>
+                              </tr>
+                                <tr>
+                                  <td><table width="100%" border="0" cellpadding="0" cellspacing="1" class="baesong" bgcolor="#e9e9e9">
+                                    <tr>
+                                      <td width="100" align="center" bgcolor="#F9F9F9" style="font-weight: bold">배송안내</td>
+                                      <td bgcolor="#FFFFFF"><?=$martintro_row["delivery"]?></td>
+                                    </tr>
+                                    <tr>
+                                      <td align="center" bgcolor="#F9F9F9" style="font-weight: bold">교환환불안내</td>
+                                      <td bgcolor="#FFFFFF"><?=$martintro_row["exchange"]?></td>
+                                    </tr>
+                                  </table></td>
+                                </tr>
+                                <tr>
+                                  <td height="10"></td>
+                                </tr>
+                                <!---------------------- 교환할부안내 끝 ------------------------------------------------>
+                              </table>
+                              </form>
+                            <?
+}else{
+?>
+                            <div style="border:1px solid #F90; padding:15px; text-align:center"><b>장바구니에 담긴 상품이 없습니다.</b></div>
+                            <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td height="70"><div align="right"><img src="../images/mypage/shop_btn1.gif" border="0" style='cursor:hand' onClick="location.href='../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>'"></div></td>
+                              </tr>
+                            </table>
+                            <?
+}
+?>
+                            <!---------------------- 총합계 버튼 끝 ------------------------------------------------->                        </td>
+                      </tr>
+                  </table>
+
+
+
+
+
+
+
+
+										</div></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="9"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

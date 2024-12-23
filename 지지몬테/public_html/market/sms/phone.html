@@ -1,0 +1,333 @@
+<html>
+<head>
+<title> SMS 메세지 보내기 </title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<style type="text/css">
+<!--
+td { font-family: "굴림", "돋움"; font-size: 9pt;}
+.box01 {font-family: "굴림", "돋움"; font-size: 9pt; background-color: #B5F3F7; border: 1px solid #B5F7F7;width:103;height:70; overflow:hidden}
+.box02 {font-family: "굴림", "돋움"; font-size: 9pt; background-color: #FFFFFF; border: 1px solid #787878; overflow:hidden; padding:2}
+.box03 {font-family: "굴림", "돋움";font-size: 9pt; background-color: #92E9EB; border: 1px solid #92E9EB; padding-top:1; text-align: center; vertical-align: middle;}
+.t01{color:#5A7DBD}
+.t02{color:#999999}
+.select{ font-family: "돋움","굴림"; font-size: 8pt;}
+-->
+</style>
+
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+
+function check_length() {
+
+	var tmpStr, nStrLen, reserve, f;
+		f = document.smssingle;
+
+		sInputStr = f.to_message.value;
+		nStrLen = calculate_byte(sInputStr);
+
+		if ( nStrLen > 80 ) {
+			tmpStr = Cut_Str(sInputStr,80);
+			reserve = nStrLen - 80;
+			alert("바이트가 초과되었습니다.(최대 80Bytes)\r\n초과된 부분은 전송되지 않습니다."); 
+			// 80byte에 맞게 입력내용 수정
+			f.to_message.value = tmpStr;
+			nStrLen = calculate_byte(tmpStr);
+			f.msglen.value = nStrLen;
+		} else {
+			f.msglen.value = nStrLen;
+		}
+	return;
+}
+
+function calculate_byte( sTargetStr ) {
+	var sTmpStr, sTmpChar;
+	var nOriginLen = 0;
+	var nStrLength = 0;
+	 
+	sTmpStr = new String(sTargetStr);
+	nOriginLen = sTmpStr.length;
+
+	for ( var i=0 ; i < nOriginLen ; i++ ) {
+		sTmpChar = sTmpStr.charAt(i);
+
+		if (escape(sTmpChar).length > 4) {
+			nStrLength += 2;
+		}else if (sTmpChar!='\r') {
+			nStrLength ++;
+		}
+	}	
+	return nStrLength; 	
+}
+
+function Cut_Str( sTargetStr , nMaxLen ) {
+	var sTmpStr, sTmpChar, sDestStr;
+	var nOriginLen = 0;
+	var nStrLength = 0;
+	var sDestStr = "";
+	sTmpStr = new String(sTargetStr);
+	nOriginLen = sTmpStr.length;
+
+	for ( var i=0 ; i < nOriginLen ; i++ ) {
+		sTmpChar = sTmpStr.charAt(i);
+
+		if (escape(sTmpChar).length > 4) {
+			nStrLength = nStrLength + 2;
+		} else if (sTmpChar!='\r') {
+			nStrLength ++;
+		}
+ 
+		if (nStrLength <= nMaxLen) {
+			sDestStr = sDestStr + sTmpChar;
+		} else {
+			break;
+		}
+	}	
+	return sDestStr; 	
+}
+
+function numchkfield(field, name) {
+	if(isNaN(field.value)) {
+		alert(name + " 항목을 반드시 숫자로 입력해 주십시오.");
+		field.focus();
+		return false;
+	}else if(document.smssingle.phone.value == "") {
+		alert(name + " 항목을 반드시 숫자로 입력해 주십시오.");
+		field.focus();
+		return false;
+	}
+	return true;
+}
+
+function Send() {
+   
+      var  r_list = document.smssingle  ;
+      var  kk     = document.smssingle.group_name.value ;
+      var  jj     = kk.split("\n");
+      var  ijj    = jj.length ;
+      var  rr     = "";
+
+	  if ( document.smssingle.group_name.value == "" ) {
+      	alert("전화번호를 입력하세요");
+		document.smssingle.group_name.focus();
+      	return ;
+      }
+
+	 
+	 if (!numchkfield(document.smssingle.phone , "회신번호")) return;
+
+      
+      if ( (document.smssingle.to_message.value) == "" ) {
+        alert("메세지를 입력하세요!");
+        return ;
+      }
+      
+	  if(jj.length > 5) {
+		  alert("전송은 5 개까지만 가능합니다.(현재 건수 : "+jj.length+")");
+		  return;
+	  }
+ 
+      if ( confirm("전송하시겠습니까?") ) {
+		var resultIs = "";
+		document.smssingle.action="message_ok.php";	
+        document.smssingle.group_name.value = jj;
+		if(document.smssingle.date.value.length < 8 && document.smssingle.check[1].checked == true) {
+			alert("예약시간이 잘못되었습니다.\n예)20040202");
+			document.smssingle.date.focus();
+			return;
+		}
+			
+		document.smssingle.submit();
+      }
+      return ;
+   }
+
+function Clear() {
+	document.smssingle.to_message.value= "";
+	document.smssingle.msglen.value= "0";
+	document.smssingle.group_name.value= "";
+	document.smssingle.phone.value= "";
+	document.smssingle.check[0].checked = true;
+	On();
+}
+
+function date() {
+	var now = new Date();
+	var year = now.getYear();
+	var mon = now.getMonth()+1+"";
+	var day = now.getDate();
+
+	if(mon.length == 1) mon = "0"+mon;
+
+	document.smssingle.date.value  = year+""+mon+""+day;
+	var hours = now.getHours();
+	var minutes = now.getMinutes();
+
+	document.smssingle.hour[hours].selected = true;	
+}
+
+function On() {
+	document.smssingle.date.disabled = true;
+	document.smssingle.hour.disabled = true;
+	document.smssingle.min.disabled = true;
+}
+
+function Off() {
+	document.smssingle.date.disabled = false;
+	document.smssingle.hour.disabled = false;
+	document.smssingle.min.disabled = false;
+
+}
+
+function mouseClick() {
+	if ((event.button==2) || (event.button==3)) {
+		alert("마우스 버튼을 사용 하실수 없습니다.");
+    }    
+}
+	document.onmousedown=mouseClick;
+
+//-->
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0">
+<FORM name = "smssingle" method = "post">
+<table width="157" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="157" height="78"><img src="images/h_img01.gif" width="157" height="78"></td>
+	</tr>
+	<tr>
+		<td height="73" align="center" background="images/h_img02.gif">
+			<textarea name="to_message" wrap="VIRTUAL" class="box01" onKeyUp="check_length();" value=""></textarea>
+			<!--<textarea name="to_message" cols="20" rows="8" onKeyUp="check_length();" value=""></textarea>-->
+			
+		</td>
+	</tr>
+	<tr>
+		<td height="21" align="center" valign="top" background="images/h_img03.gif" style="padding-top:4">
+		<input name="msglen" type="text" class="box03" style="width:15; height:16" maxlength="2" value="0"> /
+			80 Byte</td>
+	</tr>
+	<tr>
+		<td height="87"><img src="images/h_img04.gif" width="157" height="87"></td>
+	</tr>
+	<tr>
+		<td height="61" align="center" background="images/h_img05.gif">
+			<textarea name="group_name" wrap="VIRTUAL" class="box02" style="height:48;width:120;"></textarea>
+				<!--<textarea name="group_name" cols="18" rows="6"></textarea>			-->
+		</td>
+	</tr>
+	<tr>
+		<td height="21"><img src="images/h_img06.gif" width="157" height="21"></td>
+	</tr>
+	<tr>
+		<td height="125" align="center" valign="top" background="images/h_img07.gif">
+			<table border="0" cellspacing="1" cellpadding="0">
+				<tr>
+					<td>
+						<input name="phone" type="text" class="box02" style="width:120;" maxlength="12" value="" onkeypress="if (event.keyCode < 26 || event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;">						
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="radio" name="check" value="0" Onclick="On();"  checked>즉시						
+						<input type="radio" name="check" value="1" Onclick = "Off();">예약</td>
+				</tr>
+				<tr>
+					<td align="center"><!--
+						<select name="select" class="box02" style="width:120" onclick="MM_showHideLayers('calendar','','show')">
+							<option selected>20040310</option>
+						</select>
+						-->예약일시:
+						<input type = text style="width:65" name="date" value="" disabled>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<select name="hour" class="box02" disabled>
+							<option value="00" selected>0</option>
+							<option value="01">1</option>
+							<option value="02">2</option>
+							<option value="03">3</option>
+							<option value="04">4</option>
+							<option value="05">5</option>
+							<option value="06">6</option>
+							<option value="07">7</option>
+							<option value="08">8</option>
+							<option value="09">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+						</select>
+						시
+						<select name="min" class="box02" disabled>
+							<option value="00" selected>00</option>
+							<option value="05">05</option>
+							<option value="10">10</option>
+							<option value="15">15</option>2004-03-10
+							<option value="20">20</option>
+							<option value="25">25</option>
+							<option value="30">30</option>
+							<option value="35">35</option>
+							<option value="40">40</option>
+							<option value="45">45</option>
+							<option value="50">50</option>
+							<option value="55">55</option>
+							<option value="60">60</option>
+						</select>
+						분</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="40">
+			<table border="0" align="center" cellpadding="0" cellspacing="1">
+				<tr>
+					<td><a href="javascript:Send()"><img src="images/b_send.gif" border="0" width="50" height="26"></a></td>
+					<td><a href="javascript:Clear()"><img src="images/b_cancel.gif" border="0" width="50" height="26"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>           
+</form>
+<script language="JavaScript" >
+<!--
+	date();
+//-->
+</script>
+
+</body>
+</html>

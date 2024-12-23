@@ -1,0 +1,51 @@
+
+
+<footer id="footer">
+    <div class="f_menu">
+                <?
+                        if(!$UnameSess || !$MemberLevel || !$MemberName)
+                        {
+                            if($NonMemberName)
+                            {
+                                $Logined_Member_Name = $NonMemberName;
+                                echo"<a href='../main/logout.php'>로그아웃</a>";
+                            }
+                            else
+                                echo"<a href='../main/login.html'>로그인</a>";
+                        }else{
+                            $Logined_Member_Name = $UnameSess;
+                            echo"<a href='../main/logout.php'>로그아웃</a>";
+                        } 
+                        ?></a>
+                <?
+                            if(!$UnameSess || !$MemberLevel || !$MemberName)
+                            {
+                                if($NonMemberName)
+                                {
+                                    $Logined_Member_Name = $NonMemberName;
+                                    //echo"<a href='../main/logout.php'><img src='../images/mobile_menu_logout.gif' border='0' /></a>";
+                                }
+                                else
+                                    echo"<a href='../main/join.html'>회원가입</a>";
+                            }else{
+                                $Logined_Member_Name = $UnameSess;
+                                echo"<a href='../main/update.html'>정보수정</a>";
+                            }
+                            ?></a>
+                <a href="../../market/main/" target="_blank">PC버전</a>
+                <a href="tel:0516434852">전화걸기</a>
+   </div>
+			<div class="copy">상호 : 지지몬떼 &nbsp;&nbsp;&nbsp; CEO : 이문희<br />
+			  본사 : 부산광역시 동구 자성공원로 11(범일동) 4층<br />
+			  CEO : 010-8545-5813 &nbsp;&nbsp;&nbsp; T.L : 010-9908-9780 <br />
+			  E-mail : gigi4852@naver.com<br>
+				서울지사 : 서울특별시 서초구 잠원동 33-3 대성빌딩 403호 <br>
+SEOUL.L : 010-3229-9208<br> 
+사업자등록번호 : 607-12-73326 <br />
+통신판매신고번호 : 제2020-부산동구-1048호<br />
+<div class="copyright">COPYRIGHT(C) 2018. GIGI-MONTE ALL RIGHTS RESERVED. </div>
+</div>
+		</footer>
+        
+        
+ 

@@ -1,0 +1,279 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>행폰</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+	
+	
+		<script type="text/javascript">
+			//<[CDATA[
+				var currentTxtId = '0';
+				
+				function showTxt(txtId) {
+					
+					if(currentTxtId != "") {
+						$(".iconSet"+currentTxtId+" .subTxt").toggle();
+						if($(".iconSet"+currentTxtId).is(".on")) {
+							$(".iconSet"+currentTxtId).removeClass("on");
+						}
+					}
+					
+					if(currentTxtId != txtId) {
+						$(".iconSet"+txtId+" .subTxt").slideDown();
+						$(".iconSet"+txtId).addClass("on");
+						currentTxtId = txtId;
+					} else {
+						currentTxtId = "";
+					}
+				}
+			//]]>
+		</script>	
+ 
+	</head>
+	<body>
+
+
+	  <section id="content">
+			<!--
+ 			<p class="pro_ti">상품평</p> 
+			<article id="contentSub0">
+				<ul class="productTab">
+					<li><a href="../main/product_detail.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>">상세정보</a></li>
+					<li><a href="../main/product_esti.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>" class="on">상품평</a></li>
+				</ul>
+			</article>
+			-->
+<?
+	$cnfPagecount=10;
+	
+	if ($page == "") $page = 1;
+	$skipNum = ($page - 1) * $cnfPagecount;
+
+	$prev_page = $page - 1;
+	$next_page = $page + 1;
+
+
+	$SQL="select count(*) from $New_BoardTable where area='$item_no' and bbs_no = '11' and mart_id='$mart_id'";
+
+	$dbresult = mysql_query($SQL, $dbconn);
+	$numRows_tot = mysql_result($dbresult,0,0);
+
+	$SQL="select * from $New_BoardTable where area='$item_no' and bbs_no = '11' and mart_id='$mart_id' order by index_no desc limit $skipNum, $cnfPagecount";
+	//echo $SQL;
+	
+
+	$dbresult = mysql_query($SQL, $dbconn);
+	$numRows = mysql_num_rows($dbresult);
+?>
+
+
+			<article id="productReview">
+				<h3>※TOTAL <?=$numRows_tot?>개 상품평</h3>
+ 
+				<article class="reviewList">
+					<ul class="list">
+						
+<?
+if($numRows_tot == 0){
+?>
+							<li>
+									<div>
+										등록된 상품평이 없습니다.									</div>
+							</li>
+<?
+}
+?>
+<?
+	$total_page = ($numRows_tot - 1) / $cnfPagecount;
+	$total_page = intval($total_page)+1;
+
+	if($page % 5 == 0)
+	$start_page = $page - 4;
+	else
+	$start_page = $page - ($page % 5) + 1;
+
+	$end_page = $start_page + 4;
+	if($end_page >= $total_page)
+		$end_page = $total_page;
+	$prev_start_page = $start_page - 5;
+	$next_start_page = $start_page + 5;
+
+	for ($i=0; $i < $numRows; $i++){
+		$row = mysql_fetch_array( $dbresult );
+
+	$title = $row[subject_new];
+	$name = $row[writer];
+	$write_date = $row[write_date];
+	$content = nl2br($row[content]);
+	$username = $row[username];
+	$point = $row[point];
+	$password = $row[password];
+	
+	if($title == ''){
+		$title = substr($content, 0, 50);
+		preg_match('/^([\x00-\x7e]|.{2})*/', $title, $title_tmp);
+		if(strlen($content) > 50)
+			$title_tmp[0] .= '..';
+		$title = $title_tmp[0];
+	}	
+	
+	$point_str = '';
+	for($l=0;$l<$point;$l++){
+		$point_str .= "<img src='../image/product/star_1.gif' align='asbmiddle'>";
+	}
+	$j = $est_tot - $i;
+	$write_date_str = substr($write_date,0,4)."/".substr($write_date,4,2)."/".substr($write_date,6,2);
+
+	if( $username == $UnameSess ){
+		$modify_img = "<a onclick=\"CenterWin('./est_edit.html?mart_id=$mart_id&item_no=$item_no&est_no=$est_no','est_write', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=550,height=650');\" style='cursor:hand'><img src='../image/product/modify.gif'></a>";
+		$del_img = "<a onclick=\"est_del_win('$est_no','$mart_id');\" style='cursor:hand'><img src='../image/product/delete.gif'></a>";
+	}else{
+		$modify_img = "<img src='../image/product/modify.gif'>";
+		$del_img = "<img src='../image/product/delete.gif'>";
+	}
+
+	//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ==============
+	if( $username ){
+		//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ======
+		$sql1 = "select member_img from $Mart_Member_NewTable where username='$username'";
+		$res1 = mysql_query( $sql1 , $dbconn );
+		$row1 = mysql_fetch_array( $res1 );
+		if( $row1[member_img] ){
+			$name = "<img src='../../up/$mart_id/$row1[member_img]' border='0' align='absmiddle' width='25' height='25'>";
+		}else{
+			$name = $name;
+		} 
+	}else{
+		$name = $name;
+	}
+?>
+
+							<li class="iconSet<?=$i?>">
+								<a href="javascript:showTxt('<?=$i?>');"">
+									<div><?=$name?> [<?=$write_date_str ?>]</div>
+									<div><?=$title?></div>
+									<div style="display:none;" class="subTxt">
+										<?=$content?>
+									</div>
+								</a>							</li>
+<?
+}
+?>						
+
+					</ul>
+				</article>
+ 
+				<article class="paging">
+					
+ 
+ 
+ 
+ 
+<article class="paging">
+<!---------------------- 페이징 시작 ---------------------------------------------------->
+<?
+if($page == 1){
+?>
+									<a><<</a>
+<?
+}else{
+?>
+									<a href='../main/product_esti.html?page=1&bbs_no=11&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'> << </a>
+<?
+}
+?>
+<?
+if($start_page > 1){
+?>
+									<a href='../main/product_esti.html?page=<?=$prev_start_page?>&bbs_no=11&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'> < </a>
+<?
+}else{
+?>
+									<a><</a>
+<?
+}
+?>
+<?
+for($i=$start_page;$i<=$end_page;$i++){
+	if($i == $page){
+?>
+									<b>[<?=$i?>]</b>
+<?
+	}else{
+?>
+									<a href='../main/product_esti.html?page=<?=$i?>&bbs_no=11&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'><?=$i?></a>
+<?
+	}
+}
+?>
+<?
+if($end_page < $total_page){
+?>
+									<a href='../main/product_esti.html?page=<?=$next_start_page?>&bbs_no=11&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'>
+								 > </a>
+<?
+}else{
+?>
+									<a>></a>
+<?
+}
+?>
+<?
+if($page < $total_page){
+?>
+			<a href='../main/product_esti.html?page=<?=$total_page?>&bbs_no=11&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>'>
+									 >> </a>
+<?
+}else{
+?>
+									<a>>></a>
+<?
+}
+?>        
+    
+	
+ 
+</article>
+				</article>
+ 
+			</article>
+
+
+		</section>
+
+	</body>
+</html>

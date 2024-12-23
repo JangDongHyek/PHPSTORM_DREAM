@@ -1,0 +1,148 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//================== 회사소개 정보를 불러옴 ==============================================
+$com_sql = "select help from $MartIntroTable where mart_id='$mart_id'";
+$com_res = mysql_query( $com_sql, $dbconn );
+$com_tot = mysql_num_rows( $com_res );
+
+if( $com_tot > 0 ){
+	$com_row = mysql_fetch_array( $com_res );
+	$help = $com_row[help];
+
+	mysql_free_result( $com_res );
+}else{
+	$help = "";
+}
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1000" valign="top">
+    	        <div id="sub_container">
+    				<div class="article">
+                    	<div class="greet01">
+               	  			  <!--<p><img src="../images2/greet1_img.jpg"></p>-->
+                  			  <h2>Company Introduction</h2>
+                              <h3>아름다운 여성을 위한 패션 유니폼</h3>
+                              <div class="con">저희 지지몬테 유니폼은 세련되고 트렌디한 디자인으로<br>
+								  기능성, 상징성 그리고 편안함과 아름다움을 동시에<br>
+								  만족시킬 수 있도록 끊임없이 노력하고 실천하는<br>
+								  성실한 유니폼 회사입니다.<br><br>
+								  
+								 <strong> 고객 한분 한분 맺은 인연은 소중히 생각하고<br>
+								  타사와 차별화된 서비스와 A/S로<br>
+								  고객만족에 최선을 다하는 회사가 되겠습니다.</strong><br><br>
+								  
+								  이에 맞춰 더욱 노력하며 앞서나가는 디자인<br>
+								  개발에 중점을 두어 아름다움을 선물하는<br>
+								  최고의 회사가 되도록 직원모두 하나가 되어<br>
+								  노력하겠습니다.<br><br>
+							</div>
+                        </div><!--greet01-->
+						<br>	<br>
+						<div class="contents">
+							<h1 class="violet02">SUMMARY <span class="violet01 s_text">/ 회사개요</span></h1>
+							<div class="aline_left">
+								<p><strong class="dot">회사명</strong> 지지몬테</p>
+								<p><strong class="dot">본 사</strong> 부산광역시 동구 부산진성공원로 11(범일동) 4층</p>
+								<p><strong class="dot">사업자번호</strong> 607-12-73326</p>
+								<p><strong class="dot">설립년도</strong> 2003.9</p>
+								<p><strong class="dot">주생산품목</strong> 코디네이터/간호사/인포메이션(주문판매)</p>
+							</div>
+						</div>
+                    	<div class="greet01">
+                  			  <h2>Company Introduction</h2>
+								<img src="../images2/greet1_img.jpg" alt="제품공정"><br><br><br>
+                  			  <h2>찾아오시는 길</h2>
+						</div>
+						
+						<div class="map">
+						
+<div id="daumRoughmapContainer1693965339509" class="root_daum_roughmap root_daum_roughmap_landing" style="width:100%"></div>
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+
+<!-- 3. 실행 스크립트 -->
+<script charset="UTF-8">
+	new daum.roughmap.Lander({
+		"timestamp" : "1693965339509",
+		"key" : "2g49v",
+		"mapWidth" : "100%",
+		"mapHeight" : "400"
+	}).render();
+</script>
+
+<table class="map_table">
+   <tbody>
+      <tr>
+        <th>본사주소</th>
+        <td>부산광역시 동구 부산진성공원로 11(범일동) 4층</td>
+      </tr>
+          <tr>
+        <th>문의전화</th>
+        <td>051-643-4852 / 010-8545-5813 </td>
+      </tr>
+        <tr><th>FAX</th>
+        <td>051-643-4859</td>
+      </tr>
+        <tr><th>E-MAIL</th>
+        <td><a href="mailto:gigi4852@naver.com">gigi4852@naver.com</a></td>
+      </tr>
+   </tbody>
+</table>
+</div><!--map-->
+<!--끝-->
+
+
+                    </div><!--.article-->
+    </div><!--sub_container-->
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

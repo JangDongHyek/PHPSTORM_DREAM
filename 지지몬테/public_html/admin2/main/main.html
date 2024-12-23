@@ -1,0 +1,679 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<?
+include "../admin_head1.php";
+?>
+
+<?
+
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+
+
+if($flag=="ok"){
+	$SQL = "update $EstimateTable set estimate_ok='y' where est_no = $est_no and mart_id='$mart_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+}
+
+if($flag=="no"){
+	$SQL = "update $EstimateTable set estimate_ok='n' where est_no = $est_no and mart_id='$mart_id'";
+	$dbresult = mysql_query($SQL, $dbconn);
+}
+?>
+<?
+$sql = "select * from $MartMngInfoTable where mart_id='$mart_id'";
+$res = mysql_query($sql, $dbconn);
+$total = mysql_num_rows($res);
+if( $total > 0 ){
+	$row = mysql_fetch_array($res);
+	$shop_logo = $row[logo];
+	$target = "../../up/".$mart_id."/".$shop_logo;
+}
+?>
+<head>
+
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../css/menu.css" type="text/css" />
+
+<script type="text/javascript">
+function checkform(f){
+	if(f.searchword.value==""){
+		alert("검색어를 입력하세요.");
+		f.searchword.focus();
+		return false;
+	}
+	return true;
+}
+function OpenWin(url, ShopID,  OrderID, Amount, Name, E_mail, Phone, Ret_URL){ 
+	var R_URL=url+'?ShopID='+ShopID+'&OrderID='+OrderID+'&Amount='+Amount +'&Name='+Name +'&E_mail='+E_mail +'&Phone='+Phone +'&Ret_URL='+escape(Ret_URL);
+	window.open(R_URL, 'Window', 'width=550,height=450,toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=no,resizable=yes');
+}	
+</script>
+<script type="text/javascript">
+<!--
+function est_ok(est_no){
+	if(confirm("승인하시겠습니까?")){
+		window.location.href='<?=$PHP_SELF?>?flag=ok&est_no='+est_no;
+	}
+	else return;
+}
+function est_no(est_no){
+	if(confirm("승인취소하시겠습니까?")){
+		window.location.href='<?=$PHP_SELF?>?flag=no&est_no='+est_no;
+	}
+	else return;
+}
+function board_view(bbs_no, mart_id){
+	var url = "../board/board_list.php?bbs_no="+bbs_no;
+	var uploadwin = window.open(url,"uploadwin","width=800,height=600,scrollbars=no,toolbar=no,navationbar=no,scrollbars=yes,resizable=yes");
+}
+//-->
+</script>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body topmargin="0" leftmargin="0">
+<?
+include '../inc/menu1.html'; 
+?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top"><table width="100%" height="81" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td background="../img/mid_bg.gif">&nbsp;</td>
+      </tr>
+    </table></td>
+    <td width="990"><!-- 내용시작 --><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="310"><img src="../img/main_title.gif" width="310" height="81"></td>
+            <td valign="top" background="../img/top_2_bg.gif"><div align="right">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td height="10"></td>
+                </tr>
+                <tr>
+                  <td><div align="right"><img src="../img/top_icon.gif" width="13" height="15" align="absmiddle"> <span class="text_gray2_t">현재페이지</span><span class="text_gray2"> : <a href="../index.html">HOME</a> &gt; </span><span class="text_gray2_c">메인페이지</span> </div></td>
+                </tr>
+                <tr>
+                  <td height="28">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td><div align="right"><img src="../img/top_icon2.gif" width="5" height="7"> <span class="title">&nbsp;관리자모드에 접속하셨습니다.</span></div></td>
+                </tr>
+              </table>
+            </div></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td height="17"></td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="490" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><a href="../order/order_new.php?status_flag=2"><img src="../img/main_title1.gif" width="490" height="39" border="0"></a></td>
+              </tr>
+              <tr>
+                <td valign="top"><!-- 입금완료미배송 --><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                  <tr>
+                    <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                  </tr>
+                  <tr align="center">
+                    <td  bgcolor="#F7F7F7">주문번호</td>
+                    <td bgcolor="#F7F7F7">이름</td>
+                    <td bgcolor="#F7F7F7">아이디</td>
+                    <td bgcolor="#F7F7F7">날짜</td>
+                  </tr>
+                  <?
+
+$today = date("Ymd");//오늘날짜
+
+$c_sql2 = "select * from $Order_BuyTable where mart_id='$mart_id'  and ( status = '2' )";
+$c_res2 = mysql_query($c_sql2, $dbconn);
+$c_tot2 = mysql_num_rows($c_res2);
+
+$sql2 = "select * from $Order_BuyTable where mart_id='$mart_id' and ( status = '2' ) order by payment_date desc limit 3";
+$res2 = mysql_query($sql2, $dbconn);
+$tot2 = mysql_num_rows($res2);
+?>
+                  <?
+if( $tot2 == "0" ){
+?>
+                  <tr height='30'>
+                    <td colspan='4' align='center'><b>입금완료 미배송건이 하나도 없습니다.</b></td>
+                  </tr>
+                  <?
+}
+?>
+                  <?
+for($i=1; $i <= $tot2; $i++){		
+	$row2 = mysql_fetch_array($res2);	
+	$name = $row2[name];
+	$order_num = $row2[order_num];
+	$index_no = $row2[index_no];
+
+	if( $row2[id] ){
+		$id = $row2[id];
+	}else{
+		$id = "비회원";
+	}
+
+	$date = $row2[date];
+	$date = str_replace("-","",$date);
+	$date_str = substr($date,0,4)."-".substr($date,4,2)."-".substr($date,6,2);			
+?>
+                  <tr>
+                    <td><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle"><a href='../order/order_detail.php?index_no=<?=$index_no?>&page=<?=$page?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&flag=<?=$flag?>&cnfPagecount=<?=$cnfPagecount?>&QryFromDate=<?=$QryFromDate?>&QryToDate=<?=$QryToDate?>&status_flag=2'>
+                      <?=$order_num?>
+                    </a></td>
+                    <td align="center"><?=$name?>
+                      </a></td>
+                    <td align="center"><?=$id?></td>
+                    <td align="center" class="text_gray"><?=$date_str?></td>
+                  </tr>
+                  <?
+}
+if( $res2 ){
+	mysql_free_result( $res2 );
+}
+?>
+                  <tr align="right">
+                    <td colspan="4"  bgcolor="#F7F7F7"><img src="../images/icon_2.gif" width="10" height="6" align="absmiddle">입금완료 미배송건이 총 <span class="text_blue">
+                      <?=$c_tot2?>
+                    </span>건있습니다. </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                  </tr>
+                </table><!----------------------------------------입금완료미배송 END----------------></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><img src="../img/main_title3.gif" width="490" height="39" border="0" style="cursor:hand;" onClick="board_view('11', 'admin')" style="cursor:hand;"></td>
+              </tr>
+              
+			  
+			  
+			                <tr>
+                  <td><?
+$bbs_no = 11;
+$q_sql = "select * from $New_BoardTable where bbs_no = '$bbs_no' and mart_id='$mart_id' AND step=0 order by ansno asc limit 4";
+$q_res = mysql_query($q_sql, $dbconn);
+$q_tot = mysql_num_rows($q_res);
+?></td>
+                </tr>
+                <tr>
+                  <td valign="top"><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="3"></td>
+                    </tr>
+                    <tr align="center">
+                      <td bgcolor="#F7F7F7">제목</td>
+                      <td width="80" bgcolor="#F7F7F7">작성자</td>
+                      <td width="75" bgcolor="#F7F7F7">작성일</td>
+                    </tr>
+                    <?
+if( $q_tot == "0" ){
+?>
+                    <tr height='30'>
+                      <td colspan='3' align='center'><b>상품평이 하나도 없습니다.</b></td>
+                    </tr>
+                    <?
+}
+?>
+                    <?
+for($i=1; $i <= $q_tot; $i++){
+	$q_row = mysql_fetch_array($q_res);
+	$index_no = $q_row[index_no];
+	$bbs_no = $q_row[bbs_no];
+	$code = $q_row[code];
+	$writer = $q_row[writer];
+	$user_id = $q_row[username];
+	$write_date = date("Y/m/d", strtotime($q_row[write_date]));
+	$email = $q_row[email];
+	$subject_new = $q_row[subject_new];
+	$item_no = $q_row[area];
+
+	//글이 너무 길 경우 짤라줌
+	$item_name = han_cut($item_name,10);
+	$subject_new = han_cut($subject_new,16);
+	$writer = han_cut($writer,10);
+?>
+                    <tr>
+                      <td class="text_gray"><?=$subject_new?></td>
+                      <td><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">
+                          <?=$writer?></td>
+                      <td class="text_gray" align="center"><?=$write_date?></td>
+                    </tr>
+                    <?
+}
+if( $q_res ){
+	mysql_free_result( $q_res );
+}
+?>
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                    </tr>
+                  </table></td>
+                </tr>  
+			  
+			  
+			  
+			  
+			  
+			  
+            </table></td>
+            <td>&nbsp;</td>
+            <td width="490" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><a href="../order/order_new.php?status_flag=1"><img src="../img/main_title2.gif" width="490" height="39" border="0"></a></td>
+              </tr>
+              <tr>
+                <td valign="top"><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                  <tr>
+                    <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                  </tr>
+                  <tr align="center">
+                    <td  bgcolor="#F7F7F7">주문번호</td>
+                    <td bgcolor="#F7F7F7">이름</td>
+                    <td bgcolor="#F7F7F7">아이디</td>
+                    <td bgcolor="#F7F7F7">날짜</td>
+                  </tr>
+                  <?
+$c_sql4 = "select * from $Order_BuyTable where mart_id='$mart_id' and status = '1'";
+$c_res4 = mysql_query($c_sql4, $dbconn);
+$c_tot4 = mysql_num_rows($c_res4);
+
+$sql4 = "select * from $Order_BuyTable where mart_id='$mart_id' and status = '1' order by date desc limit 3";
+$res4 = mysql_query($sql4, $dbconn);
+$tot4 = mysql_num_rows($res4);
+?>
+                  <?
+if( $tot4 == "0" ){
+?>
+                  <tr height='30'>
+                    <td colspan='4' align='center'><b>입금대기건이 하나도 없습니다.</b></td>
+                  </tr>
+                  <?
+}
+?>
+                  <?
+for($i=1; $i <= $tot4; $i++){		
+	$row4 = mysql_fetch_array($res4);	
+	$name1 = $row4[name];
+	$order_num1 = $row4[order_num];
+	$index_no1 = $row4[index_no];
+	if( $row4[id] ){
+		$id1 = $row4[id];
+	}else{
+		$id1 = "비회원";
+	}
+
+	$date1 = $row4[date];
+	$date1 = str_replace("-","",$date1);
+	$date_str1 = substr($date1,0,4)."-".substr($date1,4,2)."-".substr($date1,6,2);			
+?>
+                  <tr>
+                    <td><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle"><a href='../order/order_detail.php?index_no=<?=$index_no1?>&page=<?=$page?>&keyset=<?=$keyset?>&searchword=<?=$searchword?>&flag=<?=$flag?>&cnfPagecount=<?=$cnfPagecount?>&QryFromDate=<?=$QryFromDate?>&QryToDate=<?=$QryToDate?>&status_flag=1'>
+                      <?=$order_num1?>
+                    </a></td>
+                    <td align="center"><?=$name1?>
+                      </a></td>
+                    <td align="center"><?=$id1?></td>
+                    <td align="center" class="text_gray"><?=$date_str1?></td>
+                  </tr>
+                  <?
+}
+if( $res4 ){
+	mysql_free_result( $res4 );
+}
+?>
+                  <tr align="right">
+                    <td colspan="4"  bgcolor="#F7F7F7"><img src="../images/icon_2.gif" width="10" height="6" align="absmiddle">입금대기건이 총 <span class="text_blue">
+                      <?=$c_tot4?>
+                    </span>건있습니다. </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                  </tr>
+                </table><!----------------------------------------입금대기 END----------------></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><?
+$bbs_no = 6;
+$q_sql = "select * from $New_BoardTable where bbs_no = '$bbs_no' and mart_id='$mart_id' AND step=0 order by ansno asc limit 4";
+$q_res = mysql_query($q_sql, $dbconn);
+$q_tot = mysql_num_rows($q_res);
+?>                  <img src="../img/main_title4.gif" width="490" height="39" onClick="board_view('<?=$bbs_no?>', 'admin')" style="cursor:hand;"></td>
+              </tr>
+              <tr>
+                <td valign="top"><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                  <tr>
+                    <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                  </tr>
+                  <tr align="center">
+                    <td  bgcolor="#F7F7F7">작성자</td>
+                    <td bgcolor="#F7F7F7">상품명</td>
+                    <td bgcolor="#F7F7F7">제목</td>
+                  </tr>
+                  <?
+if( $q_tot == "0" ){
+?>
+                  <tr height='30'>
+                    <td colspan='3' align='center'><b>상품문의가 하나도 없습니다.</b></td>
+                  </tr>
+                  <?
+}
+?>
+                  <?
+for($i=1; $i <= $q_tot; $i++){
+	$q_row = mysql_fetch_array($q_res);
+	$index_no = $q_row[index_no];
+	$bbs_no = $q_row[bbs_no];
+	$code = $q_row[code];
+	$writer = $q_row[writer];
+	$user_id = $q_row[username];
+	$write_date = $q_row[write_date];
+	$email = $q_row[email];
+	$subject_new = $q_row[subject_new];
+	$item_no = $q_row[area];
+	//========================== 상품명을 가져옴 =========================================
+	$sq1 = "select item_code,item_name from $ItemTable where item_no='$item_no'";
+	$re1 = mysql_query($sq1, $dbconn);
+	$ro1 = mysql_fetch_array($re1);
+
+	$item_code = $ro1[item_code];
+	$item_name = $ro1[item_name];
+
+	$item_write_date = substr($item_write_date,0,4)."-".substr($item_write_date,4,2)."-".substr($item_write_date,6,2);
+
+	//글이 너무 길 경우 짤라줌
+	$item_name = han_cut($item_name,10);
+	$subject_new = han_cut($subject_new,16);
+	$writer = han_cut($writer,10);
+?>
+                  <tr>
+                    <td><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">
+                        <?=$writer?></td>
+                    <td><?=$item_name?></td>
+                    <td class="text_gray"><?=$subject_new?></td>
+                  </tr>
+                  <?
+	if( $re1 ){
+		mysql_free_result( $re1 );
+	}
+}
+if( $q_res ){
+	mysql_free_result( $q_res );
+}
+?>
+                  <tr>
+                    <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="490" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><?
+$bbs_no = 4;
+$q_sql = "select * from $New_BoardTable where bbs_no = '$bbs_no' and mart_id='$mart_id' AND step=0 order by ansno asc limit 4";
+$q_res = mysql_query($q_sql, $dbconn);
+$q_tot = mysql_num_rows($q_res);
+?>                    <img src="../img/main_title5.gif" width="490" height="39" onClick="board_view('<?=$bbs_no?>', 'admin')" style="cursor:hand;"></td>
+                </tr>
+                <tr>
+                  <td valign="top"><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="3"></td>
+                    </tr>
+                    <tr align="center">
+                      <td bgcolor="#F7F7F7">제목</td>
+                      <td width="80" bgcolor="#F7F7F7">작성자</td>
+                      <td width="75" bgcolor="#F7F7F7">작성일</td>
+                    </tr>
+                    <?
+if( $q_tot == "0" ){
+?>
+                    <tr height='30'>
+                      <td colspan='3' align='center'><b>질문과 답변이 하나도 없습니다.</b></td>
+                    </tr>
+                    <?
+}
+?>
+                    <?
+for($i=1; $i <= $q_tot; $i++){
+	$q_row = mysql_fetch_array($q_res);
+	$index_no = $q_row[index_no];
+	$bbs_no = $q_row[bbs_no];
+	$code = $q_row[code];
+	$writer = $q_row[writer];
+	$user_id = $q_row[username];
+	$write_date = date("Y/m/d", strtotime($q_row[write_date]));
+	$email = $q_row[email];
+	$subject_new = $q_row[subject_new];
+	$item_no = $q_row[area];
+
+	//글이 너무 길 경우 짤라줌
+	$item_name = han_cut($item_name,10);
+	$subject_new = han_cut($subject_new,16);
+	$writer = han_cut($writer,10);
+?>
+                    <tr>
+                      <td class="text_gray"><?=$subject_new?></td>
+                      <td><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">
+                          <?=$writer?></td>
+                      <td class="text_gray" align="center"><?=$write_date?></td>
+                    </tr>
+                    <?
+}
+if( $q_res ){
+	mysql_free_result( $q_res );
+}
+?>
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td><a href="../member/member_list.php"><img src="../img/main_title7.gif" width="490" height="39" border="0"></a></td>
+                </tr>
+                <tr>
+                  <td valign="top"><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="2"></td>
+                    </tr>
+                    <?
+$today_day = date("Ymd");
+$today_month = date("Ym");
+
+$SQL = "select * from $Mart_Member_NewTable where mart_id ='$mart_id' and substring(date,1,8) = '$today_day'";
+$dbresult = mysql_query($SQL, $dbconn);
+$total1 = mysql_num_rows($dbresult);
+
+$SQL = "select * from $Mart_Member_NewTable where mart_id ='$mart_id' and substring(date,1,6) = '$today_month'";
+$dbresult = mysql_query($SQL, $dbconn);
+$total2 = mysql_num_rows($dbresult);
+
+$SQL = "select * from $Mart_Member_NewTable where mart_id ='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$total3 = mysql_num_rows($dbresult);
+?>
+                    <tr>
+                      <td width="35%"  bgcolor="#F7F7F7"><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">오늘 가입한회원</td>
+                      <td><?=$total1?>
+                        명</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#F7F7F7"><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">이번달 가입한회원</td>
+                      <td><?=$total2?>
+                        명</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#F7F7F7"><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">총회원</td>
+                      <td><?=$total3?>
+                        명 </td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="2"></td>
+                    </tr>
+                  </table></td>
+                </tr>
+            </table></td>
+            <td>&nbsp;</td>
+            <td width="490" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><?
+$bbs_no = 5;
+$q_sql = "select * from $New_BoardTable where bbs_no = '$bbs_no' and mart_id='$mart_id' AND step=0 order by ansno asc limit 4";
+$q_res = mysql_query($q_sql, $dbconn);
+$q_tot = mysql_num_rows($q_res);
+?>                    <img src="../img/main_title6.gif" width="490" height="39" onClick="board_view('<?=$bbs_no?>', 'admin')" style="cursor:hand;"></td>
+                </tr>
+                <tr>
+                  <td valign="top"><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="3"></td>
+                    </tr>
+                    <tr align="center">
+                      <td bgcolor="#F7F7F7">제목</td>
+                      <td width="80" bgcolor="#F7F7F7">작성자</td>
+                      <td width="75" bgcolor="#F7F7F7">작성일</td>
+                    </tr>
+                    <?
+if( $q_tot == "0" ){
+?>
+                    <tr height='30'>
+                      <td colspan='3' align='center'><b>비회원 문의가 하나도 없습니다.</b></td>
+                    </tr>
+                    <?
+}
+?>
+                    <?
+for($i=1; $i <= $q_tot; $i++){
+	$q_row = mysql_fetch_array($q_res);
+	$index_no = $q_row[index_no];
+	$bbs_no = $q_row[bbs_no];
+	$code = $q_row[code];
+	$writer = $q_row[writer];
+	$user_id = $q_row[username];
+	$write_date = date("Y/m/d", strtotime($q_row[write_date]));
+	$email = $q_row[email];
+	$subject_new = $q_row[subject_new];
+	$item_no = $q_row[area];
+
+	//글이 너무 길 경우 짤라줌
+	$item_name = han_cut($item_name,10);
+	$subject_new = han_cut($subject_new,16);
+	$writer = han_cut($writer,10);
+?>
+                    <tr>
+                      <td class="text_gray"><?=$subject_new?></td>
+                      <td><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">
+                          <?=$writer?></td>
+                      <td class="text_gray" align="center"><?=$write_date?></td>
+                    </tr>
+                    <?
+}
+if( $q_res ){
+	mysql_free_result( $q_res );
+}
+?>
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="4"></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td><a href="../counter.php"><img src="../img/main_title8.gif" width="490" height="39" border="0"></a></td>
+                </tr>
+                <tr>
+                  <td valign="top"><table align="center" border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="2"></td>
+                    </tr>
+                    <?
+$yy = date("Y");
+$mm = date("m");
+$dd = date("d");
+
+$query="select sum(hit) from nalog3_data where counter='daylife' and yy='$yy' and mm='$mm' and dd='$dd' ";
+$today_hit_temp=mysql_fetch_array(mysql_query($query));
+$today_hit1=$today_hit_temp["sum(hit)"];
+if(!$today_hit1)$today_hit1="0";
+
+
+$query="select sum(hit) from nalog3_data where counter='daylife' and yy='$yy' and mm='$mm'  ";
+$today_hit_temp=mysql_fetch_array(mysql_query($query));
+$today_hit2=$today_hit_temp["sum(hit)"];
+
+
+$query="select sum(hit) from nalog3_data where counter='daylife'";
+$today_hit_temp=mysql_fetch_array(mysql_query($query));
+$today_hit3=$today_hit_temp["sum(hit)"];
+?>
+                    <tr>
+                      <td width="35%"  bgcolor="#F7F7F7"><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">오늘 방문자수</td>
+                      <td><?echo $today_hit1?>명</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#F7F7F7"><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">이번달 방문자수</td>
+                      <td><?echo $today_hit2?>명</td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#F7F7F7"><img src="../images/icon_3.gif" width="10" height="5" align="absmiddle">총방문자수</td>
+                      <td><?echo $today_hit3?>명 </td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#33A6B3" height="3" colspan="2"></td>
+                    </tr>
+                  </table></td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table><!-- 내용끝 --></td>
+    <td valign="top"><table width="100%" height="81" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td background="../img/mid_bg.gif">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

@@ -1,0 +1,515 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title>지지몬테</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+        <link rel="stylesheet" type="text/css" href="../css/owl.carousel.css" />
+        <link rel="stylesheet" type="text/css" href="../css/owl.theme.css" />
+        
+        <script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+        <script src="../js/owl.carousel.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+		
+		
+		
+<style type="text/css">
+<!--
+#divpop {
+	position:absolute;
+	left:0px;
+	top:154px;
+	width:92%;
+	left:4%;
+	height:auto;
+	z-index:2000;
+	background-color:#333333;
+	border:1px solid #333;
+	visibility: visible;
+}
+#divpop2 {
+	position:absolute;
+	left:400px;
+	top:150px;
+	width:460px;
+	height:572px;
+	z-index:2000;
+	visibility: visible;
+}
+
+#divpop3 {
+	position:absolute;
+	left:400px;
+	top:590px;
+	width:460px;
+	height:572px;
+	z-index:2000;
+	visibility: visible;
+}
+
+.style1 a{color: #FFFFFF}
+strong {color:#fff}
+.style1 {color: #FFFFFF}
+
+-->
+
+</style>
+
+
+
+
+
+<SCRIPT language=JavaScript>
+<!--
+
+<!--
+
+//시간설정
+function startTime(){
+var time= new Date();
+hours= time.getHours();
+mins= time.getMinutes();
+secs= time.getSeconds();
+closeTime=hours*3600+mins*60+secs;
+closeTime+=10; //시간설정 (초)
+Timer();
+}
+
+//타이머
+function Timer(){
+var time= new Date();
+hours= time.getHours();
+mins= time.getMinutes();
+secs= time.getSeconds();
+curTime=hours*3600+mins*60+secs
+if (curTime>=closeTime){
+document.all['divpop'].style.visibility = "hidden";
+}
+else{
+window.setTimeout("Timer()",7200)}
+}
+
+//쿠키설정
+function setCookie( name, value, expiredays ) { 
+var todayDate = new Date(); 
+todayDate.setDate( todayDate.getDate() + expiredays ); 
+document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+} 
+
+//창닫기(레이어)
+function closeWin() { 
+if ( document.notice_form.chkbox.checked ){ 
+setCookie( "maindiv", "done" , 2 ); 
+} 
+document.all['divpop'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+
+//창닫기(레이어)
+function closeWin2() { 
+if ( document.notice_form2.chkbox2.checked ){ 
+setCookie( "maindiv2", "done" , 2 ); 
+} 
+document.all['divpop2'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+
+//창닫기(레이어)
+function closeWin3() { 
+if ( document.notice_form3.chkbox3.checked ){ 
+setCookie( "maindiv3", "done" , 2 ); 
+} 
+document.all['divpop3'].style.visibility = "hidden";
+}
+function sitelink(url_link) 
+{ 
+window.opener.location=url_link; 
+} 
+//--> 
+
+
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+-->
+//-->
+</SCRIPT>
+
+
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function showLayer() {
+document.all.divpopS.style.visibility = "visible";
+}
+
+function hideLayer() {
+document.all.divpop.style.visibility = "hidden";
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+	</head>
+	<body>
+	
+	
+	
+	<!--레이어팝업-->
+<div id="divpop"  class="layer_popup1" style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../../market/pop/pop_event.jpg" width="100%" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="30" bgcolor="#3F3F3F"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form" id="notice_form">
+                        <tr>
+                          <td height="30"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox" />
+                              <span class="product2 style1">오늘 하루 열지 않습니다.</span>&nbsp;&nbsp;<a href="javascript:closeWin();"><strong>[ X CLOSE ]</strong></a></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+			
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+<div id="divpop2"  class="layer_popup2" style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../images/sub/pro_binu.jpg" width="100%" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="30" bgcolor="#3F3F3F"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form2" id="notice_form2">
+                        <tr>
+                          <td height="30"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox2" />
+                              <span class="product2 style1">오늘 하루 열지 않습니다.</span>&nbsp;&nbsp;<a href="javascript:closeWin2();"><strong>[ X CLOSE ]</strong></a></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv2=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop2'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+<div id="divpop3"  class="layer_popup3" style="display:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" class="handler"><img src="../pop/pop_event_2.gif" width="500" height="476" border="0"></td>
+                  </tr>
+                  <tr>
+                    <td height="30" bgcolor="#3F3F3F"><table width="300" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <form name="notice_form3" id="notice_form3">
+                        <tr>
+                          <td height="30"><div align="center">
+                              <input type="checkbox" value="checkbox" name="chkbox3" />
+                              <span class="product2 style1">오늘 하루 열지 않습니다.</span>&nbsp;&nbsp;<a href="javascript:closeWin3();"><strong>[ X CLOSE ]</strong></a></div></td>
+                        </tr>
+                      </form>
+                    </table>
+                    </td>
+                  </tr>
+                </table>
+</div>
+<SCRIPT language=Javascript>
+<!--
+cookiedata = document.cookie; 
+if ( cookiedata.indexOf("maindiv3=done") < 0 ){ 
+//document.all['divpop'].style.visibility = "visible";
+} 
+else {
+document.all['divpop3'].style.visibility = "hidden"; 
+}
+//-->
+</SCRIPT>
+
+
+
+
+
+
+<? include("../include/top.html"); ?>
+
+
+<section id="content">	
+
+
+<div class="m_rolling_banner">
+          
+                <div id="owl-demo" class="owl-carousel">
+
+                <div class="item"><a href="../main/product_list.html?&category_num=51&category_num1=51"><img src="../../market/images2/m_img01.jpg"></a></div>
+                <div class="item"><a href="../main/product_list.html?&category_num=49&category_num1=49"><img src="../../market/images2/m_img02.jpg"></a></div>
+                 <!--<div class="item"><img src="../images/main_img_3.jpg"></div>
+                <div class="item"><img src="../images/main_img_4.jpg"></div>                
+               <div class="item"><img class="lazyOwl" data-src="images/m_rolling_banner_01.jpg"></div>
+                <div class="item"><img class="lazyOwl" data-src="images/m_rolling_banner_02.jpg"></div>
+                <div class="item"><img class="lazyOwl" data-src="images/m_rolling_banner_03.jpg"></div>-->
+
+              </div>
+              <!-- rolling -->   
+     <script>
+     $(document).ready(function() {
+ 
+     $("#owl-demo").owlCarousel({
+		 
+	  autoPlay : 5000,
+	 // navigation : true,
+      slideSpeed : 300,
+      paginationSpeed : 400,
+      singleItem : true,
+		 
+		 
+		  //autoPlay : 5000,
+          //items : 1,
+          //lazyLoad : true,
+          //navigation : true
+
+      });
+    });
+    </script>
+          
+</div>
+ 
+<!--제품배너-->
+        <section class="infomation cf">
+            <div class="box b1 cf">
+			
+		<div class="banner_img">
+		<a href="../main/product_list.html?&category_num=50&category_num1=50"><img src="../../market/images2/banner_20_1.jpg" alt="17s/s collection" border="0"></a>
+        <a href="../main/product_list.html?&category_num=50&category_num1=50"><img src="../../market/images2/banner_20_2.jpg" alt="17s/s collection" border="0"></a>
+		</div>
+			
+			<div class="banner_img">
+		    <a href="../main/product_list.html?category_num=31"><img src="../../market/images2/banner00.jpg" alt="17f/w collection" border="0"></a>
+            <a href="../main/product_list.html?category_num=31"><img src="../../market/images2/banner00_2.jpg" alt="17f/w collection" border="0"></a>           </div>
+			
+			<div class="banner_img">
+             <a href="../board/board_list.html?bbs_no=5"><img src="../../market/images2/banner01.jpg" alt="17f/w collection" border="0"></a>
+             <a href="../board/board_list.html?bbs_no=5"><img src="../../market/images2/banner02.jpg" alt="17f/w collection" border="0"></a>
+			</div>
+
+            <!--첫번째 .box-->
+        </section><!--infomation-->
+
+
+
+<!--동글배너-->
+    <div id="m_data">
+    	<h3><img src="../images/dong_title.png" style="width:40%"></h3>
+        <ul>
+        	<li><a href="../board/board_list.html?bbs_no=4"><img src="../images/dong01.png" border="0"></a><a href="../board/board_list.html?bbs_no=4">온라인상담</a></li>
+            <li><a href="../board/board_list.html?bbs_no=2"><img src="../images/dong02.png" border="0"></a><a href="../board/board_list.html?bbs_no=2">이용안내</a></li>
+            <li><a href="tel:0516434852"><img src="../images/dong03.png" border="0"></a><a href="tel:0516434852">전화문의</a></li>
+            <li><a href="../main/product_list.html?category_num=31"><img src="../images/dong04.png" border="0"></a><a href="../main/category.html">제품리스트</a></li>
+        </ul>
+    </div><!--m_data--> 
+
+
+
+
+<!--div class="intro_icon mt5">
+				 <dl>
+		     	<dd><a href=""><img src="../images/m_icon_01.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_02.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_03.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_04.png"></a></dd
+		     </dl>
+</div-->
+
+
+
+<!--
+<div class="intro_icon mt10">
+				 <dl>
+		     	<dd><a href=""><img src="../images/m_icon_01.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_02.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_03.png"></a></dd>
+			    <dd><a href=""><img src="../images/m_icon_04.png"></a></dd>
+		     </dl>
+</div>-->
+
+
+<article style="width:100%">
+                <h3 style="text-align:center; padding-top:40px;"><img src="../../market/images2/pro_title01.jpg" width="100%" alt="coordicator best item"></h3>
+                <ul class="specialList" style="text-align:center; padding-left:2%">
+				<? include "../include/fav_item.html" ?>
+				</ul>
+</article>
+
+
+<article style="width:100%">
+                <h3 style="text-align:center; padding-top:40px;"><img src="../../market/images2/pro_title02.jpg" width="100%" alt="coordicator best item"></h3>
+                <ul class="specialList" style="text-align:center; padding-left:2%">
+				<? include "../include/rec_item.html" ?>
+				</ul>
+</article>
+	
+	
+    <div id="m_cus">
+    	<ul>
+        	<li>
+            	<div class="c_title"><img src="../images/cus_icon01.png"></div>
+                <p> CEO : 010-8545-5813<br>
+				    T.L : 010-9908-9780<br>
+					T : 051-643-4852<br>
+					F : 051-643-4859<Br>
+             </p>
+                <h3>AM 09:30 ~ PM 18:30<br>LUNCH&nbsp;&nbsp;&nbsp;13:00 ~ 14:00<br>
+				<span>일, 공휴일 휴무</span></h3>
+				
+
+				<p class="sns"><a href="https://www.instagram.com/gigi.m4852/" target="_blank"><img src="../../market/images2/insta.jpg" alt="인스타그램" border="0"> gigi.m4852</a></p>
+				<p class="sns"><a href="http://pf.kakao.com/_FXYxhC" target="_blank"><img src="../../market/images2/kakao.jpg" alt="카카오톡"> gigimonte</a></p>
+
+				
+            </li>
+            <li>
+            	<div class="c_title"><img src="../images/cus_icon02.png"></div>
+            	<p class="con">565001-01-402909</p>
+              <h3><span>은행명&nbsp;&nbsp;&nbsp;</span>KB국민은행<br>
+                <span>예금주&nbsp;&nbsp;&nbsp;</span>이문희(지지몬테)<br>
+                <br>
+                주문자명과 입금자명이<br>
+                다른 경우는 게시판이나<br>
+                고객센터로 연락바랍니다</h3>
+            </li>
+        </ul>
+    </div><!--m_cus-->
+<!--<article id="mainNotice">
+                <h3><span class="ic"></span>공지사항</h3>
+
+				 <?             			
+				$today = date("Ymd");
+				$notice_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 2";
+				$notice_res = mysql_query($notice_sql, $dbconn);
+				$notice_tot = mysql_num_rows( $notice_res );
+				?>
+											<?
+				if( $notice_tot == "0" ){
+				?>
+                <ul>
+                    <li>등록된 공지사항이 없습니다.</li>
+                </ul>
+											<?
+				}
+				?>
+											<?
+				$i = 0;
+				while( $notice_row = mysql_fetch_array($notice_res) ){
+					$notice_no = $notice_row[index_no];
+					$notice_title = $notice_row[subject_new];
+					$notice_title = han_cut($notice_title,40);
+				?>
+                <ul>
+                    <li><a href='../board/board_read.html?index_no=<?=$notice_no?>&bbs_no=1&mart_id=<?=$mart_id?>'>-&nbsp;<?=$notice_title?></a></li>
+                </ul>
+				<?
+				}
+				if( $notice_res ){
+					mysql_free_result( $notice_res );
+				}
+				?>
+
+</article>-->
+
+
+</section>
+
+
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

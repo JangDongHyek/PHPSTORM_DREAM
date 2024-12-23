@@ -1,0 +1,145 @@
+<?php
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<!DOCTYPE html>
+ 
+ 
+ 
+ 
+ 
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title></title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+		
+		
+    
+<script>
+function checkform(f){
+	if(f.username.value==""){
+		alert("아이디를 입력하세요.");
+		f.username.focus();
+		return false;
+	}
+	if(f.password.value==""){
+		alert("비밀번호를 입력하세요.");
+		f.password.focus();
+		return false;
+	}
+	return true;
+}
+
+function ordercheck(f){
+	if(f.ordernum.value==""){
+		alert("주문번호를 입력하세요.");
+		f.ordernum.focus();
+		return false;
+	}
+	return true;
+}
+function checkform1(f){
+	if(f.order_name.value==""){
+		alert("주문자 성명을 입력하세요.");
+		f.order_name.focus();
+		return false;
+	}
+	/*
+	if(f.passport1.value==""){
+		alert("주민번호 앞자리를 입력하세요.");
+		f.passport1.focus();
+		return false;
+	}
+	if(f.passport2.value==""){
+		alert("주민번호 뒷자리를 입력하세요.");
+		f.passport2.focus();
+		return false;
+	}
+	*/
+	return true;
+}
+
+function check(){
+    var str = document.f1.passport1.value.length;
+	if(str == 6) {
+       document.f1.passport2.focus();
+    }
+
+} 
+	
+function check1(){
+    var str = document.f1.passport2.value.length;
+    if(str == 7) {
+       document.f1.order_name.focus();
+       
+	}   	
+} 
+</script> 
+	</head>
+	<body>
+<? include("../include/top.html"); ?>
+ 
+		
+<section id="content">
+		<article id="contentSubTitle">
+			<div class="cate_list">
+				<h2>&nbsp;&nbsp;<a href="../">홈</a> > 로그인</h2>
+			</div>
+		</article>
+		<?
+			$url = "";
+		?>
+        <article id="new_login">
+               <div class="form">
+               	 <form name='f' method='post' action='login_process.php?url=<?=$url?>&mart_id=<?=$mart_id?>' onsubmit='return checkform(this)'>							  
+		         <input type="hidden" name="member_type" value="1">
+                         <p class="title">회원로그인</p>
+                         <p><input type="text" name="username" value="" class="input" placeholder="아이디" /></p>
+                         <p><input type="password" name="password" value="" class="input" placeholder="패스워드" /></p>
+                         <p><INPUT type="submit" class="submit" value="로그인" ></p>
+                  </form>
+               </div>
+               <div class="form2">
+                  <form name='f1' action='temp_login_process.php?url=<?=$url?>&mart_id=<?=$mart_id?>' method="post" onsubmit='return checkform1(this)'>
+                         <p class="title">비회원로그인</p>
+                         <p><input type="text" name="order_name" value="" class="input" placeholder="주문자성명" /></p>
+                         <p><INPUT type="submit" class="submit" value="로그인" ></p>
+                         <p class="text01">아이디 및 비밀번호는 <span>쇼핑몰 PC버전</span> 에서 확인해 주세요.</p>
+                 </form>
+               </div>
+        </article>
+ 
+    </section>
+ 
+ 
+<? include("../include/bottom.html"); ?>
+	</body>
+</html>

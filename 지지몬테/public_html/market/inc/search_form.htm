@@ -1,0 +1,24 @@
+<SCRIPT LANGUAGE="JavaScript">
+		<!--
+		function search_check(){
+			if(!document.search_form.kw.value){
+				alert('검색어를 입력해주세요');
+				document.search_form.kw.focus();
+				return false;
+			}
+			return true;
+		}
+		//-->
+		</SCRIPT>
+		<table width="321" border="0" cellspacing="0" cellpadding="0" style="position: relative;">
+          <form name='search_form' method='get' action='../main/product_list.html' onsubmit='return search_check();'>
+            <input type='hidden' name='ss[search_mode]' value='default' />
+            <tr>
+              <td width="321" height="38" style="padding-left:25px; background:#FFF; border: 1px solid #ddd;"><div align="left">
+                  <input name="kw" type="text" required="required" itemname="검색어" style="width:250px;height:16px;padding-left:10px; border:0; background:url(../images2/input_text1.gif) no-repeat; ime-mode:active" onfocus="this.style.backgroundImage = 'url(none)'" />
+              </div></td>
+              <td style="position:absolute; right: 0; top:9px " width="26" valign="middle"><input name="image" type="image" src="../images2/search_btn.gif"/></td>
+            </tr>
+          </form>
+	    </table>
+		

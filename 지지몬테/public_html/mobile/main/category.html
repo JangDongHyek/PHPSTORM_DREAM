@@ -1,0 +1,74 @@
+
+
+<div id="left_menu">
+       <div class="close"><a href="javascript:menuClose()"><img src="../images/btn_close.png" /></a></div>
+       <div class="title">전체카테고리<img src="../images/all_menu.png" /></div>
+        <!--메뉴시작-->
+        <section id="content">
+                    <article id="sublist">
+                        <ul class="iconSetCategory">
+					<li><a href="../main/greet01.htm" class="off">COMPANY</a></li>
+
+
+                <?
+                $sql_cate = "select * from $CategoryTable where mart_id='$mart_id' and prevno='0' and if_hide='0' and category_num > 28 order by cat_order desc";
+                $res_cate = mysql_query($sql_cate, $dbconn);
+                $total_cate = mysql_num_rows($res_cate);
+                $i = 0;
+                while( $row_cate = mysql_fetch_array( $res_cate ) ){
+                    $i++;
+                    $category_numb = $row_cate[category_num];
+                    $category_nameb = $row_cate[category_name];
+                
+                    $sql_cate3 = "select * from $ItemTable where mart_id='$mart_id' and firstno='$category_numb' and if_hide='0'";
+                    $res_cate3 = mysql_query($sql_cate3, $dbconn);
+                    $total_cate3 = mysql_num_rows($res_cate3);
+                
+                    $sql_cate4 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$category_numb' and if_hide='0' order by cat_order desc";
+                    $res_cate4 = mysql_query($sql_cate4, $dbconn);
+                    $total_cate4 = mysql_num_rows($res_cate4);
+                
+                ?>
+
+
+
+					<li class="iconSet<?=$i?>">
+					<?if($total_cate4>0){?>
+						<a href="javascript:showSubMenu('<?=$i?>');" class="off"><?=$category_nameb?>&nbsp;(<?=$total_cate3?>)</a>
+					<?}else{?>
+						<a href="../main/product_list.html?category_num=<?=$category_numb?>"><?=$category_nameb?>&nbsp;(<?=$total_cate3?>)</a>
+					<?}?>
+
+						
+						<ul class="subCategory" style="display:none;"><!--2차메뉴시작-->
+							<?
+							$sql_cate2 = "select * from $CategoryTable where mart_id='$mart_id' and category_degree = '1' and prevno='$category_numb' and if_hide='0' order by cat_order desc";
+							$res_cate2 = mysql_query($sql_cate2, $dbconn);
+							$total_cate2 = mysql_num_rows($res_cate2);
+							while( $row_cate2 = mysql_fetch_array( $res_cate2 ) ){
+							$k = "0";
+							?>
+								<li>
+								<a href="../main/product_list.html?category_num=<?=$category_numb?>&category_num1=<?=$row_cate2[category_num]?>">ㆍ<?=$row_cate2[category_name]?></a></li>
+							<?
+							}
+							?>
+							
+							
+						</ul><!--2차메뉴끝-->
+					</li>
+                    
+
+                <?}?>
+					<!--추가메뉴시작-->
+					<li><a href="../board/board.html" class="off">COMMUNITY</a></li>
+					<li><a href="../main/mypage.html" class="off">MY PAGE</a></li>
+
+
+
+				</ul>
+			</article>
+		</section>
+       <!--메뉴끝-->
+       </div>
+       <a href="javascript:menuClose()"><div id="lay"></div></a>

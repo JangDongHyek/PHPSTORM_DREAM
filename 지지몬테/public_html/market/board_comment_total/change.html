@@ -1,0 +1,294 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+   include "../../connect_login.php";
+//================== 함수 파일을 불러옴 ==================================================
+  include "../../main.class";
+?>
+
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<script language="javascript">
+//이메일체크
+function check_email(email){
+	var filter=/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
+	if(filter.test(email))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+} 
+
+function change_check(){ 
+	var base = document.changeform;
+
+	if(base.c_title.value == ""){
+		alert("제목을 입력하세요")
+		base.c_title.focus()
+		return;
+	}
+
+	if(base.c_name.value == ""){
+		alert("신청자를 입력하세요")
+		base.c_name.focus()
+		return;
+	}
+
+	if(base.c_order_num.value == ""){
+		alert("주문번호를 입력하세요")
+		base.c_order_num.focus()
+		return;
+	}
+
+	if(base.c_phone.value == ""){
+		alert("연락처를 입력하세요")
+		base.c_phone.focus()
+		return;
+	}
+
+	if(base.c_email.value == ""){
+		alert("E-mail을 입력하세요")
+		base.c_email.focus()
+		return;
+	}else{
+		if(!check_email(base.c_email.value)){
+			alert("잘못된 E-Mail 입니다.");
+			base.c_email.focus();
+			return;
+		}
+	}
+
+	if(base.c_content.value == ""){
+		alert("사유를 입력하세요")
+		base.c_content.focus()
+		return;
+	}
+
+	base.submit();
+}
+</script>
+
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif"><? include "../include/top2.htm"; ?></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top">&nbsp;</td>
+        <td width="888" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top"><? include "../include/sub_menu.htm" ?>					  </td>
+                    <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                           
+                            <tr>
+                              <td height="5" valign="top"><? include "../inc/customer_menu.html" ?></td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+							  
+							  
+							  
+							  
+							  
+							  
+							  
+							  <!--table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" bgcolor="9B002B">
+                                  <tr>
+                                    <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                        <tr>
+                                          <td width="220"><img src="../images/board/board_img1.gif" width="169" height="66"></td>
+                                          <td><div align="right">
+                                              <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                  <td background="../images/board/boad_menu_bg.gif"><textarea name="textarea" cols="0" rows="0" id="txtResource id #1" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="460" height="66">
+              <param name="movie" value="../swf/board_menu.swf?pageNum=4">
+              <param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="menu" value="false" />
+              <embed src="../swf/board_menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="460" height="66"></embed>
+            </object>
+                          </textarea>
+                                                      <script>printEmbed("txtResource id #1")</script>                                                  </td>
+                                                </tr>
+                                              </table>
+                                          </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                              </table--></td>
+                            </tr>
+                            <tr>
+                              <td height="10"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td height="1" bgcolor="A68156"></td>
+                                  </tr>
+                                  <tr>
+                                    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                          <td height="40"><img src="../images/board/board_title4.gif" width="439" height="30" /></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                  <tr>
+                                    <td height="1" bgcolor="A68156"></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td height="10"></td>
+                            </tr>
+                            <tr>
+                              <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td>
+									<!---------------------- 교환/반품 시작 ------------------------------------------------->
+						<form name='changeform' method='post' action='change_regist.html' onsubmit='change_check(); return false;'>
+						<table width="95%" align="center" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="10"><img src="../image/helpdesk/table1_left.gif" width="10" height="40"></td>
+								<td width="100" align="center" background="../image/helpdesk/table1_bg.gif"><img src="../image/helpdesk/subject.gif"></td>
+								<td width="1"><img src="../image/helpdesk/table1_line.gif" width="1" height="40"></td>
+								<td background="../image/helpdesk/table1_bg.gif"> &nbsp;&nbsp;<input name="c_title" type="text" class="input_03" size="90" style='ime-mode:active'></td>
+								<td width="10"><img src="../image/helpdesk/table1_right.gif" width="10" height="40"></td>
+							</tr>
+						</table>
+						<table width="96%" align="center"  border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="110" height="30" align="center"><img src="../image/helpdesk/mail_name.gif"></td>
+								<td width="1"><img src="../image/helpdesk/view_line.gif" width="1" height="30"></td>
+								<td width="10"></td>
+								<td width="619"><input name="c_name" value='<?=$MemberName?>' type="text" class="input_03" size="20" style='ime-mode:active'></td>
+							</tr>
+							<tr>
+								<td bgcolor="E1E1E1" height="1" colspan="4"></td>
+							</tr>
+							<tr>
+								<td height="30" align="center"><img src="../image/helpdesk/mail_ordernum.gif"></td>
+								<td><img src="../image/helpdesk/view_line.gif" width="1" height="30"></td>
+								<td width="10"></td>
+								<td ><input name="c_order_num" type="text" class="input_03" size="30" style='ime-mode:inactive'></td>
+							</tr>
+							<tr>
+								<td bgcolor="E1E1E1" height="1" colspan="4"></td>
+							</tr>
+							<tr>
+								<td height="30" align="center"><img src="../image/helpdesk/mail_tel.gif"></td>
+								<td><img src="../image/helpdesk/view_line.gif" width="1" height="30"></td>
+								<td width="10"></td>
+								<td><input name="c_phone" type="text" class="input_03" size="20"></td>
+							</tr>
+							<tr>
+								<td bgcolor="E1E1E1" height="1" colspan="4"></td>
+							</tr>
+							<tr>
+								<td height="30" align="center"><img src="../image/helpdesk/mail_email.gif" width="30" height="30"></td>
+								<td><img src="../image/helpdesk/view_line.gif" width="1" height="30"></td>
+								<td width="10"></td>
+								<td><input name="c_email" value='<?=$MemberEmail?>' type="text" class="input_03" size="20" style='ime-mode:inactive'></td>
+							</tr>
+							<tr>
+								<td bgcolor="E1E1E1" height="1" colspan="4"></td>
+							</tr>
+							<tr>
+								<td height="30" align="center"><img src="../image/helpdesk/mail_reason.gif"></td>
+								<td><img src="../image/helpdesk/view_line.gif" width="1" height="30"></td>
+								<td width="10"></td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td bgcolor="E1E1E1" height="1" colspan="4"></td>
+							</tr>
+							<tr>
+							  <td colspan="4" align="center"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td width="5%">&nbsp;</td>
+                                  <td><table width="680"  border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                      <td height="10"></td>
+                                    </tr>
+                                    <tr>
+                                      <td><img src="../image/helpdesk/view_table_top.gif" width="680" height="10"></td>
+                                    </tr>
+                                    <tr>
+                                      <td background="../image/helpdesk/view_table_bg.gif"><table width="90%"  border="0" align="center" cellpadding="10" cellspacing="0">
+                                          <tr>
+                                            <td align="center"><textarea name="c_content" cols="90" rows="10" style='ime-mode:active' class="input_03"></textarea></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td><img src="../image/helpdesk/view_table_bottom.gif" width="680" height="10"></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="10"></td>
+                                    </tr>
+                                  </table></td>
+                                </tr>
+                              </table></td>
+							</tr>
+							<tr>
+								<td bgcolor="E1E1E1" height="1" colspan="4"></td>
+							</tr>
+						</table>
+						<table width="98%" align="center" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td height="50" align="center"><input type='image' onfocus='blur();' src="../image/helpdesk/bu_change.gif" border="0">&nbsp;<img src="../image/helpdesk/bu_cancel.gif" border="0" style='cursor:hand' onclick='document.changeform.reset();'></td>
+							</tr>
+						</table>
+						</form>
+<!---------------------- 교환/반품 끝 --------------------------------------------------->									</td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td height="100%">&nbsp;</td>
+                            </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="9"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<?
+include "../include/bottom.htm";
+?>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

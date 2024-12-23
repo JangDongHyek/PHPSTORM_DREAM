@@ -1,0 +1,204 @@
+<?
+/*
+$SQL = "select * from $MartInfoTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if($numRows > 0){
+	$ary = mysql_fetch_array($dbresult);
+	$shopname = $ary["shopname"];
+	$name = $ary["name"];
+	$passport = $ary["passport"];
+	$tel1 = $ary["tel1"];
+	$tel2 = $ary["tel2"];
+	$email = $ary["email"];
+	$place = $ary["place"];
+}
+*/
+
+$SQL = "select * from $MartMngInfoTable where mart_id='$mart_id'";
+$dbresult = mysql_query($SQL, $dbconn);
+$numRows = mysql_num_rows($dbresult);
+if($numRows>0){
+	$ary = mysql_fetch_array($dbresult);
+	$shop_logo = $ary[logo];
+	$shopuser = $ary[shopuser];
+	$bonus_ok = $ary[bonus_ok];
+	$init_bonus = $ary[init_bonus];
+	$bookmark_bonus_ok = $ary[bookmark_bonus_ok];
+	$init_bookmark_bonus = $ary[init_bookmark_bonus];
+	$by_cash_bonus_ok = $ary[by_cash_bonus_ok];
+	$init_by_cash_bonus = $ary[init_by_cash_bonus];
+	$welcome = $ary[welcome];
+	$copyright = htmlspecialchars($ary[copyright], ENT_QUOTES);
+	$card_yes = $ary[card_yes];
+	$card_url = $ary[card_url];
+	$freight_date = $ary[freight_date];
+	$freight_limit = $ary[freight_limit];
+	$freight_cost = $ary[freight_cost];
+	$union_freight_limit = $ary[union_freight_limit];
+	$union_freight_cost = $ary[union_freight_cost];
+	$pur_limit = $ary[pur_limit];
+	$card_limit = $ary[card_limit];
+	$event_width = $ary[event_width];
+	$event_height = $ary[event_height];
+	$width = $ary[width];
+	$titlecolor = $ary[titlecolor];
+	$titletxtcolor = $ary[titletxtcolor];
+	$listcolor = $ary[listcolor];
+	$listtxtcolor = $ary[listtxtcolor];
+	$color = $ary[color];
+	$user_words = $ary[user_words];
+	$user_words_perm = $ary[user_words_perm];
+	$if_union = $ary[if_union];
+	$intro = $ary[intro];
+	$if_notice = $ary[if_notice];
+	$if_chuchon = $ary[if_chuchon];
+	$if_event = $ary[if_event];
+	$if_coupon = $ary[if_coupon];
+	$if_receipt = $ary[if_receipt];
+	$if_community = $ary[if_community];
+	$page_title = $ary[page_title];
+	$member_confirm = $ary[member_confirm];
+	$if_poll = $ary[if_poll];
+	$if_quiz = $ary[if_quiz];
+	$account_yes = $ary[account_yes];
+	$bonus_limit = $ary[bonus_limit];
+	//$if_gnt_item = $ary[if_gnt_item];
+	$if_mem_use_pass = $ary[if_mem_use_pass];
+	$if_nomem_use_pass = $ary[if_nomem_use_pass];
+	$if_use_bottom_img = $ary[if_use_bottom_img];
+	$if_member_price = $ary[if_member_price];
+	$member_price_percent = $ary[member_price_percent];
+	$if_customer_price = $ary[if_customer_price];
+
+	if( $shop_logo ){
+		$upload = "../../up/$mart_id/";
+		$target = "$upload"."$shop_logo";
+		//==================== 이미지 사이즈를 구함 ==========================================
+		$img_size = @GetImageSize("$target"); 
+		$img_width = $img_size[0]; //이미지의 넓이를 알 수 있음 
+		$img_height = $img_size[1]; //이미지의 높이를 알 수 있음
+	}
+}
+?>
+
+<script language='JavaScript' src='../js/jquery-1.4.3.min.js'></script>
+<script language='JavaScript' src='../js/bluebmenu_org.js'></script>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top" background="../img/up_bg.gif">&nbsp;</td>
+        <td width="990"><table width="990" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td height="38" background="../img/up_bg.gif"><div align="right">
+              <table width="269" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="69"><a href="../index.html"><img src="../img/top_menu1.gif" width="69" height="23" border="0" /></a></td>
+                  <td width="139"><a href="../../." target="_blank"><img src="../img/top_menu2.gif" width="139" height="23" border="0" /></a></td>
+                  <td><a href="../logout.php" target="_top"><img src="../img/top_menu3.gif" width="61" height="23" border="0" /></a></td>
+                </tr>
+              </table>
+            </div></td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><div align="center">
+                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td><div align="center"><a href="../"><img src="<?=$target?>" border="0" /></a></div></td>
+                                </tr>
+                              </table></td>
+                            </tr>
+                          </table>
+                          <a href="../"></a></div></td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                </table></td>
+                <td width="784" height="73">
+<!--메인메뉴-->
+<div class="header">
+	<ul class="submenu">
+		<li><a href="../setting/main_setting.php" target="_top" title="">기본설정</a>
+			<ul class='children'>
+				<li><a href="../setting/main_setting.php" target="_top" title="">쇼핑몰 기본설정</a></li>
+				<li><a href="../info/article.php" target="_top" title="">이용약관</a></li>
+				<li><a href="../com_intro/com_intro2.php" target="_top" title="">회사소개</a></li>
+				<li><a href="../delivery/delivery_info.php" target="_top" title="">배송안내</a></li>
+				<li><a href="../delivery/exchange_info.php" target="_top" title="">교환반품안내</a></li>
+				<li><a href="../member/welcome.php" target="_top" title="">축하메세지</a></li>
+                <li><a href="../info/mypage.php" target="_top" title="">마이페이지</a></li>
+                <li><a href="../meta/meta_edit.php" target="_top" title="">메타테그</a></li>
+			</ul>
+		</li>
+        
+		<li><a href="../category/category_list.php" target="_top" title="">카테고리 관리</a>
+			<ul class='children'>
+				<li><a href="../category/category_list.php" target="_top" title="">카테고리 관리</a></li>
+			</ul>
+		</li>
+        
+		<li><a href="../good/item_frame.html" target="_top" title="">상품 관리</a>
+           <ul class='children'>
+				<li><a href="../good/item_frame.html" target="_top" title="">상품관리</a></li>
+                <li><a href="../good/item_find_jaego.php" target="_top" title="">전체상품 재고관리</a></li>
+                <li><a href="../theme_item/theme_item.php" target="_top" title="">테마상품 관리</a></li>
+			</ul>
+        </li>
+        
+		<li><a href="../order/order_new.php" target="_top" title="">주문 관리</a>
+           <ul class='children'>
+				<li><a href="../order/order_new.php" target="_top" title="">주문관리</a></li>
+                <li><a href="../order/change_list.php" target="_top" title="">교환/반품 관리</a></li>
+			</ul>
+        </li>
+        
+		<li><a href="../member/member_list.php" target="_top" title="">회원 관리</a>
+           <ul class='children'>
+				<li><a href="../member/member_list.php" target="_top" title="">회원 관리</a></li>
+			</ul>
+        </li>
+        
+		<li><a href="../board/admin_board_list.php" target="_top" title="">게시판 관리</a>
+           <ul class='children'>
+				<li><a href="../board/admin_board_list.php" target="_top" title="">게시판 관리</a></li>
+			</ul>
+        </li>
+        
+		<li><a href="../stat/member_region.php" target="_top" title="">통계 관리</a>
+           <ul class='children'>
+				<li><a href="../stat/member_region.php" target="_top" title="">회원 통계</a></li>
+                <li><a href="../counter.php" target="_top" title="">방문 통계</a></li>
+                <li><a href="../stat/sale_period.php" target="_top" title="">판매 통계</a></li>
+                <li><a href="../stat/item_count.php" target="_top" title="">상품 조회수</a></li>
+			</ul>
+        </li>
+        
+		<li><a href="javascript:alert('유료서비스 입니다. 서비스 신청 후 이용바랍니다. Tel. 051-891-0088')" title="">SMS 관리</a>
+           <ul class='children'>
+				<li><a href="javascript:alert('유료서비스 입니다. 서비스 신청 후 이용바랍니다. Tel. 051-891-0088')" title="">SMS 관리</a></li>
+			</ul>
+        </li>
+
+	</ul>
+</div>
+<!--//메인메뉴-->
+                </td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td background="../img/up_bg.gif">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>

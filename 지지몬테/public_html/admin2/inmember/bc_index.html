@@ -1,0 +1,344 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+include "../admin_head.php";
+?>
+<?
+$table = "bc";
+
+if($page == ""){
+	$page = 1;
+}
+
+if($mode == "search"){
+	$qry = "select count(*) from $table where $select_key like '%$input_key%'";
+}else{
+	$qry = "select count(*) from $table";
+}
+
+$result = mysql_query($qry,$dbconn);
+$total = mysql_result($result,0,0);
+
+$line = 100;
+$list = 10;
+$total_page = ceil($total/$line);
+$total_list = intval($total_page/$list);
+
+if($total_page%$list == 0){
+	$total_list--;
+}
+
+$curr_list = intval($page/$list);
+
+if($page%$list == 0){
+	$curr_list--;
+}
+
+$start_page = $curr_list*$list+1;
+$prev_list = $start_page - $list;
+$next_list = $start_page + $list;
+$olds = $line*($page-1);
+
+//================================= 정렬방법 =============================================
+if( $orderstr == "bname" ){
+	$orderstr = "b_name asc";
+}else{
+	$orderstr = "b_no asc";
+}
+
+if($mode == "search"){
+	$qry = "select * from $table where $select_key like '%$input_key%' order by $orderstr, b_no asc limit $olds,$line";
+}else{
+	$qry = "select * from $table order by $orderstr limit $olds,$line";
+}
+
+$result = mysql_query($qry,$dbconn);
+?>
+<script language="javascript">
+function check(){
+	var it = document.f;
+	if(it.input_key.value == ""){
+		alert("검색어를 입력하세요");
+		it.input_key.focus();
+		return false;
+	}
+
+	it.submit();
+}
+
+function delcheck(num1,num2){
+	var remessage = " 다시확인 합니다. \n\n 삭제하시겠습니까.?";
+
+	if(confirm(remessage)){
+		location.href="bc_delete.html?mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&mod=del&page="+num1+"&b_uid="+num2;
+	}
+}
+</script>
+<script>
+function del_post(){
+	var ok = confirm("선택하신 인터넷상품회사를 삭제하시겠습니까?");
+	if(ok){
+		document.write_form.action = "bc_delete.html";
+		document.write_form.submit();
+	}
+}
+</script>
+<script>
+function allcheck(form){ 
+	for( var i=0; i<form.elements.length; i++){ 
+		var check = form.elements[i]; 
+
+		check.checked = true;
+	}
+	return; 
+} 
+function uncheck(form){ 
+	for( var i=0; i<form.elements.length; i++){ 
+		var check = form.elements[i]; 
+		check.checked = false; 
+	} 
+	return; 
+} 
+</script>
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0">
+<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+	<tr valign="top">
+		<td width="200" height="500" bgcolor="F2F2F2">
+			<!--왼쪽부분시작-->
+<?
+$left_menu = "7";
+include "../include/left_menu_layer.php"; 
+?>
+			<!--왼쪽부분 END-->
+		 </td>
+		<td>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="100%" height="50" bgcolor="F2F2F2" class="title"><img src="../images/icon_1.gif" width="30" height="17" align="absmiddle"><b>인터넷상품 회사 관리</b></td>
+				</tr>
+			</table>
+			<!--내용 START~~--><br>
+			<table border="1" cellpadding="5" cellspacing="0" width="90%" bordercolordark="white" bordercolorlight="#E1E1E1" align="center">
+				<tr>
+				  <td vAlign="top" width="90%" bgColor="#ffffff">인터넷상품 회사를 기록/관리하는 곳입니다.<br></td>
+				</tr>
+				<tr>
+				  <td vAlign="top" width="90%" bgColor="#ffffff"></td>
+				</tr>
+				<tr>
+				  <td vAlign="top" width="100%" bgColor="#808080" height="1"></td>
+				</tr>
+<!----------------------------------- 내용 시작 ----------------------------------------->
+				<tr>
+					<td vAlign="top" width="100%" bgColor="#ffffff" height="3">
+						<form name="write_form" method="post" enctype="multipart/form-data" action='bc_modify.html'>
+						<table width="95%" border="0" align="center">
+							<tr>
+								<td width="100%" colspan="2" height="20"><p align="center"><b>[인터넷상품 회사
+								리스트]</b></td>
+							</tr>
+							<tr>
+								<td width='50%' height="40">
+									<input type="button" onClick='allcheck(write_form);' class="button11_gray" value="전체 선택">
+									<input type='button' value='선택 취소' onClick='uncheck(write_form);' class="button11_gray">
+									<input type='button' value='선택 삭제' onclick='del_post();' class="button11_gray">
+									<input type="submit" value="전체 수정" class="button11">
+								</td>
+								<td width='50%' align="right">
+<? 
+if($mode=="search"){ 
+?>
+									[ Search Result : <span class="red12_b"><?=$total?></span> ]
+<? 
+}else{ 
+?>
+									[ Total : <span class="red12_b"><?=$total?></span> ]
+<? 
+} 
+?>
+								</td>
+							</tr>
+						</table>
+						<table width="95%" border="0" align="center">				
+							<tr>
+								<td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+									<table width="100%" border="0">
+										<tr>
+											<td width="100%" bgColor="#ffffff">
+												<table border="1" cellpadding="0" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1" align="center">
+													<tr align="center">
+														<td width='10%' bgcolor="#f8f8f8">선택</td>
+														<td width='10%' bgcolor="#f8f8f8">NO</td>
+														<td width='10%' bgcolor="#f8f8f8">순서</td>
+														<td width="70%" bgcolor="#f8f8f8"><a href='<?=$php_self?>?orderstr=bname'><b>1차 카테고리명</b></a></td>
+													</tr>
+													<tr>
+														<td height="1" colspan="4" bgcolor="#d7d7d7"></td>
+													</tr>
+<?
+if($total == 0){
+?>
+													<tr align="center">
+														<td height="30" colspan="4">
+															등록된 인터넷상품 회사가 없습니다.
+														</td>
+													</tr>
+<?
+}
+else{
+	$i = 0;
+	while($row = mysql_fetch_array($result)){
+		$id = $total - ($olds + $i);
+		$i++;
+?>
+													<tr align="center">
+													<input type='hidden' name='aaa[]' value='<?=$row[b_uid]?>'>
+													<input type='hidden' name='b_image[]' value='<?=$row[b_image]?>'>
+														<td>
+															<input type="checkbox" name="del_check[]" value="<?=$row[b_uid]?>" style="border:0">
+														</td>
+														<td><?=$id?></td>
+														<td>
+															<input type="text" class="input_gray" name='b_no[]' value='<?=$row[b_no]?>' size="3">
+														</td>
+														<td align='left'>
+															&nbsp;<input type="text" class="input" name='b_name[]' value='<?=$row[b_name]?>' size="30">
+														</td>
+													</tr>
+													<tr>
+														<td height="1" colspan="4" bgcolor="#d7d7d7"></td>
+													</tr>
+<?
+	}
+}
+?>
+												</table>
+											</td>
+										</tr>
+									</table>
+									</form>
+									<table width="100%" border="0">
+										<tr bgcolor="f4f4f4">
+											<form name="f" method="post" action="<?=$PHP_SELF?>?mode=search" onsubmit="check(); return false;">
+											<td>
+												<select name="select_key" class="input">
+													<option value="b_name" selected>ㆍ인터넷상품 회사</option>
+												</select>
+												<input type="text" class="input" size="20" name='input_key'>
+												<input type="submit" class="button11_gray" value="검색">
+<? 
+if($mode=="search"){ 
+?>
+												<input type='button' value="취소" class="button11_gray" onclick="location.href='<?=$PHP_SELF?>'">
+<? 
+} 
+?>
+											</td>
+											</form>
+											<td align="right">
+<? 
+if($prev_list <= 0){ 
+?>
+												 처음
+<?
+}else{ 
+?>
+
+												<a href="<?=$PHP_SELF?>?code=<?=$code?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$prev_list?>">처음</a>
+
+<? 
+} 
+?>
+<? 
+if($page-1 <= 0){ 
+?>
+												◁
+<? 
+}else{ 
+?>
+												<a href="<?=$PHP_SELF?>?code=<?=$code?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page-1?>">◁</a>
+<? 
+} 
+?>
+												&nbsp;
+<? 
+for($i=$start_page;$i<$start_page+$list;$i++){
+?>
+<? 
+	if($i == $page){ 
+?>
+												<b>[<?=$i?>]</b>
+<? 
+	}else{ 
+?>
+
+												<a href="<?=$PHP_SELF?>?code=<?=$code?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$i?>"><?=$i?></a>
+<? 
+	} 
+?>
+												&nbsp;
+<?
+	if($i>=$total_page)
+	break
+?>
+<? 
+} 
+?>
+<? 
+if($page+1 > $total_page){ 
+?>
+												▷
+<? 
+}else{ 
+?>
+												<a href="<?=$PHP_SELF?>?code=<?=$code?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page+1?>">▷</a>
+<? 
+} 
+?>
+<? 
+if($next_list>$total_page){ 
+?>
+												끝
+<? 
+}else{ 
+?>
+												<a href="<?=$PHP_SELF?>?code=<?=$code?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$next_list?>">끝</a>
+<? 
+} 
+?>
+											</td>
+										</tr>
+										<tr>
+											<td height="1" colspan="2" bgcolor="#afafaf"></td>
+										</tr>
+									</table>
+
+									<table width="100%" border="0">
+										<tr>
+											<td height="70" align="center">
+												<input type="button" class="button12" value="인터넷상품 회사 등록하기" onclick="location.href='bc_insert.html'">
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+<!----------------------------------- 내용 끝 ------------------------------------------->
+			</table>
+			<br>
+			<!--내용 END~~-->
+		</td>
+	</tr>
+</table>
+</body>
+</html>
+<?
+if( $result ){
+	mysql_free_result( $result );
+}
+mysql_close( $dbconn );
+?>
