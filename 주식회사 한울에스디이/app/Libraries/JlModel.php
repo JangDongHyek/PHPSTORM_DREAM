@@ -168,7 +168,8 @@ class JlModel extends Jl{
 
         if(isset($obj['where'])) {
             $arrays = $this->jsonDecode($obj['where']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -178,7 +179,8 @@ class JlModel extends Jl{
 
         if(isset($obj['like'])) {
             $arrays = $this->jsonDecode($obj['like']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -188,7 +190,8 @@ class JlModel extends Jl{
 
         if(isset($obj['between'])) {
             $arrays = $this->jsonDecode($obj['between']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -198,7 +201,8 @@ class JlModel extends Jl{
 
         if(isset($obj['in'])) {
             $arrays = $this->jsonDecode($obj['in']);
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -210,7 +214,8 @@ class JlModel extends Jl{
             $arrays = $this->jsonDecode($obj['group_where']);
             $this->groupStart();
 
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -224,7 +229,8 @@ class JlModel extends Jl{
             $arrays = $this->jsonDecode($obj['group_like']);
             $this->groupStart();
 
-            foreach($arrays as $item) {
+            foreach($arrays as $array) {
+                $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
 
@@ -385,8 +391,6 @@ class JlModel extends Jl{
             }
         }
 
-        $this->reset();
-
         return array("data" => $data,"sql" => $sql);
     }
 
@@ -462,6 +466,10 @@ class JlModel extends Jl{
         return $object;
     }
 
+    /*
+    _param에 있는 데이터중 해당 테이블의 primary에 해당하는 데이터를 key == column 이 맞는 컬럼을 수정하는 함수
+    key == column 일경우 value의 값으로 바뀜
+    */
     function update($_param){
 
         $param = $this->escape($_param);
@@ -498,6 +506,9 @@ class JlModel extends Jl{
         return $this;
     }
 
+    /*
+    _param에 있는 데이터중 해당 테이블의 primary가 있으면 해당 기준으로 데이터 삭제하는 함수
+    */
     function delete($_param){
 
         $param = $this->escape($_param);
@@ -521,6 +532,9 @@ class JlModel extends Jl{
         return $this;
     }
 
+    /*
+    where() 등록된 데이터를 삭제하는 함수
+     */
     function whereDelete(){
         if($this->sql == "") $this->error("JlModel whereDelete() : 조건 삭제에 조건이 없습니다.");
 
@@ -539,6 +553,15 @@ class JlModel extends Jl{
         return $param[$this->primary];
     }
 
+    /*
+    select 관련 쿼리를 _param값 기준으로 반환하는 함수
+    _param
+        source(String)($this->table) : 조회하는 테이블 설정한다 join 후 사용해야함
+        select(String)(Null) : 조인 되어있는 다른 테이블의 컬럼을 조회할때 쓰는 값 *을 하면 다른테이블명_컬럼명 으로 모든 컬럼이 조회된다
+        count(Boolean)(false) : 카운트 쿼리로 인식해 *말고 프라이마리 키값만 조회 false : *
+        distinct(Boolean)(false) : true distinct 사용함
+        column(String || Array)(null) : distinct 사용할때 쓰는 필드 추가된 컬럼만큼 distinct 해서 반환
+     */
     function getSql($_param = array()) {
         $source = $_param['source'] ? $_param['source'] : $this->table;
         $other = $source == $this->table ? $this->join_table : $this->table;
@@ -566,7 +589,7 @@ class JlModel extends Jl{
             if($_param['select'] == "*") {
                 $columns = $source == $this->table ? $this->schema['join_columns'] : $this->schema['columns'];
                 foreach($columns as $column) {
-                    $select .= ", {$other}.{$column} AS join_{$other}_{$column}";
+                    $select .= ", {$other}.{$column} AS {$other}_{$column}";
                 }
             }else {
                 if(is_string($_param['select'])) $select .= ", ".$_param['select'];
@@ -585,6 +608,9 @@ class JlModel extends Jl{
         return $sql;
     }
 
+    /*
+    등록되어있는 sql에 강제로 구문을 추가하는 함수
+     */
     function addSql($query) {
         $this->sql .= "$query";
     }

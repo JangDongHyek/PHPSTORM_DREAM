@@ -92,6 +92,7 @@
 
             if(this.primary) this.getData();
             this.settingDate();
+            this.testApi();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -102,6 +103,17 @@
 
         },
         methods: {
+            async testApi() {
+                let filter = {
+                    table : "user",
+                }
+                try {
+                    let res = await this.jl.ajax("get",filter,"/api/jl");
+                    this.data = res.data[0]
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             getDay(index) {
                 const days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
 

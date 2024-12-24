@@ -29,7 +29,8 @@ class Jl {
     public  $ROOT;
     public  $DB;
     public  $URL;
-    public static $LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $JS_LOAD = false;            // js 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $VUE_LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
 
     function __construct() {
         if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
@@ -66,6 +67,28 @@ class Jl {
         //throw new \Exception($msg);
     }
 
+    //
+    function log($content,$path = "") {
+        $content = $content." at ".$this->getTime();
+
+        if($path) {
+            if (substr($path, -4) !== '.txt') {
+                $this->error("log() : 확장자는 .txt 이여야합니다.");
+            }
+
+            if(strpos($path,$this->ROOT) !== false) $path = $path;
+            else $path = $this->ROOT.$path;
+
+            file_put_contents($path, $content . PHP_EOL, FILE_APPEND);
+        }else {
+            file_put_contents("Jl_log.txt", $content . PHP_EOL, FILE_APPEND);
+        }
+
+        if (($error = error_get_last()) !== null) {
+            $this->error($error['message']);
+        }
+    }
+
     // 5.2에 주로 사용하며 유니코드 형태로 인코드된 한글데이터를 디코딩 함수
     function decodeUnicode($str) {
         while (preg_match('/\\\\u([0-9a-fA-F]{4})/', $str, $matches)) {
@@ -76,6 +99,7 @@ class Jl {
         return $str;
     }
 
+    //해당 문자열이 jsonDecode가 가능하면 true를 반환
     function isJson($string) {
         // 정규식 패턴 정의
         $pattern = '/^\s*(\{.*\}|\[.*\])\s*$/';
@@ -95,13 +119,17 @@ class Jl {
         return (json_last_error() === JSON_ERROR_NONE);
     }
 
+    //jsonEncode 한글깨짐 방지설정넣은
     function jsonEncode($data) {
         if($this->isVersion()) return json_encode($data,JSON_UNESCAPED_UNICODE);
         else return $this->decodeUnicode(json_encode($data));
     }
 
+    //상황에 필요한 로직들을 넣은 Jsondecode 함수
     function jsonDecode($origin_json,$encode = true) {
-        $str_json = stripslashes($origin_json);
+        $str_json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
+        $str_json = stripslashes($str_json);
+        $str_json = str_replace('###NEWLINE###', '\\n', $str_json);
 
         $obj = json_decode($str_json, true);
 
@@ -138,7 +166,10 @@ class Jl {
         return $obj;
     }
 
+    // 필요한 파일들을 로드하고 변수를 선언하는 기본함수
     function jsLoad() {
+        if(self::$JS_LOAD) return false;
+
         //js파일 찾기
         if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
 
@@ -160,10 +191,13 @@ class Jl {
         echo "<script>";
         echo "const jl = new Jl();";
         echo "</script>";
+
+        self::$JS_LOAD = true;
     }
 
+    // vue 사용할시 vue에 필요한 파일들을 로드하고 JS 필수함수를 실행시키는 함수
     function vueLoad($app_name = "app",$plugins = array()) {
-        if(!self::$LOAD) {
+        if(!self::$VUE_LOAD) {
             $this->jsLoad();
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
 
@@ -171,7 +205,7 @@ class Jl {
                 echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
                 echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             }
-            self::$LOAD = true;
+            self::$VUE_LOAD = true;
         }
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
@@ -179,7 +213,7 @@ class Jl {
         echo "}, false);";
         echo "</script>";
     }
-
+    // Vue 컴포넌트를 로드하는 함수
     function componentLoad($path) {
         if($path[0] != "/") $path = "/".$path;
         $path = $this->ROOT.$this->COMPONENT.$path;
@@ -201,6 +235,15 @@ class Jl {
         foreach ($files as $file) include_once($file);
     }
 
+    // 파일이 있는지 없는지 확인하는 함수
+    function isFileExists($path) {
+        if(strpos($path,$this->ROOT) !== false) $file = $path;
+        else $file = $this->ROOT.$path;
+
+        return file_exists($file);
+    }
+
+    // 연관 배열인지 확인하는 함수
     function isAssociativeArray(array $array) {
         // 배열이 비어 있는 경우, 연관 배열이 아닌 것으로 간주합니다.
         if (empty($array)) {
@@ -318,6 +361,12 @@ class Jl {
         } else {
             return $_SERVER['REMOTE_ADDR'];
         }
+    }
+
+    //현재 시간 반환하는 함수
+    function getTime() {
+        // 현재 시간 반환
+        return date('Y-m-d H:i:s');
     }
 
     // 5.3 이상일시 true 반환 그 이하는 false 를 반환한다
