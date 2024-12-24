@@ -131,7 +131,16 @@
                                     <div class="cont box">
                                         <input type="checkbox" v-model="product.area" value="국내" id="domestic" name="location"><label for="domestic">국내</label>
                                         <input type="checkbox" v-model="product.area" value="해외" id="overseas" name="location"><label for="overseas">해외</label>
-                                        <input type="checkbox" v-model="product.area" value="협의 또는 선택안함" id="negotiable1" name="location"><label for="negotiable1">협의 또는 선택안함</label>
+                                        <input type="checkbox" v-model="product.area" value="협의가능" id="overseas1" name="location"><label for="overseas1">협의가능</label>
+                                        <input type="checkbox" v-model="product.area" value="미선택" id="overseas2" name="location"><label for="overseas2">미선택</label>
+                                    </div>
+                                </div>
+                                <div class="box_write" v-if="product.area.includes('국내')">
+                                    <h4>상세지역</h4>
+                                    <div class="cont box">
+                                        <template v-for="region,rindex in regions">
+                                        <input type="checkbox" v-model="product.region" :value="region" :id="'rindex'+rindex" name="location"><label :for="'rindex'+rindex">{{region}}</label>
+                                        </template>
                                     </div>
                                 </div>
                                 <div class="box_write">
@@ -239,7 +248,7 @@
                                                     <dd>
                                                         <select required v-model="product.basic.modify">
                                                             <option value="">선택해주세요</option>
-                                                            <option v-for="item in 15" :value="item">{{ item }}회</option>
+                                                            <option v-for="item in 16" :value="item-1">{{ item-1 }}회</option>
                                                             <option value="제한없음">제한없음</option>
                                                         </select>
                                                     </dd>
@@ -284,7 +293,7 @@
                                                     <dd>
                                                         <select required v-model="product.standard.modify">
                                                             <option value="">선택해주세요</option>
-                                                            <option v-for="item in 15" :value="item">{{ item }}회</option>
+                                                            <option v-for="item in 16" :value="item-1">{{ item-1 }}회</option>
                                                             <option value="제한없음">제한없음</option>
                                                         </select>
                                                     </dd>
@@ -329,7 +338,7 @@
                                                     <dd>
                                                         <select required v-model="product.premium.modify">
                                                             <option value="">선택해주세요</option>
-                                                            <option v-for="item in 15" :value="item">{{ item }}회</option>
+                                                            <option v-for="item in 16" :value="item-1">{{ item-1 }}회</option>
                                                             <option value="제한없음">제한없음</option>
                                                         </select>
                                                     </dd>
@@ -412,6 +421,8 @@
                 categories : [],
                 bool : true,
                 parent_category_idx : "",
+
+                regions : ["서울", "경기", "인천", "강원", "대전", "세종", "충남", "충북", "부산", "울산", "경남", "경북", "대구", "광주", "전남", "전북", "제주", "전국"],
             };
         },
         created: function(){

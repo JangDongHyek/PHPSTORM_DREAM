@@ -1,5 +1,6 @@
 <?php
 include_once('./_common.php');
+include_once('../adm/insert_stock.php'); // insertStockData 함수가 정의된 파일을 포함합니다.
 include_once(G5_LIB_PATH.'/register.lib.php');
 include_once(G5_LIB_PATH.'/mailer.lib.php');
 
@@ -275,12 +276,17 @@ if ($w == '') {
     */
 
     $registerPoint = 5000;
-    insert_point_l($mb_id, $registerPoint, '회원가입 축하', '@member', $mb_id, '회원가입');
+    //insert_point_l($mb_id, $registerPoint, '회원가입 축하', '@member', $mb_id, '회원가입');
+
+    $stockPrice = getStockPrice();
+    $issuanceDate = G5_TIME_YMD;
+    $result = insertStockData($mb_id, 5, $stockPrice, $issuanceDate, "회원가입", '');
     // 추천인에게 포인트 부여
     if ($mb_recommend){
         //insert_point($mb_recommend, $config['cf_recommend_point']*0.5, $mb_id.'의 추천인', '@member', $mb_recommend, $mb_id.' 추천');
         //insert_point($mb_recommend, $config['cf_register_point'], $mb_id.'의 추천인', '@member', $mb_recommend, $mb_id.' 추천');
-        insert_point_l($mb_recommend, $registerPoint, $mb_id.'의 추천인', '@member', $mb_recommend, $mb_id.' 추천');
+        //insert_point_l($mb_recommend, $registerPoint, $mb_id.'의 추천인', '@member', $mb_recommend, $mb_id.' 추천');
+        $result = insertStockData($mb_recommend, 5, $stockPrice, $issuanceDate, "$mb_id 추천", '');
     }
 
 

@@ -239,6 +239,10 @@ class JlModel extends Jl{
 
             $this->groupEnd();
         }
+
+        if(isset($obj['add_query'])) {
+            $this->addSql($obj['add_query']);
+        }
     }
 
     function getSchema() {

@@ -141,7 +141,7 @@
                 </div>
             </div>
             -->
-            <button class="btn btn_middle btn_blue2" @click="postCareer()">등록 및 추가</button>
+            <button class="btn btn_middle btn_blue2" @click="postCareer()">추가</button>
 
             <br>
             <div class="tag">

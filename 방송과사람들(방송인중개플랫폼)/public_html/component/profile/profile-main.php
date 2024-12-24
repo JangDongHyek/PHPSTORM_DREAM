@@ -33,7 +33,8 @@
                     <button class="btn btn-prev" type="button" @click="changeStep('prev')">이전</button>
                     <button id="next-btn" type="button" class="btn_submit" @click="changeStep('next')">
                         <template v-if="!admin">
-                            저장<span v-if="section != 'step-7'">하고 다음</span>
+                            <span v-if="section != 'step-4'">다음</span>
+                            <span v-else>저장</span>
                         </template>
                         <template v-else>다음</template>
                     </button>
@@ -210,6 +211,7 @@
 
                 var res = await this.jl.ajax(method,obj,"/api/g5_member.php");
                 if (res) {
+                    if(this.section == 'step-4') alert('저장되었습니다.')
                     return true;
                 }
             },

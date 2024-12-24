@@ -21,7 +21,7 @@
                         </select>
                 </dd>
             </dl>
-            <dl><dt class="flex"><strong>근무지역 (*최대 3개까지 선택가능)</strong> <a href="" class="del">전체삭제</a></dt>
+            <dl><dt class="flex"><strong>근무가능지역 (*최대 3개까지 선택가능)</strong> <a href="" class="del">전체삭제</a></dt>
                 <dd class="flex">
                     <input type="text" v-model="temp" placeholder="지역입력후 추가 버튼을 눌러주세요">
                     <button class="btn btn_blue2" @click="addArea()">추가</button>

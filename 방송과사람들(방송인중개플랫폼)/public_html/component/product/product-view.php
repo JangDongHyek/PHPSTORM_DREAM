@@ -67,14 +67,16 @@
                                 </template>
                             </section>
                             <section id="area_service">
-                                <h3>서비스설명</h3>
-                                <div class="embed-container" v-html="data.service"></div>
                                 <!-- 여기서 부터 상세이미지-->
                                 <div class="area_detail_img">
                                     <div class="img_box" v-for="item in data.main_image_array">
                                         <img :src="jl.root+item.src">
                                     </div>
                                 </div>
+
+                                <br>
+                                <h3>서비스설명</h3>
+                                <div class="embed-container" v-html="data.service"></div>
                                 <br>
                                 <!--포트폴리오 디자인 추가-->
                                 <div class="portfolio_list">

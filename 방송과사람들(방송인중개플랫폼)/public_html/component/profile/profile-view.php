@@ -21,7 +21,7 @@
                     <nav class="lnb">
                         <div class="inr">
                             <ul>
-                                <li><a href="#area_info">전문가 프로필</a></li>
+                                <li><a href="#area_info">전문가 정보</a></li>
                                 <li><a href="#area_service">서비스</a></li>
                                 <li><a href="#area_portfolio">포트폴리오</a></li>
                                 <li><a href="#area_review">서비스 평가</a></li>
@@ -30,7 +30,7 @@
                     </nav>
                     <div class="tab_cont">
                         <section id="area_info">
-                            <h3>전문가 프로필</h3>
+                            <h3>전문가 정보</h3>
                             <div class="box_line">
                                 <h4>활동정보</h4>
                                 <dl class="grid">

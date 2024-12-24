@@ -18,7 +18,9 @@
         <?php if($_SERVER['REMOTE_ADDR']=="183.103.22.103"){ ?>
         <li><a href="<?php echo G5_BBS_URL ?>/mypage_contest.php">내 프로젝트</a></li>
         <?php }?>
-		<li><a href="<?php echo G5_BBS_URL ?>/mypage_profile.php">프로필관리</a></li>
+		<li><a href="<?php echo G5_BBS_URL ?>/profile.php?mb_no=<?=$member['mb_no']?>">
+                <?= ($member["mb_level"] > '2') ? "전문가 정보" : "프로필 관리" ?>
+            </a></li>
 		<!--<li><a href="javascript:swal('준비중입니다.')">설정</a></li>-->
         <li><a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a></li>
 	</ul>

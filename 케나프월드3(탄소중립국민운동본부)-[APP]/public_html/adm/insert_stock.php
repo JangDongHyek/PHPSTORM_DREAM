@@ -5,7 +5,7 @@ function insertStockData($mbId, $holdingCount, $stockPrice, $issuanceDate, $paym
     // 주식 삽입 로직
     if (insertStock($mbId, $holdingCount, $stockPrice, $issuanceDate, $paymentReason, '')) {
             
-        if($paymentReason === '회원가입'){
+        if($paymentReason === '회원가입' && $mbRecommend){
             if (insertStock($mbRecommend, $holdingCount, $stockPrice, $issuanceDate, '회원가입 추천', $mbId)) {
                 return true;
             } else {

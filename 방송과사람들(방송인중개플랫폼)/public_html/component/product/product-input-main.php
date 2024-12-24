@@ -50,6 +50,7 @@
                     gender: "",
                     age: "",
                     area: [],
+                    region : [],
                     weekend: [],
                     types: [],
                     styles: [],

@@ -21,16 +21,16 @@
                 <div class="border">내용</div>
             </div>
             <div class="week_content">
-                <dl class="day_section">
+                <dl class="day_section" v-for="day,index in 7">
                     <dt class="day_header border">
-                        <p>일요일(12)</p>
-                        <button class="btn btn_mini btn_grayblue">구분 추가</button>
+                        <p>{{getDay(index)}}</p>
+                        <!--<button class="btn btn_mini btn_grayblue">구분 추가</button>-->
                     </dt>
                     <dd>
                         <div class="day_content">
                             <div class="input_wrap border">
-                                <input type="text" class="input_category" placeholder="구분 내용을 입력하세요" value="현장 준비 및 기초 작업" />
-                                <button class="btn btn_mini btn_black">내용 추가</button>
+                                <input type="text" class="input_category" readonly :value="schedule[index].content" />
+                                <!--<button class="btn btn_mini btn_black">내용 추가</button>-->
                             </div>
                             <ul class="task_list">
                                 <li class="task_item border">
@@ -42,13 +42,13 @@
                                     <button class="btn btn_mini btn_blue" data-toggle="modal" data-target="#downloadModal">다운로드</button>
                                     <span class="file_info">230926_TBN충남교통방송청사신축공사_건축내역서_(2).xlsx <strong>외 2건</strong></span>
                                 </li>
-                                <li class="task_item border">
-                                    <div class="flex ai-c">
-                                        <input type="text" class="input_task" placeholder="상세 작업 내용을 입력하세요" />
-                                        <button class="btn btn_mini btn_gray">삭제</button>
-                                    </div>
-                                    <button class="btn btn_mini btn_line">업로드</button>
-                                </li>
+                                <!--<li class="task_item border">-->
+                                <!--    <div class="flex ai-c">-->
+                                <!--        <input type="text" class="input_task" placeholder="상세 작업 내용을 입력하세요" />-->
+                                <!--        <button class="btn btn_mini btn_gray">삭제</button>-->
+                                <!--    </div>-->
+                                <!--    <button class="btn btn_mini btn_line">업로드</button>-->
+                                <!--</li>-->
                             </ul>
                         </div>
                     </dd>
@@ -66,6 +66,7 @@
         props: {
             modal : {type : Boolean, default : false},
             primary : {type : String, default : ""},
+            project_idx : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -84,15 +85,15 @@
                 start_date : "", // 일요일
                 now_date : "", // 오늘날짜
                 end_date : "", // 토요일
+
+                schedule : [],
             };
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.getData();
             this.settingDate();
-            this.testApi();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -103,13 +104,15 @@
 
         },
         methods: {
-            async testApi() {
+            async getSchedule(date) {
                 let filter = {
-                    table : "user",
+                    table : "project_schedule",
+                    project_idx : this.project_idx,
+                    add_query : ` and '${date}' BETWEEN schedule_start_date AND schedule_end_date `,
                 }
                 try {
                     let res = await this.jl.ajax("get",filter,"/api/jl");
-                    this.data = res.data[0]
+                    return res;
                 }catch (e) {
                     alert(e.message)
                 }
@@ -129,7 +132,7 @@
                 // "수요일 (18)" 형식의 문자열 반환
                 return `${days[dayOfWeek]} (${day})`;
             },
-            settingDate(day = 0) {
+            async settingDate(day = 0) {
                 let date
                 if(this.now_date) {
                     date = new Date(this.now_date); // 원본 복사
@@ -154,30 +157,22 @@
                 this.start_date = startOfWeek;
                 this.end_date = endOfWeek;
 
-                console.log(date.format());
-            },
-            async postData() {
-                let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
-                try {
-                    //if(this.data.change_user_pw != this.data.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
-
-                    let res = await this.jl.ajax(method,this.data,"/api/user",options);
-
-                    alert("완료 되었습니다");
-                    window.location.reload();
-                }catch (e) {
-                    alert(e.message)
+                let currentDate = new Date(startOfWeek);
+                let temp = {
+                    content : "일정없음"
                 }
 
-            },
-            async getData() {
-                try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
-                    this.data = res.data[0]
-                }catch (e) {
-                    alert(e.message)
+                this.schedule = [];
+
+                while(currentDate <= this.end_date) {
+                    let res = await this.getSchedule(currentDate.format())
+                    currentDate.setDate(currentDate.getDate() + 1);
+
+                    if(res['count']) this.schedule.push(res['data'][0]);
+                    else this.schedule.push(this.jl.copyObject(temp));
                 }
+
+                console.log(this.schedule);
             }
         },
         computed: {

@@ -133,6 +133,8 @@
 
                     join_filter : [/*join 들어갈떄 개발예정 */],
 
+                    add_query : " and idx = 'exam' ",
+
                     order_by_desc : "idx",
                     order_by_asc : "idx",
                 }

@@ -35,7 +35,8 @@
             <div class="box_blue" id="tip">
                 <p>TIP</p>
                 <ul>
-                    <li>증빙 자료 첨부하시면 담당자 검토후 확인 마크<i class="fa-solid fa-badge-check"></i>를 달아드립니다.</li>
+<!--                    <li>증빙 자료 첨부하시면 담당자 검토후 확인 마크<i class="fa-solid fa-badge-check"></i>를 달아드립니다.</li>-->
+                    <li>허위로 학력이나 자격증을 등록하여 발생하는 모든 불이익은 본인에게 책임이 있음을 안내드립니다.</li>
                     <li><strong>첨부가능자료 : 재학증명서, 졸업증명서,성적증명서</strong></li>
                 </ul>
             </div>
@@ -82,7 +83,8 @@
             <div class="box_blue" id="tip">
                 <p>TIP</p>
                 <ul>
-                    <li>증빙 자료 첨부하시면 담당자 검토후 확인 마크<i class="fa-sharp fa-solid fa-badge-check"></i>를 달아드립니다.</li>
+<!--                    <li>증빙 자료 첨부하시면 담당자 검토후 확인 마크<i class="fa-sharp fa-solid fa-badge-check"></i>를 달아드립니다.</li>-->
+                    <li>허위로 학력이나 자격증을 등록하여 발생하는 모든 불이익은 본인에게 책임이 있음을 안내드립니다.</li>
                     <li><strong>첨부가능자료 : 자격증사본</strong></li>
                 </ul>
             </div>
