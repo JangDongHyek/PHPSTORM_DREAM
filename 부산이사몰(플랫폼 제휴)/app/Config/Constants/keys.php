@@ -1,0 +1,8 @@
+<?php
+
+// 네이버 Client ID
+const NAVER_CLIENT_ID = 'Ta1L1FFlgRftWgXLDgeM';
+const NAVER_SECRET = 'AW3UJnD53g';
+
+const KAKAO_CLIENT_ID = 'e5c624a5c2343e832cc782cfda44e819';
+const KAKAO_CLIENT_SECRET = 'IkJueNK85e5EbjBVsIAKiSu9uVApkaNU';
