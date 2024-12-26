@@ -29,7 +29,9 @@ class Jl {
     public  $ROOT;
     public  $DB;
     public  $URL;
-    public static $LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $JS_LOAD = false;            // js 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $VUE_LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
+    public static $PLUGINS = array();
 
     function __construct() {
         if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
@@ -64,6 +66,28 @@ class Jl {
         echo $this->jsonEncode($er);
         die();
         //throw new \Exception($msg);
+    }
+
+    //
+    function log($content,$path = "") {
+        $content = $content." at ".$this->getTime();
+
+        if($path) {
+            if (substr($path, -4) !== '.txt') {
+                $this->error("log() : 확장자는 .txt 이여야합니다.");
+            }
+
+            if(strpos($path,$this->ROOT) !== false) $path = $path;
+            else $path = $this->ROOT.$path;
+
+            file_put_contents($path, $content . PHP_EOL, FILE_APPEND);
+        }else {
+            file_put_contents("Jl_log.txt", $content . PHP_EOL, FILE_APPEND);
+        }
+
+        if (($error = error_get_last()) !== null) {
+            $this->error($error['message']);
+        }
     }
 
     // 5.2에 주로 사용하며 유니코드 형태로 인코드된 한글데이터를 디코딩 함수
@@ -144,42 +168,94 @@ class Jl {
     }
 
     // 필요한 파일들을 로드하고 변수를 선언하는 기본함수
-    function jsLoad() {
-        //js파일 찾기
-        if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
+    function jsLoad($plugin = array()) {
+        $plugins = array();
+        if (is_string($plugin)) array_push($plugins,$plugin);
+        else $plugins = $plugin;
 
-        echo "<script>";
-        echo "const Jl_base_url = '{$this->URL}';";
-        echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
-        echo "const Jl_editor = '{$this->EDITOR_HTML}';";
-        echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
-        //Vue 데이터 연동을 위한 변수
-        echo "let Jl_data = {};";
-        echo "let Jl_methods = {};";
-        echo "let Jl_watch = {};";
-        echo "let Jl_components = {};";
-        echo "let Jl_computed = {};";
-        echo "</script>";
-        echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
-        if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
-        if(file_exists($this->ROOT.$this->JS."/JlVue.js")) echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
-        echo "<script>";
-        echo "const jl = new Jl();";
-        echo "</script>";
+        if(!self::$JS_LOAD) {
+            //js파일 찾기
+            if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
+
+            echo "<script>";
+            echo "const Jl_base_url = '{$this->URL}';";
+            echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
+            echo "const Jl_editor = '{$this->EDITOR_HTML}';";
+            echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
+            //Vue 데이터 연동을 위한 변수
+            echo "let Jl_data = {};";
+            echo "let Jl_methods = {};";
+            echo "let Jl_watch = {};";
+            echo "let Jl_components = {};";
+            echo "let Jl_computed = {};";
+            echo "</script>";
+            echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
+            if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
+            if(file_exists($this->ROOT.$this->JS."/JlVue.js")) echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
+            if(file_exists($this->ROOT.$this->JS."/JlPlugin.js")) echo "<script src='{$this->URL}{$this->JS}/JlPlugin.js'></script>";
+
+            self::$JS_LOAD = true;
+            echo "<script>";
+            echo "const jl = new Jl();";
+            echo "</script>";
+        }else {
+            $this->pluginLoad($plugins);
+        }
+
+
+
+
+        if(in_array('swal',$plugins)) {
+            echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">';
+            echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>';
+        }
+
+
+
+
+    }
+
+    function pluginLoad($plugin = array()) {
+        $plugins = array();
+        if (is_string($plugin)) array_push($plugins,$plugin);
+        else $plugins = $plugin;
+
+        if(in_array('drag',$plugins)) {
+            if(!in_array("drag",self::$PLUGINS)) {
+                echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
+                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
+                array_push(self::$PLUGINS,"drag");
+            }
+        }
+
+        if(in_array('swal',$plugins)) {
+            if(!in_array("swal",self::$PLUGINS)) {
+                echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>';
+                array_push(self::$PLUGINS,"swal");
+            }
+        }
     }
 
     // vue 사용할시 vue에 필요한 파일들을 로드하고 JS 필수함수를 실행시키는 함수
-    function vueLoad($app_name = "app",$plugins = array()) {
-        if(!self::$LOAD) {
-            $this->jsLoad();
+    function vueLoad($app_name = "app",$plugin = array()) {
+        $plugins = array();
+        if (is_string($plugin)) array_push($plugins,$plugin);
+        else $plugins = $plugin;
+
+        if(!self::$VUE_LOAD) {
+            $this->jsLoad($plugins);
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
 
             if(in_array('drag',$plugins)) {
                 echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
                 echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             }
-            self::$LOAD = true;
+            self::$VUE_LOAD = true;
+        }else {
+            $this->pluginLoad($plugins);
         }
+
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
         echo "vueLoad('$app_name')";
@@ -334,6 +410,12 @@ class Jl {
         } else {
             return $_SERVER['REMOTE_ADDR'];
         }
+    }
+
+    //현재 시간 반환하는 함수
+    function getTime() {
+        // 현재 시간 반환
+        return date('Y-m-d H:i:s');
     }
 
     // 5.3 이상일시 true 반환 그 이하는 false 를 반환한다

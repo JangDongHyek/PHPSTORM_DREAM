@@ -141,14 +141,23 @@
                 </div>
             </div>
             -->
-            <button class="btn btn_middle btn_blue2" @click="postCareer()">추가</button>
+            <button class="btn btn_middle btn_blue2" @click="postCareer()">{{career.idx ? "수정" : "추가"}}</button>
 
             <br>
-            <div class="tag">
+            <div class="career_list">
                 <template v-for="item in careers">
-                    <span>{{item.content}}·{{item.start_date}}·{{item.end_date}}·{{item.address}}
-                        <i class="fa-light fa-paperclip" v-if="item.upfile"></i>
-                        <a class="del" href="" @click="event.preventDefault(); deleteCareer(item);"><i class="fa-light fa-xmark"></i></a>
+                    <span>
+                        <h3>
+                            <b>{{item.content}}</b>
+                            <a class="modify" @click="putCareer(item)">수정</a>
+                            <a class="del" href="" @click="event.preventDefault(); deleteCareer(item);"><i class="fa-light fa-xmark"></i></a>
+                        </h3>
+                        <p class="addr">{{item.address}}</p>
+                        <p class="date">{{item.start_date}}~{{item.end_date}}</p>
+                        <a class="file" v-if="item.upfile" :download="item.upfile.name" :href="jl.root+item.upfile.src">
+                            <i class="fa-light fa-paperclip"> </i>{{item.upfile.name}}
+                        </a>
+                        
                     </span>
                 </template>
             </div>
@@ -215,6 +224,9 @@
             });
         },
         methods: {
+            putCareer(item) {
+                this.career = item;
+            },
             async deleteCareer(career) {
                 var res = await this.jl.ajax("delete",career,"/api/member_career.php");
 
@@ -223,7 +235,7 @@
                 }
             },
             async postCareer() {
-                var method = this.primary ? "update" : "insert";
+                var method = this.career.idx ? "update" : "insert";
                 var obj = this.jl.copyObject(this.career);
 
                 var res = await this.jl.ajax(method,obj,"/api/member_career.php");

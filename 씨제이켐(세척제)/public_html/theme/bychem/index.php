@@ -1,5 +1,7 @@
 <?php
 define('_INDEX_', true);
+ini_set('display_errors', '0'); // 경고 출력 비활성화
+
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 if (G5_IS_MOBILE) {
@@ -8,6 +10,7 @@ if (G5_IS_MOBILE) {
 }
 
 include_once(G5_THEME_PATH.'/head.php');
+include_once("./jl/JlConfig.php");
 
 ?>
 
@@ -351,6 +354,10 @@ if($_POST[sms_send] == "y3"){
 	$tran_callback3 = "010-7601-4341";//보내는 사람 번호 
 	$send_date = date("YmdHis");
 	$mart_id = "bychem";
+
+	if(isset($_SESSION['count'])) $_SESSION['count'] = $_SESSION['count'] +1;
+	else $_SESSION['count'] = 0;
+
 	$tran_msg3 = iconv("utf-8","euc-kr", $_POST['scontent3']);
 	$tran_msg3 =	$_POST['tran_callback4']." ".$tran_msg3;
 
@@ -384,16 +391,25 @@ if($_POST[sms_send] == "y3"){
 		exit;
 	}
 
+    if($_SESSION['count'] > 2) {
+        echo "<script>alert('상담문의 문자는 하루 최대 3개까지만 가능합니다.');</script>";
+    }else {
+        $sms_query3 = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone3','$tran_callback3','1','$send_date','$tran_msg3')";
+        mysql_query($sms_query3,$conn_db);
 
+        //전체기록남기기
+        $all_query3 = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone3','$tran_callback3','1','$send_date','$tran_msg3',curdate())";
+        mysql_query($all_query3,$conn_db);
 
-	$sms_query3 = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone3','$tran_callback3','1','$send_date','$tran_msg3')";
-	mysql_query($sms_query3,$conn_db);
+        $model = new JlModel(array("table" => "sms_log"));
+        $model->insert(array(
+            "ip" => $model->getClientIP(),
+            "content" => $_POST['scontent3'].$_POST['tran_callback4']
+        ));
 
-	//전체기록남기기
-	$all_query3 = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone3','$tran_callback3','1','$send_date','$tran_msg3',curdate())";
-	mysql_query($all_query3,$conn_db);
+        echo "<script>alert('빠른시일 내에 회신드리겠습니다. 감사합니다!');</script>";
+    }
 
-	echo "<script>alert('빠른시일 내에 회신드리겠습니다. 감사합니다!');</script>";
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">

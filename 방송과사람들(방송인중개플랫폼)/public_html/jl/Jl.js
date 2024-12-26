@@ -43,6 +43,9 @@ class Jl {
         if (typeof JlVue !== 'undefined') {
             this.vue = new JlVue(this);
         }
+        if (typeof JlPlugin !== 'undefined') {
+            this.plugin = new JlPlugin(this);
+        }
 
         let textColor = "white"
 
@@ -67,6 +70,8 @@ class Jl {
                     return target.js[prop].bind(target.js);
                 } else if (target.vue && prop in target.vue) {
                     return target.vue[prop].bind(target.vue);
+                } else if (target.plugin && prop in target.plugin) {
+                    return target.plugin[prop].bind(target.plugin);
                 } else {
                     return undefined;
                 }
@@ -199,6 +204,75 @@ class Jl {
         };
 
         document.head.appendChild(scriptElement);
+    }
+
+    loadCSS(path) {
+        var linkElement = document.createElement('link');
+        linkElement.rel = 'stylesheet';
+        linkElement.href = this.root + path;
+
+        linkElement.onload = function() {
+            jl.log(`${path} CSS Load`, "", "#66cdaa");
+        };
+
+        linkElement.onerror = function() {
+            jl.log(`${path} CSS Error`, "", "#ff6347");
+        };
+
+        document.head.appendChild(linkElement);
+    }
+
+    checkPlugin(plugin) {
+        const missingDependencies = [];
+        let array = [];
+        if (typeof plugin === 'string') {
+            array.push(plugin);
+        }else {
+            array = plugin;
+        }
+
+        array.forEach((dep) => {
+            try {
+                switch (dep.toLowerCase()) {
+                    case "jquery":
+                        if (typeof $ === "undefined") {
+                            throw new Error("jQuery is not loaded.");
+                        }
+                        break;
+
+                    case "bootstrap":
+                        if (typeof bootstrap === "undefined" && (typeof $ === "undefined" || typeof $.fn.modal === "undefined")) {
+                            throw new Error("Bootstrap is not loaded.");
+                        }
+                        break;
+
+                    case "summernote":
+                        if (typeof $.fn.summernote === "undefined") {
+                            throw new Error("Summernote is not loaded.");
+                        }
+                        break;
+
+                    case "swal":
+                        if (typeof Swal === "undefined") {
+                            throw new Error("Swal is not loaded.");
+                        }
+                        break;
+
+                    default:
+                        console.warn(`Unknown dependency: ${dep}`);
+                        break;
+                }
+            } catch (err) {
+                //console.error(err.message);
+                missingDependencies.push(dep);
+            }
+        });
+
+        if (missingDependencies.length > 0) {
+            this.log(`플러그인 로드 필요 : ${missingDependencies.join(", ")}`, "", "#ff6347");
+        }
+
+        return missingDependencies;
     }
 
     commonFile(files,obj,key,permission) {
@@ -508,6 +582,7 @@ class Jl {
         return false;
     }
 
+    // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수
     extractYoutube(url) {
         const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
         const match = url.match(regex);

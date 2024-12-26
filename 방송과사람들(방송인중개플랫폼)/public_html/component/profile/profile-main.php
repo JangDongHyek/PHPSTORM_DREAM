@@ -11,8 +11,8 @@
                     <li class="nav-item"><a class="nav-link" href="#step-1" @click="navEvent('step-1',$event)"><div class="num">1</div> <span>기본정보</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="#step-2" @click="navEvent('step-2',$event)"><div class="num">2</div> <span>전문 분야/기술</span></a></li>
 <!--                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">3</div> <span>전문기술</span></a></li>-->
-                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">4</div> <span>학력 및 자격증</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#step-4" @click="navEvent('step-4',$event)"><div class="num">5</div> <span>경력사항</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">3</div> <span>학력 및 자격증</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-4" @click="navEvent('step-4',$event)"><div class="num">4</div> <span>경력사항</span></a></li>
                     <!-- <li class="nav-item"><a class="nav-link" href="#step-6" @click="navEvent('step-5',$event)"><div class="num">6</div> <span>희망 시급</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="#step-7" @click="navEvent('step-6',$event)"><div class="num">7</div> <span>상주 여부</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="#step-8" @click="navEvent('step-7',$event)"><div class="num">8</div> <span>프로젝트 이력</span></a></li>-->
@@ -211,7 +211,9 @@
 
                 var res = await this.jl.ajax(method,obj,"/api/g5_member.php");
                 if (res) {
-                    if(this.section == 'step-4') alert('저장되었습니다.')
+                    if(this.section == 'step-4') {
+                        this.jl.alert('저장되었습니다.')
+                    }
                     return true;
                 }
             },
@@ -276,12 +278,9 @@
     }
     @media screen and (max-width: 640px){
         .sw>.nav{flex-direction: unset!important; flex-wrap:nowrap;}
-        .sw>.nav .nav-link>span{display: none;}
+        .sw>.nav .nav-link>span{font-size: 0.6em;letter-spacing: -1px}
         .sw-theme-basic>.nav .nav-link{margin-right: 0; text-align: center;}
-        .sw>.nav .nav-link>.num {
-            font-size: 1em;
-            text-align: center;
-            width: 100%;
-        }
+        .sw>.nav .nav-link>.num {font-size: 0.8em;  }
+        .sw-theme-basic>.nav .nav-link { padding: 1rem 2px; }
     }
 </style>

@@ -31,7 +31,6 @@ class Jl {
     public  $URL;
     public static $JS_LOAD = false;            // js 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $VUE_LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
-    public static $PLUGINS = array();
 
     function __construct() {
         if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
@@ -168,83 +167,38 @@ class Jl {
     }
 
     // 필요한 파일들을 로드하고 변수를 선언하는 기본함수
-    function jsLoad($plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
+    function jsLoad() {
+        if(self::$JS_LOAD) return false;
 
-        if(!self::$JS_LOAD) {
-            //js파일 찾기
-            if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
+        //js파일 찾기
+        if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
 
-            echo "<script>";
-            echo "const Jl_base_url = '{$this->URL}';";
-            echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
-            echo "const Jl_editor = '{$this->EDITOR_HTML}';";
-            echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
-            //Vue 데이터 연동을 위한 변수
-            echo "let Jl_data = {};";
-            echo "let Jl_methods = {};";
-            echo "let Jl_watch = {};";
-            echo "let Jl_components = {};";
-            echo "let Jl_computed = {};";
-            echo "</script>";
-            echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
-            if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
-            if(file_exists($this->ROOT.$this->JS."/JlVue.js")) echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
-            if(file_exists($this->ROOT.$this->JS."/JlPlugin.js")) echo "<script src='{$this->URL}{$this->JS}/JlPlugin.js'></script>";
+        echo "<script>";
+        echo "const Jl_base_url = '{$this->URL}';";
+        echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
+        echo "const Jl_editor = '{$this->EDITOR_HTML}';";
+        echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
+        //Vue 데이터 연동을 위한 변수
+        echo "let Jl_data = {};";
+        echo "let Jl_methods = {};";
+        echo "let Jl_watch = {};";
+        echo "let Jl_components = {};";
+        echo "let Jl_computed = {};";
+        echo "</script>";
+        echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
+        if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
+        if(file_exists($this->ROOT.$this->JS."/JlVue.js")) echo "<script src='{$this->URL}{$this->JS}/JlVue.js'></script>";
+        echo "<script>";
+        echo "const jl = new Jl();";
+        echo "</script>";
 
-            self::$JS_LOAD = true;
-            echo "<script>";
-            echo "const jl = new Jl();";
-            echo "</script>";
-        }else {
-            $this->pluginLoad($plugins);
-        }
-
-
-
-
-        if(in_array('swal',$plugins)) {
-            echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">';
-            echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>';
-        }
-
-
-
-
-    }
-
-    function pluginLoad($plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
-
-        if(in_array('drag',$plugins)) {
-            if(!in_array("drag",self::$PLUGINS)) {
-                echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
-                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
-                array_push(self::$PLUGINS,"drag");
-            }
-        }
-
-        if(in_array('swal',$plugins)) {
-            if(!in_array("swal",self::$PLUGINS)) {
-                echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">';
-                echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>';
-                array_push(self::$PLUGINS,"swal");
-            }
-        }
+        self::$JS_LOAD = true;
     }
 
     // vue 사용할시 vue에 필요한 파일들을 로드하고 JS 필수함수를 실행시키는 함수
-    function vueLoad($app_name = "app",$plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
-
+    function vueLoad($app_name = "app",$plugins = array()) {
         if(!self::$VUE_LOAD) {
-            $this->jsLoad($plugins);
+            $this->jsLoad();
             echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
 
             if(in_array('drag',$plugins)) {
@@ -252,10 +206,7 @@ class Jl {
                 echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             }
             self::$VUE_LOAD = true;
-        }else {
-            $this->pluginLoad($plugins);
         }
-
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
         echo "vueLoad('$app_name')";
@@ -428,13 +379,18 @@ class Jl {
     }
 
     function INIT() {
+
         if ($this->isVersion()) {
             // namespace 가 있는지 확인 존재한다면 CI를 사용한다고 인식
+            $oldErrorReporting = error_reporting(E_ALL & ~E_WARNING); // 경고 비활성화
             $reflection = new \ReflectionClass($this);
+            error_reporting($oldErrorReporting); // 원래 설정 복원
             if ($reflection->getNamespaceName()) {
                 $this->CI = true;
             }
+        }else {
         }
+
 
 
         // 개발 허용 IP 확인

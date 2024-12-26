@@ -331,6 +331,41 @@ const getSummerNoteSettings = (editorId, enableInsert, enableTable, enablePaste)
         return button.render();
       }
     },
+    callbacks: {
+      onInit: (e) => {
+        // panel 클래스 삭제 (기본스타일과 중첩됨)
+        $('.note-editor.note-frame').removeClass('panel panel-default');
+
+        let fontSize = '14'; // 기본폰트 크기
+        let noteEditable = $('.note-editable');
+        noteEditable.css({'font-size': fontSize + 'px'});
+        const noteBtn = $('.note-btn-group.btn-group.note-fontsize');
+        noteBtn.find('.dropdown-toggle').children('.note-current-fontname').text(fontSize);
+      },
+      onPaste: function (e) {
+        // 클립보드에서 텍스트만 추출해 붙여넣기
+        if (enablePaste !== true) {
+          e.preventDefault();
+
+          let text = '';
+          if (e.originalEvent.clipboardData) {
+            text = e.originalEvent.clipboardData.getData('text/plain');
+          } else if (window.clipboardData) {
+            text = window.clipboardData.getData('Text');
+          }
+
+          // 에디터에 일반 텍스트로 삽입
+          document.execCommand('insertText', false, text);
+        }
+      },
+      onImageUpload: async function(files) {
+        // 파일 업로드 함수 호출
+        // sendSummerNoteFile(files[0], editorId);
+        for (let i = 0; i < files.length; i++) {
+          await sendSummerNoteFile(files[i], editorId);
+        }
+      }
+    }
   };
 
   return settings;

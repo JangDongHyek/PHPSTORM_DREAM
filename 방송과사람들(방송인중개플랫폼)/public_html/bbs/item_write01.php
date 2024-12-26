@@ -26,6 +26,7 @@ $c_name2 = $view["c_name"];
 	<body<?php echo isset($g5['body_script']) ? $g5['body_script'] : ''; ?> class="item_write">
 <?}?>
 
+
 <style>
 	#ft_menu{display:none;}
 </style>
@@ -33,6 +34,9 @@ $c_name2 = $view["c_name"];
 <div id="vueapp">
     <product-input-main mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>" ref="productInput"></product-input-main>
 </div>
+
+<script src="<?=$jl->URL?>/plugin/summernote/summernote.min.js"></script>
+<link rel="stylesheet" href="<?=$jl->URL?>/plugin/summernote/summernote.min.css">
 
 <?php
 $jl->vueLoad("vueapp");
@@ -42,6 +46,7 @@ include_once ($jl->ROOT."/component/product/product-input-tab2.php");
 include_once ($jl->ROOT."/component/product/product-input-tab3.php");
 include_once ($jl->ROOT."/component/slot/slot-modal.php");
 include_once ($jl->ROOT."/component/naver-editor.php");
+include_once ($jl->ROOT."/component/external/external-summernote.php");
 ?>
 
 

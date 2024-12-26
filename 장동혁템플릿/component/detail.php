@@ -57,6 +57,9 @@
             this.component_idx = this.jl.generateUniqueId();
 
             if(this.primary) this.getData();
+
+            // 플러그인이 필수인 컴포넌트일떄 사용
+            let plugins = this.jl.checkPlugin(["jquery","bootstrap","summernote"]);
         },
         mounted: function(){
             this.$nextTick(() => {

@@ -6,28 +6,21 @@ $_method = $_POST["_method"];
 
 try {
     $obj = $jl->jsonDecode($_POST['obj']);
+    $table = $obj['table'];
 
-    if($_method != "file") {
-        $table = $obj['table'];
-        if(!$table) $jl->error("obj에 테이블이 없습니다.");
-        $model = new JlModel(array("table" => $table));
+    if(!$table) $jl->error("obj에 테이블이 없습니다.");
+    $model = new JlModel(array("table" => $table));
 
-        $join = null;
-        if(isset($obj['join'])) $join = $jl->jsonDecode($obj['join']);
+    $join = null;
+    if(isset($obj['join'])) $join = $jl->jsonDecode($obj['join']);
 
-        $extensions = [];
-        if(isset($obj['extensions'])) $extensions = $jl->jsonDecode($obj['extensions']);
+    $extensions = [];
+    if(isset($obj['extensions'])) $extensions = $jl->jsonDecode($obj['extensions']);
 
-        $file_use = false;
-        $file_columns = [];
-        if(isset($obj['file_columns'])) $file_columns = $jl->jsonDecode($obj['file_columns']);
-        if(isset($obj['file_use'])) $file_use = $obj['file_use'];
-    }else {
-        $table = "basic";
-    }
-
+    $file_use = $obj['file_use'];
     $jl_file = new JlFile("/jl/jl_resource/$table");
-
+    $file_columns = [];
+    if(isset($obj['file_columns'])) $file_columns = $jl->jsonDecode($obj['file_columns']);
 
     switch (strtolower($_method)) {
         case "get":
@@ -89,11 +82,7 @@ try {
                     $file_result = $jl_file->bindGate($file_data);
                     $obj[$key] = $file_result;
                 }
-            }else{
-                if(count($_FILES)) $jl->error("파일을 사용하지않는데 첨부된 파일이 있습니다.");
             }
-
-
 
             $response['idx'] = $model->insert($obj);
             $response['success'] = true;
@@ -178,14 +167,6 @@ try {
             $response['success'] = true;
             break;
 
-        case "file" :
-            foreach ($_FILES as $key => $file_data) {
-                $file_result = $jl_file->bindGate($file_data);
-            }
-
-            $response['file'] = $jl->jsonDecode($file_result);
-            $response['success'] = true;
-            break;
         default :
             $response['success'] = false;
             $response['message'] = "_method가 존재하지않습니다.";

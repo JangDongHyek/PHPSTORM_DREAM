@@ -1,12 +1,12 @@
 <?php $componentName = str_replace(".php", "", basename(__FILE__)); ?>
 <script type="text/x-template" id="<?= $componentName ?>-template">
     <div>
-
+        <template>
             <product-input-tab1 v-show="tab == 1" ref="tab1" @change="parent_category = $event" @addOption="data.options.push(createOption('','custom'))"
                                 :product="data" :mb_no="mb_no" @changeTab="tab = $event" :admin="admin"
             ></product-input-tab1>
 
-            <product-input-tab2 v-show="tab == 2" ref="tab2"
+            <product-input-tab2 v-if="render" v-show="tab == 2" ref="tab2"
                                 :product="data" :mb_no="mb_no" @changeTab="tab = $event" :default_content="default_content"
                                 :tab="tab" :admin="admin"
             ></product-input-tab2>
@@ -14,6 +14,7 @@
             <product-input-tab3 v-show="tab == 3"
                                 :product="data" :mb_no="mb_no" @changeTab="tab = $event" @postData="postData();" :admin="admin"
             ></product-input-tab3>
+        </template>
 
     </div>
 </script>
@@ -35,6 +36,8 @@
 
                 parent_category : null,
                 render : true,
+
+                loading : true,
 
 
                 data: {
@@ -214,10 +217,13 @@
                 }
 
                 //naverEditor 값 필드에 담기
-                this.$refs.tab2.$refs.naverEditor.connectData(this.data,'service')
+                this.data.service = this.$refs.tab2.$refs.summernote.getContent();
+
+                this.data.table = "member_product";
+                this.data.file_use = true;
 
                 var method = this.primary ? "update" : "insert";
-                var res = await this.jl.ajax(method, this.data, "/api/member_product.php");
+                var res = await this.jl.ajax(method, this.data, "/jl/JlApi.php");
 
                 if (res) {
                     alert("완료하였습니다.");
@@ -231,6 +237,8 @@
                 if (res) {
                     this.data = res.response.data[0]
                     this.$refs.tab1.parent_category_idx = this.data.CATEGORY.data[0].parent_idx;
+
+                    this.render = true;
                 }
             },
             createOption : function(name = "",detail = "") {

@@ -38,21 +38,23 @@ if($mb == null) alert("로그인 해주세요", G5_URL);
 
                 <?if ($member['mb_level'] == 2) {?>
                     <profile-client mb_no="<?=$member['mb_no']?>"></profile-client>
-                <?} else if ($member['mb_level'] == 3) {?>
+                <?} else if ($member['mb_level'] >= 3) {?>
                     <profile-main mb_no="<?=$member['mb_no']?>"></profile-main>
                 <?}?>
 
 
+                <div class="hidden-xs">
 
                 <!-- 마이페이지에만 나오는 메뉴 -->
 				<?php include_once('./mypage_menu.php'); ?>
+                </div>
 			</div>
 		</div>
 
     </div>
 
 <?
-$jl->vueLoad();
+$jl->vueLoad("app","swal");
 //foreach ($jl->getDir("/component/profile") as $data) {
 //    echo $data."<br>";
 //}

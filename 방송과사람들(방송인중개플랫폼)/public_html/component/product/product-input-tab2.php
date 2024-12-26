@@ -30,7 +30,8 @@
                     <div class="box_write02">
                         <h4>서비스설명</h4>
                         <div class="cont">
-                            <naver-editor :content="product.service" ref="naverEditor" v-if="visible"></naver-editor>
+<!--                            <naver-editor :content="product.service" ref="naverEditor" v-if="visible"></naver-editor>-->
+                            <external-summernote :content="product.service" ref="summernote"></external-summernote>
                         </div>
                     </div>
                     <!--<div class="box_write02">

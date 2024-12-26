@@ -201,63 +201,6 @@ class Jl {
         document.head.appendChild(scriptElement);
     }
 
-    loadCSS(path) {
-        var linkElement = document.createElement('link');
-        linkElement.rel = 'stylesheet';
-        linkElement.href = this.root + path;
-
-        linkElement.onload = function() {
-            jl.log(`${path} CSS Load`, "", "#66cdaa");
-        };
-
-        linkElement.onerror = function() {
-            jl.log(`${path} CSS Error`, "", "#ff6347");
-        };
-
-        document.head.appendChild(linkElement);
-    }
-
-    checkPlugin(array) {
-        const missingDependencies = [];
-
-        array.forEach((dep) => {
-            try {
-                switch (dep.toLowerCase()) {
-                    case "jquery":
-                        if (typeof $ === "undefined") {
-                            throw new Error("jQuery is not loaded.");
-                        }
-                        break;
-
-                    case "bootstrap":
-                        if (typeof bootstrap === "undefined" && (typeof $ === "undefined" || typeof $.fn.modal === "undefined")) {
-                            throw new Error("Bootstrap is not loaded.");
-                        }
-                        break;
-
-                    case "summernote":
-                        if (typeof $.fn.summernote === "undefined") {
-                            throw new Error("Summernote is not loaded.");
-                        }
-                        break;
-
-                    default:
-                        console.warn(`Unknown dependency: ${dep}`);
-                        break;
-                }
-            } catch (err) {
-                //console.error(err.message);
-                missingDependencies.push(dep);
-            }
-        });
-
-        if (missingDependencies.length > 0) {
-            this.log(`플러그인 로드 필요 : ${missingDependencies.join(", ")}`, "", "#ff6347");
-        }
-
-        return missingDependencies;
-    }
-
     commonFile(files,obj,key,permission) {
         if(Array.isArray(obj[key])) {
             for (let i = 0; i < files.length; i++) {

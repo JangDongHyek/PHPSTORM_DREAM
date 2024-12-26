@@ -6,17 +6,28 @@ $_method = $_POST["_method"];
 
 try {
     $obj = $jl->jsonDecode($_POST['obj']);
-    $table = $obj['table'];
 
-    if(!$table) $jl->error("obj에 테이블이 없습니다.");
-    $model = new JlModel(array("table" => $table));
+    if($_method != "file") {
+        $table = $obj['table'];
+        if(!$table) $jl->error("obj에 테이블이 없습니다.");
+        $model = new JlModel(array("table" => $table));
 
-    $join_table = "";
-    $get_tables = [];
-    //array_push($get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
+        $join = null;
+        if(isset($obj['join'])) $join = $jl->jsonDecode($obj['join']);
 
-    $file_use = false;
-    $file = new JlFile("/jl/jl_resource/$table");
+        $extensions = [];
+        if(isset($obj['extensions'])) $extensions = $jl->jsonDecode($obj['extensions']);
+
+        $file_use = false;
+        $file_columns = [];
+        if(isset($obj['file_columns'])) $file_columns = $jl->jsonDecode($obj['file_columns']);
+        if(isset($obj['file_use'])) $file_use = $obj['file_use'];
+    }else {
+        $table = "basic";
+    }
+
+    $jl_file = new JlFile("/jl/jl_resource/$table");
+
 
     switch (strtolower($_method)) {
         case "get":
@@ -25,44 +36,44 @@ try {
             //필터링
             $model->setFilter($obj);
 
+            $getInfo = array(
+                "page" => $obj['page'],
+                "limit" => $obj['limit'],
+                "sql" => true // true 시 쿼리문이 반환된다
+            );
+
             //join
-            if ($join_table) {
-                $model->join($join_table,"origin_key","join_key");
+            if ($join) {
+                $model->join($join['table'],$join['origin'],$join['join']);
                 // 조인 필터링
                 //$model->where("join_column","value","AND",$join_table);
                 //$model->between("join_column","start","end","AND",$join_table);
                 //$model->in("join_column",array("value1","value2"),"AND",$join_table);
                 //$model->like("join_column","value","AND",$join_table);
+
+                if($join['source']) $getInfo['source'] = $join['table'];
+                if($join['select']) $getInfo['select'] = $join['select'];
             }
 
-            $object = $model->where($obj)->get(array(
-                "page" => $obj['page'],
-                "limit" => $obj['limit'],
-                //"source" => "joinTable",
-                //"select" => "joinTable.SearchColumn AS alias",
-                "sql" => true
-            ));
 
-            //getKey ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져오는형식 속도는 join이랑 비슷하거나 빠름
-            foreach($get_tables as $index => $info) {
+
+            $object = $model->where($obj)->get($getInfo);
+
+            //$extensions ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져와 확장하는 형식 속도는 join이랑 비슷하거나 빠름
+            foreach($extensions as $index => $info) {
                 $joinModel = new JlModel(array(
                     "table" => $info['table'],
                 ));
 
                 foreach ($object["data"] as $index => $data) {
-                    if(!$data[$info['get_key']]) continue;
-                    $joinModel->where($joinModel->primary, $data[$info['get_key']]);
+                    if(!$data[$info['foreign']]) continue;
+                    $joinModel->where($joinModel->primary, $data[$info['foreign']]);
                     $join_data = $joinModel->get()['data'][0];
 
-                    //Join시 변수명은 첫번째에 무조건 $로 진행 조인데이터일시 문제발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
+                    //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
                     $object["data"][$index]["$".$info['table']] = $join_data;
                 }
             }
-
-            //불러들인 데이터에 임의값을 추가할떄 사용하는 로직
-            //foreach ($object['data'] as $index => $data) {
-            //    $object['data'][$index]['example'] = "example";
-            //}
 
             $response['data'] = $object['data'];
             $response['count'] = $object['count'];
@@ -73,15 +84,13 @@ try {
 
         case "insert":
         {
-            //$item = $model->where($obj)->get();
-            //if($item['count']) $model->error("이미 신청한 상품입니다.");
-
             if($file_use) {
                 foreach ($_FILES as $key => $file_data) {
-                    $file_result = $file->bindGate($file_data);
+                    $file_result = $jl_file->bindGate($file_data);
                     $obj[$key] = $file_result;
                 }
             }
+
 
             $response['idx'] = $model->insert($obj);
             $response['success'] = true;
@@ -94,7 +103,7 @@ try {
                 $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
 
                 foreach ($_FILES as $key => $file_data) {
-                    $file_result = $file->bindGate($file_data);
+                    $file_result = $jl_file->bindGate($file_data);
                     if(!$file_result) continue;
 
                     if(is_array($file_data['name'])) {
@@ -119,7 +128,10 @@ try {
 
             if($file_use) {
                 $getData = $model->where($model->primary,$obj[$model->primary])->get()['data'][0];
-                $file->deleteDirGate($getData['data_column']);
+
+                foreach ($file_columns as $column) {
+                    $jl_file->deleteDirGate($getData[$column]);
+                }
             }
 
             $data = $model->delete($obj);
@@ -139,6 +151,16 @@ try {
         case "where_delete" :
             $model->setFilter($obj);
 
+            $getData = $model->where($obj)->get();
+
+            if($file_use) {
+                foreach ($getData as $d) {
+                    foreach ($file_columns as $column) {
+                        $jl_file->deleteDirGate($d[$column]);
+                    }
+                }
+            }
+
             $model->where($obj)->whereDelete();
             $response['success'] = true;
             break;
@@ -153,6 +175,14 @@ try {
             $response['success'] = true;
             break;
 
+        case "file" :
+            foreach ($_FILES as $key => $file_data) {
+                $file_result = $jl_file->bindGate($file_data);
+            }
+
+            $response['file'] = $jl->jsonDecode($file_result);
+            $response['success'] = true;
+            break;
         default :
             $response['success'] = false;
             $response['message'] = "_method가 존재하지않습니다.";

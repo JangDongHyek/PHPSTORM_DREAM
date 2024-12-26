@@ -45,7 +45,7 @@ function checkform(f){
 </script>
 </head>
 <?
-include_once('../../editor/func_editor.php');
+include_once('../../editor_ori/func_editor.php');
 $content = $category_left;
 ?>
 <body bgcolor="#FFFFFF" topmargin="0" leftmargin="0">
