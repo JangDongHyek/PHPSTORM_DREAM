@@ -2,24 +2,20 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div class="swiper ftSwiper" :id="'swiper'+component_idx">
         <ul id="product_list" class="swiper-wrapper">
-            <li class="swiper-slide" v-for="product in products">
-                <i @click="postHeart(product)" class="heart" :class="getClass(product)"></i>
-                <a :href="jl.root + '/bbs/item_view.php?idx=' + product.idx">
+            <li class="swiper-slide" v-for="portfolio in portfolios">
+                <i class="heart" :class="getClass(portfolio)" @click="postHeart(portfolio)"></i>
+                <a :href="jl.root + '/bbs/portfolio_view.php?idx=' + portfolio.idx">
                     <div class="area_img">
-                        <img :src="jl.root + product.main_image_array[0].src">
+                        <img :src="jl.root + portfolio.main_image_array[0].src" title="">
                     </div>
                     <div class="area_txt">
-                        <span></span> <h3>{{product.name}}</h3>
-                        <div class="price">
-                            {{parseInt(product.basic.price).format()}}원
-                        </div>
-                        <div class="star">
-                            <i></i><em>0</em>
-                        </div>
+
+                        <span></span><!-- 업체명 -->
+                        <h3>{{portfolio.name}}</h3> <!-- 제목 -->
                     </div>
+
                 </a>
             </li>
-
         </ul>
     </div>
 </script>
@@ -30,8 +26,7 @@
         props: {
             login_mb_no : {type : String, default : ""},
             modal : {type : Boolean, default : false},
-            primary : {type : String, default : ""},
-            mb_no : {type : String, default : ""},
+            product : {type : Object, default : null},
         },
         data: function(){
             return {
@@ -44,7 +39,8 @@
                     {name : "",message : ""},
                 ],
                 data : {},
-                products : [],
+
+                portfolios : [],
                 likes : [],
             };
         },
@@ -52,7 +48,7 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            this.getProduct();
+            this.getPortfolio();
             this.getLike();
         },
         mounted: function(){
@@ -78,7 +74,7 @@
                         },
                         // 화면 너비가 768px 이상일 때
                         768: {
-                            slidesPerView: 1,
+                            slidesPerView: 2.5,
                             spaceBetween: 15
                         },
                     }
@@ -89,18 +85,19 @@
 
         },
         methods: {
-            async postHeart(product) {
+            async postHeart(portfolio) {
                 let method = "insert";
 
                 let data =  {
+                    table : "member_portfolio_like",
                     member_idx : this.login_mb_no,
-                    product_idx : product.idx
+                    portfolio_idx : portfolio.idx
                 }
-                if(this.getClass(product) == 'on') method = "where_delete";
+                if(this.getClass(portfolio) == 'on') method = "where_delete";
 
 
                 try {
-                    let res = await this.jl.ajax(method,data,"/api2/member_product_like.php");
+                    let res = await this.jl.ajax(method,data,"/jl/JlApi.php");
 
                     await this.getLike();
                 }catch (e) {
@@ -108,28 +105,33 @@
                 }
 
             },
-            getClass(product) {
-                if(this.likes.includes(product.idx)) return "on";
+            getClass(portfolio) {
+                if(this.likes.includes(portfolio.idx)) return "on";
             },
             async getLike() {
                 let filter = {
+                    table : "member_portfolio_like",
                     member_idx : this.login_mb_no
                 }
                 try {
-                    let res = await this.jl.ajax("get",filter,"/api2/member_product_like.php");
-                    this.likes = this.jl.getObjectsToKey(res.data,"product_idx");
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
+                    this.likes = this.jl.getObjectsToKey(res.data,"portfolio_idx");
                 }catch (e) {
                     alert(e.message)
                 }
             },
-            async getProduct() {
+            async getPortfolio() {
+                let array = [99999999, ...this.product.portfolios];
+
                 let filter = {
-                    member_idx : this.mb_no,
-                    approval : "1",
+                    table : "member_portfolio",
+                    in : [
+                        {key : "idx", array : array }
+                    ],
                 }
                 try {
-                    let res = await this.jl.ajax("get",filter,"/api2/member_product.php");
-                    this.products = res.data
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
+                    this.portfolios = res.data
                 }catch (e) {
                     alert(e.message)
                 }

@@ -1,6 +1,6 @@
 <?php $componentName = str_replace(".php", "", basename(__FILE__)); ?>
 <script type="text/x-template" id="<?= $componentName ?>-template">
-    <div>
+    <div v-if="render">
         <div id="item_view" class="view">
             <div class="inr">
                 <ul id="area_history">
@@ -23,13 +23,13 @@
                         </div>
                         <div class="swiper-pagination"></div>
                     </div>
-                    <div class="swiper-container gallery_thumbs">
+                    <!--div class="swiper-container gallery_thumbs">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide" v-for="item in data.content_image_array">
+                            <div class="swiper-slide" v-for="item in data.main_image_array">
                                 <img :src="jl.root+item.src">
                             </div>
                         </div>
-                    </div>
+                    </div-->
                     <!--공유하기버튼--><a class="btn_share"><i class="fa-regular fa-share-nodes"></i></a>
                 </div>
 
@@ -53,7 +53,7 @@
                         <div class="tab_cont">
                             <section>
                                 <template v-for="link in data.movie_link" v-if="jl.extractYoutube(link)">
-                                    <div>
+                                    <div class="embed-container">
                                         <iframe
                                                 width="560"
                                                 height="315"
@@ -69,36 +69,19 @@
                             <section id="area_service">
                                 <!-- 여기서 부터 상세이미지-->
                                 <div class="area_detail_img">
-                                    <div class="img_box" v-for="item in data.main_image_array">
+                                    <div class="img_box" v-for="item in data.content_image_array">
                                         <img :src="jl.root+item.src">
                                     </div>
                                 </div>
 
                                 <br>
                                 <h3>서비스설명</h3>
-                                <div class="embed-container" v-html="data.service"></div>
                                 <br>
-                                <!--포트폴리오 디자인 추가-->
+                                <!--포트폴리오 디자인 추가
                                 <div class="portfolio_list">
                                         <ul>
                                             <li>
-                                                <div class="port_conts"><!--더보기 클릭시 클래스 expanded 추가-->
-                                                    <div class="port_title">000 콘텐츠 인터뷰</div>
-                                                    <div class="port_img">
-                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTEyMjNfMTMx%2FMDAxNjQwMjQyNzg3NTg4.wVfSHV1O10zd5-5-iUC9Oc5XXMltjpq_Qm5QIe-ecDwg.qPoymCA_M0zgj9LNGjrQaVSQj3iWoJ1PJOj9CkZ7t5cg.JPEG.eunu3061%2F490e499d692102c64cfd76f927c0132b.jpeg&type=sc960_832"></p>
-                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA2MDRfMTMx%2FMDAxNjg1ODg4NDI0NDUz.VVct5HfUDUo8OkmUndkfKZLvtZaU7zADX-P1KEe-zF8g.CrT81-Z97KOJi0hX8u4JkIO_sYLatu-SeNCDN71yF_Yg.JPEG.alsdud838%2Foutput_1546078941.jpg&type=sc960_832"></p>
-                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F144%2F2022%2F02%2F22%2F0000794913_001_20220222191502036.jpg&type=sc960_832"></p>
-                                                        <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fpost.phinf.naver.net%2FMjAyMjAyMjJfMjgz%2FMDAxNjQ1NDk2NjIyMzc5.QeuRbbR9Topan8FQt-_Rhx0oBbxtCzcJDIM1yZBNm84g.oYqeFiHwwgmNhxVrLGZst_fQFs6J7M27wktdZSYueBgg.JPEG%2FIJ0xkTj9swH6yj_ejD_Uwp1IRM6Q.jpg&type=sc960_832"></p>
-                                                    </div>
-                                                    <div class="port_detail">
-                                                        <strong>포트폴리오 설명</strong>
-                                                        <p>2020년도 10월에 촬영한 000광고 화보촬영입니다</p>
-                                                    </div>
-                                                </div>
-                                                <button name="btnToggle" class="port_btn">더보기</button>
-                                            </li>
-                                            <li>
-                                                <div class="port_conts">
+                                                <div class="port_conts">//더보기 클릭시 클래스 expanded 추가
                                                     <div class="port_title">000 콘텐츠 인터뷰</div>
                                                     <div class="port_img">
                                                         <p><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTEyMjNfMTMx%2FMDAxNjQwMjQyNzg3NTg4.wVfSHV1O10zd5-5-iUC9Oc5XXMltjpq_Qm5QIe-ecDwg.qPoymCA_M0zgj9LNGjrQaVSQj3iWoJ1PJOj9CkZ7t5cg.JPEG.eunu3061%2F490e499d692102c64cfd76f927c0132b.jpeg&type=sc960_832"></p>
@@ -115,7 +98,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                <!--//포트폴리오 디자인 추가-->
+                                // 추가-->
 
                                 <!--서비스 추가 옵션-->
                                 <dl class="service_option">
@@ -240,86 +223,19 @@
                         </div>
 
                         <div class="area_ft_list">
-                            <!--포트폴리오-->
                             <div>
                                 <h3>포트폴리오</h3>
-                                <div class="swiper ftSwiper">
-                                    <ul id="product_list" class="swiper-wrapper portfolio_list">
-                                        <li class="swiper-slide" v-for="item in portfolios">
-                                            <i class="heart " onclick="heart_click(15,this)"></i>
-                                            <a :href="jl.root + '/bbs/portfolio_view.php?idx=' + item.idx">
-                                                <!--<span class="icon">카테고리</span>-->
-                                                <div class="area_img">
-                                                    <img :src="`${jl.root}${item.main_image_array[0].src}`" title="">
-                                                </div>
-                                                <div class="area_txt">
-                                                    <span></span><!-- 업체명 -->
-                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
-                                                    <div class="profile_box">
-                                                        <div class="profile">
-                                                            <img src="https://itforone.com/~broadcast/data/file/member/36.jpg">
-                                                        </div>
-                                                        <div class="profile_info">czczscs</div>
-                                                    </div>
-                                                    <div class="price">50,000원</div> <!-- 가격 -->
-                                                    <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-                                                </div>
-
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <part-product-portfolio :login_mb_no="member_idx" :product="data"></part-product-portfolio>
                             </div>
-                            <!--관련 인기 상품-->
+
                             <div>
                                 <h3>관련 인기 상품</h3>
-                                <div class="swiper ftSwiper">
-                                    <ul id="product_list" class="swiper-wrapper">
-                                        <li class="swiper-slide" v-for="item in products">
-                                            <i class="heart " onclick="heart_click(15,this)"></i>
-                                            <a :href="`${jl.root}/bbs/item_view.php?idx=${item.idx}`">
-                                                <div class="area_img">
-                                                    <img :src="jl.root+item.main_image_array[0].src">
-                                                </div>
-                                                <div class="area_txt">
-                                                    <!--<span class="icon">카테고리</span>-->
-                                                    <span></span><!-- 업체명 -->
-                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
-                                                    <div class="price">
-                                                        {{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원
-                                                    </div> <!-- 가격 -->
-                                                    <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
-                                                </div>
-
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <part-product-relation :login_mb_no="member_idx" :product="data"></part-product-relation>
                             </div>
-                            <!--최근 본 서비스-->
+
                             <div>
                                 <h3>최근 본 서비스</h3>
-                                <div class="swiper ftSwiper">
-                                    <ul id="product_list" class="swiper-wrapper">
-                                        <li class="swiper-slide" v-for="item in products_log" v-if="item.idx != data.idx">
-                                            <i class="heart " onclick="heart_click(15,this)"></i>
-                                            <a :href="`${jl.root}/bbs/item_view.php?idx=${item.idx}`">
-                                                <div class="area_img">
-                                                    <img :src="jl.root+item.main_image_array[0].src">
-                                                </div>
-                                                <div class="area_txt">
-                                                    <span></span><!-- 업체명 -->
-                                                    <h3>{{ item.name }}</h3> <!-- 제목 -->
-                                                    <div class="price">
-                                                        {{ item.package ? parseInt(item.standard.price).format() : parseInt(item.basic.price).format() }}원
-                                                    </div> <!-- 가격 -->
-                                                    <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
-                                                </div>
-
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <part-product-lately :login_mb_no="member_idx"></part-product-lately>
                             </div>
 
                         </div>
@@ -353,21 +269,44 @@
                 portfolios : [],
                 products : [],
                 products_log : [],
+
+                render : false,
             };
         },
-        created: function () {
+        async created() {
             this.jl = new Jl('<?=$componentName?>');
 
-            if(this.primary) this.getData();
-            this.getCategory();
-            this.getReview();
-            this.getPortfolio();
-            this.getProduct();
-            this.getProductLog();
+            await this.getCategory();
+            if(this.primary) await this.getData();
+            await this.getReview();
+            await this.getPortfolio();
+            await this.getProduct();
+            await this.getProductLog();
         },
         mounted: function () {
             this.$nextTick(() => {
-
+                var swiper = new Swiper(".testSwiper", {
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 2,
+                            spaceBetween: 20,
+                        },
+                        768: {
+                            slidesPerView: 4,
+                            spaceBetween: 40,
+                        },
+                        1024: {
+                            slidesPerView: 5,
+                            spaceBetween: 50,
+                        },
+                    },
+                });
             });
         },
         methods: {
@@ -495,6 +434,8 @@
 
                 if (res) {
                     this.data = res.response.data[0]
+
+                    this.render = true;
                 }
             }
         },

@@ -3,7 +3,7 @@
     <div class="item_right">
         <div class="item_info">
             <template v-for="item in data.keywords">
-                <i class="cate">{{item}}</i> &nbsp;
+                <i class="cate">{{item}}</i>
             </template>
             <h3 class="subject">{{data.name}}</h3>
             <div class="company_info">
@@ -182,7 +182,7 @@
 
 
                 let order = {
-                    order_no : this.jl.createOrderNo(),
+                    order_no : this.jl.generateUniqueId(),
                     member_idx : this.member_idx,
                     seller_idx : this.product.member_idx,
                     product_idx : this.product.idx,

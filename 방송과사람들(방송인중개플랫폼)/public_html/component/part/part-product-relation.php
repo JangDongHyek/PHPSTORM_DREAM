@@ -31,7 +31,7 @@
             login_mb_no : {type : String, default : ""},
             modal : {type : Boolean, default : false},
             primary : {type : String, default : ""},
-            mb_no : {type : String, default : ""},
+            product : {type : Object, default : null},
         },
         data: function(){
             return {
@@ -124,11 +124,17 @@
             },
             async getProduct() {
                 let filter = {
+                    table : "member_product",
                     member_idx : this.mb_no,
                     approval : "1",
+
+                    where : [
+                        {key : "idx", value : this.product.idx, operator : "AND NOT"},
+                        {key : "category_idx", value : this.product.category_idx},
+                    ],
                 }
                 try {
-                    let res = await this.jl.ajax("get",filter,"/api2/member_product.php");
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
                     this.products = res.data
                 }catch (e) {
                     alert(e.message)

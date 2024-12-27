@@ -65,38 +65,39 @@ $like_cnt = sql_fetch($sql)['cnt'];
 $jl->vueLoad("viewapp");
 include_once($jl->ROOT."/component/product/product-view.php");
 include_once($jl->ROOT."/component/product/product-view-right.php");
+$jl->componentLoad("part");
 
 include_once('./_tail.php');
 ?>
 
-
+<!-- Initialize Swiper -->
 <script>
-    var swiper = new Swiper(".ftSwiper", {
-        slidesPerView: 2.5,
+    var swiper = new Swiper(".testSwiper", {
+        slidesPerView: 1,
         spaceBetween: 10,
-        grabCursor: true,
         pagination: {
             el: ".swiper-pagination",
             clickable: true,
         },
         breakpoints: {
-            // 화면 너비가 1200px 이상일 때
-            1200: {
-                slidesPerView: 3.5,
-                spaceBetween: 20
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
             },
-            // 화면 너비가 992px 이상일 때
-            950: {
-                slidesPerView: 3.5,
-                spaceBetween: 20
-            },
-            // 화면 너비가 768px 이상일 때
             768: {
-                slidesPerView: 2.5,
-                spaceBetween: 15
+                slidesPerView: 4,
+                spaceBetween: 40,
             },
-        }
+            1024: {
+                slidesPerView: 5,
+                spaceBetween: 50,
+            },
+        },
     });
+</script>
+
+<script>
+
 
  var swiper = new Swiper(".gallery_thumbs", {
 	spaceBetween: 10,

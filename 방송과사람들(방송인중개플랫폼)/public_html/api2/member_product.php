@@ -57,12 +57,12 @@ try {
                     "table" => $info['table'],
                 ));
 
-                foreach ($object["data"] as $index => $data) {
+                foreach ($object["data"] as $index2 => $data) {
                     $joinModel->where($joinModel->primary, $data[$info['get_key']]);
                     $join_data = $joinModel->get()['data'][0];
 
                     //Join시 변수명은 첫번째에 무조건 $로 진행 조인데이터일시 문제발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
-                    $object["data"][$index]["$".$info['table']] = $join_data;
+                    $object["data"][$index2]["$".$info['table']] = $join_data;
                 }
             }
 

@@ -98,7 +98,7 @@
                     table : "order",
 
                     where : [
-                        {key : "", value : ""}
+                        {key : "", value : "", operator : ""}
                     ],
 
                     like : [

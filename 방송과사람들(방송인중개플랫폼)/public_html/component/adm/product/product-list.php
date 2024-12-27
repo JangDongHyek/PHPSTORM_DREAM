@@ -16,7 +16,9 @@
                 <tbody>
                 <tr class="bg0" v-for="item,index in data">
                     <td>{{item.jl_no_reverse}}</td>
-                    <td>{{item.$g5_member.mb_id}}</td>
+                    <td>
+                        <span v-if="item.$g5_member">{{item.$g5_member.mb_id}}</span>
+                    </td>
                     <td>{{item.name}}</td>
                     <td>
                         <a :href="'./product_view.php?idx=' + item.idx">보기</a>

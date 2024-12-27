@@ -223,7 +223,13 @@
                 this.data.file_use = true;
 
                 var method = this.primary ? "update" : "insert";
-                var res = await this.jl.ajax(method, this.data, "/jl/JlApi.php");
+                let data = this.jl.copyObject(this.data);
+
+                data.basic.price = this.jl.getNumbersOnly(data.basic.price);
+                data.standard.price = this.jl.getNumbersOnly(data.standard.price);
+                data.premium.price = this.jl.getNumbersOnly(data.premium.price);
+
+                var res = await this.jl.ajax(method, data, "/jl/JlApi.php");
 
                 if (res) {
                     alert("완료하였습니다.");

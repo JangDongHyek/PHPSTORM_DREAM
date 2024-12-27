@@ -1,5 +1,5 @@
 <?php
-namespace App\Libraries;
+//namespace App\Libraries;
 require_once("Jl.php");
 
 class JlModel extends Jl{
@@ -31,6 +31,11 @@ class JlModel extends Jl{
     function __construct($object = array()) {
         //부모 생성자
         parent::__construct();
+
+        // 매개변수가 문자열이면 테이블속성만 넣었다고 가정
+        if (is_string($object)) {
+            $object = array("table" =>$object);
+        }
 
         // mysql 버전 확인
         if(function_exists("mysqli_connect")) $this->mysqli = true;

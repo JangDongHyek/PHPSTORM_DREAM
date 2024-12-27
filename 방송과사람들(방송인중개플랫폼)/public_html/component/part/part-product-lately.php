@@ -3,15 +3,15 @@
     <div class="swiper ftSwiper" :id="'swiper'+component_idx">
         <ul id="product_list" class="swiper-wrapper">
             <li class="swiper-slide" v-for="product in products">
-                <i @click="postHeart(product)" class="heart" :class="getClass(product)"></i>
-                <a :href="jl.root + '/bbs/item_view.php?idx=' + product.idx">
+                <i @click="postHeart(product.$member_product)" class="heart" :class="getClass(product.$member_product)"></i>
+                <a :href="jl.root + '/bbs/item_view.php?idx=' + product.$member_product.idx">
                     <div class="area_img">
-                        <img :src="jl.root + product.main_image_array[0].src">
+                        <img :src="jl.root + product.$member_product.main_image_array[0].src">
                     </div>
                     <div class="area_txt">
-                        <span></span> <h3>{{product.name}}</h3>
+                        <span></span> <h3>{{product.$member_product.name}}</h3>
                         <div class="price">
-                            {{parseInt(product.basic.price).format()}}원
+                            {{parseInt(product.$member_product.basic.price).format()}}원
                         </div>
                         <div class="star">
                             <i></i><em>0</em>
@@ -31,7 +31,7 @@
             login_mb_no : {type : String, default : ""},
             modal : {type : Boolean, default : false},
             primary : {type : String, default : ""},
-            mb_no : {type : String, default : ""},
+            product : {type : Object, default : null},
         },
         data: function(){
             return {
@@ -124,11 +124,15 @@
             },
             async getProduct() {
                 let filter = {
-                    member_idx : this.mb_no,
-                    approval : "1",
+                    table : "member_product_log",
+                    member_idx : this.login_mb_no,
+
+                    extensions : [
+                        {table : "member_product", foreign : "product_idx"}
+                    ],
                 }
                 try {
-                    let res = await this.jl.ajax("get",filter,"/api2/member_product.php");
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
                     this.products = res.data
                 }catch (e) {
                     alert(e.message)

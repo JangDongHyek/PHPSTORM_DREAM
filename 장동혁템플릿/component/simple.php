@@ -23,18 +23,16 @@
                 }
             };
         },
-        created: function(){
+        async created(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
-
-            if(this.primary) this.getData();
         },
-        mounted: function(){
+        mounted(){
             this.$nextTick(() => {
 
             });
         },
-        updated : function() {
+        updated() {
 
         },
         methods: {

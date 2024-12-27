@@ -35,6 +35,7 @@ class Jl {
         this.name = name;
         this.root = Jl_base_url;
         this.editor = Jl_editor;
+        this.dev = Jl_dev;
 
         // 의존성주입 패턴
         if (typeof JlJavascript !== 'undefined') {
@@ -224,12 +225,8 @@ class Jl {
 
     checkPlugin(plugin) {
         const missingDependencies = [];
-        let array = [];
-        if (typeof plugin === 'string') {
-            array.push(plugin);
-        }else {
-            array = plugin;
-        }
+
+        let array = this.convertToArray(plugin);
 
         array.forEach((dep) => {
             try {
@@ -358,6 +355,28 @@ class Jl {
      */
     isUpperCase(str) {
         return str === str.toUpperCase();
+    }
+
+    // 매개변수를 타입에따라 배열로 바꿔주는 함수
+    convertToArray(input) {
+        // 문자열인지 확인
+        if (typeof input === "string") {
+            // 문자열에 ','가 포함되어 있다면 분리
+            if (input.includes(",")) {
+                return input.split(",");
+            } else {
+                // ','가 없는 단일 문자열이라면 배열에 담아 반환
+                return [input];
+            }
+        }
+
+        // 이미 배열이라면 그대로 반환
+        if (Array.isArray(input)) {
+            return input;
+        }
+
+        // 다른 타입이라면 빈 배열 반환
+        return [];
     }
 
     // 반환값은 일치하는 객체를 반환 없을시 undefined
@@ -560,9 +579,16 @@ class Jl {
         return result;
     }
 
-    // 참조값이 숫자만으로 이러우져있는지 확인하는 함수
+    // 매개변수가 숫자만으로 이러우져있는지 확인하는 함수
     isNumber(str) {
         return !/[^0-9]/.test(str);
+    }
+
+    // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수
+    extractYoutube(url) {
+        const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
+        const match = url.match(regex);
+        return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
     }
 
     //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey" 아래 형제함수도 추가해줘야함
@@ -582,19 +608,22 @@ class Jl {
         return false;
     }
 
-    // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수
-    extractYoutube(url) {
-        const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
-        const match = url.match(regex);
-        return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
-    }
-
 
     // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
-    isNumberKeyInput(event) {
-        const sanitizedValue = event.target.value.replace(/[^0-9]/g, '');
-        event.target.value = sanitizedValue;
+    isNumberKeyInput(event, format = false) {
 
+            // 키 입력값에서 숫자와 쉼표만 유지
+        let sanitizedValue = event.target.value.replace(/[^0-9,]/g, '');
+
+        // 포맷 적용
+        if (format) {
+            // 쉼표 제거 후 다시 천 단위로 포맷팅
+            sanitizedValue = sanitizedValue.replace(/,/g, '');
+            sanitizedValue = sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // 값을 업데이트
+        event.target.value = sanitizedValue;
     }
 
     formatNumber(value,comma = false) {

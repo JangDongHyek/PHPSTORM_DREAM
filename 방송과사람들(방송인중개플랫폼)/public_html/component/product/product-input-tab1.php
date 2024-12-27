@@ -129,51 +129,54 @@
                                 <div class="box_write">
                                     <h4>지역</h4>
                                     <div class="cont box">
-                                        <input type="checkbox" v-model="product.area" value="국내" id="domestic" name="location"><label for="domestic">국내</label>
-                                        <input type="checkbox" v-model="product.area" value="해외" id="overseas" name="location"><label for="overseas">해외</label>
-                                        <input type="checkbox" v-model="product.area" value="협의가능" id="overseas1" name="location"><label for="overseas1">협의가능</label>
-                                        <input type="checkbox" v-model="product.area" value="미선택" id="overseas2" name="location"><label for="overseas2">미선택</label>
+                                        <input type="checkbox" :disabled="product.area.includes('선택안함')" v-model="product.area" value="국내" id="domestic" name="location"><label for="domestic">국내</label>
+                                        <input type="checkbox" :disabled="product.area.includes('선택안함')" v-model="product.area" value="해외" id="overseas" name="location"><label for="overseas">해외</label>
+                                        <input type="checkbox" :disabled="product.area.includes('선택안함')" v-model="product.area" value="협의가능" id="overseas1" name="location"><label for="overseas1">협의가능</label>
+                                        <input type="checkbox" @click="product.area = [];" v-model="product.area" value="선택안함" id="overseas2" name="location"><label for="overseas2">선택안함</label>
                                     </div>
                                 </div>
                                 <div class="box_write" v-if="product.area.includes('국내')">
                                     <h4>상세지역</h4>
                                     <div class="cont box">
                                         <template v-for="region,rindex in regions">
-                                        <input type="checkbox" v-model="product.region" :value="region" :id="'rindex'+rindex" name="location"><label :for="'rindex'+rindex">{{region}}</label>
+                                        <input type="checkbox" :disabled="product.region.includes('전국')" v-model="product.region" :value="region" :id="'rindex'+rindex" name="location"><label :for="'rindex'+rindex">{{region}}</label>
                                         </template>
+                                        <input type="checkbox" @click="product.region = [];" v-model="product.region" value="전국" id="rindex15111" name="location"><label for="rindex15111">전국</label>
                                     </div>
                                 </div>
                                 <div class="box_write">
                                     <h4>주말 작업<br>가능여부</h4>
                                     <div class="cont box">
-                                        <input type="checkbox" v-model="product.weekend" value="협의가능" id="negotiable2" name="availability"><label for="negotiable2">협의가능</label>
-                                        <input type="checkbox" v-model="product.weekend" value="가능" id="possible" name="availability"><label for="possible">가능</label>
-                                        <input type="checkbox" v-model="product.weekend" value="불가능" id="not-possible" name="availability"><label for="not-possible">불가능</label>
+                                        <input type="radio" v-model="product.weekend" value="협의가능" id="negotiable2" name="availability"><label for="negotiable2">협의가능</label>
+                                        <input type="radio" v-model="product.weekend" value="가능" id="possible" name="availability"><label for="possible">가능</label>
+                                        <input type="radio" v-model="product.weekend" value="불가능" id="not-possible" name="availability"><label for="not-possible">불가능</label>
                                     </div>
                                 </div>
                                 <div class="box_write" v-if="!['','27','31'].includes(parent_category_idx)" >
                                     <h4>작업유형</h4>
                                     <div class="cont box">
                                         <template v-for="item,index in getWorkType()">
-                                            <input type="checkbox" v-model="product.types" :value="item" :id="'i'+index">
+                                            <input type="checkbox" v-if="item != '선택안함'" :disabled="product.types.includes('선택안함')" v-model="product.types" :value="item" :id="'i'+index">
+                                            <input type="checkbox" v-else @click="product.types=[];" v-model="product.types" :value="item" :id="'i'+index">
                                             <label :for="'i'+index">{{item}}</label>
                                         </template>
+
                                     </div>
                                 </div>
                                 <div class="box_write" v-if="['20','21'].includes(parent_category_idx)" >
                                     <h4>스타일</h4>
                                     <div class="cont box">
-                                        <input type="checkbox" v-model="product.styles" value="인물" id="person" name="category"><label for="person">인물</label>
-                                        <input type="checkbox" v-model="product.styles" value="사물" id="object" name="category"><label for="object">사물</label>
-                                        <input type="checkbox" v-model="product.styles" value="제품" id="product" name="category"><label for="product">제품</label>
-                                        <input type="checkbox" v-model="product.styles" value="의상" id="clothing" name="category"><label for="clothing">의상</label>
-                                        <input type="checkbox" v-model="product.styles" value="자동차" id="car" name="category"><label for="car">자동차</label>
-                                        <input type="checkbox" v-model="product.styles" value="인테리어" id="interior" name="category"><label for="interior">인테리어</label>
-                                        <input type="checkbox" v-model="product.styles" value="2D" id="2d" name="category"><label for="2d">2D</label>
-                                        <input type="checkbox" v-model="product.styles" value="3D" id="3d" name="category"><label for="3d">3D</label>
-                                        <input type="checkbox" v-model="product.styles" value="이펙트" id="effects" name="category"><label for="effects">이펙트</label>
-                                        <input type="checkbox" v-model="product.styles" value="애니메이션" id="animation" name="category"><label for="animation">애니메이션</label>
-                                        <input type="checkbox" v-model="product.styles" value="선택안함" id="none-cate" name="category"><label for="none-cate">선택안함</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="인물" id="person" name="category"><label for="person">인물</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="사물" id="object" name="category"><label for="object">사물</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="제품" id="product" name="category"><label for="product">제품</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="의상" id="clothing" name="category"><label for="clothing">의상</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="자동차" id="car" name="category"><label for="car">자동차</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="인테리어" id="interior" name="category"><label for="interior">인테리어</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="2D" id="2d" name="category"><label for="2d">2D</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="3D" id="3d" name="category"><label for="3d">3D</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="이펙트" id="effects" name="category"><label for="effects">이펙트</label>
+                                        <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="애니메이션" id="animation" name="category"><label for="animation">애니메이션</label>
+                                        <input type="checkbox" @click="product.styles=[];" v-model="product.styles" value="선택안함" id="none-cate" name="category"><label for="none-cate">선택안함</label>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +187,7 @@
                                 <div class="keyword">
                                         <div class="keyword_add">
                                             <p>검색 키워드</p>
-                                            <input type="text" placeholder="키워드 입력" v-model="temp"> <span>{{product.keywords.length}}/5</span>
+                                            <input type="text" placeholder="키워드 입력" v-model="temp" @keyup.enter="addKeyword();"> <span>{{product.keywords.length}}/5</span>
                                             <button @click="addKeyword()" v-if="!admin">추가</button>
                                         </div>
                                         <div class="keyword_list">
@@ -230,7 +233,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" placeholder="0" @keydown="jl.isNumberKey" @input="jl.isNumberKeyInput" required v-model="product.basic.price"><label>원</label>
+                                                            <input type="text" class="text-right" placeholder="0" @keyup="jl.isNumberKeyInput($event,true)" @input="jl.isNumberKeyInput($event,true)" required v-model="product.basic.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -275,7 +278,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" @keydown="jl.isNumberKey" @input="jl.isNumberKeyInput" placeholder="0" required v-model="product.standard.price"><label>원</label>
+                                                            <input type="text" class="text-right" @keyup="jl.isNumberKeyInput($event,true)" @input="jl.isNumberKeyInput($event,true)" placeholder="0" required v-model="product.standard.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -320,7 +323,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" placeholder="0" @keydown="jl.isNumberKey" @input="jl.isNumberKeyInput" required v-model="product.premium.price"><label>원</label>
+                                                            <input type="text" class="text-right" placeholder="0" @keyup="jl.isNumberKeyInput($event,true)" @input="jl.isNumberKeyInput($event,true)" required v-model="product.premium.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -422,7 +425,7 @@
                 bool : true,
                 parent_category_idx : "",
 
-                regions : ["서울", "경기", "인천", "강원", "대전", "세종", "충남", "충북", "부산", "울산", "경남", "경북", "대구", "광주", "전남", "전북", "제주", "전국"],
+                regions : ["서울", "경기", "인천", "강원", "대전", "세종", "충남", "충북", "부산", "울산", "경남", "경북", "대구", "광주", "전남", "전북", "제주"],
             };
         },
         created: function(){

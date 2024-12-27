@@ -60,7 +60,8 @@ try {
             $object = $model->where($obj)->get($getInfo);
 
             //$extensions ex) 고유키로 필요한 테이블데이터를 조인대신 한번 더 조회해서 가져와 확장하는 형식 속도는 join이랑 비슷하거나 빠름
-            foreach($extensions as $index => $info) {
+            foreach($extensions as $info) {
+                $info = $jl->jsonDecode($info);
                 $joinModel = new JlModel(array(
                     "table" => $info['table'],
                 ));
@@ -78,6 +79,7 @@ try {
             $response['data'] = $object['data'];
             $response['count'] = $object['count'];
             $response['filter'] = $obj;
+            $response['sql'] = $object['sql'];
             $response['success'] = true;
             break;
         }
@@ -89,7 +91,10 @@ try {
                     $file_result = $jl_file->bindGate($file_data);
                     $obj[$key] = $file_result;
                 }
+            }else{
+                if(count($_FILES)) $jl->error("파일을 사용하지않는데 첨부된 파일이 있습니다.");
             }
+
 
 
             $response['idx'] = $model->insert($obj);

@@ -169,9 +169,7 @@ class Jl {
 
     // 필요한 파일들을 로드하고 변수를 선언하는 기본함수
     function jsLoad($plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
+        $plugins = $this->convertToArray($plugin);
 
         if(!self::$JS_LOAD) {
             //js파일 찾기
@@ -198,19 +196,9 @@ class Jl {
             echo "<script>";
             echo "const jl = new Jl();";
             echo "</script>";
-        }else {
-            $this->pluginLoad($plugins);
         }
 
-
-
-
-        if(in_array('swal',$plugins)) {
-            echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">';
-            echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>';
-        }
-
-
+        $this->pluginLoad($plugins);
 
 
     }
@@ -235,13 +223,34 @@ class Jl {
                 array_push(self::$PLUGINS,"swal");
             }
         }
+
+        if(in_array('jquery',$plugins)) {
+            if(!in_array("jquery",self::$PLUGINS)) {
+                echo '<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>';
+                array_push(self::$PLUGINS,"jquery");
+            }
+        }
+
+        if(in_array('summernote',$plugins)) {
+            if(!in_array("summernote",self::$PLUGINS)) {
+                echo '<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.css" rel="stylesheet">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.js"></script>';
+                array_push(self::$PLUGINS,"summernote");
+            }
+        }
+
+        if(in_array('bootstrap',$plugins)) {
+            if(!in_array("bootstrap",self::$PLUGINS)) {
+                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-o3pO8HUlU1KpMy2X8CCatUcsDD3T4PAtdU1sK3c4R33zE0M7nb9xr5+eTMVRGz+g" crossorigin="anonymous">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-v06KyMCIhVXp1qWiMHLKP8o+AKZCL+a59W8KJrC6V+5jMEjOemLEdZomKsm9FmQz" crossorigin="anonymous"></script>';
+                array_push(self::$PLUGINS,"bootstrap");
+            }
+        }
     }
 
     // vue 사용할시 vue에 필요한 파일들을 로드하고 JS 필수함수를 실행시키는 함수
     function vueLoad($app_name = "app",$plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
+        $plugins = $this->convertToArray($plugin);
 
         if(!self::$VUE_LOAD) {
             $this->jsLoad($plugins);
@@ -252,9 +261,10 @@ class Jl {
                 echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
             }
             self::$VUE_LOAD = true;
-        }else {
-            $this->pluginLoad($plugins);
         }
+
+        $this->pluginLoad($plugins);
+
 
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
@@ -367,6 +377,27 @@ class Jl {
         }
 
         return $result;
+    }
+
+    function convertToArray($array) {
+        // 문자열인지 확인
+        if (is_string($array)) {
+            // 문자열에 ','가 포함되어 있다면 분리
+            if (strpos($array, ',') !== false) {
+                return explode(',', $array);
+            } else {
+                // ','가 없는 단일 문자열이라면 배열에 담아 반환
+                return [$array];
+            }
+        }
+
+        // 이미 배열이라면 그대로 반환
+        if (is_array($array)) {
+            return $array;
+        }
+
+        // 다른 타입이라면 빈 배열 반환
+        return [];
     }
 
     function stringDateToDate($dateString) {

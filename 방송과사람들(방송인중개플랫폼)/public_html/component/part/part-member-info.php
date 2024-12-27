@@ -40,7 +40,7 @@
         </ul>
         <!--자기소개글-->
         <div class="btn_ft"><a href="javascript:chatting('<?=$mb['mb_id']?>',<?=$view['i_idx']?>)" class="btn_cs">전문가에게 문의하기</a></div>
-        <div class="btn_ft" v-if="login_mb_no == member.mb_no"><a class="btn_cs" :href="jl.root + '/bbs/mypage_profile.php'">프로필 등록 및 수정</a></div>
+        <div class="btn_ft" v-if="login_mb_no == member.mb_no"><a class="btn_cs btn_edit" :href="jl.root + '/bbs/mypage_profile.php'">프로필 등록 및 수정</a></div>
     </div>
 </script>
 
