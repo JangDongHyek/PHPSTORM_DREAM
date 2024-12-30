@@ -8,7 +8,7 @@ class JlPlugin {
 
         const defaultOptions = {
             title: message,
-            icon: "info",
+            icon: "info", // success,error,warning,question
             confirmButtonText: "확인"
         }
 

@@ -16,9 +16,9 @@ if ($w == 'u' && $is_admin == 'super') {
         alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
 }
 
-if (!chk_captcha()) {
-    alert('자동등록방지 숫자가 틀렸습니다.');
-}
+//if (!chk_captcha()) {
+//    alert('자동등록방지 숫자가 틀렸습니다.');
+//}
 
 if($w == 'u')
     $mb_id = isset($_SESSION['ss_mb_id']) ? trim($_SESSION['ss_mb_id']) : '';
@@ -73,6 +73,8 @@ $mb_addr2       = clean_xss_tags($mb_addr2);
 $mb_addr3       = clean_xss_tags($mb_addr3);
 $mb_addr_jibeon = preg_match("/^(N|R)$/", $mb_addr_jibeon) ? $mb_addr_jibeon : '';
 
+$mb_nick = $mb_id;
+
 if ($w == '' || $w == 'u') {
 
     if ($msg = empty_mb_id($mb_id))         alert($msg, "", true, true); // alert($msg, $url, $error, $post);
@@ -114,13 +116,13 @@ if ($w == '' || $w == 'u') {
     if ($w=='') {
         if ($msg = exist_mb_id($mb_id))     alert($msg);
 
-        if (get_session('ss_check_mb_id') != $mb_id || get_session('ss_check_mb_nick') != $mb_nick || get_session('ss_check_mb_email') != $mb_email) {
-            set_session('ss_check_mb_id', '');
-            set_session('ss_check_mb_nick', '');
-            set_session('ss_check_mb_email', '');
-
-            alert('올바른 방법으로 이용해 주십시오.');
-        }
+        //if (get_session('ss_check_mb_id') != $mb_id || get_session('ss_check_mb_nick') != $mb_nick || get_session('ss_check_mb_email') != $mb_email) {
+        //    set_session('ss_check_mb_id', '');
+        //    set_session('ss_check_mb_nick', '');
+        //    set_session('ss_check_mb_email', '');
+        //
+        //    alert('올바른 방법으로 이용해 주십시오.');
+        //}
 
         // 본인확인 체크
         if($config['cf_cert_use'] && $config['cf_cert_req']) {

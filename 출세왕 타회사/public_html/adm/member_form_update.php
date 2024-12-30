@@ -195,6 +195,10 @@ else if ($w == 'u')
                 where mb_id = '{$mb_id}' ";
 
     sql_query($sql);
+
+    //24-12-30 고객이 주소 변경하면 정기세차 차 주소도 바뀌게
+    $sql = "update `new_car_wash` set `car_w_addr1` = '{$_POST['mb_addr1']}', `car_w_addr2` = '{$_POST['mb_addr2']}' where `mb_id` = '{$mb_id}'";
+    sql_query($sql);
 }
 else
     alert('제대로 된 값이 넘어오지 않았습니다.');
