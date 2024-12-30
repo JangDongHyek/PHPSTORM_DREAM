@@ -88,6 +88,9 @@
                 try {
                     //if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
                     let res = await this.jl.ajax(method,data,"/jl/JlApi.php",options);
+
+                    await this.jl.alert('저장되었습니다.');
+
                 }catch (e) {
                     alert(e.message)
                 }

@@ -71,15 +71,15 @@ class File extends JL{
     }
 
     function deleteDirGate($file) {
-        if(is_object($file)) {
-            $this->deleteDir($file['dir']);
-        }
-        if(is_array($file)) {
-            foreach ($file as $item) {
-                $this->deleteDir($item['dir']);
-            }
-        }
-        if(is_string($file)) $this->deleteDir($file);
+        //if(is_object($file)) {
+        //    $this->deleteDir($file['dir']);
+        //}
+        //if(is_array($file)) {
+        //    foreach ($file as $item) {
+        //        $this->deleteDir($item['dir']);
+        //    }
+        //}
+        //if(is_string($file)) $this->deleteDir($file);
     }
 
     function bindGate($file,$permission = "",$path = "") {

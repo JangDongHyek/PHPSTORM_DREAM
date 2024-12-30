@@ -34,7 +34,7 @@
                     <div class="portfolio text-right">
                         <button class="btn" @click="modal = true"><i class="fa-regular fa-arrow-down-to-line"></i> 포트폴리오 불러오기</button>
                     </div>
-                    
+
                     <slot-modal :modal="modal" title="포트폴리오 불러오기" @close="modal = false">
                         <ul id="product_list">
                                 <li class="nodata">
@@ -171,7 +171,7 @@
                                 <div class="box_write">
                                     <h4>금액(VAT 포함)</h4>
                                     <div class="cont flex price">
-                                        <p class="flex"><input name="i_price" type="tel" id="i_price" value="<?=number_format($view['i_price'])?>" onkeyup = "numberWithCommas(this)" class="text-right" placeholder="금액을 입력해 주세요."><label>원</label></p>
+                                        <p class="flex chkBox"><input name="i_price" type="tel" id="i_price" value="<?=number_format($view['i_price'])?>" onkeyup = "numberWithCommas(this)" class="text-right" placeholder="금액을 입력해 주세요."><label>원</label></p>
                                         <p class="flex"><input type="checkbox" name="package" id="package"><label for="package">패키지로 가격설정</label></p>
                                     </div>
                                 </div>

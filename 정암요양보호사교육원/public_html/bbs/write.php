@@ -495,6 +495,15 @@
 			echo "</script>";
 			exit;
 		}
+
+		if($bbs_id=="boedu_board"){
+			echo "<script>";
+			echo "alert('보수교육 신청서가 접수되었습니다.');";
+			echo "location.href='../html/boedu_2.htm';";
+			echo "</script>";
+			exit;
+		}
+
 		switch($bbs[bbs_act_after]){
 			case '' : 
 			case '0' : 

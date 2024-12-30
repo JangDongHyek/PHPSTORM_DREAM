@@ -516,6 +516,11 @@ if ($w == '') {
 
 	$sql = "update `member_gcm` set `push_yn` = '$push_yn' where `mb_id` = '$member[mb_id]'";
 	sql_query($sql);
+
+
+	//24-12-30 고객이 주소 변경하면 정기세차 차 주소도 바뀌게
+	$sql = "update `new_car_wash` set `car_w_addr1` = '{$mb_addr1}', `car_w_addr2` = '{$mb_addr2}' where `mb_id` = '{$member['mb_id']}'";
+    sql_query($sql);
 }
 
 

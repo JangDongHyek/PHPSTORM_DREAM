@@ -211,7 +211,7 @@
                                         <li v-show="product.package"><a href="#premium" role="tab" data-toggle="tab">PREMIUM</a></li>
                                     </ul>
 
-                                    <!-- Tab Content -->
+                                <!-- Tab Content -->
                                     <div class="tab-content">
                                         <div class="tab-pane fade in active" id="basic">
                                                 <dl>
@@ -422,7 +422,7 @@
                 portfolios : [],
 
                 categories : [],
-                bool : true,
+                bool : false,
                 parent_category_idx : "",
 
                 regions : ["서울", "경기", "인천", "강원", "대전", "세종", "충남", "충북", "부산", "울산", "경남", "경북", "대구", "광주", "전남", "전북", "제주"],
@@ -440,10 +440,92 @@
         },
         methods: {
             changeTap() {
+                if(this.product.portfolios.length > 5) {
+                    alert("포트폴리오는 5개까지만 가능합니다.");
+                    return false;
+                }
+
                 if(this.product.name.length < 7) {
                     alert("제목은 7자이상이여야 합니다.");
                     return false;
                 }
+                if(this.product.category_idx == "") {
+                    alert("카테고리를 선택해주세요.");
+                    return false;
+                }
+
+                if(this.product.package) {
+                    if(!this.product.standard.name || !this.product.basic.name || !this.product.premium.name) {
+                        alert("가격정보의 제목은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(this.product.standard.name.length > 20 || this.product.basic.name.length > 20 || this.product.premium.name.length > 20) {
+                        alert("가격정보의 제목은 20글자까지 가능합니다.");
+                        return false;
+                    }
+
+                    if(!this.product.standard.description || !this.product.basic.description || !this.product.premium.description) {
+                        alert("가격정보의 설명은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(this.product.standard.name.description > 60 || this.product.basic.name.description > 60 || this.product.premium.name.description > 60) {
+                        alert("가격정보의 내용은 60글자까지 가능합니다.");
+                        return false;
+                    }
+
+                    if(!this.product.standard.price || !this.product.basic.price || !this.product.premium.price) {
+                        alert("가격정보의 가격은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(!this.product.standard.work || !this.product.basic.work || !this.product.premium.work) {
+                        alert("가격정보의 작업 기간은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(this.product.standard.modify === "" || this.product.basic.modify === "" || this.product.premium.modify === "") {
+                        alert("가격정보의 수정 횟수는 필수값입니다.");
+                        return false;
+                    }
+                }else {
+                    if(!this.product.basic.name) {
+                        alert("가격정보의 제목은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(this.product.basic.name.length > 20) {
+                        alert("가격정보의 제목은 20글자까지 가능합니다.");
+                        return false;
+                    }
+
+                    if(!this.product.basic.description) {
+                        alert("가격정보의 설명은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(this.product.basic.name.description > 60) {
+                        alert("가격정보의 내용은 60글자까지 가능합니다.");
+                        return false;
+                    }
+
+                    if(!this.product.basic.price) {
+                        alert("가격정보의 가격은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(!this.product.basic.work) {
+                        alert("가격정보의 작업 기간은 필수값입니다.");
+                        return false;
+                    }
+
+                    if(this.product.basic.modify === "") {
+                        alert("가격정보의 수정 횟수는 필수값입니다.");
+                        return false;
+                    }
+                }
+
                 this.$emit('changeTab',2)
             },
             addKeyword() {
@@ -451,7 +533,7 @@
                     alert("키워드를 입력해주세요.");
                     return false;
                 }
-                
+
                 if(this.product.keywords.length >= 5) {
                     alert("검색 키워드는 최대 5개입니다.");
                     return false;
@@ -523,7 +605,7 @@
             },
             parent_category_idx : function() {
                 if(this.bool) {
-                    this.data.category_idx = '';
+                    this.product.category_idx = '';
                 }else {
                     this.bool = true;
                 }

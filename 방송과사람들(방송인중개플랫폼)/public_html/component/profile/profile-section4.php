@@ -40,7 +40,7 @@
                     <li><strong>첨부가능자료 : 재학증명서, 졸업증명서,성적증명서</strong></li>
                 </ul>
             </div>
-            <button class="btn btn_middle btn_blue2" @click="postSchool">등록 및 추가</button>
+<!--            <button class="btn btn_middle btn_blue2" @click="postSchool">등록 및 추가</button>-->
             <hr>
             <br>
 
@@ -116,7 +116,7 @@
                 jl : null,
                 filter : {
                     member_idx : this.user.mb_no,
-                    approval : '1'
+                    //approval : '1'
                 },
                 data : {
 
@@ -177,7 +177,7 @@
                 var res = await this.jl.ajax(method,obj,"/api/member_school.php");
                 if (res) {
                     this.jl.log(res)
-                    alert("추가되었습니다. 승인 완료가 되면 노출됩니다.")
+                    alert("추가되었습니다.")
                     this.school = this.jl.initObject(this.school)
                     this.school.member_idx = this.user.mb_no;
                     this.getSchool();
@@ -188,6 +188,8 @@
                 const file = event.target.files[0];
                 if (file) {
                     this.school.upfile = file;
+
+                    this.postSchool();
                 } else {
                     this.school.upfile = '';
                 }
@@ -211,7 +213,7 @@
                 var res = await this.jl.ajax(method,obj,"/api/member_certify.php");
                 if (res) {
                     this.jl.log(res)
-                    alert("추가되었습니다. 승인 완료가 되면 노출됩니다.")
+                    alert("추가되었습니다.")
                     this.certify = this.jl.initObject(this.certify)
                     this.certify.member_idx = this.user.mb_no;
                     this.getCertify();

@@ -212,7 +212,8 @@
                 var res = await this.jl.ajax(method,obj,"/api/g5_member.php");
                 if (res) {
                     if(this.section == 'step-4') {
-                        this.jl.alert('저장되었습니다.')
+                        await this.jl.alert('저장되었습니다.');
+                        window.location.href= this.jl.root + "/bbs/profile.php?mb_no=" + this.mb_no;
                     }
                     return true;
                 }
@@ -230,10 +231,12 @@
                     this.origin_nick = res.response.data[0].mb_nick;
 
                     if(!this.data.work_area) this.data.work_area = [];
+                    if(!this.data.work_region) this.data.work_region = [];
                     if(!this.data.job_categories) this.data.job_categories = [];
                     if(!this.data.job_skills) this.data.job_skills = [];
                     if(!this.data.job_work_form) this.data.job_work_form = [];
                     if(!this.data.job_project) this.data.job_project = [];
+
                 }
             }
         },

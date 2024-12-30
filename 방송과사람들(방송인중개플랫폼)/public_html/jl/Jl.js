@@ -171,7 +171,7 @@ class Jl {
 
                 } else {
                     reject(new Error("xhr Status 200 아님"));
-                    console.log(xhr.statusText);
+                    this.log(xhr.statusText);
                 }
             };
 
@@ -612,7 +612,7 @@ class Jl {
     // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
     isNumberKeyInput(event, format = false) {
 
-            // 키 입력값에서 숫자와 쉼표만 유지
+        // 키 입력값에서 숫자와 쉼표만 유지
         let sanitizedValue = event.target.value.replace(/[^0-9,]/g, '');
 
         // 포맷 적용

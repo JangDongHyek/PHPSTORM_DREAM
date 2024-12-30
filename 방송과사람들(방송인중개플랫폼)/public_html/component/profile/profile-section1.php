@@ -22,12 +22,26 @@
                 </dd>
             </dl>
             <dl><dt class="flex"><strong>근무가능지역 (*최대 3개까지 선택가능)</strong> <a href="" class="del">전체삭제</a></dt>
-                <dd class="flex">
-                    <input type="text" v-model="temp" placeholder="지역입력후 추가 버튼을 눌러주세요">
-                    <button class="btn btn_blue2" @click="addArea()">추가</button>
-                </dd>
-                <dd class="tag">
-                    <span v-for="item,index in user.work_area">{{item}}<a class="del" @click="user.work_area.splice(index,1)"><i class="fa-light fa-xmark"></i></a></span>
+                <dd>
+                    <div id="item_write" class="box_write">
+                        <h5>지역</h5>
+                        <div class="cont box">
+                            <input type="checkbox" :disabled="user.work_area.includes('선택안함')" v-model="user.work_area" value="국내" id="domestic" name="location"><label for="domestic">국내</label>
+                            <input type="checkbox" :disabled="user.work_area.includes('선택안함')" v-model="user.work_area" value="해외" id="overseas" name="location"><label for="overseas">해외</label>
+                            <input type="checkbox" :disabled="user.work_area.includes('선택안함')" v-model="user.work_area" value="협의가능" id="overseas1" name="location"><label for="overseas1">협의가능</label>
+                            <input type="checkbox" @click="user.work_area = [];" v-model="user.work_area" value="선택안함" id="overseas2" name="location"><label for="overseas2">선택안함</label>
+                        </div>
+                    </div>
+
+                    <div id="item_write" class="box_write" v-if="user.work_area.includes('국내')">
+                        <h5>상세지역</h5>
+                        <div class="cont box">
+                            <template v-for="region,rindex in regions">
+                                <input type="checkbox" :disabled="user.work_region.includes('전국')" v-model="user.work_region" :value="region" :id="'rindex'+rindex" name="location"><label :for="'rindex'+rindex">{{region}}</label>
+                            </template>
+                            <input type="checkbox" @click="user.work_region = [];" v-model="user.work_region" value="전국" id="rindex15111" name="location"><label for="rindex15111">전국</label>
+                        </div>
+                    </div>
                 </dd>
             </dl>
             <dl>
@@ -57,6 +71,7 @@
                 data : {},
 
                 temp : "",
+                regions : ["서울", "경기", "인천", "강원", "대전", "세종", "충남", "충북", "부산", "울산", "경남", "경북", "대구", "광주", "전남", "전북", "제주"],
             };
         },
         created: function(){

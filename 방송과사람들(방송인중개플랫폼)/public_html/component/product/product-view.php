@@ -17,9 +17,9 @@
 
                     <div class="swiper-container gallery_top">
                         <div class="swiper-wrapper">
-                                <div class="swiper-slide" v-for="item in data.main_image_array">
-                                    <img :src="jl.root+item.src">
-                                </div>
+                            <div class="swiper-slide" v-for="item in data.main_image_array">
+                                <img :src="jl.root+item.src">
+                            </div>
                         </div>
                         <div class="swiper-pagination"></div>
                     </div>
@@ -441,9 +441,9 @@
         },
         computed: {},
         watch: {
-           data() {
-               this.postProductLog();
-           }
+            data() {
+                this.postProductLog();
+            }
         }
     });
 </script>

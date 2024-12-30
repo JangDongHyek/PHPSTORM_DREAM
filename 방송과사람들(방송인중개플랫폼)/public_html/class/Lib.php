@@ -46,6 +46,12 @@ class JL {
             echo "<script>";
             echo "const JL_base_url = '{$this->URL}';";
             echo "const JL_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
+
+            echo "const Jl_base_url = '{$this->URL}';";
+            echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
+            echo "const Jl_editor = '{$this->EDITOR_HTML}';";
+            echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
+
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
             echo "let Jl_watch = {};";
@@ -76,28 +82,29 @@ class JL {
     }
 
     function deleteDir($path) {
-        if(strpos($path,$this->ROOT) !== false) $dir = $path;
-        else $dir = $this->ROOT.$path;
-
-        if (!file_exists($dir)) {
-            return;
-            //throw new \Exception("폴더가 존재하지 않습니다.");
-        }
-
-        $files = array_diff(scandir($dir), array('.', '..'));
-
-        foreach ($files as $file) {
-            $filePath = $dir."/".$file;
-
-            // 파일인 경우 삭제하고, 디렉토리인 경우 재귀적으로 삭제합니다.
-            if (is_dir($filePath)) {
-                $this->deleteDir($filePath);
-            } else {
-                unlink($filePath);
-            }
-        }
-
-        rmdir($dir);
+        return false;
+        //if(strpos($path,$this->ROOT) !== false) $dir = $path;
+        //else $dir = $this->ROOT.$path;
+        //
+        //if (!file_exists($dir)) {
+        //    return;
+        //    //throw new \Exception("폴더가 존재하지 않습니다.");
+        //}
+        //
+        //$files = array_diff(scandir($dir), array('.', '..'));
+        //
+        //foreach ($files as $file) {
+        //    $filePath = $dir."/".$file;
+        //
+        //    // 파일인 경우 삭제하고, 디렉토리인 경우 재귀적으로 삭제합니다.
+        //    if (is_dir($filePath)) {
+        //        $this->deleteDir($filePath);
+        //    } else {
+        //        unlink($filePath);
+        //    }
+        //}
+        //
+        //rmdir($dir);
     }
 
     function getDir($dir_name, $dirs = false, $root_path = true)
