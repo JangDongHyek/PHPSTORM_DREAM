@@ -35,6 +35,7 @@ class Jl {
         this.name = name;
         this.root = Jl_base_url;
         this.editor = Jl_editor;
+        this.dev = Jl_dev;
 
         // 의존성주입 패턴
         if (typeof JlJavascript !== 'undefined') {
@@ -42,6 +43,9 @@ class Jl {
         }
         if (typeof JlVue !== 'undefined') {
             this.vue = new JlVue(this);
+        }
+        if (typeof JlPlugin !== 'undefined') {
+            this.plugin = new JlPlugin(this);
         }
 
         let textColor = "white"
@@ -67,6 +71,8 @@ class Jl {
                     return target.js[prop].bind(target.js);
                 } else if (target.vue && prop in target.vue) {
                     return target.vue[prop].bind(target.vue);
+                } else if (target.plugin && prop in target.plugin) {
+                    return target.plugin[prop].bind(target.plugin);
                 } else {
                     return undefined;
                 }
@@ -83,7 +89,7 @@ class Jl {
 
     ajax(method,obj,url,options = {}) {
         if(!obj) new Error("obj 가 존재하지않습니다.");
-
+        obj['jl_token'] = Jl_token;
         return new Promise((resolve, reject) => {
             var object = this.copyObject(obj);
 
@@ -201,6 +207,71 @@ class Jl {
         document.head.appendChild(scriptElement);
     }
 
+    loadCSS(path) {
+        var linkElement = document.createElement('link');
+        linkElement.rel = 'stylesheet';
+        linkElement.href = this.root + path;
+
+        linkElement.onload = function() {
+            jl.log(`${path} CSS Load`, "", "#66cdaa");
+        };
+
+        linkElement.onerror = function() {
+            jl.log(`${path} CSS Error`, "", "#ff6347");
+        };
+
+        document.head.appendChild(linkElement);
+    }
+
+    checkPlugin(plugin) {
+        const missingDependencies = [];
+
+        let array = this.convertToArray(plugin);
+
+        array.forEach((dep) => {
+            try {
+                switch (dep.toLowerCase()) {
+                    case "jquery":
+                        if (typeof $ === "undefined") {
+                            throw new Error("jQuery is not loaded.");
+                        }
+                        break;
+
+                    case "bootstrap":
+                        if (typeof bootstrap === "undefined" && (typeof $ === "undefined" || typeof $.fn.modal === "undefined")) {
+                            throw new Error("Bootstrap is not loaded.");
+                        }
+                        break;
+
+                    case "summernote":
+                        if (typeof $.fn.summernote === "undefined") {
+                            throw new Error("Summernote is not loaded.");
+                        }
+                        break;
+
+                    case "swal":
+                        if (typeof Swal === "undefined") {
+                            throw new Error("Swal is not loaded.");
+                        }
+                        break;
+
+                    default:
+                        console.warn(`Unknown dependency: ${dep}`);
+                        break;
+                }
+            } catch (err) {
+                //console.error(err.message);
+                missingDependencies.push(dep);
+            }
+        });
+
+        if (missingDependencies.length > 0) {
+            this.log(`플러그인 로드 필요 : ${missingDependencies.join(", ")}`, "", "#ff6347");
+        }
+
+        return missingDependencies;
+    }
+
     commonFile(files,obj,key,permission) {
         if(Array.isArray(obj[key])) {
             for (let i = 0; i < files.length; i++) {
@@ -280,10 +351,32 @@ class Jl {
     }
 
     /*
-    프로퍼티 값이 대문자인지 확인하는 함수
+    매개변수 값이 대문자인지 확인하는 함수
      */
     isUpperCase(str) {
         return str === str.toUpperCase();
+    }
+
+    // 매개변수를 타입에따라 배열로 바꿔주는 함수
+    convertToArray(input) {
+        // 문자열인지 확인
+        if (typeof input === "string") {
+            // 문자열에 ','가 포함되어 있다면 분리
+            if (input.includes(",")) {
+                return input.split(",");
+            } else {
+                // ','가 없는 단일 문자열이라면 배열에 담아 반환
+                return [input];
+            }
+        }
+
+        // 이미 배열이라면 그대로 반환
+        if (Array.isArray(input)) {
+            return input;
+        }
+
+        // 다른 타입이라면 빈 배열 반환
+        return [];
     }
 
     // 반환값은 일치하는 객체를 반환 없을시 undefined
@@ -383,7 +476,7 @@ class Jl {
         return result;
     }
 
-    // 프로퍼티 날짜타입의 데이터를 한글식 날로 변경
+    // 매개변수 날짜타입의 데이터를 한글식 날로 변경
     dateToKorean(dateString,time = false) {
         if (!dateString || dateString === '0000-00-00' || dateString === '0000-00-00 00:00:00') {
             return '유효하지 않은 날짜';
@@ -409,6 +502,7 @@ class Jl {
         return formattedDate;
     }
 
+    // 문자형식의 날짜를 매개변수 로 삽입시 년월 몇번째주 인지 반환하는함수
     dateToWeekly(dateString) {
         // 입력받은 문자열을 Date 객체로 변환
         const date = new Date(dateString);
@@ -468,25 +562,68 @@ class Jl {
         return result;
     }
 
-    // 참조값이 숫자만으로 이러우져있는지 확인하는 함수
+    //Objects 들중 매개변수에 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
+    getObjectsToKey(array, key) {
+        // 결과 값을 저장할 배열
+        const result = [];
+
+        // 배열 순회
+        array.forEach(obj => {
+            // 객체에 키가 존재하면 값 추가
+            if (obj.hasOwnProperty(key)) {
+                result.push(obj[key]);
+            }
+        });
+
+        // 값이 담긴 배열 반환
+        return result;
+    }
+
+    // 매개변수가 숫자만으로 이러우져있는지 확인하는 함수
     isNumber(str) {
         return !/[^0-9]/.test(str);
     }
 
-    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey"
+    // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수
+    extractYoutube(url) {
+        const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
+        const match = url.match(regex);
+        return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
+    }
+
+    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey" 아래 형제함수도 추가해줘야함
     isNumberKey(event) {
         const charCode = event.keyCode || event.which;
-        // 숫자 키 코드 (0-9 및 숫자 키패드 0-9)와 백스페이스, Delete 키만 허용
+        // 숫자 키(0-9), 백스페이스, Delete, 화살표 키만 허용
         if (
-            (charCode >= 48 && charCode <= 57) ||
-            (charCode >= 96 && charCode <= 105) ||
-            charCode === 8 ||
-            charCode === 46
+            (charCode >= 48 && charCode <= 57) || // 상단 숫자 키
+            (charCode >= 96 && charCode <= 105) || // 숫자 키패드
+            charCode === 8 || // 백스페이스
+            charCode === 46 || // Delete
+            (charCode >= 37 && charCode <= 40) // 화살표 키
         ) {
-            return true;
+            return true; // 입력 허용
         }
-        event.preventDefault(); // 숫자가 아닌 경우 입력 차단
+        event.preventDefault(); // 입력 차단
         return false;
+    }
+
+
+    // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
+    isNumberKeyInput(event, format = false) {
+
+        // 키 입력값에서 숫자와 쉼표만 유지
+        let sanitizedValue = event.target.value.replace(/[^0-9,]/g, '');
+
+        // 포맷 적용
+        if (format) {
+            // 쉼표 제거 후 다시 천 단위로 포맷팅
+            sanitizedValue = sanitizedValue.replace(/,/g, '');
+            sanitizedValue = sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // 값을 업데이트
+        event.target.value = sanitizedValue;
     }
 
     formatNumber(value,comma = false) {

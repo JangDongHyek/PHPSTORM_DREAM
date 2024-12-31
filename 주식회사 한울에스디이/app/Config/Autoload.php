@@ -48,6 +48,7 @@ class Autoload extends AutoloadConfig
         'Config'      => APPPATH . 'Config',
         'Helpers'     => APPPATH . 'Helpers',
         'App\Logging' => APPPATH . 'Logging', // Add this line
+        "Libraries"   => APPPATH . 'Libraries'
     ];
 
     /**

@@ -207,6 +207,18 @@ class Jl {
         rmdir($dir);
     }
 
+    function getEnv() {
+        if (class_exists('CodeIgniter\\CodeIgniter')) {
+            return 'ci4';
+        }
+
+        if (defined('CI_VERSION')) {
+            return 'ci3';
+        }
+
+        return 'php';
+    }
+
     function getDirPermission($dir) {
         if (strpos($dir, $this->ROOT) === false) $dir = $this->ROOT . $dir;
 
@@ -348,6 +360,7 @@ class Jl {
             mkdir($dir, 0777);
             chmod($dir, 0777);
         }
+
 
         //PHP INI 설정가져오기
         $this->PHP = ini_get_all();

@@ -2,24 +2,16 @@
 /*
     해당 모듈은 5.2부터 최적화 되어있습니다.
     5.2 미만은 사용이 아예 불가능합니다.
-
-    CI3
-    CI3 에 적용시킬려면 namespace 를 사용하지않고 컨트롤러 상위에
-    require_once APPPATH.'libraries/Jl.php'; 추가시켜주면 됩니다.
-    $CI 를 true 직접 바꿔줘야합니다
-
-    CI4
-    CI4 에 적용시킬려면 밑에 namespace 를 지정해주면 됩니다.
-    JlModel, JlFile 모두 namespace 를 추가해주셔야 합니다.
  */
 //namespace App\Libraries;
 require_once("JlDefine.php");
+require_once("JlModel.php");
 class Jl {
     private $root_dir;
     private $JS;
     public $EDITOR_JS;
     public $EDITOR_HTML;
-    public $CI;
+    public $ENV;
     public $COMPONENT;
 
 
@@ -27,7 +19,6 @@ class Jl {
     public $DEV = false;                   //해당값이 false 이면 로그가 안찍힙니다. INIT()에서 자동으로 바뀝니다.
     private $DEV_IP = array();
     public  $ROOT;
-    public  $DB;
     public  $URL;
     public static $JS_LOAD = false;            // js 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $VUE_LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
@@ -42,8 +33,8 @@ class Jl {
         $this->JS = JL_JS;
         $this->EDITOR_JS = JL_EDITOR_JS;
         $this->EDITOR_HTML = JL_EDITOR_HTML;
-        $this->CI = JL_CI;
         $this->COMPONENT = JL_COMPONENT;
+        $this->ENV = $this->getEnv();
 
         $this->INIT();
     }
@@ -180,6 +171,7 @@ class Jl {
             echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
             echo "const Jl_editor = '{$this->EDITOR_HTML}';";
             echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
+            //echo "const Jl_token = '{$_SESSION['jl_token']}';";
             //Vue 데이터 연동을 위한 변수
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
@@ -449,6 +441,19 @@ class Jl {
         return date('Y-m-d H:i:s');
     }
 
+    //현재 개발환경을 알아내는 함수
+    function getEnv() {
+        if (class_exists('CodeIgniter\\CodeIgniter')) {
+            return 'ci4';
+        }
+
+        if (defined('CI_VERSION')) {
+            return 'ci3';
+        }
+
+        return 'php';
+    }
+
     // 5.3 이상일시 true 반환 그 이하는 false 를 반환한다
     function isVersion() {
         $phpVersion = phpversion();
@@ -459,19 +464,10 @@ class Jl {
     }
 
     function INIT() {
-        if ($this->isVersion()) {
-            // namespace 가 있는지 확인 존재한다면 CI를 사용한다고 인식
-            $reflection = new \ReflectionClass($this);
-            if ($reflection->getNamespaceName()) {
-                $this->CI = true;
-            }
-        }
-
-
         // 개발 허용 IP 확인
         if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
 
-        if($this->CI) {
+        if(strpos($this->ENV, 'ci') !== false) {
             //ROOT 위치 찾기
             //$this->ROOT = ROOTPATH;
             $this->ROOT = FCPATH;
@@ -503,14 +499,6 @@ class Jl {
             $resource_path = $this->ROOT.$this->JS;
         }
 
-        //DB 설정
-        $this->DB = array(
-            "hostname" => JL_HOSTNAME,
-            "username" => JL_USERNAME,
-            "password" => JL_PASSWORD,
-            "database" => JL_DATABASE
-        );
-
         //resource 폴더 생성
         if(!is_dir($resource_path)) $this->error("Jl INIT() : jl 폴더가 없습니다.");
         if($this->getDirPermission($resource_path) != "777") {
@@ -526,7 +514,6 @@ class Jl {
 
         //PHP INI 설정가져오기
         $this->PHP = ini_get_all();
-
 
     }
 }
