@@ -10,6 +10,7 @@ class JlService extends Jl{
     private $file_columns = array();
 
     private $model;
+    private $session_model;
     private $jl_file;
 
     public function __construct($POST,$FILES)
@@ -26,13 +27,20 @@ class JlService extends Jl{
 
         $this->POST = $POST;
         $this->FILES = $FILES;
+
+        $this->session_model = new JlModel("jl_session");
+
     }
 
     public function method() {
         $method = $this->POST['_method'];
 
-        //if(!isset($this->obj['jl_token'])) $this->error("token이 존재하지않습니다.");
-        //if($this->obj['jl_token'] != $this->getSession('jl_token')) $this->error("token이 맞지않습니다.");
+        $token = $this->session_model->where(array("client_ip" => $this->getClientIP(),"name" => "token"))->get()['data'][0];
+
+        if(!$this->obj['jl_token']) $this->error("잘못된 접근입니다.");
+        if(!$token) $this->error("토큰 세션이 없습니다.");
+        if($token['content'] != $this->obj['jl_token']) $this->error("토큰 값이 서로 다릅니다.");
+
 
         $response = array(
             "success" => false,

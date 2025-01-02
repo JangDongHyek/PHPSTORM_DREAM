@@ -74,6 +74,11 @@
                                     </div>
                                 </div>
 
+                                <div>
+                                    <h3>포트폴리오</h3>
+                                    <part-product-portfolio :login_mb_no="member_idx" :product="data"></part-product-portfolio>
+                                </div>
+
                                 <br>
                                 <h3>서비스설명</h3>
                                 <br>
@@ -225,7 +230,7 @@
                         <div class="area_ft_list">
                             <div>
                                 <h3>포트폴리오</h3>
-                                <part-product-portfolio :login_mb_no="member_idx" :product="data"></part-product-portfolio>
+                                <part-member-portfolio :login_mb_no="member_idx" :product="data"></part-member-portfolio>
                             </div>
 
                             <div>

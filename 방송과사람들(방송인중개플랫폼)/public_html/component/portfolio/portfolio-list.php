@@ -5,7 +5,7 @@
             <h3>나의 포트폴리오관리</h3>
 
 
-            <ul id="product_list">
+            <ul id="product_list" class="portfolio_list">
                 <li v-for="item in data">
                     <i class="heart" :class="{'on' : checkLike(item.idx)}" @click="checkLike(item.idx) ? deleteLike(item.idx) : postLike(item.idx)"></i>
                     <a :href="`${jl.root}/bbs/portfolio_view.php?idx=${item.idx}`">
@@ -15,6 +15,7 @@
                     </a>
                     <div class="area_txt">
                         <!-- <span>업체명</span>업체명 -->
+                        <!--<span class="icon">카테고리</span>-->
                         <div class="grid">
                             <h3>{{ item.name }}</h3> <!-- 제목 -->
                             <a :href="`${jl.root}/bbs/portfolio_write.php?idx=${item.idx}`"><i class="fa-regular fa-pen"></i><!--수정--></a>

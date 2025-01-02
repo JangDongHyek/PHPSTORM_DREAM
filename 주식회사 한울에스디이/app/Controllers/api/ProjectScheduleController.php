@@ -198,6 +198,7 @@ class ProjectScheduleController extends BaseController
     }
 
     public function distinct() {
+        $jl = new Jl();
         $obj = $this->models[$this->table]->jsonDecode($this->request->getPost('obj'));
 
         $this->models[$this->table]->setFilter($obj);

@@ -20,12 +20,14 @@ class Jl {
     private $DEV_IP = array();
     public  $ROOT;
     public  $URL;
+    public $RESOURCE;
     public static $JS_LOAD = false;            // js 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $VUE_LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $PLUGINS = array();
 
-    function __construct() {
+    function __construct($load = true) {
         if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
+        if(!defined("JL_SESSION_TABLE_COLUMNS")) $this->error("Jl_session 테이블 컬럼 값이 존재하지 않습니다.");
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
         array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
 
@@ -35,8 +37,11 @@ class Jl {
         $this->EDITOR_HTML = JL_EDITOR_HTML;
         $this->COMPONENT = JL_COMPONENT;
         $this->ENV = $this->getEnv();
+        $this->RESOURCE = $this->getJlPath()."/jl_resource";
 
-        $this->INIT();
+        if($load) {
+            $this->INIT();
+        }
     }
 
     function error($msg) {
@@ -113,8 +118,11 @@ class Jl {
 
     //jsonEncode 한글깨짐 방지설정넣은
     function jsonEncode($data) {
-        if($this->isVersion()) return json_encode($data,JSON_UNESCAPED_UNICODE);
-        else return $this->decodeUnicode(json_encode($data));
+        if($this->isVersion()) $value = json_encode($data,JSON_UNESCAPED_UNICODE);
+        else $value = $this->decodeUnicode(json_encode($data));
+
+        return $value;
+        //return addslashes($value);
     }
 
     //상황에 필요한 로직들을 넣은 Jsondecode 함수
@@ -165,13 +173,14 @@ class Jl {
         if(!self::$JS_LOAD) {
             //js파일 찾기
             if(!file_exists($this->ROOT.$this->JS."/Jl.js")) $this->error("Jl INIT() : Jl.js 위치를 찾을 수 없습니다.");
-
+            $session_model = new JlModel('jl_session');
+            $token = $session_model->where(array("client_ip" => $this->getClientIP(),"name" => "token"))->get()['data'][0];
             echo "<script>";
             echo "const Jl_base_url = '{$this->URL}';";
             echo "const Jl_dev = ".json_encode($this->DEV).";";     // false 일때 빈값으로 들어가 jl 에러가 나와 encode처리
             echo "const Jl_editor = '{$this->EDITOR_HTML}';";
             echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
-            //echo "const Jl_token = '{$_SESSION['jl_token']}';";
+            echo "const Jl_token = '{$token['content']}';";
             //Vue 데이터 연동을 위한 변수
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
@@ -296,6 +305,10 @@ class Jl {
 
     // 연관 배열인지 확인하는 함수
     function isAssociativeArray(array $array) {
+        if (!is_array($array)) {
+            return false; // 배열이 아니면 false 반환
+        }
+
         // 배열이 비어 있는 경우, 연관 배열이 아닌 것으로 간주합니다.
         if (empty($array)) {
             return false;
@@ -303,6 +316,77 @@ class Jl {
 
         // 모든 키를 검사하여, 하나라도 연관된 키(비연속적이거나 문자열)가 있는지 확인합니다.
         return array_keys($array) !== range(0, count($array) - 1);
+    }
+
+    function getUserAgent() {
+        // User-Agent 헤더 확인
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
+            return [
+                'user_agent' => 'Unknown User-Agent',
+                'browser' => 'Unknown Browser',
+                'browser_version' => 'Unknown Version',
+                'platform' => 'Unknown Platform',
+                'is_mobile' => false,
+                'in_app_browser' => 'None',
+            ];
+        }
+
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+        $browser = 'Unknown Browser';
+        $browserVersion = 'Unknown Version';
+        $platform = 'Unknown Platform';
+        $isMobile = false;
+        $inAppBrowser = 'None';
+
+        // 모바일 여부 감지
+        if (preg_match('/Mobile|Android|iPhone|iPad|iPod/', $userAgent)) {
+            $isMobile = true;
+        }
+
+        // 플랫폼 감지 (정확한 순서로 우선 적용)
+        if (preg_match('/Android/', $userAgent)) {
+            $platform = 'Android';
+        } elseif (preg_match('/iPhone|iPad|iPod/', $userAgent)) {
+            $platform = 'iOS';
+        } elseif (preg_match('/Windows NT/', $userAgent)) {
+            $platform = 'Windows';
+        } elseif (preg_match('/Macintosh|Mac OS/', $userAgent)) {
+            $platform = 'Mac';
+        } elseif (preg_match('/Linux/', $userAgent)) {
+            $platform = 'Linux';
+        } elseif (preg_match('/CrOS/', $userAgent)) { // ChromeOS
+            $platform = 'ChromeOS';
+        }
+
+        // 브라우저 감지
+        if (preg_match('/Chrome\/([0-9\.]+)/', $userAgent, $matches)) {
+            $browser = 'Chrome';
+            $browserVersion = $matches[1];
+        } elseif (preg_match('/Safari\/([0-9\.]+)/', $userAgent) && !preg_match('/Chrome/', $userAgent)) {
+            $browser = 'Safari';
+        } elseif (preg_match('/Firefox\/([0-9\.]+)/', $userAgent, $matches)) {
+            $browser = 'Firefox';
+            $browserVersion = $matches[1];
+        }
+
+        // 앱 내부 브라우저 감지
+        if (preg_match('/KAKAOTALK/', $userAgent)) {
+            $inAppBrowser = 'KakaoTalk';
+        } elseif (preg_match('/Instagram/', $userAgent)) {
+            $inAppBrowser = 'Instagram';
+        } elseif (preg_match('/FBAN|FBAV/', $userAgent)) {
+            $inAppBrowser = 'Facebook';
+        }
+
+        return [
+            'user_agent' => $userAgent,
+            'browser' => $browser,
+            'browser_version' => $browserVersion,
+            'platform' => $platform,
+            'is_mobile' => $isMobile,
+            'in_app_browser' => $inAppBrowser,
+        ];
     }
 
     function deleteDir($path) {
@@ -436,9 +520,17 @@ class Jl {
     }
 
     //현재 시간 반환하는 함수
-    function getTime() {
-        // 현재 시간 반환
-        return date('Y-m-d H:i:s');
+    function getTime($hour = 0) {
+        // 현재 시간 가져오기
+        $currentTime = time();
+
+        // 시간 추가
+        if ($hour !== 0) {
+            $currentTime += $hour * 3600; // 1시간 = 3600초
+        }
+
+        // 포맷된 시간 반환
+        return date('Y-m-d H:i:s', $currentTime);
     }
 
     //현재 개발환경을 알아내는 함수
@@ -463,10 +555,7 @@ class Jl {
         return false;
     }
 
-    function INIT() {
-        // 개발 허용 IP 확인
-        if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
-
+    function getJlPath() {
         if(strpos($this->ENV, 'ci') !== false) {
             //ROOT 위치 찾기
             //$this->ROOT = ROOTPATH;
@@ -475,7 +564,7 @@ class Jl {
             //URL 구하기
             $this->URL = base_url();
             //resource 경로 지정
-            $resource_path = FCPATH.$this->JS;
+            return FCPATH.$this->JS;
         }else {
             //ROOT 위치 찾기
             $root = __FILE__;
@@ -496,17 +585,24 @@ class Jl {
             $this->URL = $http.$host.$user;
 
             //resource 경로 지정
-            $resource_path = $this->ROOT.$this->JS;
+            return $this->ROOT.$this->JS;
         }
+    }
 
-        //resource 폴더 생성
-        if(!is_dir($resource_path)) $this->error("Jl INIT() : jl 폴더가 없습니다.");
-        if($this->getDirPermission($resource_path) != "777") {
-            if(!chmod($resource_path, 0777)) {
+    function INIT() {
+        // 개발 허용 IP 확인
+        if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
+
+        // Jl 폴더 권한 확인
+        if(!is_dir($this->getJlPath())) $this->error("Jl INIT() : jl 폴더가 없습니다.");
+        if($this->getDirPermission($this->RESOURCE) != "777") {
+            if(!chmod($this->RESOURCE, 0777)) {
                 $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
             }
         }
-        $dir = $resource_path."/jl_resource";
+
+        //resource 폴더 생성
+        $dir = $this->RESOURCE;
         if(!is_dir($dir)) {
             mkdir($dir, 0777);
             chmod($dir, 0777);
@@ -514,6 +610,54 @@ class Jl {
 
         //PHP INI 설정가져오기
         $this->PHP = ini_get_all();
+
+        // 세션 테이블 생성 및 모델 인스턴스 생성
+        $jl_session_table_columns = $this->jsonDecode(JL_SESSION_TABLE_COLUMNS);
+        $session_model = new JlModel(array(
+            "table" => "jl_session",
+            "create" => true,
+            "columns" => $jl_session_table_columns
+        ));
+
+        // 오늘날짜아닌 세션 백업 및 데이터 삭제
+        $sessions = $session_model->addWhere(" AND DATE(insert_date) != CURDATE() ")->get();
+        if($sessions['count']) {
+            $target_date = explode(' ',$sessions['data'][0]['insert_date'])[0];
+            $sessions = $session_model->addWhere(" AND DATE(insert_date) = '$target_date' ")->get();
+            $session_model->backup("jl_session",$sessions['data'],$target_date);
+            $session_model->addWhere(" AND DATE(insert_date) = '$target_date' ")->whereDelete();
+        }
+
+
+        //만료된 세션 상태값 변경
+        $tokens = $session_model->where(array("status" => "active"))->get();
+        foreach ($tokens['data'] as $token) {
+            if(strtotime($this->getTime()) > strtotime($token['delete_date'])) {
+                $update_token = array("idx" => $token['idx'],"status" => "expired");
+                $session_model->update($update_token);
+            }
+        }
+
+
+        // 토큰 세션 생성
+        $token = $session_model->where(array("client_ip" => $this->getClientIP(),"name" => "token","status" => "active"))->get()['data'][0];
+        if(!$token) {
+            $agent = $this->getUserAgent();
+            $session_model->insert(array(
+                "client_ip" => $this->getClientIP(),
+                "name" => "token",
+                "status" => "active",
+                "content" => uniqid().str_pad(rand(0, 99), 2, "0", STR_PAD_LEFT),
+                "user_agent" => $agent['user_agent'],
+                "browser" => $agent['browser'],
+                "browser_version" => $agent['browser_version'],
+                "platform" => $agent['platform'],
+                "is_mobile" => $agent['is_mobile'],
+                "in_app_browser" => $agent['in_app_browser'],
+                "delete_date" => $this->getTime(4),
+            ));
+        }
+
 
     }
 }

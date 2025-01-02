@@ -27,11 +27,11 @@ class JlModel{
     private $join_primary = "";
     private $group_by_sql_front = "";
     private $group_by_sql_back = "";
-    
+
     private $jl;
 
     function __construct($object = array()) {
-        $this->jl = new Jl();
+        $this->jl = new Jl(false);
         // 매개변수가 문자열이면 테이블속성만 넣었다고 가정
         if (is_string($object)) {
             $object = array("table" =>$object);
@@ -88,8 +88,11 @@ class JlModel{
             }
         }
 
-
-        if(!in_array($this->table, $this->schema['tables'])) $this->jl->error("JlModel construct() : 테이블을 찾을수 없습니다.");
+        if (isset($object['create']) && $object['create'] === true) {
+            if(!$this->isTable()) $this->createTable($object['columns']);
+        }else {
+            if(!$this->isTable()) $this->jl->error("JlModel construct() : 테이블을 찾을수 없습니다.");
+        }
 
         // Primary Key 확인
         $primary = $this->getPrimary($this->table);
@@ -103,6 +106,11 @@ class JlModel{
         // 테이블 스키마 정보 조회
         $this->schema['columns'] = $this->getColumns($this->table);
         $this->schema['columns_info'] = $this->getColumnsInfo($this->table);
+
+    }
+
+    function isTable() {
+        return in_array($this->table,$this->schema['tables']);
     }
 
     function getPrimary($table) {
@@ -165,6 +173,8 @@ class JlModel{
 
         return $array;
     }
+
+
 
     function setFilter($obj) {
         if($obj['primary']) $this->where($this->primary,$obj['primary']);
@@ -375,7 +385,8 @@ class JlModel{
     function distinct($_param){
         if(!isset($_param['column'])) $this->jl->error("JlModel distinct() : column 값이 없습니다..");
         // Summary Query
-        if($this->isJson($_param['column'])) {
+
+        if($this->jl->isJson($_param['column'])) {
             $_param['column'] = $this->jsonDecode($_param['column']);
         }
 
@@ -480,8 +491,8 @@ class JlModel{
     key == column 일경우 value의 값으로 바뀜
     */
     function update($_param){
-
         $param = $this->escape($_param);
+
 
         if(!isset($param[$this->primary])) $this->jl->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
 
@@ -622,6 +633,12 @@ class JlModel{
      */
     function addSql($query) {
         $this->sql .= "$query";
+        return $this;
+    }
+    // 함수명 변경 및 버전 관리를 위해 위에랑 똑같이 진행
+    function addWhere($query) {
+        $this->sql .= "$query";
+        return $this;
     }
 
     function orderBy($first,$second = "",$source="") {
@@ -935,6 +952,200 @@ class JlModel{
 
         }
         return $param;
+    }
+
+    function jsonDecode($obj) {
+        return $this->jl->jsonDecode($obj);
+    }
+
+    function jsonEncode($obj) {
+        return $this->jl->jsonEncode($obj);
+    }
+
+    function backup($tableName, $data,$date) {
+        // 데이터가 배열인지 확인
+        if (!is_array($data) || empty($data)) {
+            die("Invalid data provided. Must be a non-empty array.");
+        }
+
+        // 첫 번째 데이터의 키를 기준으로 컬럼 이름 추출
+        $columns = array_keys($data[0]);
+        // 특정 컬럼(jl_no, jl_no_reverse) 제거
+        $excludedColumns = ['jl_no', 'jl_no_reverse'];
+        $columns = array_filter($columns, function ($column) use ($excludedColumns) {
+            return !in_array($column, $excludedColumns);
+        });
+        $columnsString = implode(', ', $columns);
+
+
+
+        // INSERT INTO 구문 시작
+        $sql = "INSERT INTO $tableName ($columnsString) VALUES\n";
+
+        // 각 데이터 항목을 SQL 값으로 변환
+        $values = [];
+        foreach ($data as $row) {
+            $escapedRow = [];
+            foreach ($row as $column => $value) {
+                // 특정 컬럼(jl_no, jl_no_reverse)은 건너뛰기
+                if (in_array($column, $excludedColumns)) {
+                    continue;
+                }
+
+                if (is_null($value)) {
+                    $escapedRow[] = "NULL";
+                    continue;
+                }
+
+                // 배열이나 객체인 경우 json_encode 처리
+                if (is_array($value) || is_object($value)) {
+                    $value = $this->jsonEncode($value);
+                }
+
+                $escapedRow[] = "'" . $value . "'";
+            }
+            $values[] = '(' . implode(', ', $escapedRow) . ')';
+        }
+
+
+        // 값 추가
+        $sql .= implode(",\n", $values) . ";\n";
+
+
+        $filePath = $this->jl->RESOURCE."/{$tableName}";
+        if(!is_dir($filePath)) {
+            mkdir($filePath, 0777);
+            chmod($filePath, 0777);
+        }
+        // 파일에 쓰기
+        $filePath = $this->jl->RESOURCE."/{$tableName}/backup";
+        if(!is_dir($filePath)) {
+            mkdir($filePath, 0777);
+            chmod($filePath, 0777);
+        }
+
+        $fileName = "{$date}.txt";
+
+        //$this->jl->error($filePath);
+        file_put_contents($filePath."/".$fileName, $sql, FILE_APPEND);
+
+        //if (($error = error_get_last()) !== null) {
+        //    $this->jl->error($error['message']);
+        //}
+    }
+
+
+    /*
+    | 속성             | 필수 여부 | 설명                                 | 예시 값                      |
+    |------------------|----------|--------------------------------------|-----------------------------|
+    | `type`           | 필수     | 데이터 타입 설정                     | 'VARCHAR', 'INT'            |
+    | `length`         | 선택     | 데이터 길이 지정                     | 255, 11                     |
+    | `nullable`       | 선택     | NULL 허용 여부                      | true, false                 |
+    | `default`        | 선택     | 기본값 설정                          | 'example', 0, 'CURRENT_TIMESTAMP' |
+    | `auto_increment` | 선택     | 자동 증가 여부                       | true, false                 |
+    | `unique`         | 선택     | 고유 제약 조건 설정                  | true, false                 |
+    | `comment`        | 선택     | 컬럼에 대한 설명 추가                | '사용자 이메일'             |
+
+    $columns = array(
+        'idx' => [
+            'type' => 'VARCHAR',
+            'length' => 15,
+            'nullable' => false,
+            'comment' => '고유값'
+        ],
+        'age' => [
+            'type' => 'VARCHAR',
+            'length' => 11,
+            'nullable' => false,
+            'auto_increment' => false,
+        ],
+        'address' => [
+            'type' => 'VARCHAR',
+            'length' => 255,
+            'nullable' => false,
+            'default' => '대한민국',
+        ],
+        'created_at' => [
+            'type' => 'DATETIME',
+            'nullable' => true,
+        ],
+        primary => "idx"
+    )
+    */
+    function createTable($columns) {
+        if($this->isTable()) $this->jl->error("JlModel createTable() : 이미 테이블이 존재합니다.");
+        // 테이블 생성 시작
+        if (!$this->jl->isAssociativeArray($columns)) {
+            $this->jl->error("JlModel createTable() : 매개변수는 연관배열로만 가능합니다.");
+        }
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $this->table)) {
+            $this->jl->error("JlModel createTable(): 유효하지 않은 테이블 이름입니다.");
+        }
+
+        if(!isset($columns['primary'])) $this->jl->error("JlModel createTable() : primary 값은 필수입니다.");
+
+
+
+        $sql = "CREATE TABLE IF NOT EXISTS `{$this->table}` (";
+
+        $columnDefinitions = [];
+        foreach ($columns as $name => $definition) {
+            if ($name === 'primary') {
+                continue;
+            }
+
+            $definition = $this->jl->jsonDecode($definition);
+
+
+            if (!isset($definition['type'])) {
+                $this->jl->error("JlModel createTable(): {$name}의 type 정보가 없습니다.");
+            }
+
+            $type = strtoupper($definition['type']);
+            if (isset($definition['auto_increment']) && $definition['auto_increment'] && $type !== 'INT') {
+                $this->jl->error("JlModel createTable(): auto_increment는 INT 타입에서만 사용할 수 있습니다.");
+            }
+
+            $type = strtoupper($definition['type']);
+            $length = isset($definition['length']) ? "({$definition['length']})" : "";
+            $nullable = isset($definition['nullable']) && !$definition['nullable'] ? "NOT NULL" : "NULL";
+            $default = isset($definition['default']) ? "DEFAULT '{$definition['default']}'" : "";
+            $autoIncrement = isset($definition['auto_increment']) && $definition['auto_increment'] ? "AUTO_INCREMENT" : "";
+            $comment = isset($definition['comment']) ? "COMMENT '{$definition['comment']}'" : "";
+
+            $columnDefinitions[] = "`$name` $type$length $nullable $default $autoIncrement $comment";
+        }
+
+        // 컬럼 정의 추가
+        $sql .= implode(", ", $columnDefinitions);
+
+        // Primary Key 추가
+        $sql .= ", PRIMARY KEY (`{$columns['primary']}`)";
+
+        $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+
+        // 쿼리 실행
+        if ($this->mysqli) {
+            $result = mysqli_query($this->connect, $sql);
+            if (!$result) {
+                $this->jl->error(mysqli_error($this->connect) . "\n $sql");
+            }
+        } else {
+            $result = mysql_query($sql, $this->connect);
+            if (!$result) {
+                $this->jl->error(mysql_error());
+            }
+        }
+
+        if (!$result) {
+            $errorMessage = "JlModel createTable(): 테이블 생성 실패";
+            if ($this->jl->DEV) {
+                $errorMessage .= "\n" . ($this->mysqli ? mysqli_error($this->connect) : mysql_error()) . "\n $sql";
+            }
+            $this->jl->error($errorMessage);
+        }
+
+        return true;
     }
 }
 ?>

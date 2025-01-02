@@ -20,6 +20,7 @@ class UserController extends BaseController
 
     public function __construct() {
         $this->models['user'] = new JlModel(array("table" => "user"));
+
         $this->models['project_base'] = new JlModel(array("table" => "project_base"));
         //array_push($this->get_tables,array("table"=> "exam", "get_key" => "exam_key" ));
     }
