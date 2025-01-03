@@ -30,20 +30,17 @@
             return {
                 jl : null,
                 component_idx : "",
-                filter : {
-                    primary : this.primary
-                },
-                required : [
-                    {name : "",message : ""},
-                ],
-                data : {},
+
+                paging : {
+                    page : 1,
+                    limit : 1,
+                    count : 0,
+                }
             };
         },
-        created: function(){
+        async created(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
-
-            if(this.primary) this.getData();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -56,22 +53,22 @@
         methods: {
             async postData() {
                 let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
+                let data = {
+                    table : "",
+                }
                 try {
-                    //if(this.data.change_user_pw != this.data.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
-
-                    let res = await this.jl.ajax(method,this.data,"/api/user",options);
-
-                    alert("완료 되었습니다");
-                    window.location.reload();
+                    let res = await this.jl.ajax(method,data,"/jl/JlApi.php");
                 }catch (e) {
                     alert(e.message)
                 }
 
             },
             async getData() {
+                let filter = {
+                    table : "order",
+                }
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
                     this.data = res.data[0]
                 }catch (e) {
                     alert(e.message)
@@ -82,7 +79,11 @@
 
         },
         watch : {
-
+            modal() {
+                if(this.modal) {
+                    console.log(this.primary)
+                }
+            }
         }
     });
 </script>

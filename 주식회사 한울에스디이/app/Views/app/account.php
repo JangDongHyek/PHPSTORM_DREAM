@@ -11,6 +11,7 @@ if(!$project) return false;
 <?php $jl->vueLoad();?>
 <?php $jl->componentLoad("account");?>
 <?php $jl->componentLoad("slot/slot-modal");?>
+<?php $jl->componentLoad("item");?>
 <?php $jl->componentLoad("part/pagination-component");?>
 
 <script>

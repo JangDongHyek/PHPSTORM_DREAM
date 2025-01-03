@@ -29,7 +29,7 @@
                     <dd>
                         <div class="day_content">
                             <div class="input_wrap border">
-                                <input type="text" class="input_category" readonly :value="schedule[index].content" />
+                                <input v-if="schedule[index]" type="text" class="input_category" readonly :value="schedule[index].content" />
                                 <!--<button class="btn btn_mini btn_black">내용 추가</button>-->
                             </div>
                             <ul class="task_list">

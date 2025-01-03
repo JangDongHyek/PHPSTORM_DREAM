@@ -84,7 +84,26 @@
                     table : "",
 
                     file_use : false, // 파일 저장할지 안할지
+
+                    // 해당하는 조건에 걸리는 데이터가 있으면 error(message)를 반환
+                    // 객체 하나당 묶음이라 여러개의 조건도 가능 아이디 확인, 닉네임 확인 이렇게하고싶으면 객체 두개필요
+                    exists : [
+                        {
+                            where : [
+                                {key : "", value : "", operator : ""}
+                            ],
+                            message : ""
+                        }
+                    ],
+
+                    //데이터를 암호화 할때 필요 ex 정보 수정시 change_user_pw의값을 user_pw 에 암호화해서 삽입한다는 내용
+                    hashes : [
+                        {key : "user_pw", convert : "user_pw"}, // 회원가입할떄
+                        {key : "change_user_pw", convert : "user_pw"}, // 회원 정보 수정할때
+                    ]
                 }
+
+                if(this.data) data = {...data...this.data}; // data 객체가있다면 병합
                 try {
                     //if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
                     let res = await this.jl.ajax(method,data,"/jl/JlApi.php",options);
@@ -157,7 +176,6 @@
             },
             async deleteData() {
                 let method = "delete";
-
                 //let method = "where_delete";
 
                 let filter = {
@@ -167,7 +185,7 @@
                     file_use : false, // 저장된 파일 삭제할지 안할지 삭제할시 데이터의 컬럼명 이들어가야한다
                     file_columns : ["exam1","exma2"] // 파일값이 저장된 컬럼
 
-                    // where_delete 일시 똑같이 조건 추가하면 된다 다중삭제가 되므로 조심히 사용해야한다
+                    // where_delete 일시
                 }
                 try {
                     //if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
@@ -175,7 +193,25 @@
                 }catch (e) {
                     alert(e.message)
                 }
-            }
+            },
+
+            //중복 제거안되는 데이터만 가져오는 함수
+            // Ex ) A라는 컬럼에 일식,중식,한식 이렇게 총 100개의 데이터가있으면 column에 A넣을시 3개의 데이터만 반환됌
+            async distinctData() {
+                let filter = {
+                    table : "example",
+                    user_idx : this.user_idx,
+                    column : "", // 중복 제거후 안겹치는 데이터만 가져오고싶은 컬럼
+
+                    //조건은 get과 같이 똑같이 조건 추가하면 된다 다중삭제가 되므로 조심히 사용해야한다
+                }
+
+                try {
+                    let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
         },
         computed: {
 

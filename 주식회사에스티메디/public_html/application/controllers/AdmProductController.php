@@ -339,6 +339,8 @@ class AdmProductController extends CI_Controller
         $this->load->model("ConfigModel");
         $resultData['result'] = $this->ConfigModel->updateApiAccessToken($feeData);
 
+        $this->jl->log("Token Update",$this->jl->RESOURCE."/token_log.txt");
+
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($resultData));

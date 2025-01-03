@@ -447,6 +447,7 @@ class JlModel{
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
+                    if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
 
@@ -466,6 +467,7 @@ class JlModel{
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
+                    if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
 
@@ -499,6 +501,7 @@ class JlModel{
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
         foreach($param as $key => $value){
+            if($key == "update_date") continue;
             if(in_array($key, $this->schema['columns'])){
                 if(!empty($update_sql)) $update_sql .= ", ";
 
@@ -962,6 +965,10 @@ class JlModel{
         return $this->jl->jsonEncode($obj);
     }
 
+    function error($obj) {
+        return $this->jl->error($obj);
+    }
+
     function backup($tableName, $data,$date) {
         // 데이터가 배열인지 확인
         if (!is_array($data) || empty($data)) {
@@ -1012,12 +1019,14 @@ class JlModel{
         $sql .= implode(",\n", $values) . ";\n";
 
 
+        //테이블 폴더 없으면 생성
         $filePath = $this->jl->RESOURCE."/{$tableName}";
         if(!is_dir($filePath)) {
             mkdir($filePath, 0777);
             chmod($filePath, 0777);
         }
-        // 파일에 쓰기
+
+        // 백업 경로 없다면 생성
         $filePath = $this->jl->RESOURCE."/{$tableName}/backup";
         if(!is_dir($filePath)) {
             mkdir($filePath, 0777);
@@ -1122,7 +1131,7 @@ class JlModel{
         // Primary Key 추가
         $sql .= ", PRIMARY KEY (`{$columns['primary']}`)";
 
-        $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        $sql .= ") DEFAULT CHARSET=utf8mb4;";
 
         // 쿼리 실행
         if ($this->mysqli) {

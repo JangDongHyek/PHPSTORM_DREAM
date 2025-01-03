@@ -21,6 +21,8 @@ class Jl {
     public  $ROOT;
     public  $URL;
     public $RESOURCE;
+
+    public static $TRACE = false;
     public static $JS_LOAD = false;            // js 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $VUE_LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $PLUGINS = array();
@@ -121,8 +123,8 @@ class Jl {
         if($this->isVersion()) $value = json_encode($data,JSON_UNESCAPED_UNICODE);
         else $value = $this->decodeUnicode(json_encode($data));
 
+        $value = str_replace('\\/', '/', $value);
         return $value;
-        //return addslashes($value);
     }
 
     //상황에 필요한 로직들을 넣은 Jsondecode 함수
@@ -589,6 +591,67 @@ class Jl {
         }
     }
 
+    function getCurrentUrl() {
+        // 프로토콜 확인 (http/https)
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+
+        // 호스트 (도메인)
+        $host = $_SERVER['HTTP_HOST']; // 도메인 또는 IP 주소
+
+        // 요청된 URI (경로 + 쿼리)
+        $uri = $_SERVER['REQUEST_URI']; // "/path/to/page?query=1"
+
+        // 경로 (쿼리스트링 제외)
+        $path = parse_url($uri, PHP_URL_PATH); // "/path/to/page"
+
+        // 쿼리스트링
+        $queryString = $_SERVER['QUERY_STRING'] ?? ''; // "query=1"
+
+        // 포트 (기본 포트 제외)
+        $port = $_SERVER['SERVER_PORT'];
+        $portInfo = ($port === "80" && $protocol === "http") || ($port === "443" && $protocol === "https") ? "" : ":$port";
+
+        // 전체 URL
+        $fullUrl = "$protocol://$host$portInfo$uri";
+
+        return [
+            'protocol' => $protocol,          // http 또는 https
+            'host' => $host,                  // 도메인 (example.com)
+            'port' => $port,                  // 포트 (80, 443 등)
+            'path' => $path,                  // 경로 (/path/to/page)
+            'query_string' => $queryString,   // 쿼리스트링 (query=1)
+            'full' => $fullUrl,           // 전체 URL (https://example.com:443/path/to/page?query=1)
+        ];
+    }
+
+    function sessionTrace($message = "") {
+        $current_url = $this->getCurrentUrl()['full'];
+        $referrer_url = $_SERVER['HTTP_REFERER'];
+
+        $content = array(
+            "current_url" => $current_url,
+            "referrer_url" => $referrer_url,
+        );
+        if($message) $content['message'] = $message;
+        $agent = $this->getUserAgent();
+
+        $session_model = new JlModel("jl_session");
+
+        $session_model->insert(array(
+            "client_ip" => $this->getClientIP(),
+            "name" => "trace",
+            "status" => "expired",
+            "content" => $this->jsonEncode($content),
+            "user_agent" => $agent['user_agent'],
+            "browser" => $agent['browser'],
+            "browser_version" => $agent['browser_version'],
+            "platform" => $agent['platform'],
+            "is_mobile" => $agent['is_mobile'],
+            "in_app_browser" => $agent['in_app_browser'],
+            "delete_date" => $this->getTime(),
+        ));
+    }
+
     function INIT() {
         // 개발 허용 IP 확인
         if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
@@ -619,16 +682,6 @@ class Jl {
             "columns" => $jl_session_table_columns
         ));
 
-        // 오늘날짜아닌 세션 백업 및 데이터 삭제
-        $sessions = $session_model->addWhere(" AND DATE(insert_date) != CURDATE() ")->get();
-        if($sessions['count']) {
-            $target_date = explode(' ',$sessions['data'][0]['insert_date'])[0];
-            $sessions = $session_model->addWhere(" AND DATE(insert_date) = '$target_date' ")->get();
-            $session_model->backup("jl_session",$sessions['data'],$target_date);
-            $session_model->addWhere(" AND DATE(insert_date) = '$target_date' ")->whereDelete();
-        }
-
-
         //만료된 세션 상태값 변경
         $tokens = $session_model->where(array("status" => "active"))->get();
         foreach ($tokens['data'] as $token) {
@@ -636,6 +689,15 @@ class Jl {
                 $update_token = array("idx" => $token['idx'],"status" => "expired");
                 $session_model->update($update_token);
             }
+        }
+
+        // 만료된 세션 오늘날짜가 아니면 백업 및 데이터 삭제
+        $sessions = $session_model->where("status","expired")->addWhere(" AND DATE(delete_date) != CURDATE() ")->get();
+        if($sessions['count']) {
+            $target_date = explode(' ',$sessions['data'][0]['delete_date'])[0];
+            $sessions = $session_model->where("status","expired")->addWhere(" AND DATE(delete_date) = '$target_date' ")->get();
+            $session_model->backup("jl_session",$sessions['data'],$target_date);
+            $session_model->addWhere(" AND DATE(delete_date) = '$target_date' ")->whereDelete();
         }
 
 
@@ -658,6 +720,10 @@ class Jl {
             ));
         }
 
+        if(!self::$TRACE) {
+            //$this->sessionTrace();
+            self::$TRACE = true;
+        }
 
     }
 }

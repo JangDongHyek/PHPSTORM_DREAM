@@ -1,7 +1,12 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <slot-modal :modal="modal" @close="$emit('close')" title="담당자 계정 등록">
+        <item-bs-modal :modal="modal" @close="$emit('close')">
+            <template v-slot:header>
+
+            </template>
+
+            <!-- body -->
             <template v-slot:default>
                 <div class="form_wrap" >
                     <label for="">소속사명</label>
@@ -31,7 +36,7 @@
             <template v-slot:footer>
                 <button type="button" class="btn btn-primary" @click="postData()">등록 완료</button>
             </template>
-        </slot-modal>
+        </item-bs-modal>
     </div>
 </script>
 
@@ -47,7 +52,12 @@
             return {
                 jl : null,
                 component_idx : "",
-                filter : {},
+
+                paging : {
+                    page : 1,
+                    limit : 1,
+                    count : 0,
+                },
                 required : [
                     {name : "company_name",message : "소속사를 입력해주세요."},
                     {name : "user_id",message : "아이디를 입력해주세요."},
@@ -67,31 +77,54 @@
 
                     notes : "",
                 },
+
+                temp : {},
             };
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.getData();
+            this.temp = this.jl.copyObject(this.data);
+
+            this.getCategoryA();
+            this.getCategoryB();
         },
         mounted: function(){
             this.$nextTick(() => {
 
             });
         },
+        updated : function() {
+
+        },
         methods: {
             async postData() {
                 let method = this.primary ? "update" : "insert";
                 let options = {required : this.required};
+
+                let data = this.jl.copyObject(this.data);
+                data['table'] = "user"
+                data['hashes'] = [];
+
+                if(method == "insert") {
+                    data['exists'] = [
+                        {
+                            where : [
+                                {key : "user_id", value : this.data.user_id, operator : ""}
+                            ],
+                            message : "이미 사용중인 아이디입니다."
+                        }
+                    ];
+
+                    data['hashes'].push({key : "user_pw_re", convert : "user_pw"});
+                }
+                else {
+                    data['hashes'].push({key : "change_user_pw", convert : "user_pw"});
+                }
+
                 try {
-                    if(method == 'insert') {
-                        if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
-                    }
-                    if(this.data.change_user_pw != this.data.user_pw_re) throw new Error("비밀번호와 비밀번호 확인이 다릅니다.");
-
-                    let res = await this.jl.ajax(method,this.data,"/api/user",options);
-
+                    let res = await this.jl.ajax(method,data,"/jl/JlApi",options);
                     alert("완료 되었습니다");
                     window.location.reload();
                 }catch (e) {
@@ -99,20 +132,56 @@
                 }
 
             },
-            async getData() {
+            async getCategoryB() {
+                let filter = {
+                    table : "project_schedule",
+                    project_idx : this.project_idx,
+                    column : "category_b",
+                    where : [
+                        {key : "category_a", value : "철근콘크리트공사", operator : ""}
+                    ],
+                }
                 try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/example.php");
+                    let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getCategoryA() {
+                let filter = {
+                    table : "project_schedule",
+                    project_idx : this.project_idx,
+                    column : "category_a"
+                }
+                try {
+                    let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getData() {
+                let filter = {
+                    table : "user",
+                    primary : this.primary
+                }
+                try {
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi");
                     this.data = res.data[0]
                 }catch (e) {
                     alert(e.message)
                 }
             }
+
         },
         computed: {
 
         },
         watch : {
-
+            modal() {
+                console.log(this.primary);
+                if(this.modal) if(this.primary) this.getData();
+                else this.data = this.jl.copyObject(this.temp);
+            }
         }
     });
 </script>

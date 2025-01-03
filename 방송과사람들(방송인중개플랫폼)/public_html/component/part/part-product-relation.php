@@ -92,6 +92,8 @@
             async postHeart(product) {
                 let method = "insert";
 
+                if(!this.login_mb_no) return false;
+
                 let data =  {
                     member_idx : this.login_mb_no,
                     product_idx : product.idx

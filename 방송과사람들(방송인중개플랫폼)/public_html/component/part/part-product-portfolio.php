@@ -88,6 +88,8 @@
             async postHeart(portfolio) {
                 let method = "insert";
 
+                if(!this.login_mb_no) return false;
+
                 let data =  {
                     table : "member_portfolio_like",
                     member_idx : this.login_mb_no,

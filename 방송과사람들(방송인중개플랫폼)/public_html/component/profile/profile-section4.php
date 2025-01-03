@@ -28,7 +28,8 @@
                     <div id="addFile" class="addFile">
                         <label class="btn" for="school_file">파일 첨부</label>
                         <span>{{school.upfile ? school.upfile.name : '증빙자료 파일 첨부'}}</span>
-                        <input type="file" id="school_file" style="display: none;" @change="updateSchoolFile">
+<!--                        <input type="file" id="school_file" style="display: none;" @change="updateSchoolFile">-->
+                        <input type="file" id="school_file" style="display: none;">
                     </div>
                 </dd>
             </dl>
@@ -40,7 +41,7 @@
                     <li><strong>첨부가능자료 : 재학증명서, 졸업증명서,성적증명서</strong></li>
                 </ul>
             </div>
-<!--            <button class="btn btn_middle btn_blue2" @click="postSchool">등록 및 추가</button>-->
+            <button class="btn btn_middle btn_blue2" @click="postSchool">등록 및 추가</button>
             <hr>
             <br>
 

@@ -15,7 +15,7 @@ class JlService extends Jl{
 
     public function __construct($POST,$FILES)
     {
-        parent::__construct();
+        parent::__construct(false);
         $this->obj = $this->jsonDecode($POST['obj']);
         if(!$this->obj['table']) $this->error("obj에 테이블이 없습니다.");
 
@@ -56,7 +56,14 @@ class JlService extends Jl{
         if($method == "file") $response = $this->file();
         if($method == "distinct") $response = $this->distinct();
 
-        return $response;
+        $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
+        if(in_array($method,$trace_list)) {
+            $result = $response['success'] ? '성공' : "실패";
+            $this->sessionTrace("{$this->obj['table']} 테이블 $method 요청 {$result}");
+        }
+        if($method)
+
+            return $response;
     }
 
     public function get() {
@@ -113,6 +120,8 @@ class JlService extends Jl{
     }
 
     public function insert() {
+        $this->iuCheck();
+
         if($this->file_use) {
             foreach ($this->FILES as $key => $file_data) {
                 $file_result = $this->jl_file->bindGate($file_data);
@@ -131,6 +140,8 @@ class JlService extends Jl{
     }
 
     public function update() {
+        $this->iuCheck();
+
         if($this->file_use) {
             //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
             $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
@@ -216,13 +227,35 @@ class JlService extends Jl{
     public function distinct() {
         $this->model->setFilter($this->obj);
 
-        $object = $this->model->where($this->obj)->distinct($this->obj);
+        $object = $this->model->distinct($this->obj);
 
         $response['data'] = $object['data'];
         $response['sql'] = $object['sql'];
         $response['success'] = true;
 
         return $response;
+    }
+
+    //insert 나 update 하기전 조건 체크
+    public function iuCheck() {
+        //조건에 해당하는 데이터가있으면 error를 반환
+        if(isset($this->obj['exists'])) {
+            $exists = $this->jsonDecode($this->obj['exists']);
+            foreach ($exists as $filter) {
+                $filter = $this->jsonDecode($filter);
+                $this->model->setFilter($filter);
+                $search = $this->model->get();
+                if($search['count']) $this->error($filter['message']);
+            }
+        }
+
+        if(isset($this->obj['hashes'])) {
+            $hashes = $this->jsonDecode($this->obj['hashes']);
+            foreach ($hashes as $hash) {
+                $hash = $this->jsonDecode($hash);
+                if($this->obj[$hash['key']]) $this->obj[$hash['convert']] = password_hash($this->obj[$hash['key']],PASSWORD_DEFAULT);
+            }
+        }
     }
 }
 ?>

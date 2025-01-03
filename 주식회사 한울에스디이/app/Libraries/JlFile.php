@@ -8,7 +8,7 @@ class JlFile extends Jl{
 
     function __construct($path = "",$resizing = false){
         //부모 생성자
-        parent::__construct();
+        parent::__construct(false);
 
         $this->resizing = $resizing;
 

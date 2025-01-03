@@ -65,7 +65,7 @@
                 </dt>
                 <dd class="tag">
                     <span v-for="child,index2 in item.childs">{{findCategory(item.idx,child).name}}
-                        <a class="del" @click="item.childs.splice(index2,1)"><i class="fa-light fa-xmark"></i></a>
+                        <a class="del" @click="deleteCategoryChild(item,index,index2)"><i class="fa-light fa-xmark"></i></a>
                     </span>
                 </dd>
             </dl>
@@ -197,6 +197,11 @@
             });
         },
         methods: {
+            deleteCategoryChild(item,index,index2) {
+                item.childs.splice(index2,1)
+
+                if(!item.childs.length) this.user.job_categories.splice(index,1)
+            },
             confirmData : function() {
                 this.user.job_skills = this.job_skills;
                 this.modal3 = false;

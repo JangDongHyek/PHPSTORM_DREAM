@@ -15,7 +15,7 @@ class JlService extends Jl{
 
     public function __construct($POST,$FILES)
     {
-        parent::__construct();
+        parent::__construct(false);
         $this->obj = $this->jsonDecode($POST['obj']);
         if(!$this->obj['table']) $this->error("obj에 테이블이 없습니다.");
 
@@ -56,7 +56,14 @@ class JlService extends Jl{
         if($method == "file") $response = $this->file();
         if($method == "distinct") $response = $this->distinct();
 
-        return $response;
+        $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
+        if(in_array($method,$trace_list)) {
+            $result = $response['success'] ? '성공' : "실패";
+            $this->sessionTrace("{$this->obj['table']} 테이블 $method 요청 {$result}");
+        }
+        if($method)
+
+            return $response;
     }
 
     public function get() {

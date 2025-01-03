@@ -53,7 +53,7 @@
                     <td class="text-center">개발예정</td>
                     <td class="text-center">{{item.notes}}</td>
                     <td class="text-center">{{item.insert_date.split(' ')[0]}}</td>
-                    <td class="text-center"><button class="btn btn_mini btn_black">수정</button></td>
+                    <td class="text-center"><button class="btn btn_mini btn_black" @click="primary = item.idx; modal = true;">수정</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -61,7 +61,7 @@
 
         <pagination-component :filter="filter" @change="changePage"></pagination-component>
 
-        <account-input :modal="modal" @close="modal = false;" :project_idx="project_idx"></account-input>
+        <account-input :modal="modal" @close="modal = false; primary = ''" :project_idx="project_idx" :primary="primary"></account-input>
     </div>
 </script>
 

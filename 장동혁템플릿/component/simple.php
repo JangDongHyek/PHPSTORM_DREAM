@@ -41,6 +41,8 @@
                 let data = {
                     table : "",
                 }
+
+                if(this.data) data = {...data...this.data}; // data 객체가있다면 병합
                 try {
                     let res = await this.jl.ajax(method,data,"/jl/JlApi.php");
                 }catch (e) {
@@ -52,6 +54,8 @@
                 let filter = {
                     table : "order",
                 }
+
+                if(this.paging) filter = {...filter...this.paging}; // paging 객체가있다면 병합
                 try {
                     let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
                     this.data = res.data[0]

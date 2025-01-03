@@ -447,6 +447,7 @@ class JlModel{
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
+                    if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
 
@@ -466,6 +467,7 @@ class JlModel{
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
+                    if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
 
@@ -499,6 +501,7 @@ class JlModel{
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
         foreach($param as $key => $value){
+            if($key == "update_date") continue;
             if(in_array($key, $this->schema['columns'])){
                 if(!empty($update_sql)) $update_sql .= ", ";
 
@@ -960,6 +963,10 @@ class JlModel{
 
     function jsonEncode($obj) {
         return $this->jl->jsonEncode($obj);
+    }
+
+    function error($obj) {
+        return $this->jl->error($obj);
     }
 
     function backup($tableName, $data,$date) {
