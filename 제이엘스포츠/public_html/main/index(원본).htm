@@ -1,0 +1,148 @@
+<? 
+   $site_path = "/home/jangwonsports_r/public_html/bbs/"; 
+   $site_url = "../bbs/";
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/flash.js"></script>
+<style type="text/css">
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style>
+</head>
+<body style="background:url(../images/main/main_bg.jpg)">
+<? include '../inc/top.htm'; ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td width="1100"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="12"></td>
+      </tr>
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="238" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main/cus.jpg"></td>
+              </tr>
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><img src="../images/main/left_bn1.jpg"></td>
+                  </tr>
+                  <tr>
+                    <td><img src="../images/main/left_bn2.jpg"></td>
+                  </tr>
+                  <tr>
+                    <td><img src="../images/main/left_bn3.jpg"></td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td><script>flash("../swf/main_swf.swf","main_swf","862","462","transparent")</script></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td height="12"></td>
+      </tr>
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td valign="top"><table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #cbcbcb; background:#FFF;">
+              <tr>
+                <td valign="top"><table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="94" style="background:url(../images/main/bbs_img1.jpg) left top no-repeat">&nbsp;</td>
+                    <td><table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><a href="../bbs/list.php?bbs_id=noticee"><img src="../images/main/bbs_title1.jpg"></a></td>
+                  </tr>
+                  <tr>
+                    <td height="76" align="left" valign="top" style="background:url(../images/main/bbs_bg.jpg) left top no-repeat;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="10">&nbsp;</td>
+                        <td><?=rg_lastest('default','noticee','공지사항',3,38, '...')?></td>
+                        <td width="10">&nbsp;</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                </table></td>
+                  </tr>
+                </table>
+                  </td>
+              </tr>
+              <tr>
+                <td><table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="94" style="background:url(../images/main/bbs_img2.jpg) left top no-repeat">&nbsp;</td>
+                    <td><table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><a href="../bbs/list.php?bbs_id=qnaa"><img src="../images/main/bbs_title2.jpg"></a></td>
+                  </tr>
+                  <tr>
+                    <td height="78" align="left" valign="top" style="background:url(../images/main/bbs_bg.jpg) left top no-repeat;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="10">&nbsp;</td>
+                        <td class="lastest"><?=rg_lastest('default','qnaa','공지사항',3,38, '...')?></td>
+                        <td width="10">&nbsp;</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                </table></td>
+                  </tr>
+                </table>
+                  </td>
+              </tr>
+            </table></td>
+            <td width="12">&nbsp;</td>
+            <td valign="top"><table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #cbcbcb; background:#FFF;">
+              <tr>
+                <td><a href="../bbs/list.php?bbs_id=pro_fac"><img src="../images/main/gal_title.jpg"></a></td>
+              </tr>
+              <tr>
+                <td width="512" height="188" valign="top" background="../images/main/main_17.jpg" style="padding-top:10px;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="21">&nbsp;</td>
+                    <td align="center"><?=rg_lastest('default_gallery_thumbnail','pro_fac','갤러리',3,15, '...')?></td>
+                    <td width="21">&nbsp;</td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td width="12">&nbsp;</td>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+			  
+                <td height="124" style="position:relative;"><iframe width="198" height="114" src="https://www.youtube.com/embed/pTmQJ5GM5YY?feature=player_detailpage?rel=0&autoplay=1&vq=highres" frameborder="0" allowfullscreen></iframe></td>
+                </tr>
+              <tr>
+                <td><a href="../main/catelog.pdf"><img src="../images/main/bottom_bn02.jpg"></a></td>
+                </tr>
+              <tr>
+                <td><a href="javascript:;" onClick="window.open('../main/movie.htm','popup','resizable=no,width=395,height=240,scrollbars=no')"><img src="../images/main/bottom_bn.jpg"></a></td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td height="12"></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<? include '../inc/copy.htm'; ?>
+</body>
+</html>

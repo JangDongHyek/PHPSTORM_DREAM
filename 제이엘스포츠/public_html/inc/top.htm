@@ -1,0 +1,81 @@
+<script type="text/javascript">
+		$(document).ready(function(){
+			$("#gnb a").mouseenter(function(){
+				$(".submenu").hide();
+				$("#submenu"+($(this).data('num'))).slideDown('fast');
+			});
+			$("#submenu").mouseleave(function(){
+			});			
+	
+		});
+		
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #4B4B4B; background:#FFF;">
+  <tr>
+    <td align="center" bgcolor="#005FAE"><table width="1100" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><a href="#"  onmouseup="window.external.AddFavorite('http://www.jlsports.co.kr/','JL SPROTS')"><img src="../images/main/bookmark.jpg" /></a></td>
+        <td><table width="0" border="0" align="right" cellpadding="0" cellspacing="0">
+          <tr>
+            <td><a href="../main/"><img src="../images/main/topset1.jpg" /></a></td>
+            <td><a href="../main/stand1.htm"><img src="../images/main/topset2.jpg" /></a></td>
+            <td><a href="../bbs/list.php?bbs_id=pro_gal"><img src="../images/main/topset3.jpg" /></a></td>
+            <td><? if($_SESSION['ss_mb_id']){ //로그인 ?><a href="../bbs/mb_logout.php?url=../main/"><img src="../images/main/logout.jpg" border="0" usemap="#Maptt" /></a><?}else{ //로그아웃 ?><a href="../bbs/mb_login.php?url=../main/"><img src="../images/main/login.jpg" border="0" usemap="#MapttMap" /></a><?}?></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><table width="1100" border="0" align="center" cellpadding="0" cellspacing="0" style="background:url(../images/main/topbg.jpg) center bottom no-repeat;">
+      <tr>
+        <td width="250" align="left" valign="top"><a href="../main/"><img src="../images/main/logo.jpg" width="238" border="0" /></a></td>
+        <td align="left" valign="top">
+<!-- ??? -->
+<div id="menu">
+	<ul id="gnb">
+        <li class="care"><a href="../bbs/list.php?bbs_id=pro_fac" data-num="1">시설소개</a></li>
+		<li class="care"><a href="../bbs/list.php?bbs_id=pro_gal" data-num="2">제품소개</a></li>
+		<li class="care"><a href="../main/stand1.htm" data-num="3">창업절차</a></li>
+		<li class="care"><a href="../main/certi1.htm" data-num="4">기술인증</a></li>
+		<li class="care"><a href="../bbs/list.php?bbs_id=noticee" data-num="5">공지사항</a></li>
+<!--		<li class="care"><a href="../bbs/list.php?bbs_id=qnaa" data-num="6">창업문의</a></li>-->
+  </ul>
+  
+  
+  <div style="float:right; margin-top:7px;">
+  <a href="https://blog.naver.com/jlsports777" target="_blank"><img src="../images/main/icon_blog.png" /></a><a href="https://instagram.com/jlsports_korea?igshid=ZDdkNTZiNTM=" target="_blank"><img src="../images/main/icon_insta.png" /></a>
+  </div>
+  
+  
+</div>
+<div id="container">
+   		<div id="main_submenu">
+ 				<div id="submenu1" style="display:none;" class="submenu">
+					<a href="../main/greet1.htm">JL STORT</a>
+					<a href="../main/greet2.htm">CEO 인사말</a>
+					<a href="../bbs/list.php?bbs_id=pro_fac">시공시설안내</a>
+					<a href="../main/greet4.htm">찾아오시는 길</a>
+				</div>
+				<!--div id="submenu2" style="display:none;" class="submenu">
+					<a href="../bbs/list.php?bbs_id=pro_gal">제품소개</a>
+				</div>
+                <div id="submenu3" style="display:none;" class="submenu">
+					<a href="../main/stand1.htm">창업절차</a>
+				</div>
+                <div id="submenu4" style="display:none;" class="submenu">
+					<a href="../main/certi1.htm">기술인증</a>
+				</div>
+                <div id="submenu5" style="display:none;" class="submenu">
+					<a href="../bbs/list.php?bbs_id=noticee">공지사항</a>
+				</div>
+                <div id="submenu6" style="display:none;" class="submenu">
+					<a href="../bbs/list.php?bbs_id=qnaa">창업문의</a>
+				</div-->
+  </div>
+</div>
+        </td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
