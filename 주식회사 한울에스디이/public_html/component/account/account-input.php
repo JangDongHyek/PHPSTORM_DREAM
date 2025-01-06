@@ -22,11 +22,32 @@
                     <label for="">연락처</label>
                     <input type="tel" v-model="data.company_person_phone" placeholder="연락처"/>
                     <label for="">담당</label>
-                    <!--<select id="company_position">-->
-                    <!--    <option value="콘크리트 타설">콘크리트 타설</option>-->
-                    <!--</select>-->
-                    <input type="checkbox" value="콘크리트 타설" id="company_position">콘크리트 타설
-                    <input type="checkbox" value="테스트 카테고리" id="company_position">테스트 카테고리
+                    <select v-model="data.category_a" @change="getCategoryB()">
+                        <option value="" disabled>선택해주세요.</option>
+                        <option v-for="category_a in categoryA" :value="category_a.category_a">{{category_a.category_a}}</option>
+                    </select>
+
+                    <select v-if="data.category_a" v-model="data.category_b" @change="getGroupA()">
+                        <option value="" disabled>선택해주세요.</option>
+                        <option v-for="category_b in categoryB" :value="category_b.category_b">{{category_b.category_b}}</option>
+                    </select>
+
+                    <select v-if="data.category_b" v-model="data.group_a" @change="getGroupB()">
+                        <option value="" disabled>선택해주세요.</option>
+                        <option v-for="group_a in groupA" :value="group_a.group_a">{{group_a.group_a}}</option>
+                    </select>
+
+                    <select v-if="data.group_a" v-model="data.group_b" @change="getGroupC()">
+                        <option value="" disabled>선택해주세요.</option>
+                        <option v-for="group_b in groupB" :value="group_b.group_b">{{group_b.group_b}}</option>
+                    </select>
+
+                    <select v-if="data.group_b" v-model="data.group_c">
+                        <option value="" disabled>선택해주세요.</option>
+                        <option v-for="group_c in groupC" :value="group_c.group_c">{{group_c.group_c}}</option>
+                    </select>
+                    <!--<input type="checkbox" value="콘크리트 타설" id="company_position">콘크리트 타설-->
+                    <!--<input type="checkbox" value="테스트 카테고리" id="company_position">테스트 카테고리-->
                     <label for="">비고</label>
                     <input type="text" v-model="data.notes" placeholder="비고"/>
                 </div>
@@ -58,12 +79,6 @@
                     limit : 1,
                     count : 0,
                 },
-                required : [
-                    {name : "company_name",message : "소속사를 입력해주세요."},
-                    {name : "user_id",message : "아이디를 입력해주세요."},
-                    {name : "company_person",message : "이름을 입력해주세요."},
-                    {name : "company_person_phone",message : "연락처를 입력해주세요."},
-                ],
                 data : {
                     project : this.project_idx,
                     level : "20",
@@ -76,9 +91,24 @@
                     company_person_phone : "",
 
                     notes : "",
+
+                    category_a : "",
+                    category_b : "",
+                    group_a : "",
+                    group_b : "",
+                    group_c : "",
                 },
 
                 temp : {},
+
+                categoryA : [],
+                categoryB : [],
+
+                groupA : [],
+                groupB : [],
+                groupC : [],
+
+                load : false,
             };
         },
         created: function(){
@@ -88,7 +118,6 @@
             this.temp = this.jl.copyObject(this.data);
 
             this.getCategoryA();
-            this.getCategoryB();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -101,7 +130,21 @@
         methods: {
             async postData() {
                 let method = this.primary ? "update" : "insert";
-                let options = {required : this.required};
+
+                let required = [
+                    {name : "company_name",message : "소속사를 입력해주세요."},
+                    {name : "user_id",message : "아이디를 입력해주세요."},
+                    {name : "company_person",message : "이름을 입력해주세요."},
+                    {name : "company_person_phone",message : "연락처를 입력해주세요."},
+
+                    {name : "category_a",message : "카테고리를 끝까지 선택해주세요."},
+                    {name : "category_b",message : "카테고리를 끝까지 선택해주세요."},
+                    {name : "group_a",message : "카테고리를 끝까지 선택해주세요."},
+                    {name : "group_b",message : "카테고리를 끝까지 선택해주세요."},
+                    {name : "group_c",message : "카테고리를 끝까지 선택해주세요."},
+                ];
+
+                let options = {required : required};
 
                 let data = this.jl.copyObject(this.data);
                 data['table'] = "user"
@@ -132,22 +175,104 @@
                 }
 
             },
+            async getGroupC() {
+                if(this.load) {
+                    this.data.group_c = "";
+                }
+
+                let filter = {
+                    table : "project_schedule",
+                    project_idx : this.project_idx,
+                    column : "group_c",
+                    where : [
+                        {key : "category_a", value : this.data.category_a, operator : ""},
+                        {key : "category_b", value : this.data.category_b, operator : ""},
+                        {key : "group_a", value : this.data.group_a, operator : ""},
+                        {key : "group_b", value : this.data.group_b, operator : ""},
+                    ],
+                }
+                try {
+                    let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+
+                    this.groupC = res.data;
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getGroupB() {
+                if(this.load) {
+                    this.data.group_b = "";
+                    this.data.group_c = "";
+                }
+
+                let filter = {
+                    table : "project_schedule",
+                    project_idx : this.project_idx,
+                    column : "group_b",
+                    where : [
+                        {key : "category_a", value : this.data.category_a, operator : ""},
+                        {key : "category_b", value : this.data.category_b, operator : ""},
+                        {key : "group_a", value : this.data.group_a, operator : ""},
+                    ],
+                }
+                try {
+                    let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+
+                    this.groupB = res.data;
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
+            async getGroupA() {
+                if(this.load) {
+                    this.data.group_a = "";
+                    this.data.group_b = "";
+                    this.data.group_c = "";
+                }
+
+                let filter = {
+                    table : "project_schedule",
+                    project_idx : this.project_idx,
+                    column : "group_a",
+                    where : [
+                        {key : "category_a", value : this.data.category_a, operator : ""},
+                        {key : "category_b", value : this.data.category_b, operator : ""}
+                    ],
+                }
+                try {
+                    let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+
+                    this.groupA = res.data;
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             async getCategoryB() {
+                if(this.load) {
+                    this.data.category_b = "";
+                    this.data.group_a = "";
+                    this.data.group_b = "";
+                    this.data.group_c = "";
+                }
+
                 let filter = {
                     table : "project_schedule",
                     project_idx : this.project_idx,
                     column : "category_b",
                     where : [
-                        {key : "category_a", value : "철근콘크리트공사", operator : ""}
+                        {key : "category_a", value : this.data.category_a, operator : ""}
                     ],
                 }
                 try {
                     let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+
+                    this.categoryB = res.data;
                 }catch (e) {
                     alert(e.message)
                 }
             },
             async getCategoryA() {
+                console.log(this.data);
                 let filter = {
                     table : "project_schedule",
                     project_idx : this.project_idx,
@@ -155,6 +280,8 @@
                 }
                 try {
                     let res = await this.jl.ajax("distinct",filter,"/jl/JlApi");
+
+                    this.categoryA = res.data;
                 }catch (e) {
                     alert(e.message)
                 }
@@ -177,10 +304,26 @@
 
         },
         watch : {
-            modal() {
+            async modal() {
                 console.log(this.primary);
-                if(this.modal) if(this.primary) this.getData();
-                else this.data = this.jl.copyObject(this.temp);
+                if(this.modal) {
+                    if(this.primary) {
+                        await this.getData();
+                        await this.getCategoryA();
+                        await this.getCategoryB();
+                        await this.getGroupA();
+                        await this.getGroupB();
+                        await this.getGroupC();
+
+                        this.load = true;
+                    }else {
+                        this.load = true;
+                    }
+                }
+                else {
+                    this.data = this.jl.copyObject(this.temp);
+                    this.load = false;
+                }
             }
         }
     });

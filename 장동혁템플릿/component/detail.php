@@ -182,7 +182,7 @@
                     table : "",
                     primary : "", // delete일시 primary 카깂을 넣으면된다 primary 키값이 아니라면 삭제 안됌
 
-                    file_use : false, // 저장된 파일 삭제할지 안할지 삭제할시 데이터의 컬럼명 이들어가야한다
+                    file_use : true, // 저장된 파일 삭제할지 안할지 삭제할시 데이터의 컬럼명 이들어가야한다
                     file_columns : ["exam1","exma2"] // 파일값이 저장된 컬럼
 
                     // where_delete 일시

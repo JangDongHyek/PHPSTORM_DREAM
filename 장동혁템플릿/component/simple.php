@@ -52,7 +52,7 @@
             },
             async getData() {
                 let filter = {
-                    table : "order",
+                    table : "exam",
                 }
 
                 if(this.paging) filter = {...filter...this.paging}; // paging 객체가있다면 병합

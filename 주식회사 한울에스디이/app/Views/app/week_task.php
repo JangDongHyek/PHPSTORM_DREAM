@@ -1,7 +1,7 @@
 <!-- 작업관리 > 금주작업 -->
 </div>
 <div id="app">
-    <schedule-week-task project_idx="<?=$project['idx']?>"></schedule-week-task>
+    <schedule-week-task project_idx="<?=$project['idx']?>" user_idx="<?=$user['idx']?>"></schedule-week-task>
 </div>
 
 <?php $jl->vueLoad('app');?>

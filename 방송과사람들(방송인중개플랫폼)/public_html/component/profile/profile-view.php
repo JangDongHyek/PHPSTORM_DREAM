@@ -10,7 +10,7 @@
                 </div>
                 <div class="item_info">
                     <template v-for="item in job_categories">
-                        <i class="cate" >{{item.name}}</i>&nbsp; <!--전문분야-->
+                        <i class="cate" >{{item.name}}</i><!--전문분야-->
                     </template>
                     <part-member-info :member="member" :login_mb_no="login_mb_no"></part-member-info>
                     <br>
@@ -36,25 +36,35 @@
                                 <dl class="grid">
                                     <dt>연락 가능 시간</dt>
                                     <dd>{{member.job_sdate}}시 ~ {{member.job_edate}}시</dd>
-                                    <dt>희망 시급</dt>
-                                    <dd>{{member.job_hourly}}원 <span v-if="member.job_hourly_consultation">(협의가능)</span></dd>
+<!--                                    <dt>희망 시급</dt>-->
+<!--                                    <dd>{{member.job_hourly}}원 <span v-if="member.job_hourly_consultation">(협의가능)</span></dd>-->
                                     <dt>상주 가능 여부</dt>
                                     <dd>{{member.job_work_stay}}</dd>
-                                    <!--상주 가능 으로 체크 했을시 추가되는 부분-->
-                                    <template v-if="member.job_work_stay == '상주 가능'">
-                                        <dt>희망 근무 형태</dt>
+                                    <dt>근무 가능지역</dt>
+                                    <dd>
+                                        <span v-for="item in member.work_area">{{item}},</span>
+                                    </dd>
+                                    <template v-if="member.work_area.includes('국내')">
+                                        <dt>상세지역</dt>
                                         <dd>
-                                            <span v-for="item in member.job_work_form">{{item}}/</span>
+                                            <span v-for="item in member.work_region">{{item}},</span>
                                         </dd>
-                                        <dt>희망 근무지</dt>
-                                        <dd>{{member.job_work_address}}</dd>
-                                        <dt>현재상태</dt>
-                                        <dd>{{member.job_work_status}}</dd>
-                                        <dt>근무 시작 가능일</dt>
-                                        <dd>{{member.job_work_date}}</dd>
-                                        <dt>희망 월급 (세전)</dt>
-                                        <dd>{{parseInt(member.job_work_smonth).format()}}원-{{parseInt(member.job_work_emonth).format()}}원</dd>
                                     </template>
+                                    <!--상주 가능 으로 체크 했을시 추가되는 부분-->
+<!--                                    <template v-if="member.job_work_stay == '상주 가능'">-->
+<!--                                        <dt>희망 근무 형태</dt>-->
+<!--                                        <dd>-->
+<!--                                            <span v-for="item in member.job_work_form">{{item}}/</span>-->
+<!--                                        </dd>-->
+<!--                                        <dt>희망 근무지</dt>-->
+<!--                                        <dd>{{member.job_work_address}}</dd>-->
+<!--                                        <dt>현재상태</dt>-->
+<!--                                        <dd>{{member.job_work_status}}</dd>-->
+<!--                                        <dt>근무 시작 가능일</dt>-->
+<!--                                        <dd>{{member.job_work_date}}</dd>-->
+<!--                                        <dt>희망 월급 (세전)</dt>-->
+<!--                                        <dd>{{parseInt(member.job_work_smonth).format()}}원-{{parseInt(member.job_work_emonth).format()}}원</dd>-->
+<!--                                    </template>-->
                                     <!--상주 가능 으로 체크 했을시 추가되는 부분-->
                                 </dl>
                             </div>
@@ -98,21 +108,10 @@
                         </section>
 
                         <section id="area_portfolio">
-                            <h3>포트폴리오</h3>
-                            <!--디자인 변경-->
-                            <?php if($_SERVER['REMOTE_ADDR'] == "59.19.201.109" || $_SERVER['REMOTE_ADDR'] == "121.140.204.65"){ ?>
-                                <div class="portfolio_list">
-                                    <ul>
-                                        <li>
-                                            <div>
+                            <h3>포트폴리오
+                                <!--<button type="button" class="btn btn_gr">더보기</button>-->
+                            </h3>
 
-                                                <button>더보기</button>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            <?php }?>
-                            <!--//디자인 변경-->
                             <part-member-portfolio :mb_no="mb_no" :login_mb_no="login_mb_no"></part-member-portfolio>
                         </section>
 

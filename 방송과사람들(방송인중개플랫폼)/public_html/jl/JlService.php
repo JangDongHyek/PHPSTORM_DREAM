@@ -120,10 +120,12 @@ class JlService extends Jl{
     }
 
     public function insert() {
+        $this->iuCheck();
+
         if($this->file_use) {
             foreach ($this->FILES as $key => $file_data) {
                 $file_result = $this->jl_file->bindGate($file_data);
-                $obj[$key] = $file_result;
+                $this->obj[$key] = $file_result;
             }
         }else{
             if(count($_FILES)) $this->error("파일을 사용하지않는데 첨부된 파일이 있습니다.");
@@ -138,6 +140,8 @@ class JlService extends Jl{
     }
 
     public function update() {
+        $this->iuCheck();
+
         if($this->file_use) {
             //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
             $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
@@ -230,6 +234,28 @@ class JlService extends Jl{
         $response['success'] = true;
 
         return $response;
+    }
+
+    //insert 나 update 하기전 조건 체크
+    public function iuCheck() {
+        //조건에 해당하는 데이터가있으면 error를 반환
+        if(isset($this->obj['exists'])) {
+            $exists = $this->jsonDecode($this->obj['exists']);
+            foreach ($exists as $filter) {
+                $filter = $this->jsonDecode($filter);
+                $this->model->setFilter($filter);
+                $search = $this->model->get();
+                if($search['count']) $this->error($filter['message']);
+            }
+        }
+
+        if(isset($this->obj['hashes'])) {
+            $hashes = $this->jsonDecode($this->obj['hashes']);
+            foreach ($hashes as $hash) {
+                $hash = $this->jsonDecode($hash);
+                if($this->obj[$hash['key']]) $this->obj[$hash['convert']] = password_hash($this->obj[$hash['key']],PASSWORD_DEFAULT);
+            }
+        }
     }
 }
 ?>

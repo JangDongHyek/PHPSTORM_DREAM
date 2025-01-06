@@ -125,7 +125,7 @@ class JlService extends Jl{
         if($this->file_use) {
             foreach ($this->FILES as $key => $file_data) {
                 $file_result = $this->jl_file->bindGate($file_data);
-                $obj[$key] = $file_result;
+                $this->obj[$key] = $file_result;
             }
         }else{
             if(count($_FILES)) $this->error("파일을 사용하지않는데 첨부된 파일이 있습니다.");

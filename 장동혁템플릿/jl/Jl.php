@@ -41,6 +41,9 @@ class Jl {
         $this->ENV = $this->getEnv();
         $this->RESOURCE = $this->getJlPath()."/jl_resource";
 
+        //PHP INI 설정가져오기
+        $this->PHP = ini_get_all();
+
         if($load) {
             $this->INIT();
         }
@@ -257,7 +260,9 @@ class Jl {
 
         if(!self::$VUE_LOAD) {
             $this->jsLoad($plugins);
-            echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+            if($this->DEV) echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>';
+            else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+
 
             if(in_array('drag',$plugins)) {
                 echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
@@ -671,8 +676,6 @@ class Jl {
             chmod($dir, 0777);
         }
 
-        //PHP INI 설정가져오기
-        $this->PHP = ini_get_all();
 
         // 세션 테이블 생성 및 모델 인스턴스 생성
         $jl_session_table_columns = $this->jsonDecode(JL_SESSION_TABLE_COLUMNS);

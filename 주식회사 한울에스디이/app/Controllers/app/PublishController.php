@@ -337,6 +337,9 @@ class PublishController extends BaseController
     // 작업관리 > 금주작업
     public function weekTask(): string
     {
+        $session = session();
+        $user = $session->get("user");
+
         $project = session()->get("project");
         $projects = session()->get("projects");
 
@@ -344,7 +347,8 @@ class PublishController extends BaseController
             'pid' => 'week_task',
             "jl" => $this->jl,
             "project" => $project,
-            "projects" => $projects
+            "projects" => $projects,
+            "user" => $user
         ];
 
         return render('app/week_task', $data);

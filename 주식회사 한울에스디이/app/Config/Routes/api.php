@@ -14,3 +14,4 @@ $routes->group('api', static function ($routes) {
 });
 
 $routes->post('jl/JlApi', 'api\JlController::method');
+$routes->post('jl/JlApi.php', 'api\JlController::method');
