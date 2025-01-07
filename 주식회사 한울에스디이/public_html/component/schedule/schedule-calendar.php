@@ -39,7 +39,7 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             project : { type : Object, default : {} },
@@ -204,7 +204,7 @@
                 this.dates = this.getMonthsBetween(this.project.start_date,this.project.end_date);
             }
         }
-    });
+    }});
 </script>
 
 <style>

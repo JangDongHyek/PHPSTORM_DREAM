@@ -89,7 +89,7 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             primary : {type : String, default : ""}
@@ -192,7 +192,7 @@
         watch : {
 
         }
-    });
+    }});
 </script>
 
 <style>

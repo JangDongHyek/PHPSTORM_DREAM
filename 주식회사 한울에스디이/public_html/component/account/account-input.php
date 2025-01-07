@@ -62,7 +62,7 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             modal : {type : Boolean, default : false},
@@ -114,6 +114,7 @@
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
+
 
             this.temp = this.jl.copyObject(this.data);
 
@@ -326,7 +327,7 @@
                 }
             }
         }
-    });
+    }});
 </script>
 
 <style>

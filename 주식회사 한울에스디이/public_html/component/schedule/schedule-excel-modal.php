@@ -25,7 +25,7 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             modal : {type : Boolean, default : false},
@@ -87,7 +87,7 @@
         watch : {
 
         }
-    });
+    }});
 </script>
 
 <style>

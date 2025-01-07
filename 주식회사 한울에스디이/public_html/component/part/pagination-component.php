@@ -14,7 +14,7 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             filter : { type: Object, default: null },
@@ -72,7 +72,7 @@
                 return Math.ceil(this.count/this.limit);
             }
         }
-    });
+    }});
 </script>
 
 <style>

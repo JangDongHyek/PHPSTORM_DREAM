@@ -1,3 +1,18 @@
+// int일경우 자동으로 컴마가 붙는 프로토타입
+Number.prototype.format = function (n, x) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
+// Date 타입의 변수 자동으로 포맷팅 YYYY-MM-DD 로 반환됌
+Date.prototype.format = function () {
+    const year = this.getFullYear();
+    const month = String(this.getMonth() + 1).padStart(2, '0');
+    const day = String(this.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
+
 class JlJavascript {
     constructor(jl) {
         this.jl = jl;

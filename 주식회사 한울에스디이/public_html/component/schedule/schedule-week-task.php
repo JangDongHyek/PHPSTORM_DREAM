@@ -57,7 +57,7 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             modal : {type : Boolean, default : false},
@@ -272,7 +272,7 @@
                     else this.schedule.push(this.jl.copyObject(temp));
 
                     res = await this.getScheduleData(currentDate.format());
-                    if(res['count']) this.$set(this.schedule_data, index, res.data);
+                    if(res['count']) this.schedule_data[index] = res.data;
 
                     index++;
                     currentDate.setDate(currentDate.getDate() + 1);
@@ -286,7 +286,7 @@
         watch : {
 
         }
-    });
+    }});
 </script>
 
 <style>

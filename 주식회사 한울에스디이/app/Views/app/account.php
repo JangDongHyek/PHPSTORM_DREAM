@@ -4,7 +4,7 @@
 if(!$project) return false;
 ?>
 <section class="list_table" id="app">
-    <account-list :project_idx="project_idx"></account-list>
+    <account-list project_idx="<?=$project['idx']?>"></account-list>
 </section>
 
 

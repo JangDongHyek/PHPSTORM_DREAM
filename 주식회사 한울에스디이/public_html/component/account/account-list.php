@@ -66,16 +66,16 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             project_idx : {type : String, default : ""},
-            primary : {type : String, default : ""}
         },
         data: function(){
             return {
                 jl : null,
                 component_idx : "",
+                primary : "",
                 filter : {
                     project : this.project_idx,
                     page : 1,
@@ -96,7 +96,7 @@
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
-
+            console.log(this.project_idx);
             this.getData();
         },
         mounted: function(){
@@ -126,7 +126,7 @@
         watch : {
 
         }
-    });
+    }});
 </script>
 
 <style>

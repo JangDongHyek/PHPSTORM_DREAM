@@ -127,7 +127,7 @@
 <input type=hidden name=act value='ok'>
 <input type=hidden name=old_password value='<?=$old_password?>'>
 <input type="hidden" name="bbs_deny_word" value="<?=$bbs[bbs_deny_word]?>">
-<input name=rg_secret type=hidden id="rg_secret" value='1' checked>
+<!--<input name=rg_secret type=hidden id="rg_secret" value='1' checked>-->
 <TR>
 	<TD bgcolor=#0D2465 height=2></TD>
 </TR>

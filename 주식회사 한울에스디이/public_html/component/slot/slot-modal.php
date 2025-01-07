@@ -21,7 +21,7 @@
 </script>
 
 <script>
-    Vue.component('<?=$componentName?>', {
+    Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
             modal : {type : Boolean, default : false},
@@ -59,7 +59,7 @@
                 if(this.modal) $(`#${this.component_idx}`).modal('show');
             }
         }
-    });
+    }});
 </script>
 
 <style>
