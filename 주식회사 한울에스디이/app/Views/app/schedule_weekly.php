@@ -1,7 +1,7 @@
 <!-- 작업관리 > 주간공정표 -->
 </div>
 <div id="app">
-    <schedule-weekly></schedule-weekly>
+    <schedule-weekly project_idx="<?=$project['idx']?>" user_idx="<?=$user['idx']?>"></schedule-weekly>
 </div>
 
 <?php $jl->vueLoad("app") ?>

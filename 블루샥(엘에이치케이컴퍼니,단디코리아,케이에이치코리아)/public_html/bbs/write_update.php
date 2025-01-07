@@ -269,6 +269,12 @@ if($bo_table=="b_order"&&$is_admin){
 	$notice="1";
 }
 
+if($bo_table=="b_qna"){
+    if (!isset($_POST['wr_email']) || !trim($_POST['wr_email'])) alert('이메일을 입력해주세요.');
+    if (!isset($_POST['ca_name']) || !trim($_POST['ca_name'])) alert('창업희망지역을 입력해주세요.');
+    if (!isset($_POST['wr_1']) || !trim($_POST['wr_1'])) alert('연락처를 입력해주세요.');
+}
+
 if(strval(strpos($bo_table,"menu"))!=""){
 	$common=",wr_11='$wr_11'
 			 ,wr_12='$wr_12'

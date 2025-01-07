@@ -322,13 +322,17 @@ class PublishController extends BaseController
     // 작업관리 > 주간공정표
     public function scheduleWeekly(): string
     {
+        $session = session();
+        $user = $session->get("user");
+
         $project = session()->get("project");
         $projects = session()->get("projects");
         $data = [
             'pid' => 'schedule_weekly',
             "jl" => $this->jl,
             "project" => $project,
-            "projects" => $projects
+            "projects" => $projects,
+            "user" => $user
         ];
 
         return render('app/schedule_weekly', $data);

@@ -3,7 +3,7 @@
     <div class="schedule_weekly">
         <div class="week_top flex ai-c jc-sb">
             <div class="task_info flex ai-c">
-                <h4>101동 [24F] A-1 &gt; 거푸집</h4> <span class="icon icon_gray">담당자</span>&nbsp;&nbsp;김설주
+                <span class="icon icon_gray">담당자</span>&nbsp;&nbsp;{{user.company_person}}
             </div>
             <div class="week_navigation flex ai-c">
                 <div class="week_date">
@@ -92,7 +92,8 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
-            primary : {type : String, default : ""}
+            project_idx : {type : String, default : ""},
+            user_idx : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -111,13 +112,16 @@
                 start_date : "", // 일요일
                 now_date : "", // 오늘날짜
                 end_date : "", // 토요일
+
+                user : {},
             };
         },
-        created: function(){
+        async created(){
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
             //this.getData();
+            this.getUser();
             this.settingDate();
         },
         mounted: function(){
@@ -126,6 +130,19 @@
             });
         },
         methods: {
+            async getUser() {
+                let filter = {
+                    table : "user",
+                    idx : this.user_idx
+                }
+
+                try {
+                    let res = await this.jl.ajax("get",filter,"/jl/JlApi");
+                    this.user = res.data[0]
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             getDay(index) {
                 const days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
 
@@ -171,20 +188,6 @@
             getClass() {
                 // 보류 블랙 완료 블루 피드백 레드 진행 그린 예정 그레이
             },
-            changePage(page) {
-                this.filter.page = page;
-
-                this.getData();
-            },
-            async getData() {
-                try {
-                    let res = await this.jl.ajax("get",this.filter,"/api/user");
-                    this.data = res.data
-                    this.filter.count = res.count;
-                }catch (e) {
-                    alert(e.message)
-                }
-            }
         },
         computed: {
 
