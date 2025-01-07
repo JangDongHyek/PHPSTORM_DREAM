@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a6ecb574-5a15-4e18-b7ea-7dc878e2603f" name="블루샥(엘에이치케이컴퍼니,단디코리아,케이에이치코리아)" url="http://dreamforone.kr">
+        <fileTransfer host="dreamforone.kr" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
