@@ -20,7 +20,7 @@ define("JL_CI",false);
 
 // Vue component 폴더 지정
 define("JL_COMPONENT","/component");
-
+define("VUE_VERSION",3);
 // DB 설정
 define("JL_HOSTNAME","localhost");
 define("JL_USERNAME","hanwool");

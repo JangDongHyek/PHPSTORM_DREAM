@@ -262,8 +262,15 @@ class Jl {
 
         if(!self::$VUE_LOAD) {
             $this->jsLoad($plugins);
-            if($this->DEV) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>';
-            else echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>';
+            if($this->DEV) {
+                if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>';
+            }
+            else {
+                if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+
+            }
 
             self::$VUE_LOAD = true;
         }
@@ -273,7 +280,7 @@ class Jl {
 
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
-        echo "vueLoad('$app_name')";
+        echo "vue".VUE_VERSION."Load('$app_name')";
         echo "}, false);";
         echo "</script>";
     }
