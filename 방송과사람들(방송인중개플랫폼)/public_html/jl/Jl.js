@@ -114,6 +114,7 @@ class Jl {
             var objects = {_method : method};
             objects = this.processObject(objects,object);
 
+            console.log(objects);
             //form 으로 데이터가공
             var form = new FormData();
             for (let i in objects) {
@@ -415,18 +416,17 @@ class Jl {
                 const value = obj[key];
                 if (value instanceof File) {
                     objs[key] = value;
-                    delete obj[key];
+                    //delete obj[key];
                 }else if(Array.isArray(value)) {
-                    value.forEach(function(item) {
-                        if(item instanceof File) {
-                            objs[key] = value;
-                            delete obj[key];
-                        }
-                    });
+                    const filteredArray = value.filter(item => !(item instanceof File));
+                    if (filteredArray.length !== value.length) {
+                        objs[key] = value; // File이 포함된 원본 배열 유지
+                    }
+                    obj[key] = filteredArray; // File 제거된 배열로 obj 업데이트
                 }
             }
         }
-
+        console.log(obj);
         objs.obj = JSON.stringify(obj);
         return objs;
     }

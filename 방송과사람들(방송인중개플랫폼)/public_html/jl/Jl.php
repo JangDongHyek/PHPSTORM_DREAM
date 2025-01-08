@@ -41,6 +41,9 @@ class Jl {
         $this->ENV = $this->getEnv();
         $this->RESOURCE = $this->getJlPath()."/jl_resource";
 
+        //PHP INI 설정가져오기
+        $this->PHP = ini_get_all();
+
         if($load) {
             $this->INIT();
         }
@@ -671,8 +674,7 @@ class Jl {
             chmod($dir, 0777);
         }
 
-        //PHP INI 설정가져오기
-        $this->PHP = ini_get_all();
+
 
         // 세션 테이블 생성 및 모델 인스턴스 생성
         $jl_session_table_columns = $this->jsonDecode(JL_SESSION_TABLE_COLUMNS);

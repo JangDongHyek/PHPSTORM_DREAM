@@ -163,7 +163,8 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                                         <input type="file" name="mb_icon" id="mb_icon" onchange="getImgPrev(this);" accept="image/*" style="display: none;">
 
                                         <!-- 프로필 사진 영역 -->
-                                        <div class="area_photo basic" onclick="document.getElementById('mb_icon').click();" style="cursor: pointer;">
+                                        <div class="area_photo_wrap">
+                                            <div class="area_photo basic" onclick="document.getElementById('mb_icon').click();" style="cursor: pointer;">
                                             <?php
                                             $icon_file = G5_DATA_PATH . '/file/member/' . $member['mb_no'] . '.jpg';
                                             if (file_exists($icon_file)) {
@@ -173,6 +174,7 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                                                 echo '<img id="profileImg" src="' . G5_IMG_URL . '/img_smile.jpg" alt="Default Profile Photo">';
                                             }
                                             ?>
+                                            </div>
                                         </div>
                                     </form>
                                 </dd>
@@ -182,7 +184,7 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
                                 <dt>닉네임<i class="fa-solid fa-asterisk"></i></dt>
                                 <dd>
                                     <input type="text" name="mb_nick" value="<?=$member['mb_nick']?>" id="reg_mb_nick" class="regist-input required"
-                                           <?=$w == 'u' ? 'readonly' : ''?>
+
                                            minlength="1" maxlength="12" required placeholder="닉네임을 입력해 주세요.">
                                 </dd>
                                 <dd class="error col-xs-12"></dd>
@@ -303,7 +305,7 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
     let id_check = true;
     let pw_check = true;
     let email_check = false;
-    let nick_check = true;
+    let nick_check = <?=$w=='u' ? 'false' : 'true'?>;
     let certify_check = true;
 
     function ag_check(obj){
@@ -530,19 +532,17 @@ if(!empty($sns) && !empty($email)) { $mb_email = $email; }
     // submit 최종 폼체크
     function fregisterform_submit(f){
         let mb_sex = $('input[name="mb_sex"]:checked').val();
-        if (f.w.value == "") {
 
-            if(nick_check){
-                alert("닉네임을 확인해주세요.");
-                return false;
-            }
-
+        if(nick_check){
+            alert("닉네임을 확인해주세요.");
+            return false;
         }
 
         if(!mb_sex) {
             alert("성별을 확인해주세요.");
             return false;
         }
+
 
         return true;
     }

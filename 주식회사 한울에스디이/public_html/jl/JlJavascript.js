@@ -13,6 +13,21 @@ Date.prototype.format = function () {
     return `${year}-${month}-${day}`;
 };
 
+// int를 바이트로 변환되서 반환되는 프로토타입
+Number.prototype.formatBytes = function (decimals = 2) {
+    if (this === 0) return '0 Bytes';
+
+    const k = 1024; // 1 KB = 1024 Bytes
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const dm = decimals < 0 ? 0 : decimals;
+
+    // 단위 결정
+    const i = Math.floor(Math.log(this) / Math.log(k));
+    const size = parseFloat((this / Math.pow(k, i)).toFixed(dm));
+
+    return `${size} ${sizes[i]}`;
+};
+
 class JlJavascript {
     constructor(jl) {
         this.jl = jl;

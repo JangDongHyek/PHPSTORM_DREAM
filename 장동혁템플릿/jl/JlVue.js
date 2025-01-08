@@ -50,4 +50,21 @@ class JlVue {
     constructor(jl) {
         this.jl = jl;
     }
+
+
+    download(data) {
+        if(!data.src) {
+            alert("다운로드의 참조 데이터가 잘못됐습니다.");
+            return false;
+        }
+        // 동적으로 a 태그 생성
+        const link = document.createElement('a');
+        link.href = this.jl.root + data.src;
+        link.download = data.name; // 다운로드할 파일 이름 설정
+        link.style.display = 'none';
+
+        document.body.appendChild(link);
+        link.click(); // 클릭 이벤트로 다운로드 트리거
+        document.body.removeChild(link); // DOM에서 제거
+    }
 }

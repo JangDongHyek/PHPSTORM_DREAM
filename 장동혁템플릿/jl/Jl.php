@@ -212,9 +212,7 @@ class Jl {
     }
 
     function pluginLoad($plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
+        $plugins = $this->convertToArray($plugin);
 
         if(in_array('drag',$plugins)) {
             if(!in_array("drag",self::$PLUGINS)) {

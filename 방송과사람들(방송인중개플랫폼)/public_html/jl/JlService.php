@@ -144,18 +144,22 @@ class JlService extends Jl{
 
         if($this->file_use) {
             //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
-            $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
+            //$getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
 
             foreach ($this->FILES as $key => $file_data) {
+                //$this->error(json_encode($file_data));
+                //$this->error($this->obj[$key]);
+                $objKeyValue = $this->jsonDecode($this->obj[$key],false);
+
                 $file_result = $this->jl_file->bindGate($file_data);
                 if(!$file_result) continue;
 
                 if(is_array($file_data['name'])) {
                     //바인드의 리턴값은 encode되서 오기때문에 decode
                     $file_result = json_decode($file_result, true);
-                    $result = array_merge($getData[$key],$file_result);
+                    $result = array_merge($objKeyValue,$file_result);
                     //문자열로 저장되어야하기떄문에 encode
-                    $this->obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
+                    $this->obj[$key] = $this->jsonEncode($result);
                 }else {
                     $this->obj[$key] = $file_result;
                 }

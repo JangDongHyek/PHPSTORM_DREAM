@@ -67,8 +67,6 @@ class JlService extends Jl{
     }
 
     public function get() {
-        $this->model->setFilter($this->obj);
-
         $join = null;
         $extensions = array();
         if(isset($this->obj['join'])) $join = $this->jsonDecode($this->obj['join']);
@@ -89,8 +87,10 @@ class JlService extends Jl{
             //$model->like("join_column","value","AND",$join_table);
 
             if($join['source']) $getInfo['source'] = $join['table'];
-            if($join['select']) $getInfo['select'] = $join['select'];
+            if($join['select']) $getInfo['select'] = $this->jsonDecode($join['select']);
         }
+        $this->model->setFilter($this->obj);
+
 
         $object = $this->model->where($this->obj)->get($getInfo);
 
