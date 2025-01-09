@@ -1,0 +1,133 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+include "../admin_head.php";
+?>
+<script language="javascript">
+function check(){
+	var here = document.form
+
+	if(here.m_name.value == ""){
+		alert("인터넷상품명을 입력하세요")
+		here.m_name.focus()
+		return
+	}
+
+	document.form.submit();
+}
+</script>
+
+<body onLoad='this.document.form.m_name.focus();'>
+<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+	<tr valign="top">
+		<td width="200" height="500" bgcolor="F2F2F2">
+			<!--왼쪽부분시작-->
+<?
+$left_menu = "7";
+include "../include/left_menu_layer.php"; 
+?>
+			<!--왼쪽부분 END-->
+		 </td>
+		<td>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="100%" height="50" bgcolor="F2F2F2" class="title"><img src="../images/icon_1.gif" width="30" height="17" align="absmiddle"><b>인터넷상품 관리</b></td>
+				</tr>
+			</table>
+			<!--내용 START~~--><br>
+			<table border="1" cellpadding="5" cellspacing="0" width="90%" bordercolordark="white" bordercolorlight="#E1E1E1" align="center">
+				<tr>
+				  <td vAlign="top" width="90%" bgColor="#ffffff">인터넷상품 정보를 기록/관리하는 곳입니다.<br></td>
+				</tr>
+				<tr>
+				  <td vAlign="top" width="90%" bgColor="#ffffff"></td>
+				</tr>
+				<tr>
+				  <td vAlign="top" width="100%" bgColor="#808080" height="1"></td>
+				</tr>
+<!----------------------------------- 내용 시작 ----------------------------------------->
+				<tr>
+					<td vAlign="top" width="100%" bgColor="#ffffff" height="3">
+						<table width="95%" border="0" align="center">
+							<tr>
+								<td width="100%" colspan="2" height="20"><p align="center"><b>[인터넷상품 								추가]</b></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td vAlign="top" width="100%" bgColor="#ffffff" height="3">
+						<form name="form" method="post" enctype="multipart/form-data" action="mc_regist.html?mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page?>" onsubmit="check(); return false">
+<!----------------------------------- 내용 시작 ----------------------------------------->
+						<table width="100%" border="0" align="center">				
+							<tr>
+								<td vAlign="top" width="100%" bgColor="#ffffff" align="center">
+<!----------------------------------- 폼 시작 ------------------------------------------->
+									<table width="100%" border="0" align="center" cellpadding="7" cellspacing="0">
+										<tr>
+											<td width="15%">인터넷상품회사</td>
+											<td width="85%">
+												<select name="b_uid" class="input" style='width:150px'>
+<?
+$sql0 = "select * from bc order by b_no asc";
+$res0 = mysql_query( $sql0, $dbconn );
+$tot0 = mysql_num_rows( $res0 );
+if( !$tot0 ){
+?>
+													<option value="">등록된 인터넷상품회사가 없습니다.</option>
+<?
+}else{
+?>
+<?
+	while( $row0 = mysql_fetch_array( $res0 ) ){
+?>
+													<option value="<?=$row0[b_uid] ?>">ㆍ<?=$row0[b_name]?></option>
+<?
+	}
+}
+if( $res0 ){
+	mysql_free_result( $res0 );
+}
+?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+										</tr>
+										<tr>
+											<td><img src="../image/icon_3.gif" width="10" height="7" align="absmiddle">인터넷상품명</td>
+											<td><input type="text" name='m_name' class="input" size="30"></td>
+										</tr>
+										<tr>
+											<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+										</tr>
+									</table>
+<!----------------------------------- 폼 끝 --------------------------------------------->
+								</td>
+							</tr>
+						</table>
+						<table width="720" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td height="70" align="center">
+									<input type="submit" class="button12" value="카테고리등록하기">
+									<input type="button" class="button12" value="목록으로" onclick="location.href='mc_index.html?mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page?>'">
+								</td>
+							</tr>
+						</table>
+						</form>
+					</td>
+				</tr>
+<!----------------------------------- 내용 끝 ------------------------------------------->
+			</table>
+			<br>
+			<!--내용 END~~-->
+		</td>
+	</tr>
+</table>
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

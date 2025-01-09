@@ -1,0 +1,90 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+
+$item_sql = "select * from $ItemTable where mart_id='$mart_id' and item_no='$item_no'";
+$item_res = mysql_query($item_sql, $dbconn);
+$item_row = mysql_fetch_array($item_res);
+$item_explain = $item_row[item_explain];
+$first_no_1 = $item_row[firstno];
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" /><!-- IE8 호환성모드 관련 -->
+		<title>쇼핑몰</title>
+	<!--<link rel="stylesheet" type="text/css" href="/css/product.css" />-->
+</head>
+ 
+<body>
+<div id="wrapper">
+	<!-- Body Container -->
+  <div id="container">
+		<!--#################### product contents start ####################-->
+		<div id="product-content">
+ 
+			<!-- product description / banner area -->
+			<div class="product-description-wrap">
+				<!-- product description -->
+				<div class="product-description">
+				<? if($first_no_1 == 122){ ?>
+				<a href="../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$prevno?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&item_no=<?=$item_no?>" style="font-size:30px;">주문하기</a>
+				<? } ?>
+				<br /><br /><br />
+					<!-- 상품설명 관리자 템플릿(2010-09-14수정) -->
+					<div id="product-explane">
+						<?=$item_explain?>
+					</div>
+ 
+ 
+					
+					<!-- 배송/환불/교환 -->
+					<div id="delivery" class="pt40">
+					
+						<?
+							$martintro_sql = "select * from $MartIntroTable where mart_id='$mart_id'";
+							$martintro_res = mysql_query($martintro_sql, $dbconn);
+							$martintro_row = mysql_fetch_array($martintro_res);
+						?>
+						
+															
+						<!---------------------- 배송안내 시작 -------------------------------------------------->
+						<ul>
+								<li>
+															
+															<h1>배송안내</h1><BR>
+																<?=$martintro_row["delivery"]?>
+								</li>
+						</ul>
+								
+						<!---------------------- 배송안내 끝 ---------------------------------------------------->
+						<!---------------------- 교환반품안내 시작 ---------------------------------------------->
+						<ul>
+								<li>
+															
+															<h1>교환반품안내</h1><BR>
+																<?=$martintro_row["exchange"]?>
+								</li>
+						</ul>	
+						<!---------------------- 교환할부안내 끝 ------------------------------------------------>
+					
+
+					</div>
+					<!-- //배송/환불/교환 -->
+				</div>
+ 
+			</div>
+		</div>
+ 
+		</div>
+ 
+	
+ 
+</div>
+</body>
+</html>
+ 
+

@@ -1,0 +1,166 @@
+<?
+include "../lib/Mall_Admin_Session.php";
+?>
+<?
+$table = "reserve";
+
+$query = "select * from $table where re_uid = '$re_uid'";
+
+$result = mysql_query( $query, $dbconn );
+$row = mysql_fetch_array( $result );
+
+$re_kind = $row[re_kind];
+$re_title = $row[re_title];
+$re_company = $row[re_company];
+$re_name = $row[re_name];
+$re_phone = $row[re_phone];
+$re_email = $row[re_email];
+$re_content = $row[re_content];
+$re_reply = $row[re_reply];
+$re_ok = $row[re_ok];
+$re_status = $row[re_status];
+$re_regdate = $row[re_regdate];
+
+if( $result ){
+	mysql_free_result( $result );
+}
+?>
+<html>
+<head>
+<title><?=$admin_title?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<script language="javascript" src="../js/common.js"></script>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script language="javascript">
+function delcheck(num1,num2,num3){
+	var remessage = " 다시확인 합니다. \n\n 삭제하시겠습니까.?";
+
+	if(confirm(remessage)){
+		location.href="delete.html?sort=<?=$sort?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&mod=del&page="+num1+"&re_uid="+num2+"&re_code="+num3;
+	}
+}
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" topmargin="0" leftmargin="0">
+<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+	<tr valign="top">
+		<td width="200" height="500" bgcolor="F2F2F2">
+			<!--왼쪽부분시작-->
+<?
+$left_menu = "8";
+include "../include/left_menu_layer.php"; 
+?>
+			<!--왼쪽부분 END-->
+		 </td>
+		<td>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="100%" height="50" bgcolor="F2F2F2" class="title"><img src="../images/icon_1.gif" width="30" height="17" align="absmiddle"><b>문의 관리</b></td>
+				</tr>
+			</table>
+
+			<!--내용 START~~--><br>
+
+			<table border="1" cellpadding="5" cellspacing="0" width="90%" bordercolordark="white" bordercolorlight="#E1E1E1" align="center">
+				<tr>     
+					<td width="90%" bgcolor="#FFFFFF" valign="top"><br>     
+						<p style="padding-left: 10px"><span class="aa">[문의 관리]</span>
+					</td>    
+				</tr>    
+   
+				<tr>   
+					<td width="100%" bgcolor="#FFFFFF" height="3" valign="top">
+
+<!----------------------------------- 폼 시작 ------------------------------------------->    
+						<table border="1" cellpadding="5" cellspacing="0" width="100%" bordercolordark="white" bordercolorlight="#E1E1E1">
+							<tr>
+								<td bgcolor="#33A6B3" height="3" colspan="2"></td>
+							</tr>
+							<tr>
+								<td align="right" bgcolor="#F7F7F7">종 류</td>
+								<td><b><?=$re_kind?></b></td>
+							</tr>
+							<tr>
+								<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+							</tr>
+							<tr>
+								<td width="15%" align="right"  bgcolor="#F7F7F7">제 목</td>
+								<td width="85%"><b><?=$re_title?></b></td>
+							</tr>
+							<tr>
+								<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+							</tr>
+							<tr>
+								<td align="right" bgcolor="#F7F7F7">회사명</td>
+								<td><?=$re_company?></td>
+							</tr>
+							<tr>
+								<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+							</tr>
+							<tr>
+								<td align="right" bgcolor="#F7F7F7">이 름</td>
+								<td><b><?=$re_name?></b></td>
+							</tr>
+							<tr>
+								<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+							</tr>
+							<tr>
+								<td align="right" bgcolor="#F7F7F7">연락처</td>
+								<td><?=$re_phone?></td>
+							</tr>
+							<tr>
+								<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+							</tr>
+							<tr>
+								<td align="right" bgcolor="#F7F7F7">이메일</td>
+								<td><a href="mailto:<?=$re_email?>"><?=$re_email?></a></td>
+							</tr>
+							<tr>
+								<td align="right" bgcolor="#F7F7F7">문의사항</td>
+								<td><?=$re_content?></td>
+							</tr>
+							<tr>
+								<td height="1" colspan="2" bgcolor="#d7d7d7"></td>
+							</tr>
+							<tr>
+								<td align="right" bgcolor="#F7F7F7">문의일자</td>
+								<td><?=$re_regdate?></td>
+							</tr>
+							<tr>
+								<td bgcolor="#33A6B3" height="3" colspan="2"></td>
+							</tr>
+						</table>
+<!----------------------------------- 폼 끝 --------------------------------------------->
+					</td>
+           		</tr>
+				<tr>
+				<form name='form' method='post' action='modify.html?sort=<?=$sort?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page?>&re_code=<?=$re_code?>'>
+				<input type='hidden' name='re_uid' value='<?=$re_uid?>'>
+				<input type='hidden' name='flag' value='ok'>
+					<td colspan="2">
+						<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td height="70" align="center">
+									<input type="submit" class="button12big" value="문의확인">&nbsp;
+									<input type="button" class="button12big" value="목록으로" onClick="location.href='index.html?sort=<?=$sort?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page?>&re_code=<?=$re_code?>'">
+									<!-- <input type="button" class="button12big" value="메일발송" onClick="location.href='mail.html?sort=<?=$sort?>&mode=<?=$mode?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page?>&re_uid=<?=$re_uid?>&re_code=<?=$re_code?>'"> -->
+									<input type="button" class="button12big" value="삭제하기" onclick="delcheck('<?=$page?>','<?=$re_uid?>','<?=$re_code?>');">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</form>
+				</tr>
+           	</table>
+<!----------------------------------- 내용 끝 ------------------------------------------->
+<br>
+			<!--내용 END~~-->
+		</td>
+	</tr>
+</table> 
+</body>        
+</html>
+<?
+mysql_close( $dbconn );
+?>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5bdd6a4e-7177-4a71-9000-c9c6417d0bce" name="부성유통(부성바이오)-쇼핑몰" url="http://smartbusan.co.kr">
+        <fileTransfer host="smartbusan.co.kr" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

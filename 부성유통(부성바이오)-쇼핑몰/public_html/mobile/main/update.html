@@ -1,0 +1,606 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+
+include "../../market/include/getmartinfo.php";
+//include "../../market/include/head_alltemplate.php";
+?>
+
+<?
+$con_sql = "select * from $Mart_Member_NewTable where username='$UnameSess' and mart_id='$mart_id'";
+$con_res = mysql_query($con_sql, $dbconn);
+$con_tot = mysql_num_rows($con_res);
+if($con_tot < 1){
+	echo ("		
+		<script>
+		window.alert('회원전용 공간입니다.');
+		location.href='../main/login.html?mart_id=$mart_id';
+		</script>
+	");
+	exit;
+}
+?>
+
+<?
+$join_sql = "select * from $Join_Form_SetTable where mart_id ='$mart_id'";
+$join_res = mysql_query($join_sql, $dbconn);
+$join_tot = mysql_num_rows($join_res);
+if($join_tot > 0){
+	$join_row = mysql_fetch_array($join_res);
+
+	$passport_use = $join_row[passport_use];
+	$zip_use = $join_row[zip_use];
+	$address_use = $join_row[address_use];
+	$tel_use = $join_row[tel_use];
+	$tel1_use = $join_row[tel1_use];
+	$email_use = $join_row[email_use];
+	$chuchon_use = $join_row[chuchon_use];
+	$msg_use = $join_row[msg_use];
+	$job_use = $join_row[job_use];
+	$com_name_use = $join_row[com_name_use];
+	$homepage_use = $join_row[homepage_use];
+	$hobby_use = $join_row[hobby_use];
+	$religion_use = $join_row[religion_use];
+	$ext1_field = $join_row[ext1_field];
+	$ext1_use = $join_row[ext1_use];
+	$ext2_field = $join_row[ext2_field];
+	$ext2_use = $join_row[ext2_use];
+	$ext3_field = $join_row[ext3_field];
+	$ext3_use = $join_row[ext3_use];
+	$ext4_field = $join_row[ext4_field];
+	$ext4_use = $join_row[ext4_use];
+	$sel_field = $join_row[sel_field];
+	$opt1_field = $join_row[opt1_field];
+	$opt2_field = $join_row[opt2_field];
+	$opt3_field = $join_row[opt3_field];
+	$opt4_field = $join_row[opt4_field];
+	$sel_use = $join_row[sel_use];
+}
+
+//================== 회원 정보를 불러옴 ==============================================
+$mem_sql = "select * from $Mart_Member_NewTable where mart_id='$mart_id' and username='$UnameSess'";
+$mem_res = mysql_query($mem_sql, $dbconn);
+$mem_tot = mysql_num_rows($mem_res);
+if($mem_tot > 0){
+	$mem_row = mysql_fetch_array($mem_res);
+	$password = $mem_row[password];
+	$name = $mem_row[name];
+	$member_img = $mem_row[member_img]; //회원 글작성시 아이콘
+	$passport1 = $mem_row[passport1];
+	$passport2 = $mem_row[passport2];
+	$email = $mem_row[email];
+	$tel = $mem_row[tel];
+	$tel1 = $mem_row[tel1];
+	$zip = $mem_row[zip];
+	$address = $mem_row[address];
+	$address_d = $mem_row[address_d];
+	$date = $mem_row[date];
+	$partner = $mem_row[partner];
+	$msg = $mem_row[msg];
+	$job = $mem_row[job];
+	$com_name = $mem_row[com_name];
+	$homepage = $mem_row[homepage];
+	$hobby = $mem_row[hobby];
+	$religion = $mem_row[religion];
+	$ext1_content = $mem_row[ext1_content];
+	$ext2_content = $mem_row[ext2_content];
+	$ext3_content = $mem_row[ext3_content];
+	$ext4_content = $mem_row[ext4_content];
+	$sel_content = $mem_row[sel_content];
+	$if_maillist = $mem_row[if_maillist];
+
+	if( $member_img ){
+		//========================= 그림파일이 있을때 출력 ===========================
+		$upload = "../../up/$mart_id/"; //업로드 디렉토리
+		$target = "$upload"."$member_img";
+		$member_img_new = "<img src='$target' height='20' border='0' align='absmiddle'>";
+	}
+}
+?>
+
+
+<?
+if( $Mall_Admin_ID ){
+?>
+<script language="javascript" src="../js/common_login.js" type="text/javascript"></script>
+<?
+}else{
+?>
+<script language="javascript" src="../js/common.js" type="text/javascript"></script>
+<?
+}
+?>
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+	<title></title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="apple-touch-icon" href="http://img.orga.co.kr/images/mobile/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="http://img.orga.co.kr/images/mobile/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/JavaScript" src="../js/jquery-1.7.min.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+
+
+function Tcheck(target, cmt, astr, lmin, lmax){
+	var i
+	var t = target.value
+	var id_chk=document.getElementById("id_chk");
+	if (t.length < lmin || t.length > lmax) {
+		if (lmin == lmax) alert(cmt + '는 ' + lmin + ' 자 이어야 합니다.');
+			 else alert(cmt + '는 ' + lmin + ' ~ ' + lmax + ' 자 이내의 영문 및 숫자로 입력하세요.');
+		//id_chk.innerHTML="(아이디는 영문자, 숫자 포함해서 6자이상)";
+		target.focus()
+
+		return true
+	}
+	if (astr.length > 1) {
+			for (i=0; i<t.length; i++)
+					if(astr.indexOf(t.substring(i,i+1))<0) {
+				alert(cmt + '에 허용할 수 없는 문자가 입력되었습니다'+'\n\n아이디는 영문자, 숫자 포함해서 6자이상입니다.');
+				//id_chk.innerHTML="(아이디는 영문자, 숫자 포함해서 6자이상)";
+				target.focus()
+				return true
+			}
+	}
+	
+	
+		return false
+	
+}
+
+
+function Eaddcheck(target, cmt){
+	var i
+	var t = target.value
+
+	if (t.length > 1) {
+			for (i=0; i<t.length; i++)
+					if(t.substring(i,i+1) == '@') {
+				return false;
+			}
+	}
+			alert(cmt + '를 정확히 입력하여 주십시오.');
+	target.focus()
+	return true	
+}
+	
+
+function checkform(f){
+
+	var Alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	var Digit = '1234567890'
+
+	if ( f.old_password.value == 0 ) {
+		alert('현재 비밀번호를 입력주세요.')
+		f.old_password.focus()
+		return false
+	}
+
+	//if (Tcheck(f.username, '희망 ID', Alpha + Digit, 4, 10)) return false;
+	//if (Tcheck(f.password1, '새비밀번호', Alpha + Digit, 4, 8)) return false;
+	//if (Tcheck(f.password2, '새비밀번호 확인', Alpha + Digit, 4, 8)) return false;
+	if( f.password1.value.length > 0 ){		
+		if (f.password1.value != f.password2.value) {
+			alert('비밀번호 확인을 다시 해주세요.')
+			f.password2.focus()
+			return false
+		}
+	}
+
+<?
+if($zip_use == 0 || $zip_use == ""){
+?>	
+	if (f.zip.value==""){
+		alert("\n우편번호를 입력하세요.");
+		f.find_button.focus()
+		return false;
+	}
+<?
+}
+if($address_use == 0 || $address_use == ""){
+?>
+	if (f.address.value==""){
+		alert("\n주소를 입력하세요.");
+		f.address.focus();
+		return false;
+	}
+	if (f.address_d.value==""){
+		alert("\n상세주소를 입력하세요.");
+		f.address_d.focus();
+		return false;
+	}
+<?
+}
+if($tel_use == 0 || $tel_use == ""){
+?>
+	if (f.tel.value==""){
+		alert("\n연락처를 입력하세요.");
+		f.tel.focus()
+		return false;
+	}
+<?
+}
+if($tel1_use == 0 || $tel1_use == ""){
+?>
+	if (f.tel1.value==""){
+		alert("\n기타연락처를 입력하세요.");
+		f.tel1.focus()
+		return false;
+	}
+<?
+}
+if($email_use == 0 || $email_use == ""){
+?>
+	var emailchk;
+	emailchk = 0;
+	if (f.email.value ==""){
+		alert("\n이메일을 입력하세요.");
+		f.email.focus()
+		return false;
+	}else{	
+		for (var j=0; j < f.email.value.length ; j++ ){
+			 var ch= f.email.value.substring(j,j+1)
+			 if (ch == "@" | ch== "." ){
+					emailchk = emailchk + 1;
+			 }
+		}
+		if (emailchk < 2 ){
+			alert("유효한 전자우편를 입력하세요!");
+			f.email.focus(); 
+			return (false);
+		}
+	}
+<?
+}
+if($chuchon_use == 0 || $chuchon_use == ""){
+?>
+	if (f.partner.value==""){
+		alert("\n추천인을 입력하세요.");
+		f.partner.focus()
+		return false;
+	}
+<?
+}
+if($msg_use == 0 || $msg_use == ""){
+?>
+	if (f.msg.value==""){
+		alert("\n하고싶은말을 입력하세요.");
+		f.msg.focus()
+		return false;
+	}
+<?
+}
+if($job_use == 0 || $job_use == ""){
+?>
+	if (f.job.value==""){
+		alert("\n직업을 입력하세요.");
+		f.job.focus()
+		return false;
+	}
+<?
+}
+if($com_name_use == 0 || $com_name_use == ""){
+?>
+	if (f.com_name.value==""){
+		alert("\n직장/학교명을 입력하세요.");
+		f.com_name.focus()
+		return false;
+	}
+<?
+}
+if($homepage_use == 0 || $homepage_use == ""){
+?>
+	if (f.homepage.value==""){
+		alert("\n홈페이지 주소를 입력하세요.");
+		f.homepage.focus()
+		return false;
+	}
+<?
+}
+if($hobby_use == 0 || $hobby_use == ""){
+?>
+	if (f.hobby.value==""){
+		alert("\n취미를 입력하세요.");
+		f.hobby.focus()
+		return false;
+	}
+<?
+}
+if($religion_use == 0 || $religion_use == ""){
+?>
+	if (f.religion.value==""){
+		alert("\n종교를 입력하세요.");
+		f.religion.focus()
+		return false;
+	}
+<?
+}
+if(($ext1_use == 0 || $ext1_use == "")&&$ext1_field !=""){
+?>
+	if (f.ext1_content.value==""){
+		alert("\n<?=$ext1_field?>를 입력하세요.");
+		f.ext1_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext2_use == 0 || $ext2_use == "")&&$ext2_field !=""){
+?>
+	if (f.ext2_content.value==""){
+		alert("\n<?=$ext2_field?>를 입력하세요.");
+		f.ext2_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext3_use == 0 || $ext3_use == "")&&$ext3_field !=""){
+?>
+	if (f.ext3_content.value==""){
+		alert("\n<?=$ext3_field?>를 입력하세요.");
+		f.ext3_content.focus()
+		return false;
+	}
+<?
+}
+if(($ext4_use == 0 || $ext4_use == "")&&$ext4_field !=""){
+?>
+	if (f.ext4_content.value==""){
+		alert("\n<?=$ext4_field?>를 입력하세요.");
+		f.ext4_content.focus()
+		return false;
+	}
+<?
+}
+if(($sel_use == 0 || $sel_use == "")&& $sel_field !=""){
+?>
+	if (f.sel_content.value==""){
+		alert("\n<?=$sel_field?>를 선택하세요.");
+		f.sel_content.focus()
+		return false;
+	}
+<?
+}
+?>
+}
+
+
+
+function resizeFrame(frm){
+	frm.style.height = "auto";
+	contentHeight = frm.contentWindow.document.body.scrollHeight;
+	frm.style.height = contentHeight + 0 + "px";
+}
+
+
+/*########################### Div레이어팝업을 띄울 자바스크립트 함수 ###########################*/
+	function doLayerPopup(v) {
+		var layerPopupFull = document.getElementById("layerPopupFull");
+		var client_width = document.body.clientWidth;
+		var client_height = document.body.clientHeight;
+		var window_height = document.body.scrollHeight;
+		var layerPopup = document.getElementById("layerPopup");
+
+		if (v=="show"){
+			layerPopupFull.style.height = window_height;
+			layerPopupFull.style.display = "";
+			layerPopup.style.left = parseInt(client_width) / 2 - (parseInt(layerPopup.style.width) / 2);
+			layerPopup.style.top = parseInt(client_height) / 2 - (parseInt(layerPopup.style.height) / 2);
+			layerPopup.style.display = "";
+			resizeFrame(document.getElementById("test"));
+		}else{
+			layerPopupFull.style.display = "none";
+			layerPopup.style.display = "none";
+		}
+	}
+	/*##############################################################################################*/
+
+
+</script> 
+	</head>
+	<body>
+
+
+
+<!--############################################### Div레이어팝업 창 ###############################################-->
+<div id="layerPopupFull" style="position:absolute; z-index:9;width:100%; left:0px; top:0px; display:none; background-color:white;filter:alpha(opacity=60);opacity:.6;"></div>
+<div id="layerPopup" style="position:absolute; z-index:10; width:300px; height:150px; display:none; margin:0; padding:0;">
+<iframe src="./find_zip_mobile.php" name="test" id="test" width="300" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" scrolling="no" onload="resizeFrame(this);"></iframe>
+<div align="center" valign="middle"><input type="button" value="닫기" onclick="doLayerPopup('hide')"></div>
+</div>
+<!--################################################################################################################-->
+
+
+
+<? include("../include/top.html"); ?>
+ 
+<style type="text/css">
+.li1	{text-decoration:none; margin:0px auto; padding:6px 0px 6px 0px; width:30%; float:left; border:0px; background-color:#EBEEC5;}
+.li2	{text-decoration:none; margin:0px auto; padding:6px 0px 6px 0px; width:70%; float:left; border:0px;}
+.li3	{text-decoration:none; margin:0px auto; padding:6px 0px 6px 0px; width:100%; float:left; border:0px;}
+.line1	{margin:opx auto; padding:0px 0px 0px 0px; height:2px; line-height:1px; background:#B9A372;}
+.line2	{margin:opx auto; padding:0px 0px 0px 0px; height:1px; line-height:1px; background:#B9A372;}
+</style>
+		
+    <section id="content">
+		<article id="contentSubTitle">
+			<div class="subTitle">
+				<h2>&nbsp;&nbsp;<a href="../">홈</a> > 정보수정</h2>
+			</div>
+		</article>
+		<article>
+		<form name='f' method='post' onSubmit="return checkform(this)" enctype="multipart/form-data" action='./modify.html'>
+		<input type='hidden' name='mart_id' value='<?=$mart_id?>'>
+		<input type="hidden" name="flag" value="update">
+		<input type='hidden' name='member_img' value='<?=$member_img?>'>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line1"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">아이디</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<span style="padding:0px 6px 0px 6px; font-weight:bold;"><?=$_SESSION["UnameSess"]?></span>
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">비밀번호</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type='password' name="old_password" class="input_03" style='width:40%; border:1px solid #C8C8C8; height:22px; ime-mode:inactive; float:left;' align="absmiddle;">
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">새 비밀번호</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type='password' name="password1" class="input_03" style='width:40%; border:1px solid #C8C8C8; height:22px; ime-mode:inactive;'>
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">새 비밀번호 확인</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type='password' name="password2" class="input_03" style='width:40%; border:1px solid #C8C8C8; height:22px; ime-mode:inactive;'>
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">이름</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<span style="padding:0px 6px 0px 6px;"><?=$name?></span>
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">E-mail</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type="text"  name="email" value='<?=$email?>' class="input_03" style='width:60%; border:1px solid #C8C8C8; height:22px; ime-mode:inactive;'>
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">E-mail 수신</span><input type="text" name="" style="width:1px; height:24px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:24px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<select name="if_maillist" style="float:left;">
+			<option value="1" <?if($if_maillist == '1'||empty($if_maillist)) echo "selected";?>>수신가능</option>
+			<option value="0"  <?if($if_maillist == '0') echo "selected";?>>수신불가능</option>
+		</select>
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">우편번호</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type="text" name="zip" value='<?=$zip?>' class="input_03" style='width:60px; height:22px; border:1px solid #C8C8C8; float:left;' align="absmiddle" >
+		<img src="../images/login_page_btn2.gif" style="cursor:pointer; margin:0px; padding:0px 0px 0px 10px; float:left;"  onclick="doLayerPopup('show')" align="absmiddle">
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">주소</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type="text" name="address" value='<?=$address?>' class="input_03" style='width:70%; height:22px; border:1px solid #C8C8C8; ime-mode:active; float:left;' align="absmiddle">
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">상세주소</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type="text" name="address_d" value='<?=$address_d?>' class="input_03" style='width:70%; height:22px; border:1px solid #C8C8C8; ime-mode:active; float:left;' align="absmiddle">
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">전화번호</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type="text" name="tel" value='<?=$tel?>' class="input_03" style='width:40%; height:22px; border:1px solid #C8C8C8; ime-mode:active; float:left;' align="absmiddle">
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li1"><span style="padding:0px 6px 0px 6px; font-weight:bold;">휴대폰번호</span><input type="text" name="" style="width:1px; height:22px; border:1px solid #EBEEC5; background:#EbEEC5; cursor:default;" readonly></li>
+		<li class="li2">
+		<input type="text" name="" style="width:1px; height:22px; border:1px solid #FFFFFF; background:#FFFFFF; cursor:default; float:left;" readonly>
+		<input type="text" name="tel1" value='<?=$tel1?>' class="input_03" style='width:40%; height:22px; border:1px solid #C8C8C8; ime-mode:active; float:left;' align="absmiddle">
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		<ul style="text-decoration:none; list-style-type:none; clear:left;">
+		<li class="li3" align="center" style="text-align:center;">
+		<input type="submit" value="정보수정">
+		</li>
+		</ul>
+							<ul style="text-decoration:none; list-style-type:none; clear:left;">
+							<li class="line2"></li>
+							</ul>
+		</form>
+		</article>
+    </section>
+ 
+ 
+<? include("../include/bottom.html"); ?>
+	</body>
+</html>

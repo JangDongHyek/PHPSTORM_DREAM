@@ -1,0 +1,100 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+//============================== 아이디 검색 결과를 가져옴 ===============================
+if( $mode == "give" ){
+	if( $UnameSess == $username ){
+		echo "
+		<script>
+		window.alert('본인에게 포인트를 선물할 수 없습니다.');
+		</script>
+		";
+		exit;
+	}
+
+	$content = "$UnameSess 님이 $money 포인트 선물";
+	$write_date = date("Y-m-d H:i:s");
+
+	/*$bonus_sql0 = "select * from $BonusTable id='$UnameSess'";
+	$bonus_res0 = mysql_query($bonus_sql0, $dbconn);
+	$bonus_row0 = mysql_fetch_array( $bonus_res0 );*/
+
+	//============================== 친구에게 포인트를 선물함 ============================
+	$bonus_sql = "insert into $BonusTable ( num, mart_id, id, write_date, bonus, content, mode ) values ( '', '$mart_id', '$username', '$write_date', '$money', '$content', 'a')";
+	$bonus_res = mysql_query($bonus_sql, $dbconn);
+
+	if( !$bonus_res ){
+		echo "
+		<script>
+		window.alert('친구에게 포인트 선물하기 실패했습니다.');
+		history.go(-1);
+		</script>
+		";
+		exit;
+	}
+
+	$bonus_sql1 = "update $Mart_Member_NewTable set bonus_total=bonus_total + $money where username='$username' and mart_id='$mart_id'";
+	$bonus_res1 = mysql_query($bonus_sql1, $dbconn);
+
+	if( !$bonus_res1 ){
+		echo "
+		<script>
+		window.alert('친구에게 선물한 포인트의 업데이트에 실패했습니다.');
+		history.go(-1);
+		</script>
+		";
+		exit;
+	}
+	//============================== 포인트를 선물한만큼 삭감함 ==========================
+	$content2 = "$username 님에게 $money 포인트 선물";
+	$money2 = -$money;
+	$bonus_sql2 = "insert into $BonusTable ( num, mart_id, id, write_date, bonus, content, mode ) values ( '', '$mart_id', '$UnameSess', '$write_date', '$money2', '$content2', 'd')";
+	$bonus_res2 = mysql_query($bonus_sql2, $dbconn);
+
+	if( !$bonus_res2 ){
+		echo "
+		<script>
+		window.alert('친구에게 선물한 포인트만큼 삭감하는데 실패했습니다.');
+		history.go(-1);
+		</script>
+		";
+		exit;
+	}
+
+	$bonus_sql3 = "update $Mart_Member_NewTable set bonus_total=bonus_total + $money2 where username='$UnameSesse' and mart_id='$mart_id'";
+	$bonus_res3 = mysql_query($bonus_sql1, $dbconn);
+
+	if( !$bonus_res3 ){
+		echo "
+		<script>
+		window.alert('삭감한 포인트의 업데이트에 실패했습니다.');
+		history.go(-1);
+		</script>
+		";
+		exit;
+	}
+
+	if( $bonus_res3 ){
+		echo "
+		<script>
+		window.alert('{$username}님에게 {$money} 포인트를 선물했습니다.');
+		</script>
+		<meta http-equiv='refresh' content='0; URL=../mypage/point.html'>
+		";
+	}else{
+		echo "
+		<script>
+		window.alert('포인트 선물하기 실패했습니다.');
+		history.go(-1);
+		</script>
+		";
+	}
+}
+?>
+<?
+mysql_close($dbconn);
+?>

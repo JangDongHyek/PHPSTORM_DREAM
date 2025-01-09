@@ -1,0 +1,412 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect_login.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>수비노 - 홍삼으로 만든 천연수제비누</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script language="javascript">
+<!--
+var old_menu = '';
+function toggleMenu(submenu) {
+	if( old_menu != submenu ) {
+		if( old_menu !='' ) {
+			old_menu.style.display = 'none';
+		}
+		submenu.style.display = '';
+		old_menu = submenu;
+	} else {
+		submenu.style.display = 'none';
+		old_menu = '';
+	}
+}
+//-->
+</script>
+<script type="text/JavaScript">
+<!--
+
+
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+//-->
+</script>
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body leftmargin="0" topmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif"><? include "../include/top2.htm"; ?></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top">&nbsp;</td>
+        <td width="888" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top" background="../images/menu_bg.gif"><? include "../include/sub_menu.htm" ?>					  </td>
+                    <td height="100%" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="2" bgcolor="ffffff"></td>
+                        </tr>
+                        <tr>
+                          <td height="100%" valign="top"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td height="7"></td>
+                            </tr>
+                            <tr>
+                              <td valign="top"><table width="97%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="D4CFC3">
+                                  <tr>
+                                    <td height="25" bgcolor="EAE6E2"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td><img src="../images/proudct/product_info_title_icon.gif" width="13" height="13" align="absmiddle" /> <span class="category_title2">커뮤니티</span> </td>
+                                          <td><div align="right"><img src="../images/home_icon.gif" width="8" height="9" align="absmiddle"> <a href="../main/index.html">홈</a> &gt; 커뮤니티 &gt; 사용후기 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td height="5" valign="top"></td>
+                            </tr>
+                            <tr>
+                              <td valign="top">
+							  
+							  <table width="707" border="0"  height="183"align="center" cellpadding="0" cellspacing="0" background="../images/commu/03.gif">
+                                <tr>
+                                  <td valign="top">
+								   <textarea name="textarea" cols="0" rows="0" id="txtResource id #1" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="707" height="30">
+              <param name="movie" value="../swf/commu_menu.swf?pageNum=3">
+              <param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="menu" value="false" />
+              <embed src="../swf/money_menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="707" height="30"></embed>
+            </object>
+                          </textarea>
+                                  <script>printEmbed("txtResource id #1")</script>		
+								  </td>
+                                </tr>
+                              </table>
+                              </td>
+                            </tr>
+                           
+                         
+                            <tr>
+                              <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                  <tr>
+<td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!---------------------- 상품평 리스트 시작 --------------------------------------------->
+<?
+if($provider_id == ""){
+	$mart_id_tmp1 = $mart_id;
+}else{
+	$mart_id_tmp1 = $provider_id;
+}
+
+if($page == ""){
+	$page = 1;
+}
+
+$est_qry = "select count(*) from $EstimateTable where mart_id='$mart_id' and estimate_ok='y'";
+
+$est_result = mysql_query( $est_qry, $dbconn );
+$est_tot = mysql_result( $est_result, 0, 0);
+
+$line = 20;
+$list = 10;
+$total_page = ceil($est_tot/$line);
+$total_list = intval($total_page/$list);
+
+if($total_page%$list == 0){
+	$total_list--;
+}
+
+$curr_list = intval($page/$list);
+
+if($page%$list == 0){
+	$curr_list--;
+}
+
+$start_page = $curr_list*$list+1;
+$prev_list = $start_page - $list;
+$next_list = $start_page + $list;
+$olds = $line*($page-1);
+
+$est_sql = "select * from $EstimateTable where mart_id='$mart_id' and estimate_ok='y' order by est_no desc limit $olds,$line";
+
+//echo $est_sql;
+
+$est_res = mysql_query($est_sql, $dbconn);
+
+
+
+
+
+?>
+                            <table width="98%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td><table width="100%"  border="0" cellspacing="0" cellpadding="10">
+                                    <tr>
+                                      <td><script language="javascript">
+<!-- 
+function est_del_win(est_no,mart_id){
+	var url = './est_del.html?mart_id='+mart_id+'&est_no='+est_no 
+	if(confirm("삭제하시겠습니까?")){
+		window.open(url, '0x0', 'top=3000,left=3000,width=0,height=0');
+	}
+}
+//-->
+              </script>
+                                          <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                            <?
+if($est_tot == 0){
+?>
+                                            <tr height='30'>
+                                              <td height="56" colspan="5" align='center' bgcolor="#FBF9F0">:::::::::::::::::::: 등록된 사용후기가 없습니다. ::::::::::::::::::::</td>
+                                            </tr>
+                                            <?
+}
+?>
+                                            <?
+$i = 0;
+while($est_row = mysql_fetch_array($est_res)){
+
+
+$est_sql2 = "select * from $ItemTable where mart_id='$mart_id' and item_no='$est_row[item_no]'";
+$est_res2 = mysql_query($est_sql2, $dbconn);
+$est_row2 = mysql_fetch_array($est_res2);
+
+
+	$id = $est_tot - ($olds + $i);
+	$i++;
+	$est_no = $est_row[est_no];
+	$title = $est_row[title];
+	$name = $est_row[name];
+	$write_date = $est_row[write_date];
+	$content = nl2br($est_row[content]);
+	$username = $est_row[username];
+	$point = $est_row[point];
+	$password = $est_row[password];
+	
+	if($title == ''){
+		$title = substr($content, 0, 50);
+		preg_match('/^([\x00-\x7e]|.{2})*/', $title, $title_tmp);
+		if(strlen($content) > 50)
+			$title_tmp[0] .= '..';
+		$title = $title_tmp[0];
+	}	
+	
+	$point_str = '';
+	for($l=0;$l<$point;$l++){
+		$point_str .= "<img src='../image/product/star_1.gif' align='asbmiddle'>";
+	}
+	$j = $est_tot - $i;
+	$write_date_str = substr($write_date,0,4)."/".substr($write_date,4,2)."/".substr($write_date,6,2);
+
+
+	if( $username == $UnameSess ){
+		//$modify_img = "<a onclick=\"CenterWin('./est_edit.html?mart_id=$mart_id&item_no=$item_no&est_no=$est_no','est_write', 'toolbar=no,menubar=no,status=no,scrollbars=yes,resizable=no,width=550,height=650');\" style='cursor:hand'><img src='../image/product/modify.gif'></a>";
+		//$del_img = "<a onclick=\"est_del_win('$est_no','$mart_id');\" style='cursor:hand'><img src='../image/product/delete.gif'></a>";
+	}else{
+		//$modify_img = "<img src='../image/product/modify.gif'>";
+		//$del_img = "<img src='../image/product/delete.gif'>";
+	}
+
+	//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ==============
+	if( $username ){
+		//========================= 관리자 아이콘이 있으면 아이콘을 작성자에 표시 ========
+		//$sql0 = "select admin_img from $MemberTable where username='$username'";
+		//$res0 = mysql_query( $sql0 , $dbconn );
+		//$tot0 = mysql_num_rows( $res0 );
+		
+		//if( $tot0 >0 ){
+		//	$row0 = mysql_fetch_array( $res0 );
+		//	$name = "<img src='../../up/$mart_id/$row0[admin_img]' border='0' align='absmiddle' height='20' width='25' height='25'>";
+		//}else{
+			//========================= 회원 아이콘이 있으면 아이콘을 작성자에 표시 ======
+			$sql1 = "select member_img from $Mart_Member_NewTable where username='$username'";
+			$res1 = mysql_query( $sql1 , $dbconn );
+			$row1 = mysql_fetch_array( $res1 );
+			if( $row1[member_img] ){
+				$name = "<img src='../../up/$mart_id/$row1[member_img]' border='0' align='absmiddle' width='25' height='25'>";
+			}else{
+				$name = $name;
+			} 
+		//}
+	}else{
+		$name = $name;
+	}
+?>
+                                            <tr>
+                                              <td height="30" width=100><a href="../main/product_info.html?mart_id=<?=$mart_id?>&category_num=<?=$est_row2[category_num]?>&item_no=<?=$est_row2[item_no]?>"><span class="text_name"><?=$est_row2[item_name]?></span></a></td>
+											  <td align=left><a href="javascript:toggleMenu(estimate<?=$i?>)"><?=$title?></a>
+                                                <?=$modify_img?>
+                                                <?=$del_img?></td>
+                                              <td width="70" align="center"><?=$name?></Td>
+											  <td width="70" align="center"><?=$point_str?></td>
+                                              <td width="70" align="right" class="search_type"><?=$write_date_str ?></td>
+                                            </tr>
+                                            <tr id="estimate<?=$i?>" style="display:none">
+                                              <td colspan='4'><div >
+                                                  <table width='100%' cellpadding="10">
+                                                    <tr>
+                                                      <td height="68" bgcolor="#F9F2E8"><?=$content?></td>
+                                                    </tr>
+                                                  </table>
+                                              </div></td>
+                                            </tr>
+                                            <tr>
+                                              <td height="1" colspan="5" bgcolor="E2E2E2"></td>
+                                            </tr>
+                                            <?
+}
+?>
+                                          </table>
+                                          <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                              <!---------------------- 페이징 시작 ---------------------------------------------------->
+                                              <td height="40" align='center'><? 
+if($prev_list <= 0){ 
+?>
+                                                  <img src="../image/bu_pre10.gif" border='0' align="absmiddle">
+                                                  <? 
+}else{ 
+?>
+                                                  <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$prev_list?>"><img src="../image/bu_pre10.gif" border='0' align="absmiddle"></a>
+                                                  <? 
+} 
+?>
+                                                  <? 
+if($page-1 <= 0){ 
+?>
+                                                  <img src="../image/bu_pre.gif" border='0' align="absmiddle">
+                                                  <? 
+}else{ 
+?>
+                                                  <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page-1?>"><img src="../image/bu_pre.gif" border='0' align="absmiddle"></a>
+                                                  <? 
+} 
+?>
+&nbsp;
+                                <? 
+for($i=$start_page;$i<$start_page+$list;$i++){
+?>
+                                <? 
+	if($i == $page){ 
+?>
+                                <b>[
+                                <?=$i?>
+                                ]</b>
+                                <? 
+	}else{ 
+?>
+                                <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$i?>">[
+                                <?=$i?>
+                                ]</a>
+                                <? 
+	} 
+?>
+&nbsp;
+                                <?
+	if($i>=$total_page)
+	break
+?>
+                                <? 
+} 
+?>
+                                <? 
+if($page+1 > $total_page){ 
+?>
+                                <img src="../image/bu_next.gif" border='0' align="absmiddle">
+                                <? 
+}else{ 
+?>
+                                <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$page+1?>"><img src="../image/bu_next.gif" border='0' align="absmiddle"></a>
+                                <? 
+} 
+?>
+                                <? 
+if($next_list>$total_page){ 
+?>
+                                <img src="../image/bu_next10.gif" border='0' align="absmiddle">
+                                <? 
+}else{ 
+?>
+                                <a href="<?=$PHP_SELF?>?category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&select_key=<?=$select_key?>&input_key=<?=$input_key?>&page=<?=$next_list?>"><img src="../image/bu_next10.gif" border='0' align="absmiddle"></a>
+                                <? 
+} 
+?>                                              </td>
+                                              <!---------------------- 페이징 끝 ---------------------->
+                                              <td align="right"><?=$write_memo?></td>
+                                            </tr>
+                                        </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="20"></td>
+                              </tr>
+                          </table>
+<!---------------------- 상품평 리스트 끝 ----------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+
+
+&nbsp;</td>
+                                  </tr>
+                              </table></td>
+                            </tr>
+                            <tr>
+                              <td height="100%">&nbsp;</td>
+                            </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<?
+include "../include/bottom.htm";
+?>
+</body>
+</html>

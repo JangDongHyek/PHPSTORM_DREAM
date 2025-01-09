@@ -1,0 +1,248 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<!-- 페이앱 세팅 STR -->
+<script>
+function submit_act(){
+	window.open('', '_popup', 'width=385,height=600,scrollbars=yes,location=yes');
+	document.card_form.target = '_popup';
+	document.card_form.submit();
+}
+</script>
+<!-- 페이앱 세팅 END -->
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<!-- 페이앱 세팅 STR (onload 제거) -->
+<body topmargin="0" leftmargin="0">
+<!-- 페이앱 세팅 END (onload 제거) -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top">&nbsp;</td>
+        <td width="888" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top" background="../images/menu_bg.gif">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+</td>
+                    <td height="100%" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="D4CFC3">
+                                  <tr>
+                                    <td height="25" bgcolor="EAE6E2"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td><img src="../images/proudct/product_info_title_icon.gif" width="13" height="13" align="absmiddle" /> <span class="category_title2">마이페이지</span></td>
+                                          <td><div align="right">페이지 경로 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5" valign="top"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" bgcolor="9B002B">
+                                    <tr>
+                                      <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                          <tr>
+                                            <td width="220"><img src="../images/mypage/mypage_img1.jpg" width="169" height="66" /></td>
+                                            <td><div align="right">
+                                                <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                  <tr>
+                                                    <td background="../images/mypage/mypage_menu_bg.gif"><textarea name="textarea" cols="0" rows="0" id="txtResource id #1" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="460" height="66">
+              <param name="movie" value="../swf/mypage_menu.swf?pageNum=2">
+              <param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="menu" value="false" />
+              <embed src="../swf/mypage_menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="460" height="66"></embed>
+            </object>
+                    </textarea>
+                                                        <script>printEmbed("txtResource id #1")</script>                                                    </td>
+                                                  </tr>
+                                                </table>
+                                            </div></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="8"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td width="7"><img src="../images/mypage/order_view_1.gif" width="7" height="58" /></td>
+                                            <td background="../images/mypage/order_view_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title1.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title2.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title3_over.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title4.gif" width="101" height="18" /></div></td>
+                                                </tr>
+                                            </table></td>
+                                            <td width="7"><img src="../images/mypage/order_view_2.gif" width="7" height="58" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="57"><img src="../images/mypage/baguni_title3.gif" width="504" height="30" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5"></td>
+                              </tr>
+                              <tr>
+                                <td>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>
+                            <table width="80%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td width="20"><img src="../image/table_1.gif" width="20" height="20"></td>
+                                <td background="../image/table_1_bg.gif">&nbsp;</td>
+                                <td width="20"><img src="../image/table_2.gif" width="20" height="20"></td>
+                              </tr>
+                              <tr>
+                                <td background="../image/table_4_bg.gif">&nbsp;</td>
+                                <td height="150"><table width="80%" border="0" align="center" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+                                    <tr>
+                                      <td height="30" align="center" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">카드결제를 진행하실려면 결제하기 버튼을 누르십시오.<br>
+                                          <br>
+                                          새창에서 카드결제가 진행되므로 창을 닫으시면 결제가 진행되지 않습니다.</td>
+                                    </tr>
+                                </table></td>
+                                <td background="../image/table_2_bg.gif">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="20"><img src="../image/table_4.gif" width="20" height="20"></td>
+                                <td background="../image/table_3_bg.gif">&nbsp;</td>
+                                <td><img src="../image/table_3.gif" width="20" height="20"></td>
+                              </tr>
+                            </table>
+<!-- 페이앱 세팅 STR -->
+							<table width="100%"  border="0" cellspacing="0" cellpadding="0" align="center">
+<!----------------------------결제 폼 시작------------------------------------>
+							<tr>
+<form method="post" name="card_form" action="./payapp_request2.php">
+<input type="hidden" name="mon_tot_freight" value="<?=$mon_tot_freight?>">
+<input type="hidden" name="order_num" value="<?=$order_num?>">
+<input type="hidden" name="paymethod" value="<?=$paymethod?>">
+<input type="hidden" name="mart_id" value="<?=$mart_id?>">
+<input type="hidden" name="recvphone" value="<?=$buyer_tel1?>">
+                                  <td height="70" align="center"><img src="../image/bu_account2.gif" width="120" height="50" border="0" style='cursor:pointer;' onclick="submit_act();"><!--<a href="#" onclick="doPay_ActiveX();"/><img src="../image/bu_account2.gif" width="120" height="50" border="0" style='cursor:hand' ></a>--> <a href="card_account_cancel.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>"><img src="../image/bu_cancel.gif" width="100" height="50" border="0"></a></td>
+							</tr>
+</form>
+<!------------------------------결제 폼 끝------------------------------------>
+                            </table>
+<!-- 페이앱 세팅 END -->
+                        </td>
+                      </tr>
+                  </table>								</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="10"></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

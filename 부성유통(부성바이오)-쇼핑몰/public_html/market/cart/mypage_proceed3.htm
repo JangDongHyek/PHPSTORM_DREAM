@@ -1,0 +1,419 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+
+?>
+<?
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// 본 샘플은  hashdata를 생성한다
+//	
+//  *    hashdata 는 요청무결성을 검증하는 데이타로 요청시 필수 항목이며,
+//               mid+oid+amount+mertkey 를 조합한후 md5 방식으로 생성한 해쉬값 입니다.
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+?>
+
+
+<?
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//  mertkey 확인 방법 
+//  1. 상점관리자(서비스: http://pgweb.dacom.net  테스트: http://pgweb.dacom.net/tmert) 접속
+//  2. Dacom 에서 받은 테스트 아이디나 서비스 아이디로 로그인
+//  3. 계약정보 -> 상점정보관리 -> 결과전송정보 에서 확인이 가능
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$mid = "ravenda";				//Dacom 제공 상점아이디
+$oid = "$OrderID";				//주문번호
+$amount = "$Amount";		//결제금액
+$mertkey = "5d018292488164940bbb7875107a0e24";		//데이콤에서 발급받은 키값
+
+////////////////////////////// hashdata 생성 - 결제요청무결성검증 //////////////////////////////
+
+$hashdata = md5($mid.$oid.$amount.$mertkey);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+?>
+<script language = 'javascript'>
+<!--
+function openWindow()
+{
+window.open("","Window","width=330, height=430, status=yes, scrollbars=no,resizable=yes, menubar=no");
+document.mainForm.action="http://pg.dacom.net/transfer/transferSelectBank.jsp";
+/*
+========
+신용카드
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/card/cardAuthAppInfo.jsp;
+서비스용 결제창 URL				http://pg.dacom.net/card/cardAuthAppInfo.jsp;
+
+========
+계좌이체
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/transfer/transferSelectBank.jsp 
+서비스용 결제창 URL				http://pg.dacom.net/transfer/transferSelectBank.jsp 
+
+========
+휴대폰
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/wireless/wirelessAuthAppInfo1.jsp
+서비스용 결제창 URL				http://pg.dacom.net/wireless/wirelessAuthAppInfo1.jsp
+
+========
+무통장입금
+========
+테스트용 결제창 URL				http://pg.dacom.net:7080/cas/casRequestSA.jsp
+서비스용 결제창 URL				http://pg.dacom.net/cas/casRequestSA.jsp 
+
+
+Test ID로 테스트시 테스트용 URL로 테스트 하셔야 합니다.
+
+*/
+document.mainForm.target = "Window";
+document.mainForm.submit();
+}
+//-->
+</script>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+</head>
+<script language='JavaScript' src='../printEmbed.js'></script>
+<body topmargin="0" leftmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/up_bg.gif">
+<!---------------------- 탑메뉴 시작 ---------------------------------------------------->
+
+<?
+include "../include/top2.htm";
+?>
+
+<!---------------------- 탑메뉴 끝 ------------------------------------------------------>	
+</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="9" valign="top">&nbsp;</td>
+        <td width="888" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="157" height="100%" valign="top" background="../images/menu_bg.gif">		  
+		<!----------------------------------서브메뉴 시작------------------------------------------>
+          <? include "../include/sub_menu.htm" ?>
+          <!----------------------------------서브메뉴 끝------------------------------------------>
+</td>
+                    <td height="100%" valign="top" background="../images/proudct/product_list_box_bg.gif"><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                        <tr>
+                          <td><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td height="7"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="D4CFC3">
+                                  <tr>
+                                    <td height="25" bgcolor="EAE6E2"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                          <td><img src="../images/proudct/product_info_title_icon.gif" width="13" height="13" align="absmiddle" /> <span class="category_title2">마이페이지</span></td>
+                                          <td><div align="right">페이지 경로 </div></td>
+                                        </tr>
+                                    </table></td>
+                                  </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5" valign="top"></td>
+                              </tr>
+                              <tr>
+                                <td valign="top"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="6" bgcolor="9B002B">
+                                    <tr>
+                                      <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="3" cellpadding="0">
+                                          <tr>
+                                            <td width="220"><img src="../images/mypage/mypage_img1.jpg" width="169" height="66" /></td>
+                                            <td><div align="right">
+                                                <table width="460" height="66" border="0" cellpadding="0" cellspacing="0">
+                                                  <tr>
+                                                    <td background="../images/mypage/mypage_menu_bg.gif"><textarea name="textarea" cols="0" rows="0" id="txtResource id #1" style="display:none;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="460" height="66">
+              <param name="movie" value="../swf/mypage_menu.swf?pageNum=2">
+              <param name="quality" value="high" /><param name="wmode" value="transparent" /><param name="menu" value="false" />
+              <embed src="../swf/mypage_menu.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="460" height="66"></embed>
+            </object>
+                    </textarea>
+                                                        <script>printEmbed("txtResource id #1")</script>                                                    </td>
+                                                  </tr>
+                                                </table>
+                                            </div></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="8"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td width="7"><img src="../images/mypage/order_view_1.gif" width="7" height="58" /></td>
+                                            <td background="../images/mypage/order_view_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title1.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title2.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title3_over.gif" width="101" height="18" /></div></td>
+                                                  <td width="10"><div align="center"><img src="../images/mypage/order_view_line.gif" width="4" height="40" /></div></td>
+                                                  <td><div align="center"><img src="../images/mypage/order_view_title4.gif" width="101" height="18" /></div></td>
+                                                </tr>
+                                            </table></td>
+                                            <td width="7"><img src="../images/mypage/order_view_2.gif" width="7" height="58" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="6"></td>
+                              </tr>
+                              <tr>
+                                <td><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                    <tr>
+                                      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="57"><img src="../images/mypage/baguni_title3.gif" width="504" height="30" /></td>
+                                          </tr>
+                                      </table></td>
+                                    </tr>
+                                    <tr>
+                                      <td height="1" bgcolor="A68156"></td>
+                                    </tr>
+                                </table></td>
+                              </tr>
+                              <tr>
+                                <td height="5"></td>
+                              </tr>
+                              <tr>
+                                <td>
+
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                      <table width="80%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td width="20"><img src="../image/table_1.gif" width="20" height="20"></td>
+                          <td background="../image/table_1_bg.gif">&nbsp;</td>
+                          <td width="20"><img src="../image/table_2.gif" width="20" height="20"></td>
+                        </tr>
+                        <tr>
+                          <td background="../image/table_4_bg.gif">&nbsp;</td>
+                          <td height="150"><table width="80%" border="0" align="center" cellpadding="20" cellspacing="0" bgcolor="#FFFFFF">
+                              <tr>
+                                <td height="30" align="center" bgcolor="F8F8F8" class="text_14_s2"><img src="../image/icon_4.gif" width="15" height="9" align="absmiddle">계좌이체를 진행하실려면 결제하기 버튼을 누르십시오.<br>
+                                    <br>
+                                    새창에서 계좌이체가 진행되므로 창을 닫으시면 결제가 진행되지 않습니다.</td>
+                              </tr>
+                          </table></td>
+                          <td background="../image/table_2_bg.gif">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="20"><img src="../image/table_4.gif" width="20" height="20"></td>
+                          <td background="../image/table_3_bg.gif">&nbsp;</td>
+                          <td><img src="../image/table_3.gif" width="20" height="20"></td>
+                        </tr>
+                      </table>
+                      <!---------------------- 버튼 시작 ------------------------------------------------------>
+                      <table width="100%"  border="0" cellspacing="0" cellpadding="0" align="center">
+                        <tr>
+<!----------------------------결제 폼 시작------------------------------------>
+
+<!--  
+        ******* 필독 *******
+		 1. 각각의 결제 수단별로 요청정보에 차이가 있을 수 있으니 반드시 메뉴얼을 참고하셔서 결제연동을 하셔야 합니다. 
+		 2. ret_url 페이지의 경우 고객이 결제를 확인하는 페이지 이므로 쇼핑몰에서 직접 제작하셔야 합니다.
+-->
+<form name="mainForm" method="POST" action="">
+<!-- 결제를 위한 필수 hidden정보 -->
+<input type="hidden" name="hashdata" value="<?= $hashdata ?>">			<!-- 결제요청 검증(무결성) 필드-->
+<input type="hidden" name="mid" value="<?= $mid?>">								<!-- 상점ID -->
+<input type="hidden" name="oid" value="<?= $oid?>">								<!-- 주문번호 -->
+<input type="hidden" name="amount" value="<?= $amount?>">					<!-- 결제금액 -->
+<input type="hidden" name="ret_url" value="<?=$Ret_URL?>">			<!-- 팝업창 사용: 리턴URL -->
+<input type="hidden" name="buyer" value="<?=$Name?>">									<!-- 구매자 -->
+<input type="hidden" name="productinfo" value="<?=$item_name?>">							<!-- 상품명 -->
+
+<input type="hidden" name="note_url" value="<?=$note_url?>">			<!-- 결제결과 데이타처리URL(웹전송연동방식) -->
+<input type="hidden" name="productcode" value="<?=$item_no?>">			
+<input type="hidden" name="deliveryinfo" value="<?=$address?>">			
+<input type="hidden" name="buyerphone" value="<?=$rev_tel1?>">			
+<input type="hidden" name="buyeremail" value="<?=$email?>">
+
+<input type="hidden" name="escrowflag" value="Y">			
+
+<input type="hidden" name="pid" value="<?=$passport?>">								<!-- 주문번호 -->
+</form>
+<!------------------------------결제 폼 끝------------------------------------>
+
+
+ <td height="70" align="center"><a href="#" onclick="javascript:openWindow()"><img src="../image/bu_account2.gif" width="120" height="50" border="0" style='cursor:hand' ></a> <a href="card_account_cancel.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>"><img src="../image/bu_cancel.gif" width="100" height="50" border="0"></a></td>
+ 
+ 
+ 
+ 
+ </tr>
+                      </table>
+                      <!---------------------- 버튼 끝 -------------------------------------------------------->
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+<? /**						
+						<form action="order_ok.html?order_num=<?=$order_num?>&mart_id=<?=$mart_id?>&category_num=<?=$category_num?>&category_num1=<?=$category_num1?>&category_num2=<?=$category_num2?>&cate_num=<?=$cate_num?>&flag=<?=$flag?>&item_no=<?=$item_no?>&provider_id=<?=$provider_id?>" method="post">
+<?/**                      <input type="hidden" name="name" value="<?=$name?>">
+                            <input type="hidden" name="passport1" value="<?=$passport1?>">
+                            <input type="hidden" name="email" value="<?=$email?>">
+                            <input type="hidden" name="buyer_tel" value="<?=$buyer_tel?>">
+                            <input type="hidden" name="buyer_tel1" value="<?=$buyer_tel1?>">
+                            <input type="hidden" name="buyer_zip" value="<?=$buyer_zip?>">
+                            <input type="hidden" name="buyer_address" value="<?=$buyer_address?>">
+                            <input type="hidden" name="buyer_address_d" value="<?=$buyer_address_d?>">
+                            <input type="hidden" name="receiver" value="<?=$receiver?>">
+                            <input type="hidden" name="rev_tel" value="<?=$rev_tel?>">
+                            <input type="hidden" name="rev_tel1" value="<?=$rev_tel1?>">
+                            <input type="hidden" name="zip" value="<?=$zip?>">
+                            <input type="hidden" name="address" value="<?=$address?>">
+                            <input type="hidden" name="address_d" value="<?=$address_d?>">
+                            <input type="hidden" name="message" value="<?=$message?>">
+                            <input type="hidden" name='mart_id' value='<?=$mart_id?>'>
+                            <input type="hidden" name='order_num' value='<?=$order_num?>'>
+                          </form>
+				  <form name=frmAGS_pay method=post action=AGS_pay_ing.php>
+                    <input type="hidden" name=Job maxlength=20 value="onlyiche">
+                    <input type="hidden" name=StoreId maxlength=20 value="<?=$allthegate_id?>">
+                    <input type="hidden" name=StoreNm value="<?=$mart_id?>">
+                    <input type="hidden" name=OrdNo maxlength=40 value="<?=$order_num?>">
+                    <input type="hidden" name=ProdNm maxlength=300 value="<?=$item_name?>">
+                    <input type="hidden" name=Amt maxlength=12 value="<?=$mon_tot_freight?>">
+                    <!-- <input type="hidden" name=Amt maxlength=12 value="1000"> -->
+                    <input type="hidden" name=UserId maxlength=20 value="<?=$UnameSess?>">
+                    <input type="hidden" name=OrdNm maxlength=40 value="<?=$name?>">
+                    <input type="hidden" name=OrdPhone maxlength=21 value="<?=$buyer_tel?>">
+                    <input type="hidden" name=UserEmail maxlength=50 value="<?=$email?>">
+                    <input type="hidden" name=RcpNm maxlength=40 value="<?=$receiver?>">
+                    <input type="hidden" name=RcpPhone maxlength=21 value="<?=$rev_tel?>">
+                    <input type="hidden" name=DlvAddr maxlength=100 value="<?=$address?><?=$address_d?>">
+                    <input type="hidden" name=Remark maxlength=350 value="<?=$message?>">
+                    <input type="hidden" name=MallUrl value="<?=$home_dir?>">
+                    <!-- <input type="button" value="지불요청" onclick="javascript:Pay(frmAGS_pay);"> -->
+                    <!-- JavaScript 에서 값을 설정하는 Hidden 필드 -->
+                    <input type=hidden name=DeviId value="">
+                    <input type=hidden name=QuotaInf value="0">
+                    <input type=hidden name=NointInf value="NONE">
+                    <!-- JavaScript 에서 값을 설정하는 Hidden 필드 -->
+                    <!-- 올더게이트 플러그인에서 사용하는 Hidden 필드 -->
+                    <input type=hidden name=AuthYn value="">
+                    <input type=hidden name=Flag value="">
+                    <input type=hidden name=AuthTy value="">
+                    <input type=hidden name=SubTy value="">
+                    <input type=hidden name=CardNo value="">
+                    <input type=hidden name=ExpMon value="">
+                    <input type=hidden name=ExpYear value="">
+                    <input type=hidden name=Instmt value="">
+                    <input type=hidden name=Passwd value="">
+                    <input type=hidden name=SocId value="">
+                    <input type=hidden name=partial_mm value="">
+                    <input type=hidden name=noIntMonth value="">
+                    <input type=hidden name=KVP_RESERVED1 value="">
+                    <input type=hidden name=KVP_RESERVED2 value="">
+                    <input type=hidden name=KVP_RESERVED3 value="">
+                    <input type=hidden name=KVP_CURRENCY value="">
+                    <input type=hidden name=KVP_CARDCODE value="">
+                    <input type=hidden name=KVP_SESSIONKEY value="">
+                    <input type=hidden name=KVP_ENCDATA value="">
+                    <input type=hidden name=KVP_CONAME value="">
+                    <input type=hidden name=KVP_NOINT value="">
+                    <input type=hidden name=KVP_QUOTA value="">
+                    <input type=hidden name=MPI_CAVV value="">
+                    <input type=hidden name=MPI_ECI value="">
+                    <input type=hidden name=MPI_MD64 value="">
+                    <input type=hidden name=ICHE_OUTBANKNAME value="">
+                    <input type=hidden name=ICHE_OUTACCTNO value="">
+                    <input type=hidden name=ICHE_OUTBANKMASTER value="">
+                    <input type=hidden name=ICHE_AMOUNT value="">
+                    <!-- 올더게이트 플러그인에서 사용하는 Hidden 필드 -->
+                  </form>**/?></td>
+                </tr>
+            </table>
+
+
+                 				</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td height="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                          </table></td>
+                        </tr>
+                        <tr>
+                          <td height="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td height="2" bgcolor="BE002E"></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+              </table></td>
+            </tr>
+            <tr>
+              <td height="10"></td>
+            </tr>
+        </table></td>
+        <td valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<!---------------------- 하단메뉴 시작 -------------------------------------------------->
+<?
+include "../include/bottom.htm";
+?>
+<!---------------------- 하단메뉴 끝 ---------------------------------------------------->	
+</body>
+</html>
+<?
+mysql_close($dbconn);
+?>

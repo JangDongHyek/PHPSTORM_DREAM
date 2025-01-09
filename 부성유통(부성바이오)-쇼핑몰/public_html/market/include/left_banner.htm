@@ -1,0 +1,37 @@
+
+<?
+if( $category_num ){
+	$left_cate_sql = "select * from $CategoryTable where category_num=$category_num and mart_id='$mart_id'";
+	$left_cate_res = mysql_query($left_cate_sql, $dbconn);
+	$left_cate_row = mysql_fetch_array( $left_cate_res );
+	$category_left = $left_cate_row[category_left];
+	$category_left = str_replace("<br />","",$category_left);
+	$category_left = str_replace("<BODY>","<BODY><br>",$category_left);
+	$category_left = str_replace("</BODY>","<br></BODY>",$category_left);
+	$category_left = str_replace("&nbsp;", "", $category_left);
+	if( $category_left ){
+?>
+<!---------------------- 1차 카테고리별 배너 시작 --------------------------------------->
+			<table width="180" border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr> 
+					<td style="height:30px"></td>
+				</tr>
+				<tr> 
+					<td><?=$category_left?></td>
+				</tr>
+				<tr> 
+					<td style="height:30px"></td>
+				</tr>
+			</table>
+<?
+	}else{
+		include "../design/left_banner_default.html";
+	}
+?>
+<!---------------------- 1차 카테고리별 배너 끝 ----------------------------------------->
+<?
+}else{
+	include "../design/left_banner_default.html";
+}
+?>
+

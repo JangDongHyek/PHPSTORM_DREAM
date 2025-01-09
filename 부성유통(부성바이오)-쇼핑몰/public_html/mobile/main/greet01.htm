@@ -1,0 +1,93 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<html>
+	<head>
+		<meta charset="euc-kr" />
+		<title></title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+		<link rel="stylesheet" type="text/css" href="../css/m_style.css" />
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+	</head>
+	<body>
+	<? include("../include/top.html"); ?>
+	
+    
+	  <section id="content">
+			<article id="contentSubTitle">
+				<div class="subTitle">
+					<h2>&nbsp;&nbsp;<a href="../">홈</a> > 회사소개</h2>
+				</div>
+			</article>
+			<article id="sublist">
+			<!--2차메뉴
+			<div class="subm">
+		<dl>
+			<dd><a href="../main/greet01.htm" class="on">인사말</a></dd>
+			<dd><a href="../main/greet02.htm">연혁</a></dd>
+			<dd><a href="../main/greet03.htm">조직도</a></dd>
+			<dd><a href="../main/greet04.htm">인증서</a></dd>
+			<dd style="border:0px;" class="last"><a href="../main/greet05.htm">오시는 길</a></dd>
+		</dl>
+</div> -->
+			<!--페이지 -->
+			<div class="page">
+			<p><br>
+			  <span style="color: #1770c3">안녕하십니까? 부성바이오입니다.</span></p>
+			  <br>
+			  <p>(주) XH핵산 전국 총괄지사
+			  </p>
+			<p><br>
+			저는 저희 부친때문에 핵산을 알게 되었습니다. 부친께서는 간경화, 고혈압, 당뇨 (2008년), 2004년에는 폐암수술까지 정말 움직이는 병원이셨습니다. 
+급성 간경화로 키 183, 몸무게 92kg나가시던 분이 배에 복수가 차올라 1년여를 병원에 계시면서 복수는 빠지지않고 몸은 뼈만 남으신 것처럼 마르고 
+약해지셨습니다.<br><br>
+
+그 당시 어떻게든 살려보려고 수소문 끝에 핵산을 알게 되었고, 몇달을 연구하고 알아본 결과 일리가 있는 박사님들의 연구결과에 확신을 갖게되어 
+이거다 싶어 효과를 본 분을 어렵게 만나 사실여부를 확인 후 부친께 말씀드렸으나 선생님이 아무거나 먹지말라 하셨다고 거부를 하셨습니다. 
+저 역시 이것때문에 더 악화되기라도 한다면 가족의 원망을 살지도 모른다는 두려움, 죄스러움때문에 더 권해 드릴 수 없는 상황이었습니다. 
+결국 환자 자신이 이것은 불치병이다 생각하고 생을 포기하시는 맘을 먹자 병원도 포기를 하였습니다.<br><br>
+
+고향으로 돌아가 집에서 생의 마감준비를 하시는데, 얼굴 한번이라도 더 봐야겠다는 마음으로 찾아뵈었으나 앉을 힘도 없어 누워서 저를 보셨습니다. 
+이미 몸은 얼음장처럼 차가워지셨고, 차마 볼 수가 없었습니다. 온몸을 마사지하며 저의 젊은 기가 몸으로 전해져 기운을 차리시라고 이틀을 마사지
+를 해드리며 마지막일지도 모를 아버지에 몸과 체온을 느꼈습니다. 그러자 몸에 온기가 돌며 앉을 기운을 차리셨습니다. <br><br> 
+ "중략"
+
+고생하시는 분들께서는 연락을 주시면 최선을 다해 모든 정보를 말씀드리겠습니다. 
+진심으로 모든 사람이 건강하게 살 수 있는 그날이 오기를 기다립니다.
+<br>
+<br><br>부성바이오 핵산
+			</p>
+			  <br>
+<br>
+			</p>
+			</div>
+			<!--페이지 -->
+			</article>
+		</section>
+    
+    <? include("../include/bottom.html"); ?>
+	</body>
+</html>

@@ -1,0 +1,136 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<link href="../css/webwidget_slideshow_dot.css" rel="stylesheet" type="text/css"/>
+</head>
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../js/webwidget_slideshow_dot.js"></script>
+<script language="javascript" type="text/javascript">
+$(function() {
+                $("#demo1").webwidget_slideshow_dot({
+                    slideshow_time_interval: '5000',
+                    slideshow_window_width: '834',
+                    slideshow_window_height: '362',
+                    //slideshow_title_color: '#999',
+                   // soldeshow_foreColor: '#000',
+                    directory: '../images2/main/'
+                });
+            });
+</script>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+if ( getCookie( "Notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../main/pop1.htm','Notice1','left=0, top=0, width=515,height=1000,scrollbars=yes');
+	//noticeWindow.opener = self;
+} 
+
+// -->
+</SCRIPT>
+
+<script language='JavaScript' src='../printEmbed.js'></script>
+<? if($Mall_Admin_ID&&$MemberLevel==1){ ?>
+<body topmargin="0" leftmargin="0">
+<?}else{?>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false" topmargin="0" leftmargin="0"> 
+<?}?>
+<? include("../include/top2_main.htm"); ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="166" height="100%" valign="top"><? include("../include/sub_menu2.htm"); ?></td>
+            <td height="362" valign="top"> 
+		     <div id="demo1" class="webwidget_slideshow_dot">
+                  <ul>
+                    <li><img src="../images_home/m_banner_01.jpg" border="0"></li>
+                    <li><img src="../images_home/m_banner_02.jpg" border="0"></li>
+                 </ul>
+               <div style="clear: both"></div>
+            </div>
+			</td>
+          </tr>
+        </table></td>
+      </tr>
+    </table> </td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td height="30">&nbsp;</td>
+      </tr>
+      <tr>
+        <td><table width="1000" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><a href="../main/product_list.html"><img src="../images_home/ban1.jpg" border="0"></a></td>
+            <td align="center"><a href="../main/product_list.html"><img src="../images_home/ban2.jpg"></a></td>
+            <td align="right"><a href="../main/product_list.html"><img src="../images_home/ban3.jpg"></a></td>
+          </tr>
+        </table></td>
+      </tr>
+	  <tr>
+        <td height="35">&nbsp;</td>
+      </tr>
+	  <tr>
+        <td height="30" valign="top"><img src="../images_home/best_t.gif"></td>
+      </tr>
+	  <tr>
+       <td><img src="../images_home/new_bg1.gif"></td>
+      </tr>
+      <tr>
+        <td background="../images_home/new_bg3.gif"><? include "../include/fav_item.htm";?></td>
+      </tr>
+      <tr>
+        <td><img src="../images_home/new_bg2.gif"></td>
+      </tr>
+	  <tr>
+        <td height="35">&nbsp;</td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+<? include("../include/bottom.htm"); ?>
+</body>
+</html>

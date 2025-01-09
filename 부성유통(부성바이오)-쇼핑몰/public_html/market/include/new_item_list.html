@@ -1,0 +1,160 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<script type="text/javascript" src="../js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery.imageScroller.js"></script>
+</head>
+
+<body>
+<style type="text/css">
+body {}
+img {border:0}
+a {text-decoration:none}
+
+/*스크롤러 스타일*/
+
+/*scroller width가 550px인 이유는?
+- 현재 이미지 가로 사이즈는 130
+- 이미지와 이미지 여백은 10
+- 현재 보이는 이미지 갯수는 4개(중간 여백 갯수는 3개)
+계산식 = (130(이미지가로크기)*4(이미지출력갯수)=520)+(3(여백갯수)*10(여백마진값)) = 550
+*/
+div#scroller {position:relative;height:200px; width:4200px; padding:0 10px;margin:0;clear:both;overflow:hidden;}
+
+/*좌우버튼*/
+div.button {height:43px;}
+#btn1, #btn2 {cursor:pointer}
+
+ul#scrollerFrame {width:4200px; padding:0;margin:0;list-style:none;}
+ul#scrollerFrame li {position:relative;float:left; margin-right:6px;width:130px;height:190px;}
+
+/*가격 및 설명 부분*/
+ul#scrollerFrame li p {margin:0;padding:0}
+ul#scrollerFrame li p.price{font-family:verdana;font-size:12px;font-weight:bold;margin-top:7px;text-align:center;color:#0a62cf}
+ul#scrollerFrame li p.comment{font-family:돋움;font-size:11px;letter-spacing:-1px;margin-top:4px;padding:0 5px;text-align:center;color:#555;line-height:130%}
+
+/*붙박이 아이콘 설정*/
+.besticon {position:absolute;top:0;left:0}
+
+</style>                        
+<script type="text/javascript">
+	
+	$(function(){	
+	     
+		$("#scroller").imageScroller({
+			next:"btn1",                   //다음 버튼 ID값
+			prev:"btn2",                   //이전 버튼 ID값
+			frame:"scrollerFrame",         //스크롤러 프레임 ID값  
+			width:130,                     //이미지 가로 크기
+			child:"li",                    //스크롤 지정 태그
+			auto:true                      //오토 롤링 (해제는 false)
+		});
+	});
+</script>
+<?
+//============================== 신상품  =================================
+
+$new_sql = "select * from $New_ItemTable where mart_id='$mart_id' order by new_item_order asc limit 30";	
+//echo $new_sql;
+$new_res = mysql_query($new_sql);
+$new_tot = mysql_num_rows($new_res);
+?>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+	<tr>
+		<td>
+			<span id="btn2" style="float:right;margin:10px 0 0 0;"><img src="../images2/new_left_arrow.gif"></span>
+		</td>
+		<td>
+ <div id="aaa" style='overflow:hidden;width:955px'> 
+		
+		
+	<div id="scroller">
+		
+		
+
+		<ul id="scrollerFrame">
+			<?
+				$k = 0;
+				while( $new_row = mysql_fetch_array($new_res) ){
+				$new_item_no[$k] = $new_row[new_item_no];
+				$item_no[$k] = $new_row[item_no];
+
+				$new_sql1 = "select * from $ItemTable T1, $CategoryTable T2 where T1.item_no='$item_no[$k]' and T1.if_hide='0' and T1.category_num=T2.category_num and T2.if_hide='0'";
+				//$new_sql1 = "select * from $ItemTable T1, $CategoryTable T2 where T1.item_no='$item_no[$k]' and T1.category_num=T2.category_num";
+
+				$new_res1 = mysql_query($new_sql1, $dbconn);
+				$new_tot1 = mysql_num_rows($new_res1);
+				$new_row1 = mysql_fetch_array($new_res1);
+				
+				$item_no1 = $new_row1[item_no];
+				$item_code = $new_row1[item_code];
+				$category_num = $new_row1[firstno];
+				$prevno = $new_row1[prevno];
+				$cate_num = $new_row1[category_num];
+				$item_name = $new_row1[item_name];
+				$icon_no = $new_row1[icon_no];
+				$img_high = $new_row1[img_sml];
+				$short_explain = $new_row1[short_explain];
+				$z_price = number_format($new_row1[z_price]);
+				$bonus = number_format($new_row1[bonus]);
+
+				$item_name = han_cut2($item_name,22);
+				if($jaego_use == 1 && $jaego == 0){
+					$icon_str = "<img src='../image/soldout_icon_s.gif' width='25' height='12' align='absmiddle'>";
+				}else{
+					if($icon_no == 0) $icon_str = "";
+					if($icon_no == 1) $icon_str = "<img src='../../admin/images/hot.gif' align='absmiddle'>";
+					if($icon_no == 2) $icon_str = "<img src='../../admin/images/new.gif' align='absmiddle'>";
+					if($icon_no == 3) $icon_str = "<img src='../../admin/images/sale.gif' align='absmiddle'>";
+					if($icon_no == 4) $icon_str = "<img src='../../admin/images/reserv.gif' align='absmiddle'>";
+					//$icon_str = make_incon_tag($icon_no, "../image/");
+				}
+				//============================ 상품 이미지 =======================================
+				if($img_high != "" && file_exists("$Co_img_UP$mart_id/$img_high")){
+					if (strstr(strtolower(substr($img_high,-4)),'.jpg') || strstr(strtolower(substr($img_high,-4)),'.gif')){
+						$img_str = "<a href='../main/product_info.html?mart_id=$mart_id&category_num=$category_num&category_num1=$prevno&category_num2=$category_num2&cate_num=$cate_num&item_no=$item_no1' target='_parent'><img src='../..$Co_img_DOWN$mart_id/$img_high'></a>";
+					}
+				}else{
+					$img_str = "<a href='../main/product_info.html?mart_id=$mart_id&category_num=$category_num&category_num1=$prevno&category_num2=$category_num2&cate_num=$cate_num&item_no=$item_no1' target='_parent'><img src='../image/noimage_s.gif' width='$list_product_img_width' height='$list_product_img_height' border='0'></a>";
+				}
+				if($z_price == 0){
+					$z_price="전화문의";
+				}else{
+					$z_price="W".$z_price;
+				}
+				?>
+				<li>
+					<!--best아이콘 설정시 추가-->
+					<?=$img_str?>
+					<p class="text_main_s" align=center><?=$item_name?></p>
+					<p class="text_main_s" align=center><?=$item_code?> </p>
+					<p class="text_18_s" align=center><?=$short_explain?></p>
+				    <p class="text_main1_s" align=center><?=$z_price?></p>  
+					
+					<p class="point" align=center>
+					<img src="../image/icon_point.gif" width="13" height="10"><?=$bonus?> 원</p>
+					<p align=center><?=$icon_str?></p>
+				</li>
+			<? $k++;}?>
+		</ul>
+	</div>
+</div>
+</td>
+<td>
+<span id="btn1" style="float:right;margin:10px 5px 0 0;"><img src="../images2/new_right_arrow.gif"></span>
+</td>
+</body>
+</html>

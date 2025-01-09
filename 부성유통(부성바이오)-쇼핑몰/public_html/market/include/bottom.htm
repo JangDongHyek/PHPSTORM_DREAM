@@ -1,0 +1,159 @@
+
+<!--
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="897"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="9">&nbsp;</td>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main_38.gif" width="888" height="21"></td>
+              </tr>
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="503"><img src="../images/main_39.jpg" width="503" height="24"></td>
+                    <td width="93"><a href="../site/company.html"><img src="../images/main_40.jpg" width="93" height="24"></a></td>
+                    <td width="57"><a href="../board/board_list.php?bbs_no=2"><img src="../images/main_41.jpg" width="57" height="24"></a></td>
+                    <td width="55"><a href="../member/mem_rule.html"><img src="../images/main_42.jpg" width="55" height="24"></a></td>
+                    <td width="72"><a href="../member/mem_person.html"><img src="../images/main_43.jpg" width="72" height="24"></a></td>
+                    <td width="56"><a href="../board/board_list.php?bbs_no=4"><img src="../images/main_44.jpg" width="56" height="24"></a></td>
+                    <td><a href="../site/sitemap.html"><img src="../images/main_45.jpg" width="52" height="24"></a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              <tr>
+                <td><img src="../images/main_46.jpg" width="888" height="80"></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><table width="1000" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td height="40" valign="top"><img src="../images_home/dot_line.gif" /></td>
+      </tr>
+	  <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="248" align="left"><img src="../images_home/call.gif" /></td>
+            <td width="272"><img src="../images_home/bank.gif" border="0" usemap="#bankk" /></td>
+            <td width="178"><img src="../images_home/qr.gif" /></td>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><a href="../board/board_list.php?bbs_no=1"><img src="../images_home/no_t.gif" border="0" /></a></td>
+              </tr>
+              <tr>
+                <td height="91" valign="top" background="../images_home/no_bg.gif"><table width="100%"  border="0" align="left" cellpadding="0" cellspacing="0">
+                  <?             			
+		$today = date("Ymd");
+		$board_sql = "select * from $New_BoardTable where mart_id='$mart_id' and bbs_no='1' order by ansno asc limit 3";
+		$board_res = mysql_query($board_sql, $dbconn);
+		$board_tot = mysql_num_rows( $board_res );
+		?>
+                  <?
+		if( $board_tot == "0" ){
+		?>
+                  <tr valign='top'>
+                    <td height='30' align='center' valign="middle">등록된 공지사항이  없습니다.</td>
+                  </tr>
+                  <?
+		}
+		?>
+                  <?
+		$i = 0;
+		while( $board_row = mysql_fetch_array($board_res) ){
+			$board_no = $board_row[index_no];
+			$board_title = $board_row[subject_new];
+			$board_title = han_cut($board_title,35);
+			$board_date = date("Y-m-d", strtotime($board_row[wirte_date]));
+		?>
+                  <tr height="25" valign='top'>
+                    <!--td width='80' align=center valign="middle">[<?=$board_date?>]</td-->
+                    <td valign="middle" class="text_14_s2"><img src="../images/notice_icon.gif" align="absmiddle" />&nbsp;<a href='../board/board_read.php?index_no=<?=$board_no?>&amp;bbs_no=1&amp;mart_id=<?=$mart_id?>'>
+                      <?=$board_title?>
+                    </a></td>
+                  </tr>
+                  <?
+		}
+		if( $board_res ){
+			mysql_free_result( $board_res );
+		}
+		?>
+                </table></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+	  <tr>
+        <td height="40">&nbsp;</td>
+      </tr>
+	 </table></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" background="../images_home/foot_bg.gif">
+  <tr>
+    <td align="center"><table width="1000" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><img src="../images_home/foot_top.gif" border="0" usemap="#foott" /></td>
+      </tr>
+      <tr>
+        <td><table width="1000" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><img src="../images_home/foot.gif" /></td>
+            <td><div align=center>
+<!-- KB에스크로 이체 인증마크 적용 시작 -->
+<script>
+function onPopKBAuthMark()
+{
+window.open('','KB_AUTHMARK','height=604, width=648, status=yes, toolbar=no, menubar=no, location=no');
+document.KB_AUTHMARK_FORM.action='https://okbfex.kbstar.com/quics';
+document.KB_AUTHMARK_FORM.target='KB_AUTHMARK';
+document.KB_AUTHMARK_FORM.submit();
+}
+</script>
+<form name="KB_AUTHMARK_FORM" method="get">
+<input type="hidden" name="page" value="C021590"/>
+<input type="hidden" name="cc" value="b034066:b035526"/>
+<input type="hidden" name="mHValue" value='9db17ab0fd99d63af093e248eca4656f201602171508741'/>
+</form>
+<a href="#" onclick="javascript:onPopKBAuthMark();return false;">
+<img src="http://img1.kbstar.com/img/escrow/escrowcmark.gif" border="0"/>
+</a>
+<!-- KB에스크로이체 인증마크 적용 종료 -->
+</div></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+
+
+
+
+
+
+<? include "../skin/latest.item.skin.php"; ?>
+<map name="foott" id="foott">
+<area shape="rect" coords="1,13,97,39" href="../member/mem_rule.html" />
+<area shape="rect" coords="96,13,207,39" href="../member/mem_person.html" />
+<area shape="rect" coords="206,13,303,39" href="http://www.ftc.go.kr/info/bizinfo/communicationView.jsp?apv_perm_no=2016332008830200047&amp;area1=&amp;area2=&amp;currpage=1&amp;searchKey=04&amp;searchVal=6061440113&amp;stdate=&amp;enddate=" target="_blank" />
+<area shape="rect" coords="303,13,364,39" href="../board/board_list.php?bbs_no=4" />
+<area shape="rect" coords="367,13,459,39" href="http://itforu.co.kr/" target="_blank" />
+<area shape="rect" coords="949,13,999,39" href="#" />
+</map>
+<map name="bankk" id="bankk"><area shape="rect" coords="2,104,97,133" href="../board/board_list.php?bbs_no=2" /><area shape="rect" coords="101,105,197,135" href="../board/change.html" />
+</map>

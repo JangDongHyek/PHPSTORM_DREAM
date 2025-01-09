@@ -1,0 +1,32 @@
+<style>
+.copy p{letter-spacing:0px;}
+</style>
+		<footer>
+			<div class="menu">
+		<dl>
+			<dd><?
+					if(!$UnameSess || !$MemberLevel || !$MemberName)
+					{
+						if($NonMemberName)
+						{
+							$Logined_Member_Name = $NonMemberName;
+							echo"<a href='../main/logout.php'>로그아웃</a>";
+						}
+						else
+							echo"<a href='../main/login.html'>로그인</a>";
+					}else{
+						$Logined_Member_Name = $UnameSess;
+						echo"<a href='../main/logout.php'>로그아웃</a>";
+					}
+					?></a></dd>
+			
+			<dd><a href="../../market/main/" target="_blank">PC버전</a></dd>
+			<dd><a href="sms:01035778959">문자전송</a></dd>
+			<dd style="border:0px;" class="last"><a href="tel:0803418959">전화걸기</a></dd>
+		</dl>
+</div>
+			<div class="copy">
+			  <p>부성바이오 | 주소 : 부산광역시 북구 낙동대로 1780번길 73(구포동, 대현빌딩 5층) | 전화 : 080-341-8959 / 010-3577-8959 | 사업자등록번호 : 606-14-40113 | 통신판매업신고번호 : 2016-부산북구-0047 | 대표자명 : 한금비 | 이메일 : hani1299@hanmail.net</p>
+              <div class="copyright">Copyright 2016 BUSUNG BIO. All rights reserved.</div>
+</div>
+		</footer>

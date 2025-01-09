@@ -1,0 +1,75 @@
+<?
+//================== DB 설정 파일을 불러옴 ===============================================
+include "../../connect.php";
+//================== 함수 파일을 불러옴 ==================================================
+include "../../main.class";
+?>
+<?
+include "../include/getmartinfo.php";
+include "../include/head_alltemplate.php";
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>현대카드무이자할부안내</title>
+<meta http-equiv="imagetoolbar" content="no">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+.t11 {
+	font-family: "돋움";
+	font-size: 11px;
+	color: #515151;
+}
+#Layer1 {
+	position:absolute;
+	left:0px;
+	top:562;
+	width:100%;
+	height:69px;
+	z-index:1;
+}
+-->
+</style>
+
+<SCRIPT language="JavaScript">
+<!--
+<!-- 
+function setCookie( name, value, expiredays ) 
+{ 
+	var todayDate = new Date(); 
+	todayDate.setDate( todayDate.getDate() + expiredays ); 
+	document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+	} 
+
+function closeWin() 
+{ 
+	if ( document.pop.notice1.checked ) 
+	setCookie( "notice1", "done" , 1);//1은 하루동안 새창을 열지 않게 합니다.
+	window.close(); 
+} 
+// -->
+
+function MM_callJS(jsStr) { //v2.0
+  return eval(jsStr)
+}
+//-->
+</SCRIPT>
+</head>
+
+
+<body topmargin="0" leftmargin="0">
+<table width="1%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><img src="../main/hyun.jpg" width="342" height="363"></td>
+  </tr>
+  <tr>
+    <td align="center"> <form name=pop> 
+
+<input type=checkbox name="notice1" value="">
+        다음부터 공지창 띄우지 않음 <a href="javascript:history.onclick=closeWin()"><strong>[닫기]</strong></a>
+    </form> </td>
+  </tr>
+</table>
+</body>
+</html>
