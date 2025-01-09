@@ -315,7 +315,7 @@ jindo.FileUploader = jindo.$Class({
             this._aHiddenInput.length = 0;
             this._removeIframe();
         }, this).bind();
-        
+
         elForm.submit();
         if (this.option("bAutoReset")) {
             this.reset();

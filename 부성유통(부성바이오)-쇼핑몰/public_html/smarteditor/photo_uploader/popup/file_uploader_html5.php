@@ -1,7 +1,7 @@
 <?php
  	$sFileInfo = '';
 	$headers = array();
-	 
+
 	foreach($_SERVER as $k => $v) {
 		if(substr($k, 0, 9) == "HTTP_FILE") {
 			$k = substr(strtolower($k), 5);

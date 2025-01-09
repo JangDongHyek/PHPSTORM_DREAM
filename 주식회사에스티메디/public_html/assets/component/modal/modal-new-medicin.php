@@ -79,6 +79,7 @@
 
                     del_yn : "N",
                     use_yn : "Y",
+                    USE_GU_YN : "Y",
                     group_like_key : "PRODUCT_NM",
                     group_like_value : "",
                 },

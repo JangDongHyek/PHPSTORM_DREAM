@@ -129,7 +129,7 @@ select {height: 22px;}
             <li>
                 <a href="<?php echo $list[$idx][$i]['href'] ?><?php echo $comment_href ?>" class="sch_res_title"><?php echo $comment_def ?><?php echo $list[$idx][$i]['subject'] ?></a>
                 <a href="<?php echo $list[$idx][$i]['href'] ?><?php echo $comment_href ?>" target="_blank">새창</a>
-                <p><?php echo $list[$idx][$i]['content'] ?></p>
+                <!--<p>--><?php //echo $list[$idx][$i]['content'] ?><!--</p>-->
                 <?php echo $list[$idx][$i]['name'] ?>
                 <span class="sch_datetime"><?php echo $list[$idx][$i]['wr_datetime'] ?></span>
             </li>
