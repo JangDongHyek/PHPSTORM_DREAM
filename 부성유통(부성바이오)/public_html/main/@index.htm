@@ -1,0 +1,128 @@
+<? 
+   $site_path = "/home/buseong/public_html/bbs/"; 
+   $site_url = "../bbs/";
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style>
+</head>
+<script language='JavaScript' src='../js/printEmbed.js'></script>
+<script language='JavaScript' src='../js/script.js'></script>
+<SCRIPT LANGUAGE="JavaScript"> 
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+ 
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+ 
+if ( getCookie( "Notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop_chu.htm','notice1','left=0, top=0, width=500,height=655,scrollbars=no');
+	//noticeWindow.opener = self;
+} 
+ 
+ 
+// -->
+</SCRIPT>
+<body>
+<? include '../inc/main_top.htm'; ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main/bg01.jpg" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="1000"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td background="../images/main/main_visual_bg.jpg" height="394">
+        <script type="text/javascript">flashWrite('../swf/mvisual.swf?pageNum=<?=$num?>','1000','394','transparent')</script>
+       <!-- <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="1000" height="394">
+          <param name="movie" value="../swf/mvisual.swf">
+          <param name="quality" value="high"><param name="wmode" value="transparent">
+          <embed src="../swf/mvisual.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="1000" height="394"></embed>
+        </object>--></td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><a href="../bbs/list.php?bbs_id=noticee"><img src="../images/main/notice_title.gif" width="248" height="49" border="0"></a></td>
+              </tr>
+              <tr>
+                <td height="92" valign="top" background="../images/main/notice_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td width="22">&nbsp;</td>
+                      <td><?=rg_lastest('default','noticee','공지사항',4,25, '...')?></td>
+                    </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><a href="../bbs/list.php?bbs_id=qnaa"><img src="../images/main/qna_title.gif" width="252" height="49" border="0"></a></td>
+              </tr>
+              <tr>
+                <td height="92" valign="top" background="../images/main/qna_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td width="22">&nbsp;</td>
+                      <td><?=rg_lastest('default','qnaa','자주하는질문',4,25, '...')?></td>
+                    </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td><img src="../images/main/call.gif" width="500" height="141" border="0" usemap="#exxx"></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="500" height="139">
+              <param name="movie" value="../swf/banner.swf">
+              <param name="quality" value="high"><param name="wmode" value="transparent">
+              <embed src="../swf/banner.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="500" height="139"></embed>
+            </object></td>
+            <td><img src="../images/main/store.gif" width="500" height="139" border="0" usemap="#movieeeeeee"></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td background="../images/main/bg02.jpg" style="background-repeat:no-repeat; background-position:left;">&nbsp;</td>
+  </tr>
+</table>
+<? include '../inc/copy.htm'; ?>
+
+<map name="exxx">
+  <area shape="rect" coords="17,96,97,120" href="../bbs/list.php?bbs_id=casee&ss[fc]=27">
+</map></body>
+</html>
+<map name="movieeeeeee">
+<area shape="rect" coords="287,25,477,49" href="#" onClick="javascript:void(window.open('../main/movie.htm','popup','resizable=no,width=640,height=360,scrollbars=no'))">
+<area shape="rect" coords="290,54,478,81" href="#" onClick="javascript:void(window.open('../main/movie2.htm','popup2','resizable=no,width=640,height=360,scrollbars=no'))">
+<area shape="rect" coords="288,83,476,111" href="#" onClick="javascript:void(window.open('../main/movie3.htm','popup3','resizable=no,width=640,height=360,scrollbars=no'))">
+<area shape="rect" coords="5,18,278,120" href="#" onClick="javascript:void(window.open('../main/movie5.htm','popup','resizable=no,width=640,height=360,scrollbars=no'))">
+</map>

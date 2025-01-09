@@ -1,0 +1,18 @@
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="css/m_style.css" />
+		<div id="footer">
+        <? if($mobile_app != 1) { ?>
+			<div class="menu">
+				<dl>
+					<dd><? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?><a href="../bbs/mb_logout.php?url=../mobile/">로그아웃</a><? } else{ //로그아웃 상태일때 ?><a href="../bbs/mobile_mb_login.php?url=../mobile/">로그인</a><? } ?></dd>
+					<dd><a href="tel:0513418959">전화하기 </a></dd>
+					<dd><a href="../bbs/mobile_list.php?bbs_id=qnaa">자주하는 질문</a></dd>
+                    <dd style="border:0px;" class="last"><a href="../main/" target="_blank">PC버전 </a></dd>			
+              </dl>
+            </div><!--.menu-->
+        <?}?>    
+            <div class="copy">
+			  <p>부성바이오 l 주소:부산시 북구 구포1동 613-21 핵산 총괄지사 5층<br>전화문의 : 051-341-8959 l H.P.:010-3577-8959<br>사업자번호:606-14-40113 | 대표자:한금비</p>
+			</div><!--.copy-->
+			<div class="copyright">copyright(c)2015. All rights reserved.</div><!--.copyright-->
+		</div><!--#footer-->

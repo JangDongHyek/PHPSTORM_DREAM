@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<title>모바일홈페이지</title>
+<link rel="stylesheet" type="text/css" href="css/m_style.css" />
+<style type="text/css">
+</style>
+</head>
+
+<body>
+<div id="wrap">
+    <? include 'top.htm'; ?>	      
+    <div class="subm2">
+            <dl>
+                <dd><a href="../mobile/s1.htm">인사말</a></dd>
+                <dd><a href="../mobile/s1_2.htm" class="on">오시는길</a></dd>
+            </dl>
+    </div><!--.subm-->
+    <div id="s_body_sub">
+     	<div class="map_txt">
+        	<p>부성바이오 오시는길 안내</p>
+            <span>◆ 주소 : 부산시 북구 구포1동 613-21 핵산 총괄지사 5층<br /> ◆ 전화문의 : 051-341-8959, 010-3577-8959</span>
+        </div><!--.map_txt-->
+        <div class="map">
+<center>
+<!-- * Daum 지도 - 지도퍼가기 -->
+<!-- 1. 지도 노드 -->
+<div id="daumRoughmapContainer1484632862299" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+
+<!--
+	2. 설치 스크립트
+	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
+-->
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="http://dmaps.daum.net/map_js_init/roughmapLoader.js"></script>
+
+<!-- 3. 실행 스크립트 -->
+<script charset="UTF-8">
+	new daum.roughmap.Lander({
+		"timestamp" : "1484632862299",
+		"key" : "ffpw",
+		"mapWidth" : "330",
+		"mapHeight" : "300"
+	}).render();
+</script>
+</div><!--.map-->
+    </div><!--#s_body-->
+    <? include 'foot.htm'; ?>
+</div><!--#wrap-->
+</body>
+</html>

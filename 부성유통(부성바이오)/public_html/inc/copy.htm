@@ -1,0 +1,119 @@
+<SCRIPT language=javascript >
+
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+
+var isDOM = (document.getElementById ? true : false); 
+var isIE4 = ((document.all && !isDOM) ? true : false);
+var isNS4 = (document.layers ? true : false);
+var isNS = navigator.appName == "Netscape";
+var MainNavTopMargin = 40;
+
+
+function getRef(id) 
+{
+	if (isDOM) return document.getElementById(id);
+	if (isIE4) return document.all[id];
+	if (isNS4) return document.layers[id];
+}
+
+</SCRIPT>
+
+
+
+<div style='position:absolute; top:63px; left:51%; z-index:1;'>
+<div id="MainNav" style='position:absolute;top:180;left:495'>
+<SCRIPT language=javascript>
+<!--
+function MoveMainNav() 
+{
+	var yMenuFrom, yMenuTo, yDistance, yOffset, timeoutNextCheck, LyrTop;
+	
+	
+	if(document.body.scrollTop > MainNavTopMargin){
+		LyrTop = 40;
+		}
+	else{
+		LyrTop = MainNavTopMargin - document.body.scrollTop ;
+		}
+	
+	
+
+	if (isNS4) 
+	{
+		yMenuFrom   = MainNav.top;
+		yMenuTo     = windows.pageYOffset + LyrTop;
+	} 
+	else if (isDOM) 
+	{
+		yMenuFrom   = parseInt (MainNav.style.top, 10);
+		yMenuTo     = (isNS ? window.pageYOffset + LyrTop : document.body.scrollTop + LyrTop);
+	}
+	timeoutNextCheck = 300;
+
+
+
+	if (yMenuFrom != yMenuTo) 
+	{
+		window.focus();
+		yDistance = yMenuTo - yMenuFrom;
+		yOffset = Math.ceil(Math.abs(yDistance) / 10);
+
+		if (yMenuTo < yMenuFrom) yOffset = -yOffset;
+		
+		if (isNS4) MainNav.top += yOffset;
+		else if (isDOM)MainNav.style.top = parseInt (MainNav.style.top, 10) + yOffset;
+		
+		timeoutNextCheck = 10;
+	}
+	setTimeout ("MoveMainNav()", timeoutNextCheck);
+}
+
+if (isNS4) 
+{
+	var MainNav = document["MainNav"];
+	MainNav.top = top.pageYOffset;
+	MainNav.visibility = "visible";
+} 
+else if (isDOM) 
+{
+	var MainNav = getRef('MainNav');
+	MainNav.style.top = MainNavTopMargin;
+	MainNav.style.visibility = "visible";
+}
+
+
+MoveMainNav();
+//-->
+</SCRIPT>
+<img src="../images/main/quick.jpg" border="0" usemap="#Map2" /></div>
+</div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main/footer_bg01.gif" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="1000"><img src="../images/main/footer.gif" width="1000" height="97" border="0" usemap="#Map_copy" /></td>
+    <td background="../images/main/footer_bg02.gif" style="background-repeat:no-repeat; background-position:left;">&nbsp;</td>
+  </tr>
+</table>
+
+
+<map name="Map2" id="Map2">
+<!--area shape="rect" coords="6,127,69,187"  href="#" onClick="javascript:void(window.open('../main/movie.htm','popup','resizable=no,width=640,height=360,scrollbars=no'))"-->
+<area shape="rect" coords="4,69,67,126" href="../bbs/list.php?bbs_id=qnaa" />
+<area shape="rect" coords="7,10,67,68" href="http://www.smartbusan.co.kr/~buseong_r/" target="_blank" />
+<area shape="rect" coords="6,190,68,247" href="../bbs/view.php?bbs_id=casee&amp;doc_num=34&amp;ss[fc]=27" target="_blank" />
+
+<area shape="rect" coords="7,253,69,269" href="#" /></map>
+
+<map name="Map_copy" id="Map_copy">
+<area shape="rect" coords="10,12,70,39" href="../main/sub1.htm" />
+<area shape="rect" coords="69,12,160,39" href="../bbs/list.php?bbs_id=pro_gal01" />
+<area shape="rect" coords="159,12,238,39" href="../bbs/list.php?bbs_id=qnaa" />
+<area shape="rect" coords="237,12,297,39" href="../main/sub1_2.htm" />
+<area shape="rect" coords="879,11,988,32" href="http://www.letsit.kr/" target="_blank" />
+</map>
