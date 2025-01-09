@@ -38,8 +38,8 @@
                                         <input type="text" class="input_task" placeholder="상세 작업 내용을 입력하세요" v-model="item.content" />
                                         <button class="btn btn_mini btn_gray" @click="deleteScheduleData(index,index2)">삭제</button>
                                     </div>
-                                    <label class="btn btn_mini btn_line" :for="'f'+index2">업로드</label>
-                                    <input type="file" style="display: none" :id="'f'+index2" @change="jl.changeFile($event,item,'file',this);">
+                                    <label class="btn btn_mini btn_line" :for="'f'+index+index2">업로드</label>
+                                    <input type="file" style="display: none" :id="'f'+index+index2" @change="jl.changeFile($event,item,'file');">
                                     <!--<button class="btn btn_mini btn_line">업로드</button>-->
                                     <!--<button class="btn btn_mini btn_blue" data-toggle="modal" data-target="#downloadModal">다운로드</button>-->
 

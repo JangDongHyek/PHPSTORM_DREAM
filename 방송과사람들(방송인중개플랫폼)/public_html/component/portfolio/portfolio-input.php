@@ -47,7 +47,7 @@
                                     <li class="file_1" v-for="item,index in data.main_image_array">
                                         <div class="area_img">
                                             <img :src="item.preview ? item.preview : jl.root+item.src">
-                                            <div class="area_delete" @click="data.main_image_array.splice(index,1)"><span class="sound_only">삭제</span></div>
+                                            <div class="area_delete" @click="data['main_image_array'].splice(index,1)"><span class="sound_only">삭제</span></div>
                                         </div>
                                     </li>
 								</ul>
@@ -205,6 +205,30 @@
             });
         },
         methods: {
+            async deleteImage(key,index) {
+                let file = this.data[key][index];
+
+                if(file.dir) {
+                    if(!confirm("해당 이미지는 저장과 상관없이 바로 삭제됩니다 삭제하시겠습니까?")) return false;
+                    this.data[key].splice(index,1)
+
+                    let data = {
+                        table : "member_portfolio",
+                        idx : this.data.idx
+                    }
+                    data[key] = this.data[key];
+
+                    try {
+                        let res = await this.jl.ajax("update",data,"/jl/JlApi.php");
+                        window.location.reload();
+                    }catch (e) {
+                        alert(e.message)
+                    }
+
+                }else {
+                    this.data[key].splice(index,1)
+                }
+            },
             addMovie() {
                 if(this.data.movie_link.length >= 10) {
                     alert("동영상 등록은 최대 10개입니다.");
@@ -267,12 +291,20 @@
                 }
 
                 var method = this.primary ? "update" : "insert";
-                var res = await this.jl.ajax(method, this.data, "/api/member_portfolio.php");
 
-                if (res) {
+                this.data.table = "member_portfolio";
+                this.data.file_use = true;
+
+
+                try {
+                    let res = await this.jl.ajax(method,this.data,"/jl/JlApi.php");
+
                     alert("완료 되었습니다.");
                     window.location.href = `${this.jl.root}/bbs/mypage_portfolio.php`;
+                }catch (e) {
+                    alert(e.message)
                 }
+
             },
             async getData() {
                 var filter = {primary : this.primary}

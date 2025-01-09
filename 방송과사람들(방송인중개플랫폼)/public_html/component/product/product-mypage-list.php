@@ -20,14 +20,17 @@
                                 <img :src="`${jl.root}${item.main_image_array[0].src}`">
                             </div>
                             <div class="area_txt">
-
-                                <span></span><!-- 업체명 -->
+                                <span v-if="item.approval"><i class="fa-solid fa-circle-check"></i> 승인완료</span>
+                                <span v-else><i class="fa-solid fa-circle-exclamation"></i> 승인대기</span>
                                 <h3>{{item.name}}</h3> <!-- 제목 -->
                                 <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
                                 <div class="price">{{getPrice(item).format()}}원 </div> <!-- 가격 -->
                             </div>
                         </a>
-                        <a class="list_btn" :href="`${jl.root}/bbs/item_write01.php?idx=${item.idx}`">수정</a> <!-- 제목 -->
+                        <div class="flex">
+                            <a class="list_btn" :href="`${jl.root}/bbs/item_write01.php?idx=${item.idx}`">수정</a> 
+                            <a class="list_btn" @click="deleteProduct(item)">삭제</a>
+                        </div>
                     </li>
                 </ul>
 
@@ -69,6 +72,24 @@
             });
         },
         methods: {
+            async deleteProduct(item) {
+                if(!confirm("정말 삭제하시겠습니까?")) return false;
+                let method = "delete";
+
+                let filter = {
+                    table : "member_product",
+                    primary : item.idx, // delete일시 primary 카깂을 넣으면된다 primary 키값이 아니라면 삭제 안됌
+
+                    file_use : true, // 저장된 파일 삭제할지 안할지 삭제할시 데이터의 컬럼명 이들어가야한다
+                }
+                try {
+                    let res = await this.jl.ajax(method,filter,"/jl/JlApi.php");
+                    alert("삭제되었습니다.");
+                    window.location.reload();
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             calcReview : function(item) {
                 if(item.review_count == 0) return 0;
 

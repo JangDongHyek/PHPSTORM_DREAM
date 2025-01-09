@@ -62,6 +62,7 @@
                     try {
                         let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
                         this.data = res.data[0]
+                        this.paging.count = res.count;
                     } catch (e) {
                         alert(e.message)
                     }

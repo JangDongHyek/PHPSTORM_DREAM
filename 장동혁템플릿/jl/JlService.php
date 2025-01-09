@@ -67,8 +67,6 @@ class JlService extends Jl{
     }
 
     public function get() {
-        $this->model->setFilter($this->obj);
-
         $join = null;
         $extensions = array();
         if(isset($this->obj['join'])) $join = $this->jsonDecode($this->obj['join']);
@@ -89,8 +87,11 @@ class JlService extends Jl{
             //$model->like("join_column","value","AND",$join_table);
 
             if($join['source']) $getInfo['source'] = $join['table'];
-            if($join['select']) $getInfo['select'] = $join['select'];
+            if($join['select']) $getInfo['select'] = $this->jsonDecode($join['select']);
         }
+
+        $this->model->setFilter($this->obj);
+
 
         $object = $this->model->where($this->obj)->get($getInfo);
 
@@ -144,16 +145,18 @@ class JlService extends Jl{
 
         if($this->file_use) {
             //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
-            $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
+            //$getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
 
             foreach ($this->FILES as $key => $file_data) {
+                $objKeyValue = $this->jsonDecode($this->obj[$key],false);
+
                 $file_result = $this->jl_file->bindGate($file_data);
                 if(!$file_result) continue;
 
                 if(is_array($file_data['name'])) {
                     //바인드의 리턴값은 encode되서 오기때문에 decode
                     $file_result = json_decode($file_result, true);
-                    $result = array_merge($getData[$key],$file_result);
+                    $result = array_merge($objKeyValue,$file_result);
                     //문자열로 저장되어야하기떄문에 encode
                     $this->obj[$key] = json_encode($result,JSON_UNESCAPED_UNICODE);
                 }else {
