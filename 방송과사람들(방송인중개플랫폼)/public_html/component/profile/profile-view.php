@@ -69,16 +69,7 @@
                                 </dl>
                             </div>
                             <div class="box_line">
-                                <h4>경력 사항</h4>
-                                <dl class="grid" >
-                                    <template v-for="item in career">
-                                        <dt>{{item.name}}</dt>
-                                        <dd>{{item.year}}년 {{item.month}}개월</dd>
-                                    </template>
-                                </dl>
-                            </div>
-                            <div class="box_line">
-                                <h4>관련 기술</h4>
+                                <h4>전문분야/기술</h4>
                                 <div class="tag">
                                     <span v-for="item in member.job_skills">{{item}}</span>
                                 </div>
@@ -101,6 +92,15 @@
                                     </template>
                                 </dl>
                             </div>
+                            <div class="box_line">
+                                <h4>경력사항</h4>
+                                <dl class="grid" >
+                                    <template v-for="item in career">
+                                        <dt>{{item.name}}</dt>
+                                        <dd>{{item.year}}년 {{item.month}}개월</dd>
+                                    </template>
+                                </dl>
+                            </div>
                         </section>
                         <section id="area_service">
                             <h3>서비스</h3>
@@ -111,7 +111,6 @@
                             <h3>포트폴리오
                                 <!--<button type="button" class="btn btn_gr">더보기</button>-->
                             </h3>
-
                             <part-member-portfolio :mb_no="mb_no" :login_mb_no="login_mb_no"></part-member-portfolio>
                         </section>
 

@@ -127,7 +127,7 @@
             async getProduct() {
                 let filter = {
                     table : "member_product",
-                    member_idx : this.mb_no,
+                    //member_idx : this.mb_no,
                     approval : "1",
 
                     where : [

@@ -48,6 +48,10 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
+            console.log(this.login_mb_no);
+            console.log(this.mb_no);
+
+
             this.getPortfolio();
             this.getLike();
         },
@@ -125,7 +129,7 @@
             async getPortfolio() {
                 let filter = {
                     table : "member_portfolio",
-                    member_idx : this.login_mb_no,
+                    member_idx : this.mb_no,
                 }
                 try {
                     let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");

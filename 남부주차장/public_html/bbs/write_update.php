@@ -340,7 +340,8 @@ if ($w == '' || $w == 'r') {
 		$wr_1=str_replace("-","/",substr($wr_1,5,strlen($wr_1)));
 		$wr_2=str_replace("-","/",substr($wr_2,5,strlen($wr_2)));
 		$msg=$wr_subject."\n".$wr_name."\n".$wr_1."\n".$wr_2;
-		goSms($wr_3,"0519733888",$msg);
+		//goSms($wr_3,"0519733888",$msg);
+        goSms($wr_3,"01066045191",$msg);
 		if($wr_subject=="유니티주차장"){
 			$msg=$wr_subject."- 부산광역시 강서구 공항앞길 221번길 45 유니티주차장입니다.";
 		}else if($wr_subject=="유카주차장"){
@@ -349,7 +350,8 @@ if ($w == '' || $w == 'r') {
 			$msg="남부주차장 - 부산광역시 강서구 공항로811번길 60-11 남부주차장 입니다.";
 			//$msg=$wr_subject."찾아오시는 길\n"."https://bit.ly/30hqQsK";
 		}
-		goSms($wr_3,"0519733888",$msg);
+		//goSms($wr_3,"0519733888",$msg);
+        goSms($wr_3,"01066045191",$msg);
 	}
 }  else if ($w == 'u') {
     if (get_session('ss_bo_table') != $_POST['bo_table'] || get_session('ss_wr_id') != $_POST['wr_id']) {

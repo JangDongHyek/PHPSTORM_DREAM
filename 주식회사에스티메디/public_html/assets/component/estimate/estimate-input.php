@@ -35,7 +35,13 @@
                         <h5>
                             <span>ST 견적 금액</span>
                             <span>일금 영 <b><em class="korUnit" data-number="900750">{{jl.numberToKorean(stTotalPrice())}}</em>원</b></span>
-                            <span><b>( ￦<em>{{stTotalPrice().format()}}</em>)</b> ※부가세 포함</span>
+                            <span><b>( ￦<em>{{stTotalPrice().format()}}</em>)</b></span>
+                        </h5>
+                    </div>
+                    <div class="table_total">
+                        <h5>
+                            <span>총 절감 금액</span>
+                            <span class="txt_red"><b>￦<em>{{(originTotalPrice() - stTotalPrice()).format()}}</em></b></span>
                         </h5>
                     </div>
                     <div class="table_wrap table">

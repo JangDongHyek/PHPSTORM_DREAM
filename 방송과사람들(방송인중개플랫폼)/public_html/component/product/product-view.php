@@ -73,7 +73,7 @@
                                         <img :src="jl.root+item.src">
                                     </div>
                                 </div>
-
+                                <br>
                                 <div>
                                     <h3>포트폴리오</h3>
                                     <part-product-portfolio :login_mb_no="member_idx" :product="data"></part-product-portfolio>
@@ -230,7 +230,7 @@
                         <div class="area_ft_list">
                             <div>
                                 <h3>포트폴리오</h3>
-                                <part-member-portfolio :login_mb_no="member_idx" :product="data"></part-member-portfolio>
+                                <part-member-portfolio :login_mb_no="member_idx" :mb_no="data.member_idx" :product="data"></part-member-portfolio>
                             </div>
 
                             <div>

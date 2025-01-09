@@ -4,11 +4,21 @@
         <div id="portfolio_view" class="view">
             <div class="inr">
 
+                <ul id="area_history">
+                    <li><a href="">홈</a></li>
+                    <li>
+                        <a class="current">포트폴리오</a>
+                    </li>
+                    <li>
+                        <a class="current">{{ member.mb_nick }} 님</a>
+                    </li>
+                </ul>
                 <div class="item_right">
                     <div class="item_hd">
-                        <div class="title">{{ member.mb_nick }} 님의 포트폴리오</div>
+                        <div class="title">{{ data.name }}</div>
+                        <!--div class="title">{{ member.mb_nick }} 님의 포트폴리오</div-->
                         <div class="btn_wrap">
-                            <!--신고하기버튼--><a class="btn_share"><i class="fa-regular fa-siren"></i></a>
+                            <!--신고하기버튼--><a class="btn_share"><i class="fa-regular fa-siren"></i></a>&nbsp;
                             <!--공유하기버튼--><a class="btn_share"><i class="fa-regular fa-share-nodes"></i></a>
                         </div>
                     </div>
@@ -25,10 +35,10 @@
                         </div>
                         <br>
                         <template v-for="item in member.mb_interest">
-                            <i class="cate">{{item}}</i> &nbsp;<!--전문분야-->
+                            <i class="cate">{{item}}</i> <!--전문분야-->
                         </template>
                         <span class="icon">{{data.CATEGORY.data[0].name}}</span>
-                        <h2>{{ data.name }}</h2>
+                        <h2></h2>
                         <div id="area_btn">
                             <a href="" class="box_btn">문의하기</a>
                             <!-- 찜하기 눌렀을 때 class="on"추가 -->
@@ -44,7 +54,17 @@
                                     <template v-for="item in data.main_image_array">
                                         <img :src="`${jl.root}${item.src}`">
                                     </template>
-
+                                </div>
+                                <br>
+                                <nav class="lnb">
+                                    <div class="inr">
+                                        <ul>
+                                            <li><a class="active">서비스설명</a></li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                                <br>
+                                <div class="area_img">
                                     <template v-for="item in data.content_image_array">
                                         <img :src="`${jl.root}${item.src}`">
                                     </template>
@@ -56,17 +76,15 @@
 
                             <section>
                                 <template v-for="link in data.movie_link" v-if="jl.extractYoutube(link)">
-                                    <div>
+                                    <div class="embed-container">
                                         <iframe
-                                                width="560"
-                                                height="315"
                                                 :src="'https://www.youtube.com/embed/' + jl.extractYoutube(link)"
                                                 title="YouTube video player"
                                                 frameborder="0"
                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                                 allowfullscreen>
                                         </iframe>
-                                    </div>
+                                    </div><br>
                                 </template>
                             </section>
 
@@ -96,10 +114,9 @@
                                             <i class="heart on"></i>
                                             <a href="https://itforone.com:443/~broadcast/bbs/item_view.php?idx=15">
                                                 <div class="area_img">
-                                                    <img src="https://itforone.com:443/~broadcast/data/file/main_img/0_2039270465__d3e9d3a90aff883a7a587b48a12d57dd7db70d9c.jpg" title="">
+                                                    <img :src="jl.root + '/theme/basic_app/img/noimg.jpg'">
                                                 </div>
                                                 <div class="area_txt">
-                                                    <span></span><!-- 업체명 -->
                                                     <h3>영상제작</h3> <!-- 제목 -->
                                                     <div class="price">50,000원 </div> <!-- 가격 -->
                                                     <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->

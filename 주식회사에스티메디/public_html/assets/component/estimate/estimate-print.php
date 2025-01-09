@@ -37,12 +37,17 @@
                 </tbody>
             </table>
         </div>
-        <h6 class="table_total">
+        <h6 class="table_total mb">
             <span>견적금액</span>
             <span>
 			<span>일금 영 <b><em class="korUnit" data-number="900750">{{jl.numberToKorean(stTotalPrice())}}</em>원</b></span>
                             <span><b>( ￦<em>{{stTotalPrice().format()}}</em>)</b> ※부가세 포함</span>
         </h6>
+		<h6 class="table_total">
+			<span>총 절감 금액</span>
+			<span class="txt_bold">&nbsp;<i class="fa-solid fa-down"></i> {{getDiscount()}}%</span>&nbsp;&nbsp;&nbsp;
+			<span class="txt_red"><b>￦<em>{{(originTotalPrice() - stTotalPrice()).format()}}</em></b></span>
+		</h6>
         <div class="table_wrap table">
             <table>
                 <colgroup>
@@ -188,6 +193,13 @@
             });
         },
         methods: {
+            getDiscount() {
+                let origin = this.originTotalPrice()
+                let st = this.stTotalPrice();
+                let result = ((origin - st) / origin * 100).toFixed(2)
+                if(isNaN(result)) return 0
+                return result;
+            },
             stTotalPrice() {
                 let price = 0;
 

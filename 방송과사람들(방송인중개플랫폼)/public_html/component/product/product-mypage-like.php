@@ -52,10 +52,9 @@
                 likes : []
             };
         },
-        created: function(){
+        async created(){
             this.jl = new Jl('<?=$componentName?>');
-            this.getLike();
-            this.getData();
+            await this.getLike();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -89,7 +88,7 @@
 
                 if(likes.length == 0) return false;
 
-                var filter = {group_ors :likes,member_idx : this.mb_no}
+                var filter = {group_ors :likes}
                 var res = await this.jl.ajax("get",filter,"/api/member_product.php");
 
                 if(res) {
@@ -124,6 +123,8 @@
 
                 if(res) {
                     this.likes = res.response.data
+
+                    await this.getData();
                 }
             }
         },

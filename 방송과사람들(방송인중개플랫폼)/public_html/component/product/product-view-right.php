@@ -2,10 +2,10 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div class="item_right">
         <div class="item_info">
-            <template v-for="item in data.keywords">
+            <template v-for="item in product.keywords">
                 <i class="cate">{{item}}</i>
             </template>
-            <h3 class="subject">{{data.name}}</h3>
+            <h3 class="subject">{{product.name}}</h3>
             <div class="company_info">
                 <div class="profile_box">
                     <div class="profile">
