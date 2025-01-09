@@ -238,7 +238,7 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.getData();
+            if(this.primary) this.getEstimate();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -246,6 +246,18 @@
             });
         },
         methods: {
+            async getEstimate() {
+                try {
+                    let filter = {
+                        idx : this.primary
+                    };
+                    let res = await this.jl.ajax("get",filter,"/api/bs_estimate");
+                    //this.data = res.data[0]
+                    this.carts = res.data[0].contents;
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             getDiscount() {
                 let origin = this.originTotalPrice()
                 let st = this.stTotalPrice();
@@ -271,6 +283,8 @@
                     mb_id : this.mb_id,
                     contents : this.carts
                 }
+
+                if(this.primary) obj.idx = this.primary;
 
                 try {
                     //if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");

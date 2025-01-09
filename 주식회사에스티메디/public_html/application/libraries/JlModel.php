@@ -188,7 +188,13 @@ class JlModel{
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
-                $this->where($item['key'],$item['value'],$operator,$source);
+                if (isset($item['key']) && strpos($item['key'], '.') !== false) {
+                    $keyParts = explode('.', $item['key'], 2);
+                    $source = $keyParts[0];
+                    $item['key'] = $keyParts[1];
+                }
+
+                if($item['value']) $this->where($item['key'],$item['value'],$operator,$source);
             }
         }
 
@@ -199,7 +205,13 @@ class JlModel{
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
-                $this->like($item['key'],$item['value'],$operator,$source);
+                if (isset($item['key']) && strpos($item['key'], '.') !== false) {
+                    $keyParts = explode('.', $item['key'], 2);
+                    $source = $keyParts[0];
+                    $item['key'] = $keyParts[1];
+                }
+
+                if($item['value']) $this->like($item['key'],$item['value'],$operator,$source);
             }
         }
 
@@ -210,7 +222,13 @@ class JlModel{
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
-                $this->between($item['key'],$item['start'],$item['end'],$operator,$source);
+                if (isset($item['key']) && strpos($item['key'], '.') !== false) {
+                    $keyParts = explode('.', $item['key'], 2);
+                    $source = $keyParts[0];
+                    $item['key'] = $keyParts[1];
+                }
+
+                if($item['start'] && $item['end']) $this->between($item['key'],$item['start'],$item['end'],$operator,$source);
             }
         }
 
@@ -221,7 +239,14 @@ class JlModel{
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
-                $this->in($item['key'],$this->jsonDecode($item['array']),$operator,$source);
+                if (isset($item['key']) && strpos($item['key'], '.') !== false) {
+                    $keyParts = explode('.', $item['key'], 2);
+                    $source = $keyParts[0];
+                    $item['key'] = $keyParts[1];
+                }
+
+                $values = $this->jsonDecode($item['array']);
+                if(count($values)) $this->in($item['key'],$values,$operator,$source);
             }
         }
 
@@ -233,6 +258,12 @@ class JlModel{
                 $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
+
+                if (isset($item['key']) && strpos($item['key'], '.') !== false) {
+                    $keyParts = explode('.', $item['key'], 2);
+                    $source = $keyParts[0];
+                    $item['key'] = $keyParts[1];
+                }
 
                 $this->where($item['key'],$item['value'],$operator,$source);
             }
@@ -248,6 +279,12 @@ class JlModel{
                 $item = $this->jsonDecode($array);
                 $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
+
+                if (isset($item['key']) && strpos($item['key'], '.') !== false) {
+                    $keyParts = explode('.', $item['key'], 2);
+                    $source = $keyParts[0];
+                    $item['key'] = $keyParts[1];
+                }
 
                 $this->like($item['key'],$item['value'],$operator,$source);
             }
@@ -447,6 +484,7 @@ class JlModel{
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
+                    if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
 
@@ -466,6 +504,7 @@ class JlModel{
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
                 foreach ($row as $key => $value) {
+                    if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
                     $decoded_value = json_decode($value, true);
 
@@ -499,6 +538,7 @@ class JlModel{
         $search_sql = " AND $this->primary='{$param[$this->primary]}' ";
 
         foreach($param as $key => $value){
+            if($key == "update_date") continue;
             if(in_array($key, $this->schema['columns'])){
                 if(!empty($update_sql)) $update_sql .= ", ";
 
@@ -960,6 +1000,10 @@ class JlModel{
 
     function jsonEncode($obj) {
         return $this->jl->jsonEncode($obj);
+    }
+
+    function error($obj) {
+        return $this->jl->error($obj);
     }
 
     function backup($tableName, $data,$date) {

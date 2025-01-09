@@ -6,6 +6,7 @@
 		<a class="btn btn_small btn_gray" href="">수정</a*/?>
             <a class="btn btn_small btn_black" :href="'./estimatePrint?idx='+primary" target="_blank">출력</a>
             <a class="btn btn_small btn_blueline" @click="postOrder();">구매</a>
+            <a class="btn btn_small btn_blueline" :href="'./estimateInput?primary='+primary">수정</a>
             <a class="btn btn_small btn_blue male-auto" href="./estimate">목록</a>
         </div>
 

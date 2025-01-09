@@ -247,8 +247,8 @@ class Jl {
 
         if(in_array('bootstrap',$plugins)) {
             if(!in_array("bootstrap",self::$PLUGINS)) {
-                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-o3pO8HUlU1KpMy2X8CCatUcsDD3T4PAtdU1sK3c4R33zE0M7nb9xr5+eTMVRGz+g" crossorigin="anonymous">';
-                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-v06KyMCIhVXp1qWiMHLKP8o+AKZCL+a59W8KJrC6V+5jMEjOemLEdZomKsm9FmQz" crossorigin="anonymous"></script>';
+                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>';
+                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
                 array_push(self::$PLUGINS,"bootstrap");
             }
         }
@@ -262,7 +262,7 @@ class Jl {
             $this->jsLoad($plugins);
             if($this->DEV) {
                 if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>';
-                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             }
             else {
                 if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>';

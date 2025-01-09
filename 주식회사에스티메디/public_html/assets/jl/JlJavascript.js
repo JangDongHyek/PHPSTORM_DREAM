@@ -1,3 +1,37 @@
+// int일경우 자동으로 컴마가 붙는 프로토타입
+Number.prototype.format = function (n, x) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
+// Date 타입의 변수 자동으로 포맷팅 YYYY-MM-DD 로 반환됌
+Date.prototype.format = function () {
+    const year = this.getFullYear();
+    const month = String(this.getMonth() + 1).padStart(2, '0');
+    const day = String(this.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
+
+/**
+ * 숫자(바이트 단위)를 읽기 쉬운 크기 단위로 변환하는 프로토타입
+ * @param {number} decimals - 소수점 자릿수 (기본값: 2)
+ * @returns {string} 읽기 쉬운 크기 단위 (예: "408 KB", "3.5 MB")
+ */
+Number.prototype.formatBytes = function (decimals = 2) {
+    if (this === 0) return '0 Bytes';
+
+    const k = 1024; // 1 KB = 1024 Bytes
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const dm = decimals < 0 ? 0 : decimals;
+
+    // 단위 결정
+    const i = Math.floor(Math.log(this) / Math.log(k));
+    const size = parseFloat((this / Math.pow(k, i)).toFixed(dm));
+
+    return `${size} ${sizes[i]}`;
+};
+
 class JlJavascript {
     constructor(jl) {
         this.jl = jl;

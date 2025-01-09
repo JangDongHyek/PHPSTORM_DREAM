@@ -21,6 +21,8 @@ class Jl {
     public  $ROOT;
     public  $URL;
     public $RESOURCE;
+
+    public static $TRACE = false;
     public static $JS_LOAD = false;            // js 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $VUE_LOAD = false;            // vue 두번 로드 되는거 방지용 static 변수는 페이지 변경시 초기화됌
     public static $PLUGINS = array();
@@ -38,6 +40,9 @@ class Jl {
         $this->COMPONENT = JL_COMPONENT;
         $this->ENV = $this->getEnv();
         $this->RESOURCE = $this->getJlPath()."/jl_resource";
+
+        //PHP INI 설정가져오기
+        $this->PHP = ini_get_all();
 
         if($load) {
             $this->INIT();
@@ -121,8 +126,8 @@ class Jl {
         if($this->isVersion()) $value = json_encode($data,JSON_UNESCAPED_UNICODE);
         else $value = $this->decodeUnicode(json_encode($data));
 
+        $value = str_replace('\\/', '/', $value);
         return $value;
-        //return addslashes($value);
     }
 
     //상황에 필요한 로직들을 넣은 Jsondecode 함수
@@ -185,8 +190,10 @@ class Jl {
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
             echo "let Jl_watch = {};";
-            echo "let Jl_components = {};";
             echo "let Jl_computed = {};";
+            //Vue3 데이터 연동을 위한 변수
+            echo "let Jl_vue = [];";
+            echo "let Jl_components = [];";
             echo "</script>";
             echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
             if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
@@ -205,9 +212,7 @@ class Jl {
     }
 
     function pluginLoad($plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
+        $plugins = $this->convertToArray($plugin);
 
         if(in_array('drag',$plugins)) {
             if(!in_array("drag",self::$PLUGINS)) {
@@ -242,8 +247,8 @@ class Jl {
 
         if(in_array('bootstrap',$plugins)) {
             if(!in_array("bootstrap",self::$PLUGINS)) {
-                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-o3pO8HUlU1KpMy2X8CCatUcsDD3T4PAtdU1sK3c4R33zE0M7nb9xr5+eTMVRGz+g" crossorigin="anonymous">';
-                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-v06KyMCIhVXp1qWiMHLKP8o+AKZCL+a59W8KJrC6V+5jMEjOemLEdZomKsm9FmQz" crossorigin="anonymous"></script>';
+                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>';
+                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
                 array_push(self::$PLUGINS,"bootstrap");
             }
         }
@@ -255,12 +260,16 @@ class Jl {
 
         if(!self::$VUE_LOAD) {
             $this->jsLoad($plugins);
-            echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
-
-            if(in_array('drag',$plugins)) {
-                echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
-                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
+            if($this->DEV) {
+                if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             }
+            else {
+                if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+
+            }
+
             self::$VUE_LOAD = true;
         }
 
@@ -269,10 +278,11 @@ class Jl {
 
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
-        echo "vueLoad('$app_name')";
+        echo "vue".VUE_VERSION."Load('$app_name')";
         echo "}, false);";
         echo "</script>";
     }
+
     // Vue 컴포넌트를 로드하는 함수
     function componentLoad($path) {
         if($path[0] != "/") $path = "/".$path;
@@ -589,6 +599,67 @@ class Jl {
         }
     }
 
+    function getCurrentUrl() {
+        // 프로토콜 확인 (http/https)
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+
+        // 호스트 (도메인)
+        $host = $_SERVER['HTTP_HOST']; // 도메인 또는 IP 주소
+
+        // 요청된 URI (경로 + 쿼리)
+        $uri = $_SERVER['REQUEST_URI']; // "/path/to/page?query=1"
+
+        // 경로 (쿼리스트링 제외)
+        $path = parse_url($uri, PHP_URL_PATH); // "/path/to/page"
+
+        // 쿼리스트링
+        $queryString = $_SERVER['QUERY_STRING'] ?? ''; // "query=1"
+
+        // 포트 (기본 포트 제외)
+        $port = $_SERVER['SERVER_PORT'];
+        $portInfo = ($port === "80" && $protocol === "http") || ($port === "443" && $protocol === "https") ? "" : ":$port";
+
+        // 전체 URL
+        $fullUrl = "$protocol://$host$portInfo$uri";
+
+        return [
+            'protocol' => $protocol,          // http 또는 https
+            'host' => $host,                  // 도메인 (example.com)
+            'port' => $port,                  // 포트 (80, 443 등)
+            'path' => $path,                  // 경로 (/path/to/page)
+            'query_string' => $queryString,   // 쿼리스트링 (query=1)
+            'full' => $fullUrl,           // 전체 URL (https://example.com:443/path/to/page?query=1)
+        ];
+    }
+
+    function sessionTrace($message = "") {
+        $current_url = $this->getCurrentUrl()['full'];
+        $referrer_url = $_SERVER['HTTP_REFERER'];
+
+        $content = array(
+            "current_url" => $current_url,
+            "referrer_url" => $referrer_url,
+        );
+        if($message) $content['message'] = $message;
+        $agent = $this->getUserAgent();
+
+        $session_model = new JlModel("jl_session");
+
+        $session_model->insert(array(
+            "client_ip" => $this->getClientIP(),
+            "name" => "trace",
+            "status" => "expired",
+            "content" => $this->jsonEncode($content),
+            "user_agent" => $agent['user_agent'],
+            "browser" => $agent['browser'],
+            "browser_version" => $agent['browser_version'],
+            "platform" => $agent['platform'],
+            "is_mobile" => $agent['is_mobile'],
+            "in_app_browser" => $agent['in_app_browser'],
+            "delete_date" => $this->getTime(),
+        ));
+    }
+
     function INIT() {
         // 개발 허용 IP 확인
         if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
@@ -607,9 +678,6 @@ class Jl {
             mkdir($dir, 0777);
             chmod($dir, 0777);
         }
-
-        //PHP INI 설정가져오기
-        $this->PHP = ini_get_all();
 
         // 세션 테이블 생성 및 모델 인스턴스 생성
         $jl_session_table_columns = $this->jsonDecode(JL_SESSION_TABLE_COLUMNS);
@@ -637,6 +705,7 @@ class Jl {
             $session_model->addWhere(" AND DATE(delete_date) = '$target_date' ")->whereDelete();
         }
 
+
         // 토큰 세션 생성
         $token = $session_model->where(array("client_ip" => $this->getClientIP(),"name" => "token","status" => "active"))->get()['data'][0];
         if(!$token) {
@@ -656,6 +725,10 @@ class Jl {
             ));
         }
 
+        if(!self::$TRACE) {
+            //$this->sessionTrace();
+            self::$TRACE = true;
+        }
 
     }
 }

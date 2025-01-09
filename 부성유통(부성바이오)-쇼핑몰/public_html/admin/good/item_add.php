@@ -158,17 +158,17 @@ function checkform(frm){
 	?>
 
 
-	
 
-	oEditors.getById["item_explain"].exec("UPDATE_CONTENTS_FIELD", []);	// 에디터의 내용이 textarea에 적용됩니다.
 
-	var content=oEditors.getById["item_explain"].getIR();
-	content=content.replace("<P>&nbsp;</P>","");
-	if (content== "" ){ 
-		 alert("내용을 입력하세요."); 
-		 oEditors.getById["item_explain"].exec("FOCUS", []); 
-		return false;
-	}
+
+
+    var hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'item_explain'; // 서버로 보낼 이름
+    hiddenInput.value = $(`#summernotediv`).summernote('code');
+
+    // form에 hidden input 추가
+    frm.appendChild(hiddenInput);
 
 	return true;
 }
@@ -1912,78 +1912,104 @@ if($if_gnt_item == 1){
               			</tr>
               			<tr>
                 			<td width="100%" bgcolor="#C8DFEC" align="center" colspan="6">
+
                 				상품 설명<br>
 <span class="style1">가로 800px 이하 사이즈의 이미지 파일을 등록하세요.</span>
 							</td>
               			</tr>
               			<tr>
-                			<td width="100%" bgcolor="#FFFFFF" align="center" colspan="6">								
-<!--------------------------------------- 에디터 시작 ------------------------------------------------------>
-<script type="text/javascript" src="../../smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
-<input type='hidden' name='secontent' value=''>
-<textarea name="item_explain" id="item_explain" rows="10" cols="100" style="width:667px; height:412px; display:none;"><?=$item_explain?></textarea>
-<!--textarea name="item_explain" id="item_explain" rows="10" cols="100" style="width:100%; height:412px; min-width:610px; display:none;"></textarea-->
-<!--
-<p>
-	<input type="button" onclick="pasteHTML();" value="본문에 내용 넣기" />
-	<input type="button" onclick="showHTML();" value="본문 내용 가져오기" />
-	<input type="button" onclick="submitContents(this);" value="서버로 내용 전송" />
-	<input type="button" onclick="setDefaultFont();" value="기본 폰트 지정하기 (궁서_24)" />
-</p>
--->
+                			<td width="100%" bgcolor="#FFFFFF" align="center" colspan="6">
+                                <div id="summernotediv"></div>
+<!-- new Editor-->
+<?
+//ROOT 위치 찾기
+$root = __FILE__;
+$position = strpos($root, "public_html");
 
-<script type="text/javascript">
-var oEditors = [];
-nhn.husky.EZCreator.createInIFrame({
-	oAppRef: oEditors,
-	elPlaceHolder: "item_explain",
-	sSkinURI: "../../smarteditor/SmartEditor2Skin.html",	
-	htParams : {
-		bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
-		bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-		bUseModeChanger : true,			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
-		fOnBeforeUnload : function(){
-			//alert("아싸!");	
-		}
-	}, //boolean
-	fOnAppLoad : function(){
-		//예제 코드
-		//oEditors.getById["item_explain"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
-	},
-	fCreator: "createSEditor2"
-});
+$ROOT = substr($root, 0, $position)."public_html";
+//URL 구하기
+$http = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? 's' : '') . '://';
+$user = str_replace(str_replace($ROOT, '', $_SERVER['SCRIPT_FILENAME']), '', $_SERVER['SCRIPT_NAME']);
+$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+if(isset($_SERVER['HTTP_HOST']) && preg_match('/:[0-9]+$/', $host))
+    $host = preg_replace('/:[0-9]+$/', '', $host);
+$URL = $http.$host.$user;
+?>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let url = "<?=$URL?>";
+    $(document).ready(function() {
+        $(`#summernotediv`).summernote({
+            height: 400,
+            lang: 'ko-KR',
+            toolbar: [
+                // 기본 툴바 설정
+                ['font', ['bold', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['paragraph']], //'ul', 'ol',
+                ['insert', ['picture', 'link']], // 이미지 삽입 버튼 추가
+                // 플러그인 버튼 추가
+                ['view', ['undo', 'redo']],
+            ],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72'],
+            placeholder: '내용을 입력해 주세요',
+            popover: {
+                image: [
+                    ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                    ['float', ['floatLeft', 'customFloatCenter', 'floatRight', 'floatNone']],
+                    ['remove', ['removeMedia']]
+                ]
+            },
+            callbacks: {
+                onImageUpload: async function(files) {
+                    // 업로드된 파일 처리
+                    for (let i = 0; i < files.length; i++) {
+                        await uploadImage(files[i], this);
+                    }
+                },
+            }
 
-function pasteHTML() {
-	var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입합니다.<\/span>";
-	oEditors.getById["item_explain"].exec("PASTE_HTML", [sHTML]);
-}
 
-function showHTML() {
-	var sHTML = oEditors.getById["item_explain"].getIR();
-	alert(sHTML);
-}
-	
-function submitContents(elClickedObj) {
-	oEditors.getById["item_explain"].exec("UPDATE_CONTENTS_FIELD", []);	// 에디터의 내용이 textarea에 적용됩니다.
-	alert(form.item_explain.value);
-	
-	// 에디터의 내용에 대한 값 검증은 이곳에서 document.getElementById("item_explain").value를 이용해서 처리하면 됩니다.
+        });
+
+        //if(component.content) $(`#${component.component_idx}`).summernote('code', component.content); // 에디터 내용 불러오기
+
+    });
+
+    function uploadImage(file, editor) {
+        var formData = new FormData(); // FormData 객체 생성
+        formData.append("upfile", file); // 파일 추가
+
+        $.ajax({
+            url: "/api/summernote.php",
+            method: "POST",
+            data: formData,
+            processData: false, // 파일 전송 시 필요
+            contentType: false, // 파일 전송 시 필요
+            dataType: "json", // 응답을 JSON 타입으로 설정
+            success: function(response) {
+                try {
+                    console.log(response);
+                    $(editor).summernote('insertImage', url + "/" +response.file.src);
+                } catch (error) {
+                    alert("Error handling server response: " + error.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("Upload failed: " + error);
+            }
+        });
+    }
 
 
-
-	try {
-		return false;
-		//elClickedObj.form.submit();
-	} catch(e) {}
-}
-
-function setDefaultFont() {
-	var sDefaultFont = '궁서';
-	var nFontSize = 24;
-	oEditors.getById["item_explain"].setDefaultFont(sDefaultFont, nFontSize);
-}
 </script>
-<!--------------------------------------- 에디트 끝 ------------------------------------------------------>
+<!--new Editor 끝-->
+
                 			</td>
               			</tr>
               			<tr>

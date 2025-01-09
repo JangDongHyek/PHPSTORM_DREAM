@@ -1,7 +1,7 @@
 <section id="ver2">
     <div class="tab-content">
         <div id="estimate">
-            <estimate-input mb_id="<?=$member['mb_id']?>" INSU_CHECK="<?=$member['INSU_CHECK']?>"></estimate-input>
+            <estimate-input mb_id="<?=$member['mb_id']?>" INSU_CHECK="<?=$member['INSU_CHECK']?>" primary="<?=$_GET['primary']?>"></estimate-input>
         </div>
 
     </div>
