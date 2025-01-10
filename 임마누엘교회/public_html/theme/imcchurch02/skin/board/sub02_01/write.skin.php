@@ -207,7 +207,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                         <? }else { ?>
                             생년월일
                         <? } ?><strong class="sound_only">필수</strong></label></p>
-                <div><input type="date" name="wr_8" value="<?php echo $write[wr_8]?>" id="wr_8" required class="frm_input required"></div>
+                <div><input type="date" name="wr_8" value="<?php echo $write[wr_8]?>" id="wr_8" required class="frm_input required" max="9999-12-31"></div>
 
             </div>
 

@@ -498,4 +498,9 @@ $qstr = implode("&amp;", $arr_query);
 
 // 관리자에서는 추가 스크립트는 사용하지 않는다.
 //$config['cf_add_script'] = '';
+
+// 게시판 상수추가
+define('G5_ADMIN_BBS_DIR',        G5_ADMIN_DIR.'/bbs');
+define('G5_ADMIN_BBS_URL',        G5_URL.'/'.G5_ADMIN_BBS_DIR);
+define('G5_ADMIN_BBS_PATH',        G5_ADMIN_PATH.'/bbs');
 ?>
