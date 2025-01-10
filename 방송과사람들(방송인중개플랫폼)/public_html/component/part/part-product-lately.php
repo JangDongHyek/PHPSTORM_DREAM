@@ -111,7 +111,9 @@
 
             },
             getClass(product) {
-                if(this.likes.includes(product.idx)) return "on";
+                if (this.likes.some(like => like == product.idx)) {
+                    return "on";
+                }
             },
             async getLike() {
                 let filter = {
@@ -132,6 +134,10 @@
                     extensions : [
                         {table : "member_product", foreign : "product_idx"}
                     ],
+
+                    join : {
+                        table : "member_product", origin : "product_idx", join : "idx",
+                    }
                 }
                 try {
                     let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");

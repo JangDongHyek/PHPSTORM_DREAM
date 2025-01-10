@@ -14,12 +14,13 @@ $pid = "portfolio";
         </style>
 
 <div id="appView">
-    <portfolio-view mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>"></portfolio-view>
+    <portfolio-view login_mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>"></portfolio-view>
 </div>
 
 <?
 $jl->vueLoad("appView");
 $jl->includeDir("/component/portfolio");
+$jl->componentLoad("/part/part-member-product.php");
 include_once('./_tail.php');
 ?>
 

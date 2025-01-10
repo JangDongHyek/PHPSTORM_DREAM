@@ -108,24 +108,8 @@
                             </div>
                             <div>
                                 <h3>{{ member.mb_nick }}님의 전문가 서비스</h3>
-                                <div class="swiper ftSwiper">
-                                    <ul id="product_list" class="swiper-wrapper">
-                                        <li class="swiper-slide">
-                                            <i class="heart on"></i>
-                                            <a href="https://itforone.com:443/~broadcast/bbs/item_view.php?idx=15">
-                                                <div class="area_img">
-                                                    <img :src="jl.root + '/theme/basic_app/img/noimg.jpg'">
-                                                </div>
-                                                <div class="area_txt">
-                                                    <h3>영상제작</h3> <!-- 제목 -->
-                                                    <div class="price">50,000원 </div> <!-- 가격 -->
-                                                    <div class="star"><i></i><em>5.0</em></div> <!-- 별점 -->
-                                                </div>
+                                <part-member-product :mb_no="member.mb_no" :login_mb_no="login_mb_no"></part-member-product>
 
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
 
@@ -141,7 +125,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            mb_no: {type: String, default: ""},
+            login_mb_no: {type: String, default: ""},
             primary: {type: String, default: ""}
         },
         data: function(){
@@ -156,15 +140,16 @@
                 member : {},
                 portfolios : [],
                 likes : [],
+
+                mb_no : "",
             };
         },
-        created: function(){
+        async created(){
             this.jl = new Jl('<?=$componentName?>');
             console.log(this.primary)
-            if(this.primary) this.getData();
-            this.getMember();
-            this.getPortfolios();
-            this.getLike();
+            if(this.primary) await this.getData();
+            await this.getPortfolios();
+            await this.getLike();
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -215,22 +200,14 @@
                     return res.result;
                 }
             },
-            async getMember() {
-                var method = "get";
-                var filter = {primary : this.mb_no};
-
-                var res = await this.jl.ajax("get",filter,"/api/g5_member.php");
-                if (res) {
-                    console.log(res)
-                    this.member = res.response.data[0];
-                }
-            },
             async getData() {
                 var filter = {primary: this.primary}
                 var res = await this.jl.ajax("get",filter,"/api/member_portfolio.php");
 
                 if(res) {
                     this.data = res.response.data[0];
+                    this.member = this.data.MEMBER.data[0];
+                    this.mb_no = this.member.mb_no;
                 }
             },
             async getPortfolios() {

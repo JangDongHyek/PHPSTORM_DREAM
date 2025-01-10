@@ -139,18 +139,46 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         
         
 		<tr>
-            <th scope="row"><label for="wr_4">제품용도<strong class="sound_only">필수</strong></label></th>
+            <th scope="row"><label for="wr_11">화학식<strong class="sound_only">필수</strong></label></th>
             <td>
-				<textarea name="wr_4" id="wr_4"><?=$write['wr_4']?></textarea>
+                <input type="text" name="wr_11" value="<?php echo $write['wr_11'] ?>" id="wr_11" required class="frm_input" size="50">
             </td>
         </tr>
 
-		<!--<tr>
-            <th scope="row"><label for="wr_3">제품가격<strong class="sound_only">필수</strong></label></th>
+        <tr>
+            <th scope="row"><label for="wr_12">CAS.NO<strong class="sound_only">필수</strong></label></th>
             <td>
-				<input type="text" name="wr_3" value="<?php echo $write['wr_3'] ?>" id="wr_3" required class="frm_input required" size="50">
+                <input type="text" name="wr_12" value="<?php echo $write['wr_12'] ?>" id="wr_12" required class="frm_input" size="50">
             </td>
-        </tr>-->
+        </tr>
+
+        <tr>
+            <th scope="row"><label for="wr_13">메이커<strong class="sound_only">필수</strong></label></th>
+            <td>
+                <input type="text" name="wr_13" value="<?php echo $write['wr_13'] ?>" id="wr_13" required class="frm_input" size="50">
+            </td>
+        </tr>
+
+        <tr>
+            <th scope="row"><label for="wr_14">순도<strong class="sound_only">필수</strong></label></th>
+            <td>
+                <input type="text" name="wr_14" value="<?php echo $write['wr_14'] ?>" id="wr_14" required class="frm_input" size="50">
+            </td>
+        </tr>
+
+        <tr>
+            <th scope="row"><label for="wr_15">포장<strong class="sound_only">필수</strong></label></th>
+            <td>
+                <input type="text" name="wr_15" value="<?php echo $write['wr_15'] ?>" id="wr_15" required class="frm_input" size="50">
+            </td>
+        </tr>
+
+        <tr>
+            <th scope="row"><label for="wr_16">별명<strong class="sound_only">필수</strong></label></th>
+            <td>
+                <textarea name="wr_16" id="wr_16"><?=$write['wr_16']?></textarea>
+            </td>
+        </tr>
 
 		<tr>
             <th scope="row"><label for="wr_content">제품설명</label></th>

@@ -1,35 +1,3 @@
-function vueLoad(app_name) {
-    Vue[app_name] = new Vue({
-        el: "#" + app_name,
-        data: Jl_data,
-        methods: Jl_methods,
-        watch: Jl_watch,
-        components: Jl_components,
-        computed: Jl_computed,
-        created: function(){
-            this.jl = new Jl(app_name,"#42B883");
-        },
-        mounted: function(){
-
-        }
-    });
-}
-
-// int일경우 자동으로 컴마가 붙는 프로토타입
-Number.prototype.format = function (n, x) {
-    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-};
-
-// Date 타입의 변수 자동으로 포맷팅 YYYY-MM-DD 로 반환됌
-Date.prototype.format = function () {
-    const year = this.getFullYear();
-    const month = String(this.getMonth() + 1).padStart(2, '0');
-    const day = String(this.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-};
-
 class Jl {
     constructor(name = "Jl.js",background = "#35495e") {
         this.name = name;
@@ -114,7 +82,6 @@ class Jl {
             var objects = {_method : method};
             objects = this.processObject(objects,object);
 
-            console.log(objects);
             //form 으로 데이터가공
             var form = new FormData();
             for (let i in objects) {
@@ -426,7 +393,7 @@ class Jl {
                 }
             }
         }
-        console.log(obj);
+
         objs.obj = JSON.stringify(obj);
         return objs;
     }

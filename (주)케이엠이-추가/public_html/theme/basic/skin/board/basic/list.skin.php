@@ -145,7 +145,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                  ?>
             </td>
             <td class="td_name sv_use"><?php echo $list[$i]['name'] ?></td>
-            <td class="td_date hidden-xs"><?php echo date('d.m.y', strtotime($list[$i]['datetime'])); ?></td>
+            <td class="td_date hidden-xs"><?php echo date('m.d.y', strtotime($list[$i]['datetime'])); ?></td>
             <td class="td_num hidden-xs"><?php echo $list[$i]['wr_hit'] ?></td>
             <?php if ($is_good) { ?><td class="td_num"><?php echo $list[$i]['wr_good'] ?></td><?php } ?>
             <?php if ($is_nogood) { ?><td class="td_num"><?php echo $list[$i]['wr_nogood'] ?></td><?php } ?>
@@ -347,8 +347,7 @@ function select_copy(sw) {
             <div class="p-1">
                 <div class="d-flex align-items-start my-2">
                     <div class="me-2"><i class="bi bi-pin"></i></div>
-                    <div>25, Seobu-ro 1331beon-gil, Juchon-myeon, Gimhae-si, Gyeongsangnam-do, Republic of
-                        Korea</div>
+                    <div>25, Seobu-ro 1331beon-gil, Juchon-myeon, Gimhae-si, Gyeongsangnam-do, Korea</div>
                 </div>
             </div>
         </div>

@@ -529,8 +529,8 @@ class Jl {
         return result;
     }
 
-    //Objects 들중 매개변수에 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
-    getObjectsToKey(array, key) {
+    //Objects안에 매개변수로 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
+    extractObjectsKey(array, key) {
         // 결과 값을 저장할 배열
         const result = [];
 

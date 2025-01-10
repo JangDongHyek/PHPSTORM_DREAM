@@ -48,10 +48,6 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            console.log(this.login_mb_no);
-            console.log(this.mb_no);
-
-
             this.getPortfolio();
             this.getLike();
         },
@@ -112,7 +108,9 @@
 
             },
             getClass(portfolio) {
-                if(this.likes.includes(portfolio.idx)) return "on";
+                if (this.likes.some(like => like == portfolio.idx)) {
+                    return "on";
+                }
             },
             async getLike() {
                 let filter = {

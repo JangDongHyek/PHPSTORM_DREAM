@@ -138,30 +138,70 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
             <!--<div class="col-md-1 hidden-sm hjdden-xs"></div>-->
             <div class="col-md-7">
                     <p class="t4 t_padding15"><span><?=$view['wr_subject']?></p> <!-- 제품코드 -->
-                    <p class="t1"><?=$view['wr_1']?></p> <!-- 제품명 -->
+                    <p class="t1" style="margin-bottom: 15px;"><?=$view['wr_1']?></p> <!-- 제품명 -->
                     <!--<p class="wow bounceIn" data-wow-delay="1s" style="width:100%; border-bottom:1px solid #b6c3cb; margin:0px auto">&nbsp;</p>-->
                     <div class="pt_30"></div>
                     <p class="t4"><span><?=$view['wr_2']?></span></p>
                     <!--<p class="t4">차종(Type of Car)<span><?=$view['wr_3']?></span></p>
                     <p class="t4">무게(Weight)<span><?=$view['wr_5']?> kg</span></p>-->
-                    <p class="wow bounceIn" data-wow-delay="1s" style="width:100%; border-bottom:1px solid rgba(0,0,0,.1); margin:0px auto">&nbsp;</p>
-					<div class="t_margin20"></div>
-                    <p class="t7"><?=$view['wr_4']?></p> <!-- 간략설명 -->
-                    <p class="wow bounceIn" data-wow-delay="1s" style="width:100%; border-bottom:1px solid rgba(0,0,0,.1); margin:0px auto">&nbsp;</p>
+                    <!-- <p class="t7"><?=$view['wr_4']?></p> --> <!-- 간략설명 -->
 					<!--<p class="t9 pt_20"><?=$view['wr_3']?><span>원</span></p>  제품가격 -->
-                    <!--견적신청버튼-->
+                    <!-- <p class="t7"><?=$view['wr_6']?></p> --> <!-- CAS No -->
+
+
+                    <p class="wow bounceIn" data-wow-delay="1s" style="width:100%; height: 3px; border-bottom:3px solid #333; margin:0px auto">&nbsp;</p>
+
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr style="padding: 14px 0;display: block;border-bottom: 1px solid #e1e1e1;">
+                                <th style="font-weight: 700;font-size: 1.3em;width: 100px;">화학식</th>
+                                <td style="font-size: 1.1em;color: #666"><?=$view['wr_11']?></td><!-- 간략설명 -->
+                            </tr>
+                            <tr style="padding: 14px 0;display: block;border-bottom: 1px solid #e1e1e1;">
+                                <th style="font-weight: 700;font-size: 1.3em;width: 100px;">CAS.NO</th>
+                                <td style="font-size: 1.1em;color: #666"><?=$view['wr_12']?></td><!-- CAS No -->
+                            </tr>
+
+                            <tr style="padding: 14px 0;display: block;border-bottom: 1px solid #e1e1e1;">
+                                <th style="font-weight: 700;font-size: 1.3em;width: 100px;">메이커</th>
+                                <td style="font-size: 1.1em;color: #666"><?=$view['wr_13']?></td><!-- CAS No -->
+                            </tr>
+
+                            <tr style="padding: 14px 0;display: block;border-bottom: 1px solid #e1e1e1;">
+                                <th style="font-weight: 700;font-size: 1.3em;width: 100px;">순도</th>
+                                <td style="font-size: 1.1em;color: #666"><?=$view['wr_14']?></td><!-- CAS No -->
+                            </tr>
+
+                            <tr style="padding: 14px 0;display: block;border-bottom: 1px solid #e1e1e1;">
+                                <th style="font-weight: 700;font-size: 1.3em;width: 100px;">포장</th>
+                                <td style="font-size: 1.1em;color: #666"><?=$view['wr_15']?></td><!-- CAS No -->
+                            </tr>
+
+                            <tr style="padding: 14px 0;display: block;border-bottom: 1px solid #e1e1e1;">
+                                <th style="font-weight: 700;font-size: 1.3em;width: 100px;">별명</th>
+                                <td style="font-size: 1.1em;color: #666"><?=$view['wr_16']?></td><!-- CAS No -->
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="wow bounceIn" data-wow-delay="1s" style="width:100%; height: 3px; border-bottom:3px solid #333; margin:0px auto">&nbsp;</p>
+
+
+
+
+                <!--견적신청버튼-->
                     <div>
                         <a href="<?php echo G5_BBS_URL ?>/write.php?bo_table=qna&wr_subject=<?php echo $view['wr_subject'];?>&wr_1=<?php echo $view[wr_1]?>&wr_2=<?php echo $view[wr_2]?>" class="counsel"><i class="fal fa-keyboard"></i>&nbsp;제품문의</a>
                         <!--<a href="<?php echo G5_BBS_URL ?>/write.php?bo_table=b_request&wr_subject=<?php echo $view['wr_subject'];?>&wr_1=<?php echo $view[wr_1]?>&wr_2=<?php echo $view[wr_2]?>" class="counsel02"><i class="fal fa-cog"></i>&nbsp;부품주문</a>-->
                     </div>
                     <!--//견적신청버튼-->
-					<div class="thumb_img t_margin30">
-						  <h3 class="hidden">제품상세설명</h3>
-						  <?php echo get_view_thumbnail($view['content']); ?>
-					</div>
+
             </div>
         </div>
-
+        <div class="view_detail">
+            <h3>상세페이지</h3>
+            <?php echo get_view_thumbnail($view['content']); ?>
+        </div>
 
         
         <? /* <div class="wrapper">

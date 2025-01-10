@@ -1,6 +1,20 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div class="swiper ftSwiper" :id="'swiper'+component_idx">
+    <ul id="product_list" class="v2" >
+        <li v-for="portfolio in portfolios">
+            <a :href="jl.root + '/bbs/portfolio_view.php?idx=' + portfolio.idx">
+                <div class="area_txt">
+                    <span></span><!-- 업체명 -->
+                    <h3>{{portfolio.name}}</h3> <!-- 제목 -->
+                </div>
+                <div class="area_img">
+                    <img :src="jl.root + portfolio.main_image_array[0].src" title="">
+                </div>
+                <button class="port_btn">더보기</button>
+            </a>
+        </li>
+    </ul>
+    <?/*div class="swiper ftSwiper" :id="'swiper'+component_idx">
         <ul id="product_list" class="swiper-wrapper">
             <li class="swiper-slide" v-for="portfolio in portfolios">
                 <i class="heart" :class="getClass(portfolio)" @click="postHeart(portfolio)"></i>
@@ -17,7 +31,7 @@
                 </a>
             </li>
         </ul>
-    </div>
+    </div*/?>
 </script>
 
 <script>

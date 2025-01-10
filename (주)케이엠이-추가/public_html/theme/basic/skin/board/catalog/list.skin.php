@@ -100,9 +100,9 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
             <?php } ?>
             <th scope="col" class="bg-kme text-light text-center py-3">Title</th>
             <th scope="col" class="bg-kme text-light text-center py-3">File</th>
-            <th scope="col" class="bg-kme text-light text-center py-3 inquiry-list-writer-width mobile-none hidden-xs">Writer</th>
-            <th scope="col" class="bg-kme text-light text-center py-3 inquiry-list-writer-width"><?php echo subject_sort_link('wr_datetime', $qstr2, 1) ?>Date</a></th>
-            <th scope="col" class="bg-kme text-light text-center py-3 inquiry-list-writer-width mobile-none hidden-xs"><?php echo subject_sort_link('wr_hit', $qstr2, 1) ?>Hits</a></th>
+            <!--<th scope="col" class="bg-kme text-light text-center py-3 inquiry-list-writer-width mobile-none hidden-xs">Writer</th>
+            <th scope="col" class="bg-kme text-light text-center py-3 inquiry-list-writer-width"><?php /*echo subject_sort_link('wr_datetime', $qstr2, 1) */?>Date</a></th>
+            <th scope="col" class="bg-kme text-light text-center py-3 inquiry-list-writer-width mobile-none hidden-xs"><?php /*echo subject_sort_link('wr_hit', $qstr2, 1) */?>Hits</a></th>-->
             <?php if ($is_good) { ?><th scope="col"><?php echo subject_sort_link('wr_good', $qstr2, 1) ?>추천</a></th><?php } ?>
             <?php if ($is_nogood) { ?><th scope="col"><?php echo subject_sort_link('wr_nogood', $qstr2, 1) ?>비추천</a></th><?php } ?>
         </tr>
@@ -135,7 +135,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                 <input type="checkbox" name="chk_wr_id[]" value="<?php echo $list[$i]['wr_id'] ?>" id="chk_wr_id_<?php echo $i ?>">
             </td>
             <?php } ?>
-            <td class="td_subject">
+            <td class="td_subject ">
                 <?php
                 echo $list[$i]['icon_reply'];
                 if ($is_category && $list[$i]['ca_name']) {
@@ -143,7 +143,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                 <a href="<?php echo $list[$i]['ca_name_href'] ?>" class="bo_cate_link hidden-xs"><?php echo $list[$i]['ca_name'] ?></a>
                 <?php } ?>
 
-                <a>
+                <a class="text-break-1 text-dark">
                     <?php echo $list[$i]['subject'] ?>
                     <?php if ($list[$i]['comment_cnt']) { ?><span class="sound_only">댓글</span><?php echo $list[$i]['comment_cnt']; ?><span class="sound_only">개</span><?php } ?>
                 </a>
@@ -162,12 +162,12 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
             </td>
             <td class="text-center" style="padding-top: 6px; padding-bottom: 6px;">
                 <?foreach ($files['data'] as $index => $data) {?>
-                <a class="btn btn-outline-primary fs-7" href="<?=G5_URL."/data/file/catalog/".$data['bf_file']?>" download="<?=$data['bf_source']?>" type="button" style="font-size: 1em;">download<?=$index+1?></a>
+                <a class="btn btn-outline-primary fs-7 download_button_width" href="<?=G5_URL."/data/file/catalog/".$data['bf_file']?>" download="<?=$data['bf_source']?>" type="button">download</a>
                 <?}?>
             </td>
-            <td class="td_name sv_use"><?php echo $list[$i]['name'] ?></td>
-            <td class="td_date hidden-xs"><?php echo $list[$i]['datetime2'] ?></td>
-            <td class="td_num hidden-xs"><?php echo $list[$i]['wr_hit'] ?></td>
+            <!--<td class="td_name sv_use"><?php /*echo $list[$i]['name'] */?></td>
+            <td class="td_date hidden-xs"><?php /*echo $list[$i]['datetime2'] */?></td>
+            <td class="td_num hidden-xs"><?php /*echo $list[$i]['wr_hit'] */?></td>-->
             <?php if ($is_good) { ?><td class="td_num"><?php echo $list[$i]['wr_good'] ?></td><?php } ?>
             <?php if ($is_nogood) { ?><td class="td_num"><?php echo $list[$i]['wr_nogood'] ?></td><?php } ?>
         </tr>

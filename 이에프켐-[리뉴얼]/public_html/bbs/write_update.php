@@ -188,6 +188,18 @@ if ($w == '' || $w == 'r') {
 if (!isset($_POST['wr_subject']) || !trim($_POST['wr_subject']))
     alert('제목을 입력하여 주십시오.');
 
+$pro_common_sql = "";
+if($bo_table == "pro01" || $bo_table == "pro02" || $bo_table == "pro03") {
+    $pro_common_sql = "
+    ,wr_11 = '$wr_11',
+    wr_12 = '$wr_12',
+    wr_13 = '$wr_13',
+    wr_14 = '$wr_14',
+    wr_15 = '$wr_15',
+    wr_16 = '$wr_16'
+    ";
+}
+
 if ($w == '' || $w == 'r') {
 
     if ($member['mb_id']) {
@@ -257,6 +269,7 @@ if ($w == '' || $w == 'r') {
                      wr_8 = '$wr_8',
                      wr_9 = '$wr_9',
                      wr_10 = '$wr_10' 
+                     {$pro_common_sql}
 					 {$sql_orderby} ";
     sql_query($sql);
 
@@ -374,6 +387,7 @@ if ($w == '' || $w == 'r') {
                      wr_8 = '{$wr_8}',
                      wr_9 = '{$wr_9}',
                      wr_10= '{$wr_10}'
+                     $pro_common_sql
 					 {$sql_orderby}
                      {$sql_ip}
                      {$sql_password}

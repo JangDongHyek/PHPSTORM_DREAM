@@ -160,6 +160,13 @@
             },
             emitProduct(product) {
                 //if(!confirm("해당 상품을 선택 하시겠습니까?")) return false;
+                if(product.sell_yn == "N") {
+                    if(!product.REPLACE_PRODUCTS.length) {
+                        if(!confirm("해당 상품은 재고가 없습니다. 제품문의 하시겠습니까?")) return false;
+                        this.postRequest(product)
+                        return false;
+                    }
+                }
                 this.$set(product,'new_amount',1);
                 this.$set(product,'new_standard_price',0);
 

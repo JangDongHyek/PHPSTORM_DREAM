@@ -4,7 +4,7 @@
 </script>
 
 <script>
-    Jl_components.push({name : "<?=$componentName?>",object : {
+    Vue.component('<?=$componentName?>', {
             template: "#<?=$componentName?>-template",
             props: {
                 primary: {type: String, default: ""}
@@ -69,7 +69,7 @@
             },
             computed: {},
             watch: {}
-        }});
+        });
 
 </script>
 

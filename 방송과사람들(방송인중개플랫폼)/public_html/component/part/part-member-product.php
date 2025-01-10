@@ -109,7 +109,9 @@
 
             },
             getClass(product) {
-                if(this.likes.includes(product.idx)) return "on";
+                if (this.likes.some(like => like == product.idx)) {
+                    return "on";
+                }
             },
             async getLike() {
                 let filter = {

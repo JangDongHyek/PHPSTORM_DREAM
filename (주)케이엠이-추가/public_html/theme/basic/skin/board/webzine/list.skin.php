@@ -122,7 +122,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                             <div class="mx-1 text-secondary">|</div>
                             <div class="d-flex">
                                 <i class="bi bi-calendar-check me-2"></i>
-                                <div><?php echo date('Y.m.d', strtotime($list[$i]['wr_datetime'])); ?></div>
+                                <div><?php echo date('m.d.Y', strtotime($list[$i]['wr_datetime'])); ?></div>
                             </div>
                             <div class="mx-1 text-secondary">|</div>
                             <div class="d-flex">

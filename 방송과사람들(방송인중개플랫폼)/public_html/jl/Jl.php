@@ -190,8 +190,10 @@ class Jl {
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
             echo "let Jl_watch = {};";
-            echo "let Jl_components = {};";
             echo "let Jl_computed = {};";
+            //Vue3 데이터 연동을 위한 변수
+            echo "let Jl_vue = [];";
+            echo "let Jl_components = [];";
             echo "</script>";
             echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
             if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
@@ -210,9 +212,7 @@ class Jl {
     }
 
     function pluginLoad($plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
+        $plugins = $this->convertToArray($plugin);
 
         if(in_array('drag',$plugins)) {
             if(!in_array("drag",self::$PLUGINS)) {
@@ -247,8 +247,8 @@ class Jl {
 
         if(in_array('bootstrap',$plugins)) {
             if(!in_array("bootstrap",self::$PLUGINS)) {
-                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-o3pO8HUlU1KpMy2X8CCatUcsDD3T4PAtdU1sK3c4R33zE0M7nb9xr5+eTMVRGz+g" crossorigin="anonymous">';
-                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-v06KyMCIhVXp1qWiMHLKP8o+AKZCL+a59W8KJrC6V+5jMEjOemLEdZomKsm9FmQz" crossorigin="anonymous"></script>';
+                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>';
+                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
                 array_push(self::$PLUGINS,"bootstrap");
             }
         }
@@ -260,12 +260,16 @@ class Jl {
 
         if(!self::$VUE_LOAD) {
             $this->jsLoad($plugins);
-            echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
-
-            if(in_array('drag',$plugins)) {
-                echo '<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>';
-                echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>';
+            if($this->DEV) {
+                if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             }
+            else {
+                if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
+
+            }
+
             self::$VUE_LOAD = true;
         }
 
@@ -274,10 +278,11 @@ class Jl {
 
         echo "<script>";
         echo "document.addEventListener('DOMContentLoaded', function(){";
-        echo "vueLoad('$app_name')";
+        echo "vue".VUE_VERSION."Load('$app_name')";
         echo "}, false);";
         echo "</script>";
     }
+
     // Vue 컴포넌트를 로드하는 함수
     function componentLoad($path) {
         if($path[0] != "/") $path = "/".$path;
@@ -673,8 +678,6 @@ class Jl {
             mkdir($dir, 0777);
             chmod($dir, 0777);
         }
-
-
 
         // 세션 테이블 생성 및 모델 인스턴스 생성
         $jl_session_table_columns = $this->jsonDecode(JL_SESSION_TABLE_COLUMNS);

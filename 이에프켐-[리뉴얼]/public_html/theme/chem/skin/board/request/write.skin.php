@@ -141,13 +141,8 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 				<tr>
             <th scope="row"><label for="wr_5">제품 <span class="en">Product</span></label></th>
             <td>
-							<select name="wr_5">
-								<option value="">제품선택</option>
-								<? for($i=0;$i<count($wr_5Array);$i++){?>
-								<option value="<?=$wr_5Array[$i]?>"<? echo $wr_5Array[$i]==$write[wr_5]?" selected":"";?>><?=$wr_5Array[$i]?></option>
-								<? }?>
-							</select>
-						</td>
+                <input type="text" name="wr_5" value="<?php echo $_GET['wr_1'] ?>" id="wr_5" class="frm_input">
+            </td>
         </tr>
 				<tr>
             <th scope="row"><label for="wr_4">수량 <span class="en">Quantity</span></label></th>
