@@ -2,7 +2,12 @@
 include_once('./_common.php');
 include_once(G5_PATH."/jl/JlConfig.php");
 
-$g5['title'] = '리스트';
+if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
+$category_model = new JlModel("category");
+$target_category = $category_model->where("idx",$category_idx)->get()['data'][0];
+
+$pid = $target_category['name'];
+$g5['title'] = $target_category['name'];
 include_once('./_head.php');
 ?>
 

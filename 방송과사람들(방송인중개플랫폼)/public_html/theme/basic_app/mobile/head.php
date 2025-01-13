@@ -70,7 +70,13 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
                 <img src="<?php echo G5_THEME_IMG_URL ?>/app/icon_back_wt.svg"><span class="sound_only">뒤로</span>
             </a>
             <div id="title"><?php echo $g5['title'] ?></div>
+
         </div>
+        <?php if($pid=='mypage_form') { ?>
+            <a class="visible-xs btn btn_blue2 btn_out" href="<?php echo G5_BBS_URL ?>/mypage.php">
+                나가기
+            </a>
+        <?php } ?>
 
         <!--
 		<div class="hd_ring">					
@@ -129,7 +135,7 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
 <?php if (!defined('_INDEX_')) { ?>
 
     <div id="vue_head">
-        <head-category category_idx="<?=$category_idx?>"></head-category>
+        <head-category category_idx="<?=$category_idx?>" ctg="<?=$_GET['ctg']?>"></head-category>
         <!-- 해당코드 component화  -->
         <!--<div id="nav_area">-->
         <!--    <nav id="gnb">-->
@@ -209,18 +215,25 @@ $jl->includeDir("/component/inc");
 <div id="wrapper">
     <? if (defined('_INDEX_')) { ?>
     <div id="idx_container">
-        <? }else { ?>
-        
+    <? }else { ?>
 
         <!--서브메뉴-->
-
         <?php if ($_SERVER['QUERY_STRING'] == 'co_id=company') { ?>
         <div id="container_wrap">
-            <?php } else { ?>
+        <?php } else if (isset($bo_table) || isset($co_id)){ ?>
+            <div id="container" class="inner">
+        <?php } else { ?>
             <div id="container">
+        <?php } ?>
+                <?php if (!empty($bo_table) || !empty($co_id)) { ?>
+                <div id="svisual">
+                    <div class="s_text">
+                        <h3><?php echo $g5['title'] ?></h3>
+                    </div><!--.s_text-->
+                </div>
+                <?php } else { ?>
+                    <div class="sub_title"></div>
                 <?php } ?>
 
-                <div class="sub_title"><?php echo $g5['title'] ?></div>
-
-                <?php } ?>
+    <?php } ?>
 

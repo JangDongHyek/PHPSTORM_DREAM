@@ -19,12 +19,12 @@
                 </li>
             </ul>
             <div class="menu-container">
-                <div class="menu-wrapper">
+                <div class="menu-wrapper" id="target_scroll">
                 <ul id="gnb_1dul" class="menu">
                     <li class="gnb_1dli single_menu">
                         <a :href="`${jl.root}/bbs/item_list.php?ctg=${category_idx}`" class="gnb_1da">전체<span></span></a>
                     </li>
-                    <li class="gnb_1dli single_menu" v-for="item in categories" v-if="item.parent_idx == category_idx">
+                    <li class="gnb_1dli single_menu" :class="{'active' : ctg == item.idx}" v-for="item in categories" v-if="item.parent_idx == category_idx">
                         <a :href="`${Jl_base_url}/bbs/item_list.php?ctg=${item.idx}&category_idx=${item.parent_idx}`" class="gnb_1da">
                             {{item.name}}<span></span>
                         </a>
@@ -39,8 +39,8 @@
                     </li>
                 </ul>
                 </div>
-                <!--<button class="scroll-button left-button"><i class="fa-light fa-angle-left"></i></button>
-                <button class="scroll-button right-button"><i class="fa-light fa-angle-right"></i></button>-->
+                <button class="scroll-button left-button" :class="{'end' : scroll_position == 0}" @click="moveScroll(-100)"><i class="fa-light fa-angle-left"></i></button> <!-- todo: 양쪽 끝까지 갔을때 end 클래스 추가-->
+                <button class="scroll-button right-button" :class="{'end' : scroll_end}" @click="moveScroll(100)"><i class="fa-light fa-angle-right"></i></button>
             </div>
         </nav>
     </div>
@@ -58,7 +58,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            category_idx : {type : String, default : ""}
+            category_idx : {type : String, default : ""},
+            ctg : {type : String, default : ""},
         },
         data: function(){
             return {
@@ -69,14 +70,20 @@
                 data : {},
                 categories : [],
                 over_idx : "",
+
+                forceUpdateKey: 0,
+
+                scroll_position : 0,
+                scroll_end : false,
             };
         },
-        created: function(){
+        async created(){
             this.jl = new Jl('<?=$componentName?>');
-            this.getData();
-            this.getCategory()
+
         },
-        mounted: function(){
+        async mounted(){
+            await this.getData();
+            await this.getCategory()
             this.$nextTick(() => {
                 $('.gnb_1dli.all_menu').hover(function() {
                     //$('ul.gnb_2dul', this).fadeIn(400);
@@ -98,7 +105,7 @@
 
                 $('#gnb .gnb_1dli.all_menu').hover(function() {
                     $('ul.gnb_2dul', this).slideDown(200);
-                    $('ul.gnb_2dul', this).css('display','block');
+                    $('ul.gnb_2dul', this).css('display','grid');
                     //$(this).children('a:first').addClass("hov");
                 }, function() {
                     $('ul.gnb_2dul', this).slideUp(200);
@@ -142,8 +149,31 @@
                     menuWrapper.scrollLeft += e.deltaY;
                 });
             });
+
+            this.scrollableDiv = document.getElementById('target_scroll');
         },
         methods: {
+            moveScroll(offset) {
+                const scrollableDiv = document.getElementById('target_scroll');
+                const scrollWidth = scrollableDiv.scrollWidth; // 전체 스크롤 길이
+                const clientWidth = scrollableDiv.clientWidth;
+                let scrollSize = scrollWidth - clientWidth;
+
+                scrollableDiv.scrollBy({ left: offset, behavior: 'smooth' });
+
+                this.scroll_position = this.scroll_position + offset;
+
+                if(this.scroll_position < 0) this.scroll_position = 0;
+
+                console.log(scrollWidth)
+                console.log(this.scroll_position)
+                console.log(clientWidth);
+                if(this.scroll_position >= scrollSize) {
+                    this.scroll_position = scrollSize;
+                    this.scroll_end = true;
+                }
+                else this.scroll_end = false;
+            },
             async getCategory() {
                 var filter = {
                     parent_idx : this.category_idx

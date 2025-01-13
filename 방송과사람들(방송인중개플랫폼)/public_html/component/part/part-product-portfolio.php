@@ -2,7 +2,7 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <ul id="product_list" class="v2" >
         <li v-for="portfolio in portfolios">
-            <a :href="jl.root + '/bbs/portfolio_view.php?idx=' + portfolio.idx">
+            <a>
                 <div class="area_txt">
                     <span></span><!-- 업체명 -->
                     <h3>{{portfolio.name}}</h3> <!-- 제목 -->
@@ -10,10 +10,63 @@
                 <div class="area_img">
                     <img :src="jl.root + portfolio.main_image_array[0].src" title="">
                 </div>
-                <button class="port_btn">더보기</button>
+                <div class="area_cont">
+                    <div class="tab_cont" v-if="portfolio.show">
+                        <section id="portfolio_info">
+                                <template v-for="item in portfolio.content_image_array">
+                                    <img :src="`${jl.root}${item.src}`">
+                                </template>
+                            <nav class="lnb">
+                                <div class="inr">
+                                    <ul>
+                                        <li><a class="active">포트폴리오 내용</a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                            <div class="conts">{{ portfolio.description }}</div>
+                        </section>
+
+                        <section>
+                            <template v-for="link in portfolio.movie_link" v-if="jl.extractYoutube(link)">
+                                <div class="embed-container">
+                                    <iframe
+                                            :src="'https://www.youtube.com/embed/' + jl.extractYoutube(link)"
+                                            title="YouTube video player"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            allowfullscreen>
+                                    </iframe>
+                                </div><br>
+                            </template>
+                        </section>
+
+                        <a  :href="jl.root + '/bbs/portfolio_view.php?idx=' + portfolio.idx" class="port_btn2">자세히 보기</a>
+                    </div>
+                </div>
+                <button class="port_btn" @click="portfolio.show = !portfolio.show">
+                    {{portfolio.show ? '숨기기' : '더보기'}}
+                </button>
+
             </a>
         </li>
     </ul>
+    <?/*
+
+    <script>
+        document.querySelector('.port_btn').addEventListener('click', function () {
+            const areaCont = document.querySelector('.area_cont');
+            const button = this;
+
+            if (areaCont.style.display === 'none' || areaCont.style.display === '') {
+                areaCont.style.display = 'block';
+                button.textContent = '숨기기';
+            } else {
+                areaCont.style.display = 'none';
+                button.textContent = '더보기';
+            }
+        });
+    </script>
+*/?>
     <?/*div class="swiper ftSwiper" :id="'swiper'+component_idx">
         <ul id="product_list" class="swiper-wrapper">
             <li class="swiper-slide" v-for="portfolio in portfolios">
@@ -35,6 +88,7 @@
 </script>
 
 <script>
+
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
@@ -147,7 +201,13 @@
                 }
                 try {
                     let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
+
+                    for(let item of res.data) {
+                        this.$set(item,'show',false);
+                    }
+
                     this.portfolios = res.data
+                    console.log(this.portfolios)
                 }catch (e) {
                     alert(e.message)
                 }
