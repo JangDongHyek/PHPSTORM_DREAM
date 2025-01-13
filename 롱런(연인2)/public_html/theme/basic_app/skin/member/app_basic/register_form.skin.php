@@ -5,6 +5,9 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 add_stylesheet('<link rel="stylesheet" href="' . $member_skin_url . '/style.css?ver=' . G5_CSS_VER . '">', 100);
 
 include_once(G5_BBS_PATH.'/nice/register.php'); // 나이스모듈
+
+$rs = sql_fetch("SELECT COUNT(*) as cnt FROM g5_member WHERE mb_hp = '{$_POST['nice_hp']}' AND mb_status = '블랙'");
+if ((int)$rs['cnt'] > 0)    alert("가입이 불가능한 회원정보 입니다. (블랙회원)", G5_URL."/bbs/login.php");
 ?>
 <style>
     body{height: 100vh; overflow-y:hidden; }

@@ -435,6 +435,7 @@ class Jl {
         $permissions = fileperms($dir);
 
         if ($permissions === false) {
+            echo $dir;
             $this->error("Jl getDirPermission() : 권한을 확인할 수 없습니다. 경로가 올바른지 확인하세요.");
         }
 

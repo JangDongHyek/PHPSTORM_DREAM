@@ -26,16 +26,16 @@ $kcb_bullet = array();
 
 
 // 아이티포원 본인인증 pass
-//if ($_SERVER['REMOTE_ADDR'] == "59.19.201.109" && $w == "") {
-//	$frm_step = 2;
-//	$kcb_cert = "T";
-//	$member['mb_name'] = "홍길동";
-//	$member['mb_sex'] = "남";
-//	$member['mb_birth'] = "1990-01-01";
-//	$member['mb_hp'] = "000-0000-0000";
-//	$member['mb_certify'] = "Y";
-//	$member['mb_id'] = "test" . getRandomString(8);
-//}
+// if ($_SERVER['REMOTE_ADDR'] == "59.19.201.109" && $w == "") {
+// 	$frm_step = 2;
+// 	$kcb_cert = "T";
+// 	$member['mb_name'] = "홍길동";
+// 	$member['mb_sex'] = "남";
+// 	$member['mb_birth'] = "1990-01-01";
+// 	$member['mb_hp'] = "000-0000-0000";
+// 	$member['mb_certify'] = "Y";
+// 	$member['mb_id'] = "test9";
+// }
 
 if ($kcb_step == '2')  {			// 본인인증후 kcb_step=2 리턴 (/bbs/kcb/phone_popup3.php)
 	$frm_step = 2;

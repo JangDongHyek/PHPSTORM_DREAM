@@ -269,18 +269,20 @@ $mb_tel = $mb_hp;
 //===============================================================
 
 if ($w == '') {
-    $ss_tel = get_session("TEL_NO");
-    if($mb_hp != $ss_tel){
-        unset($_SESSION['TEL_NO']);
-        alert("처음부터 다시 시도해주세요.");
-    }
+    // 아이티포원 본인인증 PASS
+    if ($_SERVER['REMOTE_ADDR'] != "59.19.201.109") {
+        $ss_tel = get_session("TEL_NO");
+        if ($mb_hp != $ss_tel) {
+            unset($_SESSION['TEL_NO']);
+            alert("처음부터 다시 시도해주세요.");
+        }
 
-    $ss_birth = get_session("RSLT_BIRTHDAY");
-    if($mb_birth != $ss_birth){
-        unset($_SESSION['RSLT_BIRTHDAY']);
-        alert("처음부터 다시 시도해주세요.");
+        $ss_birth = get_session("RSLT_BIRTHDAY");
+        if ($mb_birth != $ss_birth) {
+            unset($_SESSION['RSLT_BIRTHDAY']);
+            alert("처음부터 다시 시도해주세요.");
+        }
     }
-
 
     $sql = " insert into {$g5['member_table']}
                 set mb_id = '{$mb_id}',
