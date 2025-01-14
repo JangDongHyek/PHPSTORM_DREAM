@@ -17,7 +17,8 @@ $cw =sql_fetch($sql);
 $sql = "select * from g5_autoPay where userId = '{$cw["mb_id"]}' ";
 $ap = sql_fetch($sql);
 
-$sql = "select * from new_autopay_history where BillKey = '{$ap["BillKey"]}' ";
+//$sql = "select * from new_autopay_history where BillKey = '{$ap["BillKey"]}' ";
+$sql = "select * from new_autopay_history where new_car_wash_idx = '{$_GET['idx']}' ";
 $result = sql_query($sql);
 
 //총누적결제금액

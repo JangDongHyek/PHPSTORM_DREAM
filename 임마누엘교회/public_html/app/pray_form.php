@@ -5,7 +5,7 @@ include_once("../jl/JlConfig.php");
 ?>
 
 <div id="app">
-    <bbs-prayer-input></bbs-prayer-input>
+    <bbs-prayer-input mb_no="<?=$member['mb_no']?>"></bbs-prayer-input>
 </div>
 
 <script>
@@ -27,6 +27,7 @@ include_once("../jl/JlConfig.php");
 <?
 $jl->vueLoad('app');
 $jl->componentLoad("/bbs/prayer");
+$jl->componentLoad("/item");
 ?>
 <?php
 include_once("./app_tail.php");

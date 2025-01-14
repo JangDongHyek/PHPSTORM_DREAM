@@ -119,12 +119,12 @@ class JlModel{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->jl->error(mysqli_error($this->connect));
 
-            if(!$row = mysqli_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysqli_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : Primary 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->jl->error(mysql_error());
 
-            if(!$row = mysql_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysql_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : Primary 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }
 
         return $row;

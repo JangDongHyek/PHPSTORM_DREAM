@@ -31,7 +31,7 @@ class Jl {
         if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
         if(!defined("JL_SESSION_TABLE_COLUMNS")) $this->error("Jl_session 테이블 컬럼 값이 존재하지 않습니다.");
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
-        array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
+        array_push($this->DEV_IP,"112.160.220.208"); // 아이티포원 내부 IP
 
         $this->root_dir = JL_ROOT_DIR;
         $this->JS = JL_JS;

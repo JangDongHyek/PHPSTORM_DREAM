@@ -353,13 +353,13 @@ class Jl {
             if(like) {
                 return arrays.findIndex(obj => obj[key].includes(value));
             }else {
-                return arrays.findIndex(obj => obj[key] === value);
+                return arrays.findIndex(obj => obj[key] == value);
             }
         }else {
             if(like) {
                 return arrays.find(obj => obj[key].includes(value));
             }else {
-                return arrays.find(obj => obj[key] === value);
+                return arrays.find(obj => obj[key] == value);
             }
         }
     }

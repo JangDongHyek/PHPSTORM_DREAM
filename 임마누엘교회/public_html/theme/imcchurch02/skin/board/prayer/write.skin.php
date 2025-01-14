@@ -64,10 +64,11 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 </script>
 <!-- } 게시물 작성/수정 끝 -->
    <div id="app">
-       <bbs-prayer-input pc="true"></bbs-prayer-input>
+       <bbs-prayer-input pc="true" mb_no="<?=$member['mb_no']?>"></bbs-prayer-input>
    </div>
 
 <?php
 $jl->vueLoad('app');
 $jl->componentLoad("/bbs/prayer");
+$jl->componentLoad("/item");
 ?>

@@ -252,7 +252,6 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
             $list_rows = $config['cf_page_rows'];
             $list_no = $total_count - ($list_rows * ($page - 1));
             for ($i=0; $row=sql_fetch_array($result); $i++) {
-
                 $bg = 'bg'.($i%2);
                 $customer = get_member($row['mb_id']);
 
@@ -262,7 +261,8 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                 $card = sql_fetch($sql);
 
                 //총누적결제금액
-                $sql = "select sum(amt) sum from new_autopay_history where BillKey = '{$customer['billKey']}' ";
+                //$sql = "select sum(amt) sum from new_autopay_history where BillKey = '{$customer['billKey']}' ";
+                $sql = "select sum(amt) sum from new_autopay_history where new_car_wash_idx = '{$row['cw_idx']}' ";
                 $total_price = sql_fetch($sql)["sum"];
                 //예상금액
                 $sql = "select count(*) cnt from new_complete_history where cw_idx = '{$row["cw_idx"]}' and update_yn = 'N' order by ch_idx desc ";

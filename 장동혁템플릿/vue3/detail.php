@@ -11,7 +11,7 @@
         </div>
 
         <!-- 페이징 -->
-        <part-paging :filter="filter" @change="filter.page = $event; getData();"></part-paging>
+        <item-paging :paging="paging" @change="paging.page = $event; getData();"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
         <item-bs-modal :modal="modal" @close="$emit('close')">
@@ -78,7 +78,7 @@
                     {name : "",message : ""},
                 ]
 
-                let options = {required : this.required};
+                let options = {required : required};
 
                 let data = {
                     table : "",

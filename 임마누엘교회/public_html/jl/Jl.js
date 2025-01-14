@@ -298,6 +298,10 @@ class Jl {
         }
     }
 
+    href(url) {
+        window.location.href = url;
+    }
+
     dropFile(event,obj,key,permission = []) {
         this.commonFile(event.dataTransfer.files,obj,key,permission);
         this.log(obj[key])
@@ -359,7 +363,7 @@ class Jl {
             if(like) {
                 return arrays.find(obj => obj[key].includes(value));
             }else {
-                return arrays.find(obj => obj[key] === value);
+                return arrays.find(obj => obj[key] == value);
             }
         }
     }
@@ -368,7 +372,7 @@ class Jl {
         if(like) {
             return arrays.filter(obj => obj[key].includes(value));
         }else {
-            return arrays.filter(obj => obj[key] === value);
+            return arrays.filter(obj => obj[key] == value);
         }
     }
 

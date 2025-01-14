@@ -5,20 +5,21 @@
             <table>
                 <thead>
                 <tr>
-                    <th>날짜</th>
-                    <th>기도요청자</th>
+                    <th>번호</th>
                     <th>기도제목</th>
-                    <th>구분</th>
-                    <th>응답</th>
+                    <th>기간</th>
+                    <th>수정/완료</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr @click="jl.href('./pray_view.php?idx='+prayer.idx)" v-for="prayer in prayers">
-                    <td>{{prayer.insert_date.split(' ')[0]}}</td>
-                    <td>{{prayer.name}} {{prayer.job}}</td>
+                <tr v-for="item in prayers">
+                    <td>{{item.jl_no}}</td>
                     <td><p class="cut">기도제목 예시입니다.</p></td>
-                    <td>{{prayer.emergency}}</td>
-                    <td>{{prayer.status}}</td>
+                    <td>{{item.insert_date.split(' ')[0]}}-{{item.request_date}}</td>
+                    <td>
+                        <button type="button" class="btn btn_mini btn_line" @click="$emit('modify',item.idx)">수정</button>
+                        <button type="button" @click="putPrayer(item)" class="btn btn_mini btn_colorline">완료</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -32,6 +33,8 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
+                pc: {type: Boolean, default: false},
+                mb_no : {type: String, default: ""},
                 primary: {type: String, default: ""}
             },
             data: function () {
@@ -54,7 +57,7 @@
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
 
-                await this.getPrayers();
+                if(this.mb_no) await this.getPrayers();
             },
             mounted() {
                 this.$nextTick(() => {
@@ -65,16 +68,23 @@
 
             },
             methods: {
-                async postData() {
-                    let method = this.primary ? "update" : "insert";
+                async putPrayer(item) {
+                    if(item.status == "완료") {
+                        alert("이미 완료된 기도입니다.");
+                        return false;
+                    }
+                    let method = "update";
                     let data = {
-                        table: "",
+                        table: "prayer",
+                        idx : item.idx,
+                        status : "완료"
                     }
 
-                    if (this.data) data = Object.assign(data, this.data); // paging 객체가있다면 병합
 
                     try {
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php");
+                        showToast('기도가 완료되었어요');
+                        await this.getPrayers();
                     } catch (e) {
                         alert(e.message)
                     }
@@ -83,6 +93,7 @@
                 async getPrayers() {
                     let filter = {
                         table: "prayer",
+                        user_idx : this.mb_no
                     }
 
                     if (this.paging) filter = Object.assign(filter, this.paging); // paging 객체가있다면 병합

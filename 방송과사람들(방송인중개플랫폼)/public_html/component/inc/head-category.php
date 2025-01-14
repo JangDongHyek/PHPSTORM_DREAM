@@ -18,6 +18,9 @@
                     </ul>
                 </li>
             </ul>
+
+            <span class="main-category" v-if="jl.dev">{{parent_category.name}}</span>
+
             <div class="menu-container">
                 <div class="menu-wrapper" id="target_scroll">
                 <ul id="gnb_1dul" class="menu">
@@ -75,6 +78,8 @@
 
                 scroll_position : 0,
                 scroll_end : false,
+
+                parent_category : {},
             };
         },
         async created(){
@@ -204,6 +209,9 @@
                 if (res) {
                     this.jl.log(res,arguments.callee.name)
                     this.data = res.response.data
+
+                    this.parent_category = this.jl.findObject(this.data,"idx",this.category_idx);
+                    console.log(this.parent_category);
                 }
             }
         },
