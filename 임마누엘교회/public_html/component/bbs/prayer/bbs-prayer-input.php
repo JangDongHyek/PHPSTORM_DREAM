@@ -150,7 +150,7 @@
             methods: {
                 async postData() {
                     if(!this.mb_no) {
-                        alert("로그인이 필요한 기능입니다.");
+                        await this.jl.alert("로그인이 필요한 기능입니다.");
                         return false;
                     }
 
@@ -175,10 +175,10 @@
                     try {
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
-                        alert("신청되었습니다.");
+                        await this.jl.alert("신청되었습니다.");
                         window.location.reload();
                     } catch (e) {
-                        alert(e.message)
+                        await this.jl.alert(e.message)
                     }
 
                 },

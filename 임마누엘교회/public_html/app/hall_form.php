@@ -203,55 +203,13 @@ include_once("./app_head.php");
                             <td>18~19</td>
                             <td>19~20</td>
                         </tr>
-                        <tr>
-                            <td>ROOM2</td>
-                            <td>09~10</td>
-                            <td>10~11</td>
-                            <td>11~12</td>
-                            <td>12~13</td>
-                            <td>13~14</td>
-                            <td>14~15</td>
-                            <td>15~16</td>
-                            <td>16~17</td>
-                            <td>17~18</td>
-                            <td>18~19</td>
-                            <td>19~20</td>
-                        </tr>
-                        <tr>
-                            <td>ROOM3</td>
-                            <td>09~10</td>
-                            <td>10~11</td>
-                            <td>11~12</td>
-                            <td>12~13</td>
-                            <td>13~14</td>
-                            <td>14~15</td>
-                            <td>15~16</td>
-                            <td>16~17</td>
-                            <td>17~18</td>
-                            <td>18~19</td>
-                            <td>19~20</td>
-                        </tr>
-                        <tr>
-                            <td>ROOM4</td>
-                            <td>09~10</td>
-                            <td>10~11</td>
-                            <td>11~12</td>
-                            <td>12~13</td>
-                            <td>13~14</td>
-                            <td>14~15</td>
-                            <td>15~16</td>
-                            <td>16~17</td>
-                            <td>17~18</td>
-                            <td>18~19</td>
-                            <td>19~20</td>
-                        </tr>
                         </tbody>
                     </table>
-                    <!-- 2층 Table -->
+                    <!-- 지하 Table -->
                     <table class="click">
                         <thead>
                         <tr>
-                            <th>2층</th>
+                            <th>지하</th>
                             <th colspan="11"></th>
                         </tr>
                         </thead>

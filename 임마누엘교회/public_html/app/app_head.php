@@ -29,12 +29,12 @@ switch ($pid) {
     case "prayer" :
         $header_type = 1;
 		$footer_type = 1;
-		$header_name = '도고기도';
+		$header_name = '기도요청';
         break;
     case "pray_form" :
         $header_type = 1;
 		$footer_type = 2;
-		$header_name = '도고기도';
+		$header_name = '기도요청';
         break;
     case "note" :
         $header_type = 1;
@@ -84,7 +84,7 @@ switch ($pid) {
     case "class_list" :
         $header_type = 1;
 		$footer_type = 2;
-		$header_name = '속회현황';
+		$header_name = '속회예배현황';
         break;
     case "class_noti" :
         $header_type = 1;
@@ -215,6 +215,16 @@ switch ($pid) {
         $header_type = 1;
         $footer_type = 2;
         $header_name = '분실물 내용';
+        break;
+    case "video" :
+        $header_type = 1;
+        $footer_type = 1;
+        $header_name = '설교영상';
+        break;
+    case "video_form" :
+        $header_type = 1;
+        $footer_type = 2;
+        $header_name = '설교영상 등록';
         break;
 }
 

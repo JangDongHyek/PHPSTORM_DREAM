@@ -1,37 +1,47 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
+        <button class="btn_b02" @click="postData();">저장</button>
+        <br>
+        <br>
         <table>
+            <thead>
+                <tr>
+                    <th>항목</th>
+                    <th>설정값</th>
+                </tr>
+            </thead>
+            <tbody>
+
             <tr>
-                <th>금주의 설교 유튜브 링크</th>
+                <td><b>금주의 설교</b> 유튜브 링크</td>
                 <td>
                     <input type="text" v-model="data.main_youtube">
                 </td>
             </tr>
 
             <tr>
-                <th>결단노트 - 주일말씀</th>
+                <td><b>결단노트</b> 주일말씀</td>
                 <td>
                     <input type="text" v-model="data.note_day">
                 </td>
             </tr>
 
             <tr>
-                <th>결단노트 - 이번주 결단</th>
+                <td><b>결단노트</b> 이번주 결단</td>
                 <td>
                     <input type="text" v-model="data.note_week">
                 </td>
             </tr>
 
             <tr>
-                <th>결단노트 - 실천기간</th>
+                <td><b>결단노트</b> 실천기간</td>
                 <td>
-                    <input type="date" v-model="data.note_date">
+                    <input type="date" v-model="data.note_date" max="9999-12-31">
                 </td>
             </tr>
+            </tbody>
         </table>
-
-        <button @click="postData();">저장</button>
     </div>
 </script>
 
@@ -115,69 +125,4 @@
 </script>
 
 <style>
-    /* 테이블 기본 스타일 */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        font-size: 16px;
-        text-align: left;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    /* 테이블 헤더 스타일 */
-    table th {
-        background-color: #007BFF;
-        color: #fff;
-        font-weight: bold;
-        padding: 12px;
-        text-align: center;
-        border-bottom: 2px solid #ddd;
-    }
-
-    /* 테이블 셀 스타일 */
-    table td {
-        padding: 12px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    /* 홀수 행 배경색 */
-    table tr:nth-child(odd) {
-        background-color: #f4f4f4;
-    }
-
-    /* 테이블 행 hover 효과 */
-    table tr:hover {
-        background-color: #e9ecef;
-    }
-
-    /* 입력 필드 스타일 */
-    table input[type="text"],
-    table input[type="date"] {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-        box-sizing: border-box;
-    }
-
-    /* 버튼 스타일 */
-    button {
-        background-color: #28a745;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        margin-top: 10px;
-    }
-
-    button:hover {
-        background-color: #218838;
-    }
 </style>

@@ -1,8 +1,9 @@
 <?php
 $pid = "note";
 include_once("./app_head.php");
-
+include_once("../jl/JlConfig.php");
 ?>
+<div id="app">
     <div id="note">
         <div class="slogan">
             <h5>결단노트쓰기는, 주일예배의 결단 내용을 어떻게<br class="visible-xs"> 실천할 것인지를 다짐하고,<br class="hidden-xs">
@@ -13,49 +14,34 @@ include_once("./app_head.php");
             <h6>남의 험담을 하지 않겠습니다.
                 <span>2024 IMC <b>0</b>번째 결단</span>
             </h6>
-            <div class="table">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>이름</th>
-                        <th>결단 및 실천</th>
-                        <th>응원해요</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>전민웅 집사</td>
-                        <td><p class="cut" onclick="location.href='./note_view'">남의 험담을 하지 않겠습니다</p></td>
-                        <td><a onclick="showToast('응원해요!🙌')"><i class="fa-duotone fa-solid fa-hands-clapping"></i> 0</a></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>전민웅 집사</td>
-                        <td><p class="cut" onclick="showToast('비공개 노트입니다.')"><i class="fa-solid fa-lock-keyhole txt_red"></i> 제 입에 재갈을 채우겠습니다</p></td>
-                        <td><a onclick="showToast('이미 응원했어요')"><i class="fa-duotone fa-solid fa-hands-clapping"></i> 0</a></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="b-pagination-outer">
-                <ul id="border-pagination">
 
-
-                    <li><a href="javascript:void(0)" class="active">1</a></li>
-                    <li><a href="?page=2&amp;" class="">2</a></li>
-                    <li><a href="?page=3&amp;" class="">3</a></li>
-                    <li><a href="?page=4&amp;" class="">4</a></li>
-
-
-                    <li><a href="?page=4&amp;">»</a></li>
-
-                </ul>
-            </div>
+            <bbs-note-list></bbs-note-list>
         </div>
     </div>
 
+    <div class="modal fade" id="noteViewModal" tabindex="-1" role="dialog" aria-labelledby="noteViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="noteViewModalLabel">결단노트</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+
+                    <h6 class="flex ai-c jc-sb">전민웅 집사 <span class="icon icon_gray">작성일시 | 24.09.01 00:00 </span></h6>
+                    <br>
+                    남의 험담을 하지 않겠습니다
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?
+$jl->vueLoad('app');
+$jl->componentLoad("/bbs/note");
+$jl->componentLoad("/item");
+?>
 <?php
 include_once("./app_tail.php");
 ?>

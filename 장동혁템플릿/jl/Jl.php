@@ -13,6 +13,7 @@ class Jl {
     public $EDITOR_HTML;
     public $ENV;
     public $COMPONENT;
+    public $ALERT;
 
 
     protected $PHP;                         // JlFile 에서 사용
@@ -38,6 +39,7 @@ class Jl {
         $this->EDITOR_JS = JL_EDITOR_JS;
         $this->EDITOR_HTML = JL_EDITOR_HTML;
         $this->COMPONENT = JL_COMPONENT;
+        $this->ALERT = JL_ALERT;
         $this->ENV = $this->getEnv();
         $this->RESOURCE = $this->getJlPath()."/jl_resource";
 
@@ -186,6 +188,7 @@ class Jl {
             echo "const Jl_editor = '{$this->EDITOR_HTML}';";
             echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
             echo "const Jl_token = '{$token['content']}';";
+            echo "const Jl_alert = '{$this->ALERT}';";
             //Vue 데이터 연동을 위한 변수
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
@@ -194,6 +197,7 @@ class Jl {
             //Vue3 데이터 연동을 위한 변수
             echo "let Jl_vue = [];";
             echo "let Jl_components = [];";
+
             echo "</script>";
             echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
             if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";

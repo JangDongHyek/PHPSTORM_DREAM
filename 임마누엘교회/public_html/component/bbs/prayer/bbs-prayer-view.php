@@ -1,11 +1,13 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="prayer.idx">
-        <p><b class="icon icon_gray">{{prayer.status}}</b> <b class="txt_color">{{prayer.emergency}}</b></p>
-        <h6>{{prayer.name}} {{prayer.job}}</h6>
-        <p>요청기간 | {{prayer.insert_date.split(' ')[0]}} - {{prayer.request_date}} </p>
+        <p><b class="icon icon_gray2">상태 <i class="fa-thin fa-caret-right"></i> {{prayer.status}}</b> <b class="txt_color icon icon_line">구분 <i class="fa-thin fa-caret-right"></i> {{prayer.emergency}}</b></p>
+        <h6>{{prayer.name}} {{prayer.job}} <span class="icon icon_color2">{{prayer.belong}}교구 {{prayer.parish}}속</span></h6>
+        <p><i class="fa-regular fa-circle-check"></i> 요청기간 <b>{{prayer.insert_date.split(' ')[0]}} ~ {{prayer.request_date}}</b> </p>
         <hr>
-        <p><b class="icon icon_gray">{{prayer.types2 ? prayer.types2 : prayer.types }}</b> {{prayer.content}}</p>
+        <p><b class="icon icon_line icon_big">유형 <i class="fa-thin fa-caret-right"></i> {{prayer.types2 ? prayer.types2 : prayer.types }}</b> <br> <br>
+            {{prayer.content}}
+        </p>
     </div>
 
 </script>

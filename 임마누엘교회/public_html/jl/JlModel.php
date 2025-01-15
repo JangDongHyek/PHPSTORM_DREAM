@@ -366,6 +366,7 @@ class JlModel{
             }
 
             if($column == 'insert_date') $value = 'now()';
+            if($column == 'wr_datetime') $value = 'now()';
 
             if(!empty($columns)) $columns .= ", ";
             $columns .= "`{$column}`";

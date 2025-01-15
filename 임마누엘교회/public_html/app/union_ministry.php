@@ -171,14 +171,27 @@ include_once("./app_head.php");
                     <h5>부장 : 최승석 장로<br>
                         총무 : 김광수 권사</h5>
                     <p>관리부의 역할</p>
-                    <h6>내용 준비중입니다</h6>
+                    <h6>임마누엘교회에 소속된 일체의 유·무형 자산을 효율적으로 관리 운영하여
+                        교회의 지속가능한 성장과 성도의 예배생활에 미래지향적 관점에서
+                        최상의 상태로 유지 관리하기 위해 헌신하고 있습니다.</h6>
                     <p>관리부 주요사역</p>
-                    <h6>내용 준비중입니다</h6>
+                    <h6>·교회자산 유지관리 및 운영감독<br>
+                        ·교회 사무행정 운영관리<br>
+                        ·기계시설 및 전기시설 안전점검, 운영관리<br>
+                        ·토목 유휴 및 주차시설 관리보수<br>
+                        ·조경 시설 관리<br>
+                        ·위생 및 환경관리<br>
+                        ·공사입찰 및 위탁관리<br>
+                        ·목회자 사택관리<br>
+                        ·차량운행 및 운영관리<br>
+                        ·교회 거주자 환경 지원<br>
+                        ·수정유치원, 전인기독학교, 키즈카페 시설물 운영관리<br>
+                        ·IMC 카페 / 15층 라운지 운영관리</h6>
 
                     <div class="swiper mini-06">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <img src="<?php echo G5_URL ?>/app/img/ministry/noimg.jpg" alt="임마누엘 교회">
+                                <img src="<?php echo G5_URL ?>/app/img/ministry/mini-06-1.jpg" alt="임마누엘 교회">
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -200,14 +213,41 @@ include_once("./app_head.php");
                     <h5>부장 : 이준우 장로<br>
                         총무 : 류지선 권사</h5>
                     <p>사회부의 역할</p>
-                    <h6>내용 준비중입니다</h6>
+                    <h6>교회 내에서 사회적 책임을 담당하는 부서로, 교회가 사회적 약자나 필요를 충족시키기 위해 다양한 활동을 수행하는 역할을 합니다.</h6>
                     <p>사회부 주요사역</p>
-                    <h6>내용 준비중입니다</h6>
+                    <h6>1. 사회봉사 활동:<br>
+                        어려운 이웃, 노숙자, 장애인 등 사회적 약자를 돕는 프로그램을 운영합니다.
+                        예를 들어, 음식 배급, 의료 지원, 옷 기부 등<br><br>
 
-                    <div class="swiper mini-06">
+                        2. 복지 프로그램 운영:<br>
+                        (방이 복지관과 연계) 교회 내외에서 복지 활동을 통해 사람들의 생활을 향상시키고 지원합니다.<br>
+                        1)청춘아카데미 운영<br>
+                        2)어버이날 효도찬치<br><br>
+
+                        3. 선교 활동:<br>
+                        해외 선교나 지역 선교를 통해 다른 지역과 문화에서 도움이 필요한 사람들에게 복음을 전하며, 실질적인 지원을 제공합니다.<br>
+                        1)국내외 의료선교 활동<br>
+                        2)이.미용 선교활동</h6>
+
+                    <div class="swiper mini-08">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <img src="<?php echo G5_URL ?>/app/img/ministry/noimg.jpg" alt="임마누엘 교회">
+                                <img src="<?php echo G5_URL ?>/app/img/ministry/mini-08-1.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/ministry/mini-08-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/ministry/mini-08-3.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/ministry/mini-08-4.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/ministry/mini-08-5.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/ministry/mini-08-6.jpg" alt="임마누엘 교회">
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -504,6 +544,15 @@ include_once("./app_head.php");
             },
         });
         var swiper = new Swiper(".mini-07", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".mini-08", {
             slidesPerView: 1,
             spaceBetween: 5,
             autoHeight: true,

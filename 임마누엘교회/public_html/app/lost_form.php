@@ -73,7 +73,7 @@ include_once("./app_head.php");
                 </table>
             </div>
             <br>
-            <button type="button" class="btn btn_color btn-large" onclick="location.href='./lost'">신청하기</button>
+            <button type="button" class="btn btn_color btn-large" onclick="location.href='./lost'">등록하기</button>
         </div>
     </div>
 

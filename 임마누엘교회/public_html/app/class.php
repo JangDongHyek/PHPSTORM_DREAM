@@ -37,9 +37,9 @@ include_once("./app_head.php");
             </div>
             <div class="grid grid2">
                 <button class="btn" type="button" onclick="location.href='./class_form'">속회보고</button>
-                <button class="btn" type="button" onclick="location.href='./class_list'">속회현황</button>
+                <button class="btn" type="button" onclick="location.href='./class_list'">속회예배현황</button>
                 <button class="btn" type="button" onclick="location.href='./class_leader'">목회자탭</button>
-                <button class="btn" type="button" onclick="location.href=''">성경읽기</button>
+                <button class="btn" type="button" onclick="window.open('https://www.bskorea.or.kr/bible/korbibReadpage.php')">성경읽기</button>
             </div>
         </div>
     </div>

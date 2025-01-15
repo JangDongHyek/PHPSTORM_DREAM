@@ -7,7 +7,7 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
-            primary: {type: String, default: ""}
+            primary: {type: String, default: ""},
         },
         data: function () {
             return {
@@ -42,12 +42,18 @@
                     table: "",
                 }
 
+                // object의 필수값을 설정하는 option
+                let required = [
+                    {name : "",message : ""},
+                ]
+                let options = {required : required};
+
                 if (this.data) data = Object.assign(data, this.data); // paging 객체가있다면 병합
 
                 try {
-                    let res = await this.jl.ajax(method, data, "/jl/JlApi.php");
+                    let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
                 } catch (e) {
-                    alert(e.message)
+                    await this.jl.alert(e.message)
                 }
 
             },
@@ -63,7 +69,7 @@
                     this.data = res.data[0]
                     this.paging.count = res.count;
                 } catch (e) {
-                    alert(e.message)
+                    await this.jl.alert(e.message)
                 }
             }
         },

@@ -4,6 +4,7 @@ class Jl {
         this.root = Jl_base_url;
         this.editor = Jl_editor;
         this.dev = Jl_dev;
+        this.jl_alert = Jl_alert;
 
         // 의존성주입 패턴
         if (typeof JlJavascript !== 'undefined') {
@@ -53,6 +54,10 @@ class Jl {
 
     INIT(object = {}) {
         this.js.JS_INIT(object);
+    }
+
+    isMobile() {
+        return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
     ajax(method,obj,url,options = {}) {
@@ -300,6 +305,9 @@ class Jl {
 
     href(url) {
         window.location.href = url;
+    }
+    open(url) {
+        window.open(url);
     }
 
     dropFile(event,obj,key,permission = []) {

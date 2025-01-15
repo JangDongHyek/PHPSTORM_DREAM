@@ -10,7 +10,7 @@ include_once("./app_head.php");
             <button class="btn" type="button" onclick="location.href='./union_mission'"><i class="fa-duotone fa-solid fa-book-bible"></i> IMC 선교회</button>
             <button class="btn" type="button" onclick="location.href='./union_small'"><i class="fa-solid fa-people-group"></i>소그룹</button>
             <button class="btn" type="button" onclick="location.href='./union_ministry'"><i class="fa-solid fa-cross"></i> 사역부서</button>
-            <button class="btn" type="button" onclick="location.href='../bbs/content.php?co_id=sub01_06'"><i class="fa-duotone fa-solid fa-church"></i>교회행사</button>
+            <button class="btn" type="button" onclick="location.href='../bbs/board.php?bo_table=event'"><i class="fa-duotone fa-solid fa-church"></i>교회행사</button>
         </div>
     </div>
 

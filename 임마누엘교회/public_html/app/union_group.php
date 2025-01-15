@@ -17,6 +17,23 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>황은영 전도사</h6>
                     <p>심방권사</p> <h6>김금녀 권사</h6>
                     <p>도속장</p> <h6>박정임 집사</h6>
+                    <div class="swiper group-01">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-1-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-1-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-1-3.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-1-4.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -29,6 +46,17 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>김혜란 전도사</h6>
                     <p>심방권사</p> <h6>김인자 권사</h6>
                     <p>도속장</p> <h6>박지혜 집사</h6>
+                    <div class="swiper group-02">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-2-1.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-2-2.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -41,6 +69,20 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>장금록 전도사</h6>
                     <p>심방권사</p> <h6>이정원 권사</h6>
                     <p>도속장</p> <h6>정주희 권사</h6>
+                    <div class="swiper group-03">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-3-1.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-3-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-3-3.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -53,6 +95,25 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>장금록 전도사</h6>
                     <p>심방권사</p> <h6>황순희 권사</h6>
                     <p>도속장</p> <h6>문혜연 집사</h6>
+                    <div class="swiper group-04">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="swiper-slide">
+                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-1.JPG" alt="임마누엘 교회">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-2.JPG" alt="임마누엘 교회">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-3.jpg" alt="임마누엘 교회">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-4.jpg" alt="임마누엘 교회">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -65,6 +126,17 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>장금록 전도사</h6>
                     <p>심방권사</p> <h6>장연순 권사</h6>
                     <p>도속장</p> <h6>이영하 권사</h6>
+                    <div class="swiper group-05">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-5-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-5-2.JPG" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -77,6 +149,23 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>장금록 전도사</h6>
                     <p>심방권사</p> <h6>최필남 권사</h6>
                     <p>도속장</p> <h6>김정숙A 권사</h6>
+                    <div class="swiper group-06">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-6-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-6-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-6-3.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-6-4.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -89,6 +178,23 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>김혜란 전도사</h6>
                     <p>심방권사</p> <h6>김진희 권사</h6>
                     <p>도속장</p> <h6>이은주 집사</h6>
+                    <div class="swiper group-07">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-7-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-7-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-7-3.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-7-4.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -101,6 +207,17 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>황은영 전도사</h6>
                     <p>심방권사</p> <h6>강석자 권사</h6>
                     <p>도속장</p> <h6>이상은 권사</h6>
+                    <div class="swiper group-08">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-8-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-8-2.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -113,6 +230,17 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>김혜란 전도사</h6>
                     <p>심방권사</p> <h6>지수옥 권사</h6>
                     <p>도속장</p> <h6>이선아 집사</h6>
+                    <div class="swiper group-09">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-9-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-9-2.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -125,6 +253,20 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>김혜란 전도사</h6>
                     <p>심방권사</p> <h6>옥미영 권사</h6>
                     <p>도속장</p> <h6>이정자 권사</h6>
+                    <div class="swiper group-10">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-10-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-10-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-10-3.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -137,6 +279,26 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>황은영 전도사</h6>
                     <p>심방권사</p> <h6>김명숙 권사</h6>
                     <p>도속장</p> <h6>천성옥 권사</h6>
+                    <div class="swiper group-11">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-11-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-11-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-11-3.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-11-4.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-11-5.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
             <details>
@@ -149,11 +311,135 @@ include_once("./app_head.php");
                     <p>담당전도사</p> <h6>황은영 전도사</h6>
                     <p>심방권사</p> <h6>이옥분 권사</h6>
                     <p>도속장</p> <h6>이효진 집사</h6>
+                    <div class="swiper group-12">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-12-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-12-2.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-12-3.jpg" alt="임마누엘 교회">
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
             </details>
         </div>
     </div>
 
+    <script>
+        var swiper = new Swiper(".group-01", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-02", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-03", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-04", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-05", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-06", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-07", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-08", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-09", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-10", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-11", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-12", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+    </script>
 <?php
 include_once("./app_tail.php");
 ?>

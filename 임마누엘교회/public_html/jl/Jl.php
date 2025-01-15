@@ -13,6 +13,7 @@ class Jl {
     public $EDITOR_HTML;
     public $ENV;
     public $COMPONENT;
+    public $ALERT;
 
 
     protected $PHP;                         // JlFile 에서 사용
@@ -31,13 +32,14 @@ class Jl {
         if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
         if(!defined("JL_SESSION_TABLE_COLUMNS")) $this->error("Jl_session 테이블 컬럼 값이 존재하지 않습니다.");
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
-        array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
+        array_push($this->DEV_IP,"112.160.220.208"); // 아이티포원 내부 IP
 
         $this->root_dir = JL_ROOT_DIR;
         $this->JS = JL_JS;
         $this->EDITOR_JS = JL_EDITOR_JS;
         $this->EDITOR_HTML = JL_EDITOR_HTML;
         $this->COMPONENT = JL_COMPONENT;
+        $this->ALERT = JL_ALERT;
         $this->ENV = $this->getEnv();
         $this->RESOURCE = $this->getJlPath()."/jl_resource";
 
@@ -186,6 +188,7 @@ class Jl {
             echo "const Jl_editor = '{$this->EDITOR_HTML}';";
             echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
             echo "const Jl_token = '{$token['content']}';";
+            echo "const Jl_alert = '{$this->ALERT}';";
             //Vue 데이터 연동을 위한 변수
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
@@ -194,6 +197,7 @@ class Jl {
             //Vue3 데이터 연동을 위한 변수
             echo "let Jl_vue = [];";
             echo "let Jl_components = [];";
+
             echo "</script>";
             echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
             if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
@@ -435,7 +439,6 @@ class Jl {
         $permissions = fileperms($dir);
 
         if ($permissions === false) {
-            echo $dir;
             $this->error("Jl getDirPermission() : 권한을 확인할 수 없습니다. 경로가 올바른지 확인하세요.");
         }
 

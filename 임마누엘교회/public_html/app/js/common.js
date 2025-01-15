@@ -141,6 +141,7 @@ function showConfirm(message) {
 
 // toast 팝업
 function showToast(message, callback = null, duration = 1200) {
+    console.log(1);
     if (!message) return;
 
     const toast = document.getElementById("toast");
@@ -152,6 +153,8 @@ function showToast(message, callback = null, duration = 1200) {
     ConfigModule.setToastStatus(true);
 
     setTimeout(function() {
+        console.log(12);
+
         toast.classList.remove("show");
         if (typeof callback === 'function') {
             callback();

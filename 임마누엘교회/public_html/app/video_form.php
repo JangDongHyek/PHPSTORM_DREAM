@@ -1,16 +1,16 @@
 <?php
-$pid = "note_form";
+$pid = "video_form";
 include_once("./app_head.php");
 include_once("../jl/JlConfig.php");
 ?>
 
 <div id="app">
-    <bbs-note-input mb_no="<?=$member['mb_no']?>"></bbs-note-input>
+    <bbs-video-input mb_no="<?=$member['mb_no']?>"></bbs-video-input>
 </div>
 
 <?
 $jl->vueLoad('app');
-$jl->componentLoad("/bbs/note");
+$jl->componentLoad("/bbs/video");
 $jl->componentLoad("/item");
 ?>
 <?php

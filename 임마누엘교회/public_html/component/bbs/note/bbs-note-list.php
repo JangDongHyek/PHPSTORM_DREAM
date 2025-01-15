@@ -5,26 +5,24 @@
             <table>
                 <thead>
                 <tr>
-                    <th>날짜</th>
-                    <th>기도요청자</th>
-                    <th>기도제목</th>
-                    <th>구분</th>
-                    <th>응답</th>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>결단 및 실천</th>
+                    <th>응원해요</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr @click="jl.href('./pray_view.php?idx='+prayer.idx)" v-for="prayer in prayers">
-                    <td>{{prayer.insert_date.split(' ')[0]}}</td>
-                    <td>{{prayer.name}} {{prayer.job}}</td>
-                    <td><p class="cut">{{prayer.content}}</p></td>
-                    <td>{{prayer.emergency}}</td>
-                    <td>{{prayer.status}}</td>
+                <tr v-for="board in boards">
+                    <td>{{board.jl_no}}</td>
+                    <td>회원 데이터셋보고 결정</td>
+                    <td><p class="cut" data-toggle="modal" data-target="#noteViewModal">{{board.wr_content}}</p></td>
+                    <td><a onclick="showToast('응원해요!🙌')"><i class="fa-duotone fa-solid fa-hands-clapping"></i> 0</a></td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <item-paging :paging="paging" @change="paging.page = $event; getPrayers();"></item-paging>
+        <item-paging :paging="paging" @change="paging.page = $event; getBoards();"></item-paging>
     </div>
 </script>
 
@@ -47,14 +45,14 @@
 
                     data: {},
 
-                    prayers : [],
+                    boards : [],
                 };
             },
             async created() {
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
 
-                await this.getPrayers();
+                await this.getBoards();
             },
             mounted() {
                 this.$nextTick(() => {
@@ -80,16 +78,16 @@
                     }
 
                 },
-                async getPrayers() {
+                async getBoards() {
                     let filter = {
-                        table: "prayer",
+                        table: "g5_write_note",
                     }
 
                     if (this.paging) filter = Object.assign(filter, this.paging); // paging 객체가있다면 병합
 
                     try {
                         let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
-                        this.prayers = res.data
+                        this.boards = res.data
                         this.paging.count = res.count;
                     } catch (e) {
                         alert(e.message)

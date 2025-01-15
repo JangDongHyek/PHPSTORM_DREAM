@@ -70,7 +70,7 @@
             methods: {
                 async putPrayer(item) {
                     if(item.status == "완료") {
-                        alert("이미 완료된 기도입니다.");
+                        await this.jl.alert("이미 완료된 기도입니다.",{icon : 'error'});
                         return false;
                     }
                     let method = "update";
@@ -83,7 +83,7 @@
 
                     try {
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php");
-                        showToast('기도가 완료되었어요');
+                        await this.jl.alert('기도가 완료되었어요');
                         await this.getPrayers();
                     } catch (e) {
                         alert(e.message)

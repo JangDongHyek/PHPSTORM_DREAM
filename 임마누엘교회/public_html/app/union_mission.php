@@ -172,7 +172,7 @@ include_once("./app_head.php");
                 </div>
             </details>
             <details>
-                <summary>선교회</summary>
+                <summary>축구선교회</summary>
                 <div class="box_gray">
                     <h5>우리나라 최고의 스포츠!
                         땀흘리고 부딪히며 같이 뛰어 봅시다!</h5>
