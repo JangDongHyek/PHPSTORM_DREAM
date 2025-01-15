@@ -1,0 +1,15 @@
+
+rg board -> g5 board convert
+
+알지보드에서 그누보드5 로 컨버트되는 프로그램입니다.
+
+1. adm에 admin.menu910.php 파일과 rg_g5_convert 폴더 추가,
+
+2. data 폴더 안의 file 안, 해당하는 게시판 폴더 권한을 sudo chmod 707로 변경(기존 755일땐, 파일 업로드 불가)
+
+3. lib/thumbnail.lib.php 안 function thumbnail() 함수의 4번째줄, 상단에 아래 소스를 추가한다
+    
+    if(preg_match("/[\xE0-\xFF][\x80-\xFF][\x80-\xFF]/", $filename))  //true면 썸네일 없이 그대로 파일명 return, false면 썸네일 생성
+	return $filename;
+/////////////여기 위에 추가////////////
+    $source_file = "$source_path/$filename";
