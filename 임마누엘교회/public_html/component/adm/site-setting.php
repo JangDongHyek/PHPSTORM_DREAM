@@ -1,47 +1,56 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <button class="btn_b02" @click="postData();">저장</button>
+        <button class="btn btn_large btn_blue btn_b02" @click="postData();">저장</button>
         <br>
-        <br>
-        <table>
-            <thead>
+        <div class="table">
+            <table>
+                <thead>
                 <tr>
                     <th>항목</th>
                     <th>설정값</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
 
-            <tr>
-                <td><b>금주의 설교</b> 유튜브 링크</td>
-                <td>
-                    <input type="text" v-model="data.main_youtube">
-                </td>
-            </tr>
+                <tr>
+                    <td><b>메인</b> IMC 표어</td>
+                    <td>
+                        <textarea v-model="data.imc"></textarea>
+                    </td>
+                </tr>
 
-            <tr>
-                <td><b>결단노트</b> 주일말씀</td>
-                <td>
-                    <input type="text" v-model="data.note_day">
-                </td>
-            </tr>
+                <tr>
+                    <td><b>금주의 설교</b> 유튜브 링크</td>
+                    <td>
+                        <input type="text" v-model="data.main_youtube">
+                    </td>
+                </tr>
 
-            <tr>
-                <td><b>결단노트</b> 이번주 결단</td>
-                <td>
-                    <input type="text" v-model="data.note_week">
-                </td>
-            </tr>
 
-            <tr>
-                <td><b>결단노트</b> 실천기간</td>
-                <td>
-                    <input type="date" v-model="data.note_date" max="9999-12-31">
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                <tr>
+                    <td><b>결단노트</b> 주일말씀</td>
+                    <td>
+                        <input type="text" v-model="data.note_day">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>결단노트</b> 이번주 결단</td>
+                    <td>
+                        <input type="text" v-model="data.note_week">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>결단노트</b> 실천기간</td>
+                    <td>
+                        <input type="date" v-model="data.note_date" max="9999-12-31">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </script>
 
@@ -63,6 +72,7 @@
                     },
 
                     data: {
+                        imc : "",
                         main_youtube : "",
                         note_day : "",
                         note_week : "",

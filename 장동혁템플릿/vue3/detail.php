@@ -29,6 +29,9 @@
 
             </template>
         </item-bs-modal>
+
+        <!-- 부스스트랩이 있을시 사용가능한 다음주소찾기 모달-->
+        <external-bs-daum-postcode :modal="modal" @close="modal = false;" @select="getAddress"></external-bs-daum-postcode>
     </div>
 </script>
 
@@ -70,6 +73,10 @@
 
         },
         methods: {
+            getAddress(data) {
+                console.log(data);
+                this.modal = false;
+            },
             async postData() {
                 let method = this.primary ? "update" : "insert";
 

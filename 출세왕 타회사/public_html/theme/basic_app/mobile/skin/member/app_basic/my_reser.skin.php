@@ -69,7 +69,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <div class="in">
 		<div class="cslist">
             <?php for ($i = 0; $row = sql_fetch_array($reser_result); $i++){?>
-
+                <?
+                $sql = "select sum(amt) sum from new_autopay_history where new_car_wash_idx = '{$row['cw_idx']}' ";
+                $total_price = sql_fetch($sql)["sum"];
+                ?>
                 <?php
                     //23.06.21 정기,실내 결제안했으면 안보이게
                     if($row['is_payment']  != 'Y' && ($row['car_date_type'] == 3 || $row['car_date_type'] == 5)){

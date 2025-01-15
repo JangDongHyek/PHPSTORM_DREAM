@@ -1,3 +1,4 @@
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
@@ -5,43 +6,26 @@
             <table>
                 <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>이름</th>
-                    <th>결단 및 실천</th>
-                    <th>응원해요</th>
+                    <th>구분</th>
+                    <th>교구/이름</th>
+                    <th>제목</th>
+                    <th>시작일</th>
+                    <th>종료일</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="board in boards">
-                    <td>{{board.jl_no}}</td>
-                    <td>회원 데이터셋보고 결정</td>
-                    <td><p class="cut" @click="note = board; modal = true;">{{board.wr_content}}</p></td>
-                    <td><a onclick="showToast('응원해요!🙌')"><i class="fa-duotone fa-solid fa-hands-clapping"></i> 0</a></td>
+                    <td>{{board.wr_5 ? board.wr_5 : board.wr_4}}</td>
+                    <td>{{board.wr_3}}/{{board.wr_name}}</td>
+                    <td><p class="cut" @click="jl.href('./friend_view.php?idx='+board.wr_id)">{{board.wr_subject}}</p></td>
+                    <td>{{board.wr_6.split(' ')[0]}}</td>
+                    <td>{{board.wr_7.split(' ')[0]}}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
         <item-paging :paging="paging" @change="paging.page = $event; getBoards();"></item-paging>
-
-        <item-bs-modal :modal="modal" @close="modal = false;">
-            <template v-slot:header>
-                <h4 class="modal-title" id="noteViewModalLabel">결단노트</h4>
-                <button type="button" class="close" @click="modal = false;"><span aria-hidden="true">&times;</span></button>
-            </template>
-
-            <!-- body -->
-            <template v-slot:default>
-                <h6 class="flex ai-c jc-sb">회원 데이터셋보고 결정 <span class="icon icon_gray">작성일시 | {{note.wr_datetime}} </span></h6>
-                <br>
-                {{note.wr_content}}
-            </template>
-
-
-            <template v-slot:footer>
-
-            </template>
-        </item-bs-modal>
     </div>
 </script>
 
@@ -49,7 +33,7 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
-                primary: {type: String, default: ""}
+                primary: {type: String, default: ""},
             },
             data: function () {
                 return {
@@ -65,9 +49,6 @@
                     data: {},
 
                     boards : [],
-
-                    modal : false,
-                    note : {},
                 };
             },
             async created() {
@@ -91,18 +72,24 @@
                         table: "",
                     }
 
+                    // object의 필수값을 설정하는 option
+                    let required = [
+                        {name : "",message : ""},
+                    ]
+                    let options = {required : required};
+
                     if (this.data) data = Object.assign(data, this.data); // paging 객체가있다면 병합
 
                     try {
-                        let res = await this.jl.ajax(method, data, "/jl/JlApi.php");
+                        let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
                     } catch (e) {
-                        alert(e.message)
+                        await this.jl.alert(e.message)
                     }
 
                 },
                 async getBoards() {
                     let filter = {
-                        table: "g5_write_note",
+                        table: "g5_write_friend",
                     }
 
                     if (this.paging) filter = Object.assign(filter, this.paging); // paging 객체가있다면 병합
@@ -112,7 +99,7 @@
                         this.boards = res.data
                         this.paging.count = res.count;
                     } catch (e) {
-                        alert(e.message)
+                        await this.jl.alert(e.message)
                     }
                 }
             },

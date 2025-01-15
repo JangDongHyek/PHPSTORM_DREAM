@@ -1,19 +1,22 @@
 <?php
 $pid = "index";
 include_once("./app_head.php");
+include_once("../jl/JlConfig.php");
+
+$site_model = new JlModel("site_setting");
+$site_setting = $site_model->orderBy("idx","DESC")->get()['data'][0];
 
 ?>
 <div id="index">
     <div class="slogan">
         <h5>창립 50주년<br>2025 IMC 표어</h5>
-        <h5>성령의 긍휼로 · 아픔이 회복되고<br>
-            묶인데서 풀려나고 · 자유를 선포하는 교회</h5>
+        <h5><?=nl2br($site_setting['imc'])?></h5>
     </div>
     <div class="flex gap10">
         <div class="week">
             <span>금주의 설교</span>
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/7OmgL0fG6fw?controls=0" frameborder="0" allowfullscreen="" allow="accelerometer;
+                <iframe src="https://www.youtube.com/embed/<?=$jl->extractYoutube($site_setting['main_youtube'])?>?controls=0" frameborder="0" allowfullscreen="" allow="accelerometer;
     autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
         </div>

@@ -132,6 +132,14 @@ class Jl {
         return $value;
     }
 
+    function extractYoutube($url) {
+        $regex = '/(?:https?:\\/\\/(?:www\\.)?(?:youtube\\.com\\/.*[?&]v=|youtu\\.be\\/))([^&?]+)/';
+        if (preg_match($regex, $url, $matches)) {
+            return $matches[1]; // Video ID가 있으면 반환
+        }
+        return null; // Video ID가 없으면 null 반환
+    }
+
     //상황에 필요한 로직들을 넣은 Jsondecode 함수
     function jsonDecode($origin_json,$encode = true) {
         $str_json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경

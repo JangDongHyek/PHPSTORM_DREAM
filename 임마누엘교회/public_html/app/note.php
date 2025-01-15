@@ -18,23 +18,6 @@ include_once("../jl/JlConfig.php");
             <bbs-note-list></bbs-note-list>
         </div>
     </div>
-
-    <div class="modal fade" id="noteViewModal" tabindex="-1" role="dialog" aria-labelledby="noteViewModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="noteViewModalLabel">결단노트</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-
-                    <h6 class="flex ai-c jc-sb">전민웅 집사 <span class="icon icon_gray">작성일시 | 24.09.01 00:00 </span></h6>
-                    <br>
-                    남의 험담을 하지 않겠습니다
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?

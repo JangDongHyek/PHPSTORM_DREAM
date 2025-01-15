@@ -71,6 +71,14 @@ class Jl {
         //throw new \Exception($msg);
     }
 
+    function extractYoutube($url) {
+        $regex = '/(?:https?:\\/\\/(?:www\\.)?(?:youtube\\.com\\/.*[?&]v=|youtu\\.be\\/))([^&?]+)/';
+        if (preg_match($regex, $url, $matches)) {
+            return $matches[1]; // Video ID가 있으면 반환
+        }
+        return null; // Video ID가 없으면 null 반환
+    }
+
     //
     function log($content,$path = "") {
         $content = $content." at ".$this->getTime();
