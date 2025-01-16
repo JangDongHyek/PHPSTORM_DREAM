@@ -264,6 +264,14 @@ class Jl {
                 array_push(self::$PLUGINS,"bootstrap");
             }
         }
+
+        if(in_array('viewer',$plugins)) {
+            if(!in_array("viewer",self::$PLUGINS)) {
+                echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.css">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.js"></script>';
+                array_push(self::$PLUGINS,"viewer");
+            }
+        }
     }
 
     // vue 사용할시 vue에 필요한 파일들을 로드하고 JS 필수함수를 실행시키는 함수

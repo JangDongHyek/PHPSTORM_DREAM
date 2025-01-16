@@ -228,6 +228,12 @@ class Jl {
                         }
                         break;
 
+                    case "viewer":
+                        if (typeof Viewer === "undefined") {
+                            throw new Error("Viewer is not loaded.");
+                        }
+                        break;
+
                     default:
                         console.warn(`Unknown dependency: ${dep}`);
                         break;
@@ -561,6 +567,30 @@ class Jl {
     // 매개변수가 숫자만으로 이러우져있는지 확인하는 함수
     isNumber(str) {
         return !/[^0-9]/.test(str);
+    }
+
+    generateClipboard(text) {
+        // Clipboard API가 지원되는 경우
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.alert('클립보드에 복사되었습니다');
+            }).catch(err => {
+                this.alert('클립보드 복사 실패 : ', err);
+            });
+        } else {
+            // Clipboard API가 지원되지 않을 때
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                this.alert('클립보드에 복사되었습니다');
+            } catch (err) {
+                this.alert('클립보드 복사 실패 : ', err);
+            }
+            document.body.removeChild(textarea);
+        }
     }
 
     // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수

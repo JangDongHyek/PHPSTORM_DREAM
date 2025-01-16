@@ -17,8 +17,8 @@
 
                     <div class="swiper-container gallery_top">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide" v-for="item in data.main_image_array">
-                                <img :src="jl.root+item.src">
+                            <div class="swiper-slide" v-for="item,index in data.main_image_array">
+                                <img :id="'main_image'+index" :src="jl.root+item.src">
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -105,6 +105,8 @@
                                     </div>
                                 // 추가-->
 
+                                <div v-html="data.service"></div>
+
                                 <!--서비스 추가 옵션-->
                                 <dl class="service_option">
                                     <dt>성별</dt>
@@ -112,11 +114,21 @@
                                     <dt>연령</dt>
                                     <dd>{{ data.age }}</dd>
                                     <dt>지역</dt>
-                                    <dd>{{ data.area }}</dd>
+                                    <dd>
+                                        <span v-for="item in data.area">{{item}} &nbsp;</span>
+                                    </dd>
+                                    <template v-if="data.area.includes('국내')">
+                                        <dt>상세지역</dt>
+                                        <dd>
+                                            <span v-for="item in data.region">{{item}} &nbsp;</span>
+                                        </dd>
+                                    </template>
                                     <dt>주말 작업</dt>
                                     <dd>{{ data.weekend }}</dd>
                                     <dt>작업 유형</dt>
-                                    <dd>{{ data.styles }}</dd>
+                                    <dd>
+                                        <span v-for="item in data.styles">{{item}} &nbsp;</span>
+                                    </dd>
                                 </dl>
 
                                 <br>
@@ -441,6 +453,17 @@
                     this.data = res.response.data[0]
 
                     this.render = true;
+
+                    this.$nextTick(() =>{
+                        for (let i = 0; i < this.data.main_image_array.length; i++) {
+                            this.jl.imageViewer('main_image' + i,{
+                                zIndex:9999,
+                                toolbar : false,
+                                title : (image) => {return this.data.main_image_array[i].name}
+                            })
+                        }
+                    });
+
                 }
             }
         },

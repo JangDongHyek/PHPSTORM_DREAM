@@ -14,21 +14,21 @@
         <item-paging :paging="paging" @change="paging.page = $event; getData();"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
-        <item-bs-modal :modal="modal" @close="$emit('close')">
+        <external-bs-modal :modal="modal" @close="modal = false;">
             <template v-slot:header>
 
             </template>
 
             <!-- body -->
             <template v-slot:default>
-
+                <external-pdf-view v-if="modal"></external-pdf-view>
             </template>
 
 
             <template v-slot:footer>
 
             </template>
-        </item-bs-modal>
+        </external-bs-modal>
 
         <!-- 부스스트랩이 있을시 사용가능한 다음주소찾기 모달-->
         <external-bs-daum-postcode :modal="modal" @close="modal = false;" @select="getAddress"></external-bs-daum-postcode>

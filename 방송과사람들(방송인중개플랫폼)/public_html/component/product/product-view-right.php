@@ -69,11 +69,11 @@
                         </template>
 
                         <template v-else>
+                            <li role="presentation" :class="{'active' : tab == 'basic'}">
+                                <a href="" @click="event.preventDefault(); tab = 'basic'">BASIC</a>
+                            </li>
                             <li role="presentation" :class="{'active' : tab == 'standard'}">
                                 <a href="" @click="event.preventDefault(); tab = 'standard'">STANDARD</a>
-                            </li>
-                            <li role="presentation" :class="{'active' : tab == 'deluxe'}">
-                                <a href="" @click="event.preventDefault(); tab = 'deluxe'">DELUXE</a>
                             </li>
                             <li role="presentation" :class="{'active' : tab == 'premium'}">
                                 <a href="" @click="event.preventDefault(); tab = 'premium'">PREMIUM</a>
@@ -144,7 +144,6 @@
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
-            if(this.product.package) this.tab = 'standard'
             this.getLike();
         },
         mounted: function(){

@@ -44,7 +44,7 @@
 
                 // object의 필수값을 설정하는 option
                 let required = [
-                    {name : "",message : ""},
+                    {name : "",message : ``},
                 ]
                 let options = {required : required};
 

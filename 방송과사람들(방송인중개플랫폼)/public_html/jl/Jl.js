@@ -4,6 +4,7 @@ class Jl {
         this.root = Jl_base_url;
         this.editor = Jl_editor;
         this.dev = Jl_dev;
+        this.jl_alert = Jl_alert;
 
         // 의존성주입 패턴
         if (typeof JlJavascript !== 'undefined') {
@@ -53,6 +54,10 @@ class Jl {
 
     INIT(object = {}) {
         this.js.JS_INIT(object);
+    }
+
+    isMobile() {
+        return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
     ajax(method,obj,url,options = {}) {
@@ -223,6 +228,12 @@ class Jl {
                         }
                         break;
 
+                    case "viewer":
+                        if (typeof Viewer === "undefined") {
+                            throw new Error("Viewer is not loaded.");
+                        }
+                        break;
+
                     default:
                         console.warn(`Unknown dependency: ${dep}`);
                         break;
@@ -298,6 +309,13 @@ class Jl {
         }
     }
 
+    href(url) {
+        window.location.href = url;
+    }
+    open(url) {
+        window.open(url);
+    }
+
     dropFile(event,obj,key,permission = []) {
         this.commonFile(event.dataTransfer.files,obj,key,permission);
         this.log(obj[key])
@@ -353,7 +371,7 @@ class Jl {
             if(like) {
                 return arrays.findIndex(obj => obj[key].includes(value));
             }else {
-                return arrays.findIndex(obj => obj[key] == value);
+                return arrays.findIndex(obj => obj[key] === value);
             }
         }else {
             if(like) {
@@ -368,7 +386,7 @@ class Jl {
         if(like) {
             return arrays.filter(obj => obj[key].includes(value));
         }else {
-            return arrays.filter(obj => obj[key] === value);
+            return arrays.filter(obj => obj[key] == value);
         }
     }
 
@@ -529,7 +547,7 @@ class Jl {
         return result;
     }
 
-    //Objects 들중 매개변수에 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
+    //Objects안에 매개변수로 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
     getObjectsToKey(array, key) {
         // 결과 값을 저장할 배열
         const result = [];
@@ -549,6 +567,30 @@ class Jl {
     // 매개변수가 숫자만으로 이러우져있는지 확인하는 함수
     isNumber(str) {
         return !/[^0-9]/.test(str);
+    }
+
+    generateClipboard(text) {
+        // Clipboard API가 지원되는 경우
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.alert('클립보드에 복사되었습니다');
+            }).catch(err => {
+                this.alert('클립보드 복사 실패 : ', err);
+            });
+        } else {
+            // Clipboard API가 지원되지 않을 때
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                this.alert('클립보드에 복사되었습니다');
+            } catch (err) {
+                this.alert('클립보드 복사 실패 : ', err);
+            }
+            document.body.removeChild(textarea);
+        }
     }
 
     // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수

@@ -587,6 +587,30 @@ class Jl {
         return false;
     }
 
+    generateClipboard(text) {
+        // Clipboard API가 지원되는 경우
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.alert('클립보드에 복사되었습니다');
+            }).catch(err => {
+                this.alert('클립보드 복사 실패 : ', err);
+            });
+        } else {
+            // Clipboard API가 지원되지 않을 때
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                this.alert('클립보드에 복사되었습니다');
+            } catch (err) {
+                this.alert('클립보드 복사 실패 : ', err);
+            }
+            document.body.removeChild(textarea);
+        }
+    }
+
 
     // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
     isNumberKeyInput(event, format = false) {

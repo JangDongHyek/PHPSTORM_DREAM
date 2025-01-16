@@ -204,7 +204,8 @@ switch ($pid) {
     case "lost_form" :
         $header_type = 1;
         $footer_type = 2;
-        $header_name = '분실 등록';
+        if($_GET['tab'] == 1) $header_name = '습득물 등록';
+        else $header_name = '분실물 등록';
         break;
     case "lost_report" :
         $header_type = 1;
@@ -225,6 +226,11 @@ switch ($pid) {
         $header_type = 1;
         $footer_type = 2;
         $header_name = '설교영상 등록';
+        break;
+    case "setting" :
+        $header_type = 1;
+        $footer_type = 2;
+        $header_name = '설정';
         break;
 }
 

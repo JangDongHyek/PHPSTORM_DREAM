@@ -233,7 +233,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" placeholder="0" @keyup="jl.isNumberKeyInput($event,true)" @input="jl.isNumberKeyInput($event,true)" required v-model="product.basic.price"><label>원</label>
+                                                            <input type="text" class="text-right" placeholder="0" @input="isNumberKeyInput2($event,true,'basic')" required v-model="product.basic.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -278,7 +278,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" @keyup="jl.isNumberKeyInput($event,true)" @input="jl.isNumberKeyInput($event,true)" placeholder="0" required v-model="product.standard.price"><label>원</label>
+                                                            <input type="text" class="text-right" @input="isNumberKeyInput2($event,true,'standard')" placeholder="0" required v-model="product.standard.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -323,7 +323,7 @@
                                                     <dt>금액(VAT 포함)<span class="required">*</span></dt>
                                                     <dd>
                                                         <p class="flex">
-                                                            <input type="text" class="text-right" placeholder="0" @keyup="jl.isNumberKeyInput($event,true)" @input="jl.isNumberKeyInput($event,true)" required v-model="product.premium.price"><label>원</label>
+                                                            <input type="text" class="text-right" @input="isNumberKeyInput2($event,true,'premium')" placeholder="0" required v-model="product.premium.price"><label>원</label>
                                                         </p>
                                                     </dd>
                                                 </dl>
@@ -439,6 +439,21 @@
             });
         },
         methods: {
+            isNumberKeyInput2(event, format = false, targetModel) {
+                // 키 입력값에서 숫자만 유지
+                let sanitizedValue = event.target.value.replace(/[^0-9]/g, '');
+
+                // 포맷 적용
+                if (format) {
+                    sanitizedValue = sanitizedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                }
+
+                // Vue 데이터 모델 업데이트
+                this.$set(this.product[targetModel], 'price', sanitizedValue);
+
+                // DOM 값 업데이트 (필요 시)
+                event.target.value = sanitizedValue;
+            },
             changeTap() {
                 if(this.product.portfolios.length > 5) {
                     alert("포트폴리오는 5개까지만 가능합니다.");

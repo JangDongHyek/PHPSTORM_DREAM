@@ -2,21 +2,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <item-bs-modal :modal="modal" @close="$emit('close')">
-            <template v-slot:header>
-
-            </template>
-
-            <!-- body -->
-            <template v-slot:default>
-                <div id="postcode-container" style="border:1px solid #ddd; padding:10px; width:100%; height:400px; overflow:auto;"></div>
-            </template>
-
-
-            <template v-slot:footer>
-
-            </template>
-        </item-bs-modal>
+        <div id="postcode-container" style="border:1px solid #ddd; padding:10px; width:100%; height:400px; overflow:auto;"></div>
     </div>
 </script>
 
@@ -47,7 +33,7 @@
             },
             mounted() {
                 this.$nextTick(() => {
-
+                    this.openPostcode();
                 });
             },
             updated() {
@@ -75,13 +61,7 @@
                 }
             },
             computed: {},
-            watch: {
-                modal() {
-                    if(this.modal) {
-                        this.openPostcode();
-                    }
-                }
-            }
+            watch: {}
         }});
 
 </script>

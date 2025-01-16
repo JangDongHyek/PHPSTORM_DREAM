@@ -13,6 +13,7 @@ class Jl {
     public $EDITOR_HTML;
     public $ENV;
     public $COMPONENT;
+    public $ALERT;
 
 
     protected $PHP;                         // JlFile 에서 사용
@@ -33,12 +34,12 @@ class Jl {
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
         array_push($this->DEV_IP,"112.160.220.208"); // 아이티포원 내부 IP
 
-
         $this->root_dir = JL_ROOT_DIR;
         $this->JS = JL_JS;
         $this->EDITOR_JS = JL_EDITOR_JS;
         $this->EDITOR_HTML = JL_EDITOR_HTML;
         $this->COMPONENT = JL_COMPONENT;
+        $this->ALERT = JL_ALERT;
         $this->ENV = $this->getEnv();
         $this->RESOURCE = $this->getJlPath()."/jl_resource";
 
@@ -131,6 +132,14 @@ class Jl {
         return $value;
     }
 
+    function extractYoutube($url) {
+        $regex = '/(?:https?:\\/\\/(?:www\\.)?(?:youtube\\.com\\/.*[?&]v=|youtu\\.be\\/))([^&?]+)/';
+        if (preg_match($regex, $url, $matches)) {
+            return $matches[1]; // Video ID가 있으면 반환
+        }
+        return null; // Video ID가 없으면 null 반환
+    }
+
     //상황에 필요한 로직들을 넣은 Jsondecode 함수
     function jsonDecode($origin_json,$encode = true) {
         $str_json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
@@ -187,6 +196,7 @@ class Jl {
             echo "const Jl_editor = '{$this->EDITOR_HTML}';";
             echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
             echo "const Jl_token = '{$token['content']}';";
+            echo "const Jl_alert = '{$this->ALERT}';";
             //Vue 데이터 연동을 위한 변수
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
@@ -195,6 +205,7 @@ class Jl {
             //Vue3 데이터 연동을 위한 변수
             echo "let Jl_vue = [];";
             echo "let Jl_components = [];";
+
             echo "</script>";
             echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
             if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
@@ -251,6 +262,14 @@ class Jl {
                 echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>';
                 echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
                 array_push(self::$PLUGINS,"bootstrap");
+            }
+        }
+
+        if(in_array('viewer',$plugins)) {
+            if(!in_array("viewer",self::$PLUGINS)) {
+                echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.css">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.js"></script>';
+                array_push(self::$PLUGINS,"viewer");
             }
         }
     }
@@ -667,8 +686,8 @@ class Jl {
 
         // Jl 폴더 권한 확인
         if(!is_dir($this->getJlPath())) $this->error("Jl INIT() : jl 폴더가 없습니다.");
-        if($this->getDirPermission($this->RESOURCE) != "777") {
-            if(!chmod($this->RESOURCE, 0777)) {
+        if($this->getDirPermission($this->getJlPath()) != "777") {
+            if(!chmod($this->getJlPath(), 0777)) {
                 $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
             }
         }

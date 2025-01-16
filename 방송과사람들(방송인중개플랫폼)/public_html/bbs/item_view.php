@@ -66,6 +66,7 @@ $jl->vueLoad("viewapp");
 include_once($jl->ROOT."/component/product/product-view.php");
 include_once($jl->ROOT."/component/product/product-view-right.php");
 $jl->componentLoad("part");
+$jl->pluginLoad("viewer");
 
 include_once('./_tail.php');
 ?>

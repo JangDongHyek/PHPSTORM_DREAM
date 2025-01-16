@@ -107,10 +107,10 @@
 
                     try {
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php");
-                        alert("변경되었습니다.");
+                        await this.jl.alert("변경되었습니다.");
                         window.location.reload();
                     } catch (e) {
-                        alert(e.message)
+                        await this.jl.alert(e.message)
                     }
 
                 },
@@ -124,7 +124,7 @@
                         let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
                         this.data = res.data[0]
                     } catch (e) {
-                        alert(e.message)
+                        await this.jl.alert(e.message)
                     }
                 }
             },
