@@ -128,7 +128,7 @@
             computed: {},
             watch: {
                 tab() {
-                    this.page = 1;
+                    this.paging.page = 1;
                     this.getBoards();
                 }
             }

@@ -1,6 +1,8 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
+    <div>
 
+    </div>
 </script>
 
 <script>
@@ -21,11 +23,14 @@
                 },
 
                 data: {},
+                data_array : [],
             };
         },
         async created() {
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
+
+            if(this.primary) this.getData();
         },
         mounted() {
             this.$nextTick(() => {
@@ -49,6 +54,7 @@
                 let options = {required : required};
 
                 if (this.data) data = Object.assign(data, this.data); // paging 객체가있다면 병합
+                method = data.idx ? 'update' : 'insert';
 
                 try {
                     let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
@@ -59,14 +65,26 @@
             },
             async getData() {
                 let filter = {
-                    table: "user",
+                    table: "",
+                }
+
+                try {
+                    let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
+                    this.data = res.data[0]
+                } catch (e) {
+                    await this.jl.alert(e.message)
+                }
+            },
+            async getsData() {
+                let filter = {
+                    table: "",
                 }
 
                 if (this.paging) filter = Object.assign(filter, this.paging); // paging 객체가있다면 병합
 
                 try {
                     let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
-                    this.data = res.data[0]
+                    this.data_array = res.data
                     this.paging.count = res.count;
                 } catch (e) {
                     await this.jl.alert(e.message)

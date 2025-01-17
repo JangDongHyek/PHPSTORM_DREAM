@@ -141,6 +141,7 @@ class JlService extends Jl{
     }
 
     public function update() {
+        if($this->obj['primary']) $this->obj[$this->model->primary] = $this->obj['primary'];
         $this->iuCheck();
 
         if($this->file_use) {

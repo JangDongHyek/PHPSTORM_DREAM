@@ -11,7 +11,7 @@
         </div>
 
         <!-- 페이징 -->
-        <item-paging :paging="paging" @change="paging.page = $event; getData();"></item-paging>
+        <item-paging :paging="paging" @change="paging.page = $event; getsData();"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
         <external-bs-modal :modal="modal" @close="modal = false;">

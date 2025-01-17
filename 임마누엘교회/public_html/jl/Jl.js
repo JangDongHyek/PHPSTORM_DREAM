@@ -402,6 +402,9 @@ class Jl {
                         objs[key] = value; // File이 포함된 원본 배열 유지
                     }
                     obj[key] = filteredArray; // File 제거된 배열로 obj 업데이트
+                }else if (typeof value === "boolean") {
+                    // 불린 값을 문자열로 변환
+                    obj[key] = value ? "true" : "false";
                 }
             }
         }

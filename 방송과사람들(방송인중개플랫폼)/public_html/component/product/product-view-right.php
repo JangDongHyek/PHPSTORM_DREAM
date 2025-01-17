@@ -95,9 +95,10 @@
                                     <dd>{{ product[tab].work }}일</dd>
                                     <dt>수정횟수</dt>
                                     <dd>{{ product[tab].modify }}회</dd>
-                                    <dt>추가옵션</dt>
                                     <span class="line"></span>
-                                    <template v-for="item in product.options" v-if="item.bool">
+                                    <dt>맞춤옵션</dt>
+                                    <dd></dd>
+                                    <template v-for="item in product.options">
                                         <dt>{{ item.name }}</dt>
                                         <dd v-if="item.detail == 'detail'">{{parseInt(item[tab].price).format()}}원 추가시 {{item[tab].option}}</dd>
                                         <dd v-if="item.detail == 'custom'">{{item.description}}</dd>
@@ -161,7 +162,7 @@
 
                     var res = await this.jl.ajax("insert", obj, "/api/member_chat_room.php");
 
-                    window.location.href = `${this.jl.root}/bbs/chat.php?idx=${res.data.idx}`
+                    window.location.href = `${this.jl.root}/bbs/chat.php?room=${res.data.idx}&name=<?=$member['mb_nick']?>`
                 }else {
                     alert("로그인이 필요한 기능입니다.");
                 }

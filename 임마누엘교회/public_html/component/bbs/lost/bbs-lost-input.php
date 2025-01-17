@@ -42,19 +42,28 @@
                             <div class="flex gap5">
                                 <div class="uploader" :style="{ background : data.wr_8 ? 'none' : 'initial;'}" @click="$refs.file1.click()">
                                     사진 선택
-                                    <img v-if="data.wr_8" :src="data.wr_8.preview">
+                                    <template v-if="data.wr_8">
+                                        <img v-if="data.wr_8.src" :src="jl.root+data.wr_8.src">
+                                        <img v-else :src="data.wr_8.preview">
+                                    </template>
                                     <input type="file" ref="file1" style="display: none;" @change="jl.changeFile($event,data,'wr_8')">
                                 </div>
 
                                 <div class="uploader" :style="{ background : data.wr_9 ? 'none' : 'initial;'}" @click="$refs.file2.click()">
                                     사진 선택
-                                    <img v-if="data.wr_9" :src="data.wr_9.preview">
+                                    <template v-if="data.wr_9">
+                                        <img v-if="data.wr_9.src" :src="jl.root+data.wr_9.src">
+                                        <img v-else :src="data.wr_9.preview">
+                                    </template>
                                     <input type="file" ref="file2" style="display: none;" @change="jl.changeFile($event,data,'wr_9')">
                                 </div>
 
                                 <div class="uploader" :style="{ background : data.wr_10 ? 'none' : 'initial;'}" @click="$refs.file3.click()">
                                     사진 선택
-                                    <img v-if="data.wr_10" :src="data.wr_10.preview">
+                                    <template v-if="data.wr_10">
+                                        <img v-if="data.wr_10.src" :src="jl.root+data.wr_10.src">
+                                        <img v-else :src="data.wr_10.preview">
+                                    </template>
                                     <input type="file" ref="file3" style="display: none;" @change="jl.changeFile($event,data,'wr_10')">
                                 </div>
                             </div>
@@ -96,7 +105,7 @@
                 </table>
             </div>
             <br>
-            <button type="button" class="btn btn_color btn-large" @click="postBoard();">등록하기</button>
+            <button type="button" class="btn btn_color btn-large" @click="postBoard();">{{primary ? '수정하기' : '등록하기'}}</button>
         </div>
 </script>
 
@@ -139,6 +148,8 @@
             async created() {
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
+
+                if(this.primary) await this.getBoard();
             },
             mounted() {
                 this.$nextTick(() => {
@@ -151,6 +162,7 @@
             methods: {
                 async postBoard() {
                     let method = this.primary ? "update" : "insert";
+
                     let data = {
                         table: "g5_write_lost",
                         file_use : true
@@ -186,9 +198,10 @@
                     }
 
                 },
-                async getData() {
+                async getBoard() {
                     let filter = {
-                        table: "user",
+                        table: "g5_write_lost",
+                        primary : this.primary
                     }
 
                     if (this.paging) filter = Object.assign(filter, this.paging); // paging 객체가있다면 병합

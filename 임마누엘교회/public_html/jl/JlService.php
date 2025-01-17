@@ -141,6 +141,8 @@ class JlService extends Jl{
     }
 
     public function update() {
+        if($this->obj['primary']) $this->obj[$this->model->primary] = $this->obj['primary'];
+
         $this->iuCheck();
 
         if($this->file_use) {
@@ -252,6 +254,7 @@ class JlService extends Jl{
             }
         }
 
+        //암호화 할 내용이있으면 암호화 진행
         if(isset($this->obj['hashes'])) {
             $hashes = $this->jsonDecode($this->obj['hashes']);
             foreach ($hashes as $hash) {
