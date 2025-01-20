@@ -53,7 +53,8 @@ form.addEventListener('submit', async (e) => {
             return false;
         }
     } else {
-        if (form.password.value.length != 0 && form.password.value.length > 4) {
+        if (form.password.value.length < 4) {
+            console.log(form.password.value.length);
             showAlert('비밀번호를 4자 이상 입력해 주세요.', form.password.focus());
             return false;
         } else {
