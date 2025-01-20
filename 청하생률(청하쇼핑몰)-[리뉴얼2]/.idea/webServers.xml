@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6c105246-a473-425f-8699-fdb4eb2cbc68" name="청하생률(청하쇼핑몰)-[리뉴얼2]" url="http://dreamforone.kr">
+        <fileTransfer host="dreamforone.kr" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
