@@ -375,7 +375,7 @@ if ($_SESSION['ss_mb_id']) { // 로그인중이라면
             $row = sql_fetch($sql);
 
             //$key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $row['mb_password']);
-			$key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $row['mb_password']); 
+			$key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $row['mb_password']);
 
             // 쿠키에 저장된 키와 같다면
             $tmp_key = get_cookie('ck_auto');
@@ -673,7 +673,7 @@ $g5['g5_shop_coupon_table'] = G5_TABLE_PREFIX . 'shop_coupon'; // 쿠폰관리
 $g5['g5_shop_coupon_log_table'] = G5_TABLE_PREFIX . 'shop_coupon_log'; // 쿠폰관리로그
 
 $cs_list = array(
-  '1' => "소형/중형",      
+  '1' => "소형/중형",
   '2' => "대형",
 );
 

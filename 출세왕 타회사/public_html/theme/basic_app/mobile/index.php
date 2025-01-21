@@ -19,9 +19,9 @@ if($member['mb_id'] != "test01"){
     <script src="/js/fancybox.umd.js"></script>
     <link rel="stylesheet" href="/js/fancybox.css" />
     <script>
-        console.log("DEV");
+        //console.log("DEV");
         try{
-            localStorage.clear();
+            //localStorage.clear();
 
             var varUA = navigator.userAgent.toLowerCase();
             var regExpAndroid = /easyapp_android/gi;

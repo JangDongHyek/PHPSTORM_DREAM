@@ -5,11 +5,13 @@
             <div class="box">
                 <h3>나의 서비스관리</h3>
 
+
+                <button @click="location.href=jl.root+'/bbs/item_write01.php'" class="btn new_btn">서비스 등록하기</button>
                 <ul id="product_list">
                     <li class="nodata" v-if="data.length == 0">
                         <div class="nodata_wrap">
                             <div class="area_img"><img :src="`${jl.root}/theme/basic_app/img/app/img_nodata.svg`"></div>
-                            <p>등록한 서비스이 없습니다.</p>
+                            <p>등록한 서비스가 없습니다.</p>
                         </div>
                     </li>
 
@@ -20,14 +22,14 @@
                                 <img :src="`${jl.root}${item.main_image_array[0].src}`">
                             </div>
                             <div class="area_txt">
-                                <span v-if="item.approval"><i class="fa-solid fa-circle-check"></i> 승인완료</span>
+                                <span v-if="item.approval"><b class="color_blue"><i class="fa-solid fa-circle-check"></i> 승인완료</b></span>
                                 <span v-else><i class="fa-solid fa-circle-exclamation"></i> 승인대기</span>
                                 <h3>{{item.name}}</h3> <!-- 제목 -->
                                 <div class="star"><i></i><em>{{ calcReview(item) }}</em></div> <!-- 별점 -->
                                 <div class="price">{{getPrice(item).format()}}원 </div> <!-- 가격 -->
                             </div>
                         </a>
-                        <div class="flex">
+                        <div class="flex" v-if="!item.approval">
                             <a class="list_btn" :href="`${jl.root}/bbs/item_write01.php?idx=${item.idx}`">수정</a> 
                             <a class="list_btn" @click="deleteProduct(item)">삭제</a>
                         </div>
@@ -35,8 +37,6 @@
                 </ul>
 
             </div>
-
-            <button @click="location.href=jl.root+'/bbs/item_write01.php'" class="btn">서비스 등록하기</button>
 
         </div>
     </div>

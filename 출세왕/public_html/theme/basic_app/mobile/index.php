@@ -16,8 +16,8 @@ if($member['mb_id'] != "test01"){
     */
 }
 ?>
-    <script src="/js/fancybox.umd.js"></script>
-    <link rel="stylesheet" href="/js/fancybox.css" />
+    <script src="<?=G5_URL?>/js/fancybox.umd.js"></script>
+    <link rel="stylesheet" href="<?=G5_URL?>/js/fancybox.css" />
     <script>
         //console.log("DEV");
         try{

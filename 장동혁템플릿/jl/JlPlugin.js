@@ -87,6 +87,15 @@ class JlPlugin {
         });
     }
 
+    /*
+       this.$nextTick(() =>{
+            this.jl.imageViewer('main_image',{
+                zIndex:9999,
+                toolbar : false,
+                title : (image) => {return this.data.main_image_array[i].name}
+            })
+        });
+     */
     imageViewer(tag_id,options = {}) {
         /*
            options = {

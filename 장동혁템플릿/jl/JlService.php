@@ -58,12 +58,14 @@ class JlService extends Jl{
 
         $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
         if(in_array($method,$trace_list)) {
-            $result = $response['success'] ? '성공' : "실패";
-            $this->sessionTrace("{$this->obj['table']} 테이블 $method 요청 {$result}");
+            $object = array(
+                "method" => $method,
+                "response" => $response,
+            );
+            $this->sessionTrace($object);
         }
-        if($method)
 
-            return $response;
+        return $response;
     }
 
     public function get() {
@@ -134,7 +136,7 @@ class JlService extends Jl{
 
 
 
-        $response['idx'] = $this->model->insert($this->obj);
+        $response['primary'] = $this->model->insert($this->obj);
         $response['success'] = true;
 
         return $response;
@@ -168,15 +170,16 @@ class JlService extends Jl{
 
         $this->model->update($this->obj);
         $response['success'] = true;
+        $response['primary'] = $this->obj['primary'];
 
         return $response;
     }
 
     public function delete() {
         if($this->obj['primary']) $this->obj[$this->model->primary] = $this->obj['primary'];
+        $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
 
         if($this->file_use) {
-            $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
 
             foreach ($this->file_columns as $column) {
                 $this->jl_file->deleteDirGate($getData[$column]);
@@ -185,6 +188,7 @@ class JlService extends Jl{
 
         $data = $this->model->delete($this->obj);
 
+        $response['data'] = $getData;
         $response['success'] = true;
 
         return $response;
@@ -212,6 +216,8 @@ class JlService extends Jl{
         }
 
         $this->model->where($this->obj)->whereDelete();
+
+        $response['data'] = $getData;
         $response['success'] = true;
 
         return $response;

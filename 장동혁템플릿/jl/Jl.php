@@ -652,7 +652,7 @@ class Jl {
         ];
     }
 
-    function sessionTrace($message = "") {
+    function sessionTrace($object) {
         $current_url = $this->getCurrentUrl()['full'];
         $referrer_url = $_SERVER['HTTP_REFERER'];
 
@@ -660,7 +660,7 @@ class Jl {
             "current_url" => $current_url,
             "referrer_url" => $referrer_url,
         );
-        if($message) $content['message'] = $message;
+        if($object['message']) $content['message'] = $object['message'];
         $agent = $this->getUserAgent();
 
         $session_model = new JlModel("jl_session");
@@ -670,6 +670,8 @@ class Jl {
             "name" => "trace",
             "status" => "expired",
             "content" => $this->jsonEncode($content),
+            "method" => $object['method'],
+            "response" => $this->jsonEncode($object['response']),
             "user_agent" => $agent['user_agent'],
             "browser" => $agent['browser'],
             "browser_version" => $agent['browser_version'],

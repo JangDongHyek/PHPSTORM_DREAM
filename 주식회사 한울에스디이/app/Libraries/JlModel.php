@@ -386,7 +386,9 @@ class JlModel{
             if(!$result) $this->jl->error(mysql_error());
         }
 
-        //return $_id;
+
+        if($param[$this->primary]) return $param[$this->primary];
+
         if($this->mysqli)
             return mysqli_insert_id($this->connect);
         else
