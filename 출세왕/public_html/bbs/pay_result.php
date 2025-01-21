@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', '0');
+
 include_once('./_common.php');
 
 /*******************************************************************************
@@ -327,6 +329,21 @@ if ($pg_status == 1 ) // 결제성공
         $sql = "select car_date_type from new_car_wash where cw_idx = '{$moid_arr[1]}'";
         $cdt = sql_fetch($sql)["car_date_type"];
 
+
+        //2023-11-28
+        //포인트 사용처리 insert_point 마이너스 처리로 변경
+        $sql = "SELECT * FROM new_car_wash where cw_idx = '{$moid_arr[1]}'";
+        $car_result = sql_fetch($sql);
+        if($car_result['cp_id'] == "POINT"){
+            $use_point = $car_result['cp_price'];
+
+            //포인트 이중결제 부분 이승환 수정 2024-06-24
+            //insert_point($member['mb_id'], -($use_point), $PayMethod.' '.$_REQUEST["GoodsName"]);
+            //insert_use_point($member['mb_id'], $use_point);
+        }
+
+
+
         $url = G5_BBS_URL. '/my_service_ok.php?cdt=' .$cdt.'&idx='.$moid_arr[1];
     }
     else
@@ -357,6 +374,7 @@ else{ // 결제실패
 ?>
 
 <?php if ($forward == 'Y'){ ?>
+
     <script>
         alert('<?= $msg ?>');
         <?php if($_REQUEST["PayMethod"] != 'EPAY') { ?>
@@ -367,9 +385,10 @@ else{ // 결제실패
         <?php } ?>
     </script>
 <?php }else{ ?>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script>
-        alert('<?= $msg ?>');
+        swal('<?= $msg ?>');
+        //alert('<?= $msg ?>');
         location.href = "<?= $url ?>";
     </script>
 <?php } ?>

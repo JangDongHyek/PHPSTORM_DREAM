@@ -105,6 +105,7 @@ $sql = " update {$g5['config_table']}
                 cf_mobile_page_rows = '{$_POST['cf_mobile_page_rows']}',
                 cf_stipulation = '{$_POST['cf_stipulation']}',
                 cf_privacy = '{$_POST['cf_privacy']}',
+                cf_privacy2 = '{$_POST['cf_privacy2']}',
                 cf_open_modify = '{$_POST['cf_open_modify']}',
                 cf_memo_send_point = '{$_POST['cf_memo_send_point']}',
                 cf_mobile_new_skin = '{$_POST['cf_mobile_new_skin']}',

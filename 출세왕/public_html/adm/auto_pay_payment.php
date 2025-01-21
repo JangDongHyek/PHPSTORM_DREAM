@@ -12,7 +12,7 @@ include_once("./_common.php");
 
 /**********************************************************************************/
 //이부분에 로그파일 경로를 수정해주세요.
-$LogPath = "/home/weeksensitive/public_html/shop/log";
+$LogPath = "/home/successking/public_html/log";
 /**********************************************************************************/
 
 
@@ -109,6 +109,7 @@ $pgAppTime     	= $pgAppTime;
 $pgTid         	= $pgTid;
 $approvalAmt   	= $approvalAmt;
 $approvalNo    	= $approvalNo;
+$new_car_wash_dix = $new_car_wash_dix;
 
 
 if($payMethod == '01'){
@@ -266,7 +267,7 @@ sql_query($sql);
 
 //마지막 결제일 업데이트
 $sql = "update g5_autoPay set finalDate = '".G5_TIME_YMD."' where BillKey = '{$billKey}' ";
-print_r($sql);
+//print_r($sql);
 sql_query($sql);
 
 echo 0000;

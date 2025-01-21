@@ -12,17 +12,22 @@ $id = "mb_id";
 
 //$sql = "select * from {$g5['car_wash_table']} where ".$id." = '{$member['mb_id']}' and (cw_step = 0 or cw_step = 1) order by cw_idx desc ";
 //$reser_result = sql_query($sql);
-$sql = "select *,cw.cw_idx cw_idx,cw.wr_datetime cw_datetime,cw.complete_datetime cw_complete_datetime from {$g5['car_wash_table']} cw
+$w_sql = "select cw.* from {$g5['car_wash_table']} cw
 LEFT join new_re_car_wash rw on cw.rw_idx = rw.rw_idx
 where ".$id." = '{$member['mb_id']}' and (cw_step = 1 or cw_step = 0 or(rw_step = 1 and is_turn_yn = 'N')) order by cw.complete_datetime DESC,rw_date DESC, car_w_date asc ";
-$reser_result = sql_query($sql);
+$reser_result = sql_query($w_sql);
 
 
+//총누적결제금액
+$sql = "select sum(amt) sum from new_autopay_history where BillKey = '{$member['mb_id']}' ";
+$total_price = sql_fetch($sql)["sum"];
 
 //5일 후 데이터 받아오기 mb_id myodrer꺼는 ma_id wc
 $sql = "select * from new_car_wash WHERE mb_id = '{$member['mb_id']}' and now() >= date_add(complete_datetime, interval +5 day) ";
 $complete_result = sql_query($sql);
 
+
+/*
 for ($i = 0; $row = sql_fetch_array($complete_result); $i++) {
 
 //정기세차(매월관리) or 정기세차(월4회) complete_cnt가 4회 미만일 경우 완료일로 부터5 일 후 진행작업으로 감.
@@ -34,6 +39,7 @@ for ($i = 0; $row = sql_fetch_array($complete_result); $i++) {
         sql_query($sql);
     }
 }
+*/
 
 $sql = "select * from new_re_car_wash where cw_idx = '{$view["cw_idx"]}' and rw_step = 2 order by complete_datetime asc";
 $re_result_array = sql_query($sql);

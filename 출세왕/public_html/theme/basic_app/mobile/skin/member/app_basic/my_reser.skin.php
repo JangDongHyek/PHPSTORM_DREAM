@@ -53,10 +53,6 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 <!-- 매니저정보 모달팝업 -->
 
 
-
-
-
-
 <!-- 출장세차 예약현황 -->
 
 <div id="my_reser">
@@ -69,11 +65,14 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     </ul>
 
     <?php if (sql_num_rows($reser_result) > 0){?>
-    <!--내용부분--> 
+    <!--내용부분-->
     <div class="in">
 		<div class="cslist">
             <?php for ($i = 0; $row = sql_fetch_array($reser_result); $i++){?>
-
+                <?
+                $sql = "select sum(amt) sum from new_autopay_history where new_car_wash_idx = '{$row['cw_idx']}' ";
+                $total_price = sql_fetch($sql)["sum"];
+                ?>
                 <?php
                     //23.06.21 정기,실내 결제안했으면 안보이게
                     if($row['is_payment']  != 'Y' && ($row['car_date_type'] == 3 || $row['car_date_type'] == 5)){
@@ -110,6 +109,23 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                         </dd>
 
                     </dl>
+
+                    <? if($row['car_date_type'] ==2 or$row['car_date_type'] ==1) { ?>
+                        <dl class="tx_m">
+                            <dt>작업완료횟수</dt>
+                            <dd><a data-toggle="modal" data-target="#myModal_end" class="doneListA"><?=$row["complete_cnt"]?>회</a></dd>
+                        </dl>
+                        <dl class="tx_m">
+                            <dt>작업완료일</dt>
+                            <dd><a data-toggle="modal" data-target="#myModal_end" class="doneListA"><?=$row["complete_datetime"]?></a></dd>
+                        </dl>
+                    <? } ?>
+
+                    <dl class="tx_m">
+                        <dt>사용포인트</dt>
+                        <dd><a data-toggle="modal" data-target="#myModal_end" class="doneListA"><?=number_format($row["cp_price"]);?></a></dd>
+                    </dl>
+
                     <!-- 23.04.17  가리기 내부세차 따로 빼줌 wc -->
                     <dl class="tx_m" style="display: none">
                         <dt>내부세차</dt>
@@ -118,17 +134,37 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                     <dl class="tx_m">
                         <?php if ($row['cw_step'] == "0"){ ?>
                         <dt>예상이용금액</dt>
-                        <dd><span class="price">
+                        <dd><span class="price">-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                        <?php }else{ ?>
+                    <dl class="tx_m">
+                        <dt>누적결제금액</dt>
+                        <dd class="ins"><span> <? echo number_format($total_price);?> 원</span></dd>
+                    </dl>
                         <dt>최종이용금액</dt>
                         <dd><span class="price">
                         <?php } ?>
-                        <?php echo number_format($row['final_pay']); ?>
+
+                        <!-- date_type 2는 정기세차 -->
+                        <?
+                        if($row['car_date_type'] ==2)
+                        {
+                            //여기는 정기세차 횟수만큼 계산해서 뿌려줌
+                            echo number_format(($row["complete_cnt"]*12375) - $row['cp_price']);
+                        }
+                        else
+                        {
+                            //여기에 최종 결제 금액을 뿌려줌
+                            echo number_format($row['final_pay']);
+                        }
+                        ?>
+
                         </span>원
                             <!-- 쿠폰있으면 아이콘 표시 -->
+                            <!--
                             <?php if($row['cp_id'] != ""){ ?>
-                                <span class="ico"><i class="fa-solid fa-ticket"></i></span>
+                                <span class="ico">POINT 사용</span>
                             <?php } ?>
+                            -->
                         </dd>
                     </dl>
                     <?php if ($row['ma_id'] != ""){
@@ -154,7 +190,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                 </div>
             </div><!--bx-->
             <?php } ?>
-            
+
         </div>
     </div><!--in-->
 </div><!--my_reser-->

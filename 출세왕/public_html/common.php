@@ -645,12 +645,21 @@ $ip       = $_SERVER['REMOTE_ADDR'];
 //현재주소를 불러옴
 $uri = $_SERVER['REQUEST_URI'];
 
+function move($url){
+    $str = "<script>";
+    $str .= "location.href = '{$url}';";
+    $str .= "</script>";
+    echo("$str");
+    exit;
+}
+
 if ($is_guest && strpos($uri, '/adm') == false  &&strpos($uri, 'login.php') == false &&
     strpos($uri, 'register')== false && strpos($uri, 'login_check.php') == false &&
     strpos($uri, 'password_lost.php')== false && strpos($uri, 'ajax.mb')== false &&
     strpos($uri, 'ajax.controller')== false  && strpos($uri, 'content.php?co_id=pr')== false
     && strpos($uri, 'card_info_form')== false ){
-    alert("로그인 후 이용해주세요.",G5_BBS_URL.'/login.php');
+    move(G5_BBS_URL.'/login.php');
+    //alert("로그인 후 이용해주세요.",G5_BBS_URL.'/login.php');
 }
 
 //비회원일경우 팅겨냄
@@ -669,11 +678,11 @@ $cs_list = array(
 );
 
 $cdt_list = array(
-    '1' => "한달만서비스 받아보기",
+    '1' => "정기세차 맛보기",
     '2' => "정기세차(매월관리)",
-    '3' => "단기세차",
+    '3' => "외부세차 1회",
     '4' => "기업세차",
-    '5' => "실내세차",
+    '5' => "실내세차 1회",
 );
 
 //매니저 받는금액
@@ -773,6 +782,6 @@ $card_list = array(
 );
 
 //pg정보
-$pg_mid = "pgcnftp01m";
-$pg_license = "TtgLOwfT98KYi744xi9uhW5FAgOYls5qpVLvfnR1QQ21c1k/ZCo/t55IiEAIaydohwWEmcrSw0PTkvqrtKZUuQ==";
+$pg_mid = "pgcnftp02m";
+$pg_license = "BX4XI0A2SL9Wat/fxC0NzAGHXvpGqI/84LkfLWPOWPDMJVdNtu0QYNseiZoQX7DERa/2Ibiba136wgnqRfRodA==";
 ?>

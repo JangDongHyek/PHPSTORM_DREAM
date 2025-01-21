@@ -49,7 +49,7 @@ $mb_addr3       = isset($_POST['mb_addr3'])         ? trim($_POST['mb_addr3'])  
 $mb_addr_jibeon = isset($_POST['mb_addr_jibeon'])   ? trim($_POST['mb_addr_jibeon']) : "";
 $mb_signature   = isset($_POST['mb_signature'])     ? trim($_POST['mb_signature'])   : "";
 $mb_profile     = isset($_POST['mb_profile'])       ? trim($_POST['mb_profile'])     : "";
-$mb_recommend   = substr($mb_id, 0, 3).rand(1,9).date('mds',strtotime(G5_TIME_YMDHIS));
+$mb_recommend   = isset($_POST['mb_id'])       ? trim($_POST['mb_id'])     : "";
 $mb_mailling    = isset($_POST['mb_mailling'])      ? trim($_POST['mb_mailling'])    : "";
 $mb_sms         = isset($_POST['mb_sms'])           ? trim($_POST['mb_sms'])         : "";
 $mb_1           = isset($_POST['mb_1'])             ? trim($_POST['mb_1'])           : "";
@@ -62,6 +62,8 @@ $mb_7           = isset($_POST['mb_7'])             ? trim($_POST['mb_7'])      
 $mb_8           = isset($_POST['mb_8'])             ? trim($_POST['mb_8'])           : "";
 $mb_9           = isset($_POST['mb_9'])             ? trim($_POST['mb_9'])           : "";
 $mb_10          = isset($_POST['mb_10'])            ? trim($_POST['mb_10'])          : "";
+
+$reg_type           = isset($_POST['reg_type'])             ? trim($_POST['reg_type'])           : "";
 $go_work           = isset($_POST['go_work'])             ? trim($_POST['go_work'])           : "";
 $go_time1           = isset($_POST['go_time1'])             ? trim($_POST['go_time1'])           : "";
 $go_time2           = isset($_POST['go_time2'])             ? trim($_POST['go_time2'])           : "";
@@ -103,7 +105,7 @@ if ($w == '' || $w == 'u') {
     if ($msg = valid_mb_id($mb_id))         alert($msg, "", true, true);
     if ($msg = count_mb_id($mb_id))         alert($msg, "", true, true);
     $mb_hp = hyphen_hp_number($mb_hp);
-    if ($msg = exist_mb_hp($mb_hp))         alert($msg, "", true, true);
+    //if ($msg = exist_mb_hp($mb_hp))         alert($msg, "", true, true);
 
 
     // 이름, 닉네임에 utf-8 이외의 문자가 포함됐다면 오류
@@ -137,9 +139,11 @@ if ($w == '' || $w == 'u') {
     if (($config['cf_use_hp'] || $config['cf_cert_hp']) && $config['cf_req_hp']) {
         if ($msg = valid_mb_hp($mb_hp))     alert($msg, "", true, true);
     }
+    // 휴대폰 번호 체크 추가 23-12-28
 
     if ($w=='') {
         if ($msg = exist_mb_id($mb_id))     alert($msg);
+        if ($msg = exist_hp($mb_hp))     alert($msg);
 
 
         if (get_session('ss_check_mb_id') != $mb_id  ) {
@@ -156,14 +160,15 @@ if ($w == '' || $w == 'u') {
                 alert("회원가입을 위해서는 본인확인을 해주셔야 합니다.");
         }
 
-//        if ($config['cf_use_recommend'] && $mb_recommend) {
-//            if (!exist_mb_id($mb_recommend))
-//                alert("추천인이 존재하지 않습니다.");
-//        }
-
-//        if (strtolower($mb_id) == strtolower($mb_recommend)) {
-//            alert('본인을 추천할 수 없습니다.');
-//        }
+        if ($config['cf_use_recommend'] && $mb_recommend) {
+            if (!exist_mb_id($mb_recommend))
+                alert("추천인이 존재하지 않습니다.");
+        }
+/*
+        if (strtolower($mb_id) == strtolower($mb_recommend)) {
+            alert('본인을 추천할 수 없습니다.1');
+        }
+*/
     } else {
         // 자바스크립트로 정보변경이 가능한 버그 수정
         // 닉네임수정일이 지나지 않았다면
@@ -265,6 +270,7 @@ if ($w == '') {
                      mb_8 = '{$mb_8}',
                      mb_9 = '{$mb_9}',
                      mb_10 = '{$mb_10}',
+                     reg_type = '{$reg_type}',
                      go_work = '{$go_work}',
                     go_time1 = '{$go_time1}',
                     go_time2 = '{$go_time2}',
@@ -343,12 +349,17 @@ if ($w == '') {
         sql_query($sql);
     }
 
-    // 회원가입 포인트 부여
-    insert_point($mb_id, $config['cf_register_point'], '회원가입 축하', '@member', $mb_id, '회원가입');
 
 
-    // 23.04.20 추천인한테 쿠폰주는 부분 wc
+    // 23.04.20 추천인한테 쿠폰주는 부분 wc  -> 회원가입 승인할 때로 변경 관리자로
     if($mb_2){
+
+        // 회원가입 포인트 부여 -> 회원가입 승인할 때로 변경
+        //insert_point($mb_id, 5000, $mb_2.' 추천가입 축하', '@member', $mb_id, '회원가입');
+        // 추천인에게 포인트 부여 -> 회원가입 승인할 때로 변경
+        //insert_point($mb_2, 5000, $mb_id.'의 추천인', '@member', $mb_2, $mb_id.' 추천');
+
+        /*
         $j = 0;
         do {
             $cp_id = get_coupon_id();
@@ -369,26 +380,22 @@ if ($w == '') {
                     ( '$cp_id', '".$mb_id."-추천인쿠폰', '2', '', '$mb_2', '2000-01-01', '9999-09-09', '0', '5000', '10', '', '', '".G5_TIME_YMDHIS."' ) ";
 
         sql_query($sql);
-        
+        */
         //23.07.11 가입축하쿠폰발행
+        /*
         $sql = " INSERT INTO {$g5['g5_shop_coupon_table']}
                     ( cp_id, cp_subject, cp_method, cp_target, mb_id, cp_start, cp_end, cp_type, cp_price, cp_trunc, cp_minimum, cp_maximum, cp_datetime )
                 VALUES
                     ( '$cp_id', '가입축하쿠폰', '2', '', '$mb_id', '2000-01-01', '9999-09-09', '0', '5000', '10', '', '', '".G5_TIME_YMDHIS."' ) ";
 
         sql_query($sql);
-
+        */
         /*
         INSERT INTO g5_shop_coupon ( cp_id, cp_subject, cp_method, cp_target, mb_id, cp_start,
             cp_end, cp_type, cp_price, cp_trunc, cp_minimum, cp_maximum, cp_datetime )
         VALUES ( 'R3AV-W4AU-GXDU-QCKE', '추가할떄 sql보자', '2', '', 'gogac3', '2023-04-20', '2023-04-27', '1', '10', '10', '', '', '2023-04-20 09:17:58' )
        */
     }
-
-
-    // 추천인에게 포인트 부여
-//    if ($config['cf_use_recommend'] && $mb_recommend)
-//        insert_point($mb_recommend, $config['cf_recommend_point'], $mb_id.'의 추천인', '@member', $mb_recommend, $mb_id.' 추천');
 
     // 회원님께 메일 발송
     if ($config['cf_email_mb_member']) {
@@ -483,6 +490,7 @@ if ($w == '') {
                     mb_8 = '{$mb_8}',
                     mb_9 = '{$mb_9}',
                     mb_10 = '{$mb_10}',
+                    reg_type = '{$reg_type}',
                     go_work = '{$go_work}',
                     go_time1 = '{$go_time1}',
                     go_time2 = '{$go_time2}',
@@ -508,6 +516,11 @@ if ($w == '') {
 
 	$sql = "update `member_gcm` set `push_yn` = '$push_yn' where `mb_id` = '$member[mb_id]'";
 	sql_query($sql);
+
+
+	//24-12-30 고객이 주소 변경하면 정기세차 차 주소도 바뀌게
+	$sql = "update `new_car_wash` set `car_w_addr1` = '{$mb_addr1}', `car_w_addr2` = '{$mb_addr2}' where `mb_id` = '{$member['mb_id']}'";
+    sql_query($sql);
 }
 
 

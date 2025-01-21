@@ -65,7 +65,7 @@ if ($sca || $stx) {
     $sql_search = "";
 
     //$total_count = $board['bo_count_write'];
-	
+
 	@include_once($board_skin_path.'/list_search.head.skin.php');
 
     $sql = " SELECT COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE (1) {$sql_search} ";
@@ -278,4 +278,5 @@ $stx = get_text(stripslashes($stx));
 
 
 include_once($board_skin_path.'/list.skin.php');
+
 ?>

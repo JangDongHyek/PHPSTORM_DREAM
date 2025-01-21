@@ -7,7 +7,7 @@ $menu['menu250'] = array(
     array('250110', '기업세차관리', G5_ADMIN_URL . '/adm_company_service_list.php', 'company_service'),
     array('250200', '재작업관리 ', G5_ADMIN_URL . '/adm_re_service_list.php', 're_service'),
     array('250300', '연락요청관리 ', G5_ADMIN_URL . '/adm_request_call.php', 'request_call'),
-    array('250800', '쿠폰관리', G5_ADMIN_URL . '/shop_admin/couponlist.php', 'scf_coupon'),
+    array('250800', '건의함', G5_ADMIN_URL . '/report_list.php', 'management_auth'),
     /*
        array('200100', '회원관리', G5_ADMIN_URL.'/member_list.php', 'mb_list'),
        array('200300', '회원메일발송', G5_ADMIN_URL.'/mail_list.php', 'mb_mail'),

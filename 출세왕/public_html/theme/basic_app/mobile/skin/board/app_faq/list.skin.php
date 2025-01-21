@@ -44,7 +44,7 @@ if (G5_IS_ADMIN == 1) { ?>
         .td_chkbx{
             width: 30px;
         }
-
+        a.btn_b02{border:1px solid #333; background:#333!important; color:#fff; text-align:center; padding:8px 10px; text-decoration:none;}
     </style>
 <?php } ?>
 <script src="<?php echo $board_skin_url ?>/jquery.corner.js"></script> <!-- jquery 자주하는질문 원 적용 -->

@@ -33,6 +33,7 @@ from {$g5['review_table']} rv
 LEFT join g5_member ma on ma.mb_id = rv.ma_id
 LEFT join new_car_wash cw on cw.cw_idx = rv.cw_idx
 order by rv.wr_datetime DESC limit {$from_record}, {$rows} ";
+
 $result = sql_query($sql);
 $colspan = 16;
 
@@ -74,8 +75,8 @@ $colspan = 16;
                 <th>매니저성함</th>
                 <th>세차완료일</th>
                 <th>접수일</th>
-                <th>아이디</th>
-                <th>성함</th>
+                <th>고객아이디</th>
+                <th>고객성함</th>
                 <th>건의내용</th>
                 <th>건의사진</th>
 
@@ -99,13 +100,13 @@ $colspan = 16;
                     <td><?=$list_no?></td>
                     <td><?=$cdt_list[$row['car_date_type']]?></td>
                     <td><?=$cs_list[$row['car_size']]?></td>
-                    <td><?=$row['ma_name']?>님</td>
+                    <td><?=$row['ma_name']?></td>
                     <td><?=$row['cw_complete_datetime']?></td>
                     <td><?=substr($row['wr_datetime'],2,8)?></td>
 
 
                     <td><a href="./member_form.php?<?=$qstr?>&amp;w=u&amp;mb_id=<?=$row['mb_id']?>"><?=$row['mb_id']?></a></td>
-                    <td><?=$mb['mb_name']?></td>
+                    <td><a href="./member_form.php?<?=$qstr?>&amp;w=u&amp;mb_id=<?=$row['mb_id']?>"><?=$mb['mb_name']?></a></td>
                     <td><?=$row['re_content']?></td>
                     <td>
                         <?php
@@ -115,7 +116,7 @@ $colspan = 16;
                                     $filename = $file[$i]['file'];
                                     $filepath = $file[$i]['path'];
                                     $filesrc = $filepath.'/'.$filename;
-                                    $img_content = '<img src="' . $filesrc . '" style="writh:100px;height:100px">';
+                                    $img_content = "<a target='_blank' href=".$filesrc."><img src='" . $filesrc . "' style='writh:100px;height:100px'></a>";
                                     echo $img_content;
                                 }
                             }

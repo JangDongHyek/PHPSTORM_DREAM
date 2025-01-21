@@ -85,7 +85,7 @@ body{background: #fff;}
                     <dd class="status_ico"><i class="fas fa-check"></i></dd>
                     <dd class="error col-xs-12"></dd>
                 </dl>
-    
+
                 <dl class="row">
                 	<dd class="col-xs-1 req">*</dd>
                     <dd class="col-xs-11">
@@ -95,7 +95,7 @@ body{background: #fff;}
                     <dd class="status_ico lock_ico1"><i class="fas fa-lock-open"></i></dd>
                     <dd class="error col-xs-12"></dd>
                 </dl>
-    
+
                 <dl class="row">
                 	<dd class="col-xs-1 req">*</dd>
                     <dd class="col-xs-11">
@@ -105,7 +105,7 @@ body{background: #fff;}
                     <dd class="status_ico lock_ico2"><i class="fas fa-lock"></i></dd>
                     <dd class="error col-xs-12"></dd>
                 </dl>
-    
+
                 <dl class="row">
                 	<dd class="col-xs-1 req">*</dd>
                     <dd class="col-xs-11">
@@ -115,7 +115,7 @@ body{background: #fff;}
                     <dd class="status_ico"><i class="fas fa-check"></i></dd>
                     <dd class="error col-xs-12"></dd>
                 </dl>
-                
+
                 <dl class="row">
                 	<dd class="col-xs-1 req">*</dd>
                     <dd class="col-xs-11">
@@ -125,7 +125,7 @@ body{background: #fff;}
                     <dd class="status_ico"><i class="fas fa-check"></i></dd>
                     <dd class="error col-xs-12"></dd>
                 </dl>
-    
+
                 <!--
                 <dl class="row">
                 	<dd class="col-xs-1 req">*</dd>
@@ -136,7 +136,7 @@ body{background: #fff;}
                     <dd class="status_ico"><i class="fas fa-check"></i></dd>
                     <dd class="error col-xs-12"></dd>
                 </dl>
-    
+
                 <dl class="row">
                 	<dd class="col-xs-1 req">*</dd>
                     <dd class="col-xs-11">
@@ -146,8 +146,8 @@ body{background: #fff;}
                     <dd class="status_ico"><i class="fas fa-check"></i></dd>
                     <dd class="error col-xs-12"></dd>
                 </dl>-->
-				
-                
+
+
                 <!--<dl class="row">
                     <dd class="col-xs-1 req">*</dd>
                     <dd class="col-xs-11">
@@ -181,7 +181,7 @@ body{background: #fff;}
                         <dd class="error col-xs-12"></dd>
                     </dl>
                 </div>
-                
+
                 <!--지역선택 modal-->
                 <div class="Upmodal">
                         <div class="body">
@@ -230,7 +230,7 @@ body{background: #fff;}
                   $('.box-body').addClass('modal-open');
 				  $('.js-close-modal').css('opacity','1');
                 });
-                
+
                 $('.js-close-modal').click(function(){
                   $('.box-body').removeClass('modal-open');
 				  $('.js-close-modal').css('opacity','0');
@@ -246,6 +246,7 @@ body{background: #fff;}
                         <input type="text" name="mb_2" id="reg_mb_2" class="regist-input "   placeholder="추천인 아이디" >
                         <?php }else{ ?>
                          <input type="text" name="mb_2" id="reg_mb_2" class="regist-input " value="<?=$member['mb_2']?>"   placeholder="추천인 아이디" <?php if($w=="u") echo "readonly";?>>
+						 <input type="hidden" name="mb_3" id="reg_mb_3" value="1">
                          <!--
                         <input type="text" name="mb_recommend" id="reg_mb_recommend" class="regist-input "  value="<?=$member['mb_recommend']?>" placeholder="추천인 아이디" <?php if($w=="u") echo "readonly";?>>
                          -->
@@ -256,6 +257,17 @@ body{background: #fff;}
                 </dl>
                 <?php } ?>
                 <div class="sche">
+                    <h3><i class="far fa-clock"></i>가입목적</h3>
+                    <div class="row">
+                        <dd class="col-xs-12">
+                            <select name="reg_type" id="reg_type" class="sch_sel" >
+                                <option value="">가입목적 선택</option>
+                                <option value="세차">세차</option>
+                                <option value="이사청소">이사청소</option>
+                            </select>
+                        </dd>
+                    </div>
+
                     <h3><i class="far fa-clock"></i>근무형태</h3>
                     <div class="row">
                         <dd class="col-xs-12">
@@ -413,10 +425,10 @@ body{background: #fff;}
                     </dl>
                 </div><!--car_info-->
                 <?php } ?>
-    
+
             </div>
         </div><!--//join_info-->
-		
+
 		<?php if($w == ""){ ?>
         <div id="join_agr">
         <h2 class="hide">약관동의</h2>
@@ -438,7 +450,7 @@ body{background: #fff;}
                     <dd class="col-xs-4 text-right"><input type="button" value="보기" class="btn btn-agr"></dd>
                     <dd class="col-xs-12 agr_textarea"><textarea readonly><?php echo get_text($config['cf_stipulation']) ?></textarea></dd>
                 </dl>
-                
+
                 <dl class="row agree-row">
                     <dd class="col-xs-9 chk_ico" data-for="reg_req2">
                         <input type="checkbox" name="reg_req[]" id="reg_req2" value="0" onclick="ag_check(this)">
@@ -448,12 +460,21 @@ body{background: #fff;}
                     <dd class="col-xs-3 text-right"><input type="button" value="보기" class="btn btn-agr"></dd>
                     <dd class="col-xs-12 agr_textarea"><textarea readonly><?php echo get_text($config['cf_privacy']) ?></textarea></dd>
                 </dl>
-                
+                <dl class="row agree-row">
+                    <dd class="col-xs-9 chk_ico" data-for="reg_req3">
+                        <input type="checkbox" name="reg_req[]" id="reg_req3" value="0" onclick="ag_check(this)">
+                        <label for="reg_req3">카드자동이체 동의서 (필수)</label>
+                        <!--<i></i> 개인정보처리방침 동의 (필수) -->
+                    </dd>
+                    <dd class="col-xs-3 text-right"><input type="button" value="보기" class="btn btn-agr"></dd>
+                    <dd class="col-xs-12 agr_textarea"><textarea readonly><?php echo get_text($config['cf_privacy2']) ?></textarea></dd>
+                </dl>
+
                 <!--<dl class="agree-row">
                     <dd class=" chk_ico" data-for="reg_chk1">
                         <input type="checkbox" name="reg_chk[]" id="reg_chk1" value="">
                         <label for="reg_chk1">선택 동의 (선택)</label>
-                        <i></i> 선택 동의 (선택) 
+                        <i></i> 선택 동의 (선택)
                     </dd>
                 </dl>-->
             </div>
@@ -491,11 +512,11 @@ body{background: #fff;}
 				return;
 			}
 			sel_file=f;
-			
+
 			var reader = new FileReader();
 			reader.onload = function(e){
 				//var strHtml='<li<img src='+e.target.result+'>';
-				
+
 				var strHtml='<img src="'+e.target.result+'" alt="" width="100%" height="auto">';
 				$("#back-image").html(strHtml);
 				for(var i=0;i<8;i++){
@@ -590,9 +611,11 @@ function initLayerPosition(){
     element_layer.style.width = width + 'px';
     element_layer.style.height = height + 'px';
     element_layer.style.border = borderWidth + 'px solid';
+    element_layer.style.zindex = 9999;
     // 실행되는 순간의 화면 너비와 높이 값을 가져와서 중앙에 뜰 수 있도록 위치를 계산한다.
     element_layer.style.left = (((window.innerWidth || document.documentElement.clientWidth) - width)/2 - borderWidth) + 'px';
     element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
+    //element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
 }
 
 
@@ -609,9 +632,10 @@ $(function (){
 	$("#reg_all").click(function(){
 		$("#reg_req1").prop("checked",$(this).prop("checked"));
 		$("#reg_req2").prop("checked",$(this).prop("checked"));
+        $("#reg_req3").prop("checked",$(this).prop("checked"));
 	});
 	// 아이디 체크
-	
+
 	$("#reg_mb_id").keyup(function (){
 		var mb_id = $(this).val();
 		var reg_mb_id = $(this);
@@ -619,16 +643,16 @@ $(function (){
 		// 아이디 정규표현식
 		var regId = /^[a-z0-9]{4,12}$/;
 		/*
-		if (regId.test(mb_id)){ 
+		if (regId.test(mb_id)){
 			$(this).parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$(this).parents(".row").find(".error").html("");
 		}else{
 			$(this).parents(".row").find(".status_ico").removeClass("pas").addClass("err");
 			$(this).parents(".row").find(".error").addClass("on").html("아이디는 영문과 숫자, 4 ~ 12자리까지 가능합니다.");
-			
+
 			return false;
 		}*/
-		
+
 		// 아작스로 중복 아이디가 있는지 체크 1
         // 23.04.21 여기 파일없어.. 근데작동하네.. ;; wc
 		/*$.post(g5_bbs_url+"/ajax.mb_register.php", {"type":"mb_id", "val":mb_id}, function (result){
@@ -649,7 +673,7 @@ $(function (){
 		// 바뀌면 무조건 틀렸다로 표시.
 		if($("#reg_mb_password_re").val() != mb_password){
 			$("#reg_mb_password_re").parents(".row").find(".status_ico").removeClass("pas").addClass("err");
-			$("#reg_mb_password_re").parents(".row").find(".error").addClass("on").html("비밀번호가 다릅니다.");	
+			$("#reg_mb_password_re").parents(".row").find(".error").addClass("on").html("비밀번호가 다릅니다.");
 		}else{
 			$("#reg_mb_password_re").parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$("#reg_mb_password_re").parents(".row").find(".error").html("");
@@ -658,7 +682,7 @@ $(function (){
 		// 비밀번호 정규표현식
 		var regPassword = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
 
-		if (regPassword.test(mb_password)){ 
+		if (regPassword.test(mb_password)){
 			$(this).parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$(this).parents(".row").find(".error").html("");
 		}else{
@@ -673,13 +697,13 @@ $(function (){
 
 		// 비밀번호 정규표현식
 		var regPassword = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
-		
+
 		if(mb_password == mb_password_re){
 			$(this).parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$(this).parents(".row").find(".error").html("");
 		}else{
 			$(this).parents(".row").find(".status_ico").removeClass("pas").addClass("err");
-			$(this).parents(".row").find(".error").addClass("on").html("비밀번호가 다릅니다.");	
+			$(this).parents(".row").find(".error").addClass("on").html("비밀번호가 다릅니다.");
 		}
 	});
 
@@ -691,7 +715,7 @@ $(function (){
 		// 이름 정규표현식
 		var regName = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
 
-		if (regName.test(mb_name)){ 
+		if (regName.test(mb_name)){
 			$(this).parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$(this).parents(".row").find(".error").html("");
             name_chk = "Y";
@@ -719,8 +743,8 @@ $(function (){
 			$(this).parents(".row").find(".error").addClass("on").html("휴대폰 번호는 10 ~ 12자리 숫자만 입력하세요.");
 		}
 	});
-	
-	
+
+
 
 	$("#reg_mb_nick").keyup(function (){
 		var mb_nick = $(this).val();
@@ -728,20 +752,20 @@ $(function (){
 
 		// 닉네임 정규표현식
 		var regNick = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
-		
-		if (regNick.test(mb_nick)){ 
+
+		if (regNick.test(mb_nick)){
 			$(this).parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$(this).parents(".row").find(".error").html("");
 		}else{
 			$(this).parents(".row").find(".status_ico").removeClass("pas").addClass("err");
-			$(this).parents(".row").find(".error").addClass("on").html("2글자 이상 입력해주세요.")		
+			$(this).parents(".row").find(".error").addClass("on").html("2글자 이상 입력해주세요.")
 			return false;
 		}
 
 		// 23.04.21 여기 파일없어.. 근데작동하네.. ;; wc
 		/*$.post(g5_bbs_url+"/ajax.mb_register.php", {"type2":"mb_nick", "val2":mb_nick}, function (result){
-			if(result == "0"){  
-				reg_mb_nick.parents(".row").find(".status_ico").removeClass("err").addClass("pas"); 
+			if(result == "0"){
+				reg_mb_nick.parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 				reg_mb_nick.parents(".row").find(".error").html("");
 			}else{
 				reg_mb_nick.parents(".row").find(".status_ico").removeClass("pas").addClass("err");
@@ -749,24 +773,24 @@ $(function (){
 			}
 		});*/
 	});
-	
+
 	$("#reg_mb_email").keyup(function (){
 		var mb_email = $(this).val();
 		var reg_mb_email = $(this);
 
 		// 이메일 정규표현식
 		var regEmail = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-		
-		if (regEmail.test(mb_email)){ 
+
+		if (regEmail.test(mb_email)){
 			$(this).parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$(this).parents(".row").find(".error").html("");
 		}else{
 			$(this).parents(".row").find(".status_ico").removeClass("pas").addClass("err");
-			$(this).parents(".row").find(".error").addClass("on").html("올바른 E-mail 형식으로 입력해주십시오.")		
+			$(this).parents(".row").find(".error").addClass("on").html("올바른 E-mail 형식으로 입력해주십시오.")
 			return false;
 		}
 	});
-	
+
 	$("#reg_mb_level").click(function (){
 		var mb_level = $(this).val();
 		var reg_mb_level = $(this);
@@ -774,17 +798,17 @@ $(function (){
 		// 이메일 정규표현식
 
 		var regEmail = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-		
-		if (regEmail.test(mb_email)){ 
+
+		if (regEmail.test(mb_email)){
 			$(this).parents(".row").find(".status_ico").removeClass("err").addClass("pas");
 			$(this).parents(".row").find(".error").html("");
 		}else{
 			$(this).parents(".row").find(".status_ico").removeClass("pas").addClass("err");
-			$(this).parents(".row").find(".error").addClass("on").html("올바른 E-mail 형식으로 입력해주십시오.")		
+			$(this).parents(".row").find(".error").addClass("on").html("올바른 E-mail 형식으로 입력해주십시오.")
 			return false;
 		}
 	});
-	
+
 	// 라디오 버튼
 	$("#dd_type p").click(function (){
 		var v = $(this).data("val");
@@ -793,7 +817,7 @@ $(function (){
 		$(this).find("i").removeClass("fa-circle-o").addClass("fa-check-circle-o");
 	});
 
-	// 내용보기 
+	// 내용보기
 	$(".btn-agr").click(function (){
 		var dis = $(this).parents(".row").find(".agr_textarea").css("display");
 		if(dis == "none")
@@ -802,15 +826,15 @@ $(function (){
 			$(this).parents(".row").find(".agr_textarea").slideUp(100);
 	});
 	// 약관동의
-	
+
 	$(".agree-row dd:first-child").click(function (){
 		var ford = $(this).data("for");
 		var targ = $("#" + ford);
-		
-		if(targ.val() == "1"){			
+
+		if(targ.val() == "1"){
 			$(this).find("i").removeClass("nochk").addClass("chk");
 			//targ.val("0");
-		}else{			
+		}else{
 			$(this).find("i").removeClass("chk").addClass("nochk");
 			//targ.val("1");
 		}
@@ -1012,6 +1036,10 @@ function fregisterform_submit(f)
 		swal_func("개인정보처리방침 동의(필수)를 체크하십시오");
 		return false;
 	}
+    if($("#reg_req3").prop("checked")==false){
+        swal_func("카드자동이체 동의(필수)를 체크하십시오");
+        return false;
+    }
 
 	<?php } ?>
 
@@ -1044,10 +1072,10 @@ $(document).ready(function () {
         <?php } ?>
 
    $(function () {
-            
+
             $('#reg_mb_hp').keydown(function (event) {
              var key = event.charCode || event.keyCode || 0;
-             $text = $(this); 
+             $text = $(this);
              if (key !== 8 && key !== 9) {
                  if ($text.val().length === 3) {
                      $text.val($text.val() + '-');

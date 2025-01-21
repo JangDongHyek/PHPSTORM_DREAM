@@ -685,6 +685,11 @@ if ($config['cf_sms_use'] && $config['cf_icode_id'] && $config['cf_icode_pw']) {
             <th scope="row"><label for="cf_privacy">개인정보처리방침</label></th>
             <td colspan="3"><textarea id="cf_privacy" name="cf_privacy" rows="10"><?php echo $config['cf_privacy'] ?></textarea></td>
         </tr>
+        <tr>
+            <th scope="row"><label for="cf_privacy2">카드자동이체동의</label></th>
+            <td colspan="3"><textarea id="cf_privacy2" name="cf_privacy2" rows="10"><?php echo $config['cf_privacy2'] ?></textarea></td>
+        </tr>
+
         </tbody>
         </table>
     </div>

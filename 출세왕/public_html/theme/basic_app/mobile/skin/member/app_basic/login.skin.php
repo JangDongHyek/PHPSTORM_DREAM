@@ -21,13 +21,57 @@ body{background:#1a7cff; }
         opacity: 0.8;
     }
 </style>
+<script>
+    try{
+        localStorage.clear();
 
+        var varUA = navigator.userAgent.toLowerCase();
+        var regExpAndroid = /easyapp_android/gi;
+        var regExpIos = /softapp_ios/gi;
+
+        if (varUA.match(regExpAndroid)) {
+            window.EasyappAOS.loadingFinish();
+            localStorage.setItem("is_android","Y");
+            localStorage.setItem("is_app","Y");
+            window.EasyappAOS.getFcmInfo();
+        } else if (varUA.match(regExpIos)) {
+            localStorage.setItem("is_ios","Y");
+            localStorage.setItem("is_app","Y");
+            //webkit.messageHandlers.getFcmInfo.postMessage("");
+            webkit.messageHandlers.getDeviceId.postMessage("");
+            webkit.messageHandlers.getFcmToken.postMessage("");
+        } else {
+            localStorage.setItem("is_app","N");
+        }
+    }catch (e){
+        localStorage.setItem("is_app","N");
+    }finally{
+
+    }
+    function responseGetDeviceId(id){
+        var device_uuid = $("<input name='device_uuid' type='hidden' value='"+id+"'>");
+        var device_platform = $("<input name='device_platform' type='hidden' value='IOS'>");
+        $("#login_form").append(device_uuid).append(device_platform);
+    }
+    function responseGetFcmToken(token){
+        var push_register_id = $("<input name='push_register_id' type='hidden' value='"+token+"'>");
+        $("#login_form").append(push_register_id);
+    }
+    function responseGetFcmInfo(token, id, kind){
+        $("input[name='login_type']").val("APP");
+        var device_uuid = $("<input name='device_uuid' type='hidden' value='"+id+"'>");
+        var push_register_id = $("<input name='push_register_id' type='hidden' value='"+token+"'>");
+        var device_platform = $("<input name='device_platform' type='hidden' value='"+kind+"'>");
+        $("#login_form").append(device_uuid).append(push_register_id).append(device_platform);
+    }
+
+</script>
 
 <!-- 로그인 시작 { -->
 <div id="mb_login" class="mbskin">
     <h1><img src="<?php echo G5_THEME_IMG_URL ?>/app/logo.png" class="logo"></h1>
 
-    <form name="flogin" action="<?php echo $login_action_url ?>" onsubmit="return flogin_submit(this);" method="post">
+    <form name="flogin" action="<?php echo $login_action_url ?>" onsubmit="return flogin_submit(this);" method="post" id="login_form">
     <input type="hidden" name="url" value="<?php echo $login_url ?>">
 
     <fieldset id="login_fs">
@@ -80,7 +124,7 @@ body{background:#1a7cff; }
         <p>사업자 등록번호 : 174-67-00420</p>
         <p>대표번호 : 010-6610-3103</p>
         <p>대표이메일 : gimhonggyu88@hanmail.net</p>
-        <p>팩스 : 000-0000</p>
+<!--        <p>팩스 : 000-0000</p>-->
         <p><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=provision">이용약관</a><span class="line"></span><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=privacy">개인정보처리방침</a></p>
     </div>
 </div>

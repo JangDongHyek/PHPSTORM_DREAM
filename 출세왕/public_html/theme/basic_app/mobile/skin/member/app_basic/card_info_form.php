@@ -73,7 +73,7 @@ body{background: #fff;}
 <script>
 
     function cardRegister(){
-        const data = {mid:"testpay01m",moid:"<?=date("YmdHis")?>_<?=rand(10,99)?>",payMethod:"RAUT",userId:"<?=$member[mb_id]?>",buyerName:"<?=$member[mb_name]?>",cardNum:$("#cardNum").val(),cardExpire:$("#cardExpire").val(),cardPwd:$("#cardPwd").val(),idNum:$("#idNum").val(),buyerHp:"<?=hyphen_hp_number($member[mb_hp])?>",arsUseYn:"N","billKey":"<?=$member['billKey']?>"};
+        const data = {mid:"pgcnftp02m",moid:"<?=date("YmdHis")?>_<?=rand(10,99)?>",payMethod:"RAUT",userId:"<?=$member[mb_id]?>",buyerName:"<?=$member[mb_name]?>",cardNum:$("#cardNum").val(),cardExpire:$("#cardExpire").val(),cardPwd:$("#cardPwd").val(),idNum:$("#idNum").val(),buyerHp:"<?=hyphen_hp_number($member[mb_hp])?>",arsUseYn:"N","billKey":"<?=$member['billKey']?>"};
         $.ajax({
             type : "POST",
             url : "https://api.innopay.co.kr/api/regAutoCardBill",

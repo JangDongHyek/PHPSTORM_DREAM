@@ -12,7 +12,6 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
 
 //현재주소를 불러옴
 $uri = $_SERVER['REQUEST_URI'];
-
 $back_div = "";
 if (strpos($uri, 'my_service_ok.php') == false && strpos($uri, 'register')  == false ){
     $back_div = ' <div id="hd_back">
@@ -21,7 +20,6 @@ if (strpos($uri, 'my_service_ok.php') == false && strpos($uri, 'register')  == f
             </a>
         </div>';
 }
-
 ?>
 
 
@@ -37,8 +35,8 @@ if (strpos($uri, 'my_service_ok.php') == false && strpos($uri, 'register')  == f
     if(defined('_INDEX_')) { // index에서만 실행
         include G5_MOBILE_PATH.'/newwin.inc.php'; // 팝업레이어
     } ?>
-	
-    
+
+
 <?php if(defined('_INDEX_')) { ?>
     <div id="hd_wrapper">
         <div id="nav_open">
@@ -76,8 +74,8 @@ if (strpos($uri, 'my_service_ok.php') == false && strpos($uri, 'register')  == f
     if(defined('_INDEX_')) { // index에서만 실행
         include G5_MOBILE_PATH.'/newwin.inc.php'; // 팝업레이어
     } ?>
-	
-    
+
+
 <?php if(defined('_INDEX_')) { ?>
     <div id="hd_wrapper">
         <div id="nav_open">
@@ -108,13 +106,13 @@ if (strpos($uri, 'my_service_ok.php') == false && strpos($uri, 'register')  == f
         <div id="idx_container">
 	<? }else { ?>
     <!--서브메뉴-->
-    <?php 
-                    
+    <?php
+
         if(!$sm_tid)	$sm_tid = $co_id;
         if(!$sm_tid)	$sm_tid = $bo_table;
 
-        if($sm_tid)		
-        echo submenu($sm_tid, 'basic', G5_THEME_MOBILE_PATH); 
+        if($sm_tid)
+        echo submenu($sm_tid, 'basic', G5_THEME_MOBILE_PATH);
     ?>
         <div id="container">
     <?php } ?>

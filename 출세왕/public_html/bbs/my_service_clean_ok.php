@@ -11,6 +11,10 @@ if(!$is_member){
 $sql = "select * from {$g5['cleanup_table']} where cu_idx = '{$_REQUEST["idx"]}' ";
 $view = sql_fetch($sql);
 
+//SH
+//echo $sql;
+//exit;
+
 if ($view['mb_id'] != $member['mb_id'] && $member['mb_id'] != 'admin' ){
     alert('올바른 경로로 접속해주세요.',G5_URL.'/index.php','error');
 }

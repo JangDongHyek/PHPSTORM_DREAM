@@ -1,7 +1,7 @@
 <?php
 
     $menu['menu400'] = array(
-        array('400000', '건의함', G5_ADMIN_URL . '/report_list.php', 'management_auth'),
+        //array('400000', '건의함', G5_ADMIN_URL . '/report_list.php', 'management_auth'),
         //array('400000', '권한관리', G5_ADMIN_URL . '/management_auth_list.php', 'management_auth'),
 
         /*

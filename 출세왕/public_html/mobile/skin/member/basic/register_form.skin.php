@@ -418,7 +418,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
         if (typeof(f.mb_recommend) != 'undefined' && f.mb_recommend.value) {
             if (f.mb_id.value == f.mb_recommend.value) {
-                alert('본인을 추천할 수 없습니다.');
+                alert('본인을 추천할 수 없습니다.2');
                 f.mb_recommend.focus();
                 return false;
             }

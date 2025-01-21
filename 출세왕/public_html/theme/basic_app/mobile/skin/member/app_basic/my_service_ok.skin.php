@@ -55,8 +55,18 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                 <dd><?= $final_pay ?>원
                     <span class="opt">
                         (<?= $cdt_list[$view['car_date_type']]."&nbsp&nbsp".number_format($pay) ?>원 <?= $in_pay ?>)
-                        <?php if($view['cp_id']){ ?>
-                            - (<?=$view['cp_subject']?> <?=$view['cp_price_view']?>)
+
+                        <?php if($view['cp_id']){
+                            //2023-11-28
+                            if($view['cp_id'] == "POINT"){
+                                echo "- 포인트 (".$view['cp_price'].")";
+                            }else{
+                            ?>
+                                - (<?=$view['cp_subject']?> <?=$view['cp_price_view']?>)
+                            <?
+                            }
+                            ?>
+
                         <?php } ?>
 
                     </span>

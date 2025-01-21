@@ -16,6 +16,9 @@ if ($filter == 3){
     $sql_where = "car_date_type = 3";
 }else if ($filter == 5){
     $sql_where = "car_date_type = 5";
+}else if ($filter == 6){
+    // 기업세차를 임의로 6
+    $sql_where = "";
 }else{
     //정기세차는 1,2
     $sql_where = "car_date_type < 3" ;
@@ -48,33 +51,42 @@ if($complete_datetime_order){
     $sql_order .= ' order by cw.complete_datetime DESC,rw_date DESC, car_w_date asc ';
 }
 
+if($filter==6)
+{
+    $sql = "SELECT * from new_company_car_wash where ".$id." = '{$member['mb_id']}'";
+    $order_result = sql_query($sql);
+}
+else
+{
+    $sql = "select *,cw.cw_idx cw_idx,cw.wr_datetime cw_datetime,cw.complete_datetime cw_complete_datetime from {$g5['car_wash_table']} cw
+    LEFT join new_re_car_wash rw on cw.rw_idx = rw.rw_idx
+    where ".$id." = '{$member['mb_id']}' and (cw_step = 1 or (rw_step = 1 and is_turn_yn = 'N')) and {$sql_where} {$sql_order} ";
 
-
-$sql = "select *,cw.cw_idx cw_idx,cw.wr_datetime cw_datetime,cw.complete_datetime cw_complete_datetime from {$g5['car_wash_table']} cw
-LEFT join new_re_car_wash rw on cw.rw_idx = rw.rw_idx
-where ".$id." = '{$member['mb_id']}' and (cw_step = 1 or (rw_step = 1 and is_turn_yn = 'N')) and {$sql_where} {$sql_order} ";
-//print_r($sql);
-//exit;
-
-$order_result = sql_query($sql);
+    $order_result = sql_query($sql);
 
 
 
 //5일 후 데이터 받아오기
-$sql = "select * from new_car_wash WHERE ma_id = '{$member['mb_id']}' and now() >= date_add(complete_datetime, interval +5 day) ";
-$complete_result = sql_query($sql);
+    $sql = "select * from new_car_wash WHERE ma_id = '{$member['mb_id']}' and now() >= date_add(complete_datetime, interval +5 day) ";
+    $complete_result = sql_query($sql);
 
-for ($i = 0; $row = sql_fetch_array($complete_result); $i++) {
+    for ($i = 0; $row = sql_fetch_array($complete_result); $i++) {
 
 //정기세차(매월관리) or 정기세차(월4회) complete_cnt가 4회 미만일 경우 완료일로 부터5 일 후 진행작업으로 감.
-    if (($row['car_date_type'] == 2 or $row['car_date_type'] == 1 && $row['complete_cnt'] < 4) ) {
-        $sql = "update new_car_wash set cw_step = 1, rw_idx = 0 where cw_idx = {$row['cw_idx']} ";
-        sql_query($sql);
+        //if (($row['car_date_type'] == 2 or $row['car_date_type'] == 1 && $row['complete_cnt'] < 4) ) {
+            if (($row['car_date_type'] == 2 or $row['car_date_type'] == 1) ) {
+                //24-08-30 정기세차 맛보기인데 완료횟수가 4이상이면 그냥 패스
+                if($row['car_date_type'] == 1 && (int)$row['complete_cnt'] >= 4) continue;
+                
+            $sql = "update new_car_wash set cw_step = 1, rw_idx = 0 where cw_idx = {$row['cw_idx']} ";
+            sql_query($sql);
 
-        $sql = "update new_re_car_wash set is_turn_yn ='Y' where cw_idx = {$row['cw_idx']} and is_turn_yn = 'N' ";
-        sql_query($sql);
+            $sql = "update new_re_car_wash set is_turn_yn ='Y' where cw_idx = {$row['cw_idx']} and is_turn_yn = 'N' ";
+            sql_query($sql);
+        }
     }
 }
+
 
 
 $is_mypage = "my_order";

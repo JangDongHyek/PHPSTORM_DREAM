@@ -4,15 +4,18 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$latest_skin_url.'/style.css">', 0);
 ?>
-
-<div class="lt">
+<br>
+<div class="notice_txt" style="margin-top: 0px;">
+    <!--
     <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>" class="lt_title"><strong><?php echo $bo_subject ?></strong></a>
+    -->
     <ul>
     <?php for ($i=0; $i<count($list); $i++) { ?>
-        <li>
+        <li style="text-align: center;width:350px;border:solid 0px red;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
             <?php
-            //echo $list[$i]['icon_reply']." ";
-            echo "<a href=\"".$list[$i]['href']."\">";
+            //echo $list[$i]['is_notice']." ";
+            echo "<span style='display:inline-block;'>공지&nbsp; <img src='/images/aa.png' style='width:20px;height:20px;margin-top:-5px;margin-right:10px;'></span>";
+            echo "<span style='display:inline-block;'><a style='font-size:14px;' href=\"".$list[$i]['href']."\">";
             if ($list[$i]['is_notice'])
                 echo "<strong>".$list[$i]['subject']."</strong>";
             else
@@ -30,7 +33,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$latest_skin_url.'/style.css">', 
                 if (isset($list[$i]['icon_link']))   echo " " . $list[$i]['icon_link'];
                 if (isset($list[$i]['icon_secret'])) echo " " . $list[$i]['icon_secret'];
 
-            echo "</a>";
+            echo "</a></span>";
 
             ?>
         </li>
@@ -39,5 +42,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$latest_skin_url.'/style.css">', 
     <li>게시물이 없습니다.</li>
     <?php } ?>
     </ul>
+    <!--
     <div class="lt_more"><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>"><span class="sound_only"><?php echo $bo_subject ?></span>더보기</a></div>
+    -->
 </div>

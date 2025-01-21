@@ -86,11 +86,12 @@ $qstr1 = 'mb_name='.urlencode($mb_name);
 </div>
 
 <script>
+    /* 이승환 쿠폰에서 포인트 회원 조회로 변경함 쿠폰에서 사용 안됨*/
 function sel_member_id(id)
 {
-    var f = window.opener.document.fcouponform;
+    var f = window.opener.document.fpointlist2;
     f.mb_id.value = id;
-
+    //f.sch_member.value = id;
     window.close();
 }
 </script>

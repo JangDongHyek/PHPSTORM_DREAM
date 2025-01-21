@@ -28,9 +28,9 @@ body{background:#1a7cff;}
 		<fieldset id="info_fs">
 			<label for="mb_hp">휴대폰번호<strong class="sound_only">필수</strong></label>
 			<input type="tel" name="" id="mb_hp1" required class="required frm_input" size="30" placeholder="휴대폰번호(-없이 입력해주세요)">
-		</fieldset>	
+		</fieldset>
 		<div class="text-center" id="id-result">
-			
+
 		</div>
 		<div class="win_btn">
 			<button type="button" class="btn03" id="id-btn">확인</button>
@@ -45,16 +45,16 @@ body{background:#1a7cff;}
 			<label for="mb_name">아이디<strong class="sound_only">필수</strong></label>
 			<input type="text" name="mb_id" id="mb_id" required class="required frm_input" size="30" placeholder="아이디">
 		</fieldset>
-		
+
 		<fieldset id="info_fs">
 			<label for="mb_hp">휴대폰번호<strong class="sound_only">필수</strong></label>
 			<input type="tel" name="mb_hp" id="mb_hp2" required class="required frm_input" size="30" placeholder="휴대폰번호(-없이 입력해주세요)">
-		</fieldset>	
+		</fieldset>
 		<!--<fieldset id="info_fs">
 			<label for="mb_email">E-mail 주소<strong class="sound_only">필수</strong></label>
 			<input type="text" name="mb_email" id="mb_email" required class="required frm_input email" size="30" placeholder="E-mail 주소">
 		</fieldset>-->
-		
+
 		<div class="win_btn">
 			<input type="button" onclick="pw_send_sms()" value="확인" class="btn03">
 			<button type="button" onclick="javascript:history.back();" class="btn01">뒤로</button>
@@ -107,7 +107,7 @@ $(function(){
 	});
 
 });
-	
+
 </script>
 
 <script>

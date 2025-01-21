@@ -42,9 +42,9 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
     <!-- 필터추가 04.22 -->
     <ul class="filter">
-        <li class="<? if ($filter == "3") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order_end.php?filter=3'?>">단기</a></li>
-        <li class="<? if ($filter < 3) echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order_end.php?filter=1'?>">정기</a></li>
-        <li class="<? if ($filter == "5") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order_end.php?filter=5'?>">실내</a></li>
+        <li class="<? if ($filter == "3") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order_end.php?filter=3'?>">외부세차 1회</a></li>
+        <li class="<? if ($filter < 3) echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order_end.php?filter=1'?>">정기세차</a></li>
+        <li class="<? if ($filter == "5") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order_end.php?filter=5'?>">실내세차 1회</a></li>
         <!--
         <li class="<? if ($rw_idx_check == "true") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order_end.php?rw_idx_check=true'?>">재작업</a></li>
         -->

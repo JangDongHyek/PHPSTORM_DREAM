@@ -19,6 +19,45 @@ function insert_query($table_name,$table_idx,$arr,$add = ''){
     $sql .= $add;
     $sql .= "wr_datetime = '" . G5_TIME_YMDHIS . "'";
 
+    sql_query($sql);
+
+    $idx = sql_insert_id();
+
+    return $idx;
+
+
+}
+
+function insert_query_sql($table_name,$table_idx,$arr,$add = ''){
+
+    $sql = "insert into ".$table_name." set ";
+
+    foreach ($arr as $key => $value) {
+        if ($key != "mode" && $key != $table_idx && $key != 'bf_file' ) {
+            $sql .= $key . "='" . $value . "',";
+        }
+    }
+
+    $sql .= $add;
+    $sql .= "wr_datetime = '" . G5_TIME_YMDHIS . "'";
+
+    return $sql;
+
+
+}
+//24-08-30 고객이 신청할떄 wr_datetime에 ,없어서 오류 매니저가 작업완료할떄 , 있어서 오류나서 insert_query 이원화
+function insert_query2($table_name,$table_idx,$arr,$add = ''){
+
+    $sql = "insert into ".$table_name." set ";
+
+    foreach ($arr as $key => $value) {
+        if ($key != "mode" && $key != $table_idx && $key != 'bf_file' ) {
+            $sql .= $key . "='" . $value . "',";
+        }
+    }
+
+    $sql .= $add;
+    $sql .= ", wr_datetime = '" . G5_TIME_YMDHIS . "'";
 
     sql_query($sql);
 
@@ -59,32 +98,61 @@ function service_step($step,$complete_cnt=0){
 
     }
 
-	
+
 
         return $result;
 
 }
+//카 워시 폼
 
 if ($mode == "car_wash_form"){
 
     $sql = "select count(*) cnt from new_car_wash where mb_id = '{$member["mb_id"]}' and car_date_type = 2 and car_no = '{$_REQUEST['car_no']}' ";
     $cw_cnt = sql_fetch($sql)["cnt"];
 
+    /*
+    Content-Disposition: form-data; name="car_size"	1
+    Content-Disposition: form-data; name="car_date_type"	3
+    Content-Disposition: form-data; name="mode"	car_wash_form
+    Content-Disposition: form-data; name="cp_price_view"	30000
+    Content-Disposition: form-data; name="cp_price"	25000
+    Content-Disposition: form-data; name="cp_type"	cp_point
+    Content-Disposition: form-data; name="cp_id"
+    Content-Disposition: form-data; name="cp_subject"
+    Content-Disposition: form-data; name="car_no"	12가1235
+    Content-Disposition: form-data; name="car_type"	아반떼
+    Content-Disposition: form-data; name="car_color"	흰색
+    Content-Disposition: form-data; name="car_w_date"	2024. 1. 5
+    Content-Disposition: form-data; name="car_w_addr1"	부산 강서구 명지국제5로 11  (명지동, 명지 대방노블랜드 오션뷰2차)
+    Content-Disposition: form-data; name="car_w_addr2"	104동903호
+    Content-Disposition: form-data; name="car_place"
+    Content-Disposition: form-data; name="car_place2"
+    Content-Disposition: form-data; name="car_picture_memo"
+    Content-Disposition: form-data; name="car_memo"
+    Content-Disposition: form-data; name="mb_name"	김홍규
+    Content-Disposition: form-data; name="mb_hp"	01066103103
+     */
 
     //23.04.13  && $_REQUEST['car_date_type'] != 3 , 5 (5는 실내세차) 추가 정기 있으면 신청아에안되던거 단기신청이 아닐땐 가능하게  정기 + 단기 중복신청가능 wc
-    if ($cw_cnt > 0 && (int)$_REQUEST['car_date_type'] != 3 && (int)$_REQUEST['car_date_type'] != 5){
+    //if ($cw_cnt > 0 && (int)$_REQUEST['car_date_type'] != 3 && (int)$_REQUEST['car_date_type'] != 5 ){
+
+    //24-08-30 정기세차가 있는데도 정기세차 맛보기 가능하게
+    if ($cw_cnt > 0 && (int)$_REQUEST['car_date_type'] != 3 && (int)$_REQUEST['car_date_type'] != 5 && (int)$_REQUEST['car_date_type'] != 1){
         //여기 테스트용으로 풀고 정기신청 ㄱ
-        echo "0";
+        $res['type'] = "NORMAL";
+        $res['idx'] = 0;
+        $res['aa'] = 0;
+        echo json_encode($res);
         die();
     }
 
 
     $pay = $money_list[$_REQUEST['car_date_type']."".$_REQUEST['car_size']];
-    
+
     //실내세차 가격해주던거 없앰
     //$in_pay = $_REQUEST['car_in_yn'] == 'Y' ? '10000': "";
     //$final_pay = $pay + $in_pay;
-    
+
     // 23.04.20 쿠폰가격 wc
     if($_REQUEST['cp_id']){
         $cp_type = $_REQUEST['cp_type'];
@@ -104,6 +172,9 @@ if ($mode == "car_wash_form"){
         $final_pay = $pay;
     }
 
+
+
+
     $add = "mb_id = '{$member['mb_id']}',";
     $add .= "final_pay = '{$final_pay}',";
     $bo_table = 'car_wash';
@@ -117,15 +188,17 @@ if ($mode == "car_wash_form"){
         $_REQUEST['car_w_date'] =  implode(", ", $_REQUEST['car_w_date']);
     }
 
-    $sql_re = "select * from {$g5['car_wash_table']} where mb_id = '{$member['mb_id']}' and ma_id <> '' order by cw_idx desc ";
+    $sql_re = "select * from {$g5['car_wash_table']} where mb_id = '{$member['mb_id']}' and ma_id <> '' limit 0,1 ";
     $result_re = sql_fetch($sql_re);
+    $res['sql_re'] = $sql_re;
+
     if($result_re){
         $add .= " ma_id = '{$result_re['ma_id']}', ";
-        $add .= " cw_step = '1', ";
+        $add .= " cw_step = '1',";
     }
 
     $result = insert_query($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
-
+    $result_sql = insert_query_sql($g5['car_wash_table'],'cw_idx',$_REQUEST,$add);
 
     @mkdir(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);
     @chmod(G5_DATA_PATH . '/file/' . $bo_table, G5_DIR_PERMISSION);
@@ -226,7 +299,30 @@ if ($mode == "car_wash_form"){
 
     }
 
-    echo $result;
+
+    //2023-11-28
+    //포인트로 모두 결제해서 결제할내역이 없다면
+    $res = array();
+    if($final_pay == 0){
+
+        $res['type'] = "POINT";
+
+        //상태변경
+        $sql = "update new_car_wash set is_payment = 'Y' where cw_idx = '{$idx}' ";
+        sql_query($sql);
+        //보유 포인트 차감
+        insert_point($member['mb_id'], -($cp_price), '타입:'.$_REQUEST['car_date_type'].'member:'.$idx.' 포인트로 모두 결제했습니다.');
+        //insert_use_point($member['mb_id'], $cp_price);
+    }else{
+        insert_point($member['mb_id'], -($cp_price), '타입:'.$_REQUEST['car_date_type'].'member:'.$idx.' 포인트를 일부사용 결제했습니다.');
+        $res['type'] = "NORMAL";
+    }
+    $res['sq'] = $sql_re;
+    $res['idx'] = $idx;
+    $res['result_sql'] = $result_sql;
+    echo json_encode($res);
+
+
 }elseif ($mode == 'car_wash_cancel'){
 
     $result =  service_step('3');
@@ -275,7 +371,6 @@ if ($mode == "car_wash_form"){
             if (!in_array($file_ext, $check_ext)) {
                 echo "허용되지 않는 확장자입니다";
                 exit;
-
             }
 
             $chars_array = array_merge(range(0,9), range('a','z'), range('A','Z'));
@@ -296,7 +391,6 @@ if ($mode == "car_wash_form"){
 
             //23.04.14 한글 그냥그대로 파일올리는거 ;; ㄷㄷ  다뜯어고치는중.. wc
             //$dest_path = G5_DATA_PATH . '/file/car_photo/' .str_replace(" ", "", $_REQUEST['car_no']). '.jpg';
-
 
             //이미지 사이즈 조정
             $tmp_file = $_FILES['bf_file']['tmp_name'];
@@ -365,9 +459,10 @@ if ($mode == "car_wash_form"){
 		$sql_2 = "select * from `new_car_wash` where `cw_idx` = '$_REQUEST[idx]'";
 		$row = sql_fetch($sql_2);
 
-		$push_re = send_fcm($row[mb_id],"","세차가 완료되었습니다. 상세한 작업내역은 마이페이지에서 확인하실 수 있습니다. 오늘도 좋은 하루 되세요 ^^");
+		$push_re = send_fcm($row[mb_id],"","세차가 완료되었습니다. 상세한 작업내역은 마이페이지에서 확인하실 수 있습니다.");
 
-        $url = '/my_order_end.php?filter='.$complete["car_date_type"];
+        //$url = '/my_order_end.php?filter='.$complete["car_date_type"];
+        $url = '/my_order.php?filter='.$complete["car_date_type"];
     //완료취소 시
     }else if ($type == 'ing'){
 
@@ -437,6 +532,9 @@ if ($mode == "car_wash_form"){
     $add .= "final_pay = '{$final_pay}',";
 
     $result = insert_query($g5['cleanup_table'],'cu_idx',$_REQUEST,$add);
+
+    //print_r($_REQUEST);
+   // exit;
 
     goto_url(G5_BBS_URL."/my_service_clean_ok.php?idx=".$result);
 
@@ -771,7 +869,7 @@ if ($mode == "car_wash_form"){
     echo $result['cnt'];
 
 } else if($mode == "add_fcm"){
-	
+
 	set_session("fcm_token",$regId);
 
 	$sql = "select * from `member_gcm` where `RegID` = '$regId' and `mb_id` = '$mb_id'";
@@ -785,8 +883,8 @@ if ($mode == "car_wash_form"){
 
 		sql_query($sql);
 	} else {
-		
+
 	}
-	
+
 
 }

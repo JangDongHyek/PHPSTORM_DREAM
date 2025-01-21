@@ -10,7 +10,14 @@ auth_check($auth[$sub_menu], 'w');
 
 check_admin_token();
 
+
+
 $mb_id = trim($_POST['mb_id']);
+$mb = get_member($mb_id);
+
+$mb_1 = $mb['mb_1']; //승인여부
+$mb_2 = $mb['mb_2']; //적립금 추천아이디
+$mb_3 = $mb['mb_3']; //적립금 했는지 안했는지 체크
 
 // 휴대폰번호 체크
 $mb_hp = hyphen_hp_number($_POST['mb_hp']);
@@ -31,6 +38,38 @@ if($_POST['mb_certify_case'] && $_POST['mb_certify']) {
 
 $mb_zip1 = substr($_POST['mb_zip'], 0, 3);
 $mb_zip2 = substr($_POST['mb_zip'], 3);
+
+//포인트 적립
+	if($_POST['mb_1'] <> $mb_1){
+
+		$msg = "";
+
+		if($_POST['mb_1'] == "Y"){
+
+			$msg = "축하합니다! 출세왕 가입이 승인 되었습니다. 지금 바로 서비스를 신청해보세요.";
+
+			if($mb_2 && $mb_3 <> '0') // 1이면 포인트 적립해야함
+			{
+
+				// 회원가입 포인트 부여 -> 회원가입 승인할 때로 변경
+				insert_point($mb_id, 5000, $mb_2.' 추천가입 축하', 'member', $mb_id, '회원가입');
+				// 추천인에게 포인트 부여 -> 회원가입 승인할 때로 변경
+				insert_point($mb_2, 5000, $mb_id.'의 추천인', 'member', $mb_2, $mb_id.' 추천');
+				$mb_3 = 0;
+                $mb_4 = date("Y-m-d H:i:s");
+				$result_msg_add = $mb_id."님과 ".$mb_2."님 포인트가 적립되었습니다.";
+			}
+
+
+		} else if($_POST['mb_1'] == "N"){
+			$msg = "아쉽지만, 출세왕 서비스 조건에 부합하지 않아 거절되었습니다.";
+		}
+
+        $push_re = send_fcm($mb['mb_id'],"",$msg);
+
+		//푸쉬
+		//send_fcm($mb['mb_id'],"",$msg);
+	}
 
 //주차가능요일 중복체크
 $go_day = "";
@@ -64,14 +103,15 @@ $sql_common = "  mb_name = '{$_POST['mb_name']}',
                  mb_level = '{$_POST['mb_level']}',
                  mb_1 = '{$_POST['mb_1']}',
                  mb_2 = '{$_POST['mb_2']}',
-                 mb_3 = '{$_POST['mb_3']}',
-                 mb_4 = '{$_POST['mb_4']}',
+                 mb_3 = '{$mb_3}',
+                 mb_4 = '{$mb_4}',
                  mb_5 = '{$_POST['mb_5']}',
                  mb_6 = '{$_POST['mb_6']}',
                  mb_7 = '{$_POST['mb_7']}',
                  mb_8 = '{$_POST['mb_8']}',
                  mb_9 = '{$_POST['mb_9']}',
                  mb_10 = '{$_POST['mb_10']}',
+                 reg_type = '{$_POST['reg_type']}',
                  go_work = '{$_POST['go_work']}',
                  go_time1 = '{$_POST['go_time1']}',
                 go_time2 = '{$_POST['go_time2']}',
@@ -138,17 +178,6 @@ else if ($w == 'u')
         }
     }
 
-	if($mb['mb_1'] != $mb_1){
-		$msg = "";
-		if($mb_1 == "Y"){
-			$msg = "축하합니다! 출세왕 가입이 승인되었습니다. 지금당장 서비스를 신청해보세요.";
-		} else if($mb_1 == "N"){
-			$msg = "아쉽지만ㅠㅠ 가입조건이 부합하지 않아 거절되었습니다.";
-		}
-		send_fcm($mb['mb_id'],"",$msg);
-	}
-
-
     if ($mb_password)
         $sql_password = " , mb_password = '".get_encrypt_string($mb_password)."' ";
     else
@@ -166,9 +195,13 @@ else if ($w == 'u')
                 where mb_id = '{$mb_id}' ";
 
     sql_query($sql);
+
+    //24-12-30 고객이 주소 변경하면 정기세차 차 주소도 바뀌게
+    $sql = "update `new_car_wash` set `car_w_addr1` = '{$_POST['mb_addr1']}', `car_w_addr2` = '{$_POST['mb_addr2']}' where `mb_id` = '{$mb_id}'";
+    sql_query($sql);
 }
 else
     alert('제대로 된 값이 넘어오지 않았습니다.');
 
-alert("완료되었습니다.",'./member_form.php?'.$qstr.'&amp;w=u&amp;mb_id='.$mb_id, false);
+alert($result_msg_add." 완료되었습니다.",'./member_form.php?'.$qstr.'&amp;w=u&amp;mb_id='.$mb_id, false);
 ?>

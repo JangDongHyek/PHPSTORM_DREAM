@@ -674,6 +674,8 @@ if (!($w == 'u' || $w == 'cu') && $config['cf_email_use'] && $board['bo_use_emai
 //@include_once($board_skin_path.'/write_update.tail.skin.php');
 
 //delete_cache_latest($bo_table);
+
+
 if($bo_table=="center"){
 	goto_url(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table);
 	exit;
@@ -683,6 +685,6 @@ if($bo_table=="center"){
 if ($file_upload_msg) {
     alert($file_upload_msg, G5_ADMIN_URL.'/bbs/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id.$qstr);
 } else {
-    goto_url(G5_ADMIN_URL.'/bbs/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id.$qstr);
+    goto_url(G5_ADMIN_URL.'/bbs/board.php?bo_table='.$bo_table);
 }
 ?>

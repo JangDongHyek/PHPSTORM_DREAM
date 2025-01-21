@@ -15,7 +15,10 @@ if($_SESSION['ss_mb_id']=="lets080"){
 }else{
     $menu['menu300'] = array (
         array('300000', '게시판관리', ''.G5_ADMIN_BBS_URL.'/board.php?bo_table=video_lecture', 'board'),
-        array('300100', '작업영상관리', ''.G5_ADMIN_BBS_URL.'/board.php?bo_table=video_lecture', 'board'),
+        array('300100', '공지사항 (고객용)', ''.G5_ADMIN_BBS_URL.'/board.php?bo_table=notice', 'board'),
+        array('300100', '공지사항 (매니저)', ''.G5_ADMIN_BBS_URL.'/board.php?bo_table=notice_manager', 'board'),
+        array('300200', '자주묻는질문', ''.G5_ADMIN_BBS_URL.'/board.php?bo_table=use', 'board'),
+        array('300300', '작업영상관리', ''.G5_ADMIN_BBS_URL.'/board.php?bo_table=video_lecture', 'board'),
     );
 }
 ?>

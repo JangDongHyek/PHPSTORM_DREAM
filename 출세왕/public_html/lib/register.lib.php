@@ -181,5 +181,22 @@ function exist_mb_hp($reg_mb_hp, $reg_mb_id)
         return "";
 }
 
+function exist_hp($reg_mb_hp)
+{
+    global $g5;
+
+    if (!trim($reg_mb_hp)) return "";
+
+    $reg_mb_hp = hyphen_hp_number($reg_mb_hp);
+
+    $sql = "select count(*) as cnt from {$g5['member_table']} where mb_hp = '$reg_mb_hp'";
+    $row = sql_fetch($sql);
+
+    if($row['cnt'])
+        return " 이미 사용 중인 휴대폰번호입니다. 관리자에게 문의해 주세요 ".$reg_mb_hp;
+    else
+        return "";
+}
+
 return;
 ?>

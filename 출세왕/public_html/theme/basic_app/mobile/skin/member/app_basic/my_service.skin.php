@@ -9,6 +9,7 @@ if(!$is_member){
 ?>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
 <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+
 <style>
     .required_no{border: 2px  dashed #ee4e47!important}
     #my_service .form .sbtn{
@@ -63,74 +64,7 @@ if(!$is_member){
         </div>
     </div>
 </div>
-</div><!--basic_modal-->
-<!-- 등록된차량 불러오기 모달팝업 -->
-
-
-
-<!-- 쿠폰 불러오기 모달팝업 wc-->
-<div id="basic_modal_coupon">
-    <!-- Modal -->
-    <div class="modal fade" id="myModal_coupon" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fas fa-times-circle"></i></button>
-                    <h4 class="modal-title" id="myModalLabel">내 쿠폰</h4>
-                </div>
-                <div class="modal-body">
-                    <?php if ($coupon_cnt <= 0){ ?>
-                    <!--등록된 차량이 없을때는 아래 부분이 뜨도록-->
-                    <div class="service_none"><span><i class="fas fa-smile"></i></span>사용 가능한 쿠폰이 없습니다.</div>
-                </div>
-                <?php }else{ ?>
-                <ul class="mcar_list">
-                    <?php
-                        for($k = 0; $cp = sql_fetch_array($coupon_result); $k++){
-
-                            //사용 가능한 쿠폰인지 체크
-                            if (is_used_coupon($member['mb_id'], $cp['cp_id']))
-                                continue;
-
-                            $price = $money_list[$cdt . "" . $cs];
-                            $dc = 0;
-
-                            if ($cp['cp_maximum'] && $dc > $cp['cp_maximum'])
-                                $dc = $cp['cp_maximum'];
-
-                            if($cp['cp_type'])
-                                $cp_price = $cp['cp_price'].'%';
-                            else
-                                $cp_price = number_format($cp['cp_price']).'원';
-
-                        ?>
-
-
-                        <li id="idx_<?=$cp['cp_id']?>" onclick="coupon_select(this)">
-                            <h4 class="color-blue"><span class="ico"><i class="fa-solid fa-ticket"></i></span><span name="modal_cp_price_view"> <?= $cp_price ?></span></h4>
-                            <p class="color-blue"><span name="modal_cp_subject"> <?= $cp['cp_subject']?></span> </p>
-                            <p class="color-gray"><span name="modal_cp_id"> <?= $cp['cp_id'] ?></span> </p>
-                            <span name="modal_cp_price" style="display: none"> <?= $cp['cp_price']?></span>
-                            <span name="modal_cp_type" style="display: none"> <?= $cp['cp_type']?></span>
-                        </li>
-                    <?php } ?>
-                    <!--                <li class="select"><span class="ico"><i class="fas fa-car"></i></span>12가1234 / 제네시스 G80 / 검정색</li>-->
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-cancel" data-dismiss="modal" onclick="coupon_modal_del()">선택취소</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="coupon_modal_sel()">선택완료</button>
-            </div>
-            <?php } ?>
-
-        </div>
-    </div>
 </div>
-</div><!--basic_modal-->
-<!-- 쿠폰 불러오기 모달팝업 -->
-
-
-
 
 <!-- 출장세차 신청하기 폼 -->
 <form name="fservice" id="fservice" onsubmit="return fservice_submit(this);" method="post" enctype="multipart/form-data">
@@ -138,33 +72,33 @@ if(!$is_member){
 	<input type="hidden" name="car_size" value="<?= $cs ?>">
 
 
-    <? if($cdt != "4") { //단기 세차 일 때 ?>
+    <? if($cdt != "4") { ?>
     <input type="hidden" name="car_date_type" value="<?= $cdt ?>">
     <input type="hidden" name="mode" value="car_wash_form">
 
     <h1 id="top_cate"><?= $cdt_list[$cdt] ?><span class="size"><?=$cs_list[$cs]?></span>
-        <strong class="price" id="Amt_show"><?=number_format($money_list[$cdt."".$cs])?><span>원</span><p class='txt-sm'>* VAT 별도</p></strong>
+        <strong class="price" id="Amt_show"><?=number_format($money_list[$cdt."".$cs])?><span>원</span><p class='txt-sm'>* VAT 별도<?if ($cdt < 3) echo "(정기세차 4회기준)";?></p></strong>
     </h1>
-        <!-- 쿠폰관련 -->
-        <?php if ($coupon_cnt > 0) { ?>
+        <!-- 적립금 관련 -->
             <div class="coupon_wrap">
 
-            <a data-toggle="modal" data-target="#myModal_coupon" class="coupon_btn">쿠폰 적용하기<i class="fa-solid fa-ticket"></i></a>
-            <div id="coupone_box" style="display: none">
-                <div class="form"><input type="text" name="cp_price_view" value="" id="cp_price_view" placeholder="할인율"
-                                         class="frm" readonly></div>
-                <div class="form"><input type="text" name="cp_id" value=""
-                                         id="cp_id" placeholder="쿠폰번호" class="frm" readonly></div>
-                <div class="form"><input type="text" name="cp_subject" value="" id="cp_subject" placeholder="쿠폰이름"
-                                         class="frm" readonly></div>
-                <div class="form" style="display: none"><input type="text" name="cp_price" value="" id="cp_price" placeholder="할인율"
-                                         class="frm" readonly></div>
+            <a data-toggle="modal" data-target="#myModal_coupon" class="coupon_btn" onclick="coupon_modal_sel();">적립금 적용하기<i class="fa-solid fa-ticket"></i></a>
+
+            <div id="coupone_box">
+                <div class="form"><input type="text" name="cp_price_view" value="<?php echo empty($mb_point)?0:$mb_point;?>" id="cp_price_view" placeholder="현재 적립금"
+                                         class="frm" readonly><span class="color-red">* 사용가능 적립금</span></div>
+                
+                <div class="form"><input type="number"   inputmode="numeric" pattern="[0-9]*"  name="cp_price" value="" id="cp_price" placeholder="사용할 적립금" class="frm"><span class="color-red">* 사용할 적립금</span></div>
+
                 <div class="form" style="display: none"><input type="text" name="cp_type" value="" id="cp_type" placeholder="종류" class="frm"
-                                         readonly></div>
+                                                               readonly></div>
+                <div class="form" style="display: none"><input type="text" name="cp_id" value=""
+                                         id="cp_id" placeholder="쿠폰번호" class="frm" readonly></div>
+                <div class="form" style="display: none"><input type="text" name="cp_subject" value="" id="cp_subject" placeholder="쿠폰이름"
+                                         class="frm" readonly></div>
             </div>
 
             </div>
-        <?php } ?>
 
 
         <div id="area_bg"></div>
@@ -304,11 +238,11 @@ if(!$is_member){
             <select name="car_place">
                 <option value="">퇴근 후 평소에 주차하는 층수를 선택해주세요</option>
                 <!-- <option>지상</option> -->
-                <option>지하1층</option>
-                <option>지하2층</option>
-                <option>지하3층</option>
-                <option>지하4층</option>
-                <option>지하5층</option>
+                <option value="지하1층">지하1층</option>
+                <option value="지하2층">지하2층</option>
+                <option value="지하3층">지하3층</option>
+                <option value="지하4층">지하4층</option>
+                <option value="지하5층">지하5층</option>
             </select>
             </div>
             <!-- 23.04.13 필수가 아니라서 id에서 car_ 빼줌 xxx_로 변경 wc -->
@@ -355,7 +289,7 @@ if(!$is_member){
               </label>
             </div>
         </div>
-		<span class="add_com">* 내부세차 추가요금은 <strong>10,000원</strong>입니다. <br />초강력 진공청소기로 깔끔한 이물질 제거와 바닥매트 세정, 가벼운 얼룩 제거, 틈새 먼지 제거 등으로 이루어집니다.</span>
+		<span class="add_com">* 내부세차 추가요금은 <strong>15,000원</strong>입니다. <br />초강력 진공청소기로 깔끔한 이물질 제거와 바닥매트 세정, 가벼운 얼룩 제거, 틈새 먼지 제거 등으로 이루어집니다.</span>
     </div>
     <?php } ?>
 
@@ -431,20 +365,23 @@ if(!$is_member){
             <div class="select">
                 <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-primary">
-                        <input type="radio" name="cc_in_yn" value="1" id="car_in_yn" autocomplete="off" >일반
+                        <input type="radio" name="cc_in_yn" value="1" id="car_in_yn" autocomplete="off">예
                     </label>
                     <label class="btn btn-primary">
-                        <input type="radio" name="cc_in_yn" value="2" id="car_in_yn2" autocomplete="off">프리미엄
+                        <input type="radio" name="cc_in_yn" value="2" id="car_in_yn2" autocomplete="off">아니오
                     </label>
                 </div>
-            </div><
-            <span class="add_com">* 내부세차 추가요금은 <strong>10,000원</strong>입니다. <br />초강력 진공청소기로 깔끔한 이물질 제거와 바닥매트 세정, 가벼운 얼룩 제거, 틈새 먼지 제거 등으로 이루어집니다.</span>
+            </div>
+            <span class="add_com">* 내부세차 추가요금은 <strong>15,000원</strong>입니다. <br />초강력 진공청소기로 깔끔한 이물질 제거와 바닥매트 세정, 가벼운 얼룩 제거, 틈새 먼지 제거 등으로 이루어집니다.</span>
         </div>
 
         <div id="mb_service" style="padding:10px;">
             <div class="clean car" style="margin:0">
                 <div class="bx cf" style="box-shadow:0; border-radius:0">
-                    <div class="tx" style="margin:0"><i class="fas fa-car-wash"></i> 실내 세차시 작업 참고사항</div>
+                    <div id="chamgo" class="tx" style="margin:0" onclick="$('#chamgoImg').toggle();"><i class="fas fa-car-wash"></i> 실내 세차시 작업 참고사항!</div>
+                    <div id="chamgoImg" style="display:none;">
+                        <img src="/images/sil.png" width="100%">
+                    </div>
                 </div>
             </div>
         </div>
@@ -481,7 +418,7 @@ if(!$is_member){
         </div><!--my_info-->
     </div><!--bx-->
 
-    <?php if ($cdt == 2) { ?>
+    <?php if ($cdt == 2 || $cdt == 4) { ?>
         <div class="normal_btn"><input type="submit" class="btn" value="예약신청하기"></div>
     <?php }else{ ?>
         <div class="normal_btn"><input type="submit" id="pay_submit" class="btn" value="결제하기"></div>
@@ -508,8 +445,8 @@ if(!$is_member){
     <input type="hidden" name="GoodsName" value="<?=$cdt_list[$cdt]?>">
     <!--<input type="hidden" name="Amt" value="--><?//=$total?><!--">-->
     <input type="hidden" name="Moid" id="Moid" value="">
-    <input type="hidden" name="MID" id="MID" value="pgcnftp01m"> <!-- 테스트 : testpay01m -->
-    <input type="hidden" name="MerchantKey" value="TtgLOwfT98KYi744xi9uhW5FAgOYls5qpVLvfnR1QQ21c1k/ZCo/t55IiEAIaydohwWEmcrSw0PTkvqrtKZUuQ=="> <!-- 테스트 : Ma29gyAFhvv/+e4/AHpV6pISQIvSKziLIbrNoXPbRS5nfTx2DOs8OJve+NzwyoaQ8p9Uy1AN4S1I0Um5v7oNUg== -->
+    <input type="hidden" name="MID" id="MID" value="pgcnftp02m"> <!-- 테스트 : testpay01m -->
+    <input type="hidden" name="MerchantKey" value="BX4XI0A2SL9Wat/fxC0NzAGHXvpGqI/84LkfLWPOWPDMJVdNtu0QYNseiZoQX7DERa/2Ibiba136wgnqRfRodA=="> <!-- 테스트 : Ma29gyAFhvv/+e4/AHpV6pISQIvSKziLIbrNoXPbRS5nfTx2DOs8OJve+NzwyoaQ8p9Uy1AN4S1I0Um5v7oNUg== -->
     <input type="hidden" name="ReturnURL" value="<?=G5_BBS_URL?>/pay_result.php">
     <input type="hidden" name="RetryURL" value="<?=G5_BBS_URL?>/pay_result.php">
     <input type="hidden" name="ResultYN" value="N">
@@ -625,7 +562,7 @@ if(!$is_member){
                 // document.getElementById('sample2_postcode').value = data.zonecode;
                 document.getElementById("car_w_addr1").value = addr +' '+extraAddr;
                 // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("w_addr2").focus();
+                document.getElementById("car_w_addr2").focus();
 
                 // iframe을 넣은 element를 안보이게 한다.
                 // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
@@ -699,35 +636,48 @@ if(!$is_member){
     }
 
     var Amt_real = <?=$money_list[$cdt."".$cs]?>
+
     //쿠폰 선택완료
     function coupon_modal_sel() {
-        var select = $('#basic_modal_coupon .select');
-        $('#coupone_box').show();
-        if (select.length != 0) {
-
-            $('[name = cp_id]').val(select.find('[name = modal_cp_id]').text());
-            $('[name = cp_subject]').val(select.find('[name = modal_cp_subject]').text());
-            $('[name = cp_price]').val(select.find('[name = modal_cp_price]').text());
-            $('[name = cp_type]').val(select.find('[name = modal_cp_type]').text());
-            $('[name = cp_price_view]').val(select.find('[name = modal_cp_price_view]').text());
-
-            var price = Amt_real;
-            var cp_type = $('[name = cp_type]').val();
-            var cp_price = $('[name = cp_price]').val();
-
-            var dc = 0;
-
-            if(cp_type == 1) {
-                var dc = Math.floor(price * ( cp_price / 100 ));
-            } else {
-                var dc =  cp_price;
-            }
-
-
-            $('#Amt_show').html((price - dc).toLocaleString()+'<span>원</span>');
-            $('#Amt').val((price - dc)*1);
-
+        var price = Amt_real;
+        if($('[name = cp_price]').val() == ""){
+            swal("사용할 적립금을 입력하세요");
+            return;
         }
+        var cp_price = parseInt($('[name = cp_price]').val());
+        if(cp_price == "") dc= 0;
+        var dc = cp_price;
+
+        if(cp_price > 0){
+            //2023-11-28 : 쿠폰이 아닌 포인트로 사용되지만 cp_id값을 부여하여 쿠폰처럼 적용
+            //1 : Amt_show : 결제할 가격보다 더많이 사용불가능
+            //2 : 보유중인 포인트보다 더 많이 사용불가능
+            var my_point = parseInt($("#cp_price_view").val());
+            //console.log("결제액",price);
+            //console.log("보유포인트",my_point);
+            //console.log("사용포인트",cp_price);
+
+            if(cp_price > price){
+                swal("결제액보다 많은 적립금은 사용할수 없습니다.");
+                $("#cp_price").val('0');
+                return;
+            }
+            if(cp_price > my_point){
+                swal("보유중인 적립금보다 더많은 포인트를 사용할수 없습니다.");
+                $("#cp_price").val('0');
+                return;
+            }
+            //CP_ID에 POINT설정
+            $("#cp_id").val("POINT");
+        }
+        else
+        {
+            $("#cp_price").val('0');
+            return;
+        }
+
+        $('#Amt_show').html((price - dc).toLocaleString()+'<span>원</span>');
+        $('#Amt').val(price - dc);
     }
 
     //쿠폰사용 취소
@@ -861,6 +811,32 @@ if(!$is_member){
     var is_post = false;
     function fservice_submit(f) {
 
+        <? if($cdt==4) { //기업세차 전용 ?>
+
+        var form = $('form')[0];
+        var formData = new FormData(form);
+        alert('접수');
+
+        $.ajax({
+            url : g5_bbs_url + "/ajax.controller.php",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: 'POST',
+            dataType : 'json',
+            success : function(data) {
+                //2023-11-28
+                alert('신청완료');
+
+
+            },
+            err : function(err) {
+                alert(err.status);
+            }
+        });
+            return;
+        <? } ?>
+
         var is_dup = false;
         if (f.car_no.value != "") {
             is_dup = is_car_no_dup(f.car_no.value,'mb_id');
@@ -869,6 +845,16 @@ if(!$is_member){
         if (is_dup) {
             swal('중복된 차량번호가 존재합니다. 차량번호를 다시 확인해주세요.');
             return false;
+
+        }
+
+        //2023-11-28 :
+        var cp_price = parseInt($('[name = cp_price]').val());
+        if(cp_price != ""){
+            if($("#cp_id").val() == ""){
+                alert('적립금 사용시 적립금 적용하기 버튼을 눌러주세요');
+                return false;
+            }
 
         }
 
@@ -886,8 +872,6 @@ if(!$is_member){
             return false;
         }
         <?php } ?>
-
-
 
         var required_data = $("[id^='car_']"),
             required_chk = "Y";
@@ -930,6 +914,7 @@ if(!$is_member){
         }
         is_post = true;
 
+
         if (required_chk == 'Y'){
             form_ajax();
             return false;
@@ -943,6 +928,7 @@ if(!$is_member){
     }
 
     function form_ajax() {
+
         var form = $('form')[0];
         var formData = new FormData(form);
 
@@ -951,27 +937,33 @@ if(!$is_member){
             formData.append("bf_file[]", filesTempArr[i]);
         }
 
-
         $.ajax({
             url : g5_bbs_url + "/ajax.controller.php",
             processData: false,
             contentType: false,
             data: formData,
             type: 'POST',
-            // datatype : 'json',
+            dataType : 'json',
             success : function(data) {
-                if (data != 0) {
-                <?php if ($cdt == 2) { ?>
-                    window.location.href = g5_bbs_url + '/my_service_ok.php?cdt=' + <?=$_REQUEST['cdt']?> +'&idx=' + data;
-                <?php }else{ ?>
-                        //정기세차 아니면 결제하기
-                        payment(data);
-                    <?php } ?>
+                //2023-11-28
+                if(data.type == "POINT"){
+                    window.location.href = g5_bbs_url + '/my_service_ok.php?cdt=' + <?=$_REQUEST['cdt']?> +'&idx=' + data.idx;
                 }else{
-                    swal("이미 정기세차를 신청했습니다. 관리자에게 문의해주세요.").then((value) => {
-                      window.location.href = g5_url;
-                    })
+                    var idx = data.idx;
+                    if (idx != 0) {
+                        <?php if ($cdt == 2) { ?>
+                        window.location.href = g5_bbs_url + '/my_service_ok.php?cdt=' + <?=$_REQUEST['cdt']?> +'&idx=' + idx;
+                        <?php }else{ ?>
+                        //정기세차 아니면 결제하기
+                        payment(idx);
+                        <?php } ?>
+                    }else{
+                        swal("이미 정기세차를 신청했습니다. 관리자에게 문의해주세요.").then((value) => {
+                            window.location.href = g5_url;
+                        })
+                    }
                 }
+
 
             },
             err : function(err) {

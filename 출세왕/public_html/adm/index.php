@@ -12,7 +12,7 @@ if ($member['mb_level'] != 10) {
 
     goto_url($menu[$auth_result['au_menu']][0][2]);
 }else{
-    goto_url('member_list.php');
+    goto_url('adm_main.php?&lv=&yn=N');
 
 }
 

@@ -158,7 +158,7 @@ $mem_result = sql_query($sql);
                 <th>no</th>
                 <th>재작업진행상황
                     <select onchange="sst_change2(this.value,'rw_step')">
-                        <option value="" <?php if($_GET['rw_step']==0){ echo 'selected'; } ?>>전체</option>
+                        <option value="" <?php if($_GET['rw_step']==0){ echo 'selected'; } ?>>선택</option>
                         <?php for($i = 0; $i < count($step_list); $i++){
                             if ($_GET['rw_step'] == $i) {
                                 echo "<option value=\"$i\" onclick=\"sst_change2($i,'rw_step')\" selected>$step_list[$i]</option>";

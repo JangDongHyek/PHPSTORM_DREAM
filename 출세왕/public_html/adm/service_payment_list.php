@@ -4,7 +4,7 @@ include_once('./_common.php');
 
 auth_check($auth[$sub_menu], 'r');
 
-$sql_common = " from {$g5['car_wash_table']} cw left join g5_member mem on cw.ma_id = mem.mb_id ";
+$sql_common = " from {$g5['car_wash_table']} cw left join g5_member mem on cw.mb_id = mem.mb_id ";
 
 $sql_search = " where 1=1 ";
 //$sql_search = " where 1=1 and car_date_type = 2 ";
@@ -92,8 +92,11 @@ $listall = ' <a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall"><button st
 $g5['title'] = '결제 관리';
 include_once('./admin.head.php');
 
-$sql = " select cw.* {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+$sql = " select mem.mb_point,cw.* {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+
+
 $result = sql_query($sql);
+
 
 $colspan = 16;
 
@@ -231,15 +234,15 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                 </th>
                 <th>결제카드</th>
                 <th>마지막 결제일</th>
-
+                <th>현재포인트</th>
                 <!-- 23.04.21 쿠폰추가 -->
-                <th>쿠폰</th>
+                <th>누적사용포인트</th>
                 <!-- 23.04.14 총누적금액 -> 누적결제대금  -->
                 <th>누적결제대금</th>
 
                 <!-- 23.04.14 예상금액 -> 누적사용금액 -->
                 <th>누적사용금액</th>
-                <th>차액/쿠폰</th>
+                <th>차액</th>
                 <th>관리</th>
                 <th>결제내역 보기</th>
             </tr>
@@ -249,17 +252,17 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
             $list_rows = $config['cf_page_rows'];
             $list_no = $total_count - ($list_rows * ($page - 1));
             for ($i=0; $row=sql_fetch_array($result); $i++) {
-
                 $bg = 'bg'.($i%2);
                 $customer = get_member($row['mb_id']);
 
                 //카드등록 된 moid
                 $sql = "select ap.moid, max(ah.nextDate) as nextDate,finalDate from g5_autoPay ap
-                        left join new_autopay_history ah on ap.billKey = ah.billKey where ap.BillKey = '{$customer['billKey']}' LIMIT 1 ";
+                        left join new_autopay_history ah on ap.billKey = ah.billKey where ap.BillKey = '{$customer['billKey']}' group by ap.moid,finalDate LIMIT 1 ";
                 $card = sql_fetch($sql);
 
                 //총누적결제금액
-                $sql = "select sum(amt) sum from new_autopay_history where BillKey = '{$customer['billKey']}' ";
+                //$sql = "select sum(amt) sum from new_autopay_history where BillKey = '{$customer['billKey']}' ";
+                $sql = "select sum(amt) sum from new_autopay_history where new_car_wash_idx = '{$row['cw_idx']}' ";
                 $total_price = sql_fetch($sql)["sum"];
                 //예상금액
                 $sql = "select count(*) cnt from new_complete_history where cw_idx = '{$row["cw_idx"]}' and update_yn = 'N' order by ch_idx desc ";
@@ -273,17 +276,14 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                     $add_price = 0;
                 }
                 $s_mod = "";
-                if (G5_TIME_YMD >= $card["nextDate"]) {
                     // 23.04.21 실내세차 있을떄만 + 적어줌
                     //if($row["car_in_yn"] == 'Y'){
                     // 23.05.19 실내세차쪽 없애기
-                    if($row['car_date_type'] == '2' || $row['car_date_type'] == '1'){
+                    if($row['car_date_type'] == '2'){
                           $s_mod = '<input class="frm_input" type = "number" id="amt_' . $row["cw_idx"] . '" > 
                             <a style ="border:1px solid black; padding:2px" href="javascript:payment_click(\'' . $row["cw_idx"] . '\',\'' . $card["moid"] . '\',\'' . $customer['billKey'] . '\',\'' . $row['mb_id'] . '\',\'' . $customer['mb_hp'] . '\',\'' . $row['mb_name'] . '\',' . $add_price . ')">결제하기</a>';
                     }
 
-
-                }
                 $s_mod2 = '<a href="'.G5_ADMIN_URL.'/service_payment_form.php?idx='.$row["cw_idx"].'">보기</a>';
                 ?>
                 <tr class="<?php echo $bg; ?>">
@@ -303,12 +303,18 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                     <td><a href="./member_form.php?<?=$qstr?>&amp;w=u&amp;mb_id=<?=$row['mb_id']?>"><?=$row['mb_id']?></a></td>
                     <td><?=$row['mb_name']?></td>
                     <td><?=$card_list[$customer["cardCode"]]?></td>
-                    <td><?=$row['car_date_type'] == '2' || $row['car_date_type'] == '1' ? substr($card["finalDate"],2,8) : substr($row['wr_datetime'],2,8).$row['is_payment']?> </td>
-                    <td><?=$row["cp_id"] ? '사용' : ''?></td>
-                    <td><?=$row['car_date_type'] == '2' || $row['car_date_type'] == '1' ? number_format($total_price) : number_format($row['final_pay'])?></td>
+                    <td><?=$row['car_date_type'] == '2' ? substr($card["finalDate"],2,8) : substr($row['wr_datetime'],2,8).$row['is_payment']?> </td>
+                    <td><?=$row["mb_point"] ?></td>
+                    <td><?=number_format($row["cp_price"]) ?> <a style ="border:1px solid black; padding:2px" href="javascript:point_click(<?=$row['cw_idx']?>,'<?=$row['mb_id']?>');">POINT+</a></td>
+                    <td><?=$row['car_date_type'] == '2' ? number_format($total_price) : number_format($row['final_pay'])?></td>
 
-                    <td><?=number_format($complete_cnt*12375)?></td>
-                    <td><?=number_format(($complete_cnt*12375) - $total_price)?> <?=$row["cp_id"] ? '/ '.number_format(($complete_cnt*12375)*1 - $total_price - 5000) : ""?></td>
+                    <?if($row['car_date_type'] == '2') {?>
+                    <td><?=number_format($complete_cnt*12375)?>(<?=$complete_cnt?>)</td>
+                    <td><?=number_format(($complete_cnt*12375) - $total_price- $row['cp_price'])?></td>
+                    <?}else {?>
+                    <td>0(<?=$complete_cnt?>)</td>
+                    <td><?=number_format($total_price- $row['cp_price'])?></td>
+                    <?}?>
                     <td><?=$s_mod?></td>
                     <td><?=$s_mod2?></td>
                 </tr>
@@ -325,7 +331,14 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
 
 
 </form>
-
+<Div id="pop_point" style="display:none;position:absolute;padding:20px 20px 20px 20px;border:solid 1px black; background-color:#ffffff;left:40%; top:100px; width:500px; height:100px; z-index:1;">
+    <input type="hidden" id="car_idx" name="car_idx"><br>
+    포인트 대상 : <input type="text" id="mem_id" style="border: solid 0px;" readonly><br><br>
+    포인트 입력 : <input type="text" id="pnt" name="pnt">
+    <br><br>
+    <input type="button" value=" 입 력 " onclick="javascript:fn_point();">&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="button" value=" 닫 기 " onclick="javascript:$('#pop_point').hide();">
+</div>
 <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr."&nr=".$_REQUEST['nr'].'&amp;page='); ?>
 
 <script>
@@ -402,14 +415,14 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
         $('#start_date').val('<?=date("Y-m-d", strtotime("-1 months"))?>');
         $('#end_date').val('<?=date("Y-m-d")?>');
 
-        date_change()
+        date_change();
     }
 
     function click_day() {
         $('#start_date').val('<?=date("Y-m-d")?>');
         $('#end_date').val('<?=date("Y-m-d")?>');
 
-        date_change()
+        date_change();
     }
 
     function date_change() {
@@ -432,13 +445,42 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
 
     }
 
+    function fn_point()
+    {
+        if($("#pnt").val()) {
+
+            if (confirm("포인트를 입력 하시겠습니까?")) {
+                $.ajax({
+                    type: "POST",
+                    url: '/bbs/ajax.car_point.php',
+                    data: {idx: $("#car_idx").val(), "mem_id": $("#mem_id").val(), "pnt": $("#pnt").val()},
+                    cache: false,
+                    success: function (data) {
+                        console.log(data);
+                        alert("포인트 처리가 완료 되었습니다.");
+                        location.reload();
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert("통신에러");
+                    }
+                });
+            }
+        }
+    }
+    function point_click(idx,mb_id) {
+        $("#pop_point").show();
+        $("#mem_id").val(mb_id);
+        $('#car_idx').val(idx);
+    }
+
     function payment_click(idx,card_moid, billKey,mb_id,mb_hp,mb_name,add_price) {
         var url = "https://api.innopay.co.kr/api/payAutoCardBill";
         var amt = ($("#amt_"+idx).val()*1) + add_price ,
             moid = "<?=date("YmdHis")?>_<?=rand(10,99)?>";
-
+        // test mid : testpay01m
         const data2 = JSON.stringify({
-            "mid":"testpay01m",
+            "mid":"pgcnftp02m",
             "moid":moid,
             "shop_order_id":card_moid,
             "goodsName":"정기결제",
@@ -468,6 +510,7 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                     }else{
                         data["shop_order_id"] = card_moid;
                         console.log(data);
+                        data['new_car_wash_idx'] = idx;
 
                         //DB저장
                         $.ajax({

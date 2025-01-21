@@ -81,6 +81,21 @@ else
     ?>
 </div>
 
+<script>
+$(function() {
+    $("#sch_member").click(function() {
+    if($("#chk_all_mb").is(":checked")) {
+    alert("전체회원 체크를 해제 후 이용해 주십시오.");
+    return false;
+    }
+
+    var opt = "left=50,top=50,width=520,height=600,scrollbars=1";
+    var url = "./shop_admin/couponmember.php";
+    window.open(url, "win_member", opt);
+    });
+});
+</script>
+
 <form name="fsearch" id="fsearch" class="local_sch01 local_sch" method="get">
 <label for="sfl" class="sound_only">검색대상</label>
 <select name="sfl" id="sfl">
@@ -200,8 +215,11 @@ else
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row"><label for="mb_id">회원아이디<strong class="sound_only">필수</strong></label></th>
-            <td><input type="text" name="mb_id" value="<?php echo $mb_id ?>" id="mb_id" class="required frm_input" required></td>
+            <th scope="row"><label for="mb_id">회원아이디<strong class="sound_only">필수</strong></label>
+            </th>
+            <td><input type="text" name="mb_id" value="<?php echo $mb_id ?>" id="mb_id" class="required frm_input" required>
+                <button type="button" id="sch_member" class="btn_frmline">회원검색</button>
+            </td>
         </tr>
         <tr>
             <th scope="row"><label for="po_content">포인트 내용<strong class="sound_only">필수</strong></label></th>

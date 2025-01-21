@@ -128,6 +128,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                         <dt>차량정보</dt>
                         <dd><?= $row['car_no'] ?> / <?= $row['car_type'] ?> / <?= $row['car_color'] ?></dd>
                     </dl>
+
                     <dl class="tx_m">
                         <dt>세차일정</dt>
                         <dd>
@@ -142,16 +143,60 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                         <dt>내부세차</dt>
                         <dd class="ins"><span><?= $row['car_in_yn'] == 'Y' ? "<i class=\"far fa-check-circle\"></i> 포함" : "<i class=\"far fa-times-circle\"></i> 포함안함"; ?></span></dd>
                     </dl>
+
                     <dl class="tx_m">
+                        <dt>작업완료</dt>
+                        <dd><a data-toggle="modal" data-target="#myModal_end" class="doneListA"><?=$row["complete_cnt"]?>회</a></dd>
+                    </dl>
+
+
+                    <!-- 2024-07-04 이승환 추가 -->
+                    <dl class="tx_m">
+                        <dt>사용포인트</dt>
+                        <dd><a data-toggle="modal" data-target="#myModal_end" class="doneListA"><?=number_format($row["cp_price"]);?></a></dd>
+                    </dl>
+
+                    <dl class="tx_m">
+                        <dt>작업완료일</dt>
+                        <dd><a data-toggle="modal" data-target="#myModal_end" class="doneListA"><?=$row["complete_datetime"]?></a></dd>
+                    </dl>
+                    <dl class="tx_m">
+                        <?php if ($row['cw_step'] == "0"){ ?>
+                        <dt>예상이용금액</dt>
+                        <dd><span class="price">-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                       <?php }else{ ?>
+                    <dl class="tx_m">
+                        <dt>누적결제금액</dt>
+                        <dd class="ins"><span> <? echo number_format($total_price);?> 원</span></dd>
+                    </dl>
                         <dt>최종이용금액</dt>
                         <dd><span class="price">
-                       <?= number_format($row['final_pay'])?></span>원
+                        <?php } ?>
+
+                        <!-- date_type 2는 정기세차 -->
+                        <?
+                        if($row['car_date_type'] ==2)
+                        {
+                            //여기는 정기세차 횟수만큼 계산해서 뿌려줌
+                            echo number_format(($row["complete_cnt"]*12375) - $row['cp_price']);
+                        }
+                        else
+                        {
+                            //여기에 최종 결제 금액을 뿌려줌
+                            echo number_format($row['final_pay']);
+                        }
+                        ?>
+
+                        </span>원
                             <!-- 쿠폰있으면 아이콘 표시 -->
+                            <!--
                             <?php if($row['cp_id'] != ""){ ?>
-                                <span class="ico"><i class="fa-solid fa-ticket"></i></span>
+                                <span class="ico">POINT 사용</span>
                             <?php } ?>
+                            -->
                         </dd>
                     </dl>
+
                     <dl class="tx_m manager"><!--관리자가 담당매니저 정해주면 고객쪽에 뜨게 됨-->
                         <dt>담당매니저</dt>
                         <dd><?=$manager_member['mb_name']?> <span class="info"><a data-toggle="modal" data-target="#myModal2" data-name="<?=$manager_member['mb_name']?>" data-hp="<?=$manager_member['mb_hp']?>" class="info"><i class="fas fa-user-circle"></i> 매니저 정보</a></span></dd>

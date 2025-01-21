@@ -10,6 +10,10 @@ $sql_common = " from {$g5['car_wash_table']} cw
 
 $sql_search = " where 1=1 ";
 
+if ($_REQUEST["ma"] == "no"){
+    $sql_search .= "and ma_id = '' " ;
+}
+
 if ($_REQUEST["car_date_type_name"] != ""){
     $sql_search .= "and mem.mb_name like '%". $_REQUEST["car_date_type_name"]."%'" ;
 }
@@ -113,6 +117,7 @@ if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
 $from_record = ($page - 1) * $rows; // 시작 열을 구함
 
 $listall = ' <a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall"><button style="border: 1px solid #ccc">전체목록</button></a>';
+$listall .= ' <a href="'.$_SERVER['SCRIPT_NAME'].'?ma=no" class="ov_listall"><button style="border: 2px solid #999">매니저미지정목록</button></a>';
 
 $g5['title'] = '서비스관리';
 include_once('./admin.head.php');
@@ -156,7 +161,7 @@ $mem_result = sql_query($sql);
                 </div>
                 <?php for ($i =0;$mem_row =sql_fetch_array($mem_result);$i++){?>
                 <div style=" margin-bottom: 8px">
-                 <input name="modal_mb_id" type="radio" value="<?= $mem_row["mb_id"] ?>"><span style="margin-left: 10px;"><?= $mem_row["mb_name"] ?> / <?= hyphen_hp_number($mem_row["mb_hp"]) ?></span>
+                 <input name="modal_mb_id" type="radio" value="<?= $mem_row["mb_id"] ?>"><span style="margin-left: 10px;"><?= $mem_row["mb_name"] ?>(<?=$mem_row["mb_id"] ?>) / <?= hyphen_hp_number($mem_row["mb_hp"]) ?></span>
                 </div>
                 <?php } ?>
             </div>

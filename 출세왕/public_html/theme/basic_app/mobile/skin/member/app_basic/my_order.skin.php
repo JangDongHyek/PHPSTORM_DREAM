@@ -64,100 +64,167 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
     </ul>
     <ul class="filter">
-        <li class="<? if ($filter == "3") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=3'?>">단기</a></li>
-        <li class="<? if ($filter < 3) echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=1'?>">정기</a></li>
-        <li class="<? if ($filter == "5") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=5'?>">실내</a></li>
+        <li class="<? if ($filter == "3") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=3'?>">외부세차 1회</a></li>
+        <li class="<? if ($filter < 3) echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=1'?>">정기세차</a></li>
+        <li class="<? if ($filter == "5") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=5'?>">실내세차 1회</a></li>
+        <li class="<? if ($filter == "6") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=6'?>">기업세차</a></li>
         <li class="<? if ($rw_idx_check == "true") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?rw_idx_check=true'?>">재작업</a></li>
     </ul>
     
-    <!--내용부분--> 
+    <!--내용부분-->
+    <? if($filter==6) { ?>
     <div class="in">
 		<div class="cslist">
             <?php if (sql_num_rows($order_result) >0 ){
             for ($i = 0; $row = sql_fetch_array($order_result); $i++){
-                $add_strong = "";
-                $is_re_car_wash = "N";
-                //재작업건
-                if ($row['rw_idx'] != "" &&$row["is_turn_yn"] == "N") {
-                    $add_strong = "<strong style='background: #f1f1f1'>재작업 요청건</strong>";
-                    $is_re_car_wash = "Y";
-                }
-                $pass_days = 0;
-                //완료 일자에서 5일 지난 후 경과일 확인
-                if ($row['cw_complete_datetime'] != "0000-00-00 00:00:00"){
-                    $cw_complete_datetime = strtotime(date('Y-m-d', strtotime($row['cw_complete_datetime'])) . "+5 days");
-                    $now = strtotime(date("Y-m-d"));
-
-                    $time_check = $now - $cw_complete_datetime;
-                    $pass_days = floor($time_check / 86400);
-                }
-
-
                 ?>
 			<div class="bx">
             	<h2 class="tit">
-                <?php if($row["car_date_type"] < 3 && $pass_days > 0){ ?>
-				<!-- 경과일추가 04.22 --><p class="dateOver" onclick="complete_filter()"><span>+ <?=$pass_days?>일 경과</span></p>
-                <?php } ?>
-				<?= $cdt_list[$row['car_date_type']]?><strong class="size"><?= $cs_list[$row['car_size']]?></strong><?=$add_strong?>
+
 				</h2>
                 <div class="tx">
-<!--                    <dl class="tx_m">-->
-<!--                        <dt>신청일</dt>-->
-<!--                        <dd>--><?php
-//                            $date = explode(" ",$row['cw_datetime']);
-//                            $day = explode('-',$date[0]);
-//                            echo $day[0] . "년 " . $day[1] . "월 " . $day[2] . "일  ". date('H:i',strtotime($date[1])) ?><!--</dd>-->
-<!--                    </dl>-->
+
                     <dl class="tx_m">
-                        <dt>신청고객</dt>
-                        <dd><?= $row['mb_name'].' / '.hyphen_hp_number($row['mb_hp']) ?> <span class="call"><a href='tel:<?=$row['mb_hp']?>' target="_parent"><i class="fas fa-phone-alt"></i></a></span></dd><!--전화아이콘 누르면 전화연결되게 가능한가요~~-->
+                        <dt>신청회사</dt>
+                        <dd><?=$row['cc_company']?></dd>
                     </dl>
                     <dl class="tx_m">
-                        <dt>차량정보</dt>
-                        <dd><?= $row['car_no'] ?> / <?= $row['car_type'] ?> / <?= $row['car_color'] ?></dd>
+                        <dt>신청관리자</dt>
+                        <dd><?= $row['cc_manager'] ?></dd>
                     </dl>
                     <dl class="tx_m">
-                        <dt>세차일정</dt>
-                        <dd>
-                            <?php
-                            successking_date($row['car_w_date'],$row['car_w_date2']);
-                            ?>
-                        </dd>
+                        <dt>e-mail</dt>
+                        <dd><?= $row['cc_email'] ?></dd>
                     </dl>
                     <dl class="tx_m">
-                        <dt>세차장소</dt>
-                        <dd><?=$row['car_w_addr1']." ".$row['car_w_addr2']?><br /><?=$row['car_place']?></dd>
+                        <dt>휴대폰</dt>
+                        <dd><?= $row['cc_hp'] ?></dd>
                     </dl>
 
-                    <!-- 23.04.17 내부세차 다 가림 -->
-                    <dl class="tx_m" style="display: none">
-                        <dt>내부세차</dt>
-                        <dd class="ins"><span> <?= $row['car_in_yn'] == 'Y' ? "<i class=\"far fa-check-circle\"></i> 포함" : "<i class=\"far fa-times-circle\"></i> 포함안함"; ?></span></dd>
+                    <dl class="tx_m">
+                        <dt>fax</dt>
+                        <dd><?= $row['cc_fax'] ?></dd>
                     </dl>
 
-                    <?php if($member['mb_level'] != 3){ ?>
-                    <!-- 23.04.13 매니저만 못봄 wc -->
-                    <dl class="tx_m">
-                        <dt>이용금액</dt>
-                        <dd><span class="price"><?= number_format($row['final_pay']) ?></span>원</dd>
-                    </dl>
-                    <?php } ?>
+                <dl class="tx_m">
+                    <dt>주소1</dt>
+                    <dd><?= $row['cc_w_addr1'] ?></dd>
+                </dl>
+                <dl class="tx_m">
+                    <dt>주소2</dt>
+                    <dd><?= $row['cc_w_addr2'] ?></dd>
+                </dl>
+                <dl class="tx_m">
+                    <dt>연락처</dt>
+                    <dd><?= $row['cc_number'] ?></dd>
+                </dl>
+                <dl class="tx_m">
+                    <dt>실내세차</dt>
+                    <dd><?= $row['cc_in_yn'] ?></dd>
+                </dl>
+                <dl class="tx_m">
+                    <dt>신청일자</dt>
+                    <dd><?= $row['wr_datetime'] ?></dd>
+                </dl>
+            <?php } ?>
                 </div><!--tx-->
-                <div class="mini_btn cf">
-                    <a href="<?php echo G5_BBS_URL ?>/my_order_view.php?idx=<?=$row['cw_idx']?>" class="bt view a2">자세히보기</a><!--해당 예약의 상세뷰 화면으로 바로 이동-->
-                    <a data-toggle="modal" data-target="#myModal" data-idx = "<?=$row['cw_idx']?>" data-rw_idx = "<?=$row['rw_idx']?>" data-is = "<?=$is_re_car_wash?>" class="bt ok a2">작업완료</a><!--작업완료하면 완료작업으로 옮겨짐-->
-                    <?php if ($row["rw_idx"] == ""){?>
-                    <?php /* <a data-toggle="modal" data-target="#myModal2" data-idx = "<?=$row['cw_idx']?>" data-is = "<?=$is_re_car_wash?>" class="bt cancel a3">작업취소</a><!--작업취소하면 취소작업으로 옮겨짐--> */?>
-                    <?php } ?>
-                </div>
             </div><!--bx-->
-            <?php }
+            <?php
+                }else{
+                    echo "<div class=\"service_none\"><span><i class=\"fas fa-smile\"></i></span>진행예정 작업이 없습니다.</div>";
+                }
+                ?>
+        </div>
+    </div><!--in-->
+<? } else { ?>
+    <div class="in">
+        <div class="cslist">
+            <?php if (sql_num_rows($order_result) >0 ){
+                for ($i = 0; $row = sql_fetch_array($order_result); $i++){
+                    $add_strong = "";
+                    $is_re_car_wash = "N";
+                    //재작업건
+                    if ($row['rw_idx'] != "" &&$row["is_turn_yn"] == "N") {
+                        $add_strong = "<strong style='background: #f1f1f1'>재작업 요청건</strong>";
+                        $is_re_car_wash = "Y";
+                    }
+                    $pass_days = 0;
+                    //완료 일자에서 5일 지난 후 경과일 확인
+                    if ($row['cw_complete_datetime'] != "0000-00-00 00:00:00"){
+                        $cw_complete_datetime = strtotime(date('Y-m-d', strtotime($row['cw_complete_datetime'])) . "+5 days");
+                        $now = strtotime(date("Y-m-d"));
+
+                        $time_check = $now - $cw_complete_datetime;
+                        $pass_days = floor($time_check / 86400);
+                    }
+
+
+                    ?>
+                    <div class="bx">
+                        <h2 class="tit">
+                            <?php if($row["car_date_type"] < 3 && $pass_days > 0){ ?>
+                                <!-- 경과일추가 04.22 --><p class="dateOver" onclick="complete_filter()"><span>+ <?=$pass_days?>일 경과</span></p>
+                            <?php } ?>
+                            <?= $cdt_list[$row['car_date_type']]?><strong class="size"><?= $cs_list[$row['car_size']]?></strong><?=$add_strong?>
+                        </h2>
+                        <div class="tx">
+                            <!--                    <dl class="tx_m">-->
+                            <!--                        <dt>신청일</dt>-->
+                            <!--                        <dd>--><?php
+                            //                            $date = explode(" ",$row['cw_datetime']);
+                            //                            $day = explode('-',$date[0]);
+                            //                            echo $day[0] . "년 " . $day[1] . "월 " . $day[2] . "일  ". date('H:i',strtotime($date[1])) ?><!--</dd>-->
+                            <!--                    </dl>-->
+                            <dl class="tx_m">
+                                <dt>신청고객</dt>
+                                <dd><?= $row['mb_name'].' / '.hyphen_hp_number($row['mb_hp']) ?> <span class="call"><a href='tel:<?=$row['mb_hp']?>' target="_parent"><i class="fas fa-phone-alt"></i></a></span></dd><!--전화아이콘 누르면 전화연결되게 가능한가요~~-->
+                            </dl>
+                            <dl class="tx_m">
+                                <dt>차량정보</dt>
+                                <dd><?= $row['car_no'] ?> / <?= $row['car_type'] ?> / <?= $row['car_color'] ?></dd>
+                            </dl>
+                            <dl class="tx_m">
+                                <dt>세차일정</dt>
+                                <dd>
+                                    <?php
+                                    successking_date($row['car_w_date'],$row['car_w_date2']);
+                                    ?>
+                                </dd>
+                            </dl>
+                            <dl class="tx_m">
+                                <dt>세차장소</dt>
+                                <dd><?=$row['car_w_addr1']." ".$row['car_w_addr2']?><br /><?=$row['car_place']?></dd>
+                            </dl>
+
+                            <!-- 23.04.17 내부세차 다 가림 -->
+                            <dl class="tx_m" style="display: none">
+                                <dt>내부세차</dt>
+                                <dd class="ins"><span> <?= $row['car_in_yn'] == 'Y' ? "<i class=\"far fa-check-circle\"></i> 포함" : "<i class=\"far fa-times-circle\"></i> 포함안함"; ?></span></dd>
+                            </dl>
+
+                            <?php if($member['mb_level'] != 3){ ?>
+                                <!-- 23.04.13 매니저만 못봄 wc -->
+                                <dl class="tx_m">
+                                    <dt>이용금액</dt>
+                                    <dd><span class="price"><?= number_format($row['final_pay']) ?></span>원</dd>
+                                </dl>
+                            <?php } ?>
+                        </div><!--tx-->
+                        <div class="mini_btn cf">
+                            <a href="<?php echo G5_BBS_URL ?>/my_order_view.php?idx=<?=$row['cw_idx']?>" class="bt view a2">자세히보기</a><!--해당 예약의 상세뷰 화면으로 바로 이동-->
+                            <a data-toggle="modal" data-target="#myModal" data-idx = "<?=$row['cw_idx']?>" data-rw_idx = "<?=$row['rw_idx']?>" data-is = "<?=$is_re_car_wash?>" class="bt ok a2">작업완료</a><!--작업완료하면 완료작업으로 옮겨짐-->
+                            <?php if ($row["rw_idx"] == ""){?>
+                                <?php /* <a data-toggle="modal" data-target="#myModal2" data-idx = "<?=$row['cw_idx']?>" data-is = "<?=$is_re_car_wash?>" class="bt cancel a3">작업취소</a><!--작업취소하면 취소작업으로 옮겨짐--> */?>
+                            <?php } ?>
+                        </div>
+                    </div><!--bx-->
+                <?php }
             }else{
                 echo "<div class=\"service_none\"><span><i class=\"fas fa-smile\"></i></span>진행예정 작업이 없습니다.</div>";
             } ?>
         </div>
     </div><!--in-->
+<? }  ?>
 </div><!--my_reser-->
 
 <!-- 출장세차 예약현황 -->
@@ -194,6 +261,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
             dataType: "json",
             success: function(data) {
                 if (data["result"] == 1) {
+                    //alert(g5_bbs_url + data["url"]);
                     window.location.href = g5_bbs_url + data["url"];
                 }else{
                     swal_func("작업요청에 실패했습니다.");

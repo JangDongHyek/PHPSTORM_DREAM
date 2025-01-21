@@ -168,6 +168,10 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
     <!--<input type="hidden" name="mb_--><?php //echo $i ?><!--" value="--><?php //echo $mb['mb_'.$i] ?><!--" id="mb_--><?php //echo $i ?><!--">-->
     <?php //} ?>
 
+<!--
+<script>alert("<?=$mb['mb_2']?>");</script>;
+-->
+
     <?php if(empty($get_mb_level)){ ?>
         <div class="tbl_frm01 tbl_wrap">
         <table>
@@ -274,9 +278,12 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
             <?php } ?>
             <tr>
                 <th scope="row"><label for="mb_1">승인<strong class="sound_only">필수</strong></label></th>
+				<!-- 포인트 관련 mb_2 아이디 mb_3 첫가입유무 첫가입이면 1 이며 1일때문 적립 -->
+				<input type="hidden" name = "mb_2" value="<?=$mb['mb_2'];?>">
+				<input type="hidden" name = "mb_3" value="<?=$mb['mb_3'];?>">
                 <td>
                     <input name="mb_1" type="radio" value="Y"><span style="margin: 0 5px">승인</span>
-                    <input name="mb_1" type="radio" value="N"><span style="margin: 0 5px">승인안됨</span>
+                    <input name="mb_1" type="radio" value="N"><span style="margin: 0 5px">승인대기</span>
                 </td>
                 <th scope="row"><label for="mb_1">주소<strong class="sound_only">필수</strong></label></th>
                 <td>
@@ -337,13 +344,20 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
             <?php if ($w == 'u') { ?>
                 <tr>
                     <th scope="row"><label for="mb_leave_date">탈퇴일자</label></th>
-                    <td colspan="3" >
+                    <td colspan="1" >
                         <input type="text" name="mb_leave_date" value="<?php echo $mb['mb_leave_date'] ?>" id="mb_leave_date" class="frm_input" maxlength="8">
                         <input type="checkbox" value="<?php echo date("Ymd"); ?>" id="mb_leave_date_set_today" onclick="if (this.form.mb_leave_date.value==this.form.mb_leave_date.defaultValue) {
 this.form.mb_leave_date.value=this.value; } else { this.form.mb_leave_date.value=this.form.mb_leave_date.defaultValue; }">
                         <label for="mb_leave_date_set_today">탈퇴일을 오늘로 지정</label>
                     </td>
-
+                    <th>가입유형</th>
+                    <td>
+                        <select name="reg_type" id="reg_type" class="sch_sel">
+                            <option value="">가입목적</option>
+                            <option value="세차">세차</option>
+                            <option value="이사청소">이사청소</option>
+                        </select>
+                    </td>
                 </tr>
             <?php } ?>
             </tbody>
@@ -492,6 +506,7 @@ if ($mb['mb_level'] == '2'){
         $("[name='go_work']").val('<?=$mb["go_work"]?>');
         $("[name='go_time1']").val('<?=$mb["go_time1"]?>');
         $("[name='go_time2']").val('<?=$mb["go_time2"]?>');
+        $("[name='reg_type']").val('<?=$mb["reg_type"]?>');
         <?php } ?>
 
         $("input:radio[name='mb_1']:radio[value='<?=$mb['mb_1']?>']").prop("checked", true);

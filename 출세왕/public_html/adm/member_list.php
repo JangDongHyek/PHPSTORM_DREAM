@@ -6,13 +6,16 @@ auth_check($auth[$sub_menu], 'r');
 
 
 
-$sql_common = " from {$g5['member_table']} ";
+//$sql_common = " from {$g5['member_table']} ";
+$sql_common = "  from g5_member gm LEFT OUTER join new_gogac_car nc on gm.mb_id = nc.mb_id ";
 
-if($_SESSION['ss_mb_id'] == "lets080" || $_SESSION['ss_mb_id'] == "admin"){
-    $sql_search .= " where 1=1 and mb_id!='lets080' ";
+
+if($_SESSION['ss_mb_id'] == "admin"){
+    $sql_search .= " where 1=1 ";
 }else{
-    $sql_search .= " where 1=1 and mb_id!='lets080' and mb_level < 4 ";
+    $sql_search .= " where 1=1 and mb_level < 4 ";
 }
+
 
 if ($stx) {
     $sql_search .= " and ( ";
@@ -32,9 +35,6 @@ if ($stx) {
 
 if ($is_admin != 'super')
     $sql_search .= " and mb_level <= '{$member['mb_level']}' ";
-
-if($_SESSION['ss_mb_id'] != "lets080")
-    $sql_search .= " and mb_id != 'lets080'";
 
 if ($_GET['lv']){
     $sql_search .= " and mb_level = '{$_GET['lv']}' ";
@@ -79,7 +79,8 @@ $listall = '<a href="'.$_SERVER['SCRIPT_NAME'].'" class="ov_listall">전체목�
 $g5['title'] = '회원관리';
 include_once('./admin.head.php');
 
-$sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+$sql = " select gm.*,nc.car_no {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+//echo $sql;
 $result = sql_query($sql);
 
 $colspan = 16;
@@ -102,20 +103,10 @@ $colspan = 16;
     <label for="sfl" class="sound_only">검색대상</label>
     <select name="sfl" id="sfl">
         <option value="mb_id"<?php echo get_selected($_GET['sfl'], "mb_id"); ?>>아이디</option>
+        <option value="car_no"<?php echo get_selected($_GET['sfl'], "car_no"); ?>>차량번호</option>
         <option value="mb_name"<?php echo get_selected($_GET['sfl'], "mb_name"); ?>>이름</option>
         <option value="mb_hp"<?php echo get_selected($_GET['sfl'], "mb_hp"); ?>>휴대폰번호</option>
-        <? /*
-    <option value="mb_nick"<?php echo get_selected($_GET['sfl'], "mb_nick"); ?>>닉네임</option>
-    <option value="mb_name"<?php echo get_selected($_GET['sfl'], "mb_name"); ?>>이름</option>
-    <option value="mb_level"<?php echo get_selected($_GET['sfl'], "mb_level"); ?>>권한</option>
-    <option value="mb_email"<?php echo get_selected($_GET['sfl'], "mb_email"); ?>>E-MAIL</option>
-    <option value="mb_tel"<?php echo get_selected($_GET['sfl'], "mb_tel"); ?>>전화번호</option>
-    <option value="mb_hp"<?php echo get_selected($_GET['sfl'], "mb_hp"); ?>>휴대폰번호</option>
-    <option value="mb_point"<?php echo get_selected($_GET['sfl'], "mb_point"); ?>>포인트</option>
-    <option value="mb_datetime"<?php echo get_selected($_GET['sfl'], "mb_datetime"); ?>>가입일시</option>
-    <option value="mb_ip"<?php echo get_selected($_GET['sfl'], "mb_ip"); ?>>IP</option>
-    <option value="mb_recommend"<?php echo get_selected($_GET['sfl'], "mb_recommend"); ?>>추천인</option>
-	*/ ?>
+
     </select>
     <label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
     <input type="text" name="stx" value="<?php echo $stx ?>" id="stx" class=" frm_input">
@@ -166,6 +157,7 @@ $colspan = 16;
                 <th>회원구분</th>
                 <th><?php echo subject_sort_link('mb_id') ?>아이디</a></th>
                 <th><?php echo subject_sort_link('mb_name') ?>이름</a></th>
+                <th>차량번호</th>
                 <th>휴대폰</th>
                 <th>가입일</th>
                 <?php if($sst == 'mb_leave_date'){ ?>
@@ -235,6 +227,7 @@ $colspan = 16;
                         }?></td>
                     <td><?=$mb_id?></td>
                     <td><?=get_text($row['mb_name'])?></td>
+                    <td><?=get_text($row['car_no'])?></td>
                     <td><?=hyphen_hp_number($row['mb_hp'])?></td>
                     <td><?=substr($row['mb_datetime'],2,8)?></td>
                     <?php if($sst == 'mb_leave_date'){ ?>

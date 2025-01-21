@@ -45,6 +45,9 @@ if ( $mb['mb_1'] != 'Y' &&$mb["mb_level"] == 3) {
 
 };
 
+
+
+
 @include_once($member_skin_path.'/login_check.skin.php');
 
 // 회원아이디 세션 생성
@@ -106,6 +109,34 @@ if ($url) {
 } else  {
     $link = G5_URL;
 }
+
+
+//푸쉬등록
+if(!empty($_POST['device_uuid']) || !empty($_POST['push_register_id']) ){
+    $push_data = array();
+    $push_data['app_id'] = "successking";
+    $push_data['device_uuid'] = $_POST['device_uuid'];
+    $push_data['push_register_id'] = $_POST['push_register_id'];
+    $push_data['device_platform'] = $_POST['device_platform'];
+    $push_data['mem_id'] = $mb_id;
+
+    $url = "https://push.softwow.co.kr/api/device_reg.php";
+
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL,$url);
+    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt ($ch, CURLOPT_SSLVERSION,1);
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $push_data);
+
+    curl_setopt ($ch, CURLOPT_TIMEOUT, 300);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
+    $curl_result = curl_exec ($ch);
+}
+
+
+
 
 goto_url($link);
 ?>

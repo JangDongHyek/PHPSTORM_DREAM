@@ -104,6 +104,10 @@ if ($member['mb_level'] == 2){
 			<div class="bx"><a href="<?php echo G5_BBS_URL ?>/my_car.php">내 차량관리<span class="co"><i class="fas fa-car"></i></span></a></div>
             <div class="bx"><a href="<?php echo G5_BBS_URL ?>/my_service_end.php">완료된 서비스<span class="co"><i class="fas fa-car-wash"></i></span></a></div>
             <div class="bx"><a href="<?php echo G5_BBS_URL ?>/my_clean_reser.php">청소서비스<span class="co"><i class="fas fa-shower"></i></span></a></div>
+            <div class="bx"><a href="<?php echo G5_BBS_URL ?>/my_payment.php">결제완료내역<span class="co"><i class="fas fa-money-check-dollar"></i></span></a></div>
+            <!--
+            <div class="bx"><a href="javascript:swal('관리자에게 문의하세요');">탈퇴하기<span class="co"><i class="fas fa-money-check-dollar"></i></span></a></div>
+            -->ㅜ
         </div><!--top_info-->
         <ul class="my_menu">
             <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=notice">공지사항<span><i class="fal fa-angle-right"></i></span></a></li>

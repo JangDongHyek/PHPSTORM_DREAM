@@ -12,7 +12,8 @@ include_once("./_common.php");
 
 /**********************************************************************************/
 //이부분에 로그파일 경로를 수정해주세요.
-$LogPath = "/home/successking2/public_html/log";
+//$LogPath = "/home/successking2/public_html/log";
+$LogPath = "/home/successking/public_html/data/log";
 /**********************************************************************************/
 
 
@@ -266,7 +267,7 @@ $sql="insert g5_autoPay set
 									arsOrderKey='',
 									tid='$tid',
 									goodsName='$goodsName',
-									amt='35000',
+									amt='0',
 									buyerName='$buyerName',
 									buyerTel='$member[mb_hp]',
 									authDate='$authDate',
@@ -295,9 +296,10 @@ $sql="update g5_member set
 				  ";
 
 sql_query($sql);
-goto_url(G5_BBS_URL."/register_result.php");
 
 echo "0000";                        // 절대로 지우지마세요
+
+goto_url(G5_BBS_URL."/register_result.php");
 
 //      }
 

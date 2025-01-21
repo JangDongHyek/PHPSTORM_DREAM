@@ -175,7 +175,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
     <input type="hidden" name="sca" value="<?php echo $sca ?>">
     <input type="hidden" name="sop" value="and">
     <label for="sfl" class="sound_only">검색대상</label>
-    
+
     <span class="select_box">
     <select name="sfl" id="sfl">
         <option value="wr_subject"<?php echo get_selected($sfl, 'wr_subject', true); ?>>제목</option>
@@ -187,7 +187,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
         <option value="wr_name,0"<?php echo get_selected($sfl, 'wr_name,0'); ?>>글쓴이(코)</option>-->
     </select>
     </span>
-    
+
     <label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
     <input type="text" name="stx" value="<?php echo stripslashes($stx) ?>" required id="stx" class="frm_input sch_input required" maxlength="20">
     <input type="submit" value="검색" class="btn_submit02">

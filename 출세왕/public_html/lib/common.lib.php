@@ -992,6 +992,7 @@ function insert_use_point($mb_id, $point, $po_id='')
                   and po_point > po_use_point
                 $sql_order ";
     $result = sql_query($sql);
+
     for($i=0; $row=sql_fetch_array($result); $i++) {
         $point2 = $row['po_point'];
         $point3 = $row['po_use_point'];
@@ -1580,9 +1581,11 @@ function sql_password($value)
 {
     // mysql 4.0x 이하 버전에서는 password() 함수의 결과가 16bytes
     // mysql 4.1x 이상 버전에서는 password() 함수의 결과가 41bytes
-    $row = sql_fetch(" select password('$value') as pass ");
+    //$row = sql_fetch(" select password('$value') as pass ");
+	//mysql 8버전이상 패스워드함수변경
+	$row = sql_fetch(" SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$value'))))) as pass ");
 
-    return $row['pass'];
+	return $row['pass'];
 }
 
 
@@ -3451,23 +3454,12 @@ function fn_imagejpeg($image,$upload_file,$new_file_width,$new_file_height,$widt
 }
 /*
 ====================================================================
-1. 문자박스 로그인
-http://biz2.smsbox.co.kr/
-ID : letskt080
-PW : 3001jun
 
-2. 마이페이지 - 회신번호관리 - 회신번호등록
-관리계정
-1. sms만 사용		: letskt0802 (165서버)
-2. mms 함께 사용	: seongu (184서버)
-
-3. DB정보
-letskt0802 계정 : http://211.51.221.165/_phpMyadmin/
 ---------------------------------------------------------------------
 */
 function goSms($reserv_phone, $send_phone, $msg)
 {
-    $conn_db = mysqli_connect("211.51.221.165", "emma", "wjsghk!@#", "emma");
+    $conn_db = mysqli_connect("", "", "", "");
     $mart_id = "successking2";			//계정명
 
     $number_receive_people = 0;
@@ -3476,8 +3468,7 @@ function goSms($reserv_phone, $send_phone, $msg)
     $msg1 = $msg;							// 문자내용
     $send_date = date("YmdHis");
 
-    $sql = "select count(tran_pr) cnt from emma.em_all_log
-            where tran_date like '".G5_TIME_YMD."%' and tran_phone = '{$reserv_phone}' ";
+    $sql = "";
 
     $result = mysqli_query($conn_db,$sql);
     $result = mysqli_fetch_array($result);
@@ -3493,7 +3484,7 @@ function goSms($reserv_phone, $send_phone, $msg)
 
     $tran_msg1 = iconv("UTF-8", "EUC-KR", $msg1);
 
-    $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1')";
+    $sms_query = "";
     $result = mysqli_query($conn_db, $sms_query);
     if(!$result) {
         //echo mysql_error();
@@ -3501,10 +3492,10 @@ function goSms($reserv_phone, $send_phone, $msg)
     }
 
     //전체기록남기기
-    $all_query = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1',curdate())";
+    $all_query = "";
     $result2 = mysqli_query($conn_db, $all_query);
 
-    $query = "Insert into tbl_sms(f_idno,f_from_phone,f_to_phone,f_comment,f_wdate) values('$mart_id','$tran_callback1','$tran_phone1','$tran_msg1','$send_date')";
+    $query = "";
     mysqli_query($conn_db,$query);
 
 }
@@ -3538,71 +3529,89 @@ function successking_date($date, $date2=''){
 }
 
 function send_fcm($mb_id, $title, $body){
+	//$mb = get_member($mb_id);
+    $data = array();
+    $data['app_id'] = "successking";
+    $data['device_platform'] = "ALL";
+    $data['send_type'] = "2"; // 1: 전체 2:단일 (단일시 mem_id첨부필요)
+    $data['msg'] = $body;
+    $data['mem_id'] = $mb_id;
+    $url = "https://push.softwow.co.kr/api/send_request.php";
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL,$url);
+    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt ($ch, CURLOPT_SSLVERSION,1);
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
 
-	$mb = get_member($mb_id);
-
-	echo $sql = "select * from `member_gcm` where `mb_id` = '$mb[mb_id]' and `push_yn` = 'Y'";
-	$re = sql_query($sql);
-
-	while($row = sql_fetch_array($re)){
-		// 푸시 알림을 보낼 디바이스의 토큰
-		$deviceToken[] = $row['RegID'];
-	}
-
-	
-
-
-
-	// Firebase 서버 키
-	$serverKey = 'AAAAbSeuZDQ:APA91bEU36CHj9qAgKYiEKRk0emfeTKDzyQKBZYqtaUmFZGnL8l2WPMyEtJDGFjdZzlU132H1XI0NrQ84R3fyFimrzScd_zv149obhonTMv8YFeJyxxRTmXRwS1QXx-D2vCwQ-5Y1j2K';
-
-
-
-	// 푸시 알림 데이터
-	$data = [
-		'title' => $title,
-		'body' => $body
-	];
-
-	// FCM 메시지
-	$message = [];
-	if(count($deviceToken) == 0){
-		return false;
-	} else {
-		$message = [
-			'registration_ids' => $deviceToken,
-			'notification' => $data
-		];
-	}
+    curl_setopt ($ch, CURLOPT_TIMEOUT, 300);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
+    $curl_result = curl_exec ($ch);
 
 
-	// cURL 초기화
-	$ch = curl_init('https://fcm.googleapis.com/fcm/send');
-
-	// cURL 옵션 설정
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, [
-		'Content-Type: application/json',
-		'Authorization: key=' . $serverKey
-	]);
-
-	// cURL 실행
-	$response = curl_exec($ch);
-
-	// cURL 에러 체크
-	if ($response === false) {
-		//echo 'cURL error: ' . curl_error($ch);
-	} else {
-		//echo '푸시 알림을 보냈습니다.';
-	}
-
-	// cURL 세션 종료
-	curl_close($ch);
-
-
-	return $response;
+//	$sql = "select * from `member_gcm` where `mb_id` = '$mb[mb_id]' and `push_yn` = 'Y'";
+//	$re = sql_query($sql);
+//
+//	while($row = sql_fetch_array($re)){
+//		// 푸시 알림을 보낼 디바이스의 토큰
+//		$deviceToken[] = $row['RegID'];
+//	}
+//
+//
+//
+//
+//
+//	// Firebase 서버 키
+//	$serverKey = '';
+//
+//
+//
+//	// 푸시 알림 데이터
+//	$data = [
+//		'title' => $title,
+//		'body' => $body
+//	];
+//
+//	// FCM 메시지
+//	$message = [];
+//	if(count($deviceToken) == 0){
+//		return false;
+//	} else {
+//		$message = [
+//			'registration_ids' => $deviceToken,
+//			'notification' => $data
+//		];
+//	}
+//
+//
+//	// cURL 초기화
+//	$ch = curl_init('https://fcm.googleapis.com/fcm/send');
+//
+//	// cURL 옵션 설정
+//	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+//	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
+//	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//	curl_setopt($ch, CURLOPT_HTTPHEADER, [
+//		'Content-Type: application/json',
+//		'Authorization: key=' . $serverKey
+//	]);
+//
+//	// cURL 실행
+//	$response = curl_exec($ch);
+//
+//	// cURL 에러 체크
+//	if ($response === false) {
+//		//echo 'cURL error: ' . curl_error($ch);
+//	} else {
+//		//echo '푸시 알림을 보냈습니다.';
+//	}
+//
+//	// cURL 세션 종료
+//	curl_close($ch);
+//
+//
+//	return $response;
 
 }
 

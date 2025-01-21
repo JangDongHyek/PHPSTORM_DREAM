@@ -9,9 +9,13 @@ if(!$is_member){
 */
 
 
-$sql = "select * from new_car_wash 
-where mb_id = '{$member['mb_id']}' and cw_step = 2 order by cw_idx desc ";
+$sql = "select * from new_car_wash where mb_id = '{$member['mb_id']}' and cw_step = 2 order by cw_idx desc ";
 $cancel_result = sql_query($sql);
+
+//총누적결제금액
+$sql = "select sum(amt) sum from new_autopay_history where BillKey = '{$member['mb_id']}' ";
+$total_price = sql_fetch($sql)["sum"];
+
 
 $is_mypage = "my_reser_end";
 $g5['title'] = '완료내역';

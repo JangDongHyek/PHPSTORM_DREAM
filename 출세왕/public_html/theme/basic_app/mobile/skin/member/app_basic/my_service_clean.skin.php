@@ -96,22 +96,24 @@ add_javascript('<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/pro
     
     
     <div id="area_bg"></div>
-    <div class="bx" style="">
-        <h2 class="big_title">참고할 사진을 등록해 주세요. <span class="coms">* 최대 10장까지 등록가능</span></h2>
-        <div class="my_place">
-            <div class="form photo_in cf">
+    <!--
+   <div class="bx" style="">
+       <h2 class="big_title">참고할 사진을 등록해 주세요. <span class="coms">* 최대 10장까지 등록가능</span></h2>
+       <div class="my_place">
+           <div class="form photo_in cf">
 
-                <div id = "prev_area"></div>
-                <!--                   -->
-                <div name="photo_box_0" class="photo"  onclick="file_add()" >
-                    <label for="image"><span class="pbtn"><i class="fas fa-camera-alt"></i></span></label>
-                </div>                
-                <div id="file_input"></div>
-                <div class="memo"><textarea cols="30" rows="10" id="picture_memo" name="cu_picture_memo" class="my_req" placeholder="사진에 대한 추가설명이 있다면 입력해 주세요"></textarea></div>
-            </div>
-        </div><!--my_place-->
-    </div><!--bx-->
-        
+               <div id = "prev_area"></div>
+
+               <div name="photo_box_0" class="photo"  onclick="file_add()" >
+                   <label for="image"><span class="pbtn"><i class="fas fa-camera-alt"></i></span></label>
+               </div>
+               <div id="file_input"></div>
+
+               <div class="memo"><textarea cols="30" rows="10" id="picture_memo" name="cu_picture_memo" class="my_req" placeholder="사진에 대한 추가설명이 있다면 입력해 주세요"></textarea></div>
+           </div>
+       </div>
+    </div>
+        --><!--bx-->
     
     <div id="area_bg"></div>
 	<div class="bx">
