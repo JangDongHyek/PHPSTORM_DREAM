@@ -141,7 +141,8 @@
 
                 if (res) {
                     alert("완료하였습니다.");
-                    window.location.href= `${this.jl.root}/bbs/mypage_item.php`
+                    //window.location.href= `${this.jl.root}/bbs/mypage_item.php`
+                    window.location.reload();
                 }
             },
             async getData() {

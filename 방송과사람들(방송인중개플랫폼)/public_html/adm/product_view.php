@@ -30,14 +30,15 @@ include_once('./admin.head.php');
     #item_write #area_btn > a{margin: 0!important;}
 </style>
 <div id="app">
-    <product-input-main mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>" ref="productInput" admin="true"></product-input-main>
+    <product-input-main mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>" ref="productInput" ></product-input-main>
 </div>
 
-
+<?php $jl->pluginLoad(["bootstrap","summernote"]);?>
 <?php $jl->vueLoad("app",["drag"]);?>
 
 <?php $jl->componentLoad("adm/product");?>
 <?php $jl->componentLoad("item");?>
+
 
 <?php
 include_once ($jl->ROOT."/component/product/product-input-main.php");
@@ -46,6 +47,7 @@ include_once ($jl->ROOT."/component/product/product-input-tab2.php");
 include_once ($jl->ROOT."/component/product/product-input-tab3.php");
 include_once ($jl->ROOT."/component/slot/slot-modal.php");
 include_once ($jl->ROOT."/component/naver-editor.php");
+include_once ($jl->ROOT."/component/external/external-summernote.php");
 ?>
 
 

@@ -140,7 +140,7 @@
                 </div>
                 <div id="area_btn" class="col02">
                     <a class="btn_prev" href="" @click="event.preventDefault(); $emit('changeTab',2)">이전</a>
-                    <a class="btn_next" href="" @click="event.preventDefault(); $emit('postData')" v-if="!admin">등록완료</a>
+                    <a class="btn_next" href="" @click="event.preventDefault(); $emit('postData')">{{product.idx ? '수정' : '등록'}}</a>
                 </div>
             </div>
         </div>
