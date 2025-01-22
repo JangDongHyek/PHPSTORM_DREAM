@@ -52,6 +52,14 @@
                     page : 1,
                     limit : 1,
                     count : 0,
+                },
+
+                required : [
+                    {name : "",message : ``},
+                ],
+
+                data : {
+                    table : "",
                 }
             };
         },
@@ -182,6 +190,7 @@
                 }
             },
             async deleteData() {
+                if(! await this.jl.confirm("정말 삭제하시겠습니까?")) return false;
                 let method = "delete";
                 //let method = "where_delete";
 
@@ -219,6 +228,46 @@
                     alert(e.message)
                 }
             },
+
+            async jlPostData() {
+                let data = {
+                    table : "",
+                    name : "",
+                }
+
+                let required = [
+                    {name : "",message : ``},
+                ],
+                this.jl.postData(data,required,async (res) => {
+                    // 세번째 매개변수인 콜백함수가 빈값일 경우 밑에 코드가 자동 실행됌
+                    await this.jl.alert("완료되었습니다.");
+                    window.location.reload();
+                });
+            }
+
+            async jlGetData() {
+                let filter = {
+                    table : "",
+                    primary : "",
+                }
+                let data = this.jlGetData(filter,async (res) => {
+                    //함수내용
+                    // 두번쨰 매개변수인 콜백함수가 빈값일경우 res.data[0]이 그냥 return 됌
+                });
+            }
+
+            async jlGetsData() {
+                let filter = {
+                    table : "",
+                    primary : "",
+                }
+
+                let datas = this.jlGetsData(filter,async (res) => {
+                    //두번쨰 매개변수인 콜백함수가 빈값일경우 밑에 함수가 자동으로 적용됌
+                    this.data_array = res.data
+                    this.paging.count = res.count;
+                });
+            }
         },
         computed: {
 

@@ -215,7 +215,8 @@ if($is_kakaopay_use) {
             alert('장바구니가 비어 있습니다.', G5_SHOP_URL.'/cart.php');
         } else {
             // 배송비 계산
-            $send_cost = get_sendcost($s_cart_id);
+            //$send_cost = get_sendcost($s_cart_id);
+            $send_cost = 3500;
         }
 
         // 복합과세처리
@@ -223,6 +224,8 @@ if($is_kakaopay_use) {
             $comm_tax_mny = round(($tot_tax_mny + $send_cost) / 1.1);
             $comm_vat_mny = ($tot_tax_mny + $send_cost) - $comm_tax_mny;
         }
+
+        if($tot_sell_price >= 50000) $send_cost = 0;
         ?>
         </tbody>
         </table>

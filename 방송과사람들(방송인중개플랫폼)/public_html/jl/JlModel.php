@@ -119,12 +119,12 @@ class JlModel{
             $result = @mysqli_query($this->connect, $sql);
             if(!$result) $this->jl->error(mysqli_error($this->connect));
 
-            if(!$row = mysqli_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysqli_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : Primary 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }else {
             $result = @mysql_query($sql, $this->connect);
             if(!$result) $this->jl->error(mysql_error());
 
-            if(!$row = mysql_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : row 값이 존재하지않습니다 Primary설정을 확인해주세요.");
+            if(!$row = mysql_fetch_assoc($result)) $this->jl->error("JlModel getPrimary($table) : Primary 값이 존재하지않습니다 Primary설정을 확인해주세요.");
         }
 
         return $row;
@@ -366,6 +366,7 @@ class JlModel{
             }
 
             if($column == 'insert_date') $value = 'now()';
+            if($column == 'wr_datetime') $value = 'now()';
 
             if(!empty($columns)) $columns .= ", ";
             $columns .= "`{$column}`";
@@ -386,7 +387,8 @@ class JlModel{
             if(!$result) $this->jl->error(mysql_error());
         }
 
-        //return $_id;
+        if($param[$this->primary]) return $param[$this->primary];
+
         if($this->mysqli)
             return mysqli_insert_id($this->connect);
         else
@@ -532,6 +534,7 @@ class JlModel{
     function update($_param){
         $param = $this->escape($_param);
 
+        if($param['primary']) $param[$this->primary] = $param['primary'];
 
         if(!isset($param[$this->primary])) $this->jl->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
 
@@ -572,6 +575,8 @@ class JlModel{
     function delete($_param){
 
         $param = $this->escape($_param);
+
+        if($param['primary']) $param[$this->primary] = $param['primary'];
 
         if(!isset($param[$this->primary])) $this->jl->error("JlModel delete() : 고유 키 값이 존재하지 않습니다.");
 

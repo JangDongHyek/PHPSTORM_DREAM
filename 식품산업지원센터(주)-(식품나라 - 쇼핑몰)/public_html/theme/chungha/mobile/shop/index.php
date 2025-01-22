@@ -1,6 +1,6 @@
 <?php
 include_once('./_common.php');
-
+include_once(G5_PATH."/jl/JlConfig.php");
 define("_INDEX_", TRUE);
 
 include_once(G5_THEME_MSHOP_PATH.'/shop.head.php');
@@ -29,9 +29,10 @@ include_once(G5_THEME_MSHOP_PATH.'/shop.head.php');
 					
 			<?php
 			$list = new item_list(); 
-			$list->set_category('10', 1); 
+			$list->set_category('10', 1);
+			$list->set_type(4);
 			$list->set_list_mod(1); 
-			$list->set_list_row(4); 
+			$list->set_list_row(8);
 			$list->set_img_size(310, 310); 
 			$list->set_list_skin(G5_SHOP_SKIN_PATH.'/main.10.skin.php'); 
 			$list->set_view('it_img', true); 
@@ -135,78 +136,37 @@ include_once(G5_THEME_MSHOP_PATH.'/shop.head.php');
 	</div>
 		<div class="swiper-container revw_slide">		
 			<div class="swiper-wrapper">
+                <?
+                $g5_shop_item_use_model = new JlModel("g5_shop_item_use");
+                $reviews = $g5_shop_item_use_model->where("is_confirm",1)->get(array(
+                        "page" => 1,
+                        "limit" => 5,
+                ));
+
+                $g5_shop_item_model = new JlModel("g5_shop_item");
+
+                foreach($reviews['data'] as $r) {
+                    $product = $g5_shop_item_model->where("it_id",$r['it_id'])->get()['data'][0];
+                ?>
 				<div class="swiper-slide">
 					<div class="left">
 						<p class="pname">
-							<a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">
-							들깨 장어탕
+							<a href="<?php echo G5_URL; ?>/shop/item.php?it_id=<?=$r['it_id']?>">
+							<?=$r['is_subject']?>
 							</a>
 						</p>
-						<div class="price">14,200원</div>
+						<div class="price"><?=number_format($product['it_price'])?>원</div>
 						<div class="t_box">
-							<p><a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">집에서 즐기기엔 어려운 음식인데 간편하게 즐길 수 있어서 담백하니 좋았습니다.</a></p>
+							<p><a href="<?php echo G5_URL; ?>/shop/item.php?it_id=<?=$r['it_id']?>"><?=$r['is_content']?></a></p>
 						</div>
-						<p class="starBox"><span class="star_4"></span><span>4.0</span></p>
+						<p class="starBox"><span class="star_<?=$r['is_score']?>"></span><span><?=$r['is_score']?>.0</span></p>
 						<p class="idBox">itfor***</p>
 					</div>
 					<div class="right imgBox">
-						<img src="<?php echo G5_THEME_IMG_URL; ?>/main/thumb.png" alt="">
+						<img src="<?=G5_URL."/data/item/".$product['it_img1']?>" alt="">
 					</div>
 				</div>
-				<div class="swiper-slide">
-					<div class="left">
-						<p class="pname">
-							<a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">
-							들깨 장어탕
-							</a>
-						</p>
-						<div class="price">14,200원</div>
-						<div class="t_box">
-							<p><a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">집에서 즐기기엔 어려운 음식인데 간편하게 즐길 수 있어서 담백하니 좋았습니다.</a></p>
-						</div>
-						<p class="starBox"><span class="star_4"></span><span>4.0</span></p>
-						<p class="idBox">itfor***</p>
-					</div>
-					<div class="right imgBox">
-						<img src="<?php echo G5_THEME_IMG_URL; ?>/main/thumb.png" alt="">
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="left">
-						<p class="pname">
-							<a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">
-							들깨 장어탕
-							</a>
-						</p>
-						<div class="price">14,200원</div>
-						<div class="t_box">
-							<p><a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">집에서 즐기기엔 어려운 음식인데 간편하게 즐길 수 있어서 담백하니 좋았습니다.</a></p>
-						</div>
-						<p class="starBox"><span class="star_4"></span><span>4.0</span></p>
-						<p class="idBox">itfor***</p>
-					</div>
-					<div class="right imgBox">
-						<img src="<?php echo G5_THEME_IMG_URL; ?>/main/thumb.png" alt="">
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="left">
-						<p class="pname">
-							<a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">
-							들깨 장어탕
-							</a>
-						</p>
-						<div class="price">14,200원</div>
-						<div class="t_box">
-							<p><a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=review">집에서 즐기기엔 어려운 음식인데 간편하게 즐길 수 있어서 담백하니 좋았습니다.</a></p>
-						</div>
-						<p class="starBox"><span class="star_4"></span><span>4.0</span></p>
-						<p class="idBox">itfor***</p>
-					</div>
-					<div class="right imgBox">
-						<img src="<?php echo G5_THEME_IMG_URL; ?>/main/thumb.png" alt="">
-					</div>
-				</div>
+                <?}?>
 			</div>		
 			
 		</div>

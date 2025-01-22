@@ -50,10 +50,24 @@
                         </div>
                     </div>
 
-                    <slot-modal :modal="modal" title="취소 및 환불규정 보기" @close="modal = false">
-                        <div class="cont ref" style="white-space: pre-wrap;">내용</div><!--cont-->
-                    </slot-modal>
-                    
+                    <external-bs-modal :modal="modal" @close="modal = false;">
+                        <template v-slot:header>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="modal = false;"><i class="fa-light fa-xmark"></i></button>
+                            <h4 class="modal-title" id="myModalLabel">취소 및 환불규정 보기</h4>
+                        </template>
+
+                        <!-- body -->
+                        <template v-slot:default>
+                            <div class="cont ref" style="white-space: pre-wrap;">내용</div><!--cont-->
+
+                        </template>
+
+
+                        <template v-slot:footer>
+
+                        </template>
+                    </external-bs-modal>
+
                     
                     <div class="box_write02">
                         <h4>자주 묻는 질문<em><i class="point" name="subpoint">{{ product.questions.length }}</i>/5</em></h4>

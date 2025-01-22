@@ -20,12 +20,13 @@ define("JL_COMPONENT","/component");
 
 // DB 설정
 define("JL_HOSTNAME","localhost");
-define("JL_USERNAME","broadcast");
-define("JL_PASSWORD","c3gq%qyc");
-define("JL_DATABASE","broadcast");
+define("JL_USERNAME","foodindustry2");
+define("JL_PASSWORD","bls*m^zw");
+define("JL_DATABASE","foodindustry2");
 
 //Vue version 2 or 3 3이 최신이다.
-define("VUE_VERSION",2);
+define("VUE_VERSION",3);
+// alert을 뭐로쓸지 origin,swal
 define("JL_ALERT","origin");
 
 //jl_session_table 컬럼
@@ -39,6 +40,7 @@ define('JL_SESSION_TABLE_COLUMNS', '{"idx":{"type":"VARCHAR","length":15,"nullab
 1.4 Jl.php 세션 토큰 추가 JlService에 검증부분 추가
 1.5 개발환경 자동으로 구하는거 추가 및 Jl CI변수 제거에 따른 로직코드 변경
 1.6 jl 디비 세션 자동 생성 및 로직 추가
+1.7 vue3 버전 호환되게 추가 및 define vue_version 추가
 */
 
 ?>

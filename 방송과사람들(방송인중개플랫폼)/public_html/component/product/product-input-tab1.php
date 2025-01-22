@@ -55,30 +55,40 @@
                     </div>
                     <br>
                     <p class="text-center txt_blue">나의 포트폴리오를 불러와서<br class="visible-xs"> 빠르게 상품을 등록해보세요!</p>
+                    <external-bs-modal :modal="modal" @close="modal = false;">
+                        <template v-slot:header>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="modal = false;"><i class="fa-light fa-xmark"></i></button>
+                        </template>
 
-                    
-                    <slot-modal :modal="modal" title="포트폴리오 불러오기" @close="modal = false">
-                        <ul id="product_list">
-                                <li class="nodata" v-if="portfolios.length == 0">
-                                    <div class="nodata_wrap">
-                                        <div class="area_img"><img :src="`${jl.root}/theme/basic_app/img/app/img_nodata.svg`"></div>
-                                        <p>등록한 포트폴리오가 없습니다.</p>
-                                    </div>
-                                </li>
-                                <li v-else v-for="item in portfolios">
-                                    <a :href="`${jl.root}/bbs/portfolio_view.php?idx=${item.idx}`" target="_blank">
-                                        <div class="area_img">
-                                            <img :src="jl.root+item.main_image_array[0].src" title="">
+                            <!-- body -->
+                        <template v-slot:default>
+                            <ul id="product_list">
+                                    <li class="nodata" v-if="portfolios.length == 0">
+                                        <div class="nodata_wrap">
+                                            <div class="area_img"><img :src="`${jl.root}/theme/basic_app/img/app/img_nodata.svg`"></div>
+                                            <p>등록한 포트폴리오가 없습니다.</p>
                                         </div>
-                                        <div class="area_txt">
-                                            <span></span><!-- 업체명 -->
-                                            <h3>{{item.name}}</h3> <!-- 제목 -->
-                                        </div>
-                                    </a>
-                                    <button @click="product.portfolios.push(item.idx)">등록하기</button>
-                                </li>
-                            </ul>
-                    </slot-modal>
+                                    </li>
+                                    <li v-else v-for="item in portfolios">
+                                        <a :href="`${jl.root}/bbs/portfolio_view.php?idx=${item.idx}`" target="_blank">
+                                            <div class="area_img">
+                                                <img :src="jl.root+item.main_image_array[0].src" title="">
+                                            </div>
+                                            <div class="area_txt">
+                                                <span></span><!-- 업체명 -->
+                                                <h3>{{item.name}}</h3> <!-- 제목 -->
+                                            </div>
+                                        </a>
+                                        <button @click="product.portfolios.push(item.idx)">등록하기</button>
+                                    </li>
+                                </ul>
+                        </template>
+
+
+                        <template v-slot:footer>
+
+                        </template>
+                </external-bs-modal>
                     
                     <br>
                     <div class="box_write">

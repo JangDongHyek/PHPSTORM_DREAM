@@ -21,7 +21,8 @@
                     </td>
                     <td>{{item.name}}</td>
                     <td>
-                        <a :href="'./product_view.php?idx=' + item.idx">보기</a>
+                        <a :href="'./product_view.php?idx=' + item.idx + '&mb_no=' + item.member_idx">보기</a>
+                        <a @click="deleteData(item);">삭제</a>
                     </td>
                     <td>
                         <div class="toggle-switch">
@@ -71,6 +72,33 @@
             });
         },
         methods: {
+            async deleteData(item) {
+                if(! await this.jl.confirm("정말 삭제하시겠습니까?")) return false;
+                if(item.approval) {
+                    await this.jl.alert("승인된 상품은 삭제할수없습니다.");
+                    return false;
+                }
+                let method = "delete";
+                //let method = "where_delete";
+
+                let filter = {
+                    table : "member_product",
+                    primary : item.idx, // delete일시 primary 카깂을 넣으면된다 primary 키값이 아니라면 삭제 안됌
+
+                    file_use : false, // 저장된 파일 삭제할지 안할지 삭제할시 데이터의 컬럼명 이들어가야한다
+                    file_columns : ["exam1","exma2"] // 파일값이 저장된 컬럼
+
+                    // where_delete 일시
+                }
+                try {
+                    //if(!this.data.change_user_pw) throw new Error("비밀번호를 입력해주세요.");
+                    let res = await this.jl.ajax(method,filter,"/jl/JlApi.php");
+                    alert("삭제되었습니다.");
+                    window.location.reload();
+                }catch (e) {
+                    alert(e.message)
+                }
+            },
             async putData(item) {
                 let product = {idx : item.idx, approval : item.approval};
                 try {

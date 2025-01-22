@@ -2,6 +2,7 @@
 include_once('./_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 include_once(G5_LIB_PATH.'/register.lib.php');
+$pid = 'register';
 
 // 불법접근을 막도록 토큰생성
 $token = md5(uniqid(rand(), true));
@@ -22,12 +23,13 @@ if ($w == "") {
     // 리퍼러 체크
     referer_check();
 
+
     if (!isset($_POST['agree']) || !$_POST['agree']) {
-        alert('회원가입약관의 내용에 동의하셔야 회원가입 하실 수 있습니다.', G5_BBS_URL.'/register.php');
+//alert('회원가입약관의 내용에 동의하셔야 회원가입 하실 수 있습니다.', G5_BBS_URL.'/register.php');
     }
 
     if (!isset($_POST['agree2']) || !$_POST['agree2']) {
-        alert('개인정보처리방침안내의 내용에 동의하셔야 회원가입 하실 수 있습니다.', G5_BBS_URL.'/register.php');
+//alert('개인정보처리방침안내의 내용에 동의하셔야 회원가입 하실 수 있습니다.', G5_BBS_URL.'/register.php');
     }
 
     $agree  = preg_replace('#[^0-9]#', '', $_POST['agree']);
@@ -107,7 +109,7 @@ if ($w == "") {
     alert('w 값이 제대로 넘어오지 않았습니다.');
 }
 
-include_once('./_head.php');
+include_once('../head.sub.php');
 
 // 회원아이콘 경로
 $mb_icon_path = G5_DATA_PATH.'/member/'.substr($member['mb_id'],0,2).'/'.$member['mb_id'].'.gif';
@@ -126,5 +128,5 @@ if ($config['cf_use_addr'])
     add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 
 include_once($member_skin_path.'/register_form.skin.php');
-include_once('./_tail.php');
+include_once('../tail.sub.php');
 ?>

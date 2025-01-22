@@ -244,7 +244,7 @@ if(!$ca_id){
                                       </select>';
                     }
                     else
-                        $sc_method = '3000원';
+                        $sc_method = '3,500원';
                 }
             ?>
             <tr>

@@ -47,6 +47,7 @@ include_once ($jl->ROOT."/component/product/product-input-tab3.php");
 include_once ($jl->ROOT."/component/slot/slot-modal.php");
 include_once ($jl->ROOT."/component/naver-editor.php");
 include_once ($jl->ROOT."/component/external/external-summernote.php");
+include_once ($jl->ROOT."/component/external/external-bs-modal.php");
 ?>
 
 

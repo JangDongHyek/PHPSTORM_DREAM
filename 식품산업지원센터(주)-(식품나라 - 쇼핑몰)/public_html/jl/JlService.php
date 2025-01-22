@@ -143,6 +143,7 @@ class JlService extends Jl{
     }
 
     public function update() {
+        if($this->obj['primary']) $this->obj[$this->model->primary] = $this->obj['primary'];
         $this->iuCheck();
 
         if($this->file_use) {
@@ -175,8 +176,8 @@ class JlService extends Jl{
     }
 
     public function delete() {
-        $this->model->setFilter($this->obj);
-        $getData = $this->model->where($this->obj)->get()['data'][0];
+        if($this->obj['primary']) $this->obj[$this->model->primary] = $this->obj['primary'];
+        $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
 
         if($this->file_use) {
 
@@ -244,7 +245,7 @@ class JlService extends Jl{
 
         return $response;
     }
-
+    
     //insert 나 update 하기전 조건 체크
     public function iuCheck() {
         //조건에 해당하는 데이터가있으면 error를 반환

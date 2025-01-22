@@ -309,13 +309,6 @@ class Jl {
         }
     }
 
-    href(url) {
-        window.location.href = url;
-    }
-    open(url) {
-        window.open(url);
-    }
-
     dropFile(event,obj,key,permission = []) {
         this.commonFile(event.dataTransfer.files,obj,key,permission);
         this.log(obj[key])

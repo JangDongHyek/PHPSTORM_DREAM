@@ -309,6 +309,13 @@ class Jl {
         }
     }
 
+    href(url) {
+        window.location.href = url;
+    }
+    open(url) {
+        window.open(url);
+    }
+
     dropFile(event,obj,key,permission = []) {
         this.commonFile(event.dataTransfer.files,obj,key,permission);
         this.log(obj[key])
@@ -544,7 +551,7 @@ class Jl {
     }
 
     //Objects안에 매개변수로 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
-    getObjectsToKey(array, key) {
+    extractObjectsKey(array, key) {
         // 결과 값을 저장할 배열
         const result = [];
 

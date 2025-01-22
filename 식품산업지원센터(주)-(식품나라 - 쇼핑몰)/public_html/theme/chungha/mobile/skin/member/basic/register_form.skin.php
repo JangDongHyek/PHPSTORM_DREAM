@@ -94,8 +94,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 						<dd class="error col-xs-12"></dd>
 					</dl>
 
-
-					<?php if ($config['cf_use_addr']) { ?>
+                    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+					<?php //if ($config['cf_use_addr']) { ?>
 					<dl class="row adrBox">
 						<dd class="col-xs-1 req">*</dd>
 						<dd class="col-xs-11">
@@ -108,7 +108,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 							<input type="text" name="mb_addr2" value="<?php echo get_text($member['mb_addr2']) ?>" id="reg_mb_addr2" class="required f_empty" size="50" placeholder="상세주소">
 							
 							<br>
-							<input type="hidden" name="mb_addr3" value="<?php echo get_text($member['mb_addr3']) ?>" id="reg_mb_addr3" class="required f_empty" size="50" readonly="readonly">
+							<!--<input type="hidden" name="mb_addr3" value="--><?php //echo get_text($member['mb_addr3']) ?><!--" id="reg_mb_addr3" class="required f_empty" size="50" readonly="readonly">-->
 							
 							<input type="hidden" name="mb_addr_jibeon" value="<?php echo get_text($member['mb_addr_jibeon']); ?>">
 							<!--
@@ -119,7 +119,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 						<dd class="status_ico <?=$pas?>"><i class="fas fa-check"></i></dd>
 						<dd class="error col-xs-12"></dd>
 					</dl>
-					<?php }?>
+					<?php //}?>
                     
                     
                     
@@ -168,6 +168,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 		<!-- /resBox -->
 		<span class="bgType"></span>
 	</form>
+
 	<script>
     //숫자및 하이픈
     $(function () {
@@ -356,7 +357,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
             if (f.w.value == "") {
                 var msg = reg_mb_id_check();
                 if (msg) {
-                    swal(msg);
+                    alert(msg);
                     f.mb_id.select();
                     return false;
                 }
@@ -364,21 +365,21 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
             if (f.w.value == '') {
                 if (f.mb_password.value.length < 3) {
-                    swal('비밀번호를 3글자 이상 입력하십시오.');
+                    alert('비밀번호를 3글자 이상 입력하십시오.');
                     f.mb_password.focus();
                     return false;
                 }
             }
 
             if (f.mb_password.value != f.mb_password_re.value) {
-                swal('비밀번호가 같지 않습니다.');
+                alert('비밀번호가 같지 않습니다.');
                 f.mb_password_re.focus();
                 return false;
             }
 
             if (f.mb_password.value.length > 0) {
                 if (f.mb_password_re.value.length < 3) {
-                    swal('비밀번호를 3글자 이상 입력하십시오.');
+                    alert('비밀번호를 3글자 이상 입력하십시오.');
                     f.mb_password_re.focus();
                     return false;
                 }
@@ -387,45 +388,45 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
             // 이름 검사
             if (f.w.value=='') {
                 if (f.mb_name.value.length < 1) {
-                    swal('이름을 입력하십시오.');
+                    alert('이름을 입력하십시오.');
                     f.mb_name.focus();
                     return false;
                 }
             }
 
             if($('#reg_mb_id').parents(".row").find(".status_ico").hasClass("err")) {
-                swal('아이디를 확인하세요.');
+                alert('아이디를 확인하세요.');
                 $('#reg_mb_id').focus();
                 return false;
             }
             if($('#reg_mb_password_re').parents(".row").find(".status_ico").hasClass("err")) {
-                swal('비밀번호를 확인하세요.');
+                alert('비밀번호를 확인하세요.');
                 $('#reg_mb_password_re').focus();
                 return false;
             }
             if($('#reg_mb_name').parents(".row").find(".status_ico").hasClass("err")) {
-                swal('이름을 확인하세요.');
+                alert('이름을 확인하세요.');
                 $('#reg_mb_name').focus();
                 return false;
             }
             if($('#reg_mb_hp').parents(".row").find(".status_ico").hasClass("err")) {
-                swal('휴대번호를 확인하세요.');
+                alert('휴대번호를 확인하세요.');
                 $('#reg_mb_hp').focus();
                 return false;
             }
             if($('#reg_mb_email').parents(".row").find(".status_ico").hasClass("err")) {
-                swal('이메일을 확인하세요.');
+                alert('이메일을 확인하세요.');
                 $('#reg_mb_email').focus();
                 return false;
             }
 
             <?php if($w == ""){ ?>
             if($("#reg_req1").val()!="1"){
-                swal("이용약관 동의(필수)를 체크하십시오");
+                alert("이용약관 동의(필수)를 체크하십시오");
                 return false;
             }
             if($("#reg_req2").val()!="1"){
-                swal("개인정보처리방침 동의(필수)를 체크하십시오");
+                alert("개인정보처리방침 동의(필수)를 체크하십시오");
                 return false;
             }
             <?php } ?>

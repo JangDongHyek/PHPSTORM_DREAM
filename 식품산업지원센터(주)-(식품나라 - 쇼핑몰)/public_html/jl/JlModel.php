@@ -534,7 +534,6 @@ class JlModel{
     function update($_param){
         $param = $this->escape($_param);
 
-        if($param['primary']) $param[$this->primary] = $param['primary'];
 
         if(!isset($param[$this->primary])) $this->jl->error("JlModel update() : 고유 키 값이 존재하지 않습니다.");
 
@@ -575,8 +574,6 @@ class JlModel{
     function delete($_param){
 
         $param = $this->escape($_param);
-
-        if($param['primary']) $param[$this->primary] = $param['primary'];
 
         if(!isset($param[$this->primary])) $this->jl->error("JlModel delete() : 고유 키 값이 존재하지 않습니다.");
 

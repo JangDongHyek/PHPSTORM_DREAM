@@ -67,4 +67,84 @@ class JlVue {
         link.click(); // 클릭 이벤트로 다운로드 트리거
         document.body.removeChild(link); // DOM에서 제거
     }
+
+    href(url) {
+        window.location.href = url;
+    }
+    open(url) {
+        window.open(url);
+    }
+
+    async postData(data,required = [],callback = null) {
+        let options = {required : required};
+        let method = data.primary ? 'update' : 'insert';
+
+        try {
+            if(!data.table) throw new Error("테이블값이 존재하지않습니다.");
+
+            let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
+
+            if(callback) {
+                await callback(res)
+            }else {
+                await this.jl.alert("완료되었습니다.");
+                window.location.reload();
+            }
+        } catch (e) {
+            await this.jl.alert(e.message)
+        }
+
+    }
+
+    async getData(filter,callback = null) {
+        try {
+            if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
+
+            let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
+
+            if(callback) {
+                await callback(res)
+            }else {
+                return res.data[0];
+            }
+            this.data = res.data[0]
+        } catch (e) {
+            await this.jl.alert(e.message)
+        }
+    }
+
+    async getsData(filter,callback = null) {
+        try {
+            if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
+
+            let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
+
+            if(callback) {
+                await callback(res)
+            }else {
+                filter.count = res.count;
+                return res.data
+            }
+        } catch (e) {
+            await this.jl.alert(e.message)
+        }
+    }
+
+    async deleteData(data,callback) {
+        if(! await this.jl.confirm("정말 삭제하시겠습니까?")) return false;
+
+        try {
+            if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
+            let res = await this.jl.ajax("delete",data,"/jl/JlApi.php");
+
+            if(callback) {
+                await callback(res)
+            }else {
+                await this.jl.alert("완료되었습니다.");
+                window.location.reload();
+            }
+        }catch (e) {
+            alert(e.message)
+        }
+    }
 }
