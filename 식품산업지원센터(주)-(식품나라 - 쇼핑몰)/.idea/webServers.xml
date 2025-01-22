@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="892553cd-308f-42a5-a101-24ccb8ebb816" name="식품산업지원센터(주)-(식품나라 - 쇼핑몰)" url="http://itforone.com">
+        <fileTransfer host="itforone.com" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
