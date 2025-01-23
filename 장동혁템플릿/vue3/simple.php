@@ -13,6 +13,7 @@
         },
         data: function () {
             return {
+                load : false,
                 jl: null,
                 component_idx: "",
 
@@ -24,14 +25,18 @@
                     page: 1,
                     limit: 1,
                     count: 0,
-                }
+                },
+
+                rend : false,
             };
         },
         async created() {
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.data = this.jl.getData(this.filter);
+            if(this.primary) this.data = await this.jl.getData(this.filter);
+
+            this.load = true;
         },
         mounted() {
             this.$nextTick(() => {

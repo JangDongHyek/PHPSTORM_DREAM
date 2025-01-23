@@ -713,7 +713,7 @@ class JlModel{
         return $this;
     }
 
-    function join($table,$origin_key,$join_key) {
+    function join($table,$origin_key,$join_key,$join_type = "") {
         if(!in_array($table, $this->schema['tables'])) $this->jl->error("JlModel join() : $table 테이블을 찾을수 없습니다.");
         if(!in_array($origin_key, $this->schema['columns'])) $this->jl->error("JlModel join() : Origin Key를 찾을 수 없습니다.");
         $this->schema['join_columns'] = $this->getColumns($table);
@@ -722,13 +722,15 @@ class JlModel{
         $primary = $this->getPrimary($table);
         $this->join_primary = $primary['COLUMN_NAME'];
 
-        $this->join_sql = " JOIN $table ON $this->table.$origin_key = $table.$join_key ";
+        $this->join_sql = "$join_type JOIN $table ON $this->table.$origin_key = $table.$join_key ";
     }
 
     function groupBy($group_key,$total_key,$as,$type = "COUNT") {
         if(!$this->join_table) $this->jl->error("JlModel groupBy() : join()을 먼저 해주세요.");
         if(strpos($group_key,".") === false) $this->jl->error("JlModel groupBy() : group_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
         if(strpos($total_key,".") === false) $this->jl->error("JlModel groupBy() : total_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
+        if(!$as) $this->jl->error("JlModel groupBy() : as 값은 필수입니다.");
+        if(!$type) $type = "COUNT";
         $groups = explode(".",$group_key);
         $totals = explode(".",$total_key);
 

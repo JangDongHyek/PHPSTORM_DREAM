@@ -380,7 +380,7 @@ if(!$is_member){
                 <div class="bx cf" style="box-shadow:0; border-radius:0">
                     <div id="chamgo" class="tx" style="margin:0" onclick="$('#chamgoImg').toggle();"><i class="fas fa-car-wash"></i> 실내 세차시 작업 참고사항!</div>
                     <div id="chamgoImg" style="display:none;">
-                        <img src="/images/sil.png" width="100%">
+                        <img src="<?=G5_URL?>/images/sil.png" width="100%">
                     </div>
                 </div>
             </div>

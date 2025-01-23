@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <item-bs-modal :modal="modal" @close="modal = false;">
+        <item-bs-modal :modal="modal" @close="modal = false;" classes="pdf_modal">
             <template v-slot:header>
 
             </template>

@@ -8,7 +8,7 @@ include_once("../jl/JlConfig.php");
     <div id="app">
         <div id="prayer" class="view">
             <div class="box_radius box_white table">
-                <bbs-prayer-view primary="<?=$_GET['idx']?>"></bbs-prayer-view>
+                <bbs-prayer-view primary="<?=$_GET['idx']?>" mb_no="<?=$member['mb_no']?>" mb_1="<?=$member['mb_1']?>"></bbs-prayer-view>
             </div>
         </div>
     </div>

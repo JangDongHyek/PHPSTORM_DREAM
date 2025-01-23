@@ -228,6 +228,12 @@ class Jl {
                         }
                         break;
 
+                    case "viewer":
+                        if (typeof Viewer === "undefined") {
+                            throw new Error("Viewer is not loaded.");
+                        }
+                        break;
+
                     default:
                         console.warn(`Unknown dependency: ${dep}`);
                         break;
@@ -301,13 +307,6 @@ class Jl {
                 obj[key]  = '';
             }
         }
-    }
-
-    href(url) {
-        window.location.href = url;
-    }
-    open(url) {
-        window.open(url);
     }
 
     dropFile(event,obj,key,permission = []) {
@@ -566,30 +565,6 @@ class Jl {
         return !/[^0-9]/.test(str);
     }
 
-    // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수
-    extractYoutube(url) {
-        const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
-        const match = url.match(regex);
-        return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
-    }
-
-    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey" 아래 형제함수도 추가해줘야함
-    isNumberKey(event) {
-        const charCode = event.keyCode || event.which;
-        // 숫자 키(0-9), 백스페이스, Delete, 화살표 키만 허용
-        if (
-            (charCode >= 48 && charCode <= 57) || // 상단 숫자 키
-            (charCode >= 96 && charCode <= 105) || // 숫자 키패드
-            charCode === 8 || // 백스페이스
-            charCode === 46 || // Delete
-            (charCode >= 37 && charCode <= 40) // 화살표 키
-        ) {
-            return true; // 입력 허용
-        }
-        event.preventDefault(); // 입력 차단
-        return false;
-    }
-
     generateClipboard(text) {
         // Clipboard API가 지원되는 경우
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -612,6 +587,30 @@ class Jl {
             }
             document.body.removeChild(textarea);
         }
+    }
+
+    // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수
+    extractYoutube(url) {
+        const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
+        const match = url.match(regex);
+        return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
+    }
+
+    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey" 아래 형제함수도 추가해줘야함
+    isNumberKey(event) {
+        const charCode = event.keyCode || event.which;
+        // 숫자 키(0-9), 백스페이스, Delete, 화살표 키만 허용
+        if (
+            (charCode >= 48 && charCode <= 57) || // 상단 숫자 키
+            (charCode >= 96 && charCode <= 105) || // 숫자 키패드
+            charCode === 8 || // 백스페이스
+            charCode === 46 || // Delete
+            (charCode >= 37 && charCode <= 40) // 화살표 키
+        ) {
+            return true; // 입력 허용
+        }
+        event.preventDefault(); // 입력 차단
+        return false;
     }
 
 

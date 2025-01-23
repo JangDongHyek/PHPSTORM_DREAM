@@ -36,7 +36,7 @@
 <body>
 	<header id="header">
 		<div class="logo">
-			<a href="#"><img src="/images/logo.png"></a>
+			<a href="#"><img src="<?=G5_URL?>/images/logo.png"></a>
 		</div>
 		
 		<ul class="menu">
@@ -45,14 +45,14 @@
 			<li><a href="#">고객지원</a></li>
 		</ul>
 		
-		<div class="moMenu"><img src="/images/moMenu.png"></div>
+		<div class="moMenu"><img src="<?=G5_URL?>/images/moMenu.png"></div>
 	</header>
 	
 	<section id="main">
 		<div class="visual"></div>
 		
 		<div class="app">
-			<div class="appImg"><img src="/images/app.png"></div>
+			<div class="appImg"><img src="<?=G5_URL?>/images/app.png"></div>
 			<div class="mainTitA txA">
 				<div class="tit">
 					출세왕<br/>
@@ -80,17 +80,17 @@
 			
 			<ul class="serviceList">
 				<li>
-					<div class="thum"><img src="/images/serviceThum01.png"></div>
+					<div class="thum"><img src="<?=G5_URL?>/images/serviceThum01.png"></div>
 					<div class="subj">외부청소</div>
 				</li>
 				
 				<li>
-					<div class="thum"><img src="/images/serviceThum02.png"></div>
+					<div class="thum"><img src="<?=G5_URL?>/images/serviceThum02.png"></div>
 					<div class="subj">입주/이사청소</div>
 				</li>
 				
 				<li>
-					<div class="thum"><img src="/images/serviceThum03.png"></div>
+					<div class="thum"><img src="<?=G5_URL?>/images/serviceThum03.png"></div>
 					<div class="subj">내부청소</div>
 				</li>
 			</ul>
@@ -107,7 +107,7 @@
 			</div>
 			
 			<div class="couponCtA">
-				<div class="img"><img src="/images/coupon.png"></div>
+				<div class="img"><img src="<?=G5_URL?>/images/coupon.png"></div>
 				<div class="txA">
 					<div class="subj">텍스트가 들어가는 곳 입니다.</div>
 					<div class="price">
@@ -151,7 +151,7 @@
 		</div>
 		
 		<div class="download">
-			<div class="carImg"><img src="/images/carImg.png"></div>
+			<div class="carImg"><img src="<?=G5_URL?>/images/carImg.png"></div>
 			<div class="tx">
 				<div class="subj">
 					밑고 맡기는<br/>
@@ -194,7 +194,7 @@
 			</dl>
 			
 			<div class="footLogo">
-				<img src="/images/logo.png">
+				<img src="<?=G5_URL?>/images/logo.png">
 			</div>
 		</div>
 	</footer>

@@ -33,7 +33,7 @@ if(!$mb_id)
 $mb_password    = trim($_POST['mb_password']);
 $mb_password_re = trim($_POST['mb_password_re']);
 $mb_name        = trim($_POST['mb_name']);
-$mb_nick        = trim($_POST['mb_nick']);
+$mb_nick        = trim($_POST['mb_name']);
 $mb_email       = trim($_POST['mb_email']);
 $mb_sex         = isset($_POST['mb_sex'])           ? trim($_POST['mb_sex'])         : "";
 $mb_birth       = isset($_POST['mb_birth'])         ? trim($_POST['mb_birth'])       : "";
@@ -63,7 +63,7 @@ $mb_9           = isset($_POST['mb_9'])             ? trim($_POST['mb_9'])      
 $mb_10          = isset($_POST['mb_10'])            ? trim($_POST['mb_10'])          : "";
 
 $mb_name        = clean_xss_tags($mb_name);
-$mb_email       = get_email_address($mb_email);
+//$mb_email       = get_email_address($mb_email);
 $mb_homepage    = clean_xss_tags($mb_homepage);
 $mb_tel         = clean_xss_tags($mb_tel);
 $mb_zip1        = preg_replace('/[^0-9]/', '', $mb_zip1);
@@ -96,15 +96,15 @@ if ($w == '' || $w == 'u') {
         alert('비밀번호가 일치하지 않습니다.');
 
     if ($msg = empty_mb_name($mb_name))       alert($msg, "", true, true);
-    if ($msg = empty_mb_nick($mb_nick))     alert($msg, "", true, true);
-    if ($msg = empty_mb_email($mb_email))   alert($msg, "", true, true);
+    //if ($msg = empty_mb_nick($mb_nick))     alert($msg, "", true, true);
+    //if ($msg = empty_mb_email($mb_email))   alert($msg, "", true, true);
     if ($msg = reserve_mb_id($mb_id))       alert($msg, "", true, true);
-    if ($msg = reserve_mb_nick($mb_nick))   alert($msg, "", true, true);
+    //if ($msg = reserve_mb_nick($mb_nick))   alert($msg, "", true, true);
     // 이름에 한글명 체크를 하지 않는다.
     //if ($msg = valid_mb_name($mb_name))     alert($msg, "", true, true);
-    if ($msg = valid_mb_nick($mb_nick))     alert($msg, "", true, true);
-    if ($msg = valid_mb_email($mb_email))   alert($msg, "", true, true);
-    if ($msg = prohibit_mb_email($mb_email))alert($msg, "", true, true);
+    //if ($msg = valid_mb_nick($mb_nick))     alert($msg, "", true, true);
+    //if ($msg = valid_mb_email($mb_email))   alert($msg, "", true, true);
+    //if ($msg = prohibit_mb_email($mb_email))alert($msg, "", true, true);
 
     // 휴대폰 필수입력일 경우 휴대폰번호 유효성 체크
     if (($config['cf_use_hp'] || $config['cf_cert_hp']) && $config['cf_req_hp']) {
@@ -114,13 +114,13 @@ if ($w == '' || $w == 'u') {
     if ($w=='') {
         if ($msg = exist_mb_id($mb_id))     alert($msg);
 
-        if (get_session('ss_check_mb_id') != $mb_id || get_session('ss_check_mb_nick') != $mb_nick || get_session('ss_check_mb_email') != $mb_email) {
-            set_session('ss_check_mb_id', '');
-            set_session('ss_check_mb_nick', '');
-            set_session('ss_check_mb_email', '');
-
-            alert('올바른 방법으로 이용해 주십시오.');
-        }
+        //if (get_session('ss_check_mb_id') != $mb_id || get_session('ss_check_mb_nick') != $mb_nick || get_session('ss_check_mb_email') != $mb_email) {
+        //    set_session('ss_check_mb_id', '');
+        //    set_session('ss_check_mb_nick', '');
+        //    set_session('ss_check_mb_email', '');
+        //
+        //    alert('올바른 방법으로 이용해 주십시오.');
+        //}
 
         // 본인확인 체크
         if($config['cf_cert_use'] && $config['cf_cert_req']) {
@@ -145,8 +145,8 @@ if ($w == '' || $w == 'u') {
         $old_email = $member['mb_email'];
     }
 
-    if ($msg = exist_mb_nick($mb_nick, $mb_id))     alert($msg, "", true, true);
-    if ($msg = exist_mb_email($mb_email, $mb_id))   alert($msg, "", true, true);
+    //if ($msg = exist_mb_nick($mb_nick, $mb_id))     alert($msg, "", true, true);
+    //if ($msg = exist_mb_email($mb_email, $mb_id))   alert($msg, "", true, true);
 }
 
 // 사용자 코드 실행
@@ -174,8 +174,8 @@ if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
         $sql_certify .= " , mb_hp = '{$mb_hp}' ";
         $sql_certify .= " , mb_certify  = '{$cert_type}' ";
         $sql_certify .= " , mb_adult = '{$_SESSION['ss_cert_adult']}' ";
-        $sql_certify .= " , mb_birth = '{$_SESSION['ss_cert_birth']}' ";
-        $sql_certify .= " , mb_sex = '{$_SESSION['ss_cert_sex']}' ";
+        //$sql_certify .= " , mb_birth = '{$_SESSION['ss_cert_birth']}' ";
+        //$sql_certify .= " , mb_sex = '{$_SESSION['ss_cert_sex']}' ";
         $sql_certify .= " , mb_dupinfo = '{$_SESSION['ss_cert_dupinfo']}' ";
         if($w == 'u')
             $sql_certify .= " , mb_name = '{$mb_name}' ";
@@ -183,16 +183,16 @@ if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
         $sql_certify .= " , mb_hp = '{$mb_hp}' ";
         $sql_certify .= " , mb_certify  = '' ";
         $sql_certify .= " , mb_adult = 0 ";
-        $sql_certify .= " , mb_birth = '' ";
-        $sql_certify .= " , mb_sex = '' ";
+        //$sql_certify .= " , mb_birth = '' ";
+        //$sql_certify .= " , mb_sex = '' ";
     }
 } else {
     if (get_session("ss_reg_mb_name") != $mb_name || get_session("ss_reg_mb_hp") != $mb_hp) {
         $sql_certify .= " , mb_hp = '{$mb_hp}' ";
         $sql_certify .= " , mb_certify = '' ";
         $sql_certify .= " , mb_adult = 0 ";
-        $sql_certify .= " , mb_birth = '' ";
-        $sql_certify .= " , mb_sex = '' ";
+        //$sql_certify .= " , mb_birth = '' ";
+        //$sql_certify .= " , mb_sex = '' ";
     }
 }
 //===============================================================
@@ -212,6 +212,8 @@ if ($w == '') {
                      mb_addr1 = '{$mb_addr1}',
                      mb_addr2 = '{$mb_addr2}',
                      mb_addr3 = '{$mb_addr3}',
+                     mb_birth = '{$mb_birth}',
+                     mb_sex = '{$mb_sex}',
                      mb_addr_jibeon = '{$mb_addr_jibeon}',
                      mb_signature = '{$mb_signature}',
                      mb_profile = '{$mb_profile}',
@@ -324,6 +326,8 @@ if ($w == '') {
                     mb_addr1 = '{$mb_addr1}',
                     mb_addr2 = '{$mb_addr2}',
                     mb_addr3 = '{$mb_addr3}',
+                    mb_birth = '{$mb_birth}',
+                    mb_sex = '{$mb_sex}',
                     mb_addr_jibeon = '{$mb_addr_jibeon}',
                     mb_signature = '{$mb_signature}',
                     mb_profile = '{$mb_profile}',

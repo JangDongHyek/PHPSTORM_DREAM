@@ -56,11 +56,11 @@ if($member['mb_id'] != "test01"){
                 new Fancybox(
                     [
                         {
-                            src: "<img src='/images/an.png' class='fancy_img'>",
+                            src: "<img src='<?=G5_URL?>/images/an.png' class='fancy_img'>",
                             type: "html",
                         },
                         {
-                            src: "<img src='/images/"+menu+".png' class='fancy_img'><button type='button' class='next_page'>모든 내용 읽고 동의.</button>",
+                            src: "<img src='<?=G5_URL?>/images/"+menu+".png' class='fancy_img'><button type='button' class='next_page'>모든 내용 읽고 동의.</button>",
                             type: "html",
                         },
                     ],
@@ -279,7 +279,7 @@ if($member['mb_id'] != "test01"){
         <?
         if($member['mb_level'] == '10'){
             ?>
-            <button type="button" style="width:100%;margin:10px 0;padding:10px 0;" onclick="location.href='/adm/'">관리자페이지로 이동</button>
+            <button type="button" style="width:100%;margin:10px 0;padding:10px 0;" onclick="location.href='<?=G5_URL?>/adm/'">관리자페이지로 이동</button>
             <?
         }
         ?>

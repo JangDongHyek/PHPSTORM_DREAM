@@ -79,6 +79,11 @@ class Jl {
         return null; // Video ID가 없으면 null 반환
     }
 
+    // php가져온 encode된 제이슨 데이터를 js에서 echo 강제주입할떄 쓰는 함수
+    function jsParseJson($jsonString,$default = "") {
+        return htmlspecialchars_decode($jsonString ? $jsonString : $default, ENT_QUOTES);
+    }
+
     //
     function log($content,$path = "") {
         $content = $content." at ".$this->getTime();

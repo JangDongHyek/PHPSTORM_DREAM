@@ -15,7 +15,7 @@ include_once("../jl/JlConfig.php");
                 <span>2024 IMC <b>0</b>번째 결단</span>
             </h6>
 
-            <bbs-note-list></bbs-note-list>
+            <bbs-note-list mb_1="<?=$member['mb_1']?>" mb_no="<?=$member['mb_no']?>"></bbs-note-list>
         </div>
     </div>
 </div>

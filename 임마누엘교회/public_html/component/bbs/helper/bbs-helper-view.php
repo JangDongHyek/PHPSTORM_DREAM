@@ -1,6 +1,6 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div>
+    <div v-if="rend">
         <div class="box_radius box_white table">
             <p></p>
             <h6 class="txt_color"><b class="icon icon_color">{{data.wr_2}}</b> {{data.wr_3}}</h6>
@@ -20,6 +20,9 @@
             <p class="flex gap10">
                 <b class="icon icon_gray w100px">지원마감</b> {{data.wr_10}}
             </p>
+            <p class="flex gap10"  data-toggle="modal" @click="modal2 = true;">
+                <a class="icon icon_color w100px" >지원목록</a> 총 {{data.$helper_applicant.length}}명
+            </p>
             <br>
             <button class="btn btn_large btn_blue" type="button" @click="openModel()">지원하기</button>
             <br>
@@ -30,11 +33,24 @@
             </div>
         </div>
 
+        <item-bs-modal :modal="modal2" @close="modal2 = false;" classes="a b">
+            <template v-slot:header>
+                <h4 class="modal-title" id="helperListModalLabel">지원자 리스트</h4>
+                <button @click="modal2 = false;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </template>
+
+            <!-- body -->
+            <template v-slot:default>
+                <ul class="list">
+                    <li v-for="applicant in data.$helper_applicant"><span>{{applicant.name}}</span>{{applicant.phone}}</li>
+                </ul>
+            </template>
+        </item-bs-modal>
 
         <item-bs-modal :modal="modal" @close="modal = false;">
             <template v-slot:header>
                 <h4 class="modal-title" id="helpModalLabel">지원하기</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button @click="modal = false;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </template>
 
             <!-- body -->
@@ -76,20 +92,25 @@
                     data_array : [],
 
                     modal : false,
+                    modal2 : false,
 
                     applicant : {
                         user_idx : this.mb_no,
                         board_idx : this.primary,
                         name : "",
                         phone : "",
-                    }
+                    },
+
+                    rend : false,
                 };
             },
             async created() {
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
 
-                if(this.primary) this.getData();
+                if(this.primary) await this.getData();
+
+                this.rend = true;
             },
             mounted() {
                 this.$nextTick(() => {
@@ -174,26 +195,15 @@
                     let filter = {
                         table: "g5_write_helper",
                         primary : this.primary,
+
+                        relations : [
+                            {table : "helper_applicant" ,foreign : "board_idx"}
+                        ]
                     }
 
                     try {
                         let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
                         this.data = res.data[0]
-                    } catch (e) {
-                        await this.jl.alert(e.message)
-                    }
-                },
-                async getsData() {
-                    let filter = {
-                        table: "g5_write_helper",
-                    }
-
-                    if (this.paging) filter = Object.assign(filter, this.paging); // paging 객체가있다면 병합
-
-                    try {
-                        let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
-                        this.data_array = res.data
-                        this.paging.count = res.count;
                     } catch (e) {
                         await this.jl.alert(e.message)
                     }

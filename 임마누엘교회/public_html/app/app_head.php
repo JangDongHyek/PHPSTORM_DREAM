@@ -232,6 +232,26 @@ switch ($pid) {
         $footer_type = 2;
         $header_name = '설정';
         break;
+    case "inquiry" :
+        $header_type = 1;
+        $footer_type = 1;
+        $header_name = '문의하기';
+        break;
+    case "inquiry_form" :
+        $header_type = 1;
+        $footer_type = 2;
+        $header_name = '문의하기';
+        break;
+    case "faq" :
+        $header_type = 1;
+        $footer_type = 1;
+        $header_name = '자주하는질문';
+        break;
+    case "faq_form" :
+        $header_type = 1;
+        $footer_type = 2;
+        $header_name = '자주하는질문';
+        break;
 }
 
 
@@ -256,8 +276,184 @@ switch ($pid) {
     <a class="hd_title">
         <?=$header_name?>
     </a>
-    <label for="sideToggle"><input type="checkbox" id="sideToggle"><i class="fa-solid fa-bars"></i> </label>
+    <div class="flex gap10 ai-c">
+        <?php if ($pid == 'index') {  ?>
+            <?php if ($is_member) {  ?>
+                <?php if ($is_admin) {  ?>
+                <?php }  ?>
+                <a href="<?php echo G5_BBS_URL ?>/logout.php" title="로그아웃">로그아웃</a>
+            <?php } else {  ?>
+                <a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인">로그인</a></li>
+                <a href="<?php echo G5_BBS_URL ?>/register.php" title="회원가입">회원가입</a>
+            <?php }  ?>
+        <?php }  ?>
+        <label for="sideToggle"><input type="checkbox" id="sideToggle"><i class="fa-solid fa-bars"></i> </label>
+    </div>
 </header>
+
+
+    <div class="side-menu" id="sideMenu">
+        <button type="button" class="btn" id="closeMenu">&times;</button>
+        <div id="gnb">
+            <div class="flex ai-c box_blue gap10">
+            <?php if ($is_member) {  ?>
+                <p>
+                    <?php echo htmlspecialchars($member['mb_name']) ; ?>
+                    <span> 로그인 중</span>
+                </p>
+                <button type="button" class="btn btn-mini btn-gray male-auto" onclick="location.href='<?php echo G5_BBS_URL ?>/member_confirm.php?url=register_form.php'">마이페이지</button>
+            <?php } else {  ?>
+                <p>
+                    <span> 로그인이 필요합니다.</span>
+                </p>
+                <button type="button" class="btn btn-mini btn-gray male-auto" onclick="location.href='<?php echo G5_BBS_URL ?>/login.php'">로그인</button>
+            <?php }  ?>
+            </div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#webMenu" aria-controls="webMenu" role="tab" data-toggle="tab">WEB</a></li>
+                <li role="presentation"><a href="#appMenu" aria-controls="appMenu" role="tab" data-toggle="tab">APP</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="webMenu">
+                    <div class="menu">
+                        <h6>교회 소개</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_01">교회비전</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_02">섬기는 사람들</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_05">교회안내</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=event">행사안내</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_08">온라인 헌금</a></li>
+                        </ul>
+                        <h6>새가족</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub02_01">새가족 등록</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub02_02">커리큘럼</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub02_03">컨텐츠</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub02_04">인터뷰</a></li>
+                        </ul>
+                        <h6>다음세대</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub03_01_main">Linkers</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub03_02_main">교육부</a></li>
+                        </ul>
+                        <h6>선교</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub04_01_main">해외선교</a></li>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub04_02">군선교</a></li>
+                        </ul>
+                        <h6>매거진</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub06_05">Webzine</a></li>
+                        </ul>
+                        <hr>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="appMenu">
+                    <div class="menu">
+                        <h6>설교영상</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/video">목록</a></li>
+                        </ul>
+                        <h6>기도요청</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/prayer">목록</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/pray_form">요청/내역</a></li>
+                        </ul>
+                        <h6>결단노트</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/note">목록</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/note_form">작성하기</a></li>
+                        </ul>
+                        <h6>교우소식</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/friend">목록</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/friend_form">작성하기</a></li>
+                        </ul>
+                        <h6>대관신청</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/rental_hall">본당 대관</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/rental_lecture">교육관 대관</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/rental_bus">버스 사용</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/rental_equip">비품 대여</a></li>
+                        </ul>
+                        <h6>분실물찾기</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/lost">목록</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/lost_form?tab=1">주웠어요</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/lost_form?tab=2">잃어버렸어요</a></li>
+                        </ul>
+                        <h6>도우미</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/helper">목록</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/helper_form">요청하기</a></li>
+                        </ul>
+                        <h6>IMC 속회방</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/class">속회소식</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/class_form">속회보고</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/class_list">속회예배현황</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/class_leader">목회자탭</a></li>
+                        </ul>
+                        <h6>IMC 공동체</h6>
+                        <ul>
+                            <li><a href="<?php echo G5_URL ?>/app/union_group">교구방</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/union_mission">IMC 선교회</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/union_small">소그룹</a></li>
+                            <li><a href="<?php echo G5_URL ?>/app/union_ministry">사역부서</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="menu">
+                <h6>기타 서비스</h6>
+                <ul>
+                    <li><a href="<?php echo G5_URL ?>/app/inquiry">문의하기</a></li>
+                    <li><a href="<?php echo G5_URL ?>/app/faq">자주하는질문</a></li>
+                </ul>
+            </div>
+            <div class="icon">
+                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/youtube.png" alt="sns" title=""></a></span>
+                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/kakao.png" alt="sns" title=""></a></span>
+                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/facebook.png" alt="sns" title=""></a></span>
+                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/insta.png" alt="sns" title=""></a></span>
+                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/blog.png" alt="sns"></a></span>
+                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/tiktok.png" alt="sns"></a></span>
+            </div>
+            <div id="copy">
+                <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=privacy">개인정보취급처리방침</a>
+                <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=provision">서비스이용약관</a>
+                <?php if ($is_admin) {  ?>
+                    <a href="<?php echo G5_URL ?>/app/setting">관리자</a>
+                <?php }  ?>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <script>
+        const menuToggle = document.getElementById('sideToggle');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+        const closeMenu = document.getElementById('closeMenu');
+
+        menuToggle.addEventListener('click', () => {
+            sideMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    </script>
+
 <?php } ?>
 
 <div id="wrapper">

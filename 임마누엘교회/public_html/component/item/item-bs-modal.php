@@ -1,12 +1,12 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <div class="modal fade more_modal" :id="component_idx" tabindex="-1" aria-labelledby="accountFormModalLabel" :aria-hidden="modal">
-            <div class="modal-dialog wide">
+        <div class="modal fade" :class="classes" :id="component_idx" tabindex="-1" :aria-hidden="modal">
+            <div class="modal-dialog modal-wide">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <!--div class="modal-header">
                         <slot name="header"></slot>
-                    </div>
+                    </div-->
                     <div class="modal-body">
                         <slot></slot>
                     </div>
@@ -24,6 +24,7 @@
             template: "#<?=$componentName?>-template",
             props: {
                 modal : {type : Boolean, default : false},
+                classes : {type : String, default : ""},
             },
             data: function(){
                 return {

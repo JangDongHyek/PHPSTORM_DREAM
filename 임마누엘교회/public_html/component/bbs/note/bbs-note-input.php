@@ -117,7 +117,7 @@
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
                         await this.jl.alert("완료되었습니다.");
-                        window.location.reload();
+                        window.location.href="./note";
                     } catch (e) {
                         await this.jl.alert(e.message)
                     }

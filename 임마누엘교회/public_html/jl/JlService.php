@@ -58,19 +58,23 @@ class JlService extends Jl{
 
         $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
         if(in_array($method,$trace_list)) {
-            $result = $response['success'] ? '성공' : "실패";
-            $this->sessionTrace("{$this->obj['table']} 테이블 $method 요청 {$result}");
+            $object = array(
+                "method" => $method,
+                "response" => $response,
+            );
+            $this->sessionTrace($object);
         }
-        if($method)
 
-            return $response;
+        return $response;
     }
 
     public function get() {
         $join = null;
         $extensions = array();
+        $relations = array();
         if(isset($this->obj['join'])) $join = $this->jsonDecode($this->obj['join']);
         if(isset($this->obj['extensions'])) $extensions = $this->jsonDecode($this->obj['extensions']);
+        if(isset($this->obj['relations'])) $relations = $this->jsonDecode($this->obj['relations']);
 
         $getInfo = array(
             "page" => $this->obj['page'],
@@ -79,7 +83,7 @@ class JlService extends Jl{
         );
 
         if ($join) {
-            $this->model->join($join['table'],$join['origin'],$join['join']);
+            $this->model->join($join['table'],$join['origin'],$join['join'],$join['type']);
             // 조인 필터링
             //$model->where("join_column","value","AND",$join_table);
             //$model->between("join_column","start","end","AND",$join_table);
@@ -88,6 +92,13 @@ class JlService extends Jl{
 
             if($join['source']) $getInfo['source'] = $join['table'];
             if($join['select']) $getInfo['select'] = $this->jsonDecode($join['select']);
+
+            if($join['group_by']) {
+                $groups = $this->jsonDecode($join['group_by'],false);
+                foreach ($groups as $group) {
+                    $this->model->groupBy($group['group'],$group['aggregate'],$group['as'],$group['type']);
+                }
+            }
         }
 
         $this->model->setFilter($this->obj);
@@ -110,6 +121,24 @@ class JlService extends Jl{
                 $object["data"][$index]["$".$info['table']] = $join_data;
             }
         }
+
+        foreach($relations as $info) {
+            $info = $this->jsonDecode($info);
+            $joinModel = new JlModel(array(
+                "table" => $info['table'],
+            ));
+
+            foreach ($object["data"] as $index => $data) {
+                if(!$info['foreign']) continue;
+                $joinModel->where($info['foreign'],$data[$this->model->primary]);
+                $join_data = $joinModel->get()['data'];
+
+                //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
+                $object["data"][$index]["$".$info['table']] = $join_data;
+            }
+        }
+
+
 
         $response['data'] = $object['data'];
         $response['count'] = $object['count'];
@@ -134,15 +163,13 @@ class JlService extends Jl{
 
 
 
-        $response['idx'] = $this->model->insert($this->obj);
+        $response['primary'] = $this->model->insert($this->obj);
         $response['success'] = true;
 
         return $response;
     }
 
     public function update() {
-        if($this->obj['primary']) $this->obj[$this->model->primary] = $this->obj['primary'];
-
         $this->iuCheck();
 
         if($this->file_use) {
@@ -169,15 +196,16 @@ class JlService extends Jl{
 
         $this->model->update($this->obj);
         $response['success'] = true;
+        $response['primary'] = $this->obj['primary'];
 
         return $response;
     }
 
     public function delete() {
-        if($this->obj['primary']) $this->obj[$this->model->primary] = $this->obj['primary'];
+        $this->model->setFilter($this->obj);
+        $getData = $this->model->where($this->obj)->get()['data'][0];
 
         if($this->file_use) {
-            $getData = $this->model->where($this->model->primary,$this->obj[$this->model->primary])->get()['data'][0];
 
             foreach ($this->file_columns as $column) {
                 $this->jl_file->deleteDirGate($getData[$column]);
@@ -186,6 +214,7 @@ class JlService extends Jl{
 
         $data = $this->model->delete($this->obj);
 
+        $response['data'] = $getData;
         $response['success'] = true;
 
         return $response;
@@ -213,6 +242,8 @@ class JlService extends Jl{
         }
 
         $this->model->where($this->obj)->whereDelete();
+
+        $response['data'] = $getData;
         $response['success'] = true;
 
         return $response;
@@ -240,7 +271,7 @@ class JlService extends Jl{
 
         return $response;
     }
-    
+
     //insert 나 update 하기전 조건 체크
     public function iuCheck() {
         //조건에 해당하는 데이터가있으면 error를 반환
@@ -254,7 +285,6 @@ class JlService extends Jl{
             }
         }
 
-        //암호화 할 내용이있으면 암호화 진행
         if(isset($this->obj['hashes'])) {
             $hashes = $this->jsonDecode($this->obj['hashes']);
             foreach ($hashes as $hash) {
