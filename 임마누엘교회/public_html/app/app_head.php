@@ -1,7 +1,7 @@
 <?php
 require_once("../common.php");
 require_once('../head.sub.php');
-
+include_once("../jl/JlConfig.php");
 
 /**
  * 헤더타입
@@ -254,7 +254,13 @@ switch ($pid) {
         break;
 }
 
-
+$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
+    . "://"
+    . $_SERVER['HTTP_HOST']
+    . $_SERVER['REQUEST_URI'];
+//$relativeUrl = str_replace($jl->URL, '', $currentUrl);
+$site_setting_model = new JlModel("site_setting");
+$site_setting = $site_setting_model->orderBy("idx","DESC")->get()['data'][0];
 ?>
 
 
@@ -283,7 +289,7 @@ switch ($pid) {
                 <?php }  ?>
                 <a href="<?php echo G5_BBS_URL ?>/logout.php" title="로그아웃">로그아웃</a>
             <?php } else {  ?>
-                <a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인">로그인</a></li>
+                <a href="<?php echo G5_BBS_URL ?>/login.php?url=<?=$currentUrl?>" title="로그인">로그인</a></li>
                 <a href="<?php echo G5_BBS_URL ?>/register.php" title="회원가입">회원가입</a>
             <?php }  ?>
         <?php }  ?>
@@ -306,7 +312,7 @@ switch ($pid) {
                 <p>
                     <span> 로그인이 필요합니다.</span>
                 </p>
-                <button type="button" class="btn btn-mini btn-gray male-auto" onclick="location.href='<?php echo G5_BBS_URL ?>/login.php'">로그인</button>
+                <button type="button" class="btn btn-mini btn-gray male-auto" onclick="location.href='<?php echo G5_BBS_URL ?>/login.php?url=<?=$currentUrl?>'">로그인</button>
             <?php }  ?>
             </div>
             <ul class="nav nav-tabs" role="tablist">
@@ -413,12 +419,12 @@ switch ($pid) {
                 </ul>
             </div>
             <div class="icon">
-                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/youtube.png" alt="sns" title=""></a></span>
-                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/kakao.png" alt="sns" title=""></a></span>
-                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/facebook.png" alt="sns" title=""></a></span>
-                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/insta.png" alt="sns" title=""></a></span>
-                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/blog.png" alt="sns"></a></span>
-                <span><a href="" target="_blank"><img src="<?php echo G5_URL ?>/app/img/tiktok.png" alt="sns"></a></span>
+                <span><a href="<?=$site_setting['sns_youtube']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/youtube.png" alt="sns" title=""></a></span>
+                <span><a href="<?=$site_setting['sns_kakao']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/kakao.png" alt="sns" title=""></a></span>
+                <span><a href="<?=$site_setting['sns_facebook']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/facebook.png" alt="sns" title=""></a></span>
+                <span><a href="<?=$site_setting['sns_insta']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/insta.png" alt="sns" title=""></a></span>
+                <span><a href="<?=$site_setting['sns_blog']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/blog.png" alt="sns"></a></span>
+                <span><a href="<?=$site_setting['sns_tiktok']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/tiktok.png" alt="sns"></a></span>
             </div>
             <div id="copy">
                 <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=privacy">개인정보취급처리방침</a>

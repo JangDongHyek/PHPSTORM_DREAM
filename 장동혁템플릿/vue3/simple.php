@@ -1,6 +1,6 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div>
+    <div v-if="load">
 
     </div>
 </script>
@@ -18,13 +18,26 @@
                 component_idx: "",
 
                 data: {},
-                data_array : [],
+                arrays : [],
+
+                options : {
+                    required : [
+                        {name : "",message : ``},
+                    ],
+                    href : "",
+                },
 
                 filter : {
                     table : "",
+                    primary : this.primary,
                     page: 1,
                     limit: 1,
                     count: 0,
+                },
+
+                modal : {
+                    status : false,
+                    data : {},
                 },
 
                 rend : false,
@@ -35,6 +48,7 @@
             this.component_idx = this.jl.generateUniqueId();
 
             if(this.primary) this.data = await this.jl.getData(this.filter);
+            //await this.jl.getsData(this.filter,this.arrays);
 
             this.load = true;
         },

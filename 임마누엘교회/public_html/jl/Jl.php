@@ -71,19 +71,6 @@ class Jl {
         //throw new \Exception($msg);
     }
 
-    function extractYoutube($url) {
-        $regex = '/(?:https?:\\/\\/(?:www\\.)?(?:youtube\\.com\\/.*[?&]v=|youtu\\.be\\/))([^&?]+)/';
-        if (preg_match($regex, $url, $matches)) {
-            return $matches[1]; // Video ID가 있으면 반환
-        }
-        return null; // Video ID가 없으면 null 반환
-    }
-
-    // php가져온 encode된 제이슨 데이터를 js에서 echo 강제주입할떄 쓰는 함수
-    function jsParseJson($jsonString,$default = "") {
-        return htmlspecialchars_decode($jsonString ? $jsonString : $default, ENT_QUOTES);
-    }
-
     //
     function log($content,$path = "") {
         $content = $content." at ".$this->getTime();
@@ -143,6 +130,14 @@ class Jl {
 
         $value = str_replace('\\/', '/', $value);
         return $value;
+    }
+
+    function extractYoutube($url) {
+        $regex = '/(?:https?:\\/\\/(?:www\\.)?(?:youtube\\.com\\/.*[?&]v=|youtu\\.be\\/))([^&?]+)/';
+        if (preg_match($regex, $url, $matches)) {
+            return $matches[1]; // Video ID가 있으면 반환
+        }
+        return null; // Video ID가 없으면 null 반환
     }
 
     //상황에 필요한 로직들을 넣은 Jsondecode 함수
@@ -228,6 +223,11 @@ class Jl {
 
     }
 
+    // php가져온 encode된 제이슨 데이터를 js에서 echo 강제주입할떄 쓰는 함수
+    function jsParseJson($jsonString,$default = "") {
+        return htmlspecialchars_decode($jsonString ? $jsonString : $default, ENT_QUOTES);
+    }
+
     function pluginLoad($plugin = array()) {
         $plugins = $this->convertToArray($plugin);
 
@@ -267,6 +267,14 @@ class Jl {
                 echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>';
                 echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
                 array_push(self::$PLUGINS,"bootstrap");
+            }
+        }
+
+        if(in_array('viewer',$plugins)) {
+            if(!in_array("viewer",self::$PLUGINS)) {
+                echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.css">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.js"></script>';
+                array_push(self::$PLUGINS,"viewer");
             }
         }
     }
@@ -649,7 +657,7 @@ class Jl {
         ];
     }
 
-    function sessionTrace($message = "") {
+    function sessionTrace($object) {
         $current_url = $this->getCurrentUrl()['full'];
         $referrer_url = $_SERVER['HTTP_REFERER'];
 
@@ -657,7 +665,7 @@ class Jl {
             "current_url" => $current_url,
             "referrer_url" => $referrer_url,
         );
-        if($message) $content['message'] = $message;
+        if($object['message']) $content['message'] = $object['message'];
         $agent = $this->getUserAgent();
 
         $session_model = new JlModel("jl_session");
@@ -667,6 +675,8 @@ class Jl {
             "name" => "trace",
             "status" => "expired",
             "content" => $this->jsonEncode($content),
+            "method" => $object['method'],
+            "response" => $this->jsonEncode($object['response']),
             "user_agent" => $agent['user_agent'],
             "browser" => $agent['browser'],
             "browser_version" => $agent['browser_version'],

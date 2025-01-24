@@ -1,23 +1,16 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <div>
+    <div v-if="load">
         <div id="class" class="main">
             <div class="slogan">
-                <h3>제44과</h3>
-                <h2>❝<b>구원 받은 성도의 삶</b>❞</h2>
+                <h3>제{{study.chapter}}과</h3>
+                <h2>❝<b>{{study.subject}}</b>❞</h2>
                 <a class="btn btn_color btn-large" @click="modal = true;">공부하기</a>
             </div>
             <div class="box_radius box_white">
                 <h6>속회소식</h6>
-                <div class="box_gray">
-                    <p>
-                        1.속장교육 : 10월 30일 오전 11시. 목요기도회 후. 베들레헴성전<br>
-                        많은 참석 바랍니다.<br>
-                        2.연합속회 : 11월 7일 오전 11시. 예루살렘성전.<br>
-                        연합속회 후 교구별로 점심식사가 있습니다.
-                    </p>
-                </div>
-                <div class="table">
+                <div class="box_gray" v-if="classes[0]" v-html="jl.convertNewlinesToBr(classes[0].wr_content)"></div>
+                <div class="table" v-if="classes.length > 1">
                     <p class="flex jc-sb ai-c">
                         <b>이전 소식</b>
                         <a class="more" href="class_noti">+ 더보기</a>
@@ -25,9 +18,11 @@
                     <div class="table">
                         <table>
                             <tbody><!--3개만-->
-                            <tr>
-                                <td><p class="cut" onclick="location.href='./class_noti_view'">1.속장교육 : 10월 30일 오전 11시. 목요기도회 후. 베들레헴성전</p></td>
-                            </tr>
+                            <template v-for="board,index in classes">
+                                <tr v-if="index > 0">
+                                    <td><p class="cut" @click="modal2.data = board; modal2.status = true;">{{board.wr_content}}</p></td>
+                                </tr>
+                            </template>
                             </tbody>
                         </table>
                     </div>
@@ -48,7 +43,7 @@
 
             <!-- body -->
             <template v-slot:default>
-                <external-pdf-view v-if="modal" src="/app/file/44.pdf" @close="modal = false;"></external-pdf-view>
+                <external-pdf-view v-if="modal" :src="study.upfile.src" @close="modal = false;"></external-pdf-view>
             </template>
 
 
@@ -56,6 +51,23 @@
 
             </template>
         </item-bs-modal>
+
+        <external-bs-modal :modal="modal2.status" @close="modal2.status = false;" class_1="" class_2="">
+            <template v-slot:header>
+                <h4 class="modal-title" id="classNotiModalLabel">속회보고</h4>
+                <button type="button" class="close" @click="modal2.status = false;"><span aria-hidden="true">&times;</span></button>
+            </template>
+
+            <!-- body -->
+            <template v-slot:default>
+                <textarea placeholder="속회소식를 작성하세요." readonly v-model="modal2.data.wr_content"></textarea>
+            </template>
+
+
+            <template v-slot:footer>
+
+            </template>
+        </external-bs-modal>
     </div>
 </script>
 
@@ -79,11 +91,38 @@
                     data: {},
 
                     modal : false,
+                    modal2 : {
+                        status : false,
+                        data : {},
+                    },
+
+                    class_filter : {
+                        table : "g5_write_class",
+                        page: 1,
+                        limit: 4,
+                        count: 0,
+                    },
+                    classes : [],
+
+                    study_filter : {
+                        table : "class_study",
+                        page: 1,
+                        limit: 1,
+                        count: 0,
+                    },
+
+                    study : {},
+                    load : false,
                 };
             },
             async created() {
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
+
+                await this.jl.getsData(this.class_filter,this.classes);
+                this.study = await this.jl.getData(this.study_filter);
+
+                this.load = true;
             },
             mounted() {
                 this.$nextTick(() => {

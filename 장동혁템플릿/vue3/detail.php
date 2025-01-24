@@ -11,10 +11,10 @@
         </div>
 
         <!-- 페이징 -->
-        <item-paging :paging="paging" @change="paging.page = $event; getsData();"></item-paging>
+        <item-paging :filter="filter" @change="filter.page = $event; this.jl.getsData(filter,arrays);"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
-        <external-bs-modal :modal="modal" @close="modal = false;">
+        <external-bs-modal :modal="modal" @close="modal = false;" class_1="" class_2="">
             <template v-slot:header>
 
             </template>
@@ -48,15 +48,23 @@
 
                 modal : false,
 
-                paging : {
+                filter : {
                     page : 1,
                     limit : 1,
                     count : 0,
                 },
 
-                required : [
-                    {name : "",message : ``},
-                ],
+                options : {
+                    required : [
+                        {name : "",message : ``},
+                    ],
+                    href : "",
+
+                    callback : async (res) => {
+
+                    }
+                }
+
 
                 data : {
                     table : "",
@@ -184,8 +192,8 @@
 
                     add_query : " and idx = 'exam' ",
 
-                    order_by_desc : "idx",
-                    order_by_asc : "idx",
+                    order_by_desc : ["idx"],
+                    order_by_asc : ["idx"],
                 }
 
                 if(this.paging) filter = {...filter...this.paging}; // paging 객체가있다면 병합

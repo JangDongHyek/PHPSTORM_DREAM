@@ -3,9 +3,8 @@ $pid = "index";
 include_once("./app_head.php");
 include_once("../jl/JlConfig.php");
 
-$site_model = new JlModel("site_setting");
-$site_setting = $site_model->orderBy("idx","DESC")->get()['data'][0];
-
+$g5_write_video_model = new JlModel("g5_write_video");
+$g5_write_video = $g5_write_video_model->orderBy("wr_id","DESC")->get()['data'][0];
 ?>
 <div id="index">
     <div class="slogan">
@@ -16,7 +15,7 @@ $site_setting = $site_model->orderBy("idx","DESC")->get()['data'][0];
         <div class="week">
             <span>금주의 설교</span>
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/<?=$jl->extractYoutube($site_setting['main_youtube'])?>?controls=0" frameborder="0" allowfullscreen="" allow="accelerometer;
+                <iframe src="https://www.youtube.com/embed/<?=$jl->extractYoutube($g5_write_video['wr_content'])?>?controls=0" frameborder="0" allowfullscreen="" allow="accelerometer;
     autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
         </div>

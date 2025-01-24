@@ -178,8 +178,28 @@ class JlModel{
 
     function setFilter($obj) {
         if($obj['primary']) $this->where($this->primary,$obj['primary']);
-        if($obj['order_by_desc']) $this->orderBy($obj['order_by_desc'],"DESC");
-        if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
+        if($obj['order_by_desc']) {
+            if($this->jl->isJson($obj['order_by_desc'])) {
+                $orders = $this->jsonDecode($obj['order_by_desc']);
+                foreach ($orders as $order) {
+                    $this->orderBy($order,"DESC");
+                }
+            }else {
+                $this->orderBy($obj['order_by_desc'],"DESC");
+            }
+        }
+
+        if($obj['order_by_asc']) {
+            if($this->jl->isJson($obj['order_by_asc'])) {
+                $orders = $this->jsonDecode($obj['order_by_asc']);
+                foreach ($orders as $order) {
+                    $this->orderBy($order,"ASC");
+                }
+            }else {
+                $this->orderBy($obj['order_by_asc'],"ASC");
+            }
+        }
+
 
         if(isset($obj['where'])) {
             $arrays = $this->jsonDecode($obj['where']);
@@ -485,6 +505,7 @@ class JlModel{
             while($row = mysqli_fetch_assoc($result)){
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+                $row['primary'] = $row[$this->primary];
                 foreach ($row as $key => $value) {
                     if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
@@ -505,6 +526,7 @@ class JlModel{
             while($row = mysql_fetch_assoc($result)){
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+                $row['primary'] = $row[$this->primary];
                 foreach ($row as $key => $value) {
                     if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
