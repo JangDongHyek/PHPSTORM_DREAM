@@ -32,6 +32,8 @@
 
         <!-- 부스스트랩이 있을시 사용가능한 다음주소찾기 모달-->
         <external-bs-daum-postcode :modal="modal" @close="modal = false;" @select="getAddress"></external-bs-daum-postcode>
+
+        <button type="button" class="btn btn-default" @click="jl.postData(data,'table_name',options)">작성</button>
     </div>
 </script>
 

@@ -81,6 +81,13 @@ class Jl {
                     if(typeof object[req.name] === "number") {
 
                     }
+
+                    if (typeof object[req.name] === "boolean") {
+                        if(!object[req.name]) {
+                            reject(new Error(req.message));
+                            return false;
+                        }
+                    }
                 }
             }
 
@@ -608,7 +615,7 @@ class Jl {
         return text.replace(/\n/g, "<br>");
     }
 
-    //@input="jl.isNumberKeyInput"
+    // input에 숫자만 입력하게하는 함수 @input="jl.isNumberKeyInput"
     isNumberKeyInput(event, format = false) {
 
         // 키 입력값에서 숫자와 쉼표만 유지

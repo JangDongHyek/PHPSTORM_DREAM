@@ -81,6 +81,13 @@ class Jl {
                     if(typeof object[req.name] === "number") {
 
                     }
+
+                    if (typeof object[req.name] === "boolean") {
+                        if(!object[req.name]) {
+                            reject(new Error(req.message));
+                            return false;
+                        }
+                    }
                 }
             }
 
