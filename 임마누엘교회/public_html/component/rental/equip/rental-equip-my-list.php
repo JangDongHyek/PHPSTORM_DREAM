@@ -8,7 +8,7 @@
                     <th>사용일</th>
                     <th>신청인</th>
                     <th>신청부서</th>
-                    <th>장소</th>
+                    <th>신청자재</th>
                     <th>관리</th>
                 </tr>
                 </thead>
@@ -17,14 +17,15 @@
                     <td>{{item.use_date.formatDate({simple : true, type : '.'})}}</td>
                     <td>{{item.$g5_member.mb_name}} {{item.$g5_member.mb_1}}</td>
                     <td>{{item.department}}</td>
-                    <td>{{item.use_place}}</td>
+                    <td>{{item.request}}</td>
                     <td>
-                        <button type="button" class="btn btn_mini btn_gray" @click="jl.href('./hall_view.php?idx='+item.idx)">보기</button>
+                        <button type="button" class="btn btn_mini btn_gray" @click="jl.href('./equip_view.php?idx='+item.idx)">보기</button>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+
         <item-paging :paging="filter" @change="filter.page = $event; this.jl.getsData(filter,arrays);"></item-paging>
     </div>
 </script>
@@ -33,7 +34,7 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
-                admin : {type: String, default: ""},
+                mb_no : {type: String, default: ""},
                 primary : {type: String, default: ""},
             },
             data: function () {
@@ -53,7 +54,7 @@
                     },
 
                     filter : {
-                        table : "rental_hall",
+                        table : "rental_equip",
                         primary : this.primary,
                         page: 1,
                         limit: 10,
@@ -75,7 +76,10 @@
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
 
-                if(!this.admin) this.filter.status = true;
+                if(!this.mb_no) {
+                    await this.jl.alert("로그인이 필요한 페이지입니다.");
+                    window.history.back();
+                }
 
                 //if(this.primary) this.data = await this.jl.getData(this.filter);
                 await this.jl.getsData(this.filter,this.arrays);

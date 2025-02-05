@@ -134,7 +134,9 @@ class JlVue {
     }
 
     async deleteData(data,table,options = {}) {
-        if(! await this.jl.plugin.confirm("정말 삭제하시겠습니까?")) return false;
+        let message = "정말 삭제하시겠습니까?";
+        if(options.message) message = options.message;
+        if(! await this.jl.plugin.confirm(message)) return false;
 
         try {
             if(!table) throw new Error("테이블값이 존재하지않습니다.");

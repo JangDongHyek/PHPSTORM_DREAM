@@ -15,7 +15,7 @@ include_once("../jl/JlConfig.php");
 
             <rental-hall-input v-show="tab == 1" mb_no="<?=$member['mb_no']?>"></rental-hall-input>
 
-            <rental-hall-my-list v-show="tab == 2"></rental-hall-my-list>
+            <rental-hall-my-list v-show="tab == 2" mb_no="<?=$member['mb_no']?>"></rental-hall-my-list>
 
         </div>
     </div>

@@ -34,44 +34,8 @@
         <div class="table">
             <!-- 예루살렘성전 Table -->
             <table class="click">
-                <thead>
-                <tr>
-                    <th>예루살렘성전</th>
-                    <th colspan="11"></th>
-                </tr>
-                </thead>
                 <tbody>
-                    <tr v-for="place in place1">
-                        <td>{{place}}</td>
-                        <td v-for="time in times" :class="getClass(place,time)" @click="selectPlaceTime(place,time)">{{time}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- 1층 Table -->
-            <table class="click">
-                <thead>
-                <tr>
-                    <th>1층</th>
-                    <th colspan="11"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="place in place2">
-                    <td>{{place}}</td>
-                    <td v-for="time in times" :class="getClass(place,time)" @click="selectPlaceTime(place,time)">{{time}}</td>
-                </tr>
-                </tbody>
-            </table>
-            <!-- 지하 Table -->
-            <table class="click">
-                <thead>
-                <tr>
-                    <th>지하</th>
-                    <th colspan="11"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="place in place3">
+                <tr v-for="place in places">
                     <td>{{place}}</td>
                     <td v-for="time in times" :class="getClass(place,time)" @click="selectPlaceTime(place,time)">{{time}}</td>
                 </tr>
@@ -131,7 +95,7 @@
                 원하시는 장소와 시간에 사용이 불가할 수 있습니다.</p>
         </div>
         <br>
-        <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'rental_hall',options)">신청하기</button>
+        <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'rental_lecture',options)">신청하기</button>
     </div>
 </script>
 
@@ -182,7 +146,7 @@
                             {name : "name",message : `신청인을 입력해주세요`},
                             {name : "phone",message : `연락처를 입력해주세요`},
                         ],
-                        href : "./rental_hall",
+                        href : "./rental_lecture",
                     },
 
                     filter : {
@@ -198,9 +162,7 @@
                         data : {},
                     },
 
-                    place1 : ["자모실(우)", "자모실(좌)", "찬양대석(우)", "찬양대석(좌)", "우측", "좌측", "중앙",],
-                    place2 : ["베들레헴성전","찬양대실","IMC카페"],
-                    place3 : ["지하체육관", "학생찬양대실", "유치부실", "영아부실", "식당 ROOM1", "식당 ROOM2", "식당 ROOM3", "식당 ROOM4", "식당 ROOM5", "식당 ROOM6", "식당 ROOM7", "식당 ROOM8",],
+                    places : ["15층 IMC라운지 전체", "15층 IMC라운지 회의실", "13층 단체숙소 1301", "13층 단체숙소 1302", "13층 단체숙소 1303", "13층 단체숙소 1304", "11층 드림2부실", "10층 드림1부실", "에벤에셀홀"],
                     times : ["09~10", "10~11", "11~12", "12~13", "13~14", "14~15", "15~16", "16~17", "17~18", "18~19", "19~20"],
 
                     rend : false,
@@ -251,7 +213,7 @@
             watch: {
                 async use_date() {
                     await this.jl.getsData({
-                        table : "rental_hall",
+                        table : "rental_lecture",
                         use_date : this.use_date,
                         status : true,
                     },this.arrays);

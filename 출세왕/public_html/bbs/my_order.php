@@ -14,6 +14,8 @@ $id = "ma_id";
 $sql_where = "";
 if ($filter == 3){
     $sql_where = "car_date_type = 3";
+
+    $sql_where .= " and is_payment = 'Y' ";
 }else if ($filter == 5){
     $sql_where = "car_date_type = 5";
 }else if ($filter == 6){

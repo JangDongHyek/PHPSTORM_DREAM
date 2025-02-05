@@ -19,7 +19,7 @@
                     <td>{{item.department}}</td>
                     <td>{{item.use_place}}</td>
                     <td>
-                        <button type="button" class="btn btn_mini btn_gray" @click="jl.href('./hall_view.php?idx='+item.idx)">보기</button>
+                        <button type="button" class="btn btn_mini btn_gray" @click="jl.href('./lecture_view.php?idx='+item.idx)">보기</button>
                     </td>
                 </tr>
                 </tbody>
@@ -53,7 +53,7 @@
                     },
 
                     filter : {
-                        table : "rental_hall",
+                        table : "rental_lecture",
                         primary : this.primary,
                         page: 1,
                         limit: 10,

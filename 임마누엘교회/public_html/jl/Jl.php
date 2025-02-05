@@ -677,6 +677,7 @@ class Jl {
             "content" => $this->jsonEncode($content),
             "method" => $object['method'],
             "response" => $this->jsonEncode($object['response']),
+            "sessions" => $this->jsonEncode($object['sessions']),
             "user_agent" => $agent['user_agent'],
             "browser" => $agent['browser'],
             "browser_version" => $agent['browser_version'],

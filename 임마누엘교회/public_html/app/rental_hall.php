@@ -14,7 +14,7 @@ include_once("../jl/JlConfig.php");
         <div class="box_radius box_white">
             <h6><i class="fa-regular fa-tombstone"></i> 본당 예약현황</h6>
 
-        <rental-hall-list></rental-hall-list>
+        <rental-hall-list admin="<?=$is_admin?>"></rental-hall-list>
 
         </div>
     </div>

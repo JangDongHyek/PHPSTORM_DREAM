@@ -85,7 +85,8 @@ $order_count = $member_order->count();
                 if(!res.success) alert(res.message);
                 else {
                     alert("완료되었습니다.");
-                    window.location.reload();
+                    if(level == 2) window.location.href = "./mypage.php";
+                    if(level == 3) window.location.href = "./mypage_portfolio.php";
                 }
             }
         });

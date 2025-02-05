@@ -13,41 +13,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr onclick="location.href='./hall_view'">
-                    <td>24.09.01</td>
-                    <td>전민웅 집사</td>
-                    <td>제10남선교회</td>
-                    <td>찬양대석(좌)</td>
+                <tr v-for="item in arrays">
+                    <td>{{item.use_date.formatDate({simple : true, type : '.'})}}</td>
+                    <td>{{item.$g5_member.mb_name}} {{item.$g5_member.mb_1}}</td>
+                    <td>{{item.department}}</td>
+                    <td>{{item.use_place}}</td>
                     <td>
-                        <button type="button" class="btn btn_mini btn_gray">보기</button>
-                    </td>
-                </tr>
-                <tr onclick="location.href='./hall_view'">
-                    <td>24.09.01</td>
-                    <td>전민웅 집사</td>
-                    <td>제10남선교회</td>
-                    <td>찬양대석(좌)</td>
-                    <td>
-                        <button type="button" class="btn btn_mini btn_gray">보기</button>
+                        <button type="button" class="btn btn_mini btn_gray" @click="jl.href('./hall_view.php?idx='+item.idx)">보기</button>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div class="b-pagination-outer">
-            <ul id="border-pagination">
 
-
-                <li><a href="javascript:void(0)" class="active">1</a></li>
-                <li><a href="?page=2&amp;" class="">2</a></li>
-                <li><a href="?page=3&amp;" class="">3</a></li>
-                <li><a href="?page=4&amp;" class="">4</a></li>
-
-
-                <li><a href="?page=4&amp;">»</a></li>
-
-            </ul>
-        </div>
+        <item-paging :paging="filter" @change="filter.page = $event; this.jl.getsData(filter,arrays);"></item-paging>
     </div>
 </script>
 
@@ -55,6 +34,7 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
+                mb_no : {type: String, default: ""},
                 primary : {type: String, default: ""},
             },
             data: function () {
@@ -74,17 +54,22 @@
                     },
 
                     filter : {
-                        table : "",
-                        primary : this.primary,
+                        table : "rental_hall",
                         page: 1,
-                        limit: 1,
+                        limit: 10,
                         count: 0,
+                        user_idx : this.mb_no,
+                        extensions : [
+                            {table : "g5_member", foreign : "user_idx"}
+                        ],
                     },
 
                     modal : {
                         status : false,
                         data : {},
                     },
+
+                    member : {},
 
                     rend : false,
                 };
@@ -93,8 +78,12 @@
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
 
-                if(this.primary) this.data = await this.jl.getData(this.filter);
-                //await this.jl.getsData(this.filter,this.arrays);
+                if(!this.mb_no) {
+                    await this.jl.alert("로그인이 필요한 페이지입니다.");
+                    window.history.back();
+                }
+
+                await this.jl.getsData(this.filter,this.arrays);
 
                 this.load = true;
             },

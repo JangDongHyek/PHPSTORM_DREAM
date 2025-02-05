@@ -4,6 +4,7 @@ require_once("Jl.php");
 class JlService extends Jl{
     private $POST;
     private $FILES;
+    private $SESSION;
 
     private $obj;
     private $file_use = false;
@@ -13,7 +14,7 @@ class JlService extends Jl{
     private $session_model;
     private $jl_file;
 
-    public function __construct($POST,$FILES)
+    public function __construct($POST,$FILES,$SESSION)
     {
         parent::__construct(false);
         $this->obj = $this->jsonDecode($POST['obj']);
@@ -27,6 +28,7 @@ class JlService extends Jl{
 
         $this->POST = $POST;
         $this->FILES = $FILES;
+        $this->SESSION = $SESSION;
 
         $this->session_model = new JlModel("jl_session");
 
@@ -61,6 +63,7 @@ class JlService extends Jl{
             $object = array(
                 "method" => $method,
                 "response" => $response,
+                "sessions" => $this->SESSION
             );
             $this->sessionTrace($object);
         }
