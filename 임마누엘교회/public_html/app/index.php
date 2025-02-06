@@ -34,7 +34,7 @@ $g5_write_video = $g5_write_video_model->orderBy("wr_id","DESC")->get()['data'][
         <button class="btn" type="button" onclick="window.open('http://origin.imc.or.kr/wp-login.php')"><img src="<?php echo G5_URL ?>/app/img/icon6.png" alt="임마누엘 교회"> 성경필사</button>
     </div>
     <div class="grid grid3 v2 gap10">
-        <button class="btn" type="button"><i class="fa-duotone fa-circle-p"></i> 나의 포인트</button>
+        <button class="btn" type="button" onclick="location.href='./point'"><i class="fa-duotone fa-circle-p"></i> 나의 포인트</button>
         <button class="btn" type="button" onclick="location.href='../bbs/content.php?co_id=sub01_08'"><i class="fa-duotone fa-solid fa-hand-holding-heart"></i> 온라인 헌금</button>
         <button class="btn" type="button" onclick="window.open('<?php echo G5_URL ?>')"><i class="fa-duotone fa-solid fa-tv"></i> 홈페이지</button>
     </div>

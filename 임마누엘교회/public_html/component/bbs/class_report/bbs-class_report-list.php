@@ -5,7 +5,8 @@
             <button class="btn btn_large btn_back" type="button" onclick="location.href='./class'"><i class="fa-solid fa-arrow-left"></i> 속회방 메인</button>
             <div class="slogan">
                 <h6>{{wr_7}} 속회예배 현황
-                    <span>이번주 예배 드린 속 <b>{{week_filter.count}}</b>개속 / 전체 {{filter.count}}개속 중</span>
+                    <!--<span>이번주 예배 드린 속 <b>{{week_filter.count}}</b>개속 / 전체 {{filter.count}}개속 중</span>-->
+                    <span>이번주 예배 드린 속 <b>{{week_filter.count}}</b>개속 / 전체 12개속 중</span>
                 </h6>
             </div>
             <div class="box_radius box_white">
@@ -20,14 +21,21 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="board in arrays">
-                            <td>{{board.jl_no_reverse}}</td>
+                        <tr v-if="arrays.length > 0" v-for="board in arrays">
+                            <td>{{board.wr_8}}</td>
                             <td>{{board.wr_9}} {{board.wr_10}}</td>
                             <td>
                                 <button type="button" class="btn btn_mini btn_color" @click="viewBoard(board)">보기</button>
-                                <button type="button" class="btn btn_mini btn_line" v-if="mb_no == board.wr_1" @click="jl.href('./class_form?primary='+board.wr_id)">수정</button>
+                                <button type="button" class="btn btn_mini btn_line" v-if="admin || mb_no == board.wr_1" @click="jl.href('./class_form?primary='+board.wr_id)">수정</button>
                             </td>
                             <td :class="{'color' : board.wr_6}">{{board.wr_6 ? '유' : '무'}}</td>
+                        </tr>
+
+
+                        <tr v-else>
+                            <td colspan="20">
+                                작성된 내용이 없습니다.
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -52,8 +60,8 @@
                             <td>소속</td>
                             <td>
                                 <div class="flex ai-c gap5">
-                                    <input type="text" readonly v-model="modal_data.wr_7"> 교구
-                                    <input type="text" readonly v-model="modal_data.wr_8"> 속
+                                    <input type="text" readonly v-model="modal_data.wr_7">
+                                    <input type="text" readonly v-model="modal_data.wr_8">
                                 </div>
                             </td>
                         </tr>
@@ -69,20 +77,20 @@
                         <tr>
                             <td>일시 <span class="txt_color">*</span></td>
                             <td>
-                                <input type="date" readonly v-model="modal_data.wr_2">
+                                <input type="date" :readonly="!admin" v-model="modal_data.wr_2">
                             </td>
                         </tr>
                         <tr>
                             <td>장소 <span class="txt_color">*</span></td>
                             <td>
-                                <input type="text" readonly v-model="modal_data.wr_3">
+                                <input type="text" :readonly="!admin" v-model="modal_data.wr_3">
                             </td>
                         </tr>
                         <tr>
                             <td>인원 <span class="txt_color">*</span></td>
                             <td>
                                 <div class="flex ai-c gap5">
-                                    <input type="number" readonly v-model="modal_data.wr_4"> 명
+                                    <input type="number" :readonly="!admin" v-model="modal_data.wr_4"> 명
                                 </div>
                             </td>
                         </tr>
@@ -90,7 +98,7 @@
                             <td>헌금 <span class="txt_color">*</span></td>
                             <td>
                                 <div class="flex ai-c gap5">
-                                    <input type="number" readonly v-model="modal_data.wr_5"> 만원
+                                    <input type="number" :readonly="!admin" v-model="modal_data.wr_5"> 만원
                                 </div>
                             </td>
                         </tr>
@@ -99,7 +107,13 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <textarea readonly v-model="modal_data.wr_6"></textarea>
+                                <textarea :readonly="!admin" v-model="modal_data.wr_6"></textarea>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" v-if="admin || modal_data.wr_1 == mb_no">
+                                <button  class="btn btn_large btn_gray2" type="button" @click="jl.postData(modal_data,'g5_write_class_report',options)">수정</button>
                             </td>
                         </tr>
                         </tbody>
@@ -120,6 +134,7 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
+                admin : {type: String, default: ""},
                 mb_no : {type: String, default: ""},
                 mb_1 : {type: String, default: ""},
                 wr_7 : {type: String, default: ""},

@@ -6,7 +6,7 @@ include_once("../jl/JlConfig.php");
     <div id="app">
         <div id="friend" class="view">
             <button class="btn btn_large btn_back" type="button" onclick="location.href='./friend'"><i class="fa-solid fa-arrow-left"></i> 교우소식 목록</button>
-            <bbs-friend-view primary="<?=$_GET['idx']?>"></bbs-friend-view>
+            <bbs-friend-view primary="<?=$_GET['idx']?>" mb_no="<?=$member['mb_no']?>" admin="<?=$is_admin?>"></bbs-friend-view>
         </div>
     </div>
 

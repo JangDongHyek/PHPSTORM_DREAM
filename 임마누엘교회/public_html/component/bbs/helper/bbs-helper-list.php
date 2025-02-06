@@ -15,7 +15,7 @@
                 <tbody>
                 <tr v-for="board in data_array">
                     <td>{{board.wr_2}}</td>
-                    <td>{{board.wr_4}} {{board.wr_5}}</td>
+                    <td>{{board.wr_4}} <span v-for="item,index in board.wr_5">{{item}} {{index ? '' : ','}}</span></td>
                     <td>{{board.wr_3}}</td>
                     <td><p class="cut">{{board.wr_6}}</p></td>
                     <td>
@@ -43,7 +43,7 @@
 
                     paging: {
                         page: 1,
-                        limit: 1,
+                        limit: 10,
                         count: 0,
                     },
 

@@ -4,7 +4,7 @@
         <div class="box_radius box_white table">
             <p></p>
             <h6 class="txt_color"><b class="icon icon_color">{{data.wr_2}}</b> {{data.wr_3}}</h6>
-            <p class="txt_bold">기간 | {{data.wr_4}} {{data.wr_5}}</p>
+            <p class="txt_bold">기간 | {{data.wr_4}} <span v-for="item,index in data.wr_5">{{item}} {{index ? '' : ','}}</span></p>
             <hr>
             <h6>{{data.wr_6}}</h6><!--제목-->
             <div class="cont"><!--내용-->

@@ -6,7 +6,8 @@
             <div class="wrap">
                 <button class="btn" type="button" @click="modal.status = true;"><i class="fa-solid fa-book-medical"></i>이번주 속회공부 자료</button>
                 <button class="btn" type="button" @click="modal2 = true;"><i class="fa-sharp fa-solid fa-quote-left"></i>속회소식 작성</button>
-                <button class="btn" type="button" onclick="location.href='./class_noti'"><i class="fa-solid fa-align-left"></i>지난 속회보고 열람</button>
+                <!--button class="btn" type="button" onclick="location.href='./class_noti'"><i class="fa-solid fa-quote-right"></i>작성한 속회소식</button-->
+                <button class="btn" type="button" onclick="location.href='./class_all'"><i class="fa-solid fa-align-left"></i>지난 속회보고 열람</button>
             </div>
         </div>
 

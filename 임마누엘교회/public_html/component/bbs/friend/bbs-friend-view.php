@@ -20,6 +20,8 @@
                 <b class="icon icon_line w100px">마음전할곳</b>{{board.wr_11}} {{board.wr_13}} ({{board.wr_12}})
                 <button type="button" class="btn btn_gray btn_mini male-auto" @click="jl.generateClipboard(board.wr_11+' '+board.wr_13)">복사</button>
             </p>
+
+            <button v-if="board.wr_1 == mb_no || admin" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(board,'g5_write_friend',{href:'./friend'})">삭제</button>
         </div>
     </div>
 </script>
@@ -28,7 +30,9 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
-                primary: {type: String, default: ""},
+                mb_no : {type: String, default: ""},
+                admin : {type: String, default: ""},
+                primary : {type: String, default: ""},
             },
             data: function () {
                 return {

@@ -91,6 +91,11 @@ switch ($pid) {
 		$footer_type = 2;
 		$header_name = '속회소식';
         break;
+    case "class_all" :
+        $header_type = 1;
+		$footer_type = 2;
+		$header_name = '지난 속회보고';
+        break;
     case "class_list_view" :
         $header_type = 1;
 		$footer_type = 2;
@@ -156,6 +161,11 @@ switch ($pid) {
         $footer_type = 1;
         $header_name = '교육관 대관';
         break;
+    case "rental_mine" :
+        $header_type = 1;
+        $footer_type = 1;
+        $header_name = '나의 대여 신청 목록';
+        break;
     case "lecture_view" :
         $header_type = 1;
         $footer_type = 2;
@@ -195,6 +205,11 @@ switch ($pid) {
         $header_type = 1;
         $footer_type = 2;
         $header_name = '비품 대여';
+        break;
+    case "point" :
+        $header_type = 1;
+        $footer_type = 1;
+        $header_name = '나의 포인트';
         break;
     case "lost" :
         $header_type = 1;

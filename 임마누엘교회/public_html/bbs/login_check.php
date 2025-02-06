@@ -45,10 +45,10 @@ set_session('ss_mb_key', md5($mb['mb_datetime'] . $_SERVER['REMOTE_ADDR'] . $_SE
 
 // 포인트 체크
 if($config['cf_use_point']) {
-    $sum_point = get_point_sum($mb['mb_id']);
+    //$sum_point = get_point_sum($mb['mb_id']);
 
-    $sql= " update {$g5['member_table']} set mb_point = '$sum_point' where mb_id = '{$mb['mb_id']}' ";
-    sql_query($sql);
+    //$sql= " update {$g5['member_table']} set mb_point = '$sum_point' where mb_id = '{$mb['mb_id']}' ";
+    //sql_query($sql);
 }
 
 // 3.26

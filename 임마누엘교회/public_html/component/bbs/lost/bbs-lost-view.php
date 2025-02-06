@@ -18,6 +18,8 @@
 
             <button class="btn btn_large btn_blue" type="button" v-if="board.wr_1 == mb_no" @click="postBoard()">찾았어요</button>
             <button class="btn w100 btn_line" type="button" v-if="board.wr_1 == mb_no" @click="putHref()">수정하기</button>
+
+            <button v-if="board.wr_1 == mb_no || admin" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(board,'g5_write_lost',{href:'./lost'})">삭제</button>
         </div>
     </div>
 </script>
@@ -27,6 +29,7 @@
             template: "#<?=$componentName?>-template",
             props: {
                 mb_no : {type: String, default: ""},
+                admin : {type: String, default: ""},
                 primary : {type: String, default: ""},
             },
             data: function () {

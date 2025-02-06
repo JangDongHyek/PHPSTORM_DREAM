@@ -36,15 +36,15 @@
                             <td>일시 <span class="txt_color">*</span></td>
                             <td>
                                 <div class="date-container">
-                                    <input type="date" class="date-input" aria-label="날짜 선택" v-model="data.wr_4"/>
+                                    <input type="date" class="date-input" :class="{'filled' : data.wr_4_focus}" @focus="data.wr_4_focus = true" aria-label="날짜 선택" v-model="data.wr_4"/>
                                     <label for="date-input" class="date-placeholder-label">{{data.wr_4 ? data.wr_4 : '날짜를 선택해주세요'}}</label>
                                 </div>
                                 <div class="gap5 select grid grid3">
-                                    <input type="radio" name="day" id="d1" value="오전" v-model="data.wr_5">
+                                    <input type="checkbox" :disabled="data.wr_5.includes('종일')" name="day" id="d1" value="오전" v-model="data.wr_5">
                                     <label class="w100" for="d1">오전</label>
-                                    <input type="radio" name="day" id="d2" value="오후" v-model="data.wr_5">
+                                    <input type="checkbox" :disabled="data.wr_5.includes('종일')" name="day" id="d2" value="오후" v-model="data.wr_5">
                                     <label class="w100" for="d2">오후</label>
-                                    <input type="radio" name="day" id="d3" value="종일" v-model="data.wr_5">
+                                    <input type="checkbox" @click="data.wr_5.includes('종일') ? data.wr_5 = [] : data.wr_5 = ['종일']" name="day" id="d3" value="종일" v-model="data.wr_5">
                                     <label class="w100" for="d3">종일</label>
                                 </div>
                             </td>
@@ -79,7 +79,7 @@
                             <td>지원마감</td>
                             <td>
                                 <div class="date-container">
-                                    <input type="date" class="date-input" aria-label="날짜 선택" v-model="data.wr_10"/>
+                                    <input type="date" class="date-input" :class="{'filled' : data.wr_10_focus}" @focus="data.wr_10_focus = true" aria-label="날짜 선택" v-model="data.wr_10"/>
                                     <label for="date-input" class="date-placeholder-label">{{data.wr_10 ? data.wr_10 : '날짜를 선택해주세요'}}</label>
                                 </div>
 
@@ -118,7 +118,7 @@
                         wr_2 : "행사보조", // 종류선택
                         wr_3 : "", // 신청부서
                         wr_4 : "", // 일자
-                        wr_5 : "오전", // 오전 오후 종일
+                        wr_5 : [], // 오전 오후 종일
                         wr_6 : "", // 간략 내용
                         wr_7 : "", // 상세 내용
                         wr_8 : "", // 요청자

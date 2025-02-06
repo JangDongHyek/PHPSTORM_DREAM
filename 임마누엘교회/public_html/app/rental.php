@@ -10,6 +10,7 @@ include_once("./app_head.php");
             <button class="btn" type="button" onclick="location.href='./rental_bus'"><i class="fa-solid fa-bus"></i> 버스</button>
             <button class="btn" type="button" onclick="location.href='./rental_equip'"><i class="fa-regular fa-business-time"></i> 교회비품</button>
         </div>
+        <button class="btn my" type="button" onclick="location.href='./rental_mine'"><i class="fa-solid fa-list"></i> 나의 대여 신청 목록</button>
         <div class="guide">
             <h3 class="txt_red">• 대관신청시 유의사항</h3>
             <p>-예약취소 상황 시 반드시 취소신청을 해주시기 바랍니다.<br>

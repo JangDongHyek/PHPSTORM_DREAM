@@ -4,7 +4,7 @@ include_once("./app_head.php");
 include_once("../jl/JlConfig.php");
 ?>
     <div id="app">
-        <bbs-class_report-list wr_7="<?=$_GET['wr_7']?>" mb_no="<?=$member['mb_no']?>" mb_1="<?=$member['mb_1']?>"></bbs-class_report-list>
+        <bbs-class_report-list wr_7="<?=$_GET['wr_7']?>" mb_no="<?=$member['mb_no']?>" mb_1="<?=$member['mb_1']?>" admin="<?=$is_admin?>"></bbs-class_report-list>
     </div>
 
 <?

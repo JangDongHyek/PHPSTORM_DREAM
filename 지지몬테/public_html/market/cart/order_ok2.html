@@ -3,8 +3,10 @@
 include "../../connect.php";
 	if($_GET[PayMethod]=="CARD"){
 		$paymethod="bycard";
+		$payType = "(카드)";
 	}else{
 		$paymethod="byaccount";
+		$payType = "(실시간계좌이체)";
 	}
 //	echo iconv("utf-8","euc-kr",$AcquCardName);
 if($PayMethod=="EPAY"){
@@ -59,7 +61,7 @@ $result2 = mysql_query($all_query,$connect);
 $tr_senddate = date("YmdHis");
 $tran_phone = "010-9908-9780";//받는 사람 번호
 $tran_callback = "051-643-4852";//보내는 사람 번호
-$tran_msg = "$order_row[name]"."님이 주문하신 {$row[item_name]} $message2.\n결제금액:".number_format($mon_tot_freight)."원";
+$tran_msg = "$order_row[name]"."님이 주문하신 {$row[item_name]} $message2.\n결제금액:".number_format($mon_tot_freight)."원".$payType;
 
 $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone','$tran_callback','1',sysdate(),'$tran_msg')";
 $sms_res=mysql_query( $sms_query, $connect );
@@ -72,7 +74,7 @@ $result2 = mysql_query($all_query,$connect);
 $tr_senddate = date("YmdHis");
 $tran_phone = "010-8545-5813";//받는 사람 번호
 $tran_callback = "051-643-4852";//보내는 사람 번호
-$tran_msg = "$order_row[name]"."님이 주문하신 {$row[item_name]} $message2.\n결제금액:".number_format($mon_tot_freight)."원";
+$tran_msg = "$order_row[name]"."님이 주문하신 {$row[item_name]} $message2.\n결제금액:".number_format($mon_tot_freight)."원".$payType;
 
 $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone','$tran_callback','1',sysdate(),'$tran_msg')";
 $sms_res=mysql_query( $sms_query, $connect );
@@ -80,6 +82,8 @@ $sms_res=mysql_query( $sms_query, $connect );
 //전체기록남기기
 $all_query = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone','$tran_callback','1',sysdate(),'$tran_msg1',curdate())";
 $result2 = mysql_query($all_query,$connect);
+
+
 
 ?>
 

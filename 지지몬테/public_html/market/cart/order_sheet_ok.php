@@ -418,7 +418,7 @@ $result2 = mysql_query($all_query,$connect);
 $tr_senddate = date("YmdHis");
 $tran_phone = "010-4885-5818";//받는 사람 번호
 $tran_callback = "051-643-4852";//보내는 사람 번호
-$tran_msg = "$name"."님이 주문하신 {$row[item_name]} 주문하였습니다.\n결제금액:".number_format($mon_tot_freight)."원";
+$tran_msg = "$name"."님이 주문하신 {$row[item_name]} 주문하였습니다.\n결제금액:".number_format($mon_tot_freight)."원(무통장입금)";
 
 $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone','$tran_callback','1',sysdate(),'$tran_msg')";
 $sms_res=mysql_query( $sms_query, $connect );
@@ -431,7 +431,7 @@ $result2 = mysql_query($all_query,$connect);
 $tr_senddate = date("YmdHis");
 $tran_phone = "010-8545-5813";//받는 사람 번호
 $tran_callback = "051-643-4852";//보내는 사람 번호
-$tran_msg = "$name"."님이 주문하신 {$row[item_name]} 주문하였습니다.\n결제금액:".number_format($mon_tot_freight)."원";
+$tran_msg = "$name"."님이 주문하신 {$row[item_name]} 주문하였습니다.\n결제금액:".number_format($mon_tot_freight)."원(무통장입금)";
 
 $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone','$tran_callback','1',sysdate(),'$tran_msg')";
 $sms_res=mysql_query( $sms_query, $connect );
@@ -439,6 +439,8 @@ $sms_res=mysql_query( $sms_query, $connect );
 //전체기록남기기
 $all_query = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone','$tran_callback','1',sysdate(),'$tran_msg1',curdate())";
 $result2 = mysql_query($all_query,$connect);
+
+
 	echo "<meta http-equiv='refresh' content='0; URL=order_ok.html?order_num=$order_num&mart_id=$mart_id&category_num=$category_num&category_num1=$category_num1&category_num2=$category_num2&cate_num=$cate_num&flag=$flag&item_no=$item_no&provider_id=$provider_id&paymethod=$paymethod&buyer_tel1=$buyer_tel1'>";
 	exit;
 }

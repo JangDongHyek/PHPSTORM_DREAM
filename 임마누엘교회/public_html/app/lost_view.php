@@ -7,7 +7,7 @@ include_once("../jl/JlConfig.php");
     <div id="rental" class="view">
         <button class="btn btn_large btn_back" type="button" onclick="location.href='./lost'"><i class="fa-solid fa-arrow-left"></i> 분실 목록</button>
 
-        <bbs-lost-view primary="<?=$_GET['idx']?>" mb_no="<?=$member['mb_no']?>"></bbs-lost-view>
+        <bbs-lost-view primary="<?=$_GET['idx']?>" mb_no="<?=$member['mb_no']?>" admin="<?=$is_admin?>"></bbs-lost-view>
     </div>
 </div>
 

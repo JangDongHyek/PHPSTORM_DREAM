@@ -21,11 +21,11 @@
                         <td>{{wr_2}}일시 <span class="txt_color">*</span></td>
                         <td>
                             <div class="date-container">
-                                <input type="date" class="date-input" aria-label="날짜 선택" v-model="data.wr_5" />
+                                <input type="date" class="date-input" :class="{'filled' : data.wr_5_focus}" @focus="data.wr_5_focus = true" aria-label="날짜 선택" v-model="data.wr_5" />
                                 <label for="date-input" class="date-placeholder-label">{{data.wr_5 ? data.wr_5 : '날짜를 선택해주세요'}}</label>
                             </div>
                             <div class="date-container">
-                                <input type="time" class="time-input" v-model="data.wr_6"/>
+                                <input type="time" class="time-input" :class="{'filled' : data.wr_6_focus}" @focus="data.wr_6_focus = true" v-model="data.wr_6"/>
                                 <label for="date-input" class="date-placeholder-label">{{data.wr_6 ? data.wr_6 : '시간을 선택해주세요'}}</label>
                             </div>
                         </td>
