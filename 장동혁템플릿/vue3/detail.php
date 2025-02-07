@@ -60,18 +60,26 @@
 
                 options : {
                     required : [
-                        {name : "",message : ``},
+                        {name : "",message : ``,min : 0, max : 0},
+                        {
+                            name : "",
+                            message : ``,
+                            min : {length : 10, message : ""},
+                            max : {length : 30, message : ""}
+                        },
                     ],
+                    return : false, // 해당값이 true이면 ajax만 날리고 바로 리턴
                     href : "",
-
                     callback : async (res) => {
 
-                    }
+                    },
+
                 }
 
 
                 data : {
                     table : "",
+                    file_use : false,
                 }
             };
         },
@@ -148,7 +156,7 @@
                     table : "order",
 
                     where : [
-                        {key : "", value : "", operator : ""}
+                        {key : "", value : "", operator : ""} // AND,OR,AND NOT
                     ],
 
                     like : [

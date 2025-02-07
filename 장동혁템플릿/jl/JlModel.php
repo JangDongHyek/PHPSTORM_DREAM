@@ -213,7 +213,7 @@ class JlModel{
                     $source = $keyParts[0];
                     $item['key'] = $keyParts[1];
                 }
-
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 if($item['value']) $this->where($item['key'],$item['value'],$operator,$source);
             }
         }
@@ -231,6 +231,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 if($item['value']) $this->like($item['key'],$item['value'],$operator,$source);
             }
         }
@@ -265,6 +266,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 $values = $this->jsonDecode($item['array']);
                 if(count($values)) $this->in($item['key'],$values,$operator,$source);
             }
@@ -285,6 +287,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 $this->where($item['key'],$item['value'],$operator,$source);
             }
 
@@ -306,6 +309,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 $this->like($item['key'],$item['value'],$operator,$source);
             }
 

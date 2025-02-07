@@ -1,6 +1,7 @@
 <?php
 //namespace App\Libraries;
 require_once("Jl.php");
+include_once("../common.php");
 class JlService extends Jl{
     private $POST;
     private $FILES;
@@ -57,8 +58,9 @@ class JlService extends Jl{
         if($method == "where_delete" || $method == "wd") $response = $this->where_delete();
         if($method == "file") $response = $this->file();
         if($method == "distinct") $response = $this->distinct();
+        if($method == "point") $response = $this->point();
 
-        $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
+        $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd","point");
         if(in_array($method,$trace_list)) {
             $object = array(
                 "method" => $method,
@@ -167,6 +169,14 @@ class JlService extends Jl{
 
 
         $response['primary'] = $this->model->insert($this->obj);
+        $response['success'] = true;
+
+        return $response;
+    }
+
+    public function point() {
+        insert_point($this->obj['mb_id'],$this->obj['point'],$this->obj['content']);
+
         $response['success'] = true;
 
         return $response;

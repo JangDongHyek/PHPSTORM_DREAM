@@ -121,7 +121,7 @@
                 }
                 try {
                     let res = await this.jl.ajax("get",filter,"/api2/member_product_like.php");
-                    this.likes = this.jl.getObjectsToKey(res.data,"product_idx");
+                    this.likes = this.jl.extractObjectsKey(res.data,"product_idx");
                 }catch (e) {
                     alert(e.message)
                 }

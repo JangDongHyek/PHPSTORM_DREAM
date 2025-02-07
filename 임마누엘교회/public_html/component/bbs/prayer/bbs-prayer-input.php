@@ -176,7 +176,7 @@
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
                         await this.jl.alert("신청되었습니다.");
-                        window.location.href = "./prayer";
+                        //window.location.href = "./prayer";
                     } catch (e) {
                         await this.jl.alert(e.message)
                     }

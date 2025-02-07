@@ -178,8 +178,28 @@ class JlModel{
 
     function setFilter($obj) {
         if($obj['primary']) $this->where($this->primary,$obj['primary']);
-        if($obj['order_by_desc']) $this->orderBy($obj['order_by_desc'],"DESC");
-        if($obj['order_by_asc']) $this->orderBy($obj['order_by_asc'],"ASC");
+        if($obj['order_by_desc']) {
+            if($this->jl->isJson($obj['order_by_desc'])) {
+                $orders = $this->jsonDecode($obj['order_by_desc']);
+                foreach ($orders as $order) {
+                    $this->orderBy($order,"DESC");
+                }
+            }else {
+                $this->orderBy($obj['order_by_desc'],"DESC");
+            }
+        }
+
+        if($obj['order_by_asc']) {
+            if($this->jl->isJson($obj['order_by_asc'])) {
+                $orders = $this->jsonDecode($obj['order_by_asc']);
+                foreach ($orders as $order) {
+                    $this->orderBy($order,"ASC");
+                }
+            }else {
+                $this->orderBy($obj['order_by_asc'],"ASC");
+            }
+        }
+
 
         if(isset($obj['where'])) {
             $arrays = $this->jsonDecode($obj['where']);
@@ -193,7 +213,7 @@ class JlModel{
                     $source = $keyParts[0];
                     $item['key'] = $keyParts[1];
                 }
-
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 if($item['value']) $this->where($item['key'],$item['value'],$operator,$source);
             }
         }
@@ -211,6 +231,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 if($item['value']) $this->like($item['key'],$item['value'],$operator,$source);
             }
         }
@@ -245,6 +266,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 $values = $this->jsonDecode($item['array']);
                 if(count($values)) $this->in($item['key'],$values,$operator,$source);
             }
@@ -265,6 +287,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 $this->where($item['key'],$item['value'],$operator,$source);
             }
 
@@ -286,6 +309,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
+                if($item['key'] == 'primary') $item['key'] = $this->primary;
                 $this->like($item['key'],$item['value'],$operator,$source);
             }
 
@@ -485,6 +509,7 @@ class JlModel{
             while($row = mysqli_fetch_assoc($result)){
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+                $row['primary'] = $row[$this->primary];
                 foreach ($row as $key => $value) {
                     if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
@@ -505,6 +530,7 @@ class JlModel{
             while($row = mysql_fetch_assoc($result)){
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+                $row['primary'] = $row[$this->primary];
                 foreach ($row as $key => $value) {
                     if($this->primary == $key) continue;
                     // JSON인지 확인하고 디코딩 시도
@@ -713,7 +739,7 @@ class JlModel{
         return $this;
     }
 
-    function join($table,$origin_key,$join_key) {
+    function join($table,$origin_key,$join_key,$join_type = "") {
         if(!in_array($table, $this->schema['tables'])) $this->jl->error("JlModel join() : $table 테이블을 찾을수 없습니다.");
         if(!in_array($origin_key, $this->schema['columns'])) $this->jl->error("JlModel join() : Origin Key를 찾을 수 없습니다.");
         $this->schema['join_columns'] = $this->getColumns($table);
@@ -722,13 +748,15 @@ class JlModel{
         $primary = $this->getPrimary($table);
         $this->join_primary = $primary['COLUMN_NAME'];
 
-        $this->join_sql = " JOIN $table ON $this->table.$origin_key = $table.$join_key ";
+        $this->join_sql = "$join_type JOIN $table ON $this->table.$origin_key = $table.$join_key ";
     }
 
     function groupBy($group_key,$total_key,$as,$type = "COUNT") {
         if(!$this->join_table) $this->jl->error("JlModel groupBy() : join()을 먼저 해주세요.");
         if(strpos($group_key,".") === false) $this->jl->error("JlModel groupBy() : group_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
         if(strpos($total_key,".") === false) $this->jl->error("JlModel groupBy() : total_key의 형식이 잘못됐습니다. (table.column) 으로 진행해주세요.");
+        if(!$as) $this->jl->error("JlModel groupBy() : as 값은 필수입니다.");
+        if(!$type) $type = "COUNT";
         $groups = explode(".",$group_key);
         $totals = explode(".",$total_key);
 

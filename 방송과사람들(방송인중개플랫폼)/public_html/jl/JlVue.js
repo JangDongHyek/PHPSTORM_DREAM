@@ -75,73 +75,82 @@ class JlVue {
         window.open(url);
     }
 
-    async postData(data,required = [],callback = null) {
-        let options = {required : required};
+    async postData(data,table,options = {}) {
         let method = data.primary ? 'update' : 'insert';
 
         try {
-            if(!data.table) throw new Error("테이블값이 존재하지않습니다.");
+            if(!table) throw new Error("테이블값이 존재하지않습니다.");
+
+            data.table = table;
 
             let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
-            if(callback) {
-                await callback(res)
+            if(options.return) return res
+
+            if(options.callback) {
+                await options.callback(res)
             }else {
-                await this.jl.alert("완료되었습니다.");
-                window.location.reload();
+                await this.jl.plugin.alert("완료되었습니다.");
+
+                if(options.href) window.location.href = options.href;
+                else window.location.reload();
             }
         } catch (e) {
-            await this.jl.alert(e.message)
+            await this.jl.plugin.alert(e.message)
         }
 
     }
 
-    async getData(filter,callback = null) {
+    async getData(filter,options = {}) {
         try {
             if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
 
             let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
 
-            if(callback) {
-                await callback(res)
+            if(options.callback) {
+                await options.callback(res)
             }else {
                 return res.data[0];
             }
             this.data = res.data[0]
         } catch (e) {
-            await this.jl.alert(e.message)
+            await this.jl.plugin.alert(e.message)
         }
     }
 
-    async getsData(filter,callback = null) {
+    async getsData(filter,arrays,options = {}) {
         try {
             if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
 
             let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
 
-            if(callback) {
-                await callback(res)
+            if(options.callback) {
+                await options.callback(res)
             }else {
                 filter.count = res.count;
-                return res.data
+                arrays.splice(0, arrays.length, ...res.data); // vue가 인식을 못할수도 있으므로 splice후 배열 복제
             }
         } catch (e) {
-            await this.jl.alert(e.message)
+            await this.jl.plugin.alert(e.message)
         }
     }
 
-    async deleteData(data,callback) {
-        if(! await this.jl.confirm("정말 삭제하시겠습니까?")) return false;
+    async deleteData(data,table,options = {}) {
+        let message = "정말 삭제하시겠습니까?";
+        if(options.message) message = options.message;
+        if(! await this.jl.plugin.confirm(message)) return false;
 
         try {
-            if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
+            if(!table) throw new Error("테이블값이 존재하지않습니다.");
+            data.table = table;
             let res = await this.jl.ajax("delete",data,"/jl/JlApi.php");
 
-            if(callback) {
-                await callback(res)
+            if(options.callback) {
+                await options.callback(res)
             }else {
-                await this.jl.alert("완료되었습니다.");
-                window.location.reload();
+                await this.jl.plugin.alert("완료되었습니다.");
+                if(options.href) window.location.href = options.href;
+                else window.location.reload();
             }
         }catch (e) {
             alert(e.message)

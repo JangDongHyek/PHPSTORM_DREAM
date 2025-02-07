@@ -57,6 +57,7 @@
             props: {
                 primary : {type: String, default: ""},
                 mb_no : {type: String, default: ""},
+                mb_id : {type: String, default: ""},
             },
             data: function () {
                 return {
@@ -116,8 +117,29 @@
                     try {
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
-                        await this.jl.alert("완료되었습니다.");
-                        window.location.href="./note";
+                        if(res.success) {
+
+                            let week = this.getWeekRange();
+                            let week_data = await this.jl.getData({
+                                table : "g5_write_note",
+                                wr_1 : this.mb_no,
+                                between : [
+                                    {key : "wr_datetime", start : week.firstDay.format(), end: week.lastDay.format()}
+                                ],
+                                where : [
+                                    {key : "primary", value : res.primary, operator : "AND NOT"}
+                                ],
+                            });
+
+                            if(!week_data) {
+                                await this.jl.ajax("point",{table : "g5_point",mb_id : this.mb_id, point : 100,content:"결단노트"},"/jl/JlApi.php");
+                            }
+
+                            await this.jl.alert("완료되었습니다.");
+                            window.location.href="./note";
+                        }
+
+
                     } catch (e) {
                         await this.jl.alert(e.message)
                     }
@@ -135,6 +157,24 @@
                     } catch (e) {
                         alert(e.message)
                     }
+                },
+                getWeekRange() {
+                    const today = new Date();
+                    const dayOfWeek = today.getDay(); // 0 (일요일) ~ 6 (토요일)
+
+                    // 첫 번째 날 (월요일 기준)
+                    const firstDay = new Date(today);
+                    firstDay.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+                    // 마지막 날 (일요일)
+                    const lastDay = new Date(firstDay);
+                    lastDay.setDate(firstDay.getDate() + 6);
+
+
+                    return {
+                        firstDay: firstDay,
+                        lastDay: lastDay,
+                    };
                 }
             },
             computed: {},

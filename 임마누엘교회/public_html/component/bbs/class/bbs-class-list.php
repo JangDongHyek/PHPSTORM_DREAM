@@ -31,7 +31,7 @@
 
             <!-- body -->
             <template v-slot:default>
-                <textarea placeholder="속회소식를 작성하세요." readonly v-model="modal_data.wr_content"></textarea>
+                <textarea style="min-height: 50vh" placeholder="속회소식를 작성하세요." readonly v-model="modal_data.wr_content"></textarea>
             </template>
 
 

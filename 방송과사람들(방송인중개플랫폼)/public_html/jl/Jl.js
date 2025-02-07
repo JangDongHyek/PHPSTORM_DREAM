@@ -76,10 +76,26 @@ class Jl {
                             reject(new Error(req.message));
                             return false;
                         }
+
+                        if (req.min && object[req.name].length < req.min.length) {
+                            reject(new Error(`${req.min.message}`));
+                            return false;
+                        }
+                        if (req.max && object[req.name].length > req.max.length) {
+                            reject(new Error(`${req.max.message}`));
+                            return false;
+                        }
                     }
 
                     if(typeof object[req.name] === "number") {
 
+                    }
+
+                    if (typeof object[req.name] === "boolean") {
+                        if(!object[req.name]) {
+                            reject(new Error(req.message));
+                            return false;
+                        }
                     }
                 }
             }
@@ -275,6 +291,8 @@ class Jl {
                         };
                     })(file); // 클로저 사용
                     reader.readAsDataURL(file);
+                }else {
+                    obj[key] = file;
                 }
             }
 
@@ -301,6 +319,8 @@ class Jl {
                         };
                     })(file); // 클로저 사용
                     reader.readAsDataURL(file);
+                }else {
+                    obj[key] = file;
                 }
 
             } else {
@@ -544,7 +564,7 @@ class Jl {
     }
 
     //Objects안에 매개변수로 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
-    getObjectsToKey(array, key) {
+    extractObjectsKey(array, key) {
         // 결과 값을 저장할 배열
         const result = [];
 
@@ -596,25 +616,15 @@ class Jl {
         return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
     }
 
-    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey" 아래 형제함수도 추가해줘야함
-    isNumberKey(event) {
-        const charCode = event.keyCode || event.which;
-        // 숫자 키(0-9), 백스페이스, Delete, 화살표 키만 허용
-        if (
-            (charCode >= 48 && charCode <= 57) || // 상단 숫자 키
-            (charCode >= 96 && charCode <= 105) || // 숫자 키패드
-            charCode === 8 || // 백스페이스
-            charCode === 46 || // Delete
-            (charCode >= 37 && charCode <= 40) // 화살표 키
-        ) {
-            return true; // 입력 허용
+    convertNewlinesToBr(text) {
+        if (typeof text !== "string") {
+            console.warn("Input must be a string.");
+            return text;
         }
-        event.preventDefault(); // 입력 차단
-        return false;
+        return text.replace(/\n/g, "<br>");
     }
 
-
-    // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
+    // input에 숫자만 입력하게하는 함수 @input="jl.isNumberKeyInput"
     isNumberKeyInput(event, format = false) {
 
         // 키 입력값에서 숫자와 쉼표만 유지

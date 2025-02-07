@@ -5,7 +5,7 @@ include_once("../jl/JlConfig.php");
 ?>
 
 <div id="app">
-    <bbs-note-input mb_no="<?=$member['mb_no']?>"></bbs-note-input>
+    <bbs-note-input mb_no="<?=$member['mb_no']?>" mb_id="<?=$member['mb_id']?>"></bbs-note-input>
 </div>
 
 <?

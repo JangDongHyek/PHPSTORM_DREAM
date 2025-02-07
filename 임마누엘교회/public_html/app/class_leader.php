@@ -4,7 +4,7 @@ include_once("./app_head.php");
 include_once("../jl/JlConfig.php");
 ?>
 <div id="app">
-    <class-leader></class-leader>
+    <class-leader admin="<?=$is_admin?>" mb_no="<?=$member['mb_no']?>" mb_1="<?=$member['mb_1']?>"></class-leader>
 </div>
 
 

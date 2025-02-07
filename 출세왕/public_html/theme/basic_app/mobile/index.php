@@ -43,7 +43,7 @@ if($member['mb_id'] != "test01"){
             //로딩후 메니져 구분 해서 매니저 화면으로 이동
             if("<?=$member['mb_level']?>"=="3")
             {
-                location.href="/bbs/board.php?bo_table=notice_manager";
+                location.href="<?=G5_URL?>/bbs/board.php?bo_table=notice_manager";
             }
         }
         $(document).ready(function(){

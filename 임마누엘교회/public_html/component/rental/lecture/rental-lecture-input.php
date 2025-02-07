@@ -21,7 +21,7 @@
                     <td>날짜선택 <span class="txt_color">*</span></td>
                     <td>
                         <div class="date-container">
-                            <input type="date" class="date-input" aria-label="날짜 선택" v-model="data.use_date" />
+                            <input type="date" class="date-input" :class="{'filled' : data.use_date_focus}" @focus="data.use_date_focus = true" aria-label="날짜 선택" v-model="data.use_date" />
                             <label for="date-input" class="date-placeholder-label">{{ data.use_date ? data.use_date : '날짜를 선택해주세요'}}</label>
                         </div>
                     </td>

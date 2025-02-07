@@ -20,6 +20,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <input type="hidden" name="agree" value="<?php echo $agree ?>">
     <input type="hidden" name="agree2" value="<?php echo $agree2 ?>">
     <input type="hidden" name="cert_type" value="<?php echo $member['mb_certify']; ?>">
+    <input type="hidden" name="referer" value="<?=$_SERVER['HTTP_REFERER'];?>">
     <input type="hidden" name="cert_no" value="">
     <input type="hidden" name="mb_4" id="mb_4">
     <?php if (isset($member['mb_sex'])) {  ?><input type="hidden" name="mb_sex" value="<?php echo $member['mb_sex'] ?>"><?php }  ?>
@@ -129,10 +130,30 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                 <dd>
                     <div class="select" v-for="item,index in mb_4">
                         <select class="frm_input" v-model="item.first">
-                            <option value="선교회">선교회</option>
+                            <option>선교회</option>
+                            <option>부서</option>
+                            
                         </select>
-                        <select class="frm_input" v-model="item.second">
-                            <option value="골프선교회">골프선교회</option>
+                        <select v-if="item.first" class="frm_input" v-model="item.second">
+                            <template v-if="item.first == '선교회'">
+                                <option v-for="n in 12" :value="n+'남선교회'">{{n+'남선교회'}}</option>
+                                <option v-for="n in 12" :value="n+'여선교회'">{{n+'여선교회'}}</option>
+                            </template>
+                            <template v-if="item.first == '부서'">
+                                <option>아브라함</option>
+                                <option>모세</option>
+                                <option>사라</option>
+                                <option>마리아</option>
+                                <option>1링커</option>
+                                <option>2링커</option>
+                                <option>3링커</option>
+                                <option>고등부</option>
+                                <option>중등부</option>
+                                <option>드림1부</option>
+                                <option>드림2부</option>
+                                <option>유치부</option>
+                                <option>영아부</option>
+                            </template>
                         </select>
                         <button type="button" id="departDel" @click="mb_4.splice(index,1)">삭제</button>
                     </div>

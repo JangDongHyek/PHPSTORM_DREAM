@@ -40,7 +40,7 @@
                     data : {},
                 },
 
-                rend : false,
+                load : false,
             };
         },
         async created() {

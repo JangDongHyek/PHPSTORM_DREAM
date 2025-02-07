@@ -69,6 +69,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 
 <?php
 $jl->vueLoad('app');
+$jl->pluginLoad('swal');
 $jl->componentLoad("/bbs/prayer");
 $jl->componentLoad("/item");
 ?>

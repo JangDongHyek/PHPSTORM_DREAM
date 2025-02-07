@@ -66,6 +66,9 @@
             template: "#<?=$componentName?>-template",
             props: {
                 primary : {type: String, default: ""},
+                mb_no : {type: String, default: ""},
+                mb_1 : {type: String, default: ""},
+                admin : {type: String, default: ""},
             },
             data: function () {
                 return {
@@ -115,6 +118,13 @@
             async created() {
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
+
+                let allows = ["관리자","목회자"]
+
+                if(!allows.includes(this.mb_1)) {
+                    await this.jl.alert("목회자만 접근 가능합니다.");
+                    window.history.back();
+                }
 
                 if(this.primary) this.data = await this.jl.getData(this.filter);
                 //await this.jl.getsData(this.filter,this.arrays);

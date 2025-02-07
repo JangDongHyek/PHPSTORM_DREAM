@@ -85,6 +85,8 @@ class JlVue {
 
             let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
+            if(options.return) return res
+
             if(options.callback) {
                 await options.callback(res)
             }else {

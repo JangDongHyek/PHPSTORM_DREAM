@@ -64,7 +64,7 @@
                     </table>
                 </div>
                 <br>
-                <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'g5_write_class_report',options)">등록하기</button>
+                <button type="button" class="btn btn_color btn-large" @click="postData()">등록하기</button>
             </div>
         </div>
     </div>
@@ -75,6 +75,7 @@
             template: "#<?=$componentName?>-template",
             props: {
                 mb_no : {type: String, default: ""},
+                mb_id : {type: String, default: ""},
                 mb_1 : {type: String, default: ""},
                 mb_2 : {type: String, default: ""},
                 mb_3 : {type: String, default: ""},
@@ -108,7 +109,8 @@
                             {name : "wr_4",message : `인원을 입력해주세요`},
                             {name : "wr_5",message : `헌금을 입력해주세요`},
                         ],
-                        href : "./class",
+                        //href : "./class",
+                        return : true,
                     },
 
                     filter : {
@@ -136,8 +138,6 @@
                 if(this.primary) this.data = await this.jl.getData(this.filter);
                 //await this.jl.getsData(this.filter,this.arrays);
 
-
-
                 this.load = true;
             },
             mounted() {
@@ -149,7 +149,54 @@
 
             },
             methods: {
+                async postData() {
+                    try{
+                        let res = await this.jl.postData(this.data,'g5_write_class_report',this.options);
+                        if(res.success) {
 
+                            let week = this.getWeekRange();
+                            let week_data = await this.jl.getData({
+                                table : "g5_write_class_report",
+                                wr_1 : this.mb_no,
+                                between : [
+                                    {key : "wr_datetime", start : week.firstDay.format(), end: week.lastDay.format()}
+                                ],
+                                where : [
+                                    {key : "primary", value : res.primary, operator : "AND NOT"}
+                                ],
+                            });
+
+                            console.log(week_data);
+                            if(!week_data) {
+                                await this.jl.ajax("point",{table : "g5_point",mb_id : this.mb_id, point : 100,content:"속회보고"},"/jl/JlApi.php");
+                            }
+
+                            await this.jl.alert("완료되었습니다");
+                            window.location.href = "./class"
+                        }
+                    }catch (e) {
+
+                    }
+
+                },
+                getWeekRange() {
+                    const today = new Date();
+                    const dayOfWeek = today.getDay(); // 0 (일요일) ~ 6 (토요일)
+
+                    // 첫 번째 날 (월요일 기준)
+                    const firstDay = new Date(today);
+                    firstDay.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+                    // 마지막 날 (일요일)
+                    const lastDay = new Date(firstDay);
+                    lastDay.setDate(firstDay.getDate() + 6);
+
+
+                    return {
+                        firstDay: firstDay,
+                        lastDay: lastDay,
+                    };
+                }
             },
             computed: {
 

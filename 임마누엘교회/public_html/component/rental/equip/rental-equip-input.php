@@ -27,7 +27,7 @@
                         <td>날짜선택 <span class="txt_color">*</span></td>
                         <td>
                             <div class="date-container">
-                                <input type="date" class="date-input" aria-label="날짜 선택" v-model="data.use_date"/>
+                                <input type="date" class="date-input" :class="{'filled' : data.use_date_focus}" @focus="data.use_date_focus = true" aria-label="날짜 선택" v-model="data.use_date"/>
                                 <label for="date-input" class="date-placeholder-label">{{data.use_date ? data.use_date :'날짜를 선택해주세요'}}</label>
                             </div>
                         </td>
@@ -50,11 +50,11 @@
                         <td>
                             <div class="flex wrap">
                                 <div class="date-container">
-                                    <input type="date" class="date-input" aria-label="날짜 선택" v-model="data.dates1"/>
+                                    <input type="date" class="date-input" :class="{'filled' : data.dates1_focus}" @focus="data.dates1_focus = true" aria-label="날짜 선택" v-model="data.dates1"/>
                                     <label for="date-input" class="date-placeholder-label">{{data.dates1 ? data.dates1 :'날짜를 선택해주세요'}}</label>
                                 </div>
                                 <div class="date-container">
-                                    <input type="time" class="time-input" v-model="data.times1" />
+                                    <input type="time" class="time-input" :class="{'filled' : data.times1_focus}" @focus="data.times1_focus = true" v-model="data.times1" />
                                     <label for="date-input" class="date-placeholder-label">{{data.times1 ? data.times1 :'시간을 선택해주세요'}}</label>
                                 </div>
                             </div>
@@ -71,11 +71,11 @@
                         <td>
                             <div class="flex wrap">
                                 <div class="date-container">
-                                    <input type="date" class="date-input" aria-label="날짜 선택" v-model="data.dates2"/>
+                                    <input type="date" class="date-input" :class="{'filled' : data.dates2_focus}" @focus="data.dates2_focus = true" aria-label="날짜 선택" v-model="data.dates2"/>
                                     <label for="date-input" class="date-placeholder-label">{{data.dates2 ? data.dates2 :'날짜를 선택해주세요'}}</label>
                                 </div>
                                 <div class="date-container">
-                                    <input type="time" class="time-input" v-model="data.times2" />
+                                    <input type="time" class="time-input" :class="{'filled' : data.times2_focus}" @focus="data.times2_focus = true" v-model="data.times2" />
                                     <label for="date-input" class="date-placeholder-label">{{data.times2 ? data.times2 :'시간을 선택해주세요'}}</label>
                                 </div>
                             </div>

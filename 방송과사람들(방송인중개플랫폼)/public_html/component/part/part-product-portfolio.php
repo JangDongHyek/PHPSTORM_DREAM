@@ -185,7 +185,7 @@
                 }
                 try {
                     let res = await this.jl.ajax("get",filter,"/jl/JlApi.php");
-                    this.likes = this.jl.getObjectsToKey(res.data,"portfolio_idx");
+                    this.likes = this.jl.extractObjectsKey(res.data,"portfolio_idx");
                 }catch (e) {
                     alert(e.message)
                 }

@@ -223,6 +223,11 @@ class Jl {
 
     }
 
+    // php가져온 encode된 제이슨 데이터를 js에서 echo 강제주입할떄 쓰는 함수
+    function jsParseJson($jsonString,$default = "") {
+        return htmlspecialchars_decode($jsonString ? $jsonString : $default, ENT_QUOTES);
+    }
+
     function pluginLoad($plugin = array()) {
         $plugins = $this->convertToArray($plugin);
 
@@ -672,6 +677,7 @@ class Jl {
             "content" => $this->jsonEncode($content),
             "method" => $object['method'],
             "response" => $this->jsonEncode($object['response']),
+            "sessions" => $this->jsonEncode($object['sessions']),
             "user_agent" => $agent['user_agent'],
             "browser" => $agent['browser'],
             "browser_version" => $agent['browser_version'],
