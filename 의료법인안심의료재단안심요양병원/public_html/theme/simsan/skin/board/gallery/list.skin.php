@@ -88,12 +88,12 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                         <strong style="width:<?php echo $board['bo_gallery_width'] ?>px;line-height:<?php echo $board['bo_gallery_height'] ?>px">공지</strong>
                     <?php } else {
                         $thumb = get_list_thumbnail($board['bo_table'], $list[$i]['wr_id'], $board['bo_gallery_width'], $board['bo_gallery_height']);
-                        
+
 
                         //에러로 썸네일 리사이징 안만들어졌을때 원본 이미지 있으면 원본 이미지라도 썸네일화
                         $sql2 = "select * from g5_board_file where wr_id = {$list[$i]['wr_id']} and bo_table = '{$board['bo_table']}'";
                         $row2 = sql_fetch($sql2);
-                        $error_src = G5_PATH."/data/file/menu/".$row2['bf_file'];
+                        $error_src = G5_PATH."/data/file/$bo_table/".$row2['bf_file'];
                         $error_thumb = G5_DATA_URL.'/file/'.$bo_table.'/'.$row2['bf_file'];
 
                         if($thumb['src']) {

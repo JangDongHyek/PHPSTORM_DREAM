@@ -178,8 +178,10 @@ for ($i=0; $row=sql_fetch_array($result); $i++) {
 		//console.log(<?//=$i?>//);
         //console.log(<?//=$page?>//);
 
-        progressBar_id.push('<?=$i?>');
-        progressBar_percent.push('<?=$row[it_1];?>')
+        if(<?=$row[it_1];?>) {
+            progressBar_id.push('<?=$i?>');
+            progressBar_percent.push('<?=$row[it_1];?>')
+        }
 
         $(".progressBar").each(function(index) {
             $(this).LineProgressbar({
@@ -208,7 +210,7 @@ if($i == 0) echo "<p class=\"sct_noitem\">등록된 상품이 없습니다.</p>\
 		$("#video").attr("src",href);
 		var width=($(window).width())/2;
 		$("#video").attr("width",width);
-		setTimeout("viewSkip()","15000");
+		setTimeout("viewSkip()","3000");
 	}
 
 	function viewSkip(){
@@ -231,6 +233,6 @@ if($i == 0) echo "<p class=\"sct_noitem\">등록된 상품이 없습니다.</p>\
 <div class="video-view" id="video-view">
 	<div class="video-close" id="video-close"><i class="fal fa-times"></i></div>
 	<video id="video" controls autoplay></video>
-    <div class="video_txt">광고 시청은 상품 구매에 도움을 됩니다.<br />15초 후 상세페이지로 이동하실 수 있습니다!</div>
+    <!--div class="video_txt">광고 시청은 상품 구매에 도움을 됩니다.<br />15초 후 상세페이지로 이동하실 수 있습니다!</div-->
 	<div id="skip" style="color:#fff;display:none;cursor:pointer" onclick="goItem()">SKIP</div>
 </div>

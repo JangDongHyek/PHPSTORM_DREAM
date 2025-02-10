@@ -809,6 +809,31 @@ if (in_array($client_ip, $allowed_ips)) {
     $is_private = true;
 }
 
+// 세션에 이미 국가 코드가 저장되어 있는지 확인
+/*if (isset($_SESSION['countryCode'])) {
+    // 세션에서 국가 코드 가져오기
+    $countryCode = $_SESSION['countryCode'];
+} else {
+    // 세션에 저장된 국가 코드가 없으면, geoplugin API 호출
+    $geoPluginUrl = "http://www.geoplugin.net/json.gp?ip={$ip}";
+    $response = file_get_contents($geoPluginUrl);
+    $details = json_decode($response, true);
 
-// 허용된 IP일 경우 계속해서 페이지를 로드
+    // 국가 코드가 있으면 세션에 저장
+    if ($details && isset($details['geoplugin_countryCode'])) {
+        $countryCode = $details['geoplugin_countryCode'];
+        $_SESSION['countryCode'] = $countryCode;
+    } else {
+        // 국가 정보를 가져오지 못한 경우 기본값 설정 (예: 'Unknown')
+        $countryCode = 'Unknown';
+        $_SESSION['countryCode'] = $countryCode;
+    }
+}*/
+
+// 국가 코드에 따라 한국 IP 여부 판단
+$is_kr = true;
+if ($countryCode != 'KR') {
+    $is_kr = false;
+}
+$is_kr = true;
 ?>

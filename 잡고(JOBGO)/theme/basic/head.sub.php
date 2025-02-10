@@ -52,12 +52,12 @@ if($config['cf_add_meta'])
 <title><?php echo $g5_head_title; ?></title>
 <link href="<?php echo G5_THEME_CSS_URL; ?>/bootstrap.min.css" rel="stylesheet" type="text/css"><!--부트스트랩-->
 <link href="<?php echo G5_THEME_CSS_URL; ?>/animate.min.css" rel="stylesheet" type="text/css"><!--애니메이트-->
-<link href="<?php echo G5_THEME_CSS_URL; ?>/all.min.css" rel="stylesheet" type="text/css"><!--폰트어썸-->
 <link href="<?php echo G5_THEME_CSS_URL; ?>/font.css" rel="stylesheet" type="text/css"><!--폰트-->
 <link href="<?php echo G5_THEME_CSS_URL; ?>/sub.css" rel="stylesheet" type="text/css"><!--서브페이지-->
 <link href="<?php echo G5_THEME_CSS_URL; ?>/slick.css" rel="stylesheet" type="text/css"><!--slick슬라이드-->
 <link href="<?php echo G5_THEME_CSS_URL; ?>/slick-theme.css" rel="stylesheet" type="text/css"><!--slick슬라이드-->
 <link href="<?php echo G5_THEME_CSS_URL; ?>/swiper-bundle.min.css" rel="stylesheet" type="text/css"><!--슬라이드-->
+    <link href="<?php echo G5_THEME_CSS_URL; ?>/all.min.css?v=<?= time(); ?>" rel="stylesheet" type="text/css"><!--폰트어썸-->
 
 <?php
 if (defined('G5_IS_ADMIN')) {
@@ -65,6 +65,16 @@ if (defined('G5_IS_ADMIN')) {
         echo '<link rel="stylesheet" href="'.G5_ADMIN_URL.'/css/admin.css">'.PHP_EOL;
 } else {
     echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/'.(G5_IS_MOBILE?'mobile':'default').'.css">'.PHP_EOL;
+}
+?>
+<?php
+// 현재 URL을 가져옵니다
+$current_url = $_SERVER['REQUEST_URI'];
+
+// URL에 '/feed/'가 포함되어 있는지 확인합니다.
+if (strpos($current_url, '/feed/') !== false) {
+    echo '<link rel="stylesheet" href="' . G5_URL . '/feed/css/feed.css?v=' . filemtime(G5_PATH . '/feed/css/feed.css') . '">
+';
 }
 ?>
 <link rel="stylesheet" href="<?php echo G5_CSS_URL; ?>/board.css"><!--게시판공통-->
@@ -101,8 +111,9 @@ var g5_admin_url = "<?php echo G5_ADMIN_URL; ?>";
 <!--<script src="<?php echo G5_JS_URL ?>/jquery-1.9.1.js"></script>-->
 <script src="<?php echo G5_JS_URL ?>/common.js?ver=1.6"></script>
 <script src="<?php echo G5_THEME_JS_URL ?>/ui.js"></script><!--공통-->
-<script src="<?php echo G5_THEME_JS_URL ?>/all.min.js"></script><!--폰트어썸-->
-<script src="<?php echo G5_THEME_JS_URL ?>/wow.min.js"></script><!--와우-->
+    <!-- <script src="<?php echo G5_THEME_JS_URL ?>/all.min.js"></script>폰트어썸-->
+
+    <script src="<?php echo G5_THEME_JS_URL ?>/wow.min.js"></script><!--와우-->
 <script src="<?php echo G5_THEME_JS_URL ?>/slick.min.js"></script><!--slick슬라이드-->
 <script src="<?php echo G5_THEME_JS_URL ?>/jquery.ba-hashchange.1.3.min.js"></script><!--Hash 체크 JS파일-->
 <script src="<?php echo G5_THEME_JS_URL ?>/hash.eazy-0.3.js"></script><!--HASH 이동 JS파일-->
@@ -110,7 +121,16 @@ var g5_admin_url = "<?php echo G5_ADMIN_URL; ?>";
 <script src="<?php echo G5_THEME_JS_URL ?>/sweetalert2.all.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<?php
+    <?php
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    if (preg_match('/(iphone|ipod|ipad|android|mobile|blackberry|webos|opera mini|windows phone)/i', $user_agent)) {
+        ?>
+        <script src="<?php echo G5_THEME_JS_URL ?>/all.min.js" defer></script> <!-- 모바일에서만 FontAwesome 로드 -->
+        <?php
+    }
+    ?>
+
+    <?php
 if(!defined('G5_IS_ADMIN'))
     echo $config['cf_add_script'];
 ?>

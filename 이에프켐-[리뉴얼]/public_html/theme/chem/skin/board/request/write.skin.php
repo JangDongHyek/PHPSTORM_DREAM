@@ -124,11 +124,11 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 				</tr>
         <tr>
             <th scope="row"><label for="wr_name">이름 <span class="en">Company Name</span><strong class="sound_only">필수</strong></label></th>
-            <td><input type="text" name="wr_name" value="<?php echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
+            <td><input type="text" oninput="validateInput(this)" name="wr_name" value="<?php echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
         </tr>
 				<tr>
             <th scope="row"><label for="wr_2">휴대폰번호 <span class="en">Tel</span></label></th>
-            <td><input type="text" name="wr_2" value="<?php echo $write[wr_2] ?>" id="wr_2" class="frm_input"></td>
+            <td><input type="text" oninput="validateNumber(this)" name="wr_2" value="<?php echo $write[wr_2] ?>" id="wr_2" class="frm_input"></td>
         </tr>
 				<tr>
             <th scope="row"><label for="wr_email">이메일 <span class="en">E-mail</span></label></th>
@@ -222,6 +222,19 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
     </form>
 
     <script>
+        function validateInput(input) {
+            input.value = input.value.replace(/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/g, ''); // 영문, 한글(초성/중성 포함) 외 삭제
+        }
+
+        function validateNumber(input) {
+            input.value = input.value.replace(/[^0-9]/g, ''); // 숫자(0-9) 외 삭제
+        }
+
+        function isValidEmail(email) {
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailPattern.test(email);
+        }
+
     <?php if($write_min || $write_max) { ?>
     // 글자수 제한
     var char_min = parseInt(<?php echo $write_min; ?>); // 최소
@@ -287,6 +300,13 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 					f.wr_2.focus();
 					return false;
 				}
+
+				if(!isValidEmail(f.wr_email.value)) {
+				    alert("이메일 형식이 맞지않습니다");
+				    return false;
+                }
+
+
 
 				if($("#product-form").css("display")!="none"){
 					if(f.wr_4.value==""){
