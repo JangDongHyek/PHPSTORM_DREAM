@@ -85,14 +85,14 @@ var itemlist_ca_id = "<?php echo $ca_id; ?>";
         $order_by = $sort.' '.$sortodr.' , it_order, it_id desc';
     else
         $order_by = 'it_order, it_id desc';
-		
+
 
     $error = '<p class="sct_noitem">등록된 상품이 없습니다.</p>';
 
     // 리스트 스킨
     $skin_file = is_include_path_check($skin_dir.'/'.$ca['ca_skin']) ? $skin_dir.'/'.$ca['ca_skin'] : $skin_dir.'/list.10.skin.php';
     if (file_exists($skin_file)) {
-		
+
 		echo '<div id="sct_sortlst">';
         $sort_skin = $skin_dir.'/list.sort.skin.php';
         if(!is_file($sort_skin))

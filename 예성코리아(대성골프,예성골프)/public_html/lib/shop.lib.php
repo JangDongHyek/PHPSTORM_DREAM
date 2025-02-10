@@ -1026,7 +1026,7 @@ function get_item_options($it_id, $subject, $is_div='')
             $select .= '<option value="'.$row['io_id'].','.$row['io_price'].','.$row['io_stock_qty'].'">'.$row['io_id'].$price.$soldout.'</option>'.PHP_EOL;
         }
         $select .= '</select>'.PHP_EOL;
-        
+
         if($is_div === 'div') {
             $str .= '<span>'.$select.'</span>'.PHP_EOL;
             $str .= '</div>'.PHP_EOL;
@@ -1106,7 +1106,7 @@ function get_item_supply($it_id, $subject, $is_div='')
                 }
             }
             $select .= '</select>'.PHP_EOL;
-            
+
             if($is_div === 'div') {
                 $str .= '<span class="td_sit_sel">'.$select.'</span>'.PHP_EOL;
                 $str .= '</div>'.PHP_EOL;
@@ -2108,7 +2108,7 @@ function update_use_avg($it_id)
 function get_view_today_items($is_cache=false)
 {
     global $g5;
-    
+
     $tv_idx = get_session("ss_tv_idx");
 
     if( !$tv_idx ){
@@ -2129,7 +2129,7 @@ function get_view_today_items($is_cache=false)
         $rowx = sql_fetch(" select * from {$g5['g5_shop_item_table']} where it_id = '$tv_it_id' ");
         if(!$rowx['it_id'])
             continue;
-        
+
         $key = $rowx['it_id'];
 
         $cache[$key] = $rowx;
@@ -2150,7 +2150,7 @@ function get_view_today_items_count()
 function get_boxcart_datas($is_cache=false)
 {
     global $g5;
-    
+
     $cart_id = get_session("ss_cart_id");
 
     if( !$cart_id ){
@@ -2243,7 +2243,7 @@ function get_wishlist_count_by_item($it_id='')
 function get_shop_order_data($od_id, $type='item')
 {
     global $g5;
-    
+
     $od_id = clean_xss_tags($od_id);
 
     if( $type == 'personal' ){
@@ -2270,7 +2270,7 @@ function exists_inicis_shop_order($oid, $pp=array(), $od_time='', $od_ip='')
 
             $uid = md5($pp['pp_id'].$pp['pp_time'].$od_ip);
             set_session('ss_personalpay_uid', $uid);
-            
+
             goto_url(G5_SHOP_URL.'/personalpayresult.php?pp_id='.$pp['pp_id'].'&amp;uid='.$uid.'&amp;ini_noti=1');
         } else {
             goto_url(G5_SHOP_URL.'/personalpayresult.php?pp_id='.$pp['pp_id'].'&amp;ini_noti=1');
@@ -2335,7 +2335,7 @@ function get_delivery_company($company)
 // 배송업체 리스트 얻기
 function get_delivery_company2($company,$delivery)
 {
-	
+
     $option = '<option value="">없음</option>'.PHP_EOL;
     $option .= '<option value="자체배송" '.get_selected($company, $delivery).'>자체배송</option>'.PHP_EOL;
 
