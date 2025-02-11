@@ -7,46 +7,69 @@
 
 <script>
     Vue.component('<?=$componentName?>', {
-            template: "#<?=$componentName?>-template",
-            props: {
-                primary: {type: String, default: ""}
-            },
-            data: function () {
-                return {
-                    jl: null,
-                    component_idx: "",
+        template: "#<?=$componentName?>-template",
+        props: {
+            primary : {type: String, default: ""},
+        },
+        data: function () {
+            return {
+                load : false,
+                jl: null,
+                component_idx: "",
 
-                    paging: {
-                        page: 1,
-                        limit: 1,
-                        count: 0,
-                    },
+                data: {},
+                arrays : [],
 
-                    data: {},
+                options : {
+                    required : [
+                        {name : "",message : ``},
+                    ],
+                    href : "",
+                },
 
-                    load : false,
-                };
-            },
-            async created() {
-                this.jl = new Jl('<?=$componentName?>');
-                this.component_idx = this.jl.generateUniqueId();
+                filter : {
+                    table : "",
+                    primary : this.primary,
+                    page: 1,
+                    limit: 1,
+                    count: 0,
+                },
 
-                this.load = true;
-            },
-            mounted() {
-                this.$nextTick(() => {
+                modal : {
+                    status : false,
+                    data : {},
+                },
 
-                });
-            },
-            updated() {
+                load : false,
+            };
+        },
+        async created() {
+            this.jl = new Jl('<?=$componentName?>');
+            this.component_idx = this.jl.generateUniqueId();
 
-            },
-            methods: {
+            if(this.primary) this.data = await this.jl.getData(this.filter);
+//await this.jl.getsData(this.filter,this.arrays);
 
-            },
-            computed: {},
-            watch: {}
-        });
+            this.load = true;
+        },
+        mounted() {
+            this.$nextTick(() => {
+
+            });
+        },
+        updated() {
+
+        },
+        methods: {
+
+        },
+        computed: {
+
+        },
+        watch: {
+
+        }
+    });
 
 </script>
 

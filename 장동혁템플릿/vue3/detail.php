@@ -11,7 +11,7 @@
         </div>
 
         <!-- 페이징 -->
-        <item-paging :filter="filter" @change="filter.page = $event; this.jl.getsData(filter,arrays);"></item-paging>
+        <item-paging :filter="filter" @change="filter.page = $event; jl.getsData(filter,arrays);"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
         <external-bs-modal :modal="modal" @close="modal = false;" class_1="" class_2="">

@@ -10,7 +10,7 @@ include_once("../jl/JlConfig.php");
             <button type="button" class="btn btn_colorline btn-large" onclick="location.href='./lost_form?tab=2'">잃어버렸어요</button>
         </div>
 
-        <bbs-lost-list></bbs-lost-list>
+        <bbs-lost-list admin="<?=$is_admin?>"></bbs-lost-list>
     </div>
 </div>
 

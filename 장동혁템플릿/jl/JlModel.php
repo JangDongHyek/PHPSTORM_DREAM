@@ -1016,6 +1016,7 @@ class JlModel{
         foreach($_param as $key => $value){
             if (is_array($value)) $value = $this->jsonEncode($value);
             if (is_object($value)) $value = $this->jsonEncode($value);
+            if (is_bool($value)) $value = $value ? "true" : "false";
 
             if($this->mysqli) {
                 $param[$key] = mysqli_real_escape_string($this->connect, $value);

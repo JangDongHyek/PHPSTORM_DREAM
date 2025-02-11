@@ -45,6 +45,7 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
+                admin : {type: String, default: ""},
                 primary : {type: String, default: ""},
             },
             data: function () {
@@ -113,6 +114,8 @@
                         table: "g5_write_lost",
                         wr_2 : this.tab,
                     }
+
+                    if(!this.admin) filter['wr_15'] = false;
 
                     if (this.paging) filter = Object.assign(filter, this.paging); // paging 객체가있다면 병합
 

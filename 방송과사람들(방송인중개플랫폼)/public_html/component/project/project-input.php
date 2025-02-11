@@ -69,12 +69,77 @@
                             <input type="text" name="cp_reward" id="cp_reward" v-model="data.price" class="frm_input" onkeyup="numberWithCommas(this)" size="40">
                         </div>
                     </div>
-                    <div class="box_write">
-                        <h4><label for="image">메인이미지</label></h4>
-                        <div class="cont">
-                            <input type="file" name="main_img" @change="jl.changeFile($event,data,'main_image')">
+
+                    <div class="box_content">
+                        <div class="box_write02">
+                            <h4 class="b_tit">메인이미지등록
+                                <em>
+                                    <i class="point" name="point">{{ data.main_image.length }}</i>/1
+                                </em>
+                                <span v-if="data.main_image.length > 1" style="color : red;">메인 이미지는 최대 1장입니다.</span>
+                            </h4>
+                            <div class="cont">
+                                <div class="area_box">
+
+                                    <!-- 처음화면에서는 안보였다가 이미지 등록하면 나타나게 해주세요 ~~ -->
+                                    <ul class="photo_list" id="file_list">
+                                        <li class="file_1" v-for="item,index in data.main_image">
+                                            <div class="area_img">
+                                                <img :src="item.preview ? item.preview : jl.root+item.src">
+                                                <div class="area_delete" @click="data['main_image'].splice(index,1)"><span class="sound_only">삭제</span></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <!-- //이미지 미리보기 -->
+
+                                    <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
+                                           ref="main_image" @change="jl.changeFile($event,data,'main_image')">
+                                    <div id="fileDrag" class="img_wrap" @click="$refs.main_image.click();"
+                                         @drop.prevent="jl.dropFile($event,data,'main_image')" @dragover.prevent @dragleave.prevent>
+                                        <div class="area_txt">
+                                            <div class="area_img"><img
+                                                        :src="`${jl.root}/theme/basic_app/img/app/icon_upload.svg`"></div>
+                                            <span class="w">마우스로 드래그해서 파일을 추가하세요.</span>
+                                            <span class="m">파일을 추가하세요.</span>
+                                        </div>
+                                    </div>
+                                    <em>※이미지 권장 비율(4:3)</em>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="box_content">
+                        <div class="box_write02">
+                            <h4 class="b_tit">동영상 등록
+                                <!--                            동영상 기획 정리될때까지 주석처리-->
+                                <!--                            <em><i class="point" name="subpoint">{{data.movie_file_array.length}}</i>/8</em>-->
+                                <em><i class="point" name="subpoint">{{data.movie_link.length}}</i>/10</em>
+                                <div class="cont">
+                                    <div class="area_box">
+                                        <!--                                <div class="video_active box_dashed">-->
+                                        <!--                                    <ul>-->
+                                        <!--                                        <li v-for="item,index in data.movie_file_array">-->
+                                        <!--                                            <p>{{ item.name }}</p>-->
+                                        <!--                                            <a class="del" href="" @click="event.preventDefault(); data.movie_file_array.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>-->
+                                        <!--                                        </li>-->
+                                        <!--                                    </ul>-->
+                                        <!--                                    <button class="btn_add" @click="$refs.movieRef.click()"><i class="fa-light fa-folder-arrow-up"></i> 동영상 업로드</button>-->
+                                        <!--                                    <input v-show="false" type="file" ref="movieRef" @change="jl.changeFile($event,data,'movie_file_array')">-->
+                                        <!--                                </div>-->
+                                        <div class="link_active box_dashed">
+                                            <dl v-for="item,index in data.movie_link">
+                                                <dt>동영상 링크 {{ (index+1).toString().padStart(2,'0') }}.</dt>
+                                                <dd><input type="text" placeholder="등록하고자하는 동영상 링크를 입력해주세요" v-model="data.movie_link[index]"></dd>
+                                                <a class="del" href="" @click="event.preventDefault(); data.movie_link.splice(index,1)"><i class="fa-sharp fa-light fa-xmark"></i></a>
+                                            </dl>
+                                            <button class="btn_add" @click="addMovie()"><i class="fa-light fa-plus"></i> 링크 추가</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+
                     <div class="box_write">
                         <h4><label for="image">참고 자료</label></h4>
                         <div class="cont">
@@ -130,7 +195,8 @@
                     content : "",
                     end_date : "",
                     price : "",
-                    main_image : "",
+                    main_image : [],
+                    movie_link : [],
                     upfile1 : "",
                     upfile2 : "",
                     upfile3 : "",
@@ -144,7 +210,8 @@
                         {name : "category1_idx",message : `상위카테고리는 필수값입니다.`},
                         {name : "category2_idx",message : `하위카테고리는 필수값입니다.`},
                         {
-                            name : "subject",message : `제목은 필수값입니다`,
+                            name : "subject",
+                            message : `제목은 필수값입니다`,
                             min : {length : 10, message : "제목은 최소 10자 이상이여야 합니다."},
                             max : {length : 30, message : "제목은 최대 30자 이하여야 합니다."}
                         },
@@ -185,7 +252,13 @@
 
         },
         methods: {
-
+            addMovie() {
+                if(this.data.movie_link.length >= 10) {
+                    alert("동영상 등록은 최대 10개입니다.");
+                    return false;
+                }
+                this.data.movie_link.push('');
+            },
         },
         computed: {
             category1_idx() {
