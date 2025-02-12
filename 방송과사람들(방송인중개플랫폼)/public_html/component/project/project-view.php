@@ -67,7 +67,7 @@
                                 <div class="cont client">
                                     <dl>
                                         <dt>제목</dt>
-                                        <dd></dd>
+                                        <dd>{{data.subject}}</dd>
                                     </dl>
                                     <dl>
                                         <dt>클라이언트 명</dt>
@@ -93,7 +93,7 @@
                             <section>
                                 <h3><i class="fal fa-images"></i> 원하시는 관련키워드를 선택해주세요.</h3>
                                 <div class="cont">
-                                    <span class="hash">z</span>
+                                    <span class="hash"></span>
                                 </div>
                             </section>
 

@@ -26,6 +26,10 @@ if ($stx) {
         case 'mb_level' :
             $sql_search .= " ({$sfl} = '{$stx}') ";
             break;
+
+        case 'mb_id' :
+            $sql_search .= " (gm.{$sfl} like '%{$stx}%') ";
+            break;
         default :
             $sql_search .= " ({$sfl} like '%{$stx}%') ";
             break;

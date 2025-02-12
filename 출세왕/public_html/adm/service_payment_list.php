@@ -228,8 +228,9 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                 <th>아이디</th>
                 <th>성함
                     <select id="cw_mb_name" onchange="sst_change(this.value,'cw.mb_name')">
-                        <option value="desc">내림차순</option>
-                        <option value="asc">오름차순</option>
+                        <option value="">-</option>
+                        <option value="desc" <?if($sst == 'cw.mb_name' && $sod == 'desc') echo 'selected'?> >내림차순</option>
+                        <option value="asc" <?if($sst == 'cw.mb_name' && $sod == 'asc') echo 'selected'?>>오름차순</option>
                     </select>
                 </th>
                 <th>결제카드</th>
@@ -238,10 +239,10 @@ $sst = ($sst == 'mem.mb_name') ? "mb_name" : $sst;
                 <!-- 23.04.21 쿠폰추가 -->
                 <th>누적사용포인트</th>
                 <!-- 23.04.14 총누적금액 -> 누적결제대금  -->
-                <th>누적결제대금</th>
+                <th>총 결제금액</th>
 
                 <!-- 23.04.14 예상금액 -> 누적사용금액 -->
-                <th>누적사용금액</th>
+                <th>총 사용금액</th>
                 <th>차액</th>
                 <th>관리</th>
                 <th>결제내역 보기</th>

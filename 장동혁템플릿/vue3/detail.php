@@ -2,16 +2,16 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
         <!-- 파일 부분 -->
-        <input type="file" @change="jl.changeFile($event,data,'upfile')"> <!-- 데이터의 기본값은 '' -->
+        <input type="file" @change="jl.changeFile($event,row,'upfile')"> <!-- 데이터의 기본값은 '' -->
 
         <!-- 드래그 파일부분 -->
         <input type="file" ref="multiUpload" multiple>
         <div class="dragZone" @click="$refs.multiUpload.click()"
-             @drop.prevent="jl.dropFile($event,data,'upfile_array')" @dragover.prevent @dragleave.prevent>
+             @drop.prevent="jl.dropFile($event,row,'upfile_array')" @dragover.prevent @dragleave.prevent>
         </div>
 
         <!-- 페이징 -->
-        <item-paging :filter="filter" @change="filter.page = $event; jl.getsData(filter,arrays);"></item-paging>
+        <item-paging :filter="filter" @change="filter.page = $event; jl.getsData(filter,rows);"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
         <external-bs-modal :modal="modal" @close="modal = false;" class_1="" class_2="">
@@ -33,8 +33,11 @@
         <!-- 부스스트랩이 있을시 사용가능한 다음주소찾기 모달-->
         <external-bs-daum-postcode :modal="modal" @close="modal = false;" @select="getAddress"></external-bs-daum-postcode>
 
-        <button @click="jl.postData(data,'table_name',options)">추사</button>
-        <button @click="jl.deleteData(data,'rental_hall',{message :'', href:''})">삭제</button>
+        <!-- summernote -->
+        <external-summernote :row="row" field="wr_content"></external-summernote>
+
+        <button @click="jl.postData(row,'table_name',options)">추가</button>
+        <button @click="jl.deleteData(row,'rental_hall',{message :'', href:''})">삭제</button>
 
     </div>
 </script>

@@ -88,12 +88,13 @@ if ($_REQUEST["is_payment"] != ""){
     if ($is_payment)
         $qstr .= '&amp;is_payment=' . urlencode($is_payment);
 }
-
-$sql_order = " order by {$sst} {$sod} ";
+$sql_order = " order by COALESCE($sst,'') = '' asc, {$sst} {$sod} ";
 
 //완료일자
 if ($_REQUEST["complete_datetime"] != ""){
-    $sql_order = "order by complete_datetime {$_REQUEST["complete_datetime"]}";
+    $sql_order = "order by CASE 
+    WHEN complete_datetime = '0000-00-00 00:00:00' THEN 1  
+    ELSE 0 END ASC, complete_datetime {$_REQUEST["complete_datetime"]}";
     if ($complete_datetime)
         $qstr .= '&amp;complete_datetime=' . urlencode($complete_datetime);
 }
@@ -123,6 +124,7 @@ $g5['title'] = '서비스관리';
 include_once('./admin.head.php');
 
 $sql = " select cw.* {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+echo $sql;
 $result = sql_query($sql);
 
 
@@ -198,6 +200,7 @@ $mem_result = sql_query($sql);
         <option value="cw.mb_name"<?php echo get_selected($_GET['sfl'], "cw.mb_name"); ?>>성함</option>
         <option value="mem.mb_name"<?php echo get_selected($_GET['sfl'], "mem.mb_name"); ?>>매니저성함</option>
         <option value="cw.ma_id"<?php echo get_selected($_GET['sfl'], "cw.ma_id"); ?>>매니저아이디</option>
+        <option value="cw.car_no"<?php echo get_selected($_GET['sfl'], "cw.car_no"); ?>>차량번호</option>
         <!--<option value="cw_step"<?php //echo get_selected($_GET['sfl'], "cw_step"); ?>>진행상황</option>-->
         <option value="car_date_type"<?php echo get_selected($_GET['sfl'], "car_date_type"); ?>>상품명</option>
         <? /*

@@ -174,6 +174,10 @@ if ($sst) {
     $sql_order = " order by {$ob} {$sst} {$sod} ";
 }
 
+if($bo_table == "notice" || $bo_table == "notice_manager") {
+    $sql_order = " order by wr_id DESC ";
+}
+
 
 if ($sca || $stx) {
     $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
