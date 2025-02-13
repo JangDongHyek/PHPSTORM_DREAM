@@ -198,6 +198,34 @@
 </section>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const radioButtons = document.querySelectorAll('input[type="radio"][name="sell_yn"]');
+
+        radioButtons.forEach(radio => {
+            radio.addEventListener("change", function () {
+                handleRadioChange(this.value);
+            });
+        });
+
+        function handleRadioChange(value) {
+            const checkboxes = document.querySelectorAll('input[name="payMethod[]"]');
+
+            if(value == 'Y') {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+            }else {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            }
+            // 여기에 원하는 동작 추가
+        }
+    });
+
+</script>
+
+<script>
 	const uploadImageFiles = <?=json_encode($imageFiles)?>;
 </script>
 <!-- 상품등록/수정 JS -->

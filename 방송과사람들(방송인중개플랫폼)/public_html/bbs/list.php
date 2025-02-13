@@ -174,6 +174,10 @@ if ($sst) {
     $sql_order = " order by {$ob} {$sst} {$sod} ";
 }
 
+if($bo_table == "qna" && !$is_admin) {
+    $sql_search .= " AND mb_id = '{$member['mb_id']}'";
+}
+
 
 if ($sca || $stx) {
     $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";

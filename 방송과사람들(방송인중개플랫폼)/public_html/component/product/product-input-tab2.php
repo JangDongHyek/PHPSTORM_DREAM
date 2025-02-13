@@ -6,19 +6,19 @@
             <div class="snb">
                 <ul class="list_step">
                     <li id="">
-                        <a href="" @click="event.preventDefault(); $emit('changeTab',1);">
+                        <a href="" @click="event.preventDefault();">
                             <em>1</em>
                             <span>기본정보</span>
                         </a>
                     </li>
                     <li id="" class="active">
-                        <a href="" @click="event.preventDefault(); $emit('changeTab',2);">
+                        <a href="" @click="event.preventDefault();">
                             <em>2</em>
                             <span>서비스 설명</span>
                         </a>
                     </li>
                     <li id="">
-                        <a href="" @click="event.preventDefault(); $emit('changeTab',3);">
+                        <a href="" @click="event.preventDefault();">
                             <em>3</em>
                             <span>이미지 등록</span>
                         </a>
@@ -114,7 +114,7 @@
             </div>
             <div id="area_btn">
 
-                <a class="btn_prev" href="" @click="event.preventDefault(); $emit('changeTab',1)">이전</a>
+                <a class="btn_prev" :href="'./item_write01.php?tab=1&idx='+product.idx">이전</a>
                 <a class="btn_next" href="" @click="event.preventDefault(); $emit('changeTab',3)">다음</a>
             </div>
         </div>

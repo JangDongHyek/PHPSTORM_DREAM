@@ -1,18 +1,18 @@
 <?php $componentName = str_replace(".php", "", basename(__FILE__)); ?>
 <script type="text/x-template" id="<?= $componentName ?>-template">
     <div>
-        <template>
+        <template v-if="render">
             <product-input-tab1 v-show="tab == 1" ref="tab1" @change="parent_category = $event" @addOption="data.options.push(createOption('','custom'))"
-                                :product="data" :mb_no="mb_no" @changeTab="tab = $event" :admin="admin"
+                                :product="data" :mb_no="mb_no" @changeTab="changeTab" :admin="admin"
             ></product-input-tab1>
 
-            <product-input-tab2 v-if="render" v-show="tab == 2" ref="tab2"
-                                :product="data" :mb_no="mb_no" @changeTab="tab = $event" :default_content="default_content"
+            <product-input-tab2 v-show="tab == 2" ref="tab2"
+                                :product="data" :mb_no="mb_no" @changeTab="changeTab" :default_content="default_content"
                                 :tab="tab" :admin="admin"
             ></product-input-tab2>
 
             <product-input-tab3 v-show="tab == 3"
-                                :product="data" :mb_no="mb_no" @changeTab="tab = $event" @postData="postData();" :admin="admin"
+                                :product="data" :mb_no="mb_no" @changeTab="changeTab" @postData="postData();" :admin="admin"
             ></product-input-tab3>
         </template>
 
@@ -24,6 +24,7 @@
         template: "#<?=$componentName?>-template",
         props: {
             primary: {type: String, default: ""},
+            tab : {type: String, default: ""},
             mb_no: {type: String, default: ""},
             admin : {type : Boolean, default : false},
         },
@@ -31,7 +32,6 @@
             return {
                 jl: null,
                 filter: {},
-                tab: 1,
                 default_content : [], //naver-editor 참조 변수
 
                 parent_category : null,
@@ -81,11 +81,16 @@
                     content_image_array: [],
                     movie_file_array: [],
                     movie_link: [],
+
+                    //common
+                    registration : false,
                 },
             };
         },
         created: function () {
             this.jl = new Jl('<?=$componentName?>');
+
+            console.log(this.tab)
         },
         mounted: function () {
             this.$nextTick(() => {
@@ -97,35 +102,41 @@
             });
         },
         methods: {
-            async postData() {
-                if(!this.data.main_image_array.length) {
-                    alert("메인 이미지 1장은 필수입니다.");
-                    return false;
-                }
-                if(this.data.main_image_array.length > 1) {
-                    alert("메인 이미지는 1장까지 가능합니다");
-                    return false;
-                }
-                if(this.data.main_image_array[0].size > 2097152) {
-                    alert("메인 이미지의 크기 제한은 2MB 입니다.");
-                    return false;
+            async changeTab(tab) {
+                let now = tab -1;
+                if(now == 2) {
+                    this.data.service = this.$refs.tab2.$refs.summernote.getContent();
                 }
 
-                if(this.data.content_image_array.length > 10) {
-                    alert("상세 이미지는 10장까지 가능합니다");
-                    return false;
-                }
-                if(this.data.movie_file_array.length > 8) {
-                    alert("동영상 등록은 8개까지 가능합니다");
-                    return false;
-                }
-                if(this.data.movie_link.length > 10) {
-                    alert("동영상 링크 등록은 10개까지 가능합니다");
-                    return false;
-                }
+                if(now == 3) {
+                    if(!this.data.main_image_array.length) {
+                        alert("메인 이미지 1장은 필수입니다.");
+                        return false;
+                    }
+                    if(this.data.main_image_array.length > 1) {
+                        alert("메인 이미지는 1장까지 가능합니다");
+                        return false;
+                    }
+                    if(this.data.main_image_array[0].size > 2097152) {
+                        alert("메인 이미지의 크기 제한은 2MB 입니다.");
+                        return false;
+                    }
 
-                //naverEditor 값 필드에 담기
-                this.data.service = this.$refs.tab2.$refs.summernote.getContent();
+                    if(this.data.content_image_array.length > 10) {
+                        alert("상세 이미지는 10장까지 가능합니다");
+                        return false;
+                    }
+                    if(this.data.movie_file_array.length > 8) {
+                        alert("동영상 등록은 8개까지 가능합니다");
+                        return false;
+                    }
+                    if(this.data.movie_link.length > 10) {
+                        alert("동영상 링크 등록은 10개까지 가능합니다");
+                        return false;
+                    }
+
+                    this.data.registration = true;
+                }
 
                 this.data.table = "member_product";
                 this.data.file_use = true;
@@ -140,10 +151,18 @@
                 var res = await this.jl.ajax(method, data, "/jl/JlApi.php");
 
                 if (res) {
-                    alert("완료하였습니다.");
-                    //window.location.href= `${this.jl.root}/bbs/mypage_item.php`
-                    window.location.reload();
+                    if(now != 3) {
+                        window.location.href= `${window.location.pathname}?tab=${tab}&idx=${res.primary}`
+                    }else {
+                        alert("완료하였습니다.");
+                        window.location.href= `${this.jl.root}/bbs/mypage_item.php`
+                        //window.location.reload();
+                    }
                 }
+            },
+            async postData() {
+
+
             },
             async getData() {
                 var filter = {primary: this.primary}
@@ -151,7 +170,6 @@
 
                 if (res) {
                     this.data = res.response.data[0]
-                    this.$refs.tab1.parent_category_idx = this.data.CATEGORY.data[0].parent_idx;
 
                     this.render = true;
                 }

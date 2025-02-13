@@ -111,8 +111,10 @@
                                 <dl class="service_option">
                                     <dt>성별</dt>
                                     <dd>{{ data.gender }}</dd>
-                                    <dt>연령</dt>
-                                    <dd>{{ data.age }}</dd>
+                                    <template v-if="['23', '24', '28', '29'].some(item => item == data.CATEGORY.data[0].parent_idx)">
+                                        <dt>연령</dt>
+                                        <dd>{{ data.age }}</dd>
+                                    </template>
                                     <dt>지역</dt>
                                     <dd>
                                         <span v-for="item in data.area">{{item}} &nbsp;</span>
@@ -125,10 +127,20 @@
                                     </template>
                                     <dt>주말 작업</dt>
                                     <dd>{{ data.weekend }}</dd>
-                                    <dt>작업 유형</dt>
-                                    <dd>
-                                        <span v-for="item in data.styles">{{item}} &nbsp;</span>
-                                    </dd>
+
+                                    <template v-if="!['','27','31'].some(item => item == data.CATEGORY.data[0].parent_idx)">
+                                        <dt>작업 유형</dt>
+                                        <dd>
+                                            <span v-for="item in data.types">{{item}} &nbsp;</span>
+                                        </dd>
+                                    </template>
+
+                                    <template v-if="['20','21'].some(item => item == data.CATEGORY.data[0].parent_idx)">
+                                        <dt>스타일</dt>
+                                        <dd>
+                                            <span v-for="item in data.styles">{{item}} &nbsp;</span>
+                                        </dd>
+                                    </template>
                                 </dl>
 
                                 <br>

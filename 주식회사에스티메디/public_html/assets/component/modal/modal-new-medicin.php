@@ -75,7 +75,7 @@
                     page : 1,
                     limit : 6,
                     count : 0,
-                    //order_by_desc : "insert_date",
+                    order_by_desc : "sell_yn",
 
                     del_yn : "N",
                     use_yn : "Y",
@@ -106,8 +106,16 @@
                 let price;
                 if(this.INSU_CHECK == "Y") {
                     price =item.INSU_PRICE
+
+                    if(!price) {
+                        price = item.prod_price;
+                    }
                 }else {
                     price = item.prod_price
+
+                    if(!price) {
+                        price = item.INSU_PRICE;
+                    }
                 }
 
                 if (typeof price === 'string' && price.includes(',')) {

@@ -54,6 +54,7 @@
                     limit : 10,
                     count : 0,
                     order_by_desc : "insert_date",
+                    registration : true,
                 },
 
                 data : [],

@@ -124,7 +124,6 @@ $g5['title'] = '서비스관리';
 include_once('./admin.head.php');
 
 $sql = " select cw.* {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
-echo $sql;
 $result = sql_query($sql);
 
 
@@ -300,18 +299,21 @@ $mem_result = sql_query($sql);
                 <th>고객아이디</th>
                 <th>성함
                     <select id="cw_mb_name" onchange="sst_change(this.value,'cw.mb_name')">
+                        <option value="">선택</option>
                         <option value="desc">내림차순</option>
                         <option value="asc">오름차순</option>
                     </select>
                 </th>
                 <th>매니저아이디
                     <select id="ma_id" onchange="sst_change(this.value,'ma_id')">
+                        <option value="">선택</option>
                         <option value="desc">내림차순</option>
                         <option value="asc">오름차순</option>
                     </select>
                 </th>
                 <th>매니저성함
                     <select id="mem_mb_name" onchange="sst_change(this.value,'mem.mb_name')">
+                        <option value="">선택</option>
                         <option value="desc">내림차순</option>
                         <option value="asc">오름차순</option>
                     </select>
@@ -326,6 +328,7 @@ $mem_result = sql_query($sql);
                 <th>쿠폰사용</th>
                 <th>접수일
                     <select id="wr_datetime" onchange="sst_change(this.value,'wr_datetime')">
+                        <option value="">선택</option>
                         <option value="desc">내림차순</option>
                         <option value="asc">오름차순</option>
                     </select>
@@ -382,8 +385,8 @@ $mem_result = sql_query($sql);
                     <td><?= ($row['is_payment'] == "Y") ? "완료": "미완료"?></td>
                     <td><?= ($row['cp_id']) ? "사용": ""?></td>
                     <td><?=substr($row['wr_datetime'],2,8)?></td>
-                    <td><?=strtotime($row['complete_datetime'])>0 && $row["cw_step"] == 1 ? $row['complete_datetime'] : ''?></td>
-                    <td><?=strtotime($row['complete_datetime'])>0 && $row["cw_step"] == 1 ? $diff_days->days : ''?></td>
+                    <td><?=strtotime($row['complete_datetime'])>0 && $row["cw_step"] == 1 ? $row['complete_datetime'] : $row['complete_datetime']?></td>
+                    <td><?=strtotime($row['complete_datetime'])>0 && $row["cw_step"] == 1 ? $diff_days->days : $diff_days->days?></td>
                     <td><?=$s_mod?></td>
                 </tr>
 

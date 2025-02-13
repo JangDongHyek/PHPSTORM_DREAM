@@ -38,7 +38,8 @@
                 filter : {
                     page : 1,
                     limit : 8,
-                    approval : true
+                    approval : true,
+                    registration : true,
                 },
                 data : {
 

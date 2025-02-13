@@ -133,7 +133,8 @@
                 var filter = {
                     parent_idx : parent_idx,
                     category_idx : category_idx,
-                    approval : true
+                    approval : true,
+                    registration : true,
                 }
                 console.log(filter);
 

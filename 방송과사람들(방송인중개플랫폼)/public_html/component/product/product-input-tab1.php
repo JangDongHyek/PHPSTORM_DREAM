@@ -127,7 +127,7 @@
                                         <input type="radio" v-model="product.gender" name="gender" id="not-selected" value="미선택"><label for="not-selected">미선택</label>
                                     </div>
                                 </div>
-                                <div class="box_write" v-if="['23','24','28','29'].includes(parent_category_idx)">
+                                <div class="box_write" v-if="['23', '24', '28', '29'].some(item => item == parent_category_idx)">
                                     <h4>연령</h4>
                                     <div class="cont box">
                                         <input type="radio" v-model="product.age" value="키즈" id="kids" name="age-group"><label for="kids">키즈</label>
@@ -162,7 +162,7 @@
                                         <input type="radio" v-model="product.weekend" value="불가능" id="not-possible" name="availability"><label for="not-possible">불가능</label>
                                     </div>
                                 </div>
-                                <div class="box_write" v-if="!['','27','31'].includes(parent_category_idx)" >
+                                <div class="box_write" v-if="!['','27','31'].some(item => item == parent_category_idx)" >
                                     <h4>작업유형</h4>
                                     <div class="cont box">
                                         <template v-for="item,index in getWorkType()">
@@ -173,7 +173,7 @@
 
                                     </div>
                                 </div>
-                                <div class="box_write" v-if="['20','21'].includes(parent_category_idx)" >
+                                <div class="box_write" v-if="['20','21'].some(item => item == parent_category_idx)" >
                                     <h4>스타일</h4>
                                     <div class="cont box">
                                         <input type="checkbox" :disabled="product.styles.includes('선택안함')" v-model="product.styles" value="인물" id="person" name="category"><label for="person">인물</label>
@@ -440,8 +440,17 @@
         },
         created: function(){
             this.jl = new Jl('<?=$componentName?>');
+
+
             this.getCategory();
             this.getPortfolio();
+
+            if(this.product.idx) this.parent_category_idx = this.product.CATEGORY.data[0].parent_idx;
+
+            console.log(1)
+            console.log(this.product)
+            console.log(this.parent_category_idx)
+            console.log(3)
         },
         mounted: function(){
             this.$nextTick(() => {
@@ -567,30 +576,30 @@
                 this.temp = '';
             },
             getWorkType() {
-                switch (this.parent_category_idx) {
-                    case "20" :
+                switch (true) {
+                    case this.parent_category_idx == "20" :
                         return ['사진','영상','음향','선택안함']
-                    case "21" :
+                    case this.parent_category_idx == "21" :
                         return ['사진','영상','음향','선택안함']
-                    case "22" :
+                    case this.parent_category_idx == "22" :
                         return ['블로그', '카페', '밴드', '인스타그램', '페이스북', '유튜브', '포스트', '틱톡', '지식인', '트위터', '디스코드', '트위치', '기타', '선택안함'];
-                    case "23" :
+                    case this.parent_category_idx == "23" :
                         return ['드라마', '영화', '연극', '뮤지컬', '재연', '유튜브', '선택안함'];
-                    case "24" :
+                    case this.parent_category_idx == "24" :
                         return ['피팅', '패션', '주얼리', '뷰티', '의전·전시', '광고', '선택안함'];
-                    case "25" :
+                    case this.parent_category_idx == "25" :
                         return ['촬영', '무대', '스튜디오', '장비', '장소', '설치', '섭외', '통제', '취재', '선택안함'];
-                    case "26" :
+                    case this.parent_category_idx == "26" :
                         return ['한국어', '영어', '중국어', '일본어', '불어', '러시아어'];
-                    case "27" :
+                    case this.parent_category_idx == "27" :
                         return []
-                    case "28" :
+                    case this.parent_category_idx == "28" :
                         return ['노래', 'DJ', '댄스', '연주', '사회', '선택안함'];
-                    case "29" :
+                    case this.parent_category_idx == "29" :
                         return ['개인레슨', '그룹', '기업강의', '취미', '자격증', '프로젝트', '취업', '선택안함'];
-                    case "30" :
+                    case this.parent_category_idx == "30" :
                         return ['내방', '출장', '화상', '전화', '메시지', '문서', '선택안함'];
-                    case "31" :
+                    case this.parent_category_idx == "31" :
                         return [];
                     default :
                         return [];
@@ -631,10 +640,11 @@
             parent_category_idx : function() {
                 if(this.bool) {
                     this.product.category_idx = '';
+                    this.product.types = [];
+
                 }else {
                     this.bool = true;
                 }
-                this.product.types = [];
             },
             parent_category : function(){
                 this.$emit('change',this.parent_category)

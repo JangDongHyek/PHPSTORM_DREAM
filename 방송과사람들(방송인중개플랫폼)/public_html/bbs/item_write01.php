@@ -20,6 +20,10 @@ if(!$is_member){
 
 $c_name = ctg_info($view['c_p_idx'])["c_name"];
 $c_name2 = $view["c_name"];
+
+$tab = empty($_GET['tab']) ? 1 : $_GET['tab'];
+
+
 ?>
 
 <? if($name=="item_write") { ?>
@@ -32,7 +36,7 @@ $c_name2 = $view["c_name"];
 </style>
 
 <div id="vueapp">
-    <product-input-main mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>" ref="productInput"></product-input-main>
+    <product-input-main mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['idx']?>" tab="<?=$tab?>" ref="productInput"></product-input-main>
 </div>
 
 <script src="<?=$jl->URL?>/plugin/summernote/summernote.min.js"></script>

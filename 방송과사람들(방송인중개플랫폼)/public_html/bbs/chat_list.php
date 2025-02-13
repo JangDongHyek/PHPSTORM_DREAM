@@ -1,6 +1,6 @@
 <?
 include_once('./_common.php');
-include_once('../class/Lib.php');
+include_once('./class/Lib.php');
 $name = "chat_list";
 $pid = 'chat';
 $g5['title'] = '채팅리스트';

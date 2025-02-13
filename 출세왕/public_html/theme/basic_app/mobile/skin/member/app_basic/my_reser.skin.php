@@ -137,10 +137,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                         <dd><span class="price">-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                        <?php }else{ ?>
                     <dl class="tx_m">
-                        <dt>누적결제금액</dt>
+                        <dt>총 결제금액</dt>
                         <dd class="ins"><span> <? echo number_format($total_price);?> 원</span></dd>
                     </dl>
-                        <dt>최종이용금액</dt>
+                        <dt>총 사용금액</dt>
                         <dd><span class="price">
                         <?php } ?>
 

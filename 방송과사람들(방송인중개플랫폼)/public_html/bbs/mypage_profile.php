@@ -4,7 +4,7 @@ include_once(G5_PATH."/jl/JlConfig.php");
 
 $name = "cmypage";
 $pid = "mypage_form";
-$g5['title'] = '전문가 프로필관리';
+$g5['title'] = '전문가정보 수정';
 include_once('./_head.php');
 
 $mb = get_member($member[mb_id]);

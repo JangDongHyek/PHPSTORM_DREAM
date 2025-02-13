@@ -139,8 +139,8 @@
                     <div></div>
                 </div>
                 <div id="area_btn" class="col02">
-                    <a class="btn_prev" href="" @click="event.preventDefault(); $emit('changeTab',2)">이전</a>
-                    <a class="btn_next" href="" @click="event.preventDefault(); $emit('postData')">{{product.idx ? '수정' : '등록'}}</a>
+                    <a class="btn_prev" :href="'./item_write01.php?tab=2&idx='+product.idx">이전</a>
+                    <a class="btn_next" href="" @click="event.preventDefault(); $emit('changeTab',4)">완료</a>
                 </div>
             </div>
         </div>

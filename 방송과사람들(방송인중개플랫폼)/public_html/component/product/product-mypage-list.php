@@ -53,7 +53,8 @@
             return {
                 jl : null,
                 filter : {
-                    member_idx : this.mb_no
+                    member_idx : this.mb_no,
+                    registration : true,
                 },
                 data : {
 

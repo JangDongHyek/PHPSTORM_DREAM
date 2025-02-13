@@ -49,6 +49,7 @@
                             <thead>
                             <tr>
                                 <th>No.</th>
+                                <th v-if="mb_id == 'admin'">제조사</th>
                                 <th>제품명</th>
                                 <th>단가</th>
                                 <th>처방수량(월)</th>
@@ -64,6 +65,9 @@
                                 <tr v-if="product == 1">
                                     <td alt="No.">
                                         <p class="temp">-</p>
+                                    </td>
+                                    <td alt="제조사" v-if="mb_id == 'admin'">
+                                        <p class="temp">제조사</p>
                                     </td>
                                     <td alt="제품명">
                                         <input type="text" value="제품을 선택하세요." readonly @click="new_modal = true;">
@@ -94,6 +98,9 @@
                                 <tr v-else>
                                     <td alt="No.">
                                         <p>{{index+1}} <button type="button" class="btn btn_mini btn_black" @click="deleteCart(index)"><i class="fa-solid fa-trash"></i></button></p>
+                                    </td>
+                                    <td alt="제조사" v-if="mb_id == 'admin'">
+                                        <p>{{product.MAKER_NM}}</p>
                                     </td>
                                     <td alt="제품명">
                                         <input type="text" :value="product.PRODUCT_NM" readonly>

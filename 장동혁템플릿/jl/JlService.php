@@ -199,7 +199,7 @@ class JlService extends Jl{
 
         $this->model->update($this->obj);
         $response['success'] = true;
-        $response['primary'] = $this->obj['primary'];
+        $response['primary'] = $this->obj[$this->model->primary];
 
         return $response;
     }
