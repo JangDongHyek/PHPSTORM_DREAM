@@ -97,6 +97,17 @@ class Jl {
                             return false;
                         }
                     }
+
+                    if(Array.isArray(object[req.name])) {
+                        if (req.min && object[req.name].length < req.min.length) {
+                            reject(new Error(`${req.min.message}`));
+                            return false;
+                        }
+                        if (req.max && object[req.name].length > req.max.length) {
+                            reject(new Error(`${req.max.message}`));
+                            return false;
+                        }
+                    }
                 }
             }
 

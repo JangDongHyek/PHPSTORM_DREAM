@@ -5,7 +5,7 @@
             <!-- bbs/ajax.chat_list.php -->
             <ul class="chat_list ul_chat_list">
                 <li>
-                    <a href="<?/*=G5_BBS_URL*/?>/chat.php">
+                    <a href="<?=G5_BBS_URL?>/chat.php">
                         <div class="area_img"><img class="basic" src="<?php /*echo G5_IMG_URL */?>/img_smile.svg"></div>
                         <div class="chat_txt">
                             <div class="info"><em class="name">PODOSEA</em><span clas="data">11월 5일</span></div>

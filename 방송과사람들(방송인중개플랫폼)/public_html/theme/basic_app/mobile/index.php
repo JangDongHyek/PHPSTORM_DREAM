@@ -9,6 +9,7 @@ include_once(G5_THEME_MOBILE_PATH.'/head.php');
 $sql = "select * from new_item order by i_idx desc limit 8";
 $new_result = sql_query($sql);
 
+$pid = "index_mobile";
 $big_ctg = ctg_list(0);
 ?>
 
@@ -27,9 +28,23 @@ $big_ctg = ctg_list(0);
                             <span>고객님께 딱 맞는 전문가들이 기다리고 있습니다.</span>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <img src="<?php echo G5_THEME_IMG_URL ?>/app/visual01.jpg">
+                    <div class="swiper-slide v2">
+                        <div class="area_obj"><img src="<?php echo G5_IMG_URL ?>/app/main_obj2.png"></div>
+                        <div class="area_txt">
+                            <h3>다양한 분야의 방송 <br>전문가를 확인해보세요!</h3>
+                            <span>고객님께 딱 맞는 전문가들이 기다리고 있습니다.</span>
+                        </div>
                     </div>
+                    <div class="swiper-slide">
+                        <div class="area_obj"><img src="<?php echo G5_IMG_URL ?>/app/main_obj3.png"></div>
+                        <div class="area_txt">
+                            <h3>다양한 분야의 방송 <br>전문가를 확인해보세요!</h3>
+                            <span>고객님께 딱 맞는 전문가들이 기다리고 있습니다.</span>
+                        </div>
+                    </div>
+                    <!--div class="swiper-slide">
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/app/visual01.jpg">
+                    </div-->
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
@@ -350,26 +365,47 @@ $big_ctg = ctg_list(0);
             </div>
             <div class="navigation">
                 <button onclick="location.href='<?php echo G5_BBS_URL ?>/login.php'">로그인</button>
-                <a class="onboarding_close">로그인 전에 어플둘러보기</a>
+                <a class="onboarding_close">홈 화면 바로가기</a>
             </div>
         </div>
     </div>
 <?php } ?>
 <script>
-    var swiper = new Swiper(".onboardingSwiper", {
-        pagination: {
-            el: ".swiper-pagination",
-        },
-    });
-     document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
+        var swiper = new Swiper(".onboardingSwiper", {
+            pagination: {
+                el: ".swiper-pagination",
+            },
+            on: {
+                slideChange: function () {
+                    const closeButton = document.querySelector(".onboarding_close");
+                    const navigation = document.querySelector(".navigation");
+
+                    // Hide the navigation on all slides first
+                    navigation.style.display = "none";
+
+                    // Show the navigation only on the last slide
+                    if (swiper.realIndex === swiper.slides.length - 1) {
+                        navigation.style.display = "block";
+                    }
+                }
+            }
+        });
+
         const closeButton = document.querySelector(".onboarding_close");
         const onboardingElement = document.getElementById("onboarding");
 
-        closeButton.addEventListener("click", function() {
-        onboardingElement.style.display = "none";
-    });
-    });
+        // Initial check when the page loads to hide or show the navigation
+        if (swiper.realIndex === swiper.slides.length - 1) {
+            document.querySelector(".navigation").style.display = "block";
+        } else {
+            document.querySelector(".navigation").style.display = "none";
+        }
 
+        closeButton.addEventListener("click", function() {
+            onboardingElement.style.display = "none";
+        });
+    });
 </script>
 
 

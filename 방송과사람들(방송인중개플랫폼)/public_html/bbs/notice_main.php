@@ -42,7 +42,7 @@ include_once('./_head.php');
         <ul>
             <? foreach($rows as $row) {?>
             <li>
-                <a><p><?=$row['wr_subject']?></p></a>
+                <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=faq"><p><?=$row['wr_subject']?></p></a>
             </li>
             <?}?>
         </ul>

@@ -2,7 +2,7 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <section id="profile01">
         <div>
-            <h4>기본정보</h4>
+            <h4>활동정보</h4>
             <dl>
                 <dt>자기 소개 문구</dt>
                 <dd><textarea placeholder="자기소개문구를 입력해주세요" v-model="user.self_content"></textarea></dd>

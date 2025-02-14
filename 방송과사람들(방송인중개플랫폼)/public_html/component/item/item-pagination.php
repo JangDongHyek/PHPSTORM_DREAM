@@ -3,30 +3,19 @@
     <div class="paging" v-if="parseInt(count)">
         <div class="pagingWrap">
             <a class="first" @click="setPage(1)">
-                <!-- SVG 코드 -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18 6l-1.41-1.41L10.17 12l6.42 7.41L18 18l-6-6z"/>
-                    <path d="M6 6l-1.41-1.41L4.59 12l6.42 7.41L6 18l-6-6z"/>
-                </svg>
+                <i class="fa-light fa-angles-left"></i>
             </a>
             <a class="prev" @click="setPage(page-1)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
-                </svg>
+                <i class="fa-light fa-angle-left"></i>
             </a>
             <template v-for="index in getPages()">
                 <a @click="setPage(index)" :class="{'active': index == page}">{{ index }}</a>
             </template>
             <a class="next" @click="setPage(page+1)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8.59 16.59L13.17 12l-4.58-4.59L10 6l6 6-6 6z"/>
-                </svg>
+                <i class="fa-light fa-angle-right"></i>
             </a>
             <a class="last" @click="setPage(last)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 6l1.41-1.41L13.83 12l-6.42 7.41L6 18l6-6z"/>
-                    <path d="M18 6l1.41-1.41L19.83 12l-6.42 7.41L18 18l6-6z"/>
-                </svg>
+                <i class="fa-light fa-angles-right"></i>
             </a>
         </div>
     </div>

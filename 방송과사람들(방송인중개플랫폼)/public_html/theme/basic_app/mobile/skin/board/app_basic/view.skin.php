@@ -129,10 +129,10 @@ $reply_href = false;
     </div>
     <!-- } 게시물 상단 버튼 끝 -->
 
-    <?php /*?><?php
+    <?/*php
     // 코멘트 입출력
     include_once(G5_BBS_PATH.'/view_comment.php');
-     ?><?php */?>
+     */?>
 
 </article>
 <!-- } 게시판 읽기 끝 -->

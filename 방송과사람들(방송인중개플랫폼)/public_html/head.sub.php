@@ -56,6 +56,8 @@ if($config['cf_add_meta'])
 if (defined('G5_IS_ADMIN')) {
     if(!defined('_THEME_PREVIEW_'))
         echo '<link rel="stylesheet" href="'.G5_ADMIN_URL.'/css/admin.css">'.PHP_EOL;
+    echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/all.min.css">'.PHP_EOL;
+    echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/bootstrap.min.css">'.PHP_EOL;
 } else {
     echo '<link rel="stylesheet" href="'.G5_CSS_URL.'/'.(G5_IS_MOBILE?'mobile':'default').'.css">'.PHP_EOL;
 }
@@ -84,6 +86,7 @@ var g5_admin_url = "<?php echo G5_ADMIN_URL; ?>";
 <script src="<?php echo G5_JS_URL ?>/jquery.menu.js"></script>
 <script src="<?php echo G5_JS_URL ?>/common.js"></script>
 <script src="<?php echo G5_JS_URL ?>/wrest.js"></script>
+<script src="<?php echo G5_THEME_JS_URL ?>/bootstrap.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <?php

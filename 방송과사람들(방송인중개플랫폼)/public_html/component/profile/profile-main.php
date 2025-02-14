@@ -8,7 +8,7 @@
                 </div>
 
                 <ul class="nav">
-                    <li class="nav-item"><a class="nav-link" href="#step-1" @click="navEvent('step-1',$event)"><div class="num">1</div> <span>기본정보</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step-1" @click="navEvent('step-1',$event)"><div class="num">1</div> <span>활동정보</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="#step-2" @click="navEvent('step-2',$event)"><div class="num">2</div> <span>전문 분야/기술</span></a></li>
 <!--                    <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">3</div> <span>전문기술</span></a></li>-->
                     <li class="nav-item"><a class="nav-link" href="#step-3" @click="navEvent('step-3',$event)"><div class="num">3</div> <span>학력 및 자격증</span></a></li>

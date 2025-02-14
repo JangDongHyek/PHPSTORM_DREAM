@@ -84,7 +84,7 @@ $colspan = 16;
                     <td><?= $data["member"]["mb_email"] ?></td>
                     <td><?= $data["c_date"]?></td>
                     <td><?= $data["u_date"] == "0000-00-00 00:00:00" ? "미응답" : $data["u_date"]?> </td>
-                    <td><button type="button" onclick="putApprove(<?=$data["_idx"]?>)">승인</button></td>
+                    <td class="btn_confirm02"><button type="button" onclick="putApprove(<?=$data["_idx"]?>)">승인</button></td>
                 </tr>
 
                 <?php

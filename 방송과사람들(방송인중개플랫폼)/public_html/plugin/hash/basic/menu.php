@@ -6,7 +6,7 @@ $big_ctg = ctg_list2();
 
 <nav id="navtoggle">
     <div class="hd_title">
-        <a href="javascript:history.back();" class="btn_close"><i class="fa-regular fa-arrow-left"></i><span class="sound_only">닫기</span></a>
+        <a href="javascript:history.back();" class="btn_close"><i class="fa-light fa-times"></i><span class="sound_only">닫기</span></a>
         <p class="title">카테고리</p>
     </div>
     <div class="scroll">
@@ -38,12 +38,20 @@ $big_ctg = ctg_list2();
                                 </a>
                                 <div class="mgnb_2dul">
                                     <ul class="flex">
+
+                                        <li class="mgnb_2dli">
+                                            <a class="mgnb_2da" href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$big_ctg[$i]["idx"]?>">
+                                                전체
+                                            </a>
+                                        </li>
                                     <?php
                                     $small_ctg = ctg_list2($big_ctg[$i]["idx"]);
                                     for ($a = 0; $a< count($small_ctg); $a++){ ?>
-                                        <li class="mgnb_2dli"><a class="mgnb_2da" href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$small_ctg[$a]["idx"]?>">
-                                            <?=$small_ctg[$a]["name"]?>
-                                        </a></li>
+                                        <li class="mgnb_2dli">
+                                            <a class="mgnb_2da" href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=<?=$small_ctg[$a]["idx"]?>&category_idx=<?=$big_ctg[$i]["idx"]?>">
+                                                <?=$small_ctg[$a]["name"]?>
+                                            </a>
+                                        </li>
                                     <?php } ?>
                                     </ul>
                                 </div>

@@ -17,7 +17,7 @@
 		<li><a href="<?php echo G5_BBS_URL ?>/notice_main.php">고객센터</a></li>
     <?php } else /*의뢰인*/ { ?>
         <li class="on"><a href="<?php echo G5_BBS_URL ?>/mypage.php">구매상품목록</a></li>
-        <li><a href="<?php echo G5_BBS_URL ?>/mypage_contest.php">프로젝트 의뢰 LIST</a></li>
+        <li><a href="<?php echo G5_BBS_URL ?>/mypage_project_my.php">프로젝트 의뢰 LIST</a></li>
         <li><a href="javascript:swal('준비중입니다.');">광고신청관리</a></li>
         <li><a href="javascript:swal('준비중입니다.');">리뷰관리</a></li>
         <li><a href="javascript:swal('준비중입니다.');">MY혜택</a></li>

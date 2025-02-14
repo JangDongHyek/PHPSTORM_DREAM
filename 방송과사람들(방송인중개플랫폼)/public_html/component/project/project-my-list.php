@@ -1,48 +1,117 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
-        <div class="list cf">
-            <div class="thm" v-for="item in arrays">
-                <div class="mg">
-                    <!--<span class="pri">PRIME</span>prime 광고등록 상품은 해당 아이콘이 뜨도록-->
-                    <div class="heart" id="heart_div_18">
-                        <button type="button" class="heart off" onclick="like_chk('on',18,'competition')"><i class="fa-light fa-heart"></i></button><!--좋아요 누르기전 -->
+        <ul class="project-list">
+            <li class="project-item">
+                <ul class="prize-info">
+                    <li><span>🏆 총 상금</span> 80만 원</li>
+                    <li><span>📌 참여작</span> 21개</li>
+                    <li><span>📅 진행 기간</span> 6일</li>
+                    <li><span>📆 날짜</span> 25.02.05 ~ 25.02.11</li>
+                </ul>
+                <a class="project-link">
+                    <div class="thumb" onclick="location.href='./project_view.php'">
+                        <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로젝트 이미지">
                     </div>
-                    <a :href="'./contest_view.php?idx='+item.idx">
-
-                        <div class="mg_in">
-                            <div class="over">
-                                <img :src="jl.root + item.main_image[0].src">
+                    <div class="project-cont">
+                        <div class="project-info">
+                            <div class="project-category">
+                                <span class="state v1">진행 중</span><span class="state v2">모집 종료</span><span class="state v3">선정 완료</span><!--의뢰인 버전-->
+                                1차 카테고리 · 2차 카테고리
+                                <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                             </div>
-                        </div><!--클라이언트 로고-->
-                    </a>
-                </div><!--mg-->
-
-                <a :href="'./contest_view.php?idx='+item.idx">
-
-                    <div class="info">
-                        <!-- 재능강의 작성자 정보 -->
-                        <div id="lecture_writer_list">
-                            <div class="mb">
-                                <div class="mb_info">
-                                    <p><i class="fas fa-user-circle"></i>&nbsp;{{item.$g5_member.mb_nick}}</p>
-                                </div>
-                            </div>
+                            <h2 class="project-title">프로젝트명</h2>
+                            <p class="project-desc">프로젝트 설명입니다.</p>
                         </div>
-                        <div class="tit">{{item.subject}}</div><!--프로젝트 제목(최대1줄까지만 추출, 나머지는 ... 처리함)-->
-                        <div class="cont">{{item.content}}</div><!--프로젝트 설명(최대2줄까지만 추출, 나머지는 ... 처리함)-->
-                        <div class="rate cf">
-                            <div class="star"><span><i class="fal fa-eye"></i> 0회</span><span>0명의 참여자</span></div>
-                            <div class="heart_hit"><span><i class="fal fa-calendar-week"></i></span> {{item.status ? '승인' : '심사중' }} </div><!--심시기간-->
-                        </div>
-                        <div class="price">희망 제작비용 {{item.price}}만원</div><!--상품가격-->
                     </div>
                 </a>
+                <div class="btn-wrap"><!--의뢰인 버전-->
+                    <button type="button">수정</button>
+                    <button type="button">삭제</button>
+                    <button type="button" class="blue" @click="modal.status = true">선정</button>
+                </div>
+            </li>
+        </ul>
 
-            </div>
-        </div><!--list-->
+        <external-bs-modal :modal="modal.status" @close="modal.status = false;" class_1="prize-container" class_2="">
+            <template v-slot:header>
 
-        <item-pagination :filter="filter" @change="filter.page = $event; jl.getsData(filter,arrays);"></item-pagination>
+            </template>
+
+            <!-- body -->
+            <template v-slot:default>
+
+                    <div>
+                        <div class="portfolio-header">
+                            선정하기
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="join-list">
+                            <div class="btn-wrap">
+                                <button type="button" class="project-add">선정 결과 저장</button><!--의뢰인 버전-->
+                                <button type="button" class="project-done">미선정 마감</button><!--의뢰인 버전-->
+                            </div>
+                            <ul>
+                                <li>
+                                    <a>
+                                        <div class="img"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                                        <p>#1</p><!--참여순서-->
+                                        <div class="profile">
+                                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                                            <span>지원자</span>
+                                            <select>
+                                                <option>미선정</option>
+                                                <option>1등</option>
+                                                <option>2등</option>
+                                                <option>3등</option>
+                                            </select>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <div class="img"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                                        <p>#2</p><!--참여순서-->
+                                        <div class="profile">
+                                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                                            <span>지원자</span>
+                                            <select>
+                                                <option>미선정</option>
+                                                <option>1등</option>
+                                                <option>2등</option>
+                                                <option>3등</option>
+                                            </select>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <div class="img"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                                        <p>#3</p><!--참여순서-->
+                                        <div class="profile">
+                                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                                            <span>지원자</span>
+                                            <select>
+                                                <option>미선정</option>
+                                                <option>1등</option>
+                                                <option>2등</option>
+                                                <option>3등</option>
+                                            </select>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+            </template>
+
+
+            <template v-slot:footer>
+
+            </template>
+        </external-bs-modal>
     </div>
 </script>
 

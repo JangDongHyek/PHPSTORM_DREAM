@@ -25,8 +25,9 @@ $(window).load(function() {
 
 <!-- 게시판 목록 시작 { -->
 <div id="bo_list" style="width:<?php echo $width; ?>">
-    <div class="searchBox">
-        <span class="bo_title">자주묻는 질문</span> | 비움환에 자주묻는 질문입니다.
+    <div id="bo_list_total" style="border-bottom:1px solid #E6E6E6; width: 100%; padding: 5px; text-align: right; color: #999;">
+        <span>Total <?php echo number_format($total_count) ?>건</span>
+        <?php echo $page ?> 페이지
     </div>
 
     <form name="fboardlist" id="fboardlist" action="./board_list_update.php" onsubmit="return fboardlist_submit(this);" method="post">

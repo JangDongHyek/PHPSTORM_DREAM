@@ -123,36 +123,39 @@
                 let startX;
                 let scrollLeft;
 
-                menuWrapper.addEventListener('mousedown', (e) => {
-                    isDragging = true;
-                    startX = e.pageX - menuWrapper.offsetLeft;
-                    scrollLeft = menuWrapper.scrollLeft;
-                    menuWrapper.style.cursor = 'grabbing';
-                });
+                if (menuWrapper){
+                    menuWrapper.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        startX = e.pageX - menuWrapper.offsetLeft;
+                        scrollLeft = menuWrapper.scrollLeft;
+                        menuWrapper.style.cursor = 'grabbing';
+                    });
 
-                menuWrapper.addEventListener('mouseleave', () => {
-                    isDragging = false;
-                    menuWrapper.style.cursor = 'grab';
-                });
+                    menuWrapper.addEventListener('mouseleave', () => {
+                        isDragging = false;
+                        menuWrapper.style.cursor = 'grab';
+                    });
 
-                menuWrapper.addEventListener('mouseup', () => {
-                    isDragging = false;
-                    menuWrapper.style.cursor = 'grab';
-                });
+                    menuWrapper.addEventListener('mouseup', () => {
+                        isDragging = false;
+                        menuWrapper.style.cursor = 'grab';
+                    });
 
-                menuWrapper.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-                    e.preventDefault();
-                    const x = e.pageX - menuWrapper.offsetLeft;
-                    const walk = (x - startX) * 3; // 스크롤 속도 조절
-                    menuWrapper.scrollLeft = scrollLeft - walk;
-                });
+                    menuWrapper.addEventListener('mousemove', (e) => {
+                        if (!isDragging) return;
+                        e.preventDefault();
+                        const x = e.pageX - menuWrapper.offsetLeft;
+                        const walk = (x - startX) * 3; // 스크롤 속도 조절
+                        menuWrapper.scrollLeft = scrollLeft - walk;
+                    });
 
-                // 마우스 휠 이벤트 추가
-                menuWrapper.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    menuWrapper.scrollLeft += e.deltaY;
-                });
+                    // 마우스 휠 이벤트 추가
+                    menuWrapper.addEventListener('wheel', (e) => {
+                        e.preventDefault();
+                        menuWrapper.scrollLeft += e.deltaY;
+                    });
+                }
+
             });
 
             this.scrollableDiv = document.getElementById('target_scroll');

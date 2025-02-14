@@ -14,7 +14,7 @@
         <item-paging :filter="filter" @change="filter.page = $event; jl.getsData(filter,rows);"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
-        <external-bs-modal :modal="modal" @close="modal = false;" class_1="" class_2="">
+        <external-bs-modal :modal="modal.status" @close="modal.status = false;" class_1="" class_2="">
             <template v-slot:header>
 
             </template>
@@ -63,12 +63,17 @@
 
                 options : {
                     required : [
-                        {name : "",message : ``,min : 0, max : 0},
-                        {
+                        {name : "",message : ``}, //simple
+                        {//String
                             name : "",
                             message : ``,
                             min : {length : 10, message : ""},
                             max : {length : 30, message : ""}
+                        },
+                        {//Array
+                            name : "",
+                            min : {length : 1, message : ""}
+                            max : {length : 10, message : ""}
                         },
                     ],
                     return : false, // 해당값이 true이면 ajax만 날리고 바로 리턴

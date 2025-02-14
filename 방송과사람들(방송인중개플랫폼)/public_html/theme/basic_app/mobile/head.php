@@ -38,9 +38,7 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
     } ?>
 
 
-    <div id="hd_wrapper" <?php if (defined('_INDEX_')) {
-        echo "class='idx wow fadeInDown animated'";
-    } ?> data-wow-delay="0.5s" data-wow-duration="0.3s">
+    <div id="hd_wrapper" <?/*php if (defined('_INDEX_')) { echo "class='idx wow fadeInDown animated'";} */?> data-wow-delay="0.5s" data-wow-duration="0.3s">
 
         <div class="hd_idx">
             <div class="logo">
@@ -62,16 +60,17 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
             </div>
         </div><!--idx-->
 
-        <div id="hd_back" class="hd_icon">
-            <a class="hd_icon01" href="javascript:history.back();">
-                <img src="<?php echo G5_THEME_IMG_URL ?>/app/icon_back.svg"><span class="sound_only">뒤로</span>
-            </a>
-            <a class="hd_icon02" href="javascript:history.back();">
-                <img src="<?php echo G5_THEME_IMG_URL ?>/app/icon_back_wt.svg"><span class="sound_only">뒤로</span>
-            </a>
+        <?php if (defined('_INDEX_')) { ?>
+        <?php }  else { ?>
+            <div id="hd_back" class="hd_icon">
+                <a class="hd_icon01" href="javascript:history.back();">
+                    <i class="fa-light fa-arrow-left"></i><span class="sound_only">뒤로</span>
+                </a>
+
+            </div>
             <div id="title"><?php echo $g5['title'] ?></div>
 
-        </div>
+        <?php } ?>
         <?php if($pid=='mypage_form') { ?>
             <a class="visible-xs btn btn_blue2 btn_out" href="<?php echo G5_BBS_URL ?>/mypage.php">
                 나가기
@@ -117,8 +116,10 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
                 <?php if ($is_member) { ?>
                     <?php if ($member['mb_level'] > 2) { ?>
                         <li><a href="<?php echo G5_BBS_URL ?>/item_write01.php">서비스등록</a></li>
+                        <li><a href="<?php echo G5_BBS_URL ?>/mypage_portfolio.php">마이페이지</a></li>
+                    <?php } else { ?>
+                        <li><a href="<?php echo G5_BBS_URL ?>/mypage.php">마이페이지</a></li>
                     <?php } ?>
-                    <li><a href="<?php echo G5_BBS_URL ?>/mypage_jjim.php">마이페이지</a></li>
                     <li><a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a></li>
                 <?php } ?>
                 <?php if (!$is_member) { ?>

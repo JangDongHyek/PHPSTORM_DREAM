@@ -45,25 +45,36 @@ $(document).ready(function(){
 		</div>
 		<ul class="ft_menu">
 			<li>
-				<h2>방송과 사람</h2>
-				<ul class="ft_mlist">
+				<h2>방송과 사람들</h2>
+				<!--ul class="ft_mlist">
 					<li><a href="">회사소개</a></li>
-				</ul>
+				</ul-->
 			</li>
 			<li>
 				<h2>서비스 약관</h2>
 				<ul class="ft_mlist">
-					<li><a href="">이용약관</a></li>
-					<li><a href="">FAQ</a></li>
+					<li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=privacy">개인정보 처리방침</a></li>
+					<li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=provision">서비스 이용약관</a></li>
+					<li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=provision">오픈소스 라이센스</a></li>
 				</ul>
 			</li>
 			<li>
 				<h2>고객센터</h2>
 				<ul class="ft_mlist">
-					<li><a href="">공지사항</a></li>
+					<li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=notice">공지사항</a></li>
+                    <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=faq">자주찾는질문</a></li>
+                    <?php if($is_admin) { ?>
+                        <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=qna">1:1 문의</a></li>
+                    <?php } else { ?>
+                        <li><a href="<?php echo G5_BBS_URL ?>/write.php?bo_table=qna">1:1 문의</a></li>
+                    <?php } ?>
 				</ul>
 			</li>
 		</ul>
+        <div class="flex">
+            <a href="" target="_blank"><i class="fa-brands fa-apple"></i> App Store</a>
+            <a href="" target="_blank"><i class="fa-brands fa-google-play"></i> Google Play</a>
+        </div>
 		<address>
 		<span>방송과사람</span><span>부산시 센텀동로 99</span>
 		<span class="tel">전화번호 <a href="tel:031-355-5819">031-355-5819</a></span>

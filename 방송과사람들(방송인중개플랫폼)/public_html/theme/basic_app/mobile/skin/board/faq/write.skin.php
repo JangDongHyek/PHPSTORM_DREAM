@@ -83,7 +83,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 1
 
         <label for="wr_subject">제목<strong class="sound_only">필수</strong></label>
 		<div id="autosave_wrapper">
-			<input type="text" name="wr_subject" value="<?=$write['wr_subject']?>" placeholder="질문을 입력해주세요" id="wr_subject" required class="frm_input" maxlength="255">
+			<input type="text" name="wr_subject" value="<?=$write['wr_subject']?>" placeholder="질문을 입력해주세요" id="wr_subject" required class="frm_input" style="width: 100%" maxlength="255">
 		</div>
 				
 		<label for="wr_content">내용<strong class="sound_only">필수</strong></label>

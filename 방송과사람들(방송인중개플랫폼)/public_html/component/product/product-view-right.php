@@ -55,7 +55,12 @@
                 </ul>
                 <!--자기소개글-->
                 <p class="pf_produce">자기소개글</p>
-                <a href="" class="btn_cs" @click="event.preventDefault(); postChatRoom();">전문가에게 문의하기</a>
+                <?php if($_SERVER['REMOTE_ADDR']=="112.160.220.208"): ?>
+                    <a href="" class="btn_cs" @click="event.preventDefault(); postChatRoom();">전문가에게 문의하기</a>
+                <?php else:?>
+                    <a href="" class="btn_cs" @click="event.preventDefault(); alert('준비 중입니다')">전문가에게 문의하기</a>
+                <?php endif;?>
+
             </div>
             <br>
             <div class="price_info">

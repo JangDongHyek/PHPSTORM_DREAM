@@ -569,7 +569,7 @@ if (count($new_arr) < 6 ){
     <div class="section02">
         <div class="tit">
             <h2>승인된 활동회원</h2>
-            <!--			<a class="more_view" href="./bbs/mem_new.php">리스트</a>-->
+            <a class="more_view" href="./bbs/mem_new.php">리스트</a>
         </div>
         <ul class="user_list">
             <?php

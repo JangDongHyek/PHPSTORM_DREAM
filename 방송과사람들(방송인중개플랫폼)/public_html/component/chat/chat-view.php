@@ -124,6 +124,10 @@
     </div>
 </script>
 
+<script src="http://itforone.com:3150/socket.io/socket.io.js"></script>
+<script src="<?=G5_JS_URL?>/chat-view.js"></script>
+<script type="text/javascript" src="http://itforone.com:3150/js/libs/moment.js"></script>
+<script type="text/javascript" src="http://itforone.com:3150/js/libs/mustache.js"></script>
 <script>
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
@@ -200,7 +204,6 @@
         }
     });
 </script>
-
 <style>
 
 </style>

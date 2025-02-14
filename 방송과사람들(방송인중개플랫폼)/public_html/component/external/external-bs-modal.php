@@ -1,8 +1,8 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div>
-        <div class="modal fade" :id="component_idx" tabindex="-1" aria-labelledby="accountFormModalLabel" :aria-hidden="modal">
-            <div class="modal-dialog wide">
+        <div class="modal fade" :class="class_1" :id="component_idx" tabindex="-1" :aria-hidden="modal">
+            <div class="modal-dialog" :class="class_2">
                 <div class="modal-content">
                     <div class="modal-header">
                         <slot name="header"></slot>
@@ -24,6 +24,8 @@
         template: "#<?=$componentName?>-template",
         props: {
             modal : {type : Boolean, default : false},
+            class_1 : {type : String, default : ""},
+            class_2 : {type : String, default : ""},
         },
         data: function(){
             return {
