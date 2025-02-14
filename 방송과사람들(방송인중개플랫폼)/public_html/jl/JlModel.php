@@ -936,7 +936,9 @@ class JlModel{
                         $this->sql .= " $operator ";
                     }
 
-                    $this->sql .= "$source.`{$key}` = '{$value}'";
+                    if($value == "CURDATE()") $this->sql .= "$source.`{$key}` = {$value}";
+                    else $this->sql .= "$source.`{$key}` = '{$value}'";
+
                 }
             }
         }
@@ -954,7 +956,8 @@ class JlModel{
                     $this->sql .= " $operator ";
                 }
 
-                $this->sql .= "$source.`{$first}` = '{$second}'";
+                if($second == "CURDATE()") $this->sql .= "$source.`{$first}` = {$second}";
+                else $this->sql .= "$source.`{$first}` = '{$second}'";
             }
         }
 
@@ -1016,6 +1019,7 @@ class JlModel{
         foreach($_param as $key => $value){
             if (is_array($value)) $value = $this->jsonEncode($value);
             if (is_object($value)) $value = $this->jsonEncode($value);
+            if (is_bool($value)) $value = $value ? "true" : "false";
 
             if($this->mysqli) {
                 $param[$key] = mysqli_real_escape_string($this->connect, $value);

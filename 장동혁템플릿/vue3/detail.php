@@ -83,6 +83,23 @@
                 data : {
                     table : "",
                     file_use : false,
+
+                    // 해당하는 조건에 걸리는 데이터가 있으면 error(message)를 반환
+                    // 객체 하나당 묶음이라 여러개의 조건도 가능 아이디 확인, 닉네임 확인 이렇게하고싶으면 객체 두개필요
+                    exists : [
+                        {
+                            where : [
+                                {key : "", value : "", operator : ""}
+                            ],
+                            message : ""
+                        }
+                    ],
+
+                    //데이터를 암호화 할때 필요 ex 정보 수정시 change_user_pw의값을 user_pw 에 암호화해서 삽입한다는 내용
+                    hashes : [
+                        {key : "user_pw", convert : "user_pw"}, // 회원가입할떄
+                        {key : "change_user_pw", convert : "user_pw"}, // 회원 정보 수정할때
+                    ]
                 }
             };
         },

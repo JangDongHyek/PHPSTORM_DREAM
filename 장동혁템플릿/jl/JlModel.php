@@ -936,7 +936,9 @@ class JlModel{
                         $this->sql .= " $operator ";
                     }
 
-                    $this->sql .= "$source.`{$key}` = '{$value}'";
+                    if($value == "CURDATE()") $this->sql .= "$source.`{$key}` = {$value}";
+                    else $this->sql .= "$source.`{$key}` = '{$value}'";
+
                 }
             }
         }
@@ -954,7 +956,8 @@ class JlModel{
                     $this->sql .= " $operator ";
                 }
 
-                $this->sql .= "$source.`{$first}` = '{$second}'";
+                if($second == "CURDATE()") $this->sql .= "$source.`{$first}` = {$second}";
+                else $this->sql .= "$source.`{$first}` = '{$second}'";
             }
         }
 

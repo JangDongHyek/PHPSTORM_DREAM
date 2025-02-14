@@ -17,8 +17,8 @@
                 jl: null,
                 component_idx: "",
 
-                data: {},
-                arrays : [],
+                row: {},
+                rows : [],
 
                 options : {
                     required : [
@@ -47,8 +47,8 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.data = await this.jl.getData(this.filter);
-//await this.jl.getsData(this.filter,this.arrays);
+            if(this.primary) this.row = await this.jl.getData(this.filter);
+//await this.jl.getsData(this.filter,this.rows);
 
             this.load = true;
         },
