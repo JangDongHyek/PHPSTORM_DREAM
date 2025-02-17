@@ -414,9 +414,15 @@ class JlModel{
         if($param[$this->primary]) return $param[$this->primary];
 
         if($this->mysqli)
-            return mysqli_insert_id($this->connect);
+            return array(
+                "primary" => mysqli_insert_id($this->connect),
+                "sql" => $sql,
+            );
         else
-            return mysql_insert_id($this->connect);
+            return array(
+                "primary" => mysql_insert_id($this->connect),
+                "sql" => $sql,
+            );
     }
 
     function count($_param = array()){
@@ -569,9 +575,11 @@ class JlModel{
         foreach($param as $key => $value){
             if($key == "update_date") continue;
             if(in_array($key, $this->schema['columns'])){
+                $column = $this->schema['columns_info'][$key];
                 if(!empty($update_sql)) $update_sql .= ", ";
 
                 if($value == "now()") $update_sql .= "`{$key}`={$value}";
+                else if($column['DATA_TYPE'] == 'int' && $value == 'incr') $update_sql = "`{$key}`={$key}+1";
                 else $update_sql .= "`{$key}`='{$value}'";
             }
         }
@@ -592,7 +600,7 @@ class JlModel{
 
         $this->reset();
 
-        return $this;
+        return array("sql" => $sql);
     }
 
     /*

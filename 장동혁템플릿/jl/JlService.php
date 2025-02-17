@@ -121,7 +121,11 @@ class JlService extends Jl{
                 $join_data = $joinModel->get()['data'][0];
 
                 //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
-                $object["data"][$index]["$".$info['table']] = $join_data;
+                if($info['as']) {
+                    $object["data"][$index]["$".$info['as']] = $join_data;
+                }else {
+                    $object["data"][$index]["$".$info['table']] = $join_data;
+                }
             }
         }
 
@@ -153,7 +157,11 @@ class JlService extends Jl{
     }
 
     public function insert() {
-        $this->iuCheck();
+        $checked = $this->iuCheck();
+
+        if(!$checked) {
+            return array("success" => true, "message" => "checked 로 인한 sql 패스");
+        }
 
         if($this->file_use) {
             foreach ($this->FILES as $key => $file_data) {
@@ -164,16 +172,19 @@ class JlService extends Jl{
             if(count($_FILES)) $this->error("파일을 사용하지않는데 첨부된 파일이 있습니다.");
         }
 
+        $response = $this->model->insert($this->obj);
 
-
-        $response['primary'] = $this->model->insert($this->obj);
         $response['success'] = true;
 
         return $response;
     }
 
     public function update() {
-        $this->iuCheck();
+        $checked = $this->iuCheck();
+
+        if(!$checked) {
+            return array("success" => true, "message" => "checked 로 인한 sql 패스");
+        }
 
         if($this->file_use) {
             //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
@@ -197,9 +208,8 @@ class JlService extends Jl{
             }
         }
 
-        $this->model->update($this->obj);
+        $response = $this->model->update($this->obj);
         $response['success'] = true;
-        $response['primary'] = $this->obj[$this->model->primary];
 
         return $response;
     }
@@ -295,6 +305,53 @@ class JlService extends Jl{
                 if($this->obj[$hash['key']]) $this->obj[$hash['convert']] = password_hash($this->obj[$hash['key']],PASSWORD_DEFAULT);
             }
         }
+
+        if(isset($this->obj['session_exists'])) {
+            $session_exists = $this->jsonDecode($this->obj['session_exists']);
+            foreach ($session_exists as $s_exists) {
+                $s_exists = $this->jsonDecode($s_exists);
+                $this->session_model->where("content",$s_exists['content']);
+                $this->session_model->where('client_ip',$this->getClientIP());
+                $this->session_model->where('status','active');
+                $row = $this->session_model->get();
+
+                if($row['count']) {
+                    if($s_exists['exit_type'] == 'error') $this->error("iuCheck() : {$s_exists['content']} 세션이 존재합니다.");
+                    else if($s_exists['exit_type'] == 'stop') return false;
+                }
+            }
+        }
+
+        if(isset($this->obj['session_insert'])) {
+            $session_insert = $this->jsonDecode($this->obj['session_insert']);
+            foreach ($session_insert as $insert) {
+                $insert = $this->jsonDecode($insert);
+                $this->session_model->where("content",$insert['content']);
+                $this->session_model->where('client_ip',$this->getClientIP());
+                $this->session_model->where('status','active');
+                $row = $this->session_model->get();
+
+                if(!$row['count']) {
+                    $agent = $this->getUserAgent();
+
+                    $this->session_model->insert(array(
+                        "client_ip" => $this->getClientIP(),
+                        "name" => "session",
+                        "status" => "active",
+                        "content" => $insert['content'],
+                        "user_agent" => $agent['user_agent'],
+                        "browser" => $agent['browser'],
+                        "browser_version" => $agent['browser_version'],
+                        "platform" => $agent['platform'],
+                        "is_mobile" => $agent['is_mobile'],
+                        "in_app_browser" => $agent['in_app_browser'],
+                        "delete_date" => $this->getTime(4),
+                    ));
+                }
+            }
+        }
+
+        return true;
     }
 }
 ?>

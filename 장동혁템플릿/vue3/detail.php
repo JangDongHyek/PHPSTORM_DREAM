@@ -62,6 +62,7 @@
                 },
 
                 options : {
+                    file_use : false, // true 파일 사용
                     required : [
                         {name : "",message : ``}, //simple
                         {//String
@@ -87,14 +88,15 @@
 
                 data : {
                     table : "",
-                    file_use : false,
+
+                    int : "incr", // 인트타입의 컬럼인데 incr 이란 단어가 들어가면 해당컬럼 +1 로 쿼리가 대체된다
 
                     // 해당하는 조건에 걸리는 데이터가 있으면 error(message)를 반환
                     // 객체 하나당 묶음이라 여러개의 조건도 가능 아이디 확인, 닉네임 확인 이렇게하고싶으면 객체 두개필요
                     exists : [
                         {
                             where : [
-                                {key : "", value : "", operator : ""}
+                                {key : "", value : "", operator : ""},
                             ],
                             message : ""
                         }
@@ -104,7 +106,17 @@
                     hashes : [
                         {key : "user_pw", convert : "user_pw"}, // 회원가입할떄
                         {key : "change_user_pw", convert : "user_pw"}, // 회원 정보 수정할때
-                    ]
+                    ],
+
+                    // 해당 컨텐츠내용에 client_ip, status active 된 데이터가 없다면 추가
+                    session_insert : [
+                        {content : "project_hits"},
+                    ],
+
+                    // 해당 컨텐츠내용에 client_ip, status active 된 데이터가 있다면 해당 로직 중단
+                    session_exists : [
+                        {content : "project_hits", exit_type : "error"}, // exit_type 이 error일경우 error가반환 stop일경우 로직이 중단되고 끝
+                    ],
                 }
             };
         },
@@ -208,12 +220,12 @@
 
                     // 이테이블의 user_idx 값으로 user의 테이블에 primary값을 검색해 맞는 데이터 하나만 가져오는 확장형 구문
                     extensions : [
-                        {table : "user", foreign : "user_idx"}
+                        {table : "user", foreign : "user_idx", as : ""}, // as값이있다면 $테이블명이아닌 $as값으로 가져온다
                     ],
 
                     // like테이블에 foreing키에 이테이블의 primary값을 가진 모든데이터를 가져오는 연결형구문
                     relations : [
-                        {table : "like" ,foreign : "board_idx"}
+                        {table : "like" ,foreign : "board_idx"},
                     ],
 
                     join : {

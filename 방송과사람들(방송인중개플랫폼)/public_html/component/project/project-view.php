@@ -1,241 +1,84 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
-        <article id="contest_view">
-            <header>
-                <div id="contest">
-                    <div class="inr">
-                        <div class="list cf">
-                            <div class="thm">
-                                <div class="mg">
-                                    <!--<span class="pri">PRIME</span>prime 광고등록 상품은 해당 아이콘이 뜨도록-->
-                                    <div class="heart" id="heart_div_18">
-                                        <button type="button" class="heart off" onclick="like_chk('on',18,'competition')"><i class="fa-light fa-heart"></i></button><!--좋아요 누르기전 -->
-                                    </div>
-                                    <a :href="'./contest_view.php?idx='+data.idx">
-
-                                        <div class="mg_in">
-                                            <div class="over">
-                                                <img :src="jl.root + data.main_image[0].src">
-                                            </div>
-                                        </div><!--클라이언트 로고-->
-                                    </a>
-                                </div><!--mg-->
-
-                                <a :href="'./contest_view.php?idx='+data.idx">
-
-                                    <div class="info">
-                                        <!-- 재능강의 작성자 정보 -->
-                                        <div id="lecture_writer_list">
-                                            <div class="mb">
-                                                <div class="mb_info">
-                                                    <p><i class="fas fa-user-circle"></i>&nbsp;{{data.$g5_member.mb_nick}}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tit">{{data.subject}}</div><!--프로젝트 제목(최대1줄까지만 추출, 나머지는 ... 처리함)-->
-                                        <div class="cont">{{data.content}}</div><!--프로젝트 설명(최대2줄까지만 추출, 나머지는 ... 처리함)-->
-                                        <div class="rate cf">
-                                            <div class="star"><span><i class="fal fa-eye"></i> 0회</span><span>0명의 참여자</span></div>
-                                            <div class="heart_hit"><span><i class="fal fa-calendar-week"></i></span> {{data.status ? '승인' : '심사중' }} </div><!--심시기간-->
-                                        </div>
-                                        <div class="price">희망 제작비용 {{data.price}}만원</div><!--상품가격-->
-                                    </div>
-                                </a>
-
-                            </div>
-                        </div><!--list-->
-                    </div><!--in-->
-                </div><!--//contest-->
-            </header>
-
-            <div class="wrapper inr">
-                <div class="tabs cf">
-                    <input name="tabs" id="tab1" checked="" type="radio">
-                    <label for="tab1"><span class="hidden-xs">프로젝트 </span>의뢰 내용</label>
-                    <input name="tabs" id="tab2" type="radio">
-                    <label for="tab2"><span class="hidden-xs">프로젝트 </span>참여<span class="badge">0</span></label>
-                    <input name="tabs" id="tab3" type="radio">
-                    <label for="tab3">문의사항<span class="badge">0</span></label>
-
-                    <!--프로젝트 내용-->
-                    <div id="tab-content1" class="tab-content">
-                        <div class="contest_cont">
-
-                            <section>
-                                <h3><i class="far fa-newspaper"></i> 프로젝트 의뢰내용</h3>
-                                <div class="cont client">
-                                    <dl>
-                                        <dt>제목</dt>
-                                        <dd>{{data.subject}}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>클라이언트 명</dt>
-                                        <dd></dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>서비스 설명</dt>
-                                        <dd></dd>
-                                    </dl>
-                                </div>
-                            </section>
-
-                            <section>
-                                <h3><i class="fal fa-images"></i> 참고할 자료가 있으신가요?<span>(최대 3작품 선택)</span></h3>
-                                <div class="cont sample">
-
-                                    <ul>
-                                        <li><a href="">다운로드</a></li>
-                                    </ul>
-                                </div>
-                            </section>
-
-                            <section>
-                                <h3><i class="fal fa-images"></i> 원하시는 관련키워드를 선택해주세요.</h3>
-                                <div class="cont">
-                                    <span class="hash"></span>
-                                </div>
-                            </section>
-
-                            <section>
-                                <h3><i class="fal fa-folder-tree"></i> 프로젝트 상세내용</h3>
-                                <div class="cont" style="white-space: pre-wrap;">2</div>
-                            </section>
-                        </div><!--//contest_cont-->
+        <div class="project-view">
+            <div class="grid">
+                <section class="left">
+                    <div class="thumbnail-container">
+                        <img :src="jl.root + row.thumb[0].src" alt="프로젝트 이미지">
                     </div>
-
-                    <div id="tab-content2" class="tab-content">
-                        <!--프로젝트 참여 작성자 및 관리자일때-->
-
-                        <div class="contest_cont partici">
-                            <ul>
-                                <li>
-                                    <dl>
-                                        <a href="modal">
-                                            <div class="mem_area" style="background:url(<?=$url?>) no-repeat center center; background-size:; background-color:#A8A8A8">
-                                                <div class="trophy"></div>
-                                            </div>
-                                        </a>
-                                        <input type="radio" style="display: inline!important;" name="comp_win" value="">
-                                        <i class="fas fa-user-circle"></i>&nbsp
-                                        <dd class="date"></dd>
-                                    </dl>
-                                </li>
-                            </ul>
-
-<!--                            <div class="text-center empty_list" style="margin-top: 30px">-->
-<!--                                <i class="far fa-image-polaroid fa-4x"></i>-->
-<!--                                <p class="t_padding17">프로젝트 참여자가 없습니다. </p>-->
-<!--                            </div>-->
-                        </div><!--//contest_cont-->
-
-
-
-
-                        <div class="text-center empty_list" style="margin-top: 30px">
-                            <i class="far fa-eye-slash fa-4x"></i>
-                            <p class="t_padding17">현재 진행 중인 콘테스트의 참여작은 <br />개최 의뢰자만 확인 가능합니다.</p>
+                </section>
+                <section class="right">
+                    <div class="info-box">
+                        <div class="project-category">
+                            {{row.$category.name}} · {{row.$category2.name}}
+                            <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                         </div>
-
-                        <div class="text-center empty_list" style="margin-top: 30px">
-                            <i class="far fa-eye-slash fa-4x"></i>
-                            <p class="t_padding17">공모작 참가가 마감된 게시물 입니다.</p>
-                        </div>
-
-                        <div class="contest_cont partici">
-                            <ul>
-                                <li>
-                                    <dl>
-                                        <a href="modal">
-
-                                            <div class="mem_area" style="background:url(<?=$url?>) no-repeat center center; background-size:cover">
-                                                <div class="trophy"></div>
-                                            </div>
-                                        </a>
-                                        <input type="radio" style="display: inline!important;" name="comp_win" value="<?=$apply_my_row['ap_idx']?>">
-                                        <i class="fas fa-user-circle"></i>&nbsp
-                                        <dd class="date"></dd>
-                                    </dl>
-                                </li>
-                            </ul>
-                        </div>
-
-
-                        <div class="btn_partici text-right">
-                                <a href="javascript:comp_win_idx(<?=$row['cp_idx']?>)"><i class="far fa-trophy-alt"></i> 당선자 선정</a>
-                                <a href="javascript:comp_apply_modal()">프로젝트 참여하기</a>
-                                참여자에게 금액이 지급완료되었습니다.
+                        <h2>{{row.subject}}</h2>
+                        <p class="subtitle">{{row.description}}</p>
+                        <div class="profile">
+                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                            <span>{{row.$g5_member.mb_nick}}</span>
                         </div>
                     </div>
+                    <div class="prize-info">
+                        <div class="">총 상금</div>
+                        <div class="total-prize">{{totalPrize(row).format()}}원</div>
+                        <ul>
+                            <li v-for="item in row.prize">
+                                <span class="first-prize"><b>{{item.subject}}</b> {{parseInt(item.money).format()}}원</span>
+                                <span class="winner-count">x {{item.people}}명</span>
+                            </li>
+                        </ul>
 
-                    <!--참여작 보기-->
-                    <div id="tab-content3" class="tab-content">
-                        <div class="contest_cont">
-
-                            <section class="cmt">
-                                <textarea name="competition_comment_0" id="competition_comment_0" required="" maxlength="5000" placeholder="문의사항을 입력해주세요"></textarea>
-                                <input type="button" onclick="competition_comment_update('0')" id="cmt_btn_submit" value="댓글입력" accesskey="s">
-                                <p>*관련 문의사항만 등록해 주세요. 불만, 비방성 댓글은 의뢰자나 관리자에 의해 경고 없이 삭제될 수 있으며, 사이트 이용 제한이 발생할 수 있습니다.</p>
-                            </section>
-
-                            <section>
-                                <!--<h3><i class="fal fa-images"></i> 프로젝트 문의사항 <span>(4)</span></h3>-->
-                                <div id="item_review">
-                                    <div class="in">
-                                        <div class="rev cf">
-
-                                                <div class="text-center empty_list">
-                                                    <i class="fal fa-lightbulb-exclamation fa-4x"></i>
-                                                    <p class="t_padding17">등록된 문의사항이 없습니다.</p>
-                                                </div>
-
-                                                <div class="list cf">
-                                                    <a href="">
-                                                        <div class="mg">
-                                                                <img src="<?php echo G5_THEME_IMG_URL ?>/sub/default.png">
-                                                        </div><!--서비스 썸네일 추출-->
-                                                        <div class="info">
-                                                            <div class="nick"><span><i class="fas fa-user-circle"></i></span>mb_nick</div><!--닉네임 일부분 노출-->
-                                                            <div class="txt" style="white-space: pre-wrap">content</div>
-                                                            <div class="date">
-                                                                <div class="star">wr_date</div>
-                                                            </div>
-                                                            <div class="btn_gr">
-                                                                <ul>
-                                                                        <li><a onclick="toggle_visibility('reply_<?=$comment["comment_idx"]?>');">답변</a></li>
-                                                                        <li><a href="javascript:competition_comment_del(<?=$comment["comment_idx"]?>)">삭제</a></li>
-                                                                </ul>
-
-                                                            </div>
-                                                            <div id="reply_div_<?=$comment['comment_idx']?>">
-                                                                    <div class="reply">
-                                                                        wr_content
-                                                                            <a href="javascript:competition_comment_del(<?=$reply["comment_idx"]?>)"><span style="float: right">삭제</span></a>
-                                                                    </div>
-
-                                                            </div>
-                                                            <div style="display: none">
-                                                                <section class="cmt">
-                                                                    <textarea placeholder="답변을 입력해주세요"></textarea>
-                                                                    <input type="button" value="답변입력">
-                                                                </section>
-                                                            </div>
-                                                        </div>
-
-                                                    </a>
-                                                </div>
-                                        </div><!--rev-->
-                                    </div><!--in-->
-                                        <div class="review_more"><a href="">더 보기</a></div>
-                                </div>
-                            </section>
-                        </div><!--//contest_cont-->
                     </div>
-
-                </div><!--//tabs-->
+                    <div class="meta-info">
+                        <div>
+                            진행 기간<br><b>{{getDurationDays(row)}}일</b><br>
+                            <span>{{row.start_date.formatDate({type: '.'})}} - {{row.end_date.formatDate({type: '.'})}}</span>
+                        </div>
+                        <div>참여작<br><b>24개</b></div>
+                        <div>조회 수<br><b>{{row.hits}}</b></div>
+                    </div>
+                    <div class="button-container">
+                        <button class="share-btn">공유하기</button>
+                        <button class="apply-btn" onclick="location.href='./project_join.php'">프로젝트 지원하기</button>
+                    </div>
+                </section>
             </div>
 
-        </article>
+            <div class="tabs">
+                <div class="tab" :class="{'active' : tab == 0}" @click="tab = 0">요청 사항</div>
+                <div class="tab" :class="{'active' : tab == 1}" @click="tab = 1">참여작 <span class="count">24</span></div>
+                <div class="tab" :class="{'active' : tab == 2}" @click="tab = 2">문의 댓글 <span class="count">0</span></div>
+            </div>
+            <div class="tab-content active">
+                <div class="request-view" v-show="tab == 0">
+                    <h6>의뢰 내용</h6>
+                    <div>
+                        <!--에디터 내용-->
+                        의뢰 내용입니다.
+                    </div>
+                    <h6>참고 레퍼런스</h6>
+                    <div>
+                        <div class="swiper sample-swiper">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/app/visual01.jpg"></div>
+                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <project-view-request :primary="primary" v-show="tab == 1"></project-view-request>
+                <project-view-comment :primary="primary" v-show="tab == 2"></project-view-comment>
+            </div>
+        </div>
     </div>
 </script>
 
@@ -251,10 +94,11 @@
                 jl: null,
                 component_idx: "",
 
-                data: {},
-                arrays : [],
+                row: {},
+                rows : [],
 
                 options : {
+                    file_use : false,
                     required : [
                         {name : "",message : ``},
                     ],
@@ -264,13 +108,14 @@
                 filter : {
                     table : "project",
                     primary : this.primary,
-
                     page: 1,
                     limit: 1,
                     count: 0,
 
                     extensions : [
-                        {table : "g5_member", foreign : "user_idx"}
+                        {table : "g5_member", foreign : "user_idx"},
+                        {table : "category", foreign : "category1_idx"},
+                        {table : "category", foreign : "category2_idx", as : "category2"},
                     ],
                 },
 
@@ -279,6 +124,8 @@
                     data : {},
                 },
 
+                tab : 0,
+
                 load : false,
             };
         },
@@ -286,21 +133,85 @@
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
 
-            if(this.primary) this.data = await this.jl.getData(this.filter);
-//await this.jl.getsData(this.filter,this.arrays);
+
+            if(this.primary) {
+                let hitData = {
+                    primary : this.primary,
+                    hits : "incr",
+
+                    session_insert : [
+                        {content : "project_hits"+this.primary}
+                    ],
+
+                    session_exists : [
+                        {content : "project_hits"+this.primary, exit_type : "stop"},
+                    ],
+                }
+                await this.jl.postData(hitData,"project",{return : true})
+
+                this.row = await this.jl.getData(this.filter);
+            }
+            else {
+                await this.jl.alert("잘못된 접근입니다.");
+                window.history.back();
+            }
+            //await this.jl.getsData(this.filter,this.rows);
 
             this.load = true;
         },
         mounted() {
             this.$nextTick(() => {
-
+                let swiper = new Swiper(".sample-swiper", {
+                    slidesPerView: "auto",
+                    spaceBetween: 10,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                });
             });
         },
         updated() {
 
         },
         methods: {
+            getDurationDays(item) {
+                let startDate = item.start_date;
+                let endDate = item.end_date;
+                // 날짜 형식 검증 (YYYY-MM-DD)
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
+                if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+                    throw new Error('날짜 형식은 YYYY-MM-DD로 입력해주세요.');
+                }
+
+                // Date 객체 생성
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                    throw new Error('유효하지 않은 날짜입니다.');
+                }
+
+                // 일수 계산 (하루 86400000ms)
+                const diffInMs = end - start;
+                const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+                if (diffInDays < 0) {
+                    throw new Error('시작 날짜가 종료 날짜보다 이후일 수 없습니다.');
+                }
+
+                return diffInDays + 1; // 시작일부터 종료일까지 포함
+            },
+            totalPrize(item) {
+                let total = 0;
+
+                for (const prize of item.prize) {
+                    total += prize.money * prize.people;
+                }
+
+                return total;
+            }
         },
         computed: {
 

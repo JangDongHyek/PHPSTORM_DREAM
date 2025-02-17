@@ -21,6 +21,7 @@
                 rows : [],
 
                 options : {
+                    file_use : false,
                     required : [
                         {name : "",message : ``},
                     ],

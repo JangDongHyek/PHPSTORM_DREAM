@@ -65,7 +65,6 @@
                                     }
                                 },
                                 onChange: function(contents) {
-                                    console.log(1)
                                     component.row[component.field] = contents; // Vue 데이터 동기화
                                 }
                             }

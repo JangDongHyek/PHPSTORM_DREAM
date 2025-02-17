@@ -24,7 +24,7 @@ include_once('./_head.php');
                     <h3>프로젝트 의뢰 LIST</h3><!--의뢰인 :의뢰 / 전문가 : 지원-->
                     <button type="button" class="project-add" onclick="window.location.href='./project_form.php'">프로젝트 의뢰하기</button><!--의뢰인 버전-->
 
-                    <project-my-list></project-my-list>
+                    <project-my-list mb_no="<?=$member['mb_no']?>"></project-my-list>
                 </div>
             </div>
             <!-- 마이페이지에만 나오는 메뉴 -->
@@ -38,6 +38,7 @@ include_once('./_head.php');
 $jl->vueLoad("area_mypage");
 $jl->componentLoad("project");
 $jl->componentLoad("external");
+$jl->componentLoad("item");
 ?>
 
 <?

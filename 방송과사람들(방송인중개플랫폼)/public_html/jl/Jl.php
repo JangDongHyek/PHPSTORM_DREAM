@@ -277,6 +277,14 @@ class Jl {
                 array_push(self::$PLUGINS,"viewer");
             }
         }
+
+        if(in_array('swiper',$plugins)) {
+            if(!in_array("swiper",self::$PLUGINS)) {
+                //echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>';
+                array_push(self::$PLUGINS,"swiper");
+            }
+        }
     }
 
     // vue 사용할시 vue에 필요한 파일들을 로드하고 JS 필수함수를 실행시키는 함수
@@ -555,17 +563,20 @@ class Jl {
     }
 
     //현재 시간 반환하는 함수
-    function getTime($hour = 0) {
-        // 현재 시간 가져오기
-        $currentTime = time();
+    function getTime($hour = 0, $timezone = 'Asia/Seoul') {
+        // 현재 시간 생성 (기본 UTC)
+        $dt = new DateTime('now', new DateTimeZone('UTC'));
 
         // 시간 추가
         if ($hour !== 0) {
-            $currentTime += $hour * 3600; // 1시간 = 3600초
+            $dt->modify("+{$hour} hours");
         }
 
+        // 지정된 타임존으로 변경
+        $dt->setTimezone(new DateTimeZone($timezone));
+
         // 포맷된 시간 반환
-        return date('Y-m-d H:i:s', $currentTime);
+        return $dt->format('Y-m-d H:i:s');
     }
 
     //현재 개발환경을 알아내는 함수

@@ -2,32 +2,32 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <ul class="project-list">
-            <li class="project-item">
+            <li class="project-item" v-for="item in arrays">
                 <ul class="prize-info">
-                    <li><span>🏆 총 상금</span> 80만 원</li>
+                    <li><span>🏆 총 상금</span> {{ totalPrize(item).format() }}원</li>
                     <li><span>📌 참여작</span> 21개</li>
-                    <li><span>📅 진행 기간</span> 6일</li>
-                    <li><span>📆 날짜</span> 25.02.05 ~ 25.02.11</li>
+                    <li><span>📅 진행 기간</span> {{getDurationDays(item)}}일</li>
+                    <li><span>📆 날짜</span> {{item.start_date.formatDate({type : '.'})}} ~ {{item.end_date.formatDate({type : '.'})}}</li>
                 </ul>
                 <a class="project-link">
-                    <div class="thumb" onclick="location.href='./project_view.php'">
-                        <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로젝트 이미지">
+                    <div class="thumb" @click="jl.href('./project_view.php?primary=' + item.idx)">
+                        <img :src="jl.root + item.thumb[0].src" alt="프로젝트 이미지">
                     </div>
                     <div class="project-cont">
                         <div class="project-info">
                             <div class="project-category">
-                                <span class="state v1">진행 중</span><span class="state v2">모집 종료</span><span class="state v3">선정 완료</span><!--의뢰인 버전-->
-                                1차 카테고리 · 2차 카테고리
+                                <span class="state" :class="getStatus(item)">{{getStatus(item,'text')}}</span>
+                                {{item.$category.name}} · {{item.$category2.name}}
                                 <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                             </div>
-                            <h2 class="project-title">프로젝트명</h2>
-                            <p class="project-desc">프로젝트 설명입니다.</p>
+                            <h2 class="project-title">{{item.subject}}</h2>
+                            <p class="project-desc">{{item.description}}</p>
                         </div>
                     </div>
                 </a>
                 <div class="btn-wrap"><!--의뢰인 버전-->
-                    <button type="button">수정</button>
-                    <button type="button">삭제</button>
+                    <button type="button" @click="jl.href('./project_form.php?primary='+item.idx)">수정</button>
+                    <button type="button" @click="jl.deleteData(item,'project')">삭제</button>
                     <button type="button" class="blue" @click="modal.status = true">선정</button>
                 </div>
             </li>
@@ -112,6 +112,8 @@
 
             </template>
         </external-bs-modal>
+
+        <item-pagination :filter="filter" @change="filter.page = $event; jl.getsData(filter,arrays);"></item-pagination>
     </div>
 </script>
 
@@ -119,6 +121,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            mb_no : {type: String, default: ""},
             primary : {type: String, default: ""},
         },
         data: function () {
@@ -146,7 +149,9 @@
                     count: 0,
 
                     extensions : [
-                        {table : "g5_member", foreign : "user_idx"}
+                        {table : "g5_member", foreign : "user_idx"},
+                        {table : "category", foreign : "category1_idx"},
+                        {table : "category", foreign : "category2_idx", as : "category2"},
                     ],
                 },
 
@@ -176,7 +181,52 @@
 
         },
         methods: {
+            getStatus(item,type = "class") {
+                if(item.choice) {
+                    return type == "class" ? "v3" : "선정 완료";
+                }else if(this.jl.isRangeDate(item.start_date,item.end_date)) {
+                    return type == "class" ? "v1" : "진행 중";
+                }else {
+                    return type == "class" ? "v2" : "모집 종료";
+                }
+            },
+            getDurationDays(item) {
+                let startDate = item.start_date;
+                let endDate = item.end_date;
+                // 날짜 형식 검증 (YYYY-MM-DD)
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
+                if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+                    throw new Error('날짜 형식은 YYYY-MM-DD로 입력해주세요.');
+                }
+
+                // Date 객체 생성
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                    throw new Error('유효하지 않은 날짜입니다.');
+                }
+
+                // 일수 계산 (하루 86400000ms)
+                const diffInMs = end - start;
+                const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+                if (diffInDays < 0) {
+                    throw new Error('시작 날짜가 종료 날짜보다 이후일 수 없습니다.');
+                }
+
+                return diffInDays + 1; // 시작일부터 종료일까지 포함
+            },
+            totalPrize(item) {
+                let total = 0;
+
+                for (const prize of item.prize) {
+                    total += prize.money * prize.people;
+                }
+
+                return total;
+            }
         },
         computed: {
 

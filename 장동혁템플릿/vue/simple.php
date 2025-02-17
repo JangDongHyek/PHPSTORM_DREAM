@@ -21,6 +21,7 @@
                 rows : [],
 
                 options : {
+                    file_use : false,
                     required : [
                         {name : "",message : ``},
                     ],
@@ -48,7 +49,7 @@
             this.component_idx = this.jl.generateUniqueId();
 
             if(this.primary) this.row = await this.jl.getData(this.filter);
-//await this.jl.getsData(this.filter,this.rows);
+            //await this.jl.getsData(this.filter,this.rows);
 
             this.load = true;
         },

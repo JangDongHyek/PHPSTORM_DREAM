@@ -49,6 +49,47 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="box_content">
+                    <div class="box_write02">
+                        <h4 class="b_tit">메인이미지등록
+                            <em><i class="point" name="point">{{ data.thumb.length }}</i>/1</em>
+                            <span v-if="data.thumb.length > 1" style="color : red;">메인 이미지는 최대 1장입니다.</span>
+                        </h4>
+                        <div class="cont">
+                            <div class="area_box">
+
+                                <!-- 처음화면에서는 안보였다가 이미지 등록하면 나타나게 해주세요 ~~ -->
+                                <ul class="photo_list" id="file_list">
+                                    <li class="file_1" v-for="item,index in data.thumb">
+                                        <div class="area_img">
+                                            <img :src="item.preview ? item.preview : jl.root+item.src">
+                                            <div class="area_delete" @click="data.thumb.splice(index,1)"><span class="sound_only">삭제</span></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- //이미지 미리보기 -->
+
+                                <template>
+
+                                    <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
+                                           ref="main_image_array" @change="jl.changeFile($event,data,'thumb')">
+                                    <div id="fileDrag" class="img_wrap" @click="$refs.main_image_array.click();"
+                                         @drop.prevent="jl.dropFile($event,data,'thumb')" @dragover.prevent @dragleave.prevent>
+                                        <div class="area_txt">
+                                            <div class="area_img"><img
+                                                        :src="`${jl.root}/theme/basic_app/img/app/icon_upload.svg`"></div>
+                                            <span class="w">마우스로 드래그해서 파일을 추가하세요.</span>
+                                            <span class="m">파일을 추가하세요.</span>
+                                        </div>
+                                    </div>
+                                    <em>※이미지 권장 비율(4:3)</em>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="box_content">
                     <div class="box_write02">
                         <h4 class="b_tit">참고 레퍼런스 이미지
@@ -93,10 +134,14 @@
                         <div class="cont">
                             <div class="box_ck">
                                 <ul class="area_filter" id="area_filter">
-                                    <li v-for="item in data.prize">
+                                    <li v-for="item,index in data.prize">
                                         <div class="filter_active">
-                                            <input type="text" placeholder="수상명" v-model="item.subject">
                                             <dl class="grid">
+                                                <dt><label>수상명</label></dt>
+                                                <dd class="flex">
+                                                    <input type="text" placeholder="수상명" v-model="item.subject" class="titleInput">
+                                                    <span id="deletePrizeBtn" @click="data.prize.splice(index,1)">등수 삭제</span>
+                                                </dd>
                                                 <dt><label>인원</label></dt>
                                                 <dd><input type="text" placeholder="인원을 입력해주세요" v-model="item.people" class="titleInput"></dd>
                                                 <dt><label>인당 상금</label></dt>
@@ -138,7 +183,6 @@
                 },
 
                 data: {
-                    file_use : true,
                     user_idx : this.mb_no,
                     subject : "",
                     description : "",
@@ -147,12 +191,14 @@
                     category1_idx : "",
                     category2_idx : "",
                     content : "",
+                    thumb : [],
                     images : [],
                     prize : [],
                     status : false
                 },
 
                 options : {
+                    file_use : true,
                     required : [
                         {name : "user_idx",message : `로그인이 필요한 기능입니다.`},
                         {
@@ -173,12 +219,26 @@
                         {name : "category2_idx",message : `하위카테고리는 필수값입니다.`},
                         {name : "content",message : `의뢰내용을 입력해주세요.`},
                         {
+                            name : "thumb",
+                            min : {length : 1, message : "메인이미지는 필수값입니다."},
+                            max : {length : 1, message : "메인이미지는 최대 1장입니다."}
+                        },
+                        {
                             name : "images",
                             max : {length : 10, message : "참고 래퍼런스 자료는 최대 10장입니다."}
                         },
                     ],
-                    href : "",
+                    href : "./mypage_project_my.php",
                 },
+
+                filter : {
+                    table : "project",
+                    primary : this.primary,
+                    page: 1,
+                    limit: 1,
+                    count: 0,
+                },
+
 
                 categories : [],
                 category_child : [],
@@ -199,6 +259,11 @@
                 table : "category",
                 parent_idx : 0,
             },this.categories);
+
+            if(this.primary) {
+                this.data = await this.jl.getData(this.filter);
+            }
+
 
             this.load = true
         },
@@ -226,7 +291,9 @@
         },
         watch: {
             async category1_idx() {
-                this.data.category2_idx = "";
+                if(!this.data.idx) {
+                    this.data.category2_idx = "";
+                }
                 this.category_child = [];
 
                 if(this.category1_idx) {
@@ -236,6 +303,7 @@
                         table : "category",
                         parent_idx : parent.idx,
                     },this.category_child);
+
                 }
             }
         }
