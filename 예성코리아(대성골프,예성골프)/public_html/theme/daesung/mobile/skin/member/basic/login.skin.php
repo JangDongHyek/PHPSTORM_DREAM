@@ -1,6 +1,8 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+include_once(G5_PATH."/jl/JlConfig.php");
 
+$jl_kakao = new JlKakao($_POST);
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 ?>
@@ -36,9 +38,26 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 		<!-- /newLogBox -->
     
         </form>
+
+        <? add_stylesheet('<link rel="stylesheet" href="'.get_social_skin_url().'/style.css">', 10); ?>
+        <div class="login-sns sns-wrap-32 sns-wrap-over" id="sns_login">
+            <h3>소셜계정으로 로그인</h3>
+            <div class="sns-wrap">
+                <a href="http://www.yskgolf.com/plugin/social/popup.php?provider=naver&amp;url=%2Fbbs%2Flogin.php" class="sns-icon social_link sns-naver" title="네이버">
+                    <span class="ico"></span>
+                    <span class="txt">네이버<i> 로그인</i></span>
+                </a>
+                <a href="<?=$jl_kakao->createHref();?>" class="sns-icon social_link sns-kakao" title="카카오">
+                    <span class="ico"></span>
+                    <span class="txt">카카오<i> 로그인</i></span>
+                </a>
+            </div>
+        </div>
+
+
 		<?php
 			// 소셜로그인 사용시 소셜로그인 버튼
-			include_once(get_social_skin_path().'/social_login.skin.php');
+			//include_once(get_social_skin_path().'/social_login.skin.php');
 			?>
 		
         <?php // 쇼핑몰 사용시 여기부터 ?>

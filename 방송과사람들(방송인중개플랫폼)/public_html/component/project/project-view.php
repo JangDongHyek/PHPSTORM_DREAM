@@ -17,7 +17,8 @@
                         <h2>{{row.subject}}</h2>
                         <p class="subtitle">{{row.description}}</p>
                         <div class="profile">
-                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                            <img v-if="!user_thumb" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                            <img v-else :src="jl.root + '/data/file/member/' + row.user_idx + '.jpg'" alt="프로필 이미지">
                             <span>{{row.$g5_member.mb_nick}}</span>
                         </div>
                     </div>
@@ -50,24 +51,21 @@
             <div class="tabs">
                 <div class="tab" :class="{'active' : tab == 0}" @click="tab = 0">요청 사항</div>
                 <div class="tab" :class="{'active' : tab == 1}" @click="tab = 1">참여작 <span class="count">24</span></div>
-                <div class="tab" :class="{'active' : tab == 2}" @click="tab = 2">문의 댓글 <span class="count">0</span></div>
+                <div class="tab" :class="{'active' : tab == 2}" @click="tab = 2">문의 댓글 <span class="count">{{comment_count}}</span></div>
             </div>
             <div class="tab-content active">
                 <div class="request-view" v-show="tab == 0">
                     <h6>의뢰 내용</h6>
-                    <div>
-                        <!--에디터 내용-->
-                        의뢰 내용입니다.
+                    <div v-html="row.content">
+
                     </div>
                     <h6>참고 레퍼런스</h6>
                     <div>
                         <div class="swiper sample-swiper">
                             <div class="swiper-wrapper">
-                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
-                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
-                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/app/visual01.jpg"></div>
-                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
-                                <div class="swiper-slide"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
+                                <div class="swiper-slide" v-for="item in row.images">
+                                    <img :src="jl.root + item.src">
+                                </div>
                             </div>
                             <div class="swiper-pagination"></div>
                         </div>
@@ -76,7 +74,9 @@
                 </div>
 
                 <project-view-request :primary="primary" v-show="tab == 1"></project-view-request>
-                <project-view-comment :primary="primary" v-show="tab == 2"></project-view-comment>
+                <project-view-comment :project="row" v-show="tab == 2" :mb_no="mb_no"
+                                      @commentLength="comment_count = $event;"
+                ></project-view-comment>
             </div>
         </div>
     </div>
@@ -86,6 +86,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            mb_no : {type: String, default: ""},
             primary : {type: String, default: ""},
         },
         data: function () {
@@ -124,9 +125,11 @@
                     data : {},
                 },
 
-                tab : 0,
+                user_thumb : false,
 
-                load : false,
+
+                tab : 0,
+                comment_count : 0,
             };
         },
         async created() {
@@ -134,6 +137,8 @@
             this.component_idx = this.jl.generateUniqueId();
 
 
+        },
+        async mounted() {
             if(this.primary) {
                 let hitData = {
                     primary : this.primary,
@@ -150,16 +155,22 @@
                 await this.jl.postData(hitData,"project",{return : true})
 
                 this.row = await this.jl.getData(this.filter);
+
+                await this.jl.ajax("file_exists",{src : `/data/file/member/${this.row.user_idx}.jpg`},"/jl/JlApi.php").then(response => {
+                    this.user_thumb = response.exists;
+                }); // 파일 있는지 체크하는 ajax
+
+                console.log(this.user_thumb)
+
             }
             else {
                 await this.jl.alert("잘못된 접근입니다.");
                 window.history.back();
             }
-            //await this.jl.getsData(this.filter,this.rows);
 
             this.load = true;
-        },
-        mounted() {
+
+            //await this.jl.getsData(this.filter,this.rows);
             this.$nextTick(() => {
                 let swiper = new Swiper(".sample-swiper", {
                     slidesPerView: "auto",
@@ -170,6 +181,7 @@
                     },
                 });
             });
+
         },
         updated() {
 

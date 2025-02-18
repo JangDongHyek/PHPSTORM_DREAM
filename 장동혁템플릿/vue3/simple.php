@@ -41,19 +41,18 @@
                     data : {},
                 },
 
-                load : false,
             };
         },
         async created() {
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
-
+        },
+        async mounted() {
             if(this.primary) this.row = await this.jl.getData(this.filter);
             //await this.jl.getsData(this.filter,this.rows);
 
             this.load = true;
-        },
-        mounted() {
+
             this.$nextTick(() => {
 
             });

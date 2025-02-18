@@ -59,6 +59,59 @@
                     page : 1,
                     limit : 1,
                     count : 0,
+
+                    where : [
+                        {key : "", value : "", operator : ""} // AND,OR,AND NOT
+                    ],
+
+                    like : [
+                        {key : "", value : ""}
+                    ],
+
+                    between : [
+                        {key : "", start : "", end: ""}
+                    ],
+
+                    in : [
+                        {key : "", array : [] }
+                    ],
+
+                    group_where : [
+                        {key : "", value : ""},
+                        {key : "", value : ""},
+                    ],
+
+                    group_like : [
+                        {key : "", value : ""},
+                        {key : "", value : ""},
+                    ],
+
+                    // 이테이블의 user_idx 값으로 user의 테이블에 primary값을 검색해 맞는 데이터 하나만 가져오는 확장형 구문
+                    extensions : [
+                        {table : "user", foreign : "user_idx", as : ""}, // as값이있다면 $테이블명이아닌 $as값으로 가져온다
+                    ],
+
+                    // like테이블에 foreing키에 이테이블의 primary값을 가진 모든데이터를 가져오는 연결형구문
+                    relations : [
+                        {table : "like" ,foreign : "board_idx"},
+                    ],
+
+                    join : {
+                        table : "user", origin : "user_idx", join : "idx",type : "", // LEFT, INNER
+                        source : false, // true 시 join 테이블이 조회 기준이 된다
+                        select : ["column1","user.column2","user.column3 as a"], // 조회 기준이 아닌 테이블의 컬럼을 추가 조회하고싶을때 넣는다
+                        //select : "*", // 조회 기준이 아닌 테이블의 모든 컬럼을 가져오고싶을때 사용 속도로 인한 비추천
+                        group_by : [ // 그룹바이 sum이나 count 하고싶을떄
+                            {group : "g5_write_note.wr_id", aggregate : "g5_write_note_like.idx", as : "like_count", type : ""}, // type 기본값은 COUNT
+                        ],
+                    },
+
+                    join_filter : [/*join 들어갈떄 개발예정 */],
+
+                    add_query : " and idx = 'exam' ",
+
+                    order_by_desc : ["idx"],
+                    order_by_asc : ["idx"],
                 },
 
                 options : {
@@ -82,6 +135,7 @@
                     callback : async (res) => {
 
                     },
+                    //callback : this.callbackMethod // callback을 많이 사용한다면 해당방식으로 가능
 
                 }
 
@@ -130,7 +184,12 @@
             // 플러그인이 필수인 컴포넌트일떄 사용
             let plugins = this.jl.checkPlugin(["jquery","bootstrap","summernote"]);
         },
-        mounted: function(){
+        mounted: async function(){
+            // 파일 있는지 체크하는 ajax
+            await this.jl.ajax("file_exists",{src : `/data/file/member/1.jpg`},"/jl/JlApi.php").then(response => {
+                this.file_exists = response.exists;
+            });
+
             this.$nextTick(() => {
 
             });
@@ -139,6 +198,9 @@
 
         },
         methods: {
+            async callbackMethod(res) {
+
+            },
             getAddress(data) {
                 console.log(data);
                 this.modal = false;

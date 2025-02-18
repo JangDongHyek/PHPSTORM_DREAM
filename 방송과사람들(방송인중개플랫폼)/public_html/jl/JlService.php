@@ -18,12 +18,16 @@ class JlService extends Jl{
     {
         parent::__construct(false);
         $this->obj = $this->jsonDecode($POST['obj']);
-        if(!$this->obj['table']) $this->error("obj에 테이블이 없습니다.");
+
+        $values = array("file","file_save","file_exists");
+        if(!in_array($POST['_method'], $values)) {
+            if(!$this->obj['table']) $this->error("obj에 테이블이 없습니다.");
+        }
 
         if(isset($this->obj['file_columns'])) $this->file_columns = $this->jsonDecode($this->obj['file_columns']);
         if(isset($this->obj['file_use'])) $this->file_use = $this->obj['file_use'];
 
-        if($POST['_method'] != "file") $this->model = new JlModel($this->obj);
+        if(!in_array($POST['_method'], $values)) $this->model = new JlModel($this->obj);
         $this->jl_file = new JlFile("/jl/jl_resource/{$this->obj['table']}");
 
         $this->POST = $POST;
@@ -55,11 +59,12 @@ class JlService extends Jl{
         if($method == "delete" || $method == "remove") $response = $this->delete();
         if($method == "query") $response = $this->query();
         if($method == "where_delete" || $method == "wd") $response = $this->where_delete();
-        if($method == "file") $response = $this->file();
+        if($method == "file" || $method == "file_save") $response = $this->fileSave();
+        if($method == "file_exists") $response = $this->fileExists();
         if($method == "distinct") $response = $this->distinct();
 
         $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
-        if(in_array($method,$trace_list)) {
+        if(in_array($method,$trace_list) && $response['trace']) {
             $object = array(
                 "method" => $method,
                 "response" => $response,
@@ -160,7 +165,7 @@ class JlService extends Jl{
         $checked = $this->iuCheck();
 
         if(!$checked) {
-            return array("success" => true, "message" => "checked 로 인한 sql 패스");
+            return array("success" => true, "message" => "checked 로 인한 sql 패스","trace" => false);
         }
 
         if($this->file_use) {
@@ -175,6 +180,7 @@ class JlService extends Jl{
         $response = $this->model->insert($this->obj);
 
         $response['success'] = true;
+        $response['trace'] = true;
 
         return $response;
     }
@@ -183,7 +189,7 @@ class JlService extends Jl{
         $checked = $this->iuCheck();
 
         if(!$checked) {
-            return array("success" => true, "message" => "checked 로 인한 sql 패스");
+            return array("success" => true, "message" => "checked 로 인한 sql 패스","trace" => false);
         }
 
         if($this->file_use) {
@@ -210,6 +216,7 @@ class JlService extends Jl{
 
         $response = $this->model->update($this->obj);
         $response['success'] = true;
+        $response['trace'] = true;
 
         return $response;
     }
@@ -229,6 +236,7 @@ class JlService extends Jl{
 
         $response['data'] = $getData;
         $response['success'] = true;
+        $response['trace'] = true;
 
         return $response;
     }
@@ -258,16 +266,24 @@ class JlService extends Jl{
 
         $response['data'] = $getData;
         $response['success'] = true;
+        $response['trace'] = true;
 
         return $response;
     }
 
-    public function file() {
+    public function fileSave() {
         foreach ($this->FILES as $key => $file_data) {
             $file_result = $this->jl_file->bindGate($file_data);
         }
 
         $response['file'] = $this->jsonDecode($file_result);
+        $response['success'] = true;
+
+        return $response;
+    }
+
+    public function fileExists() {
+        $response['exists'] = $this->isFileExists($this->obj['src']);
         $response['success'] = true;
 
         return $response;

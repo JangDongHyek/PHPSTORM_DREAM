@@ -411,18 +411,16 @@ class JlModel{
             if(!$result) $this->jl->error(mysql_error());
         }
 
-        if($param[$this->primary]) return $param[$this->primary];
 
-        if($this->mysqli)
-            return array(
-                "primary" => mysqli_insert_id($this->connect),
-                "sql" => $sql,
-            );
-        else
-            return array(
-                "primary" => mysql_insert_id($this->connect),
-                "sql" => $sql,
-            );
+
+        if($param[$this->primary]) {
+            $response = array("sql" => $sql,"primary" => $param[$this->primary]);
+        }else {
+            if($this->mysqli) $response = array("sql" => $sql,"primary" => mysqli_insert_id($this->connect));
+            else $response = array("sql" => $sql,"primary" => mysqli_insert_id($this->connect));
+        }
+
+        return $response;
     }
 
     function count($_param = array()){
