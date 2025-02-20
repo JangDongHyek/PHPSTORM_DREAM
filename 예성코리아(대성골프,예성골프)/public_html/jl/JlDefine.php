@@ -33,7 +33,15 @@ define("JL_ALERT","origin");
 define("JL_SESSION_PATH","/data/session");
 
 
-define("JL_KAKAO_CLIENT_ID","f20ebde10cddda851c9068f9ba5a8d44");
+//카카오 로그인 define
+define("JL_KAKAO_CLIENT_ID","f20ebde10cddda851c9068f9ba5a8d44"); // REST API 키
+
+//네이버 로그인 define
+define("JL_NAVER_CLIENT_ID","");
+define("JL_NAVER_CLIENT_SECRET","");
+
+//jl을 통해 사용하는 암호화타입
+define("JL_ENCRYPT","mb_5");// mb_5
 
 //jl_session_table 컬럼
 define('JL_SESSION_TABLE_COLUMNS', '{"idx":{"type":"VARCHAR","length":15,"nullable":false,"comment":"고유값"},"client_ip":{"type":"VARCHAR","length":45,"nullable":false,"comment":"사용자 아이피"},"name":{"type":"VARCHAR","length":255,"nullable":false,"comment":"세션명"},"content":{"type":"TEXT","nullable":false,"comment":"내용"},"method":{"type":"VARCHAR","length":20,"nullable":true,"comment":"요청 방식"},"response":{"type":"LONGTEXT","nullable":true,"comment":"응답 내용"},"sessions":{"type":"LONGTEXT","nullable":true,"comment":"접속자 세션 데이터"},"user_agent":{"type":"TEXT","nullable":true,"comment":"접속정보"},"browser":{"type":"VARCHAR","length":255,"nullable":true,"comment":"접속한 브라우저"},"browser_version":{"type":"VARCHAR","length":255,"nullable":true,"comment":"브라우저 버전"},"platform":{"type":"VARCHAR","length":255,"nullable":true,"comment":"접속한 플랫폼"},"is_mobile":{"type":"VARCHAR","length":7,"nullable":true,"comment":"모바일"},"in_app_browser":{"type":"VARCHAR","length":50,"nullable":true,"comment":"앱"},"status":{"type":"VARCHAR","length":7,"nullable":false,"default":"active","comment":"세션상태"},"insert_date":{"type":"DATETIME","nullable":false,"comment":"생성일"},"update_date":{"type":"DATETIME","nullable":true,"comment":"수정일"},"delete_date":{"type":"DATETIME","nullable":true,"comment":"세션만료시간"},"primary":"idx"}');
@@ -49,6 +57,7 @@ define('JL_SESSION_TABLE_COLUMNS', '{"idx":{"type":"VARCHAR","length":15,"nullab
 1.7 vue3 버전 호환되게 추가 및 define vue_version 추가
 1.8 define 세션공유할수있게 sessionPath 추가
 1.9 카카오 로그인 로직 추가
+2.0 네이버 로그인 로직 추가, 암호화타입 define값추가 해당값으로 암호화하는 함수 추가
 */
 
 ?>

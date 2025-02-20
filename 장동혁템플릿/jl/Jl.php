@@ -519,6 +519,30 @@ class Jl {
         return substr(sprintf('%o', $permissions & 0777), -4); // 4자리 8진수 문자열 반환
     }
 
+    function formatPhoneNumber($phone) {
+        // 숫자만 남기기 (+, -, 공백 등 제거)
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+
+        // +82 국가 코드 처리
+        if (preg_match('/^82(10|1[1-9])/', $phone)) {
+            $phone = '0' . substr($phone, 2); // 8210XXXXYYYY -> 010XXXXYYYY
+        }
+
+        // 010-XXXX-XXXX 형식으로 변환 (010, 011, 016, 017, 018, 019 지원)
+        if (preg_match('/^(01[016789])(\d{4})(\d{4})$/', $phone, $matches)) {
+            return $matches[1] . '-' . $matches[2] . '-' . $matches[3];
+        }
+
+        return $phone; // 변환되지 않는 경우 원본 유지
+    }
+
+
+    function encrypt($data) {
+        if(JL_ENCRYPT == "mb_5") return md5($data);
+
+        return '';
+    }
+
     function getDir($dir_name, $dirs = false, $root_path = true)
     {
         $dir = $dir_name;
@@ -743,6 +767,38 @@ class Jl {
         ));
     }
 
+    function setSession($name,$data) {
+        if($this->ENV == "php") {
+            $_SESSION[$name] = $data;
+        }
+    }
+
+    function getSession($name) {
+        if($this->ENV == "php") return $_SESSION[$name];
+    }
+
+    function goURL($url)
+    {
+        // &amp; 를 & 로 변경
+        $url = str_replace("&amp;", "&", $url);
+
+        // 헤더가 전송되지 않았다면 HTTP 리다이렉트
+        if (!headers_sent()) {
+            header("Location: $url");
+            exit;
+        }
+
+        // 헤더가 이미 전송된 경우 JavaScript & meta refresh 사용
+        echo '<script>';
+        echo 'window.location.href = "'.$url.'";';
+        echo '</script>';
+
+        echo '<noscript>';
+        echo '<meta http-equiv="refresh" content="0;url='.$url.'" />';
+        echo '</noscript>';
+        exit;
+    }
+
     function INIT() {
         // 개발 허용 IP 확인
         if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
@@ -760,6 +816,18 @@ class Jl {
         if(!is_dir($dir)) {
             mkdir($dir, 0777);
             chmod($dir, 0777);
+        }
+
+        //세션 공유 로직 시작
+        if(session_id() == "") { // 세션이 시작이 안됐다면
+            if(JL_SESSION_PATH) {
+                if(is_dir($this->ROOT.JL_SESSION_PATH)) { // 해당 폴더가있다면 세션 공유를 위해
+                    ini_set("session.save_path", $this->ROOT.JL_SESSION_PATH); // 그누보드 세션 경로 적용
+                    session_start();
+                }else {
+                    $this->error("JlApi : SESSION_PATH 를 사용하지만 폴더가 존재하지않습니다.");
+                }
+            }
         }
 
         // 세션 테이블 생성 및 모델 인스턴스 생성

@@ -388,7 +388,8 @@
                                             </div>
                                         </li>
 
-                                        <li v-if="parent_category && !admin">
+                                        <!--li v-if="parent_category && !admin"-->
+                                        <li v-if="!admin">
                                             <div>
                                                 <span @click="$emit('addOption')">맞춤옵션 추가</span>
                                             <div>

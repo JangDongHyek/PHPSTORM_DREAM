@@ -722,11 +722,13 @@ $LGD_HASHDATA = md5($xpay_id.$field1.$xpay_key);
                           <td bgcolor="#F7F7F7" class="text_14_s2"><img src="../image/icon_4.gif" align="absmiddle"> 승인번호</td>
                           <td bgcolor="#FFFFFF"><?=$app_no?> 
 						  <!-- 페이앱 세팅 STR -->
-						  <input onClick="window.open('<?=$order_row[csturl]?>','','width=400,height=820,scrollbars=yes,resizable=no');" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="신용카드 전표출력">
+						  <!--<input onClick="window.open('<?=$order_row[csturl]?>','','width=400,height=820,scrollbars=yes,resizable=no');" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="신용카드 전표출력">-->
 						  <!--
 						  <input onClick="javascript:showReceiptByTID('<?=$xpay_id?>', '<?=$field1?>', '<?=$LGD_HASHDATA?>')" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="신용카드 전표출력">
 						  -->
 						  <!-- 페이앱 세팅 END -->
+
+						  <input onclick="javascript:window.open('https://pg.innopay.co.kr/pay/issue/CardIssue.jsp?TID=<?=$order_row['field4']?>','','width=520,height=1028')" style="BACKGROUND-COLOR: white; BORDER-BOTTOM: #7b7d7b 1px solid; BORDER-LEFT: #7b7d7b 1px solid; BORDER-RIGHT: #7b7d7b 1px solid; BORDER-TOP: #7b7d7b 1px solid; COLOR: #7b7d7b; HEIGHT: 18px; width=120" type="button" value="카드전표 출력">
 						  </td>
                         </tr>
 						<!-- 페이앱 세팅 STR -->
