@@ -95,6 +95,14 @@ if ($stx) {
                     else
                         $str .= "INSTR({$field[$k]}, '{$search_str}')";
                     break;
+
+                case 'wr_2' :
+                    $str .= "INSTR({$field[$k]}, '{$search_str}')";
+                    break;
+
+                case 'wr_4' :
+                    $str .= "INSTR({$field[$k]}, '{$search_str}')";
+                    break;
                 default :
                     $str .= "1=0"; // 항상 거짓
                     break;

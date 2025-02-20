@@ -25,7 +25,7 @@ include_once(G5_THEME_PATH.'/head.php');
                     <h3>빠른 제품 화학 물질 검색</h3>
                     <form name="fsearchbox" id="form" action="<?php echo G5_BBS_URL ?>/search.php" onsubmit="return search_submit(this);" autocomplete="off">
                         <label for="sch_str" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
-                        <input type="hidden" name="sfl" value="wr_subject||wr_content">
+                        <input type="hidden" name="sfl" value="wr_subject||wr_content||wr_2||wr_4">
                         <input type="hidden" name="sop" value="and">
                         <input type="text" name="stx" id="sch_stx" placeholder="국,영문 화학명,이명,cas no. 를 입력하세요.">
                         <button type="submit" id="sch_submit"><i class="fal fa-search"></i><span class="sound_only">검색</span></button>
@@ -69,7 +69,7 @@ include_once(G5_THEME_PATH.'/head.php');
                 <span class="wow fadeInDown" data-wow-delay="0.4s">탁월한 기술력과 전문성으로 믿음직한 파트너가 되어드립니다.<br>
                     고객사 만족과 더 나아가 사회 발전에 이바지 할 수 있도록 최선을 다하는 EF CHEM이 되겠습니다.</span>
             </div>
-			<div class="btn_area wow bounceIn" data-wow-delay="0.6s"><a href="" >제품보기</a></div>
+			<div class="btn_area wow bounceIn" data-wow-delay="0.6s"><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=pro01" >제품보기</a></div>
         </div>
     </div>
 
@@ -86,7 +86,7 @@ include_once(G5_THEME_PATH.'/head.php');
                 신규 원료 개발과 해외 마케팅 서비스 등 다양한 chemical solution을<br>
                 국내외 고객사에게 제공하고 있습니다.</p>
             </div>
-            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=greet01" class="more wow fadeInDown" data-wow-delay="0.8s">자세히 보기 <i class="fal fa-angle-right"></i></i></a>
+            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=greet02" class="more wow fadeInDown" data-wow-delay="0.8s">자세히 보기 <i class="fal fa-angle-right"></i></i></a>
         </div>
     </div>
 
@@ -94,10 +94,10 @@ include_once(G5_THEME_PATH.'/head.php');
         <div class="inr">
             <div class="banner">
                 <div class="wow fadeInUp" data-wow-delay="0.2s">
-                    <dl onclick="location.href='<?php echo G5_BBS_URL ?>/write.php?bo_table=business'">
-                        <dt>사업의뢰</dt>
-                        <dd>(주)이에프켐은 국외시장 마케팅을 통해<br>
-                            고객의 성공적인 해외 진출을 지원합니다.</dd>
+                    <dl onclick="window.open('https://www.youtube.com/channel/UCvgTR3vN9VphvpKqsE-qt-Q')">
+                        <dt>유튜브 채널</dt>
+                        <dd>(주)이에프켐이 운영중인<br>
+                            YOUTUBE 채널 입니다.</dd>
                     </dl>
                 </div>
                 <div></div>
