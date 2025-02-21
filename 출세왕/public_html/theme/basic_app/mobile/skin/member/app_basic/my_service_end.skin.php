@@ -16,7 +16,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
         <h4 class="modal-title" id="myModalLabel">건의하기</h4>
       </div>
 
-        <form name="frecom" id="frecom" action="<?= G5_BBS_URL ?>/ajax.controller.php" onsubmit="return frecom_submit(this)" method="post" enctype="multipart/form-data">
+        <form name="frecom" id="frecom" action="<?= G5_BBS_URL ?>/ajax.controller.php" onsubmit="return new_frecom_submit(this)" method="post" enctype="multipart/form-data">
             <input type="hidden" id="mode" name="mode" value="review_update" class="frm_input">
             <input type="hidden" id="cw_idx" name="cw_idx" value="">
             <input type="hidden" id="ma_id" name="ma_id">
@@ -45,7 +45,24 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 </div>
 </div><!--basic_modal-->
 <!-- 건의하기 모달팝업 -->
+<script>
+    let flag = false;
+    function new_frecom_submit(f) {
+        if(flag) {
+            return false;
+        }else {
+            flag = true;
+        }
 
+        if(!f.re_content.value) {
+            alert("내용을 입력해주세요");
+            flag = false;
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 <!-- 매니저정보 모달팝업 -->
 <div id="basic_modal">

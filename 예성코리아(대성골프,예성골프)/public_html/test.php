@@ -17,5 +17,5 @@ function formatPhoneNumber($phone) {
     return $phone; // 변환되지 않는 경우 원본 유지
 }
 
-echo formatPhoneNumber('821099098517');
+//echo formatPhoneNumber('821099098517');
 ?>

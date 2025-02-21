@@ -37,8 +37,8 @@ define("JL_SESSION_PATH","/data/session");
 define("JL_KAKAO_CLIENT_ID","f20ebde10cddda851c9068f9ba5a8d44"); // REST API 키
 
 //네이버 로그인 define
-define("JL_NAVER_CLIENT_ID","");
-define("JL_NAVER_CLIENT_SECRET","");
+define("JL_NAVER_CLIENT_ID","1JR2KqTB1TpkHVKAzDmO");
+define("JL_NAVER_CLIENT_SECRET","43pxt8WOvv");
 
 //jl을 통해 사용하는 암호화타입
 define("JL_ENCRYPT","mb_5");// mb_5

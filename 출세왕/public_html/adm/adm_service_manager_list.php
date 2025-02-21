@@ -110,6 +110,8 @@ $g5['title'] = '매니저 정산관리';
 include_once('./admin.head.php');
 
 $sql = " select cw.* {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
+
+echo $sql;
 $result = sql_query($sql);
 
 $colspan = 16;

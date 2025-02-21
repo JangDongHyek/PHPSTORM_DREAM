@@ -74,6 +74,10 @@ if ($_REQUEST["car_date_type"] != ""){
     $sql_search .= "and car_date_type = '{$_REQUEST["car_date_type"]}'";
     if ($car_date_type)
         $qstr .= '&amp;car_date_type=' . urlencode($car_date_type);
+
+    if($_GET['car_date_type'] == "3") {
+        $sql_search .= " and is_payment = 'Y' ";
+    }
 }
 
 //차 사이즈 필터
@@ -93,7 +97,9 @@ if ($_REQUEST["complete_datetime"] != ""){
 }
 
 //끝
-
+$sql = " select sum(ma_payment) as total_payment {$sql_common} {$sql_search} {$sql_order} ";
+$row = sql_fetch($sql);
+$total_payment = $row['total_payment'];
 
 $sql = " select count(*) as cnt {$sql_common} {$sql_search} {$sql_order} ";
 $row = sql_fetch($sql);
@@ -162,6 +168,8 @@ $colspan = 16;
 
     <!--내용부분--> 
     <div class="in">
+        <p>총 건수 : <?=$total_count?></p>
+        <p>총 정산금액 : <?=number_format($total_payment)?></p>
         <div class='cslist'>
 
             <?php
@@ -238,6 +246,8 @@ $colspan = 16;
                 <div class="service_none"><span><i class="fas fa-smile"></i></span>정산내역이 없습니다.</div>
             <?php } ?>
         </div>
+
+        <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr."&nr=".$_REQUEST['nr'].'&amp;page='); ?>
     </div><!--in-->
 </div><!--my_reser-->
 

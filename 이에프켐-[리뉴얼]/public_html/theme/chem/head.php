@@ -20,17 +20,17 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
 <!-- 퀵메뉴 -->
 <div class="quick">
     <dl class="cus">
-        <dd class="tel"><a href="#"><svg  xmlns="http://www.w3.org/2000/svg"    viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-skype"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a9 9 0 0 1 8.603 11.65a4.5 4.5 0 0 1 -5.953 5.953a9 9 0 0 1 -11.253 -11.253a4.5 4.5 0 0 1 5.953 -5.954a8.987 8.987 0 0 1 2.65 -.396z" /><path d="M8 14.5c.5 2 2.358 2.5 4 2.5c2.905 0 4 -1.187 4 -2.5c0 -1.503 -1.927 -2.5 -4 -2.5s-4 -1 -4 -2.5c0 -1.313 1.095 -2.5 4 -2.5c1.642 0 3.5 .5 4 2.5" /></svg><strong>051-505-7477</strong></a></dd>
+        <dd class="tel"><a href="https://join.skype.com/invite/x1YfwtTRdnpy?source=qr-ios" target="_blank"><svg  xmlns="http://www.w3.org/2000/svg"    viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-skype"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a9 9 0 0 1 8.603 11.65a4.5 4.5 0 0 1 -5.953 5.953a9 9 0 0 1 -11.253 -11.253a4.5 4.5 0 0 1 5.953 -5.954a8.987 8.987 0 0 1 2.65 -.396z" /><path d="M8 14.5c.5 2 2.358 2.5 4 2.5c2.905 0 4 -1.187 4 -2.5c0 -1.503 -1.927 -2.5 -4 -2.5s-4 -1 -4 -2.5c0 -1.313 1.095 -2.5 4 -2.5c1.642 0 3.5 .5 4 2.5" /></svg><strong>051-505-7477</strong></a></dd>
     </dl>
     <dl class="cus">
-        <dd class="tel"><a href="#"><svg  xmlns="http://www.w3.org/2000/svg"    viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-wechat"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16.5 10c3.038 0 5.5 2.015 5.5 4.5c0 1.397 -.778 2.645 -2 3.47l0 2.03l-1.964 -1.178a6.649 6.649 0 0 1 -1.536 .178c-3.038 0 -5.5 -2.015 -5.5 -4.5s2.462 -4.5 5.5 -4.5z" /><path d="M11.197 15.698c-.69 .196 -1.43 .302 -2.197 .302a8.008 8.008 0 0 1 -2.612 -.432l-2.388 1.432v-2.801c-1.237 -1.082 -2 -2.564 -2 -4.199c0 -3.314 3.134 -6 7 -6c3.782 0 6.863 2.57 7 5.785l0 .233" /><path d="M10 8h.01" /><path d="M7 8h.01" /><path d="M15 14h.01" /><path d="M18 14h.01" /></svg><strong>010-7114-8505</strong></a></dd>
+        <dd class="tel"><a href="https://u.wechat.com/kJhwsl-jmAv81Tl3H5kxq1w" target="_blank"><svg  xmlns="http://www.w3.org/2000/svg"    viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-wechat"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16.5 10c3.038 0 5.5 2.015 5.5 4.5c0 1.397 -.778 2.645 -2 3.47l0 2.03l-1.964 -1.178a6.649 6.649 0 0 1 -1.536 .178c-3.038 0 -5.5 -2.015 -5.5 -4.5s2.462 -4.5 5.5 -4.5z" /><path d="M11.197 15.698c-.69 .196 -1.43 .302 -2.197 .302a8.008 8.008 0 0 1 -2.612 -.432l-2.388 1.432v-2.801c-1.237 -1.082 -2 -2.564 -2 -4.199c0 -3.314 3.134 -6 7 -6c3.782 0 6.863 2.57 7 5.785l0 .233" /><path d="M10 8h.01" /><path d="M7 8h.01" /><path d="M15 14h.01" /><path d="M18 14h.01" /></svg><strong>010-7114-8505</strong></a></dd>
     </dl>
     <dl class="cus">
         <dd class="tel"><a href="tel:051-758-9305"><svg xmlns="http://www.w3.org/2000/svg"  width="28"  height="28"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-phone"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" /></svg><strong></strong></a></dd>
     </dl>
     <dl class="kakao_contact">
         <dd>
-            <a href="#" target="_blank">
+            <a href="http://qr.kakao.com/talk/ycgiYpa7QVvwnjIwvI3OQJ560WU-" target="_blank">
                 <i><img src="https://itforone.com:443/~ljcheol2/theme/basic/img/common/ic_kakao.svg"></i><strong>톡상담</strong>
             </a>
         </dd>
@@ -252,25 +252,124 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
 
     <div id="hd_wrapper">
         <div id="logo">
-            <?php if ($header_name == "event" || $header_name == "landing_event") {  ?>
-                <a class="black" href="<?php echo G5_URL ?>/"><img src="<?php echo G5_THEME_IMG_URL ?>/common/logo_color.png"></a>
-            <?php } else {  ?>
+                <a class="color" href="<?php echo G5_URL ?>/"><img src="<?php echo G5_THEME_IMG_URL ?>/common/logo_color.png"></a>
                 <a class="white" href="<?php echo G5_URL ?>/"><img src="<?php echo G5_THEME_IMG_URL ?>/common/logo.png"></a>
-            <?php }  ?>
         </div><!--#logo-->
-        <!--
-		<ul id="tnb">
-            <li><a href="<?php echo G5_URL ?>" class="home" title="홈"><i class="far fa-home"></i></a></li>
-            <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=pro_01" title="제품소개"><i class="fas fa-cog"></i></a></li>
-            <?php if ($is_member) {  ?>
-            <?php if ($is_admin) {  ?>
-            <?php }  ?>
-            <li><a href="<?php echo G5_BBS_URL ?>/logout.php" title="로그아웃"><i class="fas fa-unlock-alt"></i></a></li>
+
+
+        <div class="s_search">
+            <a id="hd_sch_open" class="hd_opener" title="제품검색"><i class="far fa-search"></i></a>
+            <div id="hd_sch" class="hd_div">
+                <div class="hd_sch_inr">
+                    <h2>빠른 제품 화학 물질 검색</h2>
+                    <form name="fsearchbox" action="<?php echo G5_BBS_URL ?>/search.php" onsubmit="return fsearchbox_submit(this);" method="get">
+                        <input type="hidden" name="sfl" value="wr_subject||wr_content||wr_2||wr_4">
+                        <input type="hidden" name="sop" value="and">
+                        <input type="text" name="stx" id="sch_stx" placeholder="국,영문 화학명,이명,cas no. 를 입력하세요." required class="required" maxlength="20">
+                        <button type="submit" id="sch_submit"><i class="far fa-search"></i></button>
+                    </form>
+                    <script>
+                        function fsearchbox_submit(f)
+                        {
+                            if (f.stx.value.length < 2) {
+                                alert("검색어는 두글자 이상 입력하십시오.");
+                                f.stx.select();
+                                f.stx.focus();
+                                return false;
+                            }
+
+                            // 검색에 많은 부하가 걸리는 경우 이 주석을 제거하세요.
+                            var cnt = 0;
+                            for (var i=0; i<f.stx.value.length; i++) {
+                                if (f.stx.value.charAt(i) == ' ')
+                                    cnt++;
+                            }
+
+                            if (cnt > 1) {
+                                alert("빠른 검색을 위하여 검색어에 공백은 한개만 입력할 수 있습니다.");
+                                f.stx.select();
+                                f.stx.focus();
+                                return false;
+                            }
+
+                            // Close the search box
+                            document.getElementById('hd_sch').style.display = 'none';
+                            $(".hd_opener").find("span").text("열기");
+
+                            return true;
+                        }
+                    </script>
+                </div>
+                <button type="button" id="sch_close" class="hd_closer"><span class="sound_only">검색 </span><i class="fal fa-times"></i></button>
+            </div>
+            <script>
+                $(function () {
+                    $(".hd_opener").on("click", function() {
+                        var $this = $(this);
+                        var $hd_layer = $this.next(".hd_div");
+
+                        if($hd_layer.is(":visible")) {
+                            $hd_layer.hide();
+                            $this.find("span").text("열기");
+                        } else {
+                            var $hd_layer2 = $(".hd_div:visible");
+                            $hd_layer2.prev(".hd_opener").find("span").text("열기");
+                            $hd_layer2.hide();
+
+                            $hd_layer.show();
+                            $this.find("span").text("닫기");
+                        }
+                    });
+
+                    $(".hd_closer").on("click", function() {
+                        var idx = $(".hd_closer").index($(this));
+                        $(".hd_div:visible").hide();
+                        $(".hd_opener:eq("+idx+")").find("span").text("열기");
+                    });
+                });
+            </script>
+        </div><!--//s_search-->
+
+
+        <ul id="tnb">
+            <?php if(defined('_INDEX_')) { // index에서만 실행  } ?>
             <?php } else {  ?>
-            <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인"><i class="fas fa-lock-alt"></i></a></li>
+
             <?php }  ?>
-    	</ul>
-		-->
+
+            <li><a href="<?php echo G5_URL ?>" class="home" title="홈"><i class="far fa-home"></i></a></li>
+            <!--            <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=pro_01" title="제품소개"><i class="fas fa-cog"></i></a></li>-->
+            <?php if ($is_member) {  ?>
+                <?php if ($is_admin) {  ?>
+                <?php }  ?>
+                <li><a href="<?php echo G5_BBS_URL ?>/logout.php" title="로그아웃"><i class="fas fa-unlock-alt"></i></a></li>
+            <?php } else {  ?>
+                <li><a href="<?php echo G5_BBS_URL ?>/login.php" title="로그인"><i class="fas fa-lock-alt"></i></a></li>
+            <?php }  ?>
+            <li>
+                <div class="gmenu fs">
+                    <dl>
+                        <dt><i class="fal fa-globe"></i> KOR</dt>
+                        <dd>
+                            <a href="">KOR</a>
+                            <a href="javascript:alert('준비중입니다.');" onfocus="this.blur()" style="cursor: pointer">ENG</a>
+                        </dd>
+                    </dl>
+                    <script>
+                        //글로벌 토글 메뉴
+                        $(document).ready(function(){
+                            $(".fs dt").click(function(){
+                                $(".fs dd").slideToggle();
+                            });
+                            $(".fs dd").click(function(){
+                                $(this).hide();
+                            });
+                        });
+                    </script>
+                </div>
+            </li>
+        </ul>
+
 
         <nav id="gnb">
             <h2>메인메뉴</h2>
@@ -335,7 +434,12 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
 
             <!--카테고리-->
             <div id="accordion-example" data-collapse="accordion">
-                <div id="gnb2" class="hd_div">
+                <div class="language">
+                    <div><a href="https://dreamforone.co.kr/~efchem_re2/">KOR</a></div>
+                    <div><a id="lg_en" href="javascript:void(0)">ENG</a></div>
+                </div>
+                
+                <div id="gnb2">
                     <ul id="mgnb_1dul">
                         <?php
                         $sql = " select *
@@ -357,11 +461,12 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
 
                             ?>
                             <li class="mgnb_1dli">
-                            <a class="mgnb_1da" onclick="<?php echo $count==1?"location.href='{$row[me_link]}';":"";?>"><?php echo $row['me_name'] ?><i class="fas fa-angle-down"></i></a>
+                            <a class="mgnb_1da" onclick="<?php echo $count==0?"location.href='{$row[me_link]}';":"";?>"><?php echo $row['me_name'] ?><i class="fas fa-angle-down"></i></a>
+
                             <!--1차메뉴-->
                             <?php
 
-                            if(1<$count){
+                            if(0<$count){
                                 for ($k=0; $row2=sql_fetch_array($result2); $k++) {
                                     if($k == 0)
                                         echo '<ul class="mgnb_2dul">'.PHP_EOL;
@@ -408,11 +513,11 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
             </script>
 
             <!--카피라이트-->
-            <div class="menu_add t_margin30">
+            <!--<div class="menu_add t_margin30">
                 <h3>Add.</h3>
                 <?php echo $config['cf_1']; ?>
                 <p class="copyright">COPYRIGHTⓒ2018 <?php echo $config['cf_title']; ?>. ALL RIGHTS RESERVED.</p>
-            </div>
+            </div>-->
 
         </nav>
         <!--//토글메뉴-->
@@ -441,6 +546,15 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
             left: "0px"
         }, 600);
     });
+
+
+
+    /* ENG클릭시 준비중 alert */
+    $('#lg_en').click(function() {
+        alert('준비중입니다.');
+    });
+
+
 </script>
 
 <!-- 콘텐츠 시작 { -->
@@ -452,62 +566,96 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
 	 <? }else if($bo_table == "" || $co_id == ""){ ?>	
 	 <!--서브상단비주얼-->
      <? if($co_id == "greet01" || $co_id == "greet02" || $co_id == "greet03" || $co_id == "greet03" || $co_id == "greet04") {  ?>
-	 <div id="svisual">
+	 <div class="svisual sv01">
 		<div class="s_text">
             <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">COMPANY</h3>
+			<div class="container_title wow fadeInLeft animated" data-wow-delay="0.3s" data-wow-duration="1.2s">
+			  <?php if($bo_table) {?>
+					<?php echo $board['bo_subject']; ?>
+			  <?php }else { ?>
+					<?php echo $g5['title'] ?>
+			  <?php } ?> 
+            </div>
         </div><!--.s_text-->
-     </div><!--svisual-->
-     
-     <? } else if ($bo_table == "pro01" || $bo_table == "pro02" || $bo_table == "pro03") { ?>
-     <div id="svisual">
+     <? } else if ($bo_table == "pro01" || $bo_table == "pro02" || $bo_table == "pro03" || $bo_table == "pro04") { ?>
+     <div class="svisual sv02">
 		<div class="s_text">
             <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">PRODUCT</h3>
+			<div class="container_title wow fadeInLeft animated" data-wow-delay="0.3s" data-wow-duration="1.2s">
+			  <?php if($bo_table) {?>
+					<?php echo $board['bo_subject']; ?>
+			  <?php }else { ?>
+					<?php echo $g5['title'] ?>
+			  <?php } ?> 
+            </div>
         </div><!--.s_text-->
-     </div><!--svisual-->
-     <? } else if ($bo_table == "business" || $bo_table == "business02") { ?>
-     <div id="svisual">
+     <? } else if ($bo_table == "b_news" || $bo_table == "business02") { ?>
+     <div class="svisual sv03">
 		<div class="s_text">
-            <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">BUSINESS</h3>
+            <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">NOTICE</h3>
+			<div class="container_title wow fadeInLeft animated" data-wow-delay="0.3s" data-wow-duration="1.2s">
+			  <?php if($bo_table) {?>
+					<?php echo $board['bo_subject']; ?>
+			  <?php }else { ?>
+					<?php echo $g5['title'] ?>
+			  <?php } ?> 
+            </div>
         </div><!--.s_text-->
-     </div><!--svisual-->
      <? } else if ($bo_table == "qna") { ?>
-     <div id="svisual">
+     <div class="svisual sv04">
 		<div class="s_text">
             <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">INQUIRY</h3>
+			<div class="container_title wow fadeInLeft animated" data-wow-delay="0.3s" data-wow-duration="1.2s">
+			  <?php if($bo_table) {?>
+					<?php echo $board['bo_subject']; ?>
+			  <?php }else { ?>
+					<?php echo $g5['title'] ?>
+			  <?php } ?> 
+            </div>
         </div><!--.s_text-->
-     </div><!--svisual-->
      <? } else if ($bo_table == "b_news") { ?>
-     <div id="svisual">
+     <div class="svisual">
 		<div class="s_text">
             <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">NEWS</h3>
+			<div class="container_title wow fadeInLeft animated" data-wow-delay="0.3s" data-wow-duration="1.2s">
+			  <?php if($bo_table) {?>
+					<?php echo $board['bo_subject']; ?>
+			  <?php }else { ?>
+					<?php echo $g5['title'] ?>
+			  <?php } ?> 
+            </div>
         </div><!--.s_text-->
-     </div><!--svisual-->
      <? } else  { ?>
-     <div id="svisual">
+     <div class="svisual">
 		<div class="s_text">
-        	<span class="wow fadeInLeft animated" data-wow-delay="0.4s" data-wow-duration="1.2s">해외 주요 시장에서 최상의 제품과 서비스를 제공하여 고객의 기대에 부흥하고자 최선을 다하겠습니다.
-</span>
-            <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">CHEMICAL SOLUTION LEADER</h3>
+        	<!--<span class="wow fadeInLeft animated" data-wow-delay="0.4s" data-wow-duration="1.2s">해외 주요 시장에서 최상의 제품과 서비스를 제공하여 고객의 기대에 부흥하고자 최선을 다하겠습니다.
+</span>-->
+            <h3 class="wow fadeInRight animated" data-wow-delay="0.1s" data-wow-duration="1.2s">EF CHEM</h3>
+			<div class="container_title wow fadeInLeft animated" data-wow-delay="0.3s" data-wow-duration="1.2s">EF CHEM</div>
         </div><!--.s_text-->
-     </div><!--svisual-->
      <? } ?>
-    
-        <!--서브메뉴-->
+         <!--서브메뉴-->
+         <?php
+
+         if(!$sm_tid)	$sm_tid = $co_id;
+         if(!$sm_tid)	$sm_tid = $bo_table;
+
+         if($sm_tid)
+             echo submenu($sm_tid, 'basic02', G5_THEME_PATH);
+         ?>
+         <!--//서브메뉴-->
+     </div><!--svisual-->
+
 
     
 	<div id="container">
+        <!--서브비쥬얼-->
+		
+		
 		<? if($bo_table || $co_id){ ?>
         <!-- 서브 게시판 및 내용관리 부분 -->
 		<div id="scont_wrap">
-            <!--서브메뉴-->
-            <?php
 
-            if(!$sm_tid)	$sm_tid = $co_id;
-            if(!$sm_tid)	$sm_tid = $bo_table;
-
-            if($sm_tid)
-                echo submenu($sm_tid, 'basic', G5_THEME_PATH);
-            ?>
 
 		<? }else { ?>
         <!-- 그외 검사결과창 및 회원가입 -->
@@ -516,13 +664,6 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
 			<div id="scont">
 				<!--서브타이틀-->
 				<div id="sub_title">
-                    <div class="container_title">
-                      <?php if($bo_table) {?>
-                            <?php echo $board['bo_subject']; ?>
-                        <?php }else { ?>
-                            <?php echo $g5['title'] ?>
-                        <?php } ?> 
-                    </div>
                     <!--메뉴로케이션-->
                     <?php 
             
@@ -535,4 +676,4 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
                     ?>
 				</div><!--#sub_title-->
 				<!--서브타이틀-->
-	<? } ?> 
+        <? } ?>

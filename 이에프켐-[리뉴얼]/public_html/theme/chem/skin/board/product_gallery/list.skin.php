@@ -22,8 +22,9 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
     <input type="hidden" name="sca" value="<?php echo $sca ?>">
     <input type="hidden" name="sop" value="and">
     <label for="sfl" class="sound_only">검색대상</label>
+    <input type="hidden" name="sfl" value="wr_subject||wr_content||wr_2||wr_4">
     <label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
-    <input type="text" name="stx" value="<?php echo stripslashes($stx) ?>" required id="stx" class="frm_input sch_input required" placeholder="검색어를 입력해주세요" style="border:0px !important; background:#fff !important;outline-style: none;">
+    <input type="text" name="stx" value="<?php echo stripslashes($stx) ?>" required id="stx" class="frm_input sch_input required" placeholder="국,영문 화학명,이명,cas no. 를 입력하세요." style="border:0px !important; background:#fff !important;outline-style: none;">
     <button type="submit" id="sch_submit" style="border:0; background:none"><i class="fal fa-search"></i><span class="sound_only">검색</span></button>
     </form>
 </fieldset>
@@ -41,19 +42,11 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
     <label for="sfl" class="sound_only">검색대상</label>
     
     <span class="select_box">
-    <select name="sfl" id="sfl">
-        <option value="wr_subject"<?php echo get_selected($sfl, 'wr_subject', true); ?>>제목</option>
-        <option value="wr_content"<?php echo get_selected($sfl, 'wr_content'); ?>>내용</option>
-        <option value="wr_subject||wr_content"<?php echo get_selected($sfl, 'wr_subject||wr_content'); ?>>제목+내용</option>
-        <option value="mb_id,1"<?php echo get_selected($sfl, 'mb_id,1'); ?>>회원아이디</option>
-        <!--<option value="mb_id,0"<?php echo get_selected($sfl, 'mb_id,0'); ?>>회원아이디(코)</option>
-        <option value="wr_name,1"<?php echo get_selected($sfl, 'wr_name,1'); ?>>글쓴이</option>
-        <option value="wr_name,0"<?php echo get_selected($sfl, 'wr_name,0'); ?>>글쓴이(코)</option> -->
-    </select>
+    <input type="hidden" name="sfl" value="wr_subject||wr_content||wr_2||wr_4">
     </span>
     
     <label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
-    <input type="text" name="stx" value="<?php echo stripslashes($stx) ?>" required id="stx" class="frm_input sch_input required" maxlength="20">
+    <input type="text" name="stx" placeholder="국,영문 화학명,이명,cas no. 를 입력하세요." value="<?php echo stripslashes($stx) ?>" required id="stx" class="frm_input sch_input required" maxlength="20">
     <input type="submit" value="검색" class="btn_submit02">
     </form>
 </fieldset>
@@ -164,11 +157,11 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                     // echo $list[$i]['icon_reply']; 갤러리는 reply 를 사용 안 할 것 같습니다. - 지운아빠 2013-03-04
                     if ($is_category && $list[$i]['ca_name']) {
                      ?>
-                    <a href="<?php echo $list[$i]['ca_name_href'] ?>" class="bo_cate_link"><?php echo $list[$i]['ca_name'] ?></a>
+                    <!--<a href="<?php echo $list[$i]['ca_name_href'] ?>" class="bo_cate_link"><?/*php echo $list[$i]['ca_name'] */?></a>-->
                     <?php } ?>
                     <a href="<?php echo $list[$i]['href'] ?>" class="title">
-                        <p class="t9"><?php echo $list[$i]['wr_1'] ?><!-- 제목 --></p>
-                        <p class="t16"><?php echo $list[$i]['wr_2'] ?><!-- 제품코드 --></p>                        
+                        <!--<p class="t9"><?/*php echo $list[$i]['wr_2'] */?><!-- 제품코드 </p>-->
+                        <p class="t16"><?/*php echo $list[$i]['wr_1'] */?><!-- 제목 --></p>                        
 						<p class="t10 t_margin12"><?php echo $list[$i]['subject'] ?>
                         <?php /*?><?php if ($list[$i]['comment_cnt']) { ?><span class="sound_only">댓글</span><?php echo $list[$i]['comment_cnt']; ?><span class="sound_only">개</span><?php } ?><?php */?>
                     </p></a>

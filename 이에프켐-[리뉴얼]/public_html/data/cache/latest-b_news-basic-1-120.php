@@ -1,6 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
-$bo_subject='관련뉴스';
+$bo_subject='공지사항';
 $list=array (
   0 => 
   array (
@@ -19,7 +19,7 @@ $list=array (
     'wr_link2' => '',
     'wr_link1_hit' => '0',
     'wr_link2_hit' => '0',
-    'wr_hit' => '3',
+    'wr_hit' => '11',
     'wr_good' => '0',
     'wr_nogood' => '0',
     'mb_id' => 'lets080',
@@ -55,9 +55,9 @@ $list=array (
     'reply' => 0,
     'icon_reply' => '',
     'icon_link' => '',
-    'ca_name_href' => 'http://dreamforone.co.kr/~efchem_re2/bbs/board.php?bo_table=b_news&amp;sca=',
-    'href' => 'http://dreamforone.co.kr/~efchem_re2/bbs/board.php?bo_table=b_news&amp;wr_id=1',
-    'comment_href' => 'http://dreamforone.co.kr/~efchem_re2/bbs/board.php?bo_table=b_news&amp;wr_id=1',
+    'ca_name_href' => 'https://dreamforone.co.kr:443/~efchem_re2/bbs/board.php?bo_table=b_news&amp;sca=',
+    'href' => 'https://dreamforone.co.kr:443/~efchem_re2/bbs/board.php?bo_table=b_news&amp;wr_id=1',
+    'comment_href' => 'https://dreamforone.co.kr:443/~efchem_re2/bbs/board.php?bo_table=b_news&amp;wr_id=1',
     'icon_new' => '',
     'icon_hot' => '',
     'icon_secret' => '',
@@ -68,8 +68,8 @@ $list=array (
     ),
     'link_href' => 
     array (
-      1 => 'http://dreamforone.co.kr/~efchem_re2/bbs/link.php?bo_table=b_news&amp;wr_id=1&amp;no=1',
-      2 => 'http://dreamforone.co.kr/~efchem_re2/bbs/link.php?bo_table=b_news&amp;wr_id=1&amp;no=2',
+      1 => 'https://dreamforone.co.kr:443/~efchem_re2/bbs/link.php?bo_table=b_news&amp;wr_id=1&amp;no=1',
+      2 => 'https://dreamforone.co.kr:443/~efchem_re2/bbs/link.php?bo_table=b_news&amp;wr_id=1&amp;no=2',
     ),
     'link_hit' => 
     array (

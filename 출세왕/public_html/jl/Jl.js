@@ -97,11 +97,28 @@ class Jl {
                             return false;
                         }
                     }
+
+                    if(Array.isArray(object[req.name])) {
+                        if (req.min && object[req.name].length < req.min.length) {
+                            reject(new Error(`${req.min.message}`));
+                            return false;
+                        }
+                        if (req.max && object[req.name].length > req.max.length) {
+                            reject(new Error(`${req.max.message}`));
+                            return false;
+                        }
+                    }
                 }
+            }
+
+            if("file_use" in options) {
+                object.file_use = options.file_use;
             }
 
             var objects = {_method : method};
             objects = this.processObject(objects,object);
+
+
 
             //form 으로 데이터가공
             var form = new FormData();
@@ -354,6 +371,44 @@ class Jl {
      */
     isUpperCase(str) {
         return str === str.toUpperCase();
+    }
+
+    isRangeDate(startDate,endDate) {
+        // 날짜 및 시간 형식 검증
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+
+        // 입력 검증
+        if (!dateRegex.test(startDate) && !dateTimeRegex.test(startDate)) {
+            throw new Error('startDate는 "YYYY-MM-DD" 또는 "YYYY-MM-DD HH:MM" 형식이어야 합니다.');
+        }
+        if (!dateRegex.test(endDate) && !dateTimeRegex.test(endDate)) {
+            throw new Error('endDate는 "YYYY-MM-DD" 또는 "YYYY-MM-DD HH:MM" 형식이어야 합니다.');
+        }
+
+        // Date 객체 생성
+        let start, end;
+        if (dateTimeRegex.test(startDate)) {
+            start = new Date(startDate.replace(' ', 'T'));
+        } else {
+            start = new Date(`${startDate}T00:00:00`);
+        }
+
+        if (dateTimeRegex.test(endDate)) {
+            end = new Date(endDate.replace(' ', 'T'));
+        } else {
+            end = new Date(`${endDate}T23:59:59`);
+        }
+
+        const now = new Date();
+
+        // 날짜 유효성 체크
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            throw new Error('유효하지 않은 날짜 또는 시간입니다.');
+        }
+
+        // 현재 시간이 범위 안에 포함되는지 확인
+        return now >= start && now <= end;
     }
 
     // 매개변수를 타입에따라 배열로 바꿔주는 함수

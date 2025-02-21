@@ -13,31 +13,35 @@ $user_response = $jl_kakao->getUser($token); // [id,connected_at,kakao_account]
  * phone_number +82 치환 선택
  */
 $user = $user_response['kakao_account'];
-$user['phone_number'] = $jl->formatPhoneNumber($user['phone_number']);
+// 변수명 공용화
+$user['phone'] = $jl->formatPhoneNumber($user['phone_number']);
+$user['primary'] = $user_response['id'];
 
-//예외 로직 시작
+
+//공통 로직 시작
 $model = new JlModel("g5_member");
+$row = $model->where("sns_code",$user['primary'])->get();
 
-$response = $model->where("mb_id","jl_k_".$user_response['id'])->get();
-if(!$response['count']) {
-    $row = array(
-        "mb_id" => "jl_k_".$user_response['id'],
-        "mb_password" => $jl->encrypt($user_response['id']),
+if(!$row['count']) {
+    $data = array(
+        "mb_id" => $jl->generateUniqueId(),
+        "mb_password" => $jl->encrypt($jl->generateUniqueId()),
         "mb_name" => $user['name'],
         "mb_email" => $user['email'],
         "mb_level" => 2,
-        "mb_hp" => $user['phone_number'],
+        "mb_hp" => $user['phone'],
         "mb_datetime" => "now()",
+        "sns_code" => $user['primary'],
     );
 
-    $model->insert($row);
+    $model->insert($data);
 
-    $response = $model->where("mb_id","jl_k_".$user_response['id'])->get();
+    $row = $model->where("sns_code",$user['primary'])->get();
 }
 
 
-$jl->setSession('ss_mb_id', "jl_k_".$user_response['id']);
-$jl->setSession('ss_mb_key', md5($response['data'][0]['mb_datetime'] . $jl->getClientIP() . $_SERVER['HTTP_USER_AGENT']));
+$jl->setSession('ss_mb_id', $row['data'][0]['mb_id']);
+$jl->setSession('ss_mb_key', md5($row['data'][0]['mb_datetime'] . $jl->getClientIP() . $_SERVER['HTTP_USER_AGENT']));
 
 $jl->goURL($jl->URL);
 ?>

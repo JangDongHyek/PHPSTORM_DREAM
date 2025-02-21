@@ -1,7 +1,7 @@
 <?php
 // Define 파일이 제대로 Load 됐는지 확인용
 define("JL_CHECK",true);
-define("JL_Version",1.8);
+define("JL_Version",2.0);
 
 // 최상단 폴더의 이름
 define("JL_ROOT_DIR","public_html");
@@ -11,7 +11,6 @@ define("JL_JS","/jl");
 
 // 스마트에디터 사용시 경로지정 HuskyEZCreator.js
 define("JL_EDITOR_JS","/plugin/editor/smarteditor2/js/HuskyEZCreator.js");
-
 // 스마트에디터 사용시 경로지정 SmartEditor2Skin.html
 define("JL_EDITOR_HTML","/plugin/editor/smarteditor2/SmartEditor2Skin.html");
 
@@ -32,6 +31,16 @@ define("JL_ALERT","origin");
 // session 폴더가있다면 경로 입력 CI나 그냥 세션으로 사용가능하다면 주석처리나 빈값으로 변경
 define("JL_SESSION_PATH","/data/session");
 
+//카카오 로그인 define
+define("JL_KAKAO_CLIENT_ID","");// REST API 키
+
+//네이버 로그인 define
+define("JL_NAVER_CLIENT_ID","");
+define("JL_NAVER_CLIENT_SECRET","");
+
+//jl을 통해 사용하는 암호화타입
+define("JL_ENCRYPT","mb_5");// mb_5
+
 //jl_session_table 컬럼
 define('JL_SESSION_TABLE_COLUMNS', '{"idx":{"type":"VARCHAR","length":15,"nullable":false,"comment":"고유값"},"client_ip":{"type":"VARCHAR","length":45,"nullable":false,"comment":"사용자 아이피"},"name":{"type":"VARCHAR","length":255,"nullable":false,"comment":"세션명"},"content":{"type":"TEXT","nullable":false,"comment":"내용"},"method":{"type":"VARCHAR","length":20,"nullable":true,"comment":"요청 방식"},"response":{"type":"LONGTEXT","nullable":true,"comment":"응답 내용"},"sessions":{"type":"LONGTEXT","nullable":true,"comment":"접속자 세션 데이터"},"user_agent":{"type":"TEXT","nullable":true,"comment":"접속정보"},"browser":{"type":"VARCHAR","length":255,"nullable":true,"comment":"접속한 브라우저"},"browser_version":{"type":"VARCHAR","length":255,"nullable":true,"comment":"브라우저 버전"},"platform":{"type":"VARCHAR","length":255,"nullable":true,"comment":"접속한 플랫폼"},"is_mobile":{"type":"VARCHAR","length":7,"nullable":true,"comment":"모바일"},"in_app_browser":{"type":"VARCHAR","length":50,"nullable":true,"comment":"앱"},"status":{"type":"VARCHAR","length":7,"nullable":false,"default":"active","comment":"세션상태"},"insert_date":{"type":"DATETIME","nullable":false,"comment":"생성일"},"update_date":{"type":"DATETIME","nullable":true,"comment":"수정일"},"delete_date":{"type":"DATETIME","nullable":true,"comment":"세션만료시간"},"primary":"idx"}');
 
@@ -45,6 +54,8 @@ define('JL_SESSION_TABLE_COLUMNS', '{"idx":{"type":"VARCHAR","length":15,"nullab
 1.6 jl 디비 세션 자동 생성 및 로직 추가
 1.7 vue3 버전 호환되게 추가 및 define vue_version 추가
 1.8 define 세션공유할수있게 sessionPath 추가
+1.9 카카오 api 관련 로직 추가 external/JlKakao, oauth/kakao, JL_KAKAO_CLIENT_ID
+2.0 네이버 로그인 로직 추가 external/JlNaver, oauth/naver, 암호화타입 define값추가 해당값으로 암호화하는 함수 추가
 */
 
 ?>

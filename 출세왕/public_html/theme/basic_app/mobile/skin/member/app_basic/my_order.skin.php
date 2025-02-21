@@ -3,6 +3,30 @@
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 //add_stylesheet('<link rel="stylesheet" href="'.G5_MSHOP_SKIN_URL.'/style.css">', 0);
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
+
+/*// 현재 시간을 타임스탬프로 저장
+$current_time = time();
+
+// 현재 URL의 기존 쿼리 스트링을 가져옴
+$query_params = $_GET;
+
+// 기존에 timestamp가 없거나 1초 이상 차이가 나면 갱신
+if (!isset($query_params['timestamp']) || abs($current_time - intval($query_params['timestamp'])) > 1) {
+    // timestamp 값을 현재 시간으로 업데이트
+    $query_params['timestamp'] = $current_time;
+
+    // 새로운 URL 생성 (기존 파라미터 유지 + timestamp 추가)
+    $new_url = strtok($_SERVER["REQUEST_URI"], '?') . '?' . http_build_query($query_params);
+
+    // 새 URL로 리디렉트
+    header("Location: $new_url");
+    exit;
+}*/
+
 ?>
 
 <!-- 모달팝업 -->
@@ -241,12 +265,21 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
     });
 
+    let flag = false;
+
 
     function service_step(type) {
         var idx = "";
         if(type == 'complete'){
             idx = $("#complete_idx").val();
         }
+
+        if(flag) {
+            return false;
+        }else {
+            flag = true;
+        }
+
 
         $.ajax({
             url: g5_bbs_url+"/ajax.controller.php",
@@ -265,6 +298,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                     window.location.href = g5_bbs_url + data["url"];
                 }else{
                     swal_func("작업요청에 실패했습니다.");
+                    flag = false;
                 }
             }
         });
@@ -298,5 +332,15 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
         }
         location.href = newURL;
     }
+
+    window.addEventListener("pageshow", function(event) {
+        if (event.persisted) {
+            location.reload();
+        }
+    });
+
+    window.addEventListener("popstate", function(event) {
+        location.reload(); // 뒤로가기가 감지되면 새로고침
+    });
 
 </script>

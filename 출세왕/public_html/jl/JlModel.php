@@ -411,12 +411,16 @@ class JlModel{
             if(!$result) $this->jl->error(mysql_error());
         }
 
-        if($param[$this->primary]) return $param[$this->primary];
 
-        if($this->mysqli)
-            return mysqli_insert_id($this->connect);
-        else
-            return mysql_insert_id($this->connect);
+
+        if($param[$this->primary]) {
+            $response = array("sql" => $sql,"primary" => $param[$this->primary]);
+        }else {
+            if($this->mysqli) $response = array("sql" => $sql,"primary" => mysqli_insert_id($this->connect));
+            else $response = array("sql" => $sql,"primary" => mysqli_insert_id($this->connect));
+        }
+
+        return $response;
     }
 
     function count($_param = array()){
@@ -569,9 +573,11 @@ class JlModel{
         foreach($param as $key => $value){
             if($key == "update_date") continue;
             if(in_array($key, $this->schema['columns'])){
+                $column = $this->schema['columns_info'][$key];
                 if(!empty($update_sql)) $update_sql .= ", ";
 
                 if($value == "now()") $update_sql .= "`{$key}`={$value}";
+                else if($column['DATA_TYPE'] == 'int' && $value == 'incr') $update_sql = "`{$key}`={$key}+1";
                 else $update_sql .= "`{$key}`='{$value}'";
             }
         }
@@ -592,7 +598,7 @@ class JlModel{
 
         $this->reset();
 
-        return $this;
+        return array("sql" => $sql,"primary" => $param[$this->primary]);
     }
 
     /*
@@ -936,7 +942,9 @@ class JlModel{
                         $this->sql .= " $operator ";
                     }
 
-                    $this->sql .= "$source.`{$key}` = '{$value}'";
+                    if($value == "CURDATE()") $this->sql .= "$source.`{$key}` = {$value}";
+                    else $this->sql .= "$source.`{$key}` = '{$value}'";
+
                 }
             }
         }
@@ -954,7 +962,8 @@ class JlModel{
                     $this->sql .= " $operator ";
                 }
 
-                $this->sql .= "$source.`{$first}` = '{$second}'";
+                if($second == "CURDATE()") $this->sql .= "$source.`{$first}` = {$second}";
+                else $this->sql .= "$source.`{$first}` = '{$second}'";
             }
         }
 

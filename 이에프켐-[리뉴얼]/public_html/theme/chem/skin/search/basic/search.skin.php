@@ -5,7 +5,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$search_skin_url.'/style.css">', 
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 ?>
 
-<?php if ($result_cnt == 0) { ?>
+<?php if ($total_count == 0) { ?>
 <p class="search_tit"><span>'<?php echo $stx ?>'</span> 에 대한 검색결과 <?php echo number_format($total_count) ?>개</p>
     <div class="empty_list">
            <p><i class="fal fa-search fa-3x"></i></p>

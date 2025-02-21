@@ -12,6 +12,8 @@ $sql_search = " where 1=1 ";
 
 if ($_REQUEST["ma"] == "no"){
     $sql_search .= "and ma_id = '' " ;
+
+    $qstr .= '&amp;ma=' . urlencode($_REQUEST["ma"]);
 }
 
 if ($_REQUEST["car_date_type_name"] != ""){
@@ -98,7 +100,6 @@ if ($_REQUEST["complete_datetime"] != ""){
     if ($complete_datetime)
         $qstr .= '&amp;complete_datetime=' . urlencode($complete_datetime);
 }
-
 
 //끝
 
@@ -361,8 +362,12 @@ $mem_result = sql_query($sql);
                 $mb_work_arr = explode(',', $row['mb_work'] );
                 $manage_mb = get_member($row['ma_id']);
 
-                $diff_days = date_diff(date_create($row['complete_datetime']), date_create(G5_TIME_YMDHIS));
-                $day = $diff_days->days;
+                if($row['complete_datetime'] == "0000-00-00 00:00:00") {
+                    $day = 0;
+                }else {
+                    $diff_days = date_diff(date_create($row['complete_datetime']), date_create(G5_TIME_YMDHIS));
+                    $day = $diff_days->days;
+                }
                 ?>
                 <tr class="<?php echo $bg; ?>">
                     <td>
@@ -386,7 +391,7 @@ $mem_result = sql_query($sql);
                     <td><?= ($row['cp_id']) ? "사용": ""?></td>
                     <td><?=substr($row['wr_datetime'],2,8)?></td>
                     <td><?=strtotime($row['complete_datetime'])>0 && $row["cw_step"] == 1 ? $row['complete_datetime'] : $row['complete_datetime']?></td>
-                    <td><?=strtotime($row['complete_datetime'])>0 && $row["cw_step"] == 1 ? $diff_days->days : $diff_days->days?></td>
+                    <td><?=strtotime($row['complete_datetime'])>0 && $row["cw_step"] == 1 ? $day : $day?></td>
                     <td><?=$s_mod?></td>
                 </tr>
 

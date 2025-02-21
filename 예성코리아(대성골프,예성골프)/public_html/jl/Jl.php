@@ -767,6 +767,10 @@ class Jl {
         ));
     }
 
+    function generateUniqueId() {
+        return uniqid().str_pad(rand(0, 99), 2, "0", STR_PAD_LEFT);
+    }
+
     function setSession($name,$data) {
         if($this->ENV == "php") {
             $_SESSION[$name] = $data;
@@ -775,6 +779,8 @@ class Jl {
 
     function getSession($name) {
         if($this->ENV == "php") return $_SESSION[$name];
+        else return "";
+
     }
 
     function goURL($url)
