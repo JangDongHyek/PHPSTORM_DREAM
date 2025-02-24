@@ -14,7 +14,7 @@
         <item-paging :filter="filter" @change="filter.page = $event; jl.getsData(filter,rows);"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
-        <external-bs-modal :modal="modal.status" @close="modal.status = false;" class_1="" class_2="">
+        <external-bs-modal :modal="modal">
             <template v-slot:header>
 
             </template>
@@ -36,8 +36,8 @@
         <!-- summernote -->
         <external-summernote :row="row" field="wr_content"></external-summernote>
 
-        <button @click="jl.postData(row,'table_name',options)">추가</button>
-        <button @click="jl.deleteData(row,'rental_hall',{message :'', href:''})">삭제</button>
+        <button @click="jl.postData(row,options)">추가</button>
+        <button @click="jl.deleteData(row,{message :'', href:''})">삭제</button>
 
     </div>
 </script>
@@ -93,7 +93,15 @@
 
                     // like테이블에 foreing키에 이테이블의 primary값을 가진 모든데이터를 가져오는 연결형구문
                     relations : [
-                        {table : "like" ,foreign : "board_idx"},
+                        {
+                            table : "like" ,
+                            foreign : "board_idx",
+                            type : "count",
+                            filter : {
+
+                            },
+                        }, // type(count,data)
+
                     ],
 
                     join : {
@@ -115,6 +123,7 @@
                 },
 
                 options : {
+                    table : '',
                     file_use : false, // true 파일 사용
                     required : [
                         {name : "",message : ``}, //simple
@@ -130,6 +139,15 @@
                             max : {length : 10, message : ""}
                         },
                     ],
+                    updated : [
+                        {key : "", value : ``},
+                    ],
+                    confirm : {
+                        message : '',
+                        callback : async () => { // false 시 실행되는 callback
+
+                        },
+                    },
                     return : false, // 해당값이 true이면 ajax만 날리고 바로 리턴
                     href : "",
                     callback : async (res) => {
@@ -143,7 +161,7 @@
                 data : {
                     table : "",
 
-                    int : "incr", // 인트타입의 컬럼인데 incr 이란 단어가 들어가면 해당컬럼 +1 로 쿼리가 대체된다
+                    hits : "incr", // 인트타입의 컬럼인데 incr 이란 단어가 들어가면 해당컬럼 +1 로 쿼리가 대체된다
 
                     // 해당하는 조건에 걸리는 데이터가 있으면 error(message)를 반환
                     // 객체 하나당 묶음이라 여러개의 조건도 가능 아이디 확인, 닉네임 확인 이렇게하고싶으면 객체 두개필요
@@ -169,7 +187,7 @@
 
                     // 해당 컨텐츠내용에 client_ip, status active 된 데이터가 있다면 해당 로직 중단
                     session_exists : [
-                        {content : "project_hits", exit_type : "error"}, // exit_type 이 error일경우 error가반환 stop일경우 로직이 중단되고 끝
+                        {content : "project_hits", exit_type : "error"}, // exit_type 이 error일경우 error가반환 stop일경우 아무것도안함
                     ],
                 }
             };
@@ -402,7 +420,9 @@
 
         },
         watch : {
+            async "object.key" (value,old_value) {
 
+            }
         }
     }});
 </script>

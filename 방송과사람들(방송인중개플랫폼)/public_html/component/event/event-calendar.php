@@ -4,7 +4,7 @@
         <div class="calendar_check">
             <div class="title">
                 <h6>출석하기</h6>
-                <button class="attendance-btn" id="markAttendance" @click="jl.postData(row,'event_attend',options)">출석하기</button>
+                <button class="attendance-btn" id="markAttendance" @click="jl.postData(row,options)">출석하기</button>
             </div>
 
             <div class="calendar-container">
@@ -79,6 +79,7 @@
                 rows : [],
 
                 options : {
+                    table : "event_attend",
                     required : [
                         {name : "user_idx",message : `로그인이 필요한 기능입니다.`},
                     ],

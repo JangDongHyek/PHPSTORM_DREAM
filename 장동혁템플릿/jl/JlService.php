@@ -142,8 +142,15 @@ class JlService extends Jl{
 
             foreach ($object["data"] as $index => $data) {
                 if(!$info['foreign']) continue;
+                if($info['filter']) {
+                    $info_filter = $this->jsonDecode($info['filter']);
+                    $joinModel->setFilter($info_filter);
+                }
                 $joinModel->where($info['foreign'],$data[$this->model->primary]);
-                $join_data = $joinModel->get()['data'];
+
+                if($info['type'] == 'count') $join_data = $joinModel->count();
+                else $join_data = $joinModel->get()['data'];
+
 
                 //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
                 $object["data"][$index]["$".$info['table']] = $join_data;

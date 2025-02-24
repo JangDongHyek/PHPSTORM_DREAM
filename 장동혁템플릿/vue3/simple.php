@@ -21,6 +21,7 @@
                 rows : [],
 
                 options : {
+                    table : "",
                     file_use : false,
                     required : [
                         {name : "",message : ``},
@@ -38,7 +39,10 @@
 
                 modal : {
                     status : false,
+                    load : false,
                     data : {},
+                    class_1 : "",
+                    class_2 : "",
                 },
 
             };
@@ -67,7 +71,14 @@
 
         },
         watch: {
-
+            async "modal.status"(value,old_value) {
+                if(value) {
+                    this.modal.load = true;
+                }else {
+                    this.modal.load = false;
+                    this.modal.data = {};
+                }
+            }
         }
     }});
 

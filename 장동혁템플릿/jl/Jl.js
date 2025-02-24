@@ -111,8 +111,19 @@ class Jl {
                 }
             }
 
+            if("updated" in options) {
+                for (let i = 0; i < options.updated.length; i++) {
+                    let updated = options.updated[i];
+                    object[updated.key] = updated.value;
+                }
+            }
+
             if("file_use" in options) {
                 object.file_use = options.file_use;
+            }
+
+            if("table" in options) {
+                object.table = options.table;
             }
 
             var objects = {_method : method};
@@ -479,6 +490,8 @@ class Jl {
                 }else if (typeof value === "boolean") {
                     // 불린 값을 문자열로 변환
                     obj[key] = value ? "true" : "false";
+                }else if (typeof value === "object" && value !== null && Object.keys(value).length === 0) {
+                    obj[key] = ""; // 빈 객체 {}를 빈 문자열로 변환
                 }
             }
         }

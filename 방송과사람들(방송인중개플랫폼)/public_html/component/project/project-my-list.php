@@ -5,7 +5,7 @@
             <li class="project-item" v-for="item in arrays">
                 <ul class="prize-info">
                     <li><span>🏆 총 상금</span> {{ totalPrize(item).format() }}원</li>
-                    <li><span>📌 참여작</span> 21개</li>
+                    <li><span>📌 참여작</span> {{item.$project_request.length}}개</li>
                     <li><span>📅 진행 기간</span> {{getDurationDays(item)}}일</li>
                     <li><span>📆 날짜</span> {{item.start_date.formatDate({type : '.'})}} ~ {{item.end_date.formatDate({type : '.'})}}</li>
                 </ul>
@@ -27,77 +27,47 @@
                 </a>
                 <div class="btn-wrap"><!--의뢰인 버전-->
                     <button type="button" @click="jl.href('./project_form.php?primary='+item.idx)">수정</button>
-                    <button type="button" @click="jl.deleteData(item,'project')">삭제</button>
-                    <button type="button" class="blue" @click="modal.status = true">선정</button>
+                    <button type="button" @click="jl.deleteData(item,{table : 'project'})">삭제</button>
+                    <button type="button" class="blue" @click="modal.status = true; modal.data = item">선정</button>
                 </div>
             </li>
         </ul>
 
-        <external-bs-modal :modal="modal.status" @close="modal.status = false;" class_1="prize-container" class_2="">
+        <external-bs-modal-new :modal="modal">
             <template v-slot:header>
-
+                <div class="portfolio-header">
+                    선정하기
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             </template>
 
             <!-- body -->
             <template v-slot:default>
 
                     <div>
-                        <div class="portfolio-header">
-                            선정하기
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+
                         <div class="join-list">
                             <div class="btn-wrap">
-                                <button type="button" class="project-add">선정 결과 저장</button><!--의뢰인 버전-->
-                                <button type="button" class="project-done">미선정 마감</button><!--의뢰인 버전-->
+                                <button type="button" class="project-add" @click="putData(true)">선정 결과 저장</button><!--의뢰인 버전-->
+                                <button type="button" class="project-done" @click="putData(false)">미선정 마감</button><!--의뢰인 버전-->
                             </div>
                             <ul>
-                                <li>
+                                <li v-for="item,index in modal.data.$project_request">
                                     <a>
-                                        <div class="img"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
-                                        <p>#1</p><!--참여순서-->
-                                        <div class="profile">
-                                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
-                                            <span>지원자</span>
-                                            <select>
-                                                <option>미선정</option>
-                                                <option>1등</option>
-                                                <option>2등</option>
-                                                <option>3등</option>
-                                            </select>
+                                        <div class="img">
+                                            <img v-if="item.images.length == 0" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
+                                            <img v-else :src="jl.root + item.images[0].src">
                                         </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <div class="img"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
-                                        <p>#2</p><!--참여순서-->
+                                        <p>#{{index+1}}</p><!--참여순서-->
                                         <div class="profile">
-                                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
-                                            <span>지원자</span>
-                                            <select>
-                                                <option>미선정</option>
-                                                <option>1등</option>
-                                                <option>2등</option>
-                                                <option>3등</option>
-                                            </select>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <div class="img"><img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg"></div>
-                                        <p>#3</p><!--참여순서-->
-                                        <div class="profile">
-                                            <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
-                                            <span>지원자</span>
-                                            <select>
-                                                <option>미선정</option>
-                                                <option>1등</option>
-                                                <option>2등</option>
-                                                <option>3등</option>
+                                            <img v-if="!item.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                                            <img v-else :src="jl.root + '/data/file/member/' + item.user_idx + '.jpg'" alt="프로필 이미지">
+                                            <span>{{item.$g5_member.mb_nick}}</span>
+                                            <select v-model="item.prize">
+                                                <option value="">미선정</option>
+                                                <option v-for="p in modal.data.prize" :vlaue="p.subject">{{p.subject}}</option>
                                             </select>
                                         </div>
                                     </a>
@@ -111,7 +81,7 @@
             <template v-slot:footer>
 
             </template>
-        </external-bs-modal>
+        </external-bs-modal-new>
 
         <item-pagination :filter="filter" @change="filter.page = $event; jl.getsData(filter,arrays);"></item-pagination>
     </div>
@@ -153,11 +123,27 @@
                         {table : "category", foreign : "category1_idx"},
                         {table : "category", foreign : "category2_idx", as : "category2"},
                     ],
+
+                    relations : [
+                        {
+                            table : "project_request" ,
+                            foreign : "project_idx",
+                            type : "data",
+                            filter : {
+                                where : [
+                                    {key : "cancel", value : 'jl_null', operator : ""} // AND,OR,AND NOT
+                                ],
+                            }
+                        }, // data,count
+                    ],
                 },
 
                 modal : {
                     status : false,
+                    load : false,
                     data : {},
+                    class_1 : "prize-container",
+                    class_2 : "",
                 },
 
                 load : false,
@@ -181,6 +167,30 @@
 
         },
         methods: {
+            async putData(bool) {
+                if(bool) {
+                    for (const row of this.modal.data.$project_request) {
+                        await this.jl.postData(row,{table : "project_request",return : true});
+                    }
+                }else {
+                    for (const row of this.modal.data.$project_request) {
+                        await this.jl.postData(row,{
+                            table : "project_request",
+                            return : true,
+                            updated : [
+                                {key : "prize", value : ''},
+                            ]
+                        });
+                    }
+                }
+
+                await this.jl.postData(this.modal.data,{
+                    table : "project",
+                    updated : [
+                        {key : "choice", value : bool},
+                    ],
+                })
+            },
             getStatus(item,type = "class") {
                 if(item.choice) {
                     return type == "class" ? "v3" : "선정 완료";
@@ -232,7 +242,22 @@
 
         },
         watch: {
+            async "modal.status" (value,old_value) {
+                if(value) {
+                    for (const row of this.modal.data.$project_request) {
+                        await this.jl.ajax("file_exists",{src : `/data/file/member/${row.user_idx}.jpg`},"/jl/JlApi.php").then(response => {
+                            row.file_exists = response.exists;
+                        });
 
+                        let user = await this.jl.getData({table : "g5_member",primary : row.user_idx});
+                        row.$g5_member = user;
+                    }
+                    this.modal.load = true;
+                }else {
+                    this.modal.load = false;
+                    this.modal.data = {};
+                }
+            }
         }
     });
 

@@ -5,7 +5,7 @@
             <h6>문의 댓글</h6>
             <div>
                 <textarea placeholder="문의 내용을 입력하세요." v-model="row.content"></textarea>
-                <button type="button" class="qna-btn" @click="jl.postData(row,'project_comment',options)">문의 등록</button>
+                <button type="button" class="qna-btn" @click="jl.postData(row,options)">문의 등록</button>
             </div>
             <h6>답변 내용</h6>
             <div>
@@ -21,7 +21,7 @@
                             <span>{{item.$g5_member.mb_nick}}</span>
                             <div class="btn-wrap">
                                 <button type="button" class="answer-btn" v-if="item.user_idx == mb_no"
-                                    @click="jl.deleteData(item,'project_comment',{callback : callbackMethod})">삭제</button><!--본인-->
+                                    @click="jl.deleteData(item,{table:'project_comment',callback : callbackMethod})">삭제</button><!--본인-->
                                 <button type="button" class="answer-btn" v-if="project.user_idx == mb_no"
                                     @click="row_comment.comment_idx ? row_comment.comment_idx = '' : row_comment.comment_idx = item.idx">답변</button><!--의뢰자-->
                             </div>
@@ -32,7 +32,7 @@
                             <div class="btn-wrap" v-if="project.user_idx == mb_no"><!--본인-->
                                 <button type="button" class="answer-btn" @click="putReply(reply)">수정</button>
                                 <button type="button" class="answer-btn"
-                                    @click="jl.deleteData(reply,'project_comment',{callback : callbackMethod})">삭제</button>
+                                    @click="jl.deleteData(reply,{table:'project_comment',callback : callbackMethod})">삭제</button>
                             </div>
                         </div>
                     </li>
@@ -40,7 +40,7 @@
 
                 <div class="answer-field" v-if="row_comment.comment_idx">
                     <textarea placeholder="문의 내용을 입력하세요." v-model="row_comment.content"></textarea>
-                    <button type="button" class="qna-btn" @click="jl.postData(row_comment,'project_comment',options)">답변 등록</button>
+                    <button type="button" class="qna-btn" @click="jl.postData(row_comment,options)">답변 등록</button>
                 </div>
             </div>
         </div>
@@ -74,6 +74,7 @@
                 rows : [],
 
                 options : {
+                    table : 'project_comment',
                     file_use : false,
                     required : [
                         {name : "user_idx",message : `로그인이 필요한 기능입니다.`},
@@ -94,7 +95,7 @@
                     ],
 
                     relations : [
-                        {table : "project_comment" ,foreign : "comment_idx"},
+                        {table : "project_comment" ,foreign : "comment_idx",type : 'data'},
                     ],
                 },
 

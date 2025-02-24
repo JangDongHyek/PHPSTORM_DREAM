@@ -26,7 +26,7 @@
                     </td>
                     <td>
                         <div class="toggle-switch">
-                            <input type="checkbox" :id="'toggle'+index"  v-model="item.status" @change="jl.postData(item,'project',{return : true})"/>
+                            <input type="checkbox" :id="'toggle'+index"  v-model="item.status" @change="jl.postData(item,{table:'project',return : true})"/>
                             <label :for="'toggle'+ index"></label>
                         </div>
                     </td>

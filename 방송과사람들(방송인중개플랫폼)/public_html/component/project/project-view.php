@@ -38,19 +38,19 @@
                             진행 기간<br><b>{{getDurationDays(row)}}일</b><br>
                             <span>{{row.start_date.formatDate({type: '.'})}} - {{row.end_date.formatDate({type: '.'})}}</span>
                         </div>
-                        <div>참여작<br><b>24개</b></div>
+                        <div>참여작<br><b>{{row.$project_request}}개</b></div>
                         <div>조회 수<br><b>{{row.hits}}</b></div>
                     </div>
                     <div class="button-container">
                         <button class="share-btn">공유하기</button>
-                        <button class="apply-btn" onclick="location.href='./project_join.php'">프로젝트 지원하기</button>
+                        <button class="apply-btn" @click="jl.href('./project_join.php?project_idx='+primary)">프로젝트 지원하기</button>
                     </div>
                 </section>
             </div>
 
             <div class="tabs">
                 <div class="tab" :class="{'active' : tab == 0}" @click="tab = 0">요청 사항</div>
-                <div class="tab" :class="{'active' : tab == 1}" @click="tab = 1">참여작 <span class="count">24</span></div>
+                <div class="tab" :class="{'active' : tab == 1}" @click="tab = 1">참여작 <span class="count">{{row.$project_request}}</span></div>
                 <div class="tab" :class="{'active' : tab == 2}" @click="tab = 2">문의 댓글 <span class="count">{{comment_count}}</span></div>
             </div>
             <div class="tab-content active">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                <project-view-request :primary="primary" v-show="tab == 1"></project-view-request>
+                <project-view-request :project="row" v-show="tab == 1"></project-view-request>
                 <project-view-comment :project="row" v-show="tab == 2" :mb_no="mb_no"
                                       @commentLength="comment_count = $event;"
                 ></project-view-comment>
@@ -118,6 +118,19 @@
                         {table : "category", foreign : "category1_idx"},
                         {table : "category", foreign : "category2_idx", as : "category2"},
                     ],
+
+                    relations : [
+                        {
+                            table : "project_request" ,
+                            foreign : "project_idx",
+                            type:'count',
+                            filter : {
+                                where : [
+                                    {key : "cancel", value : 'jl_null', operator : ""} // AND,OR,AND NOT
+                                ],
+                            }
+                        },
+                    ],
                 },
 
                 modal : {
@@ -152,7 +165,7 @@
                         {content : "project_hits"+this.primary, exit_type : "stop"},
                     ],
                 }
-                await this.jl.postData(hitData,"project",{return : true})
+                await this.jl.postData(hitData,{table:"project",return : true})
 
                 this.row = await this.jl.getData(this.filter);
 

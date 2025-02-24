@@ -43,6 +43,8 @@ define("JL_EDITOR_HTML","/plugin/editor/smarteditor2/SmartEditor2Skin.html");// 
 1.8 define 세션공유할수있게 sessionPath 추가
 1.9 카카오 api 관련 로직 추가 external/JlKakao, oauth/kakao, JL_KAKAO_CLIENT_ID
 2.0 네이버 로그인 로직 추가 external/JlNaver, oauth/naver, 암호화타입 define값추가 해당값으로 암호화하는 함수 추가
+---------------2.0이하에서 2.1 버전업이 된다면 jl.postData,jl.deleteData 함수 매개변수 변경해줘야함 ------------
+2.1 Jl.js JlVue.js 주요함수 매개변수 변경
 */
 
 ?>

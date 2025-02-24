@@ -158,7 +158,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="project-add" @click="jl.postData(data,'project',options)">프로젝트 의뢰하기</button>
+                <button type="button" class="project-add" @click="jl.postData(data,options)">프로젝트 의뢰하기</button>
             </form>
         </div>
     </div>
@@ -198,6 +198,7 @@
                 },
 
                 options : {
+                    table : 'project',
                     file_use : true,
                     required : [
                         {name : "user_idx",message : `로그인이 필요한 기능입니다.`},

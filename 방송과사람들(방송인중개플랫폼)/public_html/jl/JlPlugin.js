@@ -22,7 +22,7 @@ class JlPlugin {
         const defaultOptions = {
             title: message,
             icon: null, // success,error,warning,question
-            confirmButtonText: "확인"
+            confirmButtonText: "확인",
         }
 
         await Swal.fire({ ...defaultOptions, ...options });
