@@ -1,6 +1,6 @@
 <? 
 include_once('./_common.php');
-
+include_once(G5_PATH."/jl/JlConfig.php");
 $g5['title'] = '프로젝트 의뢰';
 include_once('./_head.php');
 $name = "project_list";
@@ -78,94 +78,15 @@ $pid = "project_list";
 </script>
 <!--//서브 상단 배너-->
 
-<!-- 순서 모달팝업 -->
-<div id="basic_modal">
-    <!-- Modal -->
-    <div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <ul id="sort_list" class="sort_list_mobile">
-                        <li class="active">최신순</li>
-                        <li>추천순</li>
-                        <li>별점순</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div><!--basic_modal-->
 <div id="area_project">
-    <div class="inr">
-        <ul id="area_history"><li><a href="">홈</a></li> <!----> <li><a href="" class="current">프로젝트</a></li></ul>
-        <div id="list_top">
-            <div class="total">총 2건</div>
-            <div class="sort_list"><span data-toggle="modal" data-target="#listModal">최신순</span></div>
-        </div>
-        <ul class="project-list">
-            <li class="project-item">
-                <a href="./project_view.php" class="project-link">
-                    <div class="thumb">
-                        <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로젝트 이미지">
-                    </div>
-                    <div class="project-cont">
-                        <div class="project-info">
-                            <div class="project-category">
-                                1차 카테고리 · 2차 카테고리
-                                <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
-                            </div>
-                            <h2 class="project-title">프로젝트명</h2>
-                            <p class="project-desc">프로젝트 설명입니다.</p>
-                        </div>
-                        <div class="project-user">
-                            <div class="user-info">
-                                <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="유저 프로필" class="user-img">
-                                <span class="user-name">의뢰인</span>
-                            </div>
-                            <div class="view-count">👁️ 1,662</div>
-                        </div>
-                    </div>
-                    <ul class="prize-info">
-                        <li><span>🏆 총 상금</span> 80만 원</li>
-                        <li><span>📌 참여작</span> 21개</li>
-                        <li><span>📅 진행 기간</span> 6일</li>
-                        <li><span>📆 날짜</span> 25.02.05 ~ 25.02.11</li>
-                    </ul>
-                </a>
-            </li>
-            <li class="project-item">
-                <a href="./project_view.php" class="project-link">
-                    <div class="thumb">
-                        <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로젝트 이미지">
-                    </div>
-                    <div class="project-cont">
-                        <div class="project-info">
-                            <div class="project-category">
-                                1차 카테고리 · 2차 카테고리
-                                <button type="button" class="bookmark"><i class="fa-solid fa-bookmark"></i></button>
-                            </div>
-                            <h2 class="project-title">프로젝트명</h2>
-                            <p class="project-desc">프로젝트 설명입니다.</p>
-                        </div>
-                        <div class="project-user">
-                            <div class="user-info">
-                                <img src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="유저 프로필" class="user-img">
-                                <span class="user-name">의뢰인</span>
-                            </div>
-                            <div class="view-count">👁️ 1,662</div>
-                        </div>
-                    </div>
-                    <ul class="prize-info">
-                        <li><span>🏆 총 상금</span> 80만 원</li>
-                        <li><span>📌 참여작</span> 21개</li>
-                        <li><span>📅 진행 기간</span> 6일</li>
-                        <li><span>📆 날짜</span> 25.02.05 ~ 25.02.11</li>
-                    </ul>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <project-list></project-list>
 </div>
+
+<?
+$jl->vueLoad("area_project",["summernote"]);
+$jl->componentLoad("project");
+$jl->componentLoad("external");
+?>
 
 <?php
 include_once('./_tail.php');

@@ -55,6 +55,7 @@
                                 <th>처방수량(월)</th>
                                 <th>기존합계</th>
                                 <th>대체의약품</th>
+                                <th v-if="mb_id == 'admin'">제조사</th>
                                 <th>ST단가</th>
                                 <th>ST합계</th>
                                 <th>절감금액</th>
@@ -84,6 +85,9 @@
                                     </td>
                                     <td alt="대체의약품">
                                         <p class="temp">대체의약품</p>
+                                    </td>
+                                    <td alt="제조사" v-if="mb_id == 'admin'">
+                                        <p class="temp">제조사</p>
                                     </td>
                                     <td alt="ST단가" class="text_right">
                                         <p class="temp">0</p>
@@ -124,6 +128,9 @@
                                             <b>{{getReplace(product).PRODUCT_NM}}</b>
                                             <!--<button type="button" data-toggle="modal" data-target="#moreModal1" class="btn btn_mini btn_black">변경</button>-->
                                         </p>
+                                    </td>
+                                    <td alt="제조사" v-if="mb_id == 'admin'">
+                                        <p>{{getReplace(product).MAKER_NM}}</p>
                                     </td>
                                     <td alt="ST단가" class="text_right">
                                         <p><em>ST단가</em><b>{{getPrice(getReplace(product)).format()}}</b></p>

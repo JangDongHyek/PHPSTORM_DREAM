@@ -30,6 +30,7 @@ if(!$row['count']) {
         "mb_hp" => $user['phone'],
         "mb_datetime" => "now()",
         "sns_code" => $user['primary'],
+        "sns_type" => "naver"
     );
 
     $model->insert($data);

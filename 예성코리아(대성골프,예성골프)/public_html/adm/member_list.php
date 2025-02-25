@@ -130,6 +130,7 @@ $colspan = 16;
             <input type="checkbox" name="chkall" value="1" id="chkall" onclick="check_all(this.form)">
         </th>
         <th scope="col" id="mb_list_id"><?php echo subject_sort_link('mb_id') ?>아이디</a></th>
+        <th scope="col" id="mb_list_name"><?php echo subject_sort_link('sns_type') ?>sns</a></th>
 		<th scope="col" id="mb_list_name"><?php echo subject_sort_link('mb_name') ?>이름</a></th>
 		<th scope="col" id="mb_list_addr"><?php echo subject_sort_link('mb_addr') ?>주소</a></th>
 		<th scope="col" id="mb_list_addr"><?php echo subject_sort_link('mb_email') ?>이메일</a></th>
@@ -209,6 +210,9 @@ $colspan = 16;
         </td>
         <td headers="mb_list_id" class="td_name sv_use">
             <?php echo $mb_id ?>
+        </td>
+        <td headers="mb_list_cert" class="td_mbcert">
+            <?php echo $row['sns_type'] ?>
         </td>
         <td headers="mb_list_cert"  class="td_mbcert">
            <?php echo $row[mb_name]?>
