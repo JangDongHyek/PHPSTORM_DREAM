@@ -1197,7 +1197,7 @@ $script
 			}
 			if($rg_file1_name && eregi('(\.gif|\.jpg|\.png)$', $rg_file1_name))
 				$rg_file1_url = $data_url.$bbs.'/'.$rg_doc_num.'$1$'.$rg_file1_name;
-			else 
+			else
 				$rg_file1_url = "";
 
 			if($rg_file2_name && eregi('(\.gif|\.jpg|\.png)$', $rg_file2_name))
@@ -1210,7 +1210,7 @@ $script
 			$a_list = "<a href=\"$u_list\" $class[link_list]>";
 			if($length) $rg_title = rg_cut_string($rg_title,$length,$suffix);
 
-			$rg_cat_name = $category_list[$rg_cat_num][cat_name]; 
+			$rg_cat_name = $category_list[$rg_cat_num][cat_name];
 			include($skin_lastest_path."main.php");
 			$i++;
 		}

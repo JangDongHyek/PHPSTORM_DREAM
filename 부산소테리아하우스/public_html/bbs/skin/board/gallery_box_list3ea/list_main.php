@@ -4,6 +4,10 @@ $rg_title_cut = rg_cut_string($rg_title,15,'...');
 ?> 
 
 <?
+
+$origin_thumb = false;
+$new_thumb = false;
+
 //썸네일 가로세로 크기 설정 
 $thum_width = 200; //세로는 가로 비율에 따라 바뀝
 
@@ -11,8 +15,7 @@ $thum_width = 200; //세로는 가로 비율에 따라 바뀝
 $rg_thum1_url = $bbs_data_url.urlencode($rg_doc_num.'$1$'.$rg_file1_name);
 
 if($rg_file1_name && eregi('(\.jpg|\.gif)$',$rg_file1_name)){
-
-
+    $origin_thumb = true;
 	// 파일1의 서버경로
 	$rg_file1_path = $bbs_data_path.$rg_doc_num.'$1$'.$rg_file1_name;
 
@@ -28,6 +31,11 @@ if($rg_file1_name && eregi('(\.jpg|\.gif)$',$rg_file1_name)){
 		MakeThum_Gall_List($rg_doc_num,"1",$bbs_id,$rg_file1_name,$thum_width);
 	}
 	
+}else {
+    if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/', $rg_content, $matches)) {
+        $new_thumb = true;
+        $firstImageSrc = $matches[1]; // 첫 번째 이미지의 src 값
+    }
 }
 if($l_cols % $cols == 0) {
 ?>
@@ -54,7 +62,14 @@ if($l_cols % $cols == 0) {
             <tr>
               <td bgcolor="#FFFFFF"> 
                 <a href="./view.php?bbs_id=<?=$bbs_id?>&page=<?=$page?>&doc_num=<?=$rg_doc_num?>" title="<?=$rg_title?>">
-                <img src="<?=$rg_thum1_url?>" border="0" onerror="this.src='<?=$skin_board_url?>blank_.gif'" style="cursor:hand;" vspace="2" hspace="2"></td>
+
+                    <?if($origin_thumb) {?>
+                <img src="<?=$rg_thum1_url?>" border="0" onerror="this.src='<?=$skin_board_url?>blank_.gif'" style="cursor:hand;" vspace="2" hspace="2">
+                    <?}else if($new_thumb) {?>
+
+                    <img src="<?=$firstImageSrc?>" border="0" onerror="this.src='<?=$skin_board_url?>blank_.gif'" style="cursor:hand;width: 200px; height: 113px" vspace="2" hspace="2" style="">
+                <?}?>
+              </td>
             </tr>
         </table></div></td>
   </tr>

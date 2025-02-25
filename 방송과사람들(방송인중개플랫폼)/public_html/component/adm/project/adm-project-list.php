@@ -21,7 +21,7 @@
                     </td>
                     <td>{{item.subject}}</td>
                     <td>
-                        <a :href="'./project_view.php?idx=' + item.idx">보기</a>
+                        <a :href="'../bbs/project_view.php?primary=' + item.idx">보기</a>
                         <a>삭제</a>
                     </td>
                     <td>

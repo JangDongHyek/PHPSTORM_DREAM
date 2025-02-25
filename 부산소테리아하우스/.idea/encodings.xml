@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/public_html/bbs/include/func.inc.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/mb_login.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/skin/board/gallery_box_list3ea/head.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/skin/board/gallery_box_list3ea/list_main.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/skin/board/gallery_box_list3ea/setup.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/skin/lastest/default_gallery_thumbnail/main.php" charset="x-windows-949" />
+  </component>
+</project>

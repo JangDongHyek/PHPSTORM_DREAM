@@ -7,11 +7,11 @@
 		
 		//썸네일있음 보여주고 없음 본이미지 보여주기(사이즈작은놈은 썸네일 없음)
 	if(file_exists($bbs_data_path.$rg_doc_num.'$1$'.$rg_file1_name)) {
-		
+
 		// 파일1의 서버경로
 		$rg_file1_path = $bbs_data_path.$rg_doc_num.'$1$'.$rg_file1_name;
-	}else{	
-		
+	}else{
+
 		// 파일1의 서버경로
 		$rg_file1_path = $bbs_data_path.$rg_doc_num.'$1$th2$'.$rg_file1_name;
 	}
@@ -43,11 +43,24 @@
 			}
 		}
 	} else {
-		// 섬네일1의 url
-		$rg_thum1_url = '';
-		$rg_thum1_width = $thum_width; 
-		$rg_thum1_height = $thum_height; 
-	}
+      if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/', $rg_content, $matches)) {
+          $new_thumb = true;
+
+          // 첫 번째 이미지의 src 값
+          $rg_thum1_url = $matches[1];
+
+          // "./editor" 부분을 "../bbs/editor"로 변경
+          $rg_thum1_url = preg_replace('/^\.\//', '../bbs/', $rg_thum1_url);
+
+      }else {
+              // 섬네일1의 url
+              $rg_thum1_url = '';
+          }
+
+      $rg_thum1_width = $thum_width;
+      $rg_thum1_height = $thum_height;
+
+  }
 ?>
 	<td valign="top" align="center">
 		<table style="table-layout:fixed" width="100%">
