@@ -1,0 +1,41 @@
+<meta http-equiv="imagetoolbar" content="no">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main_01.gif" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="990"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><img src="../images/logo.gif" width="778" height="64" border="0" usemap="#Map_logo" /></td>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td rowspan="2"><img src="../images/topset.gif" width="155" height="64" border="0" usemap="#Map_topset" /></td>
+            <td><? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?><a href="../bbs/mb_login.php"><a href="../bbs/mb_logout.php?url=../main/index.htm">
+<img src="../images/logout.gif" border="0" /><?}else{ //로그아웃 상태일때?><a href="../bbs/mb_login.php"><img src="../images/login.gif" border="0" /><?}?></td>
+          </tr>
+          <tr>
+            <td><img src="../images/log_bg.gif" width="57" height="32" /></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="2"><img src="../images/menu.gif" width="990" height="34" border="0" usemap="#Map_menu" /></td>
+        </tr>
+    </table></td>
+    <td background="../images/main_05.gif" style="background-repeat:no-repeat; background-position:left;">&nbsp;</td>
+  </tr>
+</table>
+
+<map name="Map_menu">
+  <area shape="rect" coords="161,-1,255,33" href="../index.htm">
+<area shape="rect" coords="260,1,429,33" href="../main/sub1_1.htm">
+<area shape="rect" coords="438,2,552,39" href="../main/sub3_1.htm">
+<area shape="rect" coords="559,1,674,35" href="../bbs/list.php?bbs_id=noticee">
+<area shape="rect" coords="676,1,821,34" href="../main/sub5_1.htm">
+</map>
+<map name="Map_logo">
+<area shape="rect" coords="341,13,636,58" href="../index.htm">
+</map>
+<map name="Map_topset">
+<area shape="rect" coords="1,8,43,27" href="../index.htm">
+<area shape="rect" coords="45,7,97,26" href="../bbs/list.php?bbs_id=noticee">
+<area shape="rect" coords="98,7,153,25" href="../bbs/list.php?bbs_id=boardd">
+</map>

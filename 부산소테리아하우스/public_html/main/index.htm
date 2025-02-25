@@ -1,0 +1,62 @@
+<? 
+   $site_path = "/home/soteriahouse/public_html/bbs/"; 
+   $site_url = "../bbs/";
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>무제 문서</title>
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+
+<body>
+<? include('../inc/top.htm'); ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main_08.gif" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="990"><img src="../images/main_visual.jpg" width="990" height="442" border="0" usemap="#Map_mv" /></td>
+    <td background="../images/main_10.gif" style="background-repeat:no-repeat; background-positionleft;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><a href="../bbs/list.php?bbs_id=noticee"><img src="../images/main_12.gif" width="293" height="57" border="0" /></a></td>
+          </tr>
+          <tr>
+            <td width="293" height="123" valign="top" background="../images/notice_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="35">&nbsp;</td>
+                <td><?=rg_lastest('default','noticee','공지사항',3,35, '...')?></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><a href="../bbs/list.php?bbs_id=boardd"><img src="../images/main_13.gif" width="451" height="57" border="0" /></a></td>
+          </tr>
+          <tr>
+            <td width="451" height="123" valign="top" background="../images/album_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="20">&nbsp;</td>
+                <td><?=rg_lastest('default_gallery_thumbnail','pro_albumm','앨범',3,15, '...')?></td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td><img src="../images/main_14.gif" width="246" height="180" /></td>
+      </tr>
+    </table></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<? include('../inc/copy.htm'); ?>
+
+<map name="Map_mv">
+  <area shape="rect" coords="742,391,971,431" href="../main/sub2_1.htm">
+</map></body>
+</html>
