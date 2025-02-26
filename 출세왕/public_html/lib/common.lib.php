@@ -3452,14 +3452,59 @@ function fn_imagejpeg($image,$upload_file,$new_file_width,$new_file_height,$widt
     imagedestroy($tmpCreation);
 
 }
+
+function goSms($reserv_phone, $send_phone="", $msg){
+    $conn_db = mysqli_connect("211.51.221.165", "emma", "wjsghk!@#", "emma");
+    //$conn_db = mysqli_connect("14.48.175.184","mms_com","sbtpsxja!@#","mms_com");
+    $mart_id = "successking2";			//계정명
+
+    $number_receive_people = 0;
+    $tran_phone1 = $reserv_phone;			// 수신번호
+    $tran_callback1 = "0518910088";			// 발신번호
+    $msg1 = $msg;							// 문자내용
+    $send_date = date("YmdHis");
+
+    $sql = "select count(tran_pr) cnt from emma.em_all_log
+            where tran_date like '".G5_TIME_YMD."%' and tran_phone = '{$reserv_phone}' ";
+
+    $result = mysqli_query($conn_db,$sql);
+    $result = mysqli_fetch_array($result);
+    //6회부터 오류창 표시
+    if ($result['cnt'] > 10){
+        //echo "하루 인증횟수(5회)를 초과하였습니다.";
+        //exit("하루 인증횟수(10회)를 초과하였습니다.");
+    }
+    if(!$tran_callback1){
+        //echo "전화번호가 잘못되었습니다. 다시 입력해주세요.";
+        exit("전화번호가 잘못되었습니다. 다시 입력해주세요.");
+    }
+
+    $tran_msg1 = iconv("UTF-8", "EUC-KR", $msg1);
+
+    $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1')";
+    $result = mysqli_query($conn_db, $sms_query);
+    if(!$result) {
+        echo mysqli_error($conn_db);
+        return false;
+    }
+
+    //전체기록남기기
+    $all_query = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1',curdate())";
+    $result2 = mysqli_query($conn_db, $all_query);
+
+    $query = "Insert into tbl_sms(f_idno,f_from_phone,f_to_phone,f_comment,f_wdate) values('$mart_id','$tran_callback1','$tran_phone1','$tran_msg1','$send_date')";
+    mysqli_query($conn_db,$query);
+
+}
+
 /*
 ====================================================================
 
 ---------------------------------------------------------------------
 */
-function goSms($reserv_phone, $send_phone, $msg)
+/*function goSms($reserv_phone, $send_phone, $msg)
 {
-    $conn_db = mysqli_connect("", "", "", "");
+    $conn_db = mysqli_connect("211.51.221.165", "emma", "wjsghk!@#", "emma");
     $mart_id = "successking2";			//계정명
 
     $number_receive_people = 0;
@@ -3498,7 +3543,7 @@ function goSms($reserv_phone, $send_phone, $msg)
     $query = "";
     mysqli_query($conn_db,$query);
 
-}
+}*/
 
 
 //23.04.17 날짜표시함수 wc
@@ -3528,8 +3573,57 @@ function successking_date($date, $date2=''){
     }
 }
 
-function send_fcm($mb_id, $title, $body){
-	//$mb = get_member($mb_id);
+function send_fcm($mb_id, $title, $body, $url="")
+{
+
+    $token_list = array();
+
+    $sql = "select * from `member_gcm` where `mb_id` = '{$mb_id}' and `push_yn` = 'Y'";
+    $re = sql_query($sql);
+    while ($row = sql_fetch_array($re)) {
+        $token_list[] = $row['RegID'];
+    }
+
+
+    $serverKey = 'AAAAbSeuZDQ:APA91bEU36CHj9qAgKYiEKRk0emfeTKDzyQKBZYqtaUmFZGnL8l2WPMyEtJDGFjdZzlU132H1XI0NrQ84R3fyFimrzScd_zv149obhonTMv8YFeJyxxRTmXRwS1QXx-D2vCwQ-5Y1j2K';
+    //$fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+    $fcmUrl = 'https://dreamforone.kr/~fcmproject/fcm/request_fcm';
+
+    $headers = [
+        'Authorization: key=' . $serverKey,
+        'Content-Type: application/json',
+    ];
+
+    $data = [
+        "registration_ids" => $token_list,
+        "dreamforone_domain" => 'successking2',
+        "notification" => [
+            "title" => $title,
+            "body" => $body,
+            "url" => $url
+        ],
+        "data" => [
+            "url" => $url
+        ]
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $fcmUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+    }
+    curl_close($ch);
+    return $result;
+
+
+    //$mb = get_member($mb_id);
     $data = array();
     $data['app_id'] = "successking";
     $data['device_platform'] = "ALL";
@@ -3538,17 +3632,17 @@ function send_fcm($mb_id, $title, $body){
     $data['mem_id'] = $mb_id;
     $url = "https://push.softwow.co.kr/api/send_request.php";
     $ch = curl_init();
-    curl_setopt ($ch, CURLOPT_URL,$url);
-    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt ($ch, CURLOPT_SSLVERSION,1);
-    curl_setopt ($ch, CURLOPT_POST, 1);
-    curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-    curl_setopt ($ch, CURLOPT_TIMEOUT, 300);
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
-    $curl_result = curl_exec ($ch);
-
+    curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    $curl_result = curl_exec($ch);
+}
 
 //	$sql = "select * from `member_gcm` where `mb_id` = '$mb[mb_id]' and `push_yn` = 'Y'";
 //	$re = sql_query($sql);
@@ -3613,6 +3707,6 @@ function send_fcm($mb_id, $title, $body){
 //
 //	return $response;
 
-}
+
 
 ?>

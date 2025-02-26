@@ -19,7 +19,7 @@ class JlService extends Jl{
         parent::__construct(false);
         $this->obj = $this->jsonDecode($POST['obj']);
 
-        $values = array("file","file_save","file_exists");
+        $values = array("file","file_save","file_exists","captcha_image","captcha_check");
         if(!in_array($POST['_method'], $values)) {
             if(!$this->obj['table']) $this->error("obj에 테이블이 없습니다.");
         }
@@ -62,6 +62,8 @@ class JlService extends Jl{
         if($method == "file" || $method == "file_save") $response = $this->fileSave();
         if($method == "file_exists") $response = $this->fileExists();
         if($method == "distinct") $response = $this->distinct();
+        if($method == "captcha_image") $response = $this->captchaImage();
+        if($method == "captcha_check") $response = $this->captchaCheck();
 
         $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
         if(in_array($method,$trace_list) && $response['trace']) {
@@ -375,6 +377,118 @@ class JlService extends Jl{
         }
 
         return true;
+    }
+
+    public function captchaCheck() {
+        if($this->obj['captcha_code'] == $_SESSION['jl_captcha']) {
+            return [
+                'success' => true
+            ];
+        }else {
+            return [
+                'success' => false,
+                'message' => "자동등록방지가 정확하지않습니다."
+            ];
+        }
+    }
+
+    public function captchaImage() {
+        // 문자 유형 선택
+        $char_pool = [
+            "number" => "0123456789",
+            "eng" => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+            "number_eng" => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        ];
+
+        // 랜덤 문자열 생성
+        $char_list = $char_pool[JL_CAPTCHAR_PATTERN];
+        $captcha_text = "";
+        for ($i = 0; $i < 6; $i++) {
+            $captcha_text .= $char_list[rand(0, strlen($char_list) - 1)];
+        }
+        $_SESSION['jl_captcha'] = $captcha_text;
+
+        $width = 150;
+        $height = 50;
+        $image = imagecreatetruecolor($width, $height);
+
+        $background_color = imagecolorallocate($image, 255, 255, 255); // 흰색 배경
+        $text_color = imagecolorallocate($image, 0, 0, 0); // 검은색 텍스트
+        $noise_color = imagecolorallocate($image, 100, 100, 100); // 노이즈 색상
+
+        // 배경 색상 채우기
+        imagefilledrectangle($image, 0, 0, $width, $height, $background_color);
+
+        // 랜덤 노이즈 추가 (점, 선)
+        for ($i = 0; $i < 300; $i++) {
+            imagesetpixel($image, rand(0, $width), rand(0, $height), $noise_color);
+        }
+        for ($i = 0; $i < 10; $i++) {
+            imageline($image, rand(0, $width), rand(0, $height), rand(0, $width), rand(0, $height), $noise_color);
+        }
+
+        // 폰트 설정
+        $font = $this->ROOT . "/jl/font/" . JL_FONT;
+        $use_ttf = file_exists($font); // 폰트 파일 존재 여부 확인
+
+
+        // 개별 문자 랜덤 배치 (폰트 유무에 따라 다르게 처리)
+        $x = 15;
+        for ($i = 0; $i < strlen($captcha_text); $i++) {
+            $angle = rand(-30, 30); // 랜덤 회전
+            $y = rand(30, 40); // Y축 위치 랜덤 조정
+
+            if ($use_ttf) {
+                // TTF 폰트가 있을 경우
+                imagettftext($image, JL_FONTSIZE, $angle, $x, $y, $text_color, $font, $captcha_text[$i]);
+            } else {
+                // 기본 GD 라이브러리 폰트 사용 < 기본 폰트시 글자크기 변경 불가능
+                imagestring($image, 5, $x, 15, $captcha_text[$i], $text_color);
+            }
+
+            $x += JL_FONTSIZE - 5; // 글자 크기에 따라 간격 조정
+        }
+
+        // 왜곡 효과 적용
+        $distorted_image = imagecreatetruecolor($width, $height);
+        imagefilledrectangle($distorted_image, 0, 0, $width, $height, $background_color);
+
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
+                $newX = (int)($x + sin($y / 10) * 5); // X축 왜곡
+                $newY = (int)($y + cos($x / 10) * 5); // Y축 왜곡
+                if ($newX >= 0 && $newX < $width && $newY >= 0 && $newY < $height) {
+                    imagesetpixel($distorted_image, $newX, $newY, imagecolorat($image, $x, $y));
+                }
+            }
+        }
+
+        //폴더 생성
+        $dir = $this->RESOURCE.'/captcha/';
+        if(!is_dir($dir)) {
+            mkdir($dir, 0777);
+            chmod($dir, 0777);
+        }
+        $captcha_filename = "captcha_" . time() . ".png";
+        $captcha_path = $dir . $captcha_filename;
+        imagepng($distorted_image, $captcha_path);
+
+        imagedestroy($image);
+        imagedestroy($distorted_image);
+
+        // 5분지난 파일 삭제
+        $captcha_files = glob($dir . "captcha_*.png"); // 기존 CAPTCHA 파일 찾기
+        foreach ($captcha_files as $file) {
+            if (filemtime($file) < time() - 300) { // 300초 = 5분
+                unlink($file);
+            }
+        }
+
+        // 응답 반환
+        return [
+            "success" => true,
+            "src" => $this->URL . "/jl/jl_resource/captcha/" . $captcha_filename
+        ];
     }
 }
 ?>

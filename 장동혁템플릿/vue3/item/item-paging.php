@@ -52,6 +52,7 @@
                 else if (page > this.last) page = this.last;
 
                 this.page = page;
+                this.filter.page = page;
                 this.$emit("change", page);
             }
         },

@@ -11,7 +11,7 @@
         </div>
 
         <!-- 페이징 -->
-        <item-paging :filter="filter" @change="filter.page = $event; jl.getsData(filter,rows);"></item-paging>
+        <item-paging :filter="filter" @change="jl.getsData(filter,rows);"></item-paging>
 
         <!-- 부트스트랩 기반 모달 -->
         <external-bs-modal :modal="modal">
@@ -39,6 +39,7 @@
         <button @click="jl.postData(row,options)">추가</button>
         <button @click="jl.deleteData(row,{message :'', href:''})">삭제</button>
 
+        <item-captcha :row="row" field="captcha"></item-captcha>
     </div>
 </script>
 
