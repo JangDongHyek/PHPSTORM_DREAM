@@ -4,8 +4,8 @@
         <ul class="project-list">
             <li class="project-item" v-for="item in arrays">
                 <ul class="prize-info">
-                    <li><span>🏆 총 상금</span> {{ totalPrize(item).format() }}원</li>
-                    <li><span>📌 참여작</span> {{item.$project_request.length}}개</li>
+                    <li><span>🏆 예산</span> {{ totalPrize(item).format() }}원</li>
+                    <li><span>📌 지원자</span> {{item.$project_request.length}}명</li>
                     <li><span>📅 진행 기간</span> {{getDurationDays(item)}}일</li>
                     <li><span>📆 날짜</span> {{item.start_date.formatDate({type : '.'})}} ~ {{item.end_date.formatDate({type : '.'})}}</li>
                 </ul>
@@ -16,11 +16,12 @@
                     <div class="project-cont">
                         <div class="project-info">
                             <div class="project-category">
-                                <span class="state" :class="getStatus(item)">{{getStatus(item,'text')}}</span>
+                                <span class="icon" v-if="!item.status">승인전</span>
+                                <span class="state" :class="getStatus(item)" >{{getStatus(item,'text')}}</span>
                                 {{item.$category.name}} · {{item.$category2.name}}
-                                <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
+                                <button type="button" class="bookmark" @click="postBookmark(item)"><i :class="item.$project_bookmark.length ? 'fa-solid' : 'fa-light'" class="fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                             </div>
-                            <h2 class="project-title">{{item.subject}}</h2>
+                            <h2 class="project-title" @click="jl.href('./project_view.php?primary=' + item.idx)">{{item.subject}}</h2>
                             <p class="project-desc">{{item.description}}</p>
                         </div>
                     </div>
@@ -56,15 +57,17 @@
                             <ul>
                                 <li v-for="item,index in modal.data.$project_request">
                                     <a>
-                                        <div class="img">
-                                            <img v-if="item.images.length == 0" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
-                                            <img v-else :src="jl.root + item.images[0].src">
+                                        <div class="img" @click="jl.href('./portfolio_view.php?idx=' + item.$member_portfolio.idx)">
+                                            <img v-if="item.portfolios.length == 0" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
+                                            <img v-else :src="jl.root + item.$member_portfolio.main_image_array[0].src">
                                         </div>
                                         <p>#{{index+1}}</p><!--참여순서-->
                                         <div class="profile">
-                                            <img v-if="!item.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
-                                            <img v-else :src="jl.root + '/data/file/member/' + item.user_idx + '.jpg'" alt="프로필 이미지">
-                                            <span>{{item.$g5_member.mb_nick}}</span>
+                                            <template @click="jl.href('./profile.php?mb_no=' + item.user_idx)">
+                                                <img v-if="!item.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                                                <img v-else :src="jl.root + '/data/file/member/' + item.user_idx + '.jpg'" alt="프로필 이미지">
+                                                <span>{{item.$g5_member.mb_nick}}</span>
+                                            </template>
                                             <select v-model="item.prize">
                                                 <option value="">미선정</option>
                                                 <option v-for="p in modal.data.prize" :vlaue="p.subject">{{p.subject}}</option>
@@ -135,6 +138,14 @@
                                 ],
                             }
                         }, // data,count
+                        {
+                            table : "project_bookmark" ,
+                            foreign : "project_idx",
+                            type : "data",
+                            filter : {
+                                user_idx : this.mb_no,
+                            },
+                        }, // type(count,data)
                     ],
                 },
 
@@ -167,6 +178,18 @@
 
         },
         methods: {
+            async postBookmark(project) {
+                let row = {user_idx : this.mb_no,project_idx : project.idx};
+                let options = {table : "project_bookmark",return : true};
+
+                if(project.$project_bookmark.length) {
+                    await this.jl.deleteData(project.$project_bookmark[0],options)
+                }else {
+                    await this.jl.postData(row,options);
+                }
+
+                await this.jl.getsData(this.filter,this.arrays);
+            },
             async putData(bool) {
                 if(bool) {
                     for (const row of this.modal.data.$project_request) {
@@ -251,6 +274,15 @@
 
                         let user = await this.jl.getData({table : "g5_member",primary : row.user_idx});
                         row.$g5_member = user;
+
+                        let portfolios = await this.jl.getData({
+                            table : "member_portfolio",
+                            in : [
+                                {key : "idx", array : row.portfolios }
+                            ],
+                        });
+
+                        row.$member_portfolio = portfolios;
                     }
                     this.modal.load = true;
                 }else {

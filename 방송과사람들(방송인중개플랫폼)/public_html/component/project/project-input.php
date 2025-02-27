@@ -3,26 +3,6 @@
     <div v-if="load">
         <div class="inr v2 project-form">
             <h3>프로젝트 의뢰</h3>
-            <form>
-                <div class="box_write">
-                    <h4>제목</h4>
-                    <div class="cont">
-                        <input v-model="data.subject" type="text" maxlength="30" placeholder="7자이상 30자 이하">
-                    </div>
-                </div>
-                <div class="box_write">
-                    <h4>한줄 설명</h4>
-                    <div class="cont">
-                        <input v-model="data.description" type="text" maxlength="30" placeholder="7자이상 30자 이하">
-                    </div>
-                </div>
-                <div class="box_write">
-                    <h4>진행 기간</h4>
-                    <div class="cont">
-                        <input v-model="data.start_date" type="date"> ~
-                        <input v-model="data.end_date" type="date">
-                    </div>
-                </div>
                 <div class="box_write">
                     <h4>1차 카테고리</h4>
                     <div class="cont">
@@ -41,6 +21,18 @@
                         </select>
                     </div>
                 </div>
+                <div class="box_write">
+                    <h4>제목</h4>
+                    <div class="cont">
+                        <input v-model="data.subject" type="text" maxlength="30" placeholder="7자이상 30자 이하">
+                    </div>
+                </div>
+                <div class="box_write">
+                    <h4>한줄 설명</h4>
+                    <div class="cont">
+                        <input v-model="data.description" type="text" maxlength="30" placeholder="7자이상 30자 이하">
+                    </div>
+                </div>
                 <div class="box_content">
                     <div class="box_write02">
                         <h4 class="b_tit">의뢰 내용</h4>
@@ -50,6 +42,43 @@
                     </div>
                 </div>
 
+                <div class="box_write">
+                    <h4>진행 기간</h4>
+                    <div class="cont">
+                        <input v-model="data.start_date" type="date"> ~
+                        <input v-model="data.end_date" type="date">
+                    </div>
+                </div>
+
+                <div class="box_content">
+                    <div class="box_write02">
+                        <h4>예산</h4>
+                        <div class="cont">
+                            <div class="box_ck">
+                                <ul class="area_filter" id="area_filter">
+                                    <li v-for="item,index in data.prize">
+                                        <div class="filter_active">
+                                            <dl class="grid">
+                                                <dt><label>매칭명</label></dt>
+                                                <dd class="flex">
+                                                    <input type="text" placeholder="ex) 선정" v-model="item.subject" class="titleInput">
+                                                    <span id="deletePrizeBtn" @click="data.prize.splice(index,1)">예산 삭제</span>
+                                                </dd>
+                                                <dt><label>인원</label></dt>
+                                                <dd><input type="text" placeholder="인원을 입력해주세요" v-model="item.people" class="titleInput"></dd>
+                                                <dt><label>인당 예산</label></dt>
+                                                <dd><input type="number" placeholder="예산을 입력해주세요" v-model="item.money" class="descInput"></dd>
+                                            </dl>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <span id="addPrizeBtn" @click="data.prize.push({subject:'',people:'',money:''})">예산 추가</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="box_content">
                     <div class="box_write02">
                         <h4 class="b_tit">메인이미지등록
@@ -90,11 +119,18 @@
                     </div>
                 </div>
 
+                <div class="box_write">
+                    <h4>동영상</h4>
+                    <div class="cont">
+                        <input type="text" placeholder="유튜브 링크를 입력하세요." v-model="data.movie_link">
+                    </div>
+                </div>
+                
                 <div class="box_content">
                     <div class="box_write02">
-                        <h4 class="b_tit">참고 레퍼런스 이미지
+                        <h4 class="b_tit">상세 이미지
                             <em><i class="point" id="img_count">{{data.images.length}}</i>/10</em>
-                            <span id="img_limit_msg" style="color: red; display: none;">참고 레퍼런스 이미지는 최대 10장입니다.</span>
+                            <span id="img_limit_msg" style="color: red; display: none;">상세 이미지는 최대 10장입니다.</span>
                         </h4>
                         <div class="cont">
                             <div class="area_box">
@@ -128,38 +164,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="box_content">
-                    <div class="box_write02">
-                        <h4>상금</h4>
-                        <div class="cont">
-                            <div class="box_ck">
-                                <ul class="area_filter" id="area_filter">
-                                    <li v-for="item,index in data.prize">
-                                        <div class="filter_active">
-                                            <dl class="grid">
-                                                <dt><label>수상명</label></dt>
-                                                <dd class="flex">
-                                                    <input type="text" placeholder="수상명" v-model="item.subject" class="titleInput">
-                                                    <span id="deletePrizeBtn" @click="data.prize.splice(index,1)">등수 삭제</span>
-                                                </dd>
-                                                <dt><label>인원</label></dt>
-                                                <dd><input type="text" placeholder="인원을 입력해주세요" v-model="item.people" class="titleInput"></dd>
-                                                <dt><label>인당 상금</label></dt>
-                                                <dd><input type="number" placeholder="상금을 입력해주세요" v-model="item.money" class="descInput"></dd>
-                                            </dl>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div>
-                                    <span id="addPrizeBtn" @click="data.prize.push({subject:'',people:'',money:''})">등수 추가</span>
-                                </div>
-                            </div>
-                        </div>
+
+                <div class="box_write" v-for="upfile,index in data.upfiles">
+                    <h4>첨부 파일 {{index+1}}</h4>
+                    <div class="cont">
+                        <template v-if="upfile.src">{{upfile.name}}</template>
+                        <input v-else type="file" @change="jl.changeFile($event,data.upfiles,index)">
+
+                        <button @click="data.upfiles.splice(index,1)">삭제</button>
                     </div>
                 </div>
+                <div>
+                    <span class="addBtn" @click="data.upfiles.push({})">파일 추가</span>
+                </div>
 
+                <div class="box_write" v-for="link,index in data.links">
+                    <h4>일반 링크</h4>
+                    <div class="cont">
+                        <input type="text" placeholder="일반 링크를 입력하세요." v-model="data.links[index]">
+
+                        <button @click="data.links.splice(index,1)">삭제</button>
+                    </div>
+                </div>
+                <div>
+                    <span class="addBtn" @click="data.links.push('')">링크 추가</span>
+                </div>
+                
                 <button type="button" class="project-add" @click="jl.postData(data,options)">프로젝트 의뢰하기</button>
-            </form>
         </div>
     </div>
 </script>
@@ -184,16 +215,19 @@
 
                 data: {
                     user_idx : this.mb_no,
-                    subject : "",
-                    description : "",
-                    start_date : "",
-                    end_date : "",
                     category1_idx : "",
                     category2_idx : "",
+                    subject : "",
+                    description : "",
                     content : "",
-                    thumb : [],
-                    images : [],
+                    start_date : "",
+                    end_date : "",
                     prize : [],
+                    thumb : [],
+                    movie_link : "",
+                    images : [],
+                    upfiles : [],
+                    links : [],
                     status : false
                 },
 

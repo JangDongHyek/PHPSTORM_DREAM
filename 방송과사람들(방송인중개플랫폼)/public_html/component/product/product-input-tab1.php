@@ -88,7 +88,7 @@
                         <template v-slot:footer>
 
                         </template>
-                </external-bs-modal>
+                    </external-bs-modal>
                     
                     <br>
                     <div class="box_write">

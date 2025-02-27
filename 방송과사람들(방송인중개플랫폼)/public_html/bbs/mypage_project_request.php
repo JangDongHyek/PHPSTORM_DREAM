@@ -21,7 +21,7 @@ include_once('./_head.php');
 
             <div class="mypage_cont">
                 <div class="box">
-                    <h3>프로젝트 지원 LIST</h3><!--의뢰인 :의뢰 / 전문가 : 지원-->
+                    <h3>프로젝트 지원 LIST <a href="<?php echo G5_BBS_URL ?>/mypage_project_wish.php" class="bookmarkBtn">북마크</a></h3><!--의뢰인 :의뢰 / 전문가 : 지원-->
 
                     <project-my-request mb_no="<?=$member['mb_no']?>"></project-my-request>
                 </div>

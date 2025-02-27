@@ -32,8 +32,8 @@
                             </div>
                         </div>
                         <ul class="prize-info">
-                            <li><span>🏆 총 상금</span> {{totalPrize(item).format()}} 원</li>
-                            <li><span>📌 참여작</span> {{item.$project_request.length}}개</li>
+                            <li><span>🏆 예산</span> {{totalPrize(item).format()}} 원</li>
+                            <li><span>📌 지원자</span> {{item.$project_request.length}}명</li>
                             <li><span>📅 진행 기간</span> {{getDurationDays(item)}}일</li>
                             <li><span>📆 날짜</span> {{item.start_date.formatDate({type : '.'})}} ~ {{item.end_date.formatDate({type : '.'})}} </li>
                         </ul>
@@ -69,6 +69,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            mb_no : {type: String, default: ""},
             primary : {type: String, default: ""},
         },
         data: function () {

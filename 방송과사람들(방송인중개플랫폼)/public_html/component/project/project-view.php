@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="prize-info">
-                        <div class="">총 상금</div>
+                        <div class="">프로젝트 예산</div>
                         <div class="total-prize">{{totalPrize(row).format()}}원</div>
                         <ul>
                             <li v-for="item in row.prize">
@@ -38,11 +38,11 @@
                             진행 기간<br><b>{{getDurationDays(row)}}일</b><br>
                             <span>{{row.start_date.formatDate({type: '.'})}} - {{row.end_date.formatDate({type: '.'})}}</span>
                         </div>
-                        <div>참여작<br><b>{{row.$project_request}}개</b></div>
+                        <div>지원자<br><b>{{row.$project_request}}명</b></div>
                         <div>조회 수<br><b>{{row.hits}}</b></div>
                     </div>
                     <div class="button-container">
-                        <button class="share-btn">공유하기</button>
+                        <!--button class="share-btn">공유하기</button-->
                         <button class="apply-btn" @click="jl.href('./project_join.php?project_idx='+primary)">프로젝트 지원하기</button>
                     </div>
                 </section>
@@ -50,17 +50,32 @@
 
             <div class="tabs">
                 <div class="tab" :class="{'active' : tab == 0}" @click="tab = 0">요청 사항</div>
-                <div class="tab" :class="{'active' : tab == 1}" @click="tab = 1">참여작 <span class="count">{{row.$project_request}}</span></div>
                 <div class="tab" :class="{'active' : tab == 2}" @click="tab = 2">문의 댓글 <span class="count">{{comment_count}}</span></div>
+                <div class="tab" v-if="mb_no == row.user_idx" :class="{'active' : tab == 1}" @click="tab = 1">지원자 <span class="count">{{row.$project_request}}</span></div><!--의뢰인만 노출-->
             </div>
             <div class="tab-content active">
                 <div class="request-view" v-show="tab == 0">
                     <h6>의뢰 내용</h6>
+
+                    <div class="swiper-slide" v-for="item in row.images">
+                        <img :src="jl.root + item.src">
+                    </div>
+
                     <div v-html="row.content">
 
                     </div>
-                    <h6>참고 레퍼런스</h6>
-                    <div>
+                    <h6>관련 영상</h6>
+                    <div class="video-container">
+                        <iframe v-if="row.movie_link"
+                                :src="'https://www.youtube.com/embed/' + jl.extractYoutube(row.movie_link)"
+                                title="YouTube video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+
+                    <?/*div>
                         <div class="swiper sample-swiper">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide" v-for="item in row.images">
@@ -69,8 +84,23 @@
                             </div>
                             <div class="swiper-pagination"></div>
                         </div>
-
+                    </div*/?>
+                    <h6>첨부 파일</h6>
+                    <div class="download-button">
+                        <template v-for="upfile in row.upfiles" v-if="upfile.src">
+                            <a :href="jl.root + upfile.src" :download="upfile.name">
+                                <i class="fa-solid fa-download"></i> {{upfile.name}}
+                            </a>
+                        </template>
                     </div>
+                    <h6>연결 링크</h6>
+                    <div class="link-button">
+                        <a v-for="link in row.links" :href="link" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-external-link-alt"></i> {{link}}
+                        </a>
+                    </div>
+
+
                 </div>
 
                 <project-view-request :project="row" v-show="tab == 1"></project-view-request>

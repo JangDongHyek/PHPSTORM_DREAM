@@ -146,11 +146,16 @@ class JlVue {
     async deleteData(data,options = {}) {
         let message = "정말 삭제하시겠습니까?";
         if(options.message) message = options.message;
-        if(! await this.jl.plugin.confirm(message)) return false;
+
+        if(!options.return) {
+            if(! await this.jl.plugin.confirm(message)) return false;
+        }
 
         try {
             if(!options.table) throw new Error("테이블값이 존재하지않습니다.");
             let res = await this.jl.ajax("delete",data,"/jl/JlApi.php",options);
+
+            if(options.return) return res
 
             if(options.callback) {
                 await options.callback(res)

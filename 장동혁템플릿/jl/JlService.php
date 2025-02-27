@@ -147,6 +147,7 @@ class JlService extends Jl{
                 if($info['filter']) {
                     $info_filter = $this->jsonDecode($info['filter']);
                     $joinModel->setFilter($info_filter);
+                    $joinModel->where($info_filter);
                 }
                 $joinModel->where($info['foreign'],$data[$this->model->primary]);
 

@@ -15,6 +15,7 @@ $pid = "project_form";
 
 <? $jl->vueLoad('area_project'); ?>
 <? $jl->componentLoad("/project"); ?>
+<? $jl->componentLoad("/external"); ?>
 <?php
 include_once('./_tail.php');
 ?>

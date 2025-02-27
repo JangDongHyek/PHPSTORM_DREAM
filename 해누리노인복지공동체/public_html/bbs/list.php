@@ -6,7 +6,7 @@
 		require_once("_header.php");
 		if( $mb && ($HTTP_SESSION_VARS[ss_login_ok]=='ok') && !empty($HTTP_SESSION_VARS[ss_mb_id]))
 		{
-		
+
 			include($skin_board_path."error.php");
 		}else{
 			$login_url = "mb_login.php";

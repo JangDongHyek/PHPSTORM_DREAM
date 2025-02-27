@@ -5,8 +5,8 @@
             <ul class="project-list">
                 <li class="project-item" v-for="item in rows">
                     <ul class="prize-info">
-                        <li><span>🏆 총 상금</span> {{ totalPrize(item.$project).format() }}원</li>
-                        <li><span>📌 참여작</span> {{item.$project.$project_request}}개</li>
+                        <li><span>🏆 예산</span> {{ totalPrize(item.$project).format() }}원</li>
+                        <li><span>📌 지원자</span> {{item.$project.$project_request}}명</li>
                         <li><span>📅 진행 기간</span> {{getDurationDays(item.$project)}}일</li>
                         <li><span>📆 날짜</span> {{item.$project.start_date.formatDate({type : '.'})}} ~ {{item.$project.end_date.formatDate({type : '.'})}}</li>
                     </ul>
@@ -19,9 +19,9 @@
                                 <div class="project-category">
                                     <span class="state v1" :class="getClass(item)">{{ getStatus(item) }}</span>
                                     {{item.$project.$category.name}} · {{item.$project.$category2.name}}
-                                    <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
+                                    <button type="button" class="bookmark" @click="postBookmark(item.$project)"><i :class="item.$project.$project_bookmark.length ? 'fa-solid' : 'fa-light'" class="fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                                 </div>
-                                <h2 class="project-title">{{item.$project.subject}}</h2>
+                                <h2 class="project-title" @click="jl.href('./project_view.php?primary=' + item.$project.idx)">{{item.$project.subject}}</h2>
                                 <p class="project-desc">{{item.$project.description}}</p>
                             </div>
                         </div>
@@ -30,7 +30,9 @@
                         <button type="button" v-if="!item.cancel && getStatus(item) != '선정 완료'" @click="jl.href(`./project_join.php?primary=${item.idx}&project_idx=${item.$project.idx}`)">지원 보기</button>
                         <button type="button" v-if="!item.cancel && getStatus(item) != '선정 완료'" @click="jl.postData(item,options)">지원 취소</button>
                         <button type="button" v-if="item.cancel" class="gray">지원 취소됨</button><!--취소시 교체 노출-->
-                        <button type="button" v-if="getStatus(item) == '선정 완료'" class="blue" @click="modal.data = item; modal.status = true;">결과 확인</button>
+                        <button type="button" v-if="item.prize" class="blue2">의뢰 채팅</button><!--매칭 (거부시 사용불가처리)-->
+                        <button type="button" v-if="item.prize">수락/거부</button><!--매칭 (수락 이후 완료하기로)-->
+                        <button type="button" v-if="getStatus(item) == '선정 완료'" class="blue" @click="modal.data = item; modal.status = true;">결과 확인</button><!--탈락-->
                     </div>
                 </li>
             </ul>
@@ -82,6 +84,7 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            mb_no : {type: String, default: ""},
             primary : {type: String, default: ""},
         },
         data: function () {
@@ -113,6 +116,8 @@
                     page: 1,
                     limit: 1000,
                     count: 0,
+
+                    user_idx : this.mb_no,
 
                     relations : [
                         {table : "project_request" ,foreign : "project_idx",type : "count"}, // data,count
@@ -157,6 +162,14 @@
                                 ],
                             }
                         }, // data,count
+                        {
+                            table : "project_bookmark" ,
+                            foreign : "project_idx",
+                            type : "data",
+                            filter : {
+                                user_idx : this.mb_no,
+                            },
+                        }, // type(count,data)
                     ],
                 });
                 row['$project'] = project;
@@ -172,6 +185,20 @@
 
         },
         methods: {
+            async postBookmark(project) {
+                let row = {user_idx : this.mb_no,project_idx : project.idx};
+                let options = {table : "project_bookmark",return : true};
+
+
+                if(project.$project_bookmark.length) {
+                    await this.jl.deleteData(project.$project_bookmark[0],options)
+                }else {
+                    await this.jl.postData(row,options);
+                }
+
+                window.location.reload();
+                //await this.jl.getsData(this.filter,this.arrays);
+            },
             getClass(item) {
                 if(item.cancel) return "v2";
                 else if(item.$project.choice) return "v3";

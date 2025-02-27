@@ -27,8 +27,8 @@
                         </div>
                     </div>
                     <ul class="prize-info">
-                        <li><span>🏆 총 상금</span> {{ totalPrize(project).format() }}원</li>
-                        <li><span>📌 참여작</span> 21개</li>
+                        <li><span>🏆 예산</span> {{ totalPrize(project).format() }}원</li>
+                        <li><span>📌 지원자</span> 21명</li>
                         <li><span>📅 진행 기간</span> {{getDurationDays(project)}}일</li>
                         <li><span>📆 날짜</span> {{project.start_date.formatDate({type : '.'})}} ~ {{project.end_date.formatDate({type : '.'})}}</li>
                     </ul>
@@ -36,72 +36,87 @@
             </div>
             <form>
                 <div class="box_write">
-                    <h4>작품명</h4>
+                    <h4>지원명</h4>
                     <div class="cont">
-                        <input v-model="row.subject" type="text" maxlength="30" placeholder="7자이상 30자 이하">
+                        <input v-model="row.subject" type="text" maxlength="30" placeholder="7자 이상 30자 이하">
                     </div>
                 </div>
                 <div class="box_content">
                     <div class="box_write02">
-                        <h4 class="b_tit">작품 사용</h4>
-                        <div class="cont">
-                            <textarea v-model="row.content"></textarea><!--에디터 말고 textarea 사용-->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="box_content">
-                    <div class="box_write02">
-                        <h4 class="b_tit">작품 이미지
-                            <em><i class="point" id="img_count">{{row.images.length}}</i>/10</em>
-                            <span id="img_limit_msg" style="color: red; display: none;">작품 이미지는 최대 10장입니다.</span>
+                        <h4 class="b_tit">
+                            포트폴리오
+                            <em>
+                                <i name="subpoint" class="point">{{row.portfolios.length}}</i>/5
+                            </em>
                         </h4>
                         <div class="cont">
                             <div class="area_box">
-
-                                <!-- 처음화면에서는 안보였다가 이미지 등록하면 나타나게 해주세요 ~~ -->
-                                <ul class="photo_list" id="file_list">
-                                    <li class="file_1" v-for="item,index in row.images">
+                                <ul id="file_list" class="photo_list">
+                                    <li class="file_1" v-for="item,index in portfolio_view_rows">
                                         <div class="area_img">
-                                            <img :src="item.preview ? item.preview : jl.root+item.src">
-                                            <div class="area_delete" @click="row.images.splice(index,1)"><span class="sound_only">삭제</span></div>
+                                            <img v-if="item.main_image_array.length" :src="jl.root + item.main_image_array[0].src">
+                                            <div class="area_delete" @click="deletePortfolio(item)">
+                                                <span class="sound_only">삭제</span>
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>
-                                <!-- //이미지 미리보기 -->
-
-                                <template>
-                                    <input type="file" name="file" id="input_file" multiple accept="*" style="position: absolute; left: -999; opacity:0; width: 0; height: 0;"
-                                           ref="images" @change="jl.changeFile($event,row,'images')">
-                                    <div id="fileDrag" class="img_wrap" @click="$refs.images.click();"
-                                         @drop.prevent="jl.dropFile($event,row,'images')" @dragover.prevent @dragleave.prevent>
-                                        <div class="area_txt">
-                                            <div class="area_img"><img
-                                                    :src="`${jl.root}/theme/basic_app/img/app/icon_upload.svg`"></div>
-                                            <span class="w">마우스로 드래그해서 파일을 추가하세요.</span>
-                                            <span class="m">파일을 추가하세요.</span>
-                                        </div>
-                                    </div>
-                                </template>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="box_write">
-                    <h4>첨부파일</h4>
-                    <div class="cont">
-                        <label class="file-upload">
-                            파일 선택
-                            <input type="file" @change="jl.changeFile($event,row,'upfile')">
-                        </label>
-                        <p class="file-name">{{row.upfile.name ? row.upfile.name : '선택된 파일 없음'}}</p>
-                    </div>
+                <div class="portfolio text-right">
+                    <button type="button" class="btn" @click="modal.status = true;">
+                        <i class="fa-regular fa-arrow-down-to-line"></i> 포트폴리오 불러오기
+                    </button>
                 </div>
+                <br>
+                <p class="text-center txt_blue">
+                    나의 포트폴리오를 불러와서<br class="visible-xs">
+                    프로젝트에 지원해보세요!
+                </p>
+                <br>
+
 
                 <button type="button" class="project-add" @click="jl.postData(row,options)">프로젝트 지원하기</button>
             </form>
         </div>
+
+        <external-bs-modal-new :modal="modal">
+            <template v-slot:header>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="modal.status = false;"><i class="fa-light fa-xmark"></i></button>
+            </template>
+
+            <!-- body -->
+            <template v-slot:default>
+                <ul id="product_list">
+                    <li class="nodata" v-if="portfolio_rows.length == 0">
+                        <div class="nodata_wrap">
+                            <div class="area_img"><img :src="`${jl.root}/theme/basic_app/img/app/img_nodata.svg`"></div>
+                            <p>등록한 포트폴리오가 없습니다.</p>
+                        </div>
+                    </li>
+                    <li v-else v-for="item in portfolio_rows">
+                        <a :href="`${jl.root}/bbs/portfolio_view.php?idx=${item.idx}`" target="_blank">
+                            <div class="area_img">
+                                <img :src="jl.root+item.main_image_array[0].src" title="">
+                            </div>
+                            <div class="area_txt">
+                                <span></span><!-- 업체명 -->
+                                <h3>{{item.name}}</h3> <!-- 제목 -->
+                            </div>
+                        </a>
+                        <button @click="row.portfolios.push(item.idx)">등록하기</button>
+                    </li>
+                </ul>
+            </template>
+
+
+            <template v-slot:footer>
+
+            </template>
+        </external-bs-modal-new>
     </div>
 </script>
 
@@ -123,9 +138,7 @@
                     user_idx : this.mb_no,
                     project_idx : this.project_idx,
                     subject : "",
-                    content : "",
-                    images : [],
-                    upfile : {},
+                    portfolios : [],
                     prize : "",
                     cancel : "",
                 },
@@ -138,9 +151,13 @@
                     required : [
                         {//String
                             name : "subject",
-                            message : `작품명은 7이상 30자 이하입니다`,
-                            min : {length : 7, message : "작품명은 7이상 30자 이하입니다"},
-                            max : {length : 30, message : "작품명은 7이상 30자 이하입니다"}
+                            message : `지원명은 7자 이상 30자 이하입니다`,
+                            min : {length : 7, message : "지원명은 7자 이상 30자 이하입니다"},
+                            max : {length : 30, message : "지원명은 7자 이상 30자 이하입니다"}
+                        },
+                        {//String
+                            name : "portfolios",
+                            max : {length : 5, message : "포트폴리오는 최대 5개 까지입니다."}
                         },
                     ],
                     href : "",
@@ -156,11 +173,16 @@
 
                 modal : {
                     status : false,
+                    load : false,
                     data : {},
+                    class_1 : "",
+                    class_2 : "",
                 },
 
                 user_thumb : false,
 
+                portfolio_rows : [],
+                portfolio_view_rows : [],
             };
         },
         async created() {
@@ -193,6 +215,11 @@
                 this.user_thumb = response.exists;
             }); // 파일 있는지 체크하는 ajax
 
+            await this.jl.getsData({
+                table : "member_portfolio",
+                member_idx : this.mb_no,
+            },this.portfolio_rows);
+
             if(this.primary) this.row = await this.jl.getData(this.filter);
             //await this.jl.getsData(this.filter,this.rows);
 
@@ -206,6 +233,12 @@
 
         },
         methods: {
+            deletePortfolio(portfolio) {
+                let index = this.row.portfolios.findIndex(item => item == portfolio.idx);
+                if (index !== -1) {
+                    this.row.portfolios.splice(index, 1);
+                }
+            },
             getDurationDays(item) {
                 let startDate = item.start_date;
                 let endDate = item.end_date;
@@ -248,7 +281,27 @@
 
         },
         watch: {
-
+            async "row.portfolios"(value,old) {
+                if(value.length == 0) {
+                    this.portfolio_view_rows = [];
+                    return false;
+                }
+                await this.jl.getsData({
+                    table : "member_portfolio",
+                    in : [
+                        {key : "idx", array : value }
+                    ],
+                },this.portfolio_view_rows);
+                console.log(value)
+            },
+            async "modal.status"(value,old_value) {
+                if(value) {
+                    this.modal.load = true;
+                }else {
+                    this.modal.load = false;
+                    this.modal.data = {};
+                }
+            }
         }
     });
 
