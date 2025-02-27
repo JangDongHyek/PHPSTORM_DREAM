@@ -1,0 +1,29 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main/menu_bg02.gif" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="989"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><img src="../images/main/top_menu.gif" width="821" height="37" border="0" /></td>
+        <td><a href="../main/index.htm"><img src="../images/main/home.gif" width="61" height="37" border="0" /></a></td>
+        <td><a href="../bbs/mb_login.php"><? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?><a href="../bbs/mb_login.php"><a href="../bbs/mb_logout.php?url=../main/index.htm"><img src="../images/main/logout.gif" width="107" height="37" border="0" /><?}else{ //로그아웃 상태일때?><a href="../bbs/mb_login.php"><img src="../images/main/admin.gif" width="107" height="37" border="0" /><?}?></a></td>
+      </tr>
+    </table></td>
+    <td background="../images/main/menu_bg03.gif" style="background-repeat:no-repeat; background-position:left;">&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main/menu_bg01.gif" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="989"><img src="../images/main/menu.gif" width="989" height="79" border="0" usemap="#menunn" /></td>
+    <td background="../images/main/menu_bg04.gif" style="background-repeat:no-repeat; background-position:left;">&nbsp;</td>
+  </tr>
+</table>
+<map name="menunn" id="menunn">
+<area shape="rect" coords="4,4,278,70" href="../main/index.htm" />
+<area shape="rect" coords="293,3,375,39" href="../main/sub1.htm" />
+<area shape="rect" coords="380,3,494,41" href="../main/sub2.htm" />
+<area shape="rect" coords="504,4,626,40" href="../main/sub3.htm" />
+<area shape="rect" coords="633,2,755,40" href="../main/sub4.htm" />
+<area shape="rect" coords="760,3,906,39" href="../main/sub5.htm" />
+<area shape="rect" coords="906,3,982,39" href="../bbs/list.php?bbs_id=noticee" />
+</map>

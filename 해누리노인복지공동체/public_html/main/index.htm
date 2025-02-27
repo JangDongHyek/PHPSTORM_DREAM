@@ -1,0 +1,174 @@
+<? 
+   $site_path = "/home/haenuri/public_html/bbs/"; 
+   $site_url = "../bbs/";
+   require_once($site_path."include/lib.inc.php"); 
+?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+.banner {width:1000px; text-align:center; padding:0px 0 20px; margin:0 auto;}
+.banner ul {padding:0; margin:0; list-style:none;}
+.banner ul li {border:1px solid #CCCCCC; display:inline-block; margin:0 3px; padding:0 4px;}
+-->
+</style>
+
+
+
+<script type="text/JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+  window.open(theURL,winName,features);
+}
+//-->
+</script>
+
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+//-->
+</script>
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+				endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 )
+			break;
+	}
+	return "";
+}
+
+//폼의 체크 박스를 체그 하면 새창이 나타나지 않으며, 체크 하지 않았을 경우, 계속 나타납니다. 
+
+
+
+if ( getCookie( "Notice1" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	noticeWindow  =  window.open('../pop/pop_notice_1.htm','Notice1','left=0, top=0, width=600,height=800');
+	noticeWindow.opener = self;
+} 
+
+if ( getCookie( "Notice2" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop_notice_2.htm','Notice2','left=250, top=0, width=600,height=625,scrollbars=yes');
+	//noticeWindow.opener = self;
+} 
+
+if ( getCookie( "Notice3" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop_notice_1.htm','Notice3','left=500, top=0, width=600,height=470');
+	//noticeWindow.opener = self;
+} 
+
+if ( getCookie( "Notice4" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop_notice_2.htm','Notice4','left=750, top=0, width=500,height=530');
+	//noticeWindow.opener = self;
+} 
+
+
+if ( getCookie( "Notice5" ) != "done" ) {
+//새창으로 열릴 페이지의 경로 및 크기와 위치를 지정해 주세요. 
+	//noticeWindow  =  window.open('../pop/pop_chu.htm','Notice5','left=500, top=0, width=450,height=650');
+	//noticeWindow.opener = self;
+} 
+
+
+// -->
+</SCRIPT>
+
+
+</head>
+<body>
+<? include '../inc/top.htm'; ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/main/bg01.jpg" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="989"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><img src="../images/main/main_visual.jpg" width="989" height="485" border="0"></td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><img src="../images/main/notice_title.gif" width="364" height="73" border="0" usemap="#fdfdfd"></td>
+              </tr>
+              <tr>
+                <td height="108" valign="top" background="../images/main/notice_bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td width="50">&nbsp;</td>
+                      <td><?=rg_lastest('default','noticee','공지사항',3,34, '...')?></td>
+                    </tr>
+                </table></td>
+              </tr>
+            </table></td>
+            <td valign="top"><img src="../images/main/call.gif" width="315" height="181" border="0"></td>
+            <td align="center" valign="top"><img src="../images/main/company.gif" width="310" height="181" border="0" usemap="#sddsd"></td>
+          </tr>
+        </table>
+          </td>
+      </tr>
+    </table></td>
+    <td background="../images/main/bg02.jpg" style="background-repeat:no-repeat; background-position:left;">&nbsp;</td>
+  </tr>
+</table>
+
+<div class="banner">
+<ul>
+<li><a href="http://www.mohw.go.kr/" target="_blank"><img src="../images/banner_1.gif" border="0"></a></li>
+<li><a href="https://www.busan.go.kr/" target="_blank"><img src="../images/banner_2.gif" border="0"></a></li>
+<li><a href="https://www.suyeong.go.kr/" target="_blank"><img src="../images/banner_3.gif" border="0"></a></li>
+<li><a href="https://basw.or.kr/" target="_blank"><img src="../images/banner_4.gif" border="0"></a></li>
+<li><a href="https://www.vms.or.kr/" target="_blank"><img src="../images/banner_5.gif" border="0"></a></li>
+</ul>
+</div>
+
+
+
+<? include '../inc/copy.htm'; ?>
+</body>
+</html>
+<map name="sddsd">
+  <area shape="rect" coords="12,50,284,143" href="../main/sub1.htm">
+</map>
+<map name="fdfdfd">
+<area shape="rect" coords="304,44,345,64" href="../bbs/list.php?bbs_id=noticee">
+</map>

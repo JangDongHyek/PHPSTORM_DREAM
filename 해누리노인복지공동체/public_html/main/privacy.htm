@@ -1,0 +1,397 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+
+<style type="text/css">
+<!--
+table tr td {font-size:14px!important;}
+
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-family: 'Noto Sans KR'; 
+	
+}
+.style1 {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+
+	
+	
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 100; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 300; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype'); 
+	}
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 400; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 500; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 700; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype'); 
+	} 
+@font-face { 
+	font-family: 'Noto Sans KR'; 
+	font-style: normal; 
+	font-weight: 900; 
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'), 
+		url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
+	}
+
+/* 나눔고딕 */
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 700;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 800;
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.eot);
+  src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.eot?#iefix) format('embedded-opentype'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.ttf) format('truetype');
+}
+
+	
+-->
+</style></head>
+<body>
+<? include '../inc/top.htm'; ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="../images/sub/sub_bg01.jpg" style="background-repeat:no-repeat; background-position:right;">&nbsp;</td>
+    <td width="989"><img src="../images/sub/privacy_img.jpg" width="989" height="216"></td>
+    <td background="../images/sub/sub_bg02.jpg" style="background-repeat:no-repeat; background-position:left;">&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" style="background-repeat:repeat; background-position:100% 0">&nbsp;</td>
+    <td width="989" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><span class="style1">개인정보처리방침</span></td>
+          </tr>
+          <tr>
+            <td align="center" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><strong>제1조 개인정보의 처리목적 </strong><br>
+                  1. 해누리노인복지공동체에서는 개인정보파일 목록에 기재된 목적을 위하여 개인정보를 처리합니다. <br>
+처리하고 있는 개인정보는 다음의 목적 이외의 용도로 이용되지 않으며, 이용목적이 변경되는 경우에는 개인정보보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.<br>
+<br>
+2. 해누리노인복지공동체는 법령에 따른 개인정보 보유, 이용기간 또는 정보주체로부터 개인정보를 수집시에 동의 받은 개인정보 보유.이용기간 내에서 개인정보를 처리 보유합니다.<br>
+<br>
+3. 
+                          해누리노인복지공동체는 개인정보파일 목록에 개재된 목적을 위하여 개인정보를 처리하며, 개인정보보호법 제32조에 따라 등록.공개하는 개인정보파일의 처리 목적은 다음과 같습니다.<br>
+
+                  <br>
+                  <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>개인정보파일의 명칭</strong></td>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>운영근거</strong></td>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>처리목적</strong></td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF"><strong>이용자(대상자)관리파일</strong></td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">사회복지사업법제6조의2<br>
+                        사회복지사업법제33조</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">서비스 제공 및 관리</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF"><strong>자원봉사자관리파일</strong></td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">자원봉사활동 기본법 시행령 제15조 사회복지사업법 제6조의 2 사회복지사업법 제33조</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">자원봉사 관리</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF"><strong>후원자관리파일</strong></td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">기부금품의 모집 및 사용에 관한 법률 시행령 19조</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">후원자관리 및 후원금품</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF"><strong>종사자 및 강사 관리파일</strong></td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">노동관련법령, 근로기준법</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">종사자 관리</td>
+                    </tr>
+                  </table>
+                  <strong><br>
+                    <br>
+                    제2조 처리하는 개인정보항목  <br>
+                  </strong>
+                  <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>구분</strong></td>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>필수항목</strong></td>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>선택항목</strong></td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">이용자(대상자)관리파일</td>
+                      <td valign="middle" bgcolor="#FFFFFF">성명, 생년월일,성별,주소,연락처, 경력,장애우형, 자녀사항</td>
+                      <td valign="middle" bgcolor="#FFFFFF">보호구분, 이메일등</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">자원봉사자관리파일</td>
+                      <td valign="middle" bgcolor="#FFFFFF">성명, 생년월일, 전화번호, vms연번 또는 아이디, 주소</td>
+                      <td valign="middle" bgcolor="#FFFFFF">가입봉사단체, 희망봉사분야, 이메일등</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">후원자관리파일</td>
+                      <td valign="middle" bgcolor="#FFFFFF">성명, 생년월일, 성별, 주소, 전화번화, 후원종류, 후원금액, 후원방법등</td>
+                      <td valign="middle" bgcolor="#FFFFFF">주민등록번호, 계좌정보, 약정일자 이메일등</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">종사자파일관리</td>
+                      <td valign="middle" bgcolor="#FFFFFF">성명,주민등록번호,성별,연락처,주소,학력,<br>
+                        자격증, 경력,이메일,은행명, 계좌번호, 등/초본,범죄이력조회                           </td>
+                      <td valign="middle" bgcolor="#FFFFFF">건강증명서<br>
+                        남자일 경우(병적증명서)<br>
+                        가족관계증명서                          </td>
+                    </tr>
+                  </table>
+                  <br>
+                  <strong><br>
+                  제3조 개인정보의 처리 및 보유기간</strong><br>
+                  해누리노인복지공동체는 법령에 따른 개인정보 보유. 이용기간 또는 정보주체로부터 개인정보를 수집시에   동의받은 개인정보 보유.이용기간 내에서<br>
+                  개인정보를 처리. 보유합니다.<br>
+                  <br>
+                  ① 각각의 개인정보 처리 및 보유기간은 다음과 같습니다. 단, 개인정보 삭제 요청시 상위법에서 자료요구에     관한 근거가 있을 경우 영구보존합니다.
+                   <br>
+                  <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>개인정보파일의 명칭</strong></td>
+                      <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>보유기간</strong></td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF"> 이용자(대상자)관리파일</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">동의받은 정보 보유· .이용기간 내에서 처리.보유</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">자원봉사자관리파일</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">동의받은 정보 보유· .이용기간 내에서 처리.보유</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">후원자관리파일</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">동의받은 정보 보유· .이용기간 내에서 처리.보유</td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">종사자관리파일</td>
+                      <td align="center" valign="middle" bgcolor="#FFFFFF">동의받은 정보 보유· .이용기간 내에서 처리.보유</td>
+                    </tr>
+                  </table>
+                  
+                  <strong><br>
+                  <br>
+                  제4조 개인정보의 제3자제공                    </strong><br>
+                    
+                    해누리노인복지공동체는 정보주체의 개인정보를 제1조(개인정보의 처리목적), 제2조(처리하는 항목), 제3조(개인정보의처리 및 보유기간)에서 명시한 범위 내에서만 처리하면, 정보주체의 동의, 법률의 특별한 규정 등 개인정보 보호법제17조에 해당하는 경우에만 개인정보를 제3자에게 제공합니다.
+                        해누리노인복지공동체는 다음과 같이 개인정보를 제3자에게 제공하고 있습니다.<br>
+                    <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+                          <tr>
+                            <td width="150" align="center" valign="middle" bgcolor="#F0F0F0"><strong>구분</strong></td>
+                            <td align="center" valign="middle" bgcolor="#F0F0F0"><strong> 이용자(대상자)관리파일</strong></td>
+                            <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>자원봉사자관리파일</strong></td>
+                            <td align="center" valign="middle" bgcolor="#F0F0F0"><strong>후원자관리파일</strong></td>
+                          </tr>
+                          <tr>
+                            <td align="center" valign="middle" bgcolor="#FFFFFF">개인정보제공받는자</td>
+                            <td valign="middle" bgcolor="#FFFFFF">시군구, 사회복지관련기관, 후원자 및 단체, 협력의료기관,<br>
+                            자원봉사자, 기타</td>
+                            <td valign="middle" bgcolor="#FFFFFF">사회복지봉사활동인증<br>
+                              관리시스템(VMS)
+                            </td>
+                            <td valign="middle" bgcolor="#FFFFFF">기부·후원단체, 국세청, 금융감독원,<br>
+                            cms관련기관등</td>
+                          </tr>
+                          <tr>
+                            <td width="150" align="center" valign="middle" bgcolor="#FFFFFF">이용목적</td>
+                            <td valign="middle" bgcolor="#FFFFFF">인적사항 및 근황파악, 서비스제공, 프로그램이용등</td>
+                            <td valign="middle" bgcolor="#FFFFFF">봉사실적 입력, 관리, 확인서발급</td>
+                            <td valign="middle" bgcolor="#FFFFFF">인적사항 및 근황파악 신청한 서비스이용<br>
+                            (연말정산자료, 기부금영수증발급)</td>
+                          </tr>
+                          <tr>
+                            <td width="150" align="center" valign="middle" bgcolor="#FFFFFF">개인정보제공항목</td>
+                            <td valign="middle" bgcolor="#FFFFFF">성명,주민등록번호,연락처,주소,이메일주소, 직업, 종교,<br>
+                            대상구분,장애유무, 질병관련이력,주거현황,가족관계,<br>
+                            결혼상태, 경제적상황, 보호구분등</td>
+                            <td valign="middle" bgcolor="#FFFFFF">성명, 주민등록변호, 주소, 연락처, 자원봉사활동내역, 
+                            만14세미만은 법정대리인정보</td>
+                            <td valign="middle" bgcolor="#FFFFFF">성명, 주민등록변호, 주소, 연락처, 후원구분,
+                            납입구분등</td>
+                          </tr>
+                          <tr>
+                            <td width="150" align="center" valign="middle" bgcolor="#FFFFFF">정보제공보유.이용기간</td>
+                            <td colspan="3" valign="middle" bgcolor="#FFFFFF">후원해지 요청시 까지 또는 문서파기요청시 3일 이내</td>
+                          </tr>
+                        </table>
+                        
+                  <strong><br>
+                  <br>
+                  제5조 정보연계를 통한 개인정보                  </strong><br>
+                  해누리노인복지공동체는 한국재가노인복지협회, 부산광역시청, 부산사회복지공동모금회, 등 업무연계 기관과 서비스 제공 및 관리업무를 수행하고 있습니다. 개인동의서(종사자, 이용자,후원자,자원봉사자)를 통해 개인정보활용동의 확인 후 개인정보를 수집하고 직접 업무 및 서비스 관리를 목적으로 개인정보를 업무연계
+                  기관에 제공합니다
+                  
+                  <br>
+                  <strong><br>
+                  <br>
+                  제6조 개인정보처리의 위탁<br>
+                  </strong>해누리노인복지공동체는 개인정보를 동의없이 외부업체에 위탁하지 않습니다. 향후 위탁이 필요한 경우, 위탁대상자와 위탁업무에 내용에 대해 정보주체에 통지하고, 필요한 경우 사전 동의를 받겠습니다.
+                   
+                    <br>
+                    <br>
+                    <br>
+                    <strong>제7조 정보주체의 권리. 의무 및 행사방법                    </strong>
+                      <br>
+                      정보주체는 해누리노인복지공동체에 다음과 같은 권리를 행사할 수 있으며, 만14세 미만 아동의 법정대리인은 그 아동의 개인정보에 대한 열람, 정정, 삭제, 처리정지를 요구할 수 있습니다.<br>
+                      <br>
+                      ① 개인정보 열람요구<br>
+                      ② 오류등이 있을 경우 정정요구<br>
+                      ③ 삭제요구<br>
+                      ④ 처리정지요규
+                    
+                      2. 제1항에 따른 권리 행사는 해누리노인복지공동체에 대히 서면, 전화,전자우편, 모사전송(FAX)등을 통하여 하실수 있으면 해누리노인복지공동체는 이에 대해 지체없이 조치하겠습니다.<br>
+                      <br>
+                      3. 정보주체가 개인정보의 오류 등에 대한 정정 또는 삭제을 요구한 경우에는 해누리노인복지공동체는 정정 <br>
+                      또는 삭제를 완료 할 때 까지 당해 개인정보를 이용하거나 제공하지 않습니다.<br>
+                      <br>
+                      4. 제1항에 따른 권리행사는 정보주체의 법정대리인이나 위임을 받은자 등 대리인을 통하여 하실수 있습니다. 이 경우 개인정보보호법 시행규칙 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.<br>
+                      <br>
+                      5. 정보주체는 개인정보 보호법 등 관련법령을 위반하여 해누리노인복지공동체가 처리하고 있는 정보주체 본인     이나 타인의 개인정보 및 사생활을 침해하여서는 아니 됩니다.
+                    
+                      <br>
+                      <br>
+                      <br>
+                    <strong>제8조 개인정보의 파기<br>
+                    </strong>1. 해누리노인복지공동체는 개인정보 보유기간의 경과, 처리목적 달성 등 개인정보가 불필요하게되었을 때에는 지체없이 해당 개인정보를 파기한다.<br>
+                  2. 개인정보 파기의 절차 및 방법은 다음과 같습니다<br>
+                  <br>
+                  
+                    <!--[if !supportEmptyParas]-->
+  ① 파기절차<br>
+  개인정보는 목적 달성 후 즉시 또는 별도의 공간에 옮겨져 내무 방침 및 기타 관련법령에 따라 일정기간       저장된 후 파기 됩니다.<br>
+  별도의 공간에 옮겨진 개인정보는 법룰에 의한 경우가 아니고 서는 다른목적으로      이용되지 않습니다.<br>
+  <br>
+  <!--[if !supportEmptyParas]-->②파기방법<br>
+                    종이에 출력된 개인정보는 분쇄기로 소각을 통하여 파기하며, 전자적 파일 형태로 저장된 개인정보는 기록      을 재생할수 없는 기술적 방법을 사용하여 삭제합니다.<br>
+                    <br>
+                    <strong><br>
+                    제9조 개인정보의 안전서 확보조치                  </strong><br>
+                  해누리노인복지공동체는 개인정보의 안전성 확보를 위해 정기적인 직원교육을 하는 등 관련조치를 취하고 있습니다.<br>
+                  <br>
+                  <strong><br>
+                    제10조 권익침해 구제방법<br>
+                  </strong>정보주체는 아래의 기관에 대해 개인정보 침해에 대한 피해구제, 상담 등을 문의하실 수 있습니다. 아래의 기관은 해누리노인복지공동체와는 별개의 기관으로서 자체적인 개인정보 불만처리, 피해구제 결과에 만족하지 못하시거나 보다 자세한 도움이 필요하시면 문의하여 주시기 바랍니다.
+                  
+                    <br>
+                    <br>
+  개인정보보호 종합지원 포털(행정안전부 운영)<br>
+  - 소관업무: 개인정보 침해사실 신고, 상담, 자료제공<br>
+  - 홈폐이지: <a href="http://www.privacy,go,kr"><u>www.privacy,go,kr</u></a>. ☎02-2100-3394
+                  
+                    <!--[if !supportEmptyParas]--><!--[endif]-->개인정보 침해신고센터<br>
+                    - 소관업무: 개인정보 침해사실, 신고, 상담신청<br>
+                    - 홈페이지: privacy.or.kr ☎(국번없이)118<br>
+                    - 주소:(138-950)서울시 송파구 중대로135 한국인터넷진흥원 개인정보침해신고센터<br>
+                    <br>
+                    개인정보 분쟁조정위원회(한국인터넷진흥원 운영)<br>
+                    - 소관업무: 개인정보 분쟁조정 신청, 집단분쟁조정(민사적해결)<br>
+                    - 홈페이지: privacy.or.kr ☎(국번없이)118<br>
+                    - 주소:(138-950)서울시 송파구 중대로135 한국인터넷진흥원 개인정보침해신고센터<br>
+                    <br>
+                    경찰청 사이버테러대응센터<br>
+                    - 소관업무: 개인정보 침해 관련 형사사건 문의 및 신고<br>
+                    - 홈페이지: <a href="http://www.natan.go.kr"><u>www.natan.go.kr</u></a> ☎(사이버범죄)02-393-9112 (경찰청대표)1566-0112<br>
+                    <br>
+                    <br>
+                    <strong>제11조 개인정보 보호책임자<br>
+                  </strong>1. 해누리노인복지공동체는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 정보주체의 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.
+                  
+                    <!--[if !supportEmptyParas]-->
+                    <br>
+                    <br>
+                    개인정보 보호 책임자 및 담당자<br>
+  - 기  관: 해누리노인복지공동체(산하기관전체)<br>
+  - 책임자: 대표이사<br>
+  - 담당자: 시설장<br>
+  - 연락처: ☎051-751-7272 ☎051-912-7275<br>
+  <br>
+  2. 정보주체께서는 해누리노인복지공동체의 서비스를 이용하시면서 발생한 모든 개인정보 보호관련 문의, 불만     처리, 피해구제등에 관한 사항을 개인정보 보호 책임자 및 담당 기관으로 문의 할수 있습니다. 
+                   해누리노인복지공동체는 정보주체의 문의에 대해 지체없이 답변 및 처리해드릴 것입니다.<br>
+                   <br>
+                            <br>
+                          <strong>제12조 개인정보처리방침 변경<br>
+                  </strong>이 개인정보처방침은 2020.02.01.부터 적용됩니다.
+                                      
+                    
+                  </td>
+              </tr>
+              <tr>
+                <td align="center">&nbsp;</td>
+              </tr>
+              
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+</table>
+<? include '../inc/copy.htm'; ?>
+</body>
+</html>
