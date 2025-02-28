@@ -74,73 +74,73 @@ $big_ctg = ctg_list(0);
 		<div class="inr cate">
                     <ul id="cate_list" class="v2">
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=20">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=20">
                                 <div class="area_icon"></div>
                                 <h3>영상·사진·음향 제작</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=21">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=21">
                                 <div class="area_icon"></div>
                                 <h3>방송 디자인·편집</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=22">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=22">
                                 <div class="area_icon"></div>
                                 <h3>방송마케팅</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=23">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=23">
                                 <div class="area_icon"></div>
                                 <h3>방송·배우·연기</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=24">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=24">
                                 <div class="area_icon"></div>
                                 <h3>모델</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=25">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=25">
                                 <div class="area_icon"></div>
                                 <h3>방송 스태프</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=26">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=26">
                                 <div class="area_icon"></div>
                                 <h3>방송·시나리오·작가</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=27">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=27">
                                 <div class="area_icon"></div>
                                 <h3>뷰티·패션</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=28">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=28">
                                 <div class="area_icon"></div>
                                 <h3>MC·행사·이벤트</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=29">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=29">
                                 <div class="area_icon"></div>
                                 <h3>레슨</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=30">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=30">
                                 <div class="area_icon"></div>
                                 <h3>심리상담</h3>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?ctg=31">
+                            <a href="<?php echo G5_BBS_URL; ?>/item_list.php?category1_idx=31">
                                 <div class="area_icon"></div>
                                 <h3>기타</h3>
                             </a>
@@ -318,6 +318,10 @@ $big_ctg = ctg_list(0);
 
 <!--온보딩 페이지 작업-->
 <?php if (!$is_member) { ?>
+
+    <?php if($_SERVER['REMOTE_ADDR']=="112.160.220.208"){ ?>
+
+    <?php } else {?>
     <div id="onboarding">
         <div class="onboarding">
             <div class="onboarding-container">
@@ -369,6 +373,7 @@ $big_ctg = ctg_list(0);
             </div>
         </div>
     </div>
+    <?php }?>
 <?php } ?>
 <script>
     document.addEventListener("DOMContentLoaded", function() {

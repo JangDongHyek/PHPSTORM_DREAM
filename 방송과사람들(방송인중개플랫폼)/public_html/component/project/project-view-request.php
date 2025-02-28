@@ -3,14 +3,14 @@
     <div v-if="load">
         <div class="join-view">
             <h6 v-if="getStatus(project) != '진행 중'">매칭 완료!</h6>
-            <div>
-                <ul v-if="getStatus(project) == '선정 완료'">
-                    <li v-for="item,index in rows" v-if="item.prize">
+            <div v-if="getStatus(project) == '선정 완료'">
+                <ul>
+                    <li v-for="item,index in rows">
                         <a @click="modal.data = item; modal.status = true;">
                             <div class="img">
                                 <span class="icon_1st">{{item.prize}}</span>
-                                <img v-if="item.images.length == 0" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
-                                <img v-else :src="jl.root + item.images[0].src">
+                                <img v-if="item.$member_portfolio.length" :src="jl.root + item.$member_portfolio[0].main_image_array[0].src">
+                                <img v-else src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
                             </div>
 <!--                           <p>#{{index+1}}</p>-->
                             <div class="profile">
@@ -39,7 +39,7 @@
                                 <img v-if="item.$member_portfolio.length" :src="jl.root + item.$member_portfolio[0].main_image_array[0].src">
                                 <img v-else src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
                             </div>
-                            <p>#{{index+1}}</p><!--참여순서-->
+                            <p>#{{index+1}} {{item.subject}}</p><!--참여순서-->
                             <div class="profile">
                                 <img v-if="!item.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
                                 <img v-else :src="jl.root + '/data/file/member/' + item.user_idx + '.jpg'" alt="프로필 이미지">
@@ -73,7 +73,7 @@
                     <div class="portfolio-grid">
                         <div class="portfolio-info">
                             <h1 class="title">{{modal.data.subject}}</h1>
-                            <p class="winner-badge">{{modal.data.prize}}</p>
+                            <p v-if="modal.data.prize" class="winner-badge">{{modal.data.prize}}</p>
                             <p class="description" v-html="jl.convertNewlinesToBr(modal.data.content)"></p>
                             <div class="profile" @click="jl.href('./profile.php?mb_no=' + modal.data.user_idx)">
                                 <img v-if="!modal.data.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">

@@ -1,7 +1,7 @@
 <?php
 // Define 파일이 제대로 Load 됐는지 확인용
 define("JL_CHECK",true);
-define("JL_Version",2.2);
+define("JL_Version",2.3);
 
 /******************************필수******************************************/
 define("JL_ROOT_DIR","public_html");// 최상단 폴더의 이름
@@ -50,6 +50,7 @@ define("JL_EDITOR_HTML","/plugin/editor/smarteditor2/SmartEditor2Skin.html");// 
 ---------------2.0이하에서 2.1 버전업이 된다면 jl.postData,jl.deleteData 함수 매개변수 변경해줘야함 ------------
 2.1 Jl.js JlVue.js 주요함수 매개변수 변경
 2.2 JlService captcha 통신 추가 , font 파일 추가
+2.3 JlService get로직 Extensions,Relations 따로 함수로 뺴서 프로세스화 이걸로 인해 필터 및 데이터가 이상적인 트리형식으로 가능해짐
 */
 
 ?>

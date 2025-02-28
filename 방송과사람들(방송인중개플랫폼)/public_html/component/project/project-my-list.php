@@ -1,7 +1,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
-        <ul class="project-list">
+        <ul class="project-list" v-if="arrays.length">
             <li class="project-item" v-for="item in arrays">
                 <ul class="prize-info">
                     <li><span>🏆 예산</span> {{ totalPrize(item).format() }}원</li>
@@ -33,6 +33,8 @@
                 </div>
             </li>
         </ul>
+
+        <div v-else>의뢰한 프로젝트가 없습니다.</div>
 
         <external-bs-modal-new :modal="modal">
             <template v-slot:header>

@@ -78,13 +78,59 @@ class JlService extends Jl{
         return $response;
     }
 
+    private function processExtensions(&$record, $extensions) {
+        foreach ($extensions as $info) {
+            $info = $this->jsonDecode($info);
+            $joinModel = new JlModel(array("table" => $info['table']));
+
+            if (!isset($record[$info['foreign']]) || !$record[$info['foreign']]) continue;
+
+            $joinModel->where($joinModel->primary, $record[$info['foreign']]);
+            $join_data = $joinModel->get()['data'][0];
+
+            $key = $info['as'] ? "$".$info['as'] : "$".$info['table'];
+            $record[$key] = $join_data;
+
+            if (isset($info['relations'])) {
+                $re_relations = $this->jsonDecode($info['relations']);
+                $this->processRelations($record[$key], $re_relations);
+            }
+
+            // **재귀 호출: 만약 join_data가 extensions을 포함하면 또 호출**
+            if (isset($info['extensions'])) {
+                $re_extensions = $this->jsonDecode($info['extensions']);
+                $this->processExtensions($record[$key], $re_extensions);
+            }
+        }
+    }
+
+    private function processRelations(&$data, $relations) {
+        foreach ($relations as $info) {
+            $info = $this->jsonDecode($info);
+            $joinModel = new JlModel(array("table" => $info['table']));
+
+            if (!isset($info['foreign']) || !$info['foreign']) continue;
+
+            if (isset($info['filter'])) {
+                $info_filter = $this->jsonDecode($info['filter']);
+                $joinModel->setFilter($info_filter);
+                $joinModel->where($info_filter);
+            }
+
+            $joinModel->where($info['foreign'], $data[$this->model->primary]);
+
+            $join_data = ($info['type'] == 'count') ? $joinModel->count() : $joinModel->get()['data'];
+
+            $data["$".$info['table']] = $join_data;
+        }
+    }
+
     public function get() {
-        $join = null;
-        $extensions = array();
-        $relations = array();
-        if(isset($this->obj['join'])) $join = $this->jsonDecode($this->obj['join']);
-        if(isset($this->obj['extensions'])) $extensions = $this->jsonDecode($this->obj['extensions']);
-        if(isset($this->obj['relations'])) $relations = $this->jsonDecode($this->obj['relations']);
+        $join = isset($this->obj['join']) ? $this->jsonDecode($this->obj['join']) : null;
+        $extensions = isset($this->obj['extensions']) ? $this->jsonDecode($this->obj['extensions']) : array();
+
+
+        $relations = isset($this->obj['relations']) ? $this->jsonDecode($this->obj['relations']) : array();
 
         $getInfo = array(
             "page" => $this->obj['page'],
@@ -93,80 +139,39 @@ class JlService extends Jl{
         );
 
         if ($join) {
-            $this->model->join($join['table'],$join['origin'],$join['join'],$join['type']);
-            // 조인 필터링
-            //$model->where("join_column","value","AND",$join_table);
-            //$model->between("join_column","start","end","AND",$join_table);
-            //$model->in("join_column",array("value1","value2"),"AND",$join_table);
-            //$model->like("join_column","value","AND",$join_table);
+            $this->model->join($join['table'], $join['origin'], $join['join'], $join['type']);
 
-            if($join['source']) $getInfo['source'] = $join['table'];
-            if($join['select']) $getInfo['select'] = $this->jsonDecode($join['select']);
+            if (isset($join['source'])) $getInfo['source'] = $join['table'];
+            if (isset($join['select'])) $getInfo['select'] = $this->jsonDecode($join['select']);
 
-            if($join['group_by']) {
-                $groups = $this->jsonDecode($join['group_by'],false);
+            if (isset($join['group_by'])) {
+                $groups = $this->jsonDecode($join['group_by'], false);
                 foreach ($groups as $group) {
-                    $this->model->groupBy($group['group'],$group['aggregate'],$group['as'],$group['type']);
+                    $this->model->groupBy($group['group'], $group['aggregate'], $group['as'], $group['type']);
                 }
             }
         }
 
         $this->model->setFilter($this->obj);
-
-
         $object = $this->model->where($this->obj)->get($getInfo);
 
-        foreach($extensions as $info) {
-            $info = $this->jsonDecode($info);
-            $joinModel = new JlModel(array(
-                "table" => $info['table'],
-            ));
-
-            foreach ($object["data"] as $index => $data) {
-                if(!$data[$info['foreign']]) continue;
-                $joinModel->where($joinModel->primary, $data[$info['foreign']]);
-                $join_data = $joinModel->get()['data'][0];
-
-                //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
-                if($info['as']) {
-                    $object["data"][$index]["$".$info['as']] = $join_data;
-                }else {
-                    $object["data"][$index]["$".$info['table']] = $join_data;
-                }
-            }
+        // extensions 재귀 처리
+        foreach ($object["data"] as $index =>$data) {
+            $this->processExtensions($object["data"][$index], $extensions);
         }
 
-        foreach($relations as $info) {
-            $info = $this->jsonDecode($info);
-            $joinModel = new JlModel(array(
-                "table" => $info['table'],
-            ));
-
-            foreach ($object["data"] as $index => $data) {
-                if(!$info['foreign']) continue;
-                if($info['filter']) {
-                    $info_filter = $this->jsonDecode($info['filter']);
-                    $joinModel->setFilter($info_filter);
-                    $joinModel->where($info_filter);
-                }
-                $joinModel->where($info['foreign'],$data[$this->model->primary]);
-
-                if($info['type'] == 'count') $join_data = $joinModel->count();
-                else $join_data = $joinModel->get()['data'];
-
-
-                //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
-                $object["data"][$index]["$".$info['table']] = $join_data;
-            }
+        // relations 재귀 처리
+        foreach ($object["data"] as $index =>$data) {
+            $this->processRelations($object["data"][$index], $relations);
         }
 
-
-
-        $response['data'] = $object['data'];
-        $response['count'] = $object['count'];
-        $response['filter'] = $this->obj;
-        $response['sql'] = $object['sql'];
-        $response['success'] = true;
+        $response = array(
+            "data" => $object["data"],
+            "count" => $object["count"],
+            "filter" => $this->obj,
+            "sql" => $object["sql"],
+            "success" => true
+        );
 
         return $response;
     }
@@ -379,6 +384,8 @@ class JlService extends Jl{
 
         return true;
     }
+
+
 
     public function captchaCheck() {
         if($this->obj['captcha_code'] == $_SESSION['jl_captcha']) {

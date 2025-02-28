@@ -838,10 +838,10 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                     <input type="text" name="mb_live_si" value="<?php echo $mb['mb_live_si'] ?>" id="mb_live_si" required class="frm_input" size="15" placeholder="예) 부산광역시">
                     <input type="text" name="mb_live_gu" value="<?php echo $mb['mb_live_gu'] ?>" id="mb_live_gu" required class="frm_input" size="15" placeholder="예) 해운대구">
                 </td>
-                <th scope="row"><label for="mb_old">* 나이<strong class="sound_only">필수</strong></label></th>
-                <td>
-                    <input type="text" name="mb_old" value="<?php echo $mb['mb_old'] ?>" id="mb_old" required class="frm_input" size="15" >
-                </td>
+                <!--<th scope="row"><label for="mb_old">* 나이<strong class="sound_only">필수</strong></label></th>-->
+                <!--<td>-->
+                <!--    <input type="text" name="mb_old" value="--><?php //echo $mb['mb_old'] ?><!--" id="mb_old" required class="frm_input" size="15" >-->
+                <!--</td>-->
             </tr>
             <tr>
                 <th scope="row"><label for="mb_hobby">좋아하는 취미를 선택해주세요<br>(최대 5개까지 선택 가능)<?php echo $sound_only ?></label></th>

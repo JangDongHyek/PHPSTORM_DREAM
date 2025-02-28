@@ -2,7 +2,7 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <div v-if="load">
-            <ul class="project-list">
+            <ul class="project-list" v-if="rows.length">
                 <li class="project-item" v-for="item in rows">
                     <ul class="prize-info">
                         <li><span>🏆 예산</span> {{ totalPrize(item.$project).format() }}원</li>
@@ -36,6 +36,8 @@
                     </div>
                 </li>
             </ul>
+
+            <div v-else>지원한 프로젝트가 없습니다.</div>
 
             <external-bs-modal-new :modal="modal">
                 <template v-slot:header>

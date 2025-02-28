@@ -46,15 +46,16 @@ if($error) {
 ?>
 
 <script>
-    swal("<?php echo strip_tags($msg); ?>")
-        // => 익스플로어 사용 불가능
-        .then(function(){
-            <?php if ($url) { ?>
-            document.location.replace("<?php echo str_replace('&amp;', '&', $url); ?>");
-            <?php } else { ?>
-            history.back();
-            <?php } ?>
-        });
+    swal.fire({
+        text: "<?php echo strip_tags($msg); ?>",
+        confirmButtonText: '확인',
+    }).then(function () {
+        <?php if ($url) { ?>
+        document.location.replace("<?php echo str_replace('&amp;', '&', $url); ?>");
+        <?php } else { ?>
+        history.back();
+        <?php } ?>
+    });
 </script>
 
 <noscript>

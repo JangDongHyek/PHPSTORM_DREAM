@@ -55,11 +55,12 @@
                 </ul>
                 <!--자기소개글-->
                 <p class="pf_produce">자기소개글</p>
-                <?php if($_SERVER['REMOTE_ADDR']=="112.160.220.208"): ?>
+                <?php /*if($_SERVER['REMOTE_ADDR']=="112.160.220.208"): */?><!--
                     <a href="" class="btn_cs" @click="event.preventDefault(); postChatRoom();">전문가에게 문의하기</a>
-                <?php else:?>
+                <?php /*else:*/?>
                     <a href="" class="btn_cs" @click="event.preventDefault(); alert('준비 중입니다')">전문가에게 문의하기</a>
-                <?php endif;?>
+                --><?php /*endif;*/?>
+                <a href="" class="btn_cs" @click="event.preventDefault(); postChatRoom();">전문가에게 문의하기</a>
 
             </div>
             <br>
@@ -162,12 +163,13 @@
                 if(this.member_idx) {
                     let obj = {
                         buyer_idx : this.member_idx,
-                        seller_idx : this.product.member_idx
+                        seller_idx : this.product.member_idx,
+                        item_idx : <?=$_GET['idx'] ? $_GET['idx'] : "''"?>
                     }
-
+                    /*//item_idx : <?=$_GET['idx']?>*/
                     var res = await this.jl.ajax("insert", obj, "/api/member_chat_room.php");
-
-                    window.location.href = `${this.jl.root}/bbs/chat.php?room=${res.data.idx}&name=<?=$member['mb_nick']?>`
+                    //console.log(res)
+                    window.location.href = `${this.jl.root}/bbs/chat.php?room=${res.data.idx}&name=<?=$member['mb_nick']?>&item=<?=$_GET['idx']?>`;
                 }else {
                     alert("로그인이 필요한 기능입니다.");
                 }

@@ -160,7 +160,7 @@
                             max : {length : 5, message : "포트폴리오는 최대 5개 까지입니다."}
                         },
                     ],
-                    href : "",
+                    href : `./project_view.php?primary=${this.project_idx}`,
                 },
 
                 filter : {

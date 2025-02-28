@@ -136,7 +136,6 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
 <?php if (!defined('_INDEX_')) { ?>
 
     <div id="vue_head">
-        <head-category category_idx="<?=$category_idx?>" ctg="<?=$_GET['ctg']?>"></head-category>
         <!-- 해당코드 component화  -->
         <!--<div id="nav_area">-->
         <!--    <nav id="gnb">-->
@@ -209,8 +208,6 @@ if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
 <?php } ?>
 
 <?php
-$jl->vueLoad("vue_head");
-$jl->includeDir("/component/inc");
 ?>
 
 <div id="wrapper">

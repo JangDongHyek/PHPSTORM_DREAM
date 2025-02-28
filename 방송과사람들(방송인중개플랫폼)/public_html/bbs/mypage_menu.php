@@ -28,11 +28,12 @@
         <?php if($_SERVER['REMOTE_ADDR']=="183.103.22.103"){ ?>
         <?php }?>
         <!--<li><a onclick="utils.showToast('준비중입니다.')">결제내역</a></li>
-        <li><a href="<?php echo G5_BBS_URL ?>/chat_list.php">문의채팅</a></li>
+
         <li><a href="<?php echo G5_BBS_URL ?>/mypage_jjim.php">찜한서비스</a></li>
         <li><a href="<?php echo G5_BBS_URL ?>/mypage_jjim_portfolio.php">찜한포트폴리오</a></li>
 		<li><a href="<?php echo G5_BBS_URL ?>/mypage_sale.php">판매관리</a></li>
 		<li><a href="javascript:swal('준비중입니다.')">설정</a></li>-->
+        <li><a href="<?php echo G5_BBS_URL ?>/chat_list.php">문의채팅</a></li>
         <li><a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a></li>
 	</ul>
 </div>

@@ -62,15 +62,15 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
-            ctg : {type : String,default : ""},
-            category_idx : {type : String,default : ""},
+            category1_idx : {type : String,default : ""},
+            category2_idx : {type : String,default : ""},
             member_idx : {type : String,default : ""},
         },
         data: function(){
             return {
                 jl : null,
                 filter : {
-                    idx : this.ctg
+                    idx : this.category2_idx ? this.category2_idx : this.category1_idx
                 },
                 data : {
 
@@ -127,8 +127,8 @@
                 }
             },
             async getProduct() {
-                var parent_idx = this.category_idx ? '' : this.ctg;
-                var category_idx = this.ctg;
+                var parent_idx = this.category2_idx ? '' : this.category1_idx;
+                var category_idx = this.category2_idx;
 
                 var filter = {
                     parent_idx : parent_idx,

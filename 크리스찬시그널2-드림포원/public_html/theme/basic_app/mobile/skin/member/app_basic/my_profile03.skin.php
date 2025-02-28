@@ -242,10 +242,10 @@ $mb = get_member($mb_id);
             <div id="my_profile">
 
                 <div class="in">
-                    <div class="form-group">
-                        <label for="mb_old">나이</label>
-                        <input type="text" class="form-control" id="mb_old" name="mb_old" value="<?=$mb['mb_old']?>" placeholder="나이을 입력해 주세요">
-                    </div>
+                    <!--<div class="form-group">-->
+                    <!--    <label for="mb_old">나이</label>-->
+                    <!--    <input type="text" class="form-control" id="mb_old" name="mb_old" value="--><?//=$mb['mb_old']?><!--" placeholder="나이을 입력해 주세요">-->
+                    <!--</div>-->
                     <div class="form-group">
                         <label for="mb_job">직업</label>
                         <input type="text" class="form-control" id="mb_job" name="mb_job" value="<?=$mb['mb_job']?>" placeholder="직업을 입력해 주세요">

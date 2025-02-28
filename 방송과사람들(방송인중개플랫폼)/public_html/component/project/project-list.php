@@ -17,7 +17,7 @@
                             <div class="project-info">
                                 <div class="project-category">
                                     {{item.$category.name}} · {{item.$category2.name}}
-                                    <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
+                                    <button type="button" class="bookmark" @click="event.stopPropagation();postBookmark(item)"><i :class="item.$project_bookmark.length ? 'fa-solid' : 'fa-light'" class="fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                                 </div>
                                 <h2 class="project-title">{{item.subject}}</h2>
                                 <p class="project-desc">{{item.description}}</p>
@@ -41,6 +41,8 @@
                 </li>
             </ul>
         </div>
+
+        <item-paging :filter="filter" @change="jl.getsData(filter,rows);"></item-paging>
 
 
         <external-bs-modal-new :modal="modal">
@@ -69,6 +71,8 @@
     Vue.component('<?=$componentName?>', {
         template: "#<?=$componentName?>-template",
         props: {
+            category1_idx : {type: String, default: ""},
+            category2_idx : {type: String, default: ""},
             mb_no : {type: String, default: ""},
             primary : {type: String, default: ""},
         },
@@ -94,8 +98,11 @@
                     table : "project",
 
                     page: 1,
-                    limit: 1,
+                    limit: 10,
                     count: 0,
+
+                    category1_idx : this.category1_idx,
+                    category2_idx : this.category2_idx,
 
                     order_by_desc : "idx",
 
@@ -116,6 +123,14 @@
                                 ],
                             }
                         }, // data,count
+                        {
+                            table : "project_bookmark" ,
+                            foreign : "project_idx",
+                            type : "data",
+                            filter : {
+                                user_idx : this.mb_no,
+                            },
+                        }, // type(count,data)
                     ],
                 },
 
@@ -159,6 +174,30 @@
 
         },
         methods: {
+            async postBookmark(project) {
+                let row = {user_idx : this.mb_no,project_idx : project.idx};
+                let options = {table : "project_bookmark",return : true};
+
+                if(project.$project_bookmark.length) {
+                    await this.jl.deleteData(project.$project_bookmark[0],options)
+                }else {
+                    await this.jl.postData(row,options);
+                }
+
+                await this.jl.getsData(this.filter,this.rows,{
+                    callback : async (res) => {
+                        let rows = res.data;
+                        for (const row of rows) {
+                            await this.jl.ajax("file_exists",{src : `/data/file/member/${row.user_idx}.jpg`},"/jl/JlApi.php").then(response => {
+                                row.file_exists = response.exists;
+                            });
+                        }
+
+                        this.filter.count = res.count;
+                        this.rows = rows;
+                    },
+                });
+            },
             getDurationDays(item) {
                 let startDate = item.start_date;
                 let endDate = item.end_date;

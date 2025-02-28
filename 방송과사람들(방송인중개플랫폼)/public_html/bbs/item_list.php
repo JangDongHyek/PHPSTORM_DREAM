@@ -2,14 +2,17 @@
 include_once('./_common.php');
 include_once(G5_PATH."/jl/JlConfig.php");
 
-if(empty($_GET['category_idx'])) $category_idx = $_GET['ctg'];
 $category_model = new JlModel("category");
-$target_category = $category_model->where("idx",$category_idx)->get()['data'][0];
+if($_GET['category2_idx']) $target_category = $category_model->where("idx",$_GET['category2_idx'])->get()['data'][0];
+else $target_category = $category_model->where("idx",$_GET['category1_idx'])->get()['data'][0];
 
 $pid = $target_category['name'];
 $g5['title'] = $target_category['name'];
 include_once('./_head.php');
 ?>
+<div id="app2">
+    <head-category-new category1_idx="<?=$_GET['category1_idx']?>" category2_idx="<?=$_GET['category2_idx']?>"></head-category-new>
+</div>
 
 <!--서브 상단 배너-->
 <div class="swiper subSwiper">
@@ -66,7 +69,7 @@ include_once('./_head.php');
     <div id="app">
 
         <div id="area_product">
-            <product-list ctg="<?=$_GET['ctg']?>" category_idx="<?=$_GET['category_idx']?>" member_idx="<?=$member['mb_no']?>"></product-list>
+            <product-list category1_idx="<?=$_GET['category1_idx']?>" category2_idx="<?=$_GET['category2_idx']?>" member_idx="<?=$member['mb_no']?>"></product-list>
 
 
         </div>
@@ -85,8 +88,10 @@ include_once('./_head.php');
         <!--//서브 상단 배너-->
     </div>
 <?php
+$jl->vueLoad("app2");
 $jl->vueLoad("app");
 $jl->includeDir("/component/product");
+$jl->componentLoad("/inc");
 include_once($jl->ROOT."/component/paging2-component.php");
 
 include_once('./_tail.php');

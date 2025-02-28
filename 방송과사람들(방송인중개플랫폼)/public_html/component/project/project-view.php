@@ -12,7 +12,7 @@
                     <div class="info-box">
                         <div class="project-category">
                             {{row.$category.name}} · {{row.$category2.name}}
-                            <button type="button" class="bookmark"><i class="fa-light fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
+                            <button type="button" class="bookmark" @click="postBookmark(row)"><i :class="row.$project_bookmark.length ? 'fa-solid' : 'fa-light'" class="fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                         </div>
                         <h2>{{row.subject}}</h2>
                         <p class="subtitle">{{row.description}}</p>
@@ -160,6 +160,14 @@
                                 ],
                             }
                         },
+                        {
+                            table : "project_bookmark" ,
+                            foreign : "project_idx",
+                            type : "data",
+                            filter : {
+                                user_idx : this.mb_no,
+                            },
+                        }, // type(count,data)
                     ],
                 },
 
@@ -230,6 +238,18 @@
 
         },
         methods: {
+            async postBookmark(project) {
+                let row = {user_idx : this.mb_no,project_idx : project.idx};
+                let options = {table : "project_bookmark",return : true};
+
+                if(project.$project_bookmark.length) {
+                    await this.jl.deleteData(project.$project_bookmark[0],options)
+                }else {
+                    await this.jl.postData(row,options);
+                }
+
+                this.row = await this.jl.getData(this.filter);
+            },
             getDurationDays(item) {
                 let startDate = item.start_date;
                 let endDate = item.end_date;

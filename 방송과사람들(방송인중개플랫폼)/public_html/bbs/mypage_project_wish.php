@@ -21,10 +21,9 @@ include_once('./_head.php');
 
             <div class="mypage_cont">
                 <div class="box">
-                    <h3>프로젝트 의뢰 LIST <a href="<?php echo G5_BBS_URL ?>/mypage_project_wish.php" class="bookmarkBtn">북마크</a></h3><!--의뢰인 :의뢰 / 전문가 : 지원-->
-                    <button type="button" class="project-add" onclick="window.location.href='./project_form.php'">프로젝트 의뢰하기</button><!--의뢰인 버전-->
+                    <h3>프로젝트 북마크 LIST</h3>
 
-                    <project-my-list mb_no="<?=$member['mb_no']?>"></project-my-list>
+                    <project-my-wish mb_no="<?=$member['mb_no']?>"></project-my-wish>
                 </div>
             </div>
             <!-- 마이페이지에만 나오는 메뉴 -->

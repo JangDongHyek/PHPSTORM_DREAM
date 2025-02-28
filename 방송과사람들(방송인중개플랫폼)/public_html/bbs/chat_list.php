@@ -10,7 +10,7 @@ $jl = new JL();
 
 /** 채팅리스트 **/
 if(!$is_member){
-    alert("회원이시라면 로그인 후 이용해주세요.",G5_BBS_URL.'/login.php?url='.G5_BBS_URL."/chat_list.php" );
+    alert("로그인이 필요합니다.",G5_BBS_URL.'/login.php?url='.G5_BBS_URL."/chat_list.php" );
 }
 ?>
 
