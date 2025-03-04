@@ -37,7 +37,7 @@
 
             <template v-slot:footer>
                 <button type="button" class="btn btn-default" @click="modal.status = false;">닫기</button>
-                <button type="button" class="btn btn-default" @click="jl.postData(modal.data,'class_study',options)">작성</button>
+                <button type="button" class="btn btn-default" @click="jl.postData(modal.data,options)">작성</button>
             </template>
         </external-bs-modal>
 
@@ -55,7 +55,7 @@
 
             <template v-slot:footer>
                 <button type="button" class="btn btn-default" @click="modal2 = false;">닫기</button>
-                <button type="button" class="btn btn-default" @click="jl.postData(modal2_data,'g5_write_class')">작성</button>
+                <button type="button" class="btn btn-default" @click="jl.postData(modal2_data,{table : 'g5_write_class'})">작성</button>
             </template>
         </external-bs-modal>
     </div>
@@ -80,6 +80,7 @@
                     arrays : [],
 
                     options : {
+                        table : 'class_study',
                         required : [
                             {name : "chapter",message : `과를 입력해주세요.`},
                             {name : "subject",message : `제목을 입력해주세요.`},

@@ -3,29 +3,55 @@
     <div v-if="load">
         <div class="join-view">
             <h6 v-if="getStatus(project) != '진행 중'">매칭 완료!</h6>
-            <div v-if="getStatus(project) == '선정 완료'">
-                <ul>
-                    <li v-for="item,index in rows">
-                        <a @click="modal.data = item; modal.status = true;">
-                            <div class="img">
-                                <span class="icon_1st">{{item.prize}}</span>
-                                <img v-if="item.$member_portfolio.length" :src="jl.root + item.$member_portfolio[0].main_image_array[0].src">
-                                <img v-else src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
-                            </div>
-<!--                           <p>#{{index+1}}</p>-->
-                            <div class="profile">
-                                <img v-if="!item.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
-                                <img v-else :src="jl.root + '/data/file/member/' + item.user_idx + '.jpg'" alt="프로필 이미지">
-                                <span>{{item.$g5_member.mb_nick}}</span>
-                            </div>
-                        </a>
-                        <div class="flex">
-                            <button type="button" class="chatBtn">채팅하기</button><!--매칭 거부시 (> 매칭 실패로 변경 클래스 out 추가)-->
-                            <button type="button" class="payBtn">예산 결제</button><!--매칭 완료시-->
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            <template v-if="getStatus(project) == '선정 완료'">
+                    <h6>선정</h6>
+                    <div>
+                        <ul>
+                            <li v-for="item,index in rows" v-if="item.prize">
+                                <a @click="modal.data = item; modal.status = true;">
+                                    <div class="img">
+                                        <span class="icon_1st">선정</span>
+                                        <img v-if="item.$member_portfolio.length" :src="jl.root + item.$member_portfolio[0].main_image_array[0].src">
+                                        <img v-else src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
+                                    </div>
+                                    <!--                           <p>#{{index+1}}</p>-->
+                                    <div class="profile">
+                                        <img v-if="!item.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                                        <img v-else :src="jl.root + '/data/file/member/' + item.user_idx + '.jpg'" alt="프로필 이미지">
+                                        <span>{{item.$g5_member.mb_nick}}</span>
+                                    </div>
+                                </a>
+                                <div class="flex">
+                                    <button type="button" class="chatBtn">채팅하기</button><!--매칭 거부시 (> 매칭 실패로 변경 클래스 out 추가)-->
+                                    <button type="button" class="payBtn">예산 결제</button><!--매칭 완료시-->
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h6>지원자</h6>
+                    <div>
+                        <ul>
+                            <li v-for="item,index in rows" v-if="!item.prize">
+                                <a @click="modal.data = item; modal.status = true;">
+                                    <div class="img">
+                                        <img v-if="item.$member_portfolio.length" :src="jl.root + item.$member_portfolio[0].main_image_array[0].src">
+                                        <img v-else src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg">
+                                    </div>
+                                    <!--                           <p>#{{index+1}}</p>-->
+                                    <div class="profile">
+                                        <img v-if="!item.file_exists" src="http://itforone.com/~broadcast/theme/basic_app/img/noimg.jpg" alt="프로필 이미지">
+                                        <img v-else :src="jl.root + '/data/file/member/' + item.user_idx + '.jpg'" alt="프로필 이미지">
+                                        <span>{{item.$g5_member.mb_nick}}</span>
+                                    </div>
+                                </a>
+
+                            </li>
+                        </ul>
+                    </div>
+
+            </template>
+
             <h6 v-if="getStatus(project) == '진행 중'">지원자</h6>
             <div v-if="getStatus(project) == '진행 중'">
                 <div class="empty" v-if="rows.length == 0">
@@ -214,21 +240,24 @@
 
                         row.$member_portfolio = [];
 
-                        await this.jl.getsData({
-                            table : "member_portfolio",
-                            in : [
-                                {key : "idx", array : row.portfolios }
-                            ],
-                        },row.$member_portfolio,{
-                            callback : async (res2) => {
-                                let rows2 = res2.data;
-                                for (let row2 of rows2) {
-                                    this.$set(row2,'show',false);
-                                }
+                        if(row.portfolios) {
+                            await this.jl.getsData({
+                                table : "member_portfolio",
+                                in : [
+                                    {key : "idx", array : row.portfolios }
+                                ],
+                            },row.$member_portfolio,{
+                                callback : async (res2) => {
+                                    let rows2 = res2.data;
+                                    for (let row2 of rows2) {
+                                        this.$set(row2,'show',false);
+                                    }
 
-                                row.$member_portfolio = rows2;
-                            },
-                        });
+                                    row.$member_portfolio = rows2;
+                                },
+                            });
+                        }
+
 
                     }
 

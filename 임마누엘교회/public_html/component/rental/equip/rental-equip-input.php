@@ -110,7 +110,7 @@
                     원하시는 일시에 대여가 불가할 수 있습니다.</p>
             </div>
             <br>
-            <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'rental_equip',options)">신청하기</button>
+            <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,options)">신청하기</button>
     </div>
 </script>
 
@@ -150,6 +150,7 @@
                     arrays : [],
 
                     options : {
+                        table : 'rental_equip',
                         required : [
                             {name : "user_idx",message : `로그인은 필수입니다.`},
                             {name : "department",message : `신청부서는 필수입니다.`},

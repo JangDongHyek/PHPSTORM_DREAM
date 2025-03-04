@@ -9,10 +9,10 @@ $pid = "project_list";
 
 <div id="area_project">
     <div class="inr">
-        <ul id="area_history"><li><a href="">홈</a></li> <!----> <li><a href="" class="current">프로젝트</a></li></ul>
+        <ul id="area_history"><li><a href="">홈</a></li> <!----> <li><a href="<?php echo G5_BBS_URL ?>/project_list?category1_idx=20" class="current">프로젝트</a></li></ul>
     </div>
 
-    <project-view primary="<?=$_GET['primary']?>" mb_no="<?=$member['mb_no']?>"></project-view>
+    <project-view primary="<?=$_GET['primary']?>" mb_no="<?=$member['mb_no']?>" tab="<?=$_GET['tab']?>"></project-view>
 </div>
 
 <? $jl->vueLoad('area_project',['swiper']); ?>

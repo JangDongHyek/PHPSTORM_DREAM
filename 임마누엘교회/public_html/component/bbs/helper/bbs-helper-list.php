@@ -13,13 +13,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="board in data_array">
+                <tr v-if="data_array.length > 0" v-for="board in data_array">
                     <td>{{board.wr_2}}</td>
-                    <td>{{board.wr_4}} <span v-for="item,index in board.wr_5">{{item}} {{index ? '' : ','}}</span></td>
+                    <td>{{board.wr_4}} <span v-for="item,index in board.wr_5">{{item}} {{index ? '' : ''}}</span></td>
                     <td>{{board.wr_3}}</td>
-                    <td><p class="cut">{{board.wr_6}}</p></td>
+                    <td><p class="cut2">{{board.wr_6}}</p></td>
                     <td>
                         <button type="button" class="btn btn_mini btn_gray" @click="jl.href('./helper_view.php?primary='+board.wr_id)">보기</button>
+                    </td>
+                </tr>
+
+                <tr v-else>
+                    <td colspan="20">
+                        작성된 내용이 없습니다.
                     </td>
                 </tr>
                 </tbody>

@@ -14,8 +14,8 @@
             <p><b class="icon icon_gray">수령일시</b> {{data.dates1}} {{data.times1}}</p>
             <p><b class="icon icon_gray">반납인</b> {{data.returner}} </p>
             <p><b class="icon icon_gray">반납일시</b> {{data.dates2}} {{data.times2}}</p>
-            <button class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(data,'rental_equip',{message : '예약 취소시 데이터는 삭제됩니다 삭제하시겠습니까?',href : './rental_equip'})">예약 취소</button>
-            <button  v-if="admin" class="btn btn_large btn_gray2" type="button" @click="putData()">승인</button>
+            <button class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(data,{table:'rental_equip',message : '예약 취소시 데이터는 삭제됩니다 삭제하시겠습니까?',href : './rental_equip'})">예약 취소</button>
+            <button  v-if="admin" class="btn btn_large btn_color" type="button" @click="putData()">승인</button>
         </div>
     </div>
 </script>
@@ -93,7 +93,7 @@
 
                     this.data.status = true;
 
-                    await this.jl.postData(this.data,'rental_equip');
+                    await this.jl.postData(this.data, {table : 'rental_equip'});
                 }
             },
             computed: {

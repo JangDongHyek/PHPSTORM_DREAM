@@ -52,7 +52,7 @@ $dayoftheweek = date("w", mktime (0,0,0,$month,1,$year));
             <table border="0" cellspacing="5" cellpadding="0">
                 <tr>
                     <td>
-                    	<a href="<?php 
+                    	<a class="button-month" href="<?php
 							echo $_SERVER['PHP_SELF']."?bo_table={$bo_table}&";
 							if ($month == 1) { 
 								$year_pre=$year-1; 
@@ -61,10 +61,10 @@ $dayoftheweek = date("w", mktime (0,0,0,$month,1,$year));
 								$year_pre=$year-1; $month_pre=$month;
 							} 
 							echo "year={$year_pre}&month={$month_pre}&sc_no={$sc_no}";
-						?>"><img src="<?php echo $board_skin_url; ?>/img/y_prev.gif" border="0" alt="<?php echo $year_pre; ?>년"></a>
+						?>"><i class="fa-solid fa-chevrons-left"></i></a>
                     </td>
                     <td>
-                    	<a href="<?php 
+                    	<a class="button-month" href="<?php
 							echo $_SERVER['PHP_SELF']."?bo_table={$bo_table}&";
 							if ($month === 1) { 
 								$year_pre  = $year-1; 
@@ -74,14 +74,14 @@ $dayoftheweek = date("w", mktime (0,0,0,$month,1,$year));
 								$month_pre = $month-1;
 							} 
 							echo "year={$year_pre}&month={$month_pre}&sc_no={$sc_no}";
-						?>"><img src="<?php echo $board_skin_url; ?>/img/m_prev.gif" border="0" alt="<?php echo $month_pre; ?>월"></a>
+						?>"><i class="fa-solid fa-chevron-left"></i></a>
                     </td>
                     <td style="padding:0 10px;font-size:18px;font-weight:bold;">
                     	<a href="<?php 
 							echo $_SERVER['PHP_SELF']."?bo_table=".$bo_table; 
 						?>" title="오늘로" onfocus="this.blur()"><?php echo "{$year}년&nbsp;{$month}월"; ?></a></td>
                     <td>
-                    	<a href="<?php 
+                    	<a class="button-month" href="<?php
 							echo $_SERVER['PHP_SELF']."?bo_table={$bo_table}&";
 							if ($month === 12) { 
 								$year_pre  = $year+1; 
@@ -91,10 +91,10 @@ $dayoftheweek = date("w", mktime (0,0,0,$month,1,$year));
 								$month_pre = $month+1;
 							} 
 							echo "year={$year_pre}&month={$month_pre}&sc_no={$sc_no}";
-						?>"><img src="<?php echo $board_skin_url; ?>/img/m_next.gif" border="0" alt="<?php echo $month_pre; ?>월"></a>
+						?>"><i class="fa-solid fa-chevron-right"></i></a>
                     </td>
                     <td>
-                    	<a href="<?php 
+                    	<a class="button-month" href="<?php
 							echo $_SERVER['PHP_SELF']."?bo_table={$bo_table}&";
 							if ($month === 12) { 
 								$year_pre  = $year+1; 
@@ -104,7 +104,7 @@ $dayoftheweek = date("w", mktime (0,0,0,$month,1,$year));
 								$month_pre = $month;
 							} 
 							echo "year={$year_pre}&month={$month_pre}&sc_no={$sc_no}";
-						?>"><img src="<?php echo $board_skin_url; ?>/img/y_next.gif" border="0" alt="<?php echo $year_pre; ?>년"></a>
+						?>"><i class="fa-solid fa-chevrons-right"></i></a>
                     </td>
                 </tr>
             </table>			

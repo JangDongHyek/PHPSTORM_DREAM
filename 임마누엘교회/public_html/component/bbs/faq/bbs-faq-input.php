@@ -29,7 +29,7 @@
                 </div>
             </div>
             <br>
-            <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'g5_write_faq',options)">등록하기</button>
+            <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,options)">등록하기</button>
         </div>
     </div>
 </script>
@@ -53,6 +53,7 @@
                     data_array : [],
 
                     options : {
+                        table : "g5_write_faq",
                         required : [
                             {name : "wr_subject",message : `질문은 필수값입니다.`},
                             {name : "wr_content",message : `답변은 필수값입니다.`},

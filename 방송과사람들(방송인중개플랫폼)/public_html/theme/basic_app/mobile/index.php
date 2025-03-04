@@ -290,7 +290,7 @@ $big_ctg = ctg_list(0);
 
                 <section>
                     <h3 class="title">프로젝트 의뢰</h3>
-                    <div id="area_bn2" onclick="location.href='<?php echo G5_BBS_URL ?>/contest_list.php'">
+                    <div id="area_bn2" onclick="location.href='<?php echo G5_BBS_URL ?>/project_list.php?category1_id=20'">
                         <div class="txt">
                             <span>방송과 사람들</span>
                             <h2><strong>프로젝트 의뢰</strong> 맡겨보세요!</h2>

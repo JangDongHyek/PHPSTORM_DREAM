@@ -14,12 +14,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="board in boards">
+                <tr v-if="boards.length > 0" v-for="board in boards">
                     <td>{{board.wr_5 ? board.wr_5 : board.wr_4}}</td>
                     <td>{{board.wr_3}}/{{board.wr_name}}</td>
                     <td><p class="cut" @click="jl.href('./friend_view.php?idx='+board.wr_id)">{{board.wr_subject}}</p></td>
                     <td>{{board.wr_6.split(' ')[0]}}</td>
                     <td>{{board.wr_7.split(' ')[0]}}</td>
+                </tr>
+
+                <tr v-else>
+                    <td colspan="20">
+                        작성된 내용이 없습니다.
+                    </td>
                 </tr>
                 </tbody>
             </table>

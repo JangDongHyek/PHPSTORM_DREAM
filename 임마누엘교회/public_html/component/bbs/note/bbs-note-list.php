@@ -12,11 +12,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="board in boards">
+                <tr v-if="boards.length > 0" v-for="board in boards">
                     <td>{{board.jl_no}}</td>
                     <td>{{board.$g5_member.mb_name}}</td>
                     <td><p class="cut" @click="viewContent(board)">{{board.wr_2 == '공개' ? board.wr_content : '비공개입니다.'}}</p></td>
                     <td><a @click="postLike(board)"><i class="fa-duotone fa-solid fa-hands-clapping"></i> {{board.like_count}}</a></td>
+                </tr>
+
+                <tr v-else>
+                    <td colspan="20">
+                        작성된 내용이 없습니다.
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -13,11 +13,17 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="board in arrays">
+                    <tr v-if="arrays.length > 0"  v-for="board in arrays">
                         <td>{{board.wr_datetime.split(' ')[0]}}</td>
                         <td class="txt_bold" :class="{'txt_blue' : board.wr_2}">{{board.wr_2 ? '완료' : '접수'}}</td>
                         <td><p class="cut" @click="viewBoard(board)">{{board.wr_subject}}</p></td>
                         <td>{{board.$g5_member.mb_name}}</td>
+                    </tr>
+
+                    <tr v-else>
+                        <td colspan="20">
+                            작성된 내용이 없습니다.
+                        </td>
                     </tr>
 
                     </tbody>
@@ -44,7 +50,7 @@
 
             <template v-slot:footer>
                 <button type="button" class="btn btn-secondary" @click="modal_data = {}; modal = false;">닫기</button>
-                <button type="button" class="btn btn-primary" @click="modal_data.wr_2 = true; jl.postData(modal_data,'g5_write_qna',options)">저장</button>
+                <button type="button" class="btn btn-primary" @click="modal_data.wr_2 = true; jl.postData(modal_data,options)">저장</button>
             </template>
         </item-bs-modal>
     </div>
@@ -70,6 +76,7 @@
                     arrays : [],
 
                     options : {
+                        table : 'g5_write_qna',
                         required : [
 
                         ],

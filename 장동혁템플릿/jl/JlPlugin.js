@@ -4,6 +4,11 @@ class JlPlugin {
     }
 
     async alert(message, options = {}) {
+        //if(this.jl.isMobile()) {
+        //    await this.toast(message,options);
+        //    return false;
+        //}
+
         switch (this.jl.jl_alert) {
             case "origin" : {
                 alert(message);

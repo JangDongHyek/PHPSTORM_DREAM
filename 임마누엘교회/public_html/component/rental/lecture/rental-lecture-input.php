@@ -95,7 +95,7 @@
                 원하시는 장소와 시간에 사용이 불가할 수 있습니다.</p>
         </div>
         <br>
-        <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'rental_lecture',options)">신청하기</button>
+        <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,options)">신청하기</button>
     </div>
 </script>
 
@@ -133,6 +133,7 @@
                     arrays : [],
 
                     options : {
+                        table : 'rental_lecture',
                         required : [
                             {name : "user_idx",message : `로그인이 필요한 기능입니다.`},
                             {name : "department",message : `신청부서를 입력해주세요`},

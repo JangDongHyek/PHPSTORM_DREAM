@@ -75,13 +75,21 @@ class JlVue {
         window.open(url);
     }
 
-    async postData(data,table,options = {}) {
+    async postData(data,options = {}) {
         let method = data.primary ? 'update' : 'insert';
 
         try {
-            if(!table) throw new Error("테이블값이 존재하지않습니다.");
+            if(!options.table) throw new Error("테이블값이 존재하지않습니다.");
 
-            data.table = table;
+            if("confirm" in options) {
+                if(!await this.jl.plugin.confirm(options.confirm.message)) {
+                    if(options.confirm.callback) {
+                        await options.confirm.callback()
+                    }else {
+                        return false;
+                    }
+                }
+            }
 
             let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
@@ -135,15 +143,19 @@ class JlVue {
         }
     }
 
-    async deleteData(data,table,options = {}) {
+    async deleteData(data,options = {}) {
         let message = "정말 삭제하시겠습니까?";
         if(options.message) message = options.message;
-        if(! await this.jl.plugin.confirm(message)) return false;
+
+        if(!options.return) {
+            if(! await this.jl.plugin.confirm(message)) return false;
+        }
 
         try {
-            if(!table) throw new Error("테이블값이 존재하지않습니다.");
-            data.table = table;
-            let res = await this.jl.ajax("delete",data,"/jl/JlApi.php");
+            if(!options.table) throw new Error("테이블값이 존재하지않습니다.");
+            let res = await this.jl.ajax("delete",data,"/jl/JlApi.php",options);
+
+            if(options.return) return res
 
             if(options.callback) {
                 await options.callback(res)

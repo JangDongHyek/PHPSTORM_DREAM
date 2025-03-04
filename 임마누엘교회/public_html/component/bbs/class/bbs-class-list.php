@@ -12,9 +12,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="board in arrays">
+                    <tr v-if="arrays.length > 0" v-for="board in arrays">
                         <td>{{board.wr_datetime.split(' ')[0]}}</td>
                         <td><p class="cut" @click="modal_data = board; modal = true;">{{board.wr_content}}</p></td>
+                    </tr>
+                    <tr v-else>
+                        <td colspan="20">
+                            작성된 내용이 없습니다.
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -25,7 +30,7 @@
 
         <external-bs-modal :modal="modal" @close="modal = false;" class_1="" class_2="">
             <template v-slot:header>
-                <h4 class="modal-title" id="classNotiModalLabel">속회보고</h4>
+                <h4 class="modal-title" id="classNotiModalLabel">속회소식</h4>
                 <button type="button" class="close" @click="modal = false;"><span aria-hidden="true">&times;</span></button>
             </template>
 

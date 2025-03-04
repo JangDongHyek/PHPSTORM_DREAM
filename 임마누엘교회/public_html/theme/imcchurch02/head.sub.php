@@ -67,6 +67,7 @@ if($config['cf_add_meta'])
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!--video js-->
 
+
 <?php
 if (defined('G5_IS_ADMIN')) {
     if(!defined('_THEME_PREVIEW_'))

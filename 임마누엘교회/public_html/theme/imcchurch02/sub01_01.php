@@ -8,7 +8,7 @@
                 <div class="dd">
                     <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01" class="" target=""><i class="fa-solid fa-arrow-left"></i></a></dd>
                     <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_01" class="<?php if($co_id == "sub01_01"){ echo "on";}?>" target="">교회역사</a></dd>
-                    <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_01_02" class="<?php if($co_id == "sub01_01_02"){ echo "on";}?>" target="">목회철학</a></dd>
+                    <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_01_02" class="<?php if($co_id == "sub01_01_02"){ echo "on";}?>" target="">인사말</a></dd>
                     <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_01_03" class="<?php if($co_id == "sub01_01_03"){ echo "on";}?>" target="">교회CI소개</a></dd>
                     <dd><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_01_04" class="<?php if($co_id == "sub01_01_04"){ echo "on";}?>" target="">교회주제가악보</a></dd>
                 </div>

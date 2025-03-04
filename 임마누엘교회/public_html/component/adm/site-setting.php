@@ -48,7 +48,7 @@
                         <input type="date" v-model="data.note_date" max="9999-12-31">
                     </td>
                 </tr>
-                <tr>
+                <?/*tr>
                     <td><b>유튜브</b></td>
                     <td>
                         <input type="text" v-model="data.sns_youtube">
@@ -83,7 +83,7 @@
                     <td>
                         <input type="text" v-model="data.sns_tiktok">
                     </td>
-                </tr>
+                </tr*/?>
                 </tbody>
             </table>
         </div>

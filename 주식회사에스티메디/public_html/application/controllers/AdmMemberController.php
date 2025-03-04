@@ -115,8 +115,14 @@ class AdmMemberController extends CI_Controller
                 ->set_output(json_encode($resultData));
             return;
         }
-
         $this->load->model("MemberModel");
+        $member = $this->MemberModel->getMemberInfo($post['idxArr']);
+
+        if (substr($member['mb_hp'], 0, 3) === "010" && $post['isAuth'] == 'Y') {
+            goSms($member['mb_hp'],'051-891-0088','[에스티메디] 회원가입 승인이 완료 되었습니다.');
+        }
+
+
         $resultData['result'] = $this->MemberModel->updateAuthMember($post['isAuth'], $post['idxArr']);
 
         $this->output

@@ -13,6 +13,25 @@ Date.prototype.format = function () {
     return `${year}-${month}-${day}`;
 };
 
+/**
+ * 숫자(바이트 단위)를 읽기 쉬운 크기 단위로 변환하는 프로토타입
+ * @param {number} decimals - 소수점 자릿수 (기본값: 2)
+ * @returns {string} 읽기 쉬운 크기 단위 (예: "408 KB", "3.5 MB")
+ */
+Number.prototype.formatBytes = function (decimals = 2) {
+    if (this === 0) return '0 Bytes';
+
+    const k = 1024; // 1 KB = 1024 Bytes
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const dm = decimals < 0 ? 0 : decimals;
+
+    // 단위 결정
+    const i = Math.floor(Math.log(this) / Math.log(k));
+    const size = parseFloat((this / Math.pow(k, i)).toFixed(dm));
+
+    return `${size} ${sizes[i]}`;
+};
+
 String.prototype.formatDate = function(options = { time: false, type: '-', simple: true }) {
     // 기본 옵션 설정
     const defaultOptions = { time: false, type: '-', simple: true };
@@ -38,25 +57,6 @@ String.prototype.formatDate = function(options = { time: false, type: '-', simpl
     }
 
     return formattedDate;
-};
-
-/**
- * 숫자(바이트 단위)를 읽기 쉬운 크기 단위로 변환하는 프로토타입
- * @param {number} decimals - 소수점 자릿수 (기본값: 2)
- * @returns {string} 읽기 쉬운 크기 단위 (예: "408 KB", "3.5 MB")
- */
-Number.prototype.formatBytes = function (decimals = 2) {
-    if (this === 0) return '0 Bytes';
-
-    const k = 1024; // 1 KB = 1024 Bytes
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const dm = decimals < 0 ? 0 : decimals;
-
-    // 단위 결정
-    const i = Math.floor(Math.log(this) / Math.log(k));
-    const size = parseFloat((this / Math.pow(k, i)).toFixed(dm));
-
-    return `${size} ${sizes[i]}`;
 };
 
 class JlJavascript {

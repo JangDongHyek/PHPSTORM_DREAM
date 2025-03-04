@@ -186,8 +186,11 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                     <? if($bo_table == "sub02_01_04"){ ?>
                         <input type="text" name="wr_5" id="wr_5" value="<?php echo $write[wr_5]?>" class="frm_input required">
                     <? }else { ?>
-                        <input type="radio" name="wr_5" value="남자" id="male" class="frm_input required" <?php if($write[wr_5]=="남자") echo"checked"; ?>><label for="male">남자</label>
-                        <input type="radio" name="wr_5" value="여자" id="female" class="frm_input required" <?php if($write[wr_5]=="여자") echo "checked"; ?>><label for="female">여자</label>
+                        <input type="radio" name="wr_5" value="남자" id="male" class="frm_input required" <?php if(isset($write['wr_5']) && $write['wr_5'] == "남자") echo "checked"; ?>>
+                        <label for="male">남자</label>
+
+                        <input type="radio" name="wr_5" value="여자" id="female" class="frm_input required" <?php if(isset($write['wr_5']) && $write['wr_5'] == "여자") echo "checked"; ?>>
+                        <label for="female">여자</label>
                     <? } ?>
                 </div>
             </div>
@@ -199,7 +202,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                         <? }else { ?>
                             핸드폰번호
                         <? } ?><strong class="sound_only">필수</strong></label></p>
-                <div><input type="tel" name="wr_1" id="wr_1" value="<?php echo $write[wr_1]?>" class="frm_input required" oninput="autoHyphen2(this)"></div>
+                <div><input type="tel" name="wr_1" id="wr_1" value="<?php echo $write[wr_1]?>" required class="frm_input required" oninput="autoHyphen2(this)"></div>
 
                 <p><label for="">
                         <? if($bo_table == "sub02_01_04"){ ?>
@@ -214,45 +217,45 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
             <div class="flex">
                 <? if($bo_table == "sub02_01_04"){ ?>
                     <p class="sub"><label for="">Select Gender<strong class="sound_only">필수</strong></label></p>
-                    <div CLASS="flex select" style="margin-bottom: 0">
+                    <div class="flex select" style="margin-bottom: 0">
                         <input type="radio" name="wr_4" value="남자" id="male" class="frm_input required" <?php if($write[wr_4]=="male") echo"checked"; ?>><label for="male">Male</label>
                         <input type="radio" name="wr_4" value="여자" id="female" class="frm_input required" <?php if($write[wr_4]=="female") echo "checked"; ?>><label for="female">Female</label>
                     </div>
                 <? }else { ?>
                     <p class="sub"><label for="">주소<strong class="sound_only">필수</strong></label></p>
                     <div style="display: flex; align-items: center">
-                        <p style="position: relative; width: 100%"><input type="text" name="wr_3" value="<?php echo $write[wr_3]?>" id="wr_3" required class="frm_input required ver_tel">
+                        <p style="position: relative; width: 100%"><input type="text" name="wr_3" value="<?php echo $write[wr_3]?>" id="wr_3" class="frm_input ver_tel">
                             <a href="javascript:;" onclick="sample2_execDaumPostcode()" class="ver_btn"><i class="fa-solid fa-magnifying-glass"></i></a>
                         </p>
-                        <p style="width: 100%"><input type="text" name="wr_4" value="<?php echo $write[wr_4]?>" id="wr_4" required class="frm_input required"></p>
+                        <p style="width: 100%"><input type="text" name="wr_4" value="<?php echo $write[wr_4]?>" id="wr_4" class="frm_input"></p>
                     </div>
                 <? } ?>
             </div>
 
             <div class="flex">
-                <p class="sub"><label for="">
+                <p class="sub" style="max-width: 200px"><label for="">
                         <? if($bo_table == "sub02_01_04"){ ?>
                             How did you get to know our church?
                         <? }else { ?>
                             어떻게 교회를 알게 되셨나요?
                         <? } ?><strong class="sound_only">필수</strong></label></p>
                 <div>
-                    <p><input type="text" name="wr_6" value="<?php echo $write[wr_6]?>" id="wr_6" required class="frm_input required"></p>
+                    <p><input type="text" name="wr_6" value="<?php echo $write[wr_6]?>" id="wr_6" class="frm_input"></p>
                 </div>
             </div>
 
             <? if($bo_table == "sub02_01"||$bo_table == "sub02_01_02") {?>
             <div class="flex">
-                    <p  class="sub"><label for="">인도자가 있다면 적어주세요.<strong class="sound_only">필수</strong></label></p>
+                    <p  class="sub" style="max-width: 200px"><label for="">인도자가 있다면 적어주세요.<strong class="sound_only">필수</strong></label></p>
                 <div>
-                    <p><input type="text" name="wr_7" value="<?php echo $write[wr_7]?>" id="wr_7" required class="frm_input required"></p>
+                    <p><input type="text" name="wr_7" value="<?php echo $write[wr_7]?>" id="wr_7" class="frm_input"></p>
                 </div>
             </div>
             <? }else if($bo_table == "sub02_01_03"){ ?>
             <div class="flex">
-                    <p  class="sub"><label for="">학교와 학년을 적어주세요.<strong class="sound_only">필수</strong></label></p>
+                    <p  class="sub" style="max-width: 200px"><label for="">학교와 학년을 적어주세요.<strong class="sound_only">필수</strong></label></p>
                 <div>
-                    <p><input type="text" name="wr_7" value="<?php echo $write[wr_7]?>" id="wr_7" required class="frm_input required"></p>
+                    <p><input type="text" name="wr_7" value="<?php echo $write[wr_7]?>" id="wr_7" class="frm_input"></p>
                 </div>
             </div>
             <? }else { ?>
@@ -316,7 +319,9 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
 
 </section>
 <!-- } 게시물 작성/수정 끝 -->
-   
+
+
+
 <!--   주소찾기-->
     <div id="layer">
         <span id="btnCloseLayer" onclick="closeDaumPostcode()">닫기<i class="fa-solid fa-xmark"></i></span>
@@ -441,7 +446,19 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
         }
 
         function fwrite_submit(f) {
-            <?php echo $editor_js; // 에디터 사용시 자바스크립트에서 내용을 폼필드로 넣어주며 내용이 입력되었는지 검사함   ?>
+            <?php //echo $editor_js; // 에디터 사용시 자바스크립트에서 내용을 폼필드로 넣어주며 내용이 입력되었는지 검사함   ?>
+
+            if(f.bo_table.value == 'sub02_01_04') {
+                if(!f.wr_4.value) {
+                    alert('Please check your gender');
+                    return false;
+                }
+            }else {
+                if(!f.wr_5.value) {
+                    alert("성별을 체크해주세요.");
+                    return false;
+                }
+            }
 
             var subject = "";
             var content = "";
@@ -475,6 +492,7 @@ add_javascript('<script type="text/javascript" src="'.$board_skin_url.'/js/ui.js
                     f.wr_content.focus();
                 return false;
             }
+
 
             if (document.getElementById("char_count")) {
                 if (char_min > 0 || char_max > 0) {

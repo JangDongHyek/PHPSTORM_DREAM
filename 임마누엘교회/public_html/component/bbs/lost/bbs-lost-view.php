@@ -12,18 +12,34 @@
             <p v-if="board.wr_2 == '습득'"><b class="icon icon_gray">보관장소</b> - {{board.wr_13}}</p>
             <p v-else><b class="icon icon_gray">교구/속</b> - {{board.wr_13}}</p>
 
-            <img v-if="board.wr_8" :src="jl.root+board.wr_8.src" alt="">
-            <img v-if="board.wr_9" :src="jl.root+board.wr_9.src" alt="">
-            <img v-if="board.wr_10" :src="jl.root+board.wr_10.src" alt="">
+
+
+
+            <div class="swiper imgSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-if="board.wr_8"><img :src="jl.root+board.wr_8.src" alt=""></div>
+                    <div class="swiper-slide" v-if="board.wr_9"><img :src="jl.root+board.wr_9.src" alt=""></div>
+                    <div class="swiper-slide" v-if="board.wr_10"><img :src="jl.root+board.wr_10.src" alt=""></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
 
             <button class="btn btn_large btn_blue" type="button" v-if="admin ||board.wr_1 == mb_no" @click="postBoard()">찾았어요</button>
             <button class="btn w100 btn_line" type="button" v-if="board.wr_1 == mb_no" @click="putHref()">수정하기</button>
 
-            <button v-if="board.wr_1 == mb_no || admin" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(board,'g5_write_lost',{href:'./lost'})">삭제</button>
+            <button v-if="board.wr_1 == mb_no || admin" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(board,{table:'g5_write_lost',href:'./lost'})">삭제</button>
         </div>
     </div>
 </script>
-
+<script>
+    var swiper = new Swiper(".imgSwiper", {
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+</script>
 <script>
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
@@ -56,7 +72,13 @@
             },
             mounted() {
                 this.$nextTick(() => {
-
+                    new Swiper('.imgSwiper', {
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        loop: true,
+                    });
                 });
             },
             updated() {

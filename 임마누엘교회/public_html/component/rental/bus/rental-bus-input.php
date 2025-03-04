@@ -114,7 +114,7 @@
                 2.운행비용에 대한 안내를 사무실에서 반드시 확인하시길 바랍니다.</p>
         </div>
         <br>
-        <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'rental_bus',options)">신청하기</button>
+        <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,options)">신청하기</button>
     </div>
 </script>
 
@@ -151,6 +151,7 @@
                     arrays : [],
 
                     options : {
+                        table : 'rental_bus',
                         required : [
                             {name : "user_idx",message : `로그인이 필요한 기능입니다.`},
                             {name : "department",message : `신청부서를 입력해주세요.`},

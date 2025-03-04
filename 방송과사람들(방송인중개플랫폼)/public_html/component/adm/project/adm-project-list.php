@@ -52,7 +52,7 @@
 
                 paging: {
                     page: 1,
-                    limit: 1,
+                    limit: 10,
                     count: 0,
                 },
 
@@ -60,7 +60,7 @@
                     table : "project",
                     primary : this.primary,
                     page: 1,
-                    limit: 1,
+                    limit: 10,
                     count: 0,
 
                     extensions : [

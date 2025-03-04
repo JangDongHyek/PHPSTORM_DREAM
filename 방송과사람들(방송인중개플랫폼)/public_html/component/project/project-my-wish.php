@@ -1,7 +1,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
-        <ul class="project-list" v-if="rows.length">
+        <ul class="project-list" v-if="rows.length > 0">
             <li class="project-item" v-for="item in rows">
                 <ul class="prize-info">
                     <li><span>🏆 예산</span> {{ totalPrize(item.$project).format() }}원</li>

@@ -5,7 +5,6 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 ?>
 <style>
-html, body{width:100%;height:100%;min-height:500px;background:url(<?php echo $member_skin_url ?>/img/bg2.jpg) no-repeat center fixed ; background-size:cover; overflow-y:hidden; overflow-x:hidden;}
 </style>
 
 <!-- 로그인 시작 { -->
@@ -16,31 +15,37 @@ html, body{width:100%;height:100%;min-height:500px;background:url(<?php echo $me
     <input type="hidden" name="url" value="<?php echo $login_url ?>">
 
     <fieldset id="login_fs">
+
+        <a href="javascript:history.back();" class="btn_back"><i class="fa-solid fa-left"></i></a>
+        <img src="<?php echo G5_THEME_IMG_URL ?>/common/logo_color.svg" alt="임마누엘 교회">
+        <br><br>
+        <p>서비스 이용을 위해 로그인이 필요합니다.</p>
+        <br><br>
         <legend>회원로그인</legend>
         <label for="login_id" class="login_id">회원아이디<strong class="sound_only"> 필수</strong></label>
-        <input type="text" name="mb_id" id="login_id" required class="frm_input required" placeholder="아이디를 입력해 주세요" size="20" maxLength="20">
-        <label for="login_pw" class="login_pw">비밀번호<strong class="sound_only"> 필수</strong></label>
-        <input type="password" name="mb_password" id="login_pw" required class="frm_input required" placeholder="비밀번호를 입력해 주세요" size="20" maxLength="20">
+        <input type="text" name="mb_id" id="login_id" required class="frm_input" placeholder="아이디를 입력해 주세요" size="20" maxLength="20">
+        <input type="password" name="mb_password" id="login_pw" required class="frm_input" placeholder="비밀번호를 입력해 주세요" size="20" maxLength="20">
         <input type="submit" value="로그인" class="btn_submit">
+        <a href="./register.php" class="btn_sign">회원 가입</a>
         <?/*<input type="checkbox" name="auto_login" id="login_auto_login">
         <label for="login_auto_login">자동로그인</label>*/?>
+        <br>
+        <br>
     </fieldset>
 
-    <!--<aside id="login_info">
-        <h2>회원로그인 안내</h2>
+    <aside id="login_info">
+        <!--h2>회원로그인 안내</h2>
         <p>
             회원아이디 및 비밀번호가 기억 안나실 때는 아이디/비밀번호 찾기를 이용하십시오.<br>
             아직 회원이 아니시라면 회원으로 가입 후 이용해 주십시오.
         </p>
-        <div>
-            <a href="<?php echo G5_BBS_URL ?>/password_lost.php" target="_blank" id="login_password_lost" class="btn02">아이디 비밀번호 찾기</a>
-            <a href="./register.php" class="btn01">회원 가입</a>
-        </div>
-    </aside>-->
+            <a href="<?php echo G5_BBS_URL ?>/password_lost.php" target="_blank" id="login_password_lost" class="btn02">아이디 비밀번호 찾기</a-->
 
-    <div class="btn_confirm">
+    </aside>
+
+    <!--div class="btn_confirm">
         <a href="<?php echo G5_URL ?>/"><i class="fas fa-home"></i>&nbsp;&nbsp;메인으로 돌아가기</a>
-    </div>
+    </div-->
 
     </form>
 

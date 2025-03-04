@@ -14,6 +14,12 @@ include_once(G5_LIB_PATH.'/visit.lib.php');
 include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 include_once(G5_LIB_PATH.'/submenu.lib.php');
+
+$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
+    . "://"
+    . $_SERVER['HTTP_HOST']
+    . $_SERVER['REQUEST_URI'];
+
 ?>
 
 
@@ -95,6 +101,15 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
             </ul>
         </nav>
         <div class="nav_open">
+
+            <?php if ($is_member) {  ?>
+                <?php if ($is_admin) {  ?>
+                <?php }  ?>
+                <a href="<?php echo G5_BBS_URL ?>/logout.php" title="로그아웃">로그아웃</a>
+            <?php } else {  ?>
+                <a href="<?php echo G5_BBS_URL ?>/login.php?url=<?=$currentUrl?>" title="로그인">로그인</a></li>
+                <a href="<?php echo G5_BBS_URL ?>/register.php" title="회원가입">회원가입</a>
+            <?php }  ?>
             <a href="#hash-menu" id="hash_menu" data-role="button" data-url="<?php echo G5_PLUGIN_URL;?>/hash/" data-ref="1" data-animation="right">
                 <div>
                     <span></span>
@@ -399,6 +414,7 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
         <? } else if ($bo_table == "product_view") { ?>
         <? } else if ($bo_table == "qna" || $bo_table == "data") { ?>
         <? } else if ($bo_table == "contact") { ?>
+        <? } else if ($pid == "register") { ?>
         <? } else  { ?>
         <div id="svisual" class="sv1">
 
@@ -439,16 +455,16 @@ include_once(G5_LIB_PATH.'/submenu.lib.php');
                         <? if($bo_table || $co_id){ ?>
                         <!-- 서브 게시판 및 내용관리 부분 -->
                         <div id="scont_wrap">
-                            <? }else { ?>
-                            <!-- 그외 검사결과창 및 회원가입 -->
-                            <div id="scont_wrap2">
-                                <? } ?>
+                        <? }else { ?>
+                        <!-- 그외 검사결과창 및 회원가입 -->
+                        <div id="scont_wrap2">
+                        <? } ?>
 
-                                <div id="scont">
-                                    <!--서브타이틀-->
-                                    <div id="sub_title">
-                                        <?php echo $g5['title']; ?>
-                                    </div>
-                                    <!--#sub_title-->
-                                    <!--서브타이틀-->
-                                    <? } ?>
+                            <div id="scont">
+                                <!--서브타이틀-->
+                                <div id="sub_title">
+                                    <?php echo $g5['title']; ?>
+                                </div>
+                                <!--#sub_title-->
+                                <!--서브타이틀-->
+                                <? } ?>

@@ -16,8 +16,8 @@
             <p><b class="icon icon_gray">현지출발시간</b> {{data.times2}} </p>
             <p v-if="data.dates2 != '0000-00-00'"><b class="icon icon_gray">당일외출발</b> {{data.dates2}} {{data.times3}}  </p>
             <p>-</p>
-            <button  v-if="admin || mb_no == data.user_idx" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(data,'rental_bus',{message : '예약 취소시 데이터는 삭제됩니다 삭제하시겠습니까?',href : './rental_bus'})">예약 취소</button>
-            <button  v-if="admin" class="btn btn_large btn_gray2" type="button" @click="putData()">승인</button>
+            <button  v-if="admin || mb_no == data.user_idx" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(data,{table:'rental_bus',message : '예약 취소시 데이터는 삭제됩니다 삭제하시겠습니까?',href : './rental_bus'})">예약 취소</button>
+            <button  v-if="admin" class="btn btn_large btn_color" type="button" @click="putData()">승인</button>
         </div>
     </div>
 </script>
@@ -95,7 +95,7 @@
 
                     this.data.status = true;
 
-                    await this.jl.postData(this.data,'rental_bus');
+                    await this.jl.postData(this.data, {table : 'rental_bus'});
                 }
             },
             computed: {

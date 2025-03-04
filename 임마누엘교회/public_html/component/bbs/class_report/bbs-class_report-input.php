@@ -48,7 +48,7 @@
                             <td>헌금 <span class="txt_color">*</span></td>
                             <td>
                                 <div class="flex ai-c gap5">
-                                    <input type="number" required v-model="data.wr_5" @input="jl.isNumberKeyInput"> 만원
+                                    <input type="number" required v-model="data.wr_5" @input="jl.isNumberKeyInput"> 원
                                 </div>
                             </td>
                         </tr>
@@ -103,6 +103,7 @@
                     arrays : [],
 
                     options : {
+                        table : "g5_write_class_report",
                         required : [
                             {name : "wr_2",message : `일시를 입력해주세요`},
                             {name : "wr_3",message : `장소를 입력해주세요`},
@@ -151,7 +152,7 @@
             methods: {
                 async postData() {
                     try{
-                        let res = await this.jl.postData(this.data,'g5_write_class_report',this.options);
+                        let res = await this.jl.postData(this.data,this.options);
                         if(res.success) {
 
                             let week = this.getWeekRange();

@@ -20,7 +20,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="board in boards">
+                        <tr v-if="boards.length > 0" v-for="board in boards">
                             <td>{{board.wr_3}}</td>
                             <td>{{board.wr_5}}</td>
                             <td>{{board.wr_4}}</td>
@@ -29,6 +29,12 @@
                             </td>
                             <td>
                                 <button type="button" class="btn btn_mini btn_gray" @click="jl.href('./lost_view.php?idx='+board.wr_id)">보기</button>
+                            </td>
+                        </tr>
+
+                        <tr v-else>
+                            <td colspan="20">
+                                작성된 내용이 없습니다.
                             </td>
                         </tr>
                         </tbody>

@@ -4,7 +4,7 @@
     }
 </style>
 
-<div class="wow fadeInUp animated" data-wow-delay="0.6s" data-wow-duration="0.8s">
+<div class="wow fadeInUp animated" data-wow-duration="0.8s">
 <? if(defined('_INDEX_')) {?>
 <? }else if($co_id == "sub01"){ ?>
 <div class="sub_main grid3">
@@ -44,7 +44,7 @@
                 <h6>교회안내<i class="fa-solid fa-arrow-up-right"></i></h6>
             </div>
         </a>
-        <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=sub01_06">
+        <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=event">
            <img src="<?php echo G5_THEME_IMG_URL ?>/sub/sub_ban06.png" alt="">
             <div class="textWrap">
                 <p>06</p>
@@ -224,14 +224,14 @@
 </div>
 <div class="sub_main grid3" style="padding-top: 0">
     <div class="inr banWrap">
-        <a href="https://www.sujungkids.com/" target="_blank">
+        <a href="https://www.wpca.or.kr/" target="_blank">
            <img src="<?php echo G5_THEME_IMG_URL ?>/sub/sub04_ban03.png" alt="">
             <div class="textWrap">
                 <p>03</p>
                 <h6>전인기독학교<i class="fa-solid fa-arrow-up-right"></i></h6>
             </div>
         </a>
-        <a href="https://www.wpca.or.kr/" target="_blank">
+        <a href="https://www.sujungkids.com/" target="_blank">
            <img src="<?php echo G5_THEME_IMG_URL ?>/sub/sub04_ban04.png" alt="">
             <div class="textWrap">
                 <p>04</p>

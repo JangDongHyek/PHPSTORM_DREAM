@@ -1,7 +1,6 @@
 <?php
 //namespace App\Libraries;
 require_once("Jl.php");
-include_once("../common.php");
 class JlService extends Jl{
     private $POST;
     private $FILES;
@@ -19,12 +18,16 @@ class JlService extends Jl{
     {
         parent::__construct(false);
         $this->obj = $this->jsonDecode($POST['obj']);
-        if(!$this->obj['table']) $this->error("obj에 테이블이 없습니다.");
+
+        $values = array("file","file_save","file_exists","captcha_image","captcha_check");
+        if(!in_array($POST['_method'], $values)) {
+            if(!$this->obj['table']) $this->error("obj에 테이블이 없습니다.");
+        }
 
         if(isset($this->obj['file_columns'])) $this->file_columns = $this->jsonDecode($this->obj['file_columns']);
         if(isset($this->obj['file_use'])) $this->file_use = $this->obj['file_use'];
 
-        if($POST['_method'] != "file") $this->model = new JlModel($this->obj);
+        if(!in_array($POST['_method'], $values)) $this->model = new JlModel($this->obj);
         $this->jl_file = new JlFile("/jl/jl_resource/{$this->obj['table']}");
 
         $this->POST = $POST;
@@ -56,12 +59,14 @@ class JlService extends Jl{
         if($method == "delete" || $method == "remove") $response = $this->delete();
         if($method == "query") $response = $this->query();
         if($method == "where_delete" || $method == "wd") $response = $this->where_delete();
-        if($method == "file") $response = $this->file();
+        if($method == "file" || $method == "file_save") $response = $this->fileSave();
+        if($method == "file_exists") $response = $this->fileExists();
         if($method == "distinct") $response = $this->distinct();
-        if($method == "point") $response = $this->point();
+        if($method == "captcha_image") $response = $this->captchaImage();
+        if($method == "captcha_check") $response = $this->captchaCheck();
 
-        $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd","point");
-        if(in_array($method,$trace_list)) {
+        $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
+        if(in_array($method,$trace_list) && $response['trace']) {
             $object = array(
                 "method" => $method,
                 "response" => $response,
@@ -73,13 +78,59 @@ class JlService extends Jl{
         return $response;
     }
 
+    private function processExtensions(&$record, $extensions) {
+        foreach ($extensions as $info) {
+            $info = $this->jsonDecode($info);
+            $joinModel = new JlModel(array("table" => $info['table']));
+
+            if (!isset($record[$info['foreign']]) || !$record[$info['foreign']]) continue;
+
+            $joinModel->where($joinModel->primary, $record[$info['foreign']]);
+            $join_data = $joinModel->get()['data'][0];
+
+            $key = $info['as'] ? "$".$info['as'] : "$".$info['table'];
+            $record[$key] = $join_data;
+
+            if (isset($info['relations'])) {
+                $re_relations = $this->jsonDecode($info['relations']);
+                $this->processRelations($record[$key], $re_relations);
+            }
+
+            // **재귀 호출: 만약 join_data가 extensions을 포함하면 또 호출**
+            if (isset($info['extensions'])) {
+                $re_extensions = $this->jsonDecode($info['extensions']);
+                $this->processExtensions($record[$key], $re_extensions);
+            }
+        }
+    }
+
+    private function processRelations(&$data, $relations) {
+        foreach ($relations as $info) {
+            $info = $this->jsonDecode($info);
+            $joinModel = new JlModel(array("table" => $info['table']));
+
+            if (!isset($info['foreign']) || !$info['foreign']) continue;
+
+            if (isset($info['filter'])) {
+                $info_filter = $this->jsonDecode($info['filter']);
+                $joinModel->setFilter($info_filter);
+                $joinModel->where($info_filter);
+            }
+
+            $joinModel->where($info['foreign'], $data[$this->model->primary]);
+
+            $join_data = ($info['type'] == 'count') ? $joinModel->count() : $joinModel->get()['data'];
+
+            $data["$".$info['table']] = $join_data;
+        }
+    }
+
     public function get() {
-        $join = null;
-        $extensions = array();
-        $relations = array();
-        if(isset($this->obj['join'])) $join = $this->jsonDecode($this->obj['join']);
-        if(isset($this->obj['extensions'])) $extensions = $this->jsonDecode($this->obj['extensions']);
-        if(isset($this->obj['relations'])) $relations = $this->jsonDecode($this->obj['relations']);
+        $join = isset($this->obj['join']) ? $this->jsonDecode($this->obj['join']) : null;
+        $extensions = isset($this->obj['extensions']) ? $this->jsonDecode($this->obj['extensions']) : array();
+
+
+        $relations = isset($this->obj['relations']) ? $this->jsonDecode($this->obj['relations']) : array();
 
         $getInfo = array(
             "page" => $this->obj['page'],
@@ -88,74 +139,49 @@ class JlService extends Jl{
         );
 
         if ($join) {
-            $this->model->join($join['table'],$join['origin'],$join['join'],$join['type']);
-            // 조인 필터링
-            //$model->where("join_column","value","AND",$join_table);
-            //$model->between("join_column","start","end","AND",$join_table);
-            //$model->in("join_column",array("value1","value2"),"AND",$join_table);
-            //$model->like("join_column","value","AND",$join_table);
+            $this->model->join($join['table'], $join['origin'], $join['join'], $join['type']);
 
-            if($join['source']) $getInfo['source'] = $join['table'];
-            if($join['select']) $getInfo['select'] = $this->jsonDecode($join['select']);
+            if (isset($join['source'])) $getInfo['source'] = $join['table'];
+            if (isset($join['select'])) $getInfo['select'] = $this->jsonDecode($join['select']);
 
-            if($join['group_by']) {
-                $groups = $this->jsonDecode($join['group_by'],false);
+            if (isset($join['group_by'])) {
+                $groups = $this->jsonDecode($join['group_by'], false);
                 foreach ($groups as $group) {
-                    $this->model->groupBy($group['group'],$group['aggregate'],$group['as'],$group['type']);
+                    $this->model->groupBy($group['group'], $group['aggregate'], $group['as'], $group['type']);
                 }
             }
         }
 
         $this->model->setFilter($this->obj);
-
-
         $object = $this->model->where($this->obj)->get($getInfo);
 
-        foreach($extensions as $info) {
-            $info = $this->jsonDecode($info);
-            $joinModel = new JlModel(array(
-                "table" => $info['table'],
-            ));
-
-            foreach ($object["data"] as $index => $data) {
-                if(!$data[$info['foreign']]) continue;
-                $joinModel->where($joinModel->primary, $data[$info['foreign']]);
-                $join_data = $joinModel->get()['data'][0];
-
-                //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
-                $object["data"][$index]["$".$info['table']] = $join_data;
-            }
+        // extensions 재귀 처리
+        foreach ($object["data"] as $index =>$data) {
+            $this->processExtensions($object["data"][$index], $extensions);
         }
 
-        foreach($relations as $info) {
-            $info = $this->jsonDecode($info);
-            $joinModel = new JlModel(array(
-                "table" => $info['table'],
-            ));
-
-            foreach ($object["data"] as $index => $data) {
-                if(!$info['foreign']) continue;
-                $joinModel->where($info['foreign'],$data[$this->model->primary]);
-                $join_data = $joinModel->get()['data'];
-
-                //$extensions은 변수명이 첫번째에 무조건 $로 진행 확장데이터일시 수정에 문제가 발생함 첫글자 $ 필드 삭제 처리는 jl.js에 있음
-                $object["data"][$index]["$".$info['table']] = $join_data;
-            }
+        // relations 재귀 처리
+        foreach ($object["data"] as $index =>$data) {
+            $this->processRelations($object["data"][$index], $relations);
         }
 
-
-
-        $response['data'] = $object['data'];
-        $response['count'] = $object['count'];
-        $response['filter'] = $this->obj;
-        $response['sql'] = $object['sql'];
-        $response['success'] = true;
+        $response = array(
+            "data" => $object["data"],
+            "count" => $object["count"],
+            "filter" => $this->obj,
+            "sql" => $object["sql"],
+            "success" => true
+        );
 
         return $response;
     }
 
     public function insert() {
-        $this->iuCheck();
+        $checked = $this->iuCheck();
+
+        if(!$checked) {
+            return array("success" => true, "message" => "checked 로 인한 sql 패스","trace" => false);
+        }
 
         if($this->file_use) {
             foreach ($this->FILES as $key => $file_data) {
@@ -166,24 +192,20 @@ class JlService extends Jl{
             if(count($_FILES)) $this->error("파일을 사용하지않는데 첨부된 파일이 있습니다.");
         }
 
-
-
-        $response['primary'] = $this->model->insert($this->obj);
-        $response['success'] = true;
-
-        return $response;
-    }
-
-    public function point() {
-        insert_point($this->obj['mb_id'],$this->obj['point'],$this->obj['content']);
+        $response = $this->model->insert($this->obj);
 
         $response['success'] = true;
+        $response['trace'] = true;
 
         return $response;
     }
 
     public function update() {
-        $this->iuCheck();
+        $checked = $this->iuCheck();
+
+        if(!$checked) {
+            return array("success" => true, "message" => "checked 로 인한 sql 패스","trace" => false);
+        }
 
         if($this->file_use) {
             //업데이트는 기존 사진 데이터 가져와서 머지를 해줘야하기때문에 값 가져오기
@@ -207,9 +229,9 @@ class JlService extends Jl{
             }
         }
 
-        $this->model->update($this->obj);
+        $response = $this->model->update($this->obj);
         $response['success'] = true;
-        $response['primary'] = $this->obj['primary'];
+        $response['trace'] = true;
 
         return $response;
     }
@@ -229,6 +251,7 @@ class JlService extends Jl{
 
         $response['data'] = $getData;
         $response['success'] = true;
+        $response['trace'] = true;
 
         return $response;
     }
@@ -258,16 +281,24 @@ class JlService extends Jl{
 
         $response['data'] = $getData;
         $response['success'] = true;
+        $response['trace'] = true;
 
         return $response;
     }
 
-    public function file() {
+    public function fileSave() {
         foreach ($this->FILES as $key => $file_data) {
             $file_result = $this->jl_file->bindGate($file_data);
         }
 
         $response['file'] = $this->jsonDecode($file_result);
+        $response['success'] = true;
+
+        return $response;
+    }
+
+    public function fileExists() {
+        $response['exists'] = $this->isFileExists($this->obj['src']);
         $response['success'] = true;
 
         return $response;
@@ -305,6 +336,167 @@ class JlService extends Jl{
                 if($this->obj[$hash['key']]) $this->obj[$hash['convert']] = password_hash($this->obj[$hash['key']],PASSWORD_DEFAULT);
             }
         }
+
+        if(isset($this->obj['session_exists'])) {
+            $session_exists = $this->jsonDecode($this->obj['session_exists']);
+            foreach ($session_exists as $s_exists) {
+                $s_exists = $this->jsonDecode($s_exists);
+                $this->session_model->where("content",$s_exists['content']);
+                $this->session_model->where('client_ip',$this->getClientIP());
+                $this->session_model->where('status','active');
+                $row = $this->session_model->get();
+
+                if($row['count']) {
+                    if($s_exists['exit_type'] == 'error') $this->error("iuCheck() : {$s_exists['content']} 세션이 존재합니다.");
+                    else if($s_exists['exit_type'] == 'stop') return false;
+                }
+            }
+        }
+
+        if(isset($this->obj['session_insert'])) {
+            $session_insert = $this->jsonDecode($this->obj['session_insert']);
+            foreach ($session_insert as $insert) {
+                $insert = $this->jsonDecode($insert);
+                $this->session_model->where("content",$insert['content']);
+                $this->session_model->where('client_ip',$this->getClientIP());
+                $this->session_model->where('status','active');
+                $row = $this->session_model->get();
+
+                if(!$row['count']) {
+                    $agent = $this->getUserAgent();
+
+                    $this->session_model->insert(array(
+                        "client_ip" => $this->getClientIP(),
+                        "name" => "session",
+                        "status" => "active",
+                        "content" => $insert['content'],
+                        "user_agent" => $agent['user_agent'],
+                        "browser" => $agent['browser'],
+                        "browser_version" => $agent['browser_version'],
+                        "platform" => $agent['platform'],
+                        "is_mobile" => $agent['is_mobile'],
+                        "in_app_browser" => $agent['in_app_browser'],
+                        "delete_date" => $this->getTime(4),
+                    ));
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+
+    public function captchaCheck() {
+        if($this->obj['captcha_code'] == $_SESSION['jl_captcha']) {
+            return [
+                'success' => true
+            ];
+        }else {
+            return [
+                'success' => false,
+                'message' => "자동등록방지가 정확하지않습니다."
+            ];
+        }
+    }
+
+    public function captchaImage() {
+        // 문자 유형 선택
+        $char_pool = [
+            "number" => "0123456789",
+            "eng" => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+            "number_eng" => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        ];
+
+        // 랜덤 문자열 생성
+        $char_list = $char_pool[JL_CAPTCHAR_PATTERN];
+        $captcha_text = "";
+        for ($i = 0; $i < 6; $i++) {
+            $captcha_text .= $char_list[rand(0, strlen($char_list) - 1)];
+        }
+        $_SESSION['jl_captcha'] = $captcha_text;
+
+        $width = 150;
+        $height = 50;
+        $image = imagecreatetruecolor($width, $height);
+
+        $background_color = imagecolorallocate($image, 255, 255, 255); // 흰색 배경
+        $text_color = imagecolorallocate($image, 0, 0, 0); // 검은색 텍스트
+        $noise_color = imagecolorallocate($image, 100, 100, 100); // 노이즈 색상
+
+        // 배경 색상 채우기
+        imagefilledrectangle($image, 0, 0, $width, $height, $background_color);
+
+        // 랜덤 노이즈 추가 (점, 선)
+        for ($i = 0; $i < 300; $i++) {
+            imagesetpixel($image, rand(0, $width), rand(0, $height), $noise_color);
+        }
+        for ($i = 0; $i < 10; $i++) {
+            imageline($image, rand(0, $width), rand(0, $height), rand(0, $width), rand(0, $height), $noise_color);
+        }
+
+        // 폰트 설정
+        $font = $this->ROOT . "/jl/font/" . JL_FONT;
+        $use_ttf = file_exists($font); // 폰트 파일 존재 여부 확인
+
+
+        // 개별 문자 랜덤 배치 (폰트 유무에 따라 다르게 처리)
+        $x = 15;
+        for ($i = 0; $i < strlen($captcha_text); $i++) {
+            $angle = rand(-30, 30); // 랜덤 회전
+            $y = rand(30, 40); // Y축 위치 랜덤 조정
+
+            if ($use_ttf) {
+                // TTF 폰트가 있을 경우
+                imagettftext($image, JL_FONTSIZE, $angle, $x, $y, $text_color, $font, $captcha_text[$i]);
+            } else {
+                // 기본 GD 라이브러리 폰트 사용 < 기본 폰트시 글자크기 변경 불가능
+                imagestring($image, 5, $x, 15, $captcha_text[$i], $text_color);
+            }
+
+            $x += JL_FONTSIZE - 5; // 글자 크기에 따라 간격 조정
+        }
+
+        // 왜곡 효과 적용
+        $distorted_image = imagecreatetruecolor($width, $height);
+        imagefilledrectangle($distorted_image, 0, 0, $width, $height, $background_color);
+
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
+                $newX = (int)($x + sin($y / 10) * 5); // X축 왜곡
+                $newY = (int)($y + cos($x / 10) * 5); // Y축 왜곡
+                if ($newX >= 0 && $newX < $width && $newY >= 0 && $newY < $height) {
+                    imagesetpixel($distorted_image, $newX, $newY, imagecolorat($image, $x, $y));
+                }
+            }
+        }
+
+        //폴더 생성
+        $dir = $this->RESOURCE.'/captcha/';
+        if(!is_dir($dir)) {
+            mkdir($dir, 0777);
+            chmod($dir, 0777);
+        }
+        $captcha_filename = "captcha_" . time() . ".png";
+        $captcha_path = $dir . $captcha_filename;
+        imagepng($distorted_image, $captcha_path);
+
+        imagedestroy($image);
+        imagedestroy($distorted_image);
+
+        // 5분지난 파일 삭제
+        $captcha_files = glob($dir . "captcha_*.png"); // 기존 CAPTCHA 파일 찾기
+        foreach ($captcha_files as $file) {
+            if (filemtime($file) < time() - 300) { // 300초 = 5분
+                unlink($file);
+            }
+        }
+
+        // 응답 반환
+        return [
+            "success" => true,
+            "src" => $this->URL . "/jl/jl_resource/captcha/" . $captcha_filename
+        ];
     }
 }
 ?>

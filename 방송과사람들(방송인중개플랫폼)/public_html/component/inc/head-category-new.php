@@ -72,6 +72,8 @@
                     table : "category",
                     parent_idx : 0,
 
+                    order_by_asc : "priority",
+
                     relations : [
                         {
                             table : "category" ,

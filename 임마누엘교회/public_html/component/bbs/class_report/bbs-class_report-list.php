@@ -98,7 +98,7 @@
                             <td>헌금 <span class="txt_color">*</span></td>
                             <td>
                                 <div class="flex ai-c gap5">
-                                    <input type="number" :readonly="!admin" v-model="modal_data.wr_5"> 만원
+                                    <input type="number" :readonly="!admin" v-model="modal_data.wr_5"> 원
                                 </div>
                             </td>
                         </tr>
@@ -113,7 +113,7 @@
 
                         <tr>
                             <td colspan="2" v-if="admin || modal_data.wr_1 == mb_no">
-                                <button  class="btn btn_large btn_gray2" type="button" @click="jl.postData(modal_data,'g5_write_class_report',options)">수정</button>
+                                <button  class="btn btn_large btn_gray2" type="button" @click="jl.postData(modal_data,options)">수정</button>
                             </td>
                         </tr>
                         </tbody>
@@ -150,6 +150,7 @@
                     arrays : [],
 
                     options : {
+                        table : 'g5_write_class_report',
                         required : [
                             {name : "",message : ``},
                         ],

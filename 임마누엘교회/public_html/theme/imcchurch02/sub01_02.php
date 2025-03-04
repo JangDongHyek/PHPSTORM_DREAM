@@ -47,15 +47,45 @@
                 </div>
 
                 <div class="conslide">
-                    <ul class="sub-slider05">
-                        <?php for($i=1;$i<10;$i++){?>
-                        <li class="slide"><img src="<?php echo G5_THEME_IMG_URL ?>/sub01_01/00<?php echo $i ?>.jpg" alt=""></li>
-                        <?php }?>
-                        <?php for($i=10;$i<46;$i++){?>
-                        <li class="slide"><img src="<?php echo G5_THEME_IMG_URL ?>/sub01_01/0<?php echo $i ?>.jpg" alt=""></li>
-                        <?php }?>
-                    </ul>
+
+                    <div class="swiper sub-slider">
+                        <div class="swiper-wrapper">
+                            <?php for($i=1;$i<10;$i++){?>
+                                <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/sub01_01/00<?php echo $i ?>.jpg" alt=""></div>
+                            <?php }?>
+                            <?php for($i=10;$i<46;$i++){?>
+                                <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/sub01_01/0<?php echo $i ?>.jpg" alt=""></div>
+                            <?php }?>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </div>
+                <script>
+                    var swiper = new Swiper(".sub-slider", {
+                        slidesPerView: 2,
+                        spaceBetween: 10,
+                        autoHeight: true,
+                        loop :true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            type: "fraction",
+                        },
+                        breakpoints: {
+                            640: {
+                                slidesPerView: 2,
+                                spaceBetween: 10,
+                            },
+                            768: {
+                                slidesPerView: 4,
+                                spaceBetween: 10,
+                            },
+                            1024: {
+                                slidesPerView: 6,
+                                spaceBetween: 10,
+                            },
+                        },
+                    });
+                </script>
             </div>
         </div>
     </section>

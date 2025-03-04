@@ -190,7 +190,12 @@
         <div class="inr v2">
             <div>
                 <div class="grid_wrap">
-                    <h2>1호 버스(8337)<br><br>저녁 : 스타리아(7413)</h2>
+                    <div>
+                        <h2>1호 버스(8337)</h2>
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/8337.jpg" alt="">
+                        <h2><br>저녁 : 스타리아(7413)</h2>
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/7413.jpg" alt="">
+                    </div>
                     <div class="table">
                         <p>강일, 고덕, 길동, 둔촌동, 성내동, 풍납동, 파크리오</p>
                         <p>차량 기사 : 신봉국 권사 010-8904-0409</p>
@@ -548,7 +553,10 @@
                     </div>
                 </div>
                 <div class="grid_wrap">
-                    <h2>쏠라티(728머 3764)</h2>
+                    <div>
+                        <h2>솔라티(3764)</h2>
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/3764.jpg" alt="">
+                    </div>
                     <div class="table">
                         <p>자양동, 잠실동, 잠실역, 파크리오</p>
                         <p>차량 기사 : 조재흥 집사 010-7220-5794</p>
@@ -772,7 +780,10 @@
                     </div>
                 </div>
                 <div class="grid_wrap">
-                    <h2>5호 카운티 (6954)</h2>
+                    <div>
+                        <h2>5호 카운티 (6954)</h2>
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/6954.jpg" alt="">
+                    </div>
                     <div class="table">
                         <p>하남, 천현동, 신장동, 덕풍동, 감북동, 방이동</p>
                         <p>차량 기사 : 박만수 집사 010-3975-3004</p>
@@ -1029,7 +1040,10 @@
                     </div>
                 </div>
                 <div class="grid_wrap">
-                    <h2>스타렉스 (6509)</h2>
+                    <div>
+                        <h2>스타렉스 (6509)</h2>
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/6509.jpg" alt="">
+                    </div>
                     <div class="table">
                         <p>거여동, 개롱역, 오금동, 삼전동, 송파동, 방이동</p>
                         <p>차량 기사 : 정후남 집사 010-8338-0048</p>
@@ -1307,6 +1321,8 @@
         </div>
     </div>
     <? }else if($co_id == "sub01_05_04"){ ?>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <div class="sub sub01_05_04">
         <div class="inr v2">
             <div class="sub" id="sub07_01">
@@ -1332,15 +1348,88 @@
                                 <b style="color:#000">4. 교회에서 석촌역방향 국민은행 건물 앞</b> : 10대<br>
                                 – 올라가는 전용길이 없으니 확인하시고 주차하시기 바랍니다.</dd>
                         </dl>
+
+                        <div class="conslide">
+
+                            <div class="swiper free-slider">
+                                <div class="swiper-wrapper">
+                                    <?php for($i=1;$i<5;$i++){?>
+                                        <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/free-<?php echo $i ?>.jpg" alt=""></div>
+                                    <?php }?>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                        <script>
+                            var swiper = new Swiper(".free-slider", {
+                                slidesPerView: 2,
+                                spaceBetween: 10,
+                                loop :true,
+                                pagination: {
+                                    el: ".swiper-pagination",
+                                    type: "fraction",
+                                },
+                                breakpoints: {
+                                    640: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 10,
+                                    },
+                                    768: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 10,
+                                    },
+                                    1024: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 10,
+                                    },
+                                },
+                            });
+                        </script>
                         <dl>
                             <dt>● 유료주차 : 310대</dt>
                             <dd>
                                 <b style="color:#000">1. 공원남4문</b> : 50여대<br>
                                 <b style="color:#000">2. 한성백제박물관 </b>: 50대<br>
-                                <b style="color:#000">3. 공원남3문(박물관)</b> : 180대<br>
+                                <b style="color:#000">3. 공원남3문(소마미술관)</b> : 180대<br>
                                 <b style="color:#000">4. 교회 앞 노상 공영주차장</b> : 30대
                             </dd>
                         </dl>
+                        <div class="conslide">
+
+                            <div class="swiper fee-slider">
+                                <div class="swiper-wrapper">
+                                    <?php for($i=1;$i<5;$i++){?>
+                                        <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/fee-<?php echo $i ?>.jpg" alt=""></div>
+                                    <?php }?>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                        <script>
+                            var swiper = new Swiper(".fee-slider", {
+                                slidesPerView: 2,
+                                spaceBetween: 10,
+                                loop :true,
+                                pagination: {
+                                    el: ".swiper-pagination",
+                                    type: "fraction",
+                                },
+                                breakpoints: {
+                                    640: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 10,
+                                    },
+                                    768: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 10,
+                                    },
+                                    1024: {
+                                        slidesPerView: 4,
+                                        spaceBetween: 10,
+                                    },
+                                },
+                            });
+                        </script>
                     </div>
                     <div class="titwrap">
                         <h3>🚘 주차장 이용 안내</h3>
@@ -1367,8 +1456,46 @@
                             </dd>
                         </dl>
                     </div>
+                    <div class="conslide">
+
+                        <div class="swiper ban-slider">
+                            <div class="swiper-wrapper">
+                                <?php for($i=1;$i<4;$i++){?>
+                                    <div class="swiper-slide"><img src="<?php echo G5_THEME_IMG_URL ?>/sub01_05/ban-<?php echo $i ?>.jpg" alt=""></div>
+                                <?php }?>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    </div>
+                    <script>
+                        var swiper = new Swiper(".ban-slider", {
+                            slidesPerView: 2,
+                            spaceBetween: 10,
+                            loop :true,
+                            pagination: {
+                                el: ".swiper-pagination",
+                                type: "fraction",
+                            },
+                            breakpoints: {
+                                640: {
+                                    slidesPerView: 2,
+                                    spaceBetween: 10,
+                                },
+                                768: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 10,
+                                },
+                                1024: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 10,
+                                },
+                            },
+                        });
+                    </script>
                 </div>
             </div>
+
+
         </div>
     </div>
     <? }else if($co_id == "sub01_05_05"){ ?>

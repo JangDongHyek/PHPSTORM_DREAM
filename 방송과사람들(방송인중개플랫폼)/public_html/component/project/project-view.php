@@ -117,6 +117,7 @@
         template: "#<?=$componentName?>-template",
         props: {
             mb_no : {type: String, default: ""},
+            tab : {type: Number, default: 0},
             primary : {type: String, default: ""},
         },
         data: function () {
@@ -178,8 +179,6 @@
 
                 user_thumb : false,
 
-
-                tab : 0,
                 comment_count : 0,
             };
         },

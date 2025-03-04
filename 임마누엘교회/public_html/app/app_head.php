@@ -434,12 +434,16 @@ $site_setting = $site_setting_model->orderBy("idx","DESC")->get()['data'][0];
                 </ul>
             </div>
             <div class="icon">
-                <span><a href="<?=$site_setting['sns_youtube']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/youtube.png" alt="sns" title=""></a></span>
-                <span><a href="<?=$site_setting['sns_kakao']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/kakao.png" alt="sns" title=""></a></span>
+                <span><a href="https://blog.naver.com/letsdoimc" target="_blank"><img src="<?php echo G5_URL ?>/app/img/blog.png" alt="sns"></a></span>
+                <span><a href="https://www.instagram.com/imc_worship_official/" target="_blank"><img src="<?php echo G5_URL ?>/app/img/insta.png" alt="sns" title=""></a></span>
+                <span><a href="https://www.youtube.com/channel/UC8XsX2FEj61FL20MlTDjV8g" target="_blank"><img src="<?php echo G5_URL ?>/app/img/youtube.png" alt="sns" title=""></a></span>
+                <span><a href="https://www.facebook.com/IMCworship/" target="_blank"><img src="<?php echo G5_URL ?>/app/img/facebook.png" alt="sns" title=""></a></span>
+                <?/*span><a href="<?=$site_setting['sns_youtube']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/youtube.png" alt="sns" title=""></a></span>
+                <!--span><a href="<?=$site_setting['sns_kakao']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/kakao.png" alt="sns" title=""></a></span-->
                 <span><a href="<?=$site_setting['sns_facebook']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/facebook.png" alt="sns" title=""></a></span>
                 <span><a href="<?=$site_setting['sns_insta']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/insta.png" alt="sns" title=""></a></span>
-                <span><a href="<?=$site_setting['sns_blog']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/blog.png" alt="sns"></a></span>
-                <span><a href="<?=$site_setting['sns_tiktok']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/tiktok.png" alt="sns"></a></span>
+                <span><a href="<?=$site_setting['sns_blog']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/blog.png" alt="sns"></a></span*/?>
+                <!--span><a href="<?=$site_setting['sns_tiktok']?>" target="_blank"><img src="<?php echo G5_URL ?>/app/img/tiktok.png" alt="sns"></a></span-->
             </div>
             <div id="copy">
                 <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=privacy">개인정보취급처리방침</a>

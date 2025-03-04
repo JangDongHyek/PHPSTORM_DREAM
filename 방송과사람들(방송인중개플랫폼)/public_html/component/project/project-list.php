@@ -7,7 +7,7 @@
                 <div class="total">총 {{filter.count}}건</div>
                 <div class="sort_list" @click="modal.status = true;"><span>최신순</span></div>
             </div>
-            <ul class="project-list">
+            <ul class="project-list" v-if="rows.length > 0">
                 <li class="project-item" v-for="item in rows">
                     <a @click="jl.href('./project_view.php?primary=' + item.idx)" class="project-link">
                         <div class="thumb">
@@ -40,6 +40,8 @@
                     </a>
                 </li>
             </ul>
+            
+            <div v-else>의뢰가 없습니다</div>
         </div>
 
         <item-paging :filter="filter" @change="jl.getsData(filter,rows);"></item-paging>
@@ -103,6 +105,8 @@
 
                     category1_idx : this.category1_idx,
                     category2_idx : this.category2_idx,
+
+                    status : true,
 
                     order_by_desc : "idx",
 

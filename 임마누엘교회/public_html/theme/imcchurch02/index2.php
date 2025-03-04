@@ -108,7 +108,7 @@ include_once(G5_THEME_PATH.'/head.php');
             </div>
         </a>
         
-        <a href="<?php echo G5_BBS_URL ?>/write.php?bo_table=prayer">
+        <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=prayer">
            <img src="<?php echo G5_THEME_IMG_URL ?>/sub/sub02_ban04.png" alt="">
             <div class="textWrap">
                 <h6>기도 요청<i class="fa-solid fa-arrow-up-right"></i></h6>

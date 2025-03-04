@@ -24,13 +24,13 @@
                 <div class="box_write">
                     <h4>제목</h4>
                     <div class="cont">
-                        <input v-model="data.subject" type="text" maxlength="30" placeholder="7자이상 30자 이하">
+                        <input v-model="data.subject" type="text" maxlength="30" placeholder="10자이상 30자 이하">
                     </div>
                 </div>
                 <div class="box_write">
                     <h4>한줄 설명</h4>
                     <div class="cont">
-                        <input v-model="data.description" type="text" maxlength="30" placeholder="7자이상 30자 이하">
+                        <input v-model="data.description" type="text" maxlength="30" placeholder="10자이상 30자 이하">
                     </div>
                 </div>
                 <div class="box_content">
@@ -52,7 +52,7 @@
 
                 <div class="box_content">
                     <div class="box_write02">
-                        <h4>예산</h4>
+                        <h4>예산(Vat포함)</h4>
                         <div class="cont">
                             <div class="box_ck">
                                 <ul class="area_filter" id="area_filter">
@@ -67,7 +67,7 @@
                                                 <dt><label>인원</label></dt>
                                                 <dd><input type="text" placeholder="인원을 입력해주세요" v-model="item.people" class="titleInput"></dd>
                                                 <dt><label>인당 예산</label></dt>
-                                                <dd><input type="number" placeholder="예산을 입력해주세요" v-model="item.money" class="descInput"></dd>
+                                                <dd><input type="number" placeholder="예산(Vat포함)을 입력해주세요" v-model="item.money" class="descInput"></dd>
                                             </dl>
                                         </div>
                                     </li>
@@ -239,13 +239,13 @@
                         {
                             name : "subject",
                             message : `제목은 필수값입니다`,
-                            min : {length : 7, message : "제목은 최소 7자 이상이여야 합니다."},
+                            min : {length : 10, message : "제목은 최소 10자 이상이여야 합니다."},
                             max : {length : 30, message : "제목은 최대 30자 이하여야 합니다."}
                         },
                         {
                             name : "description",
                             message : `한줄설명은 필수값입니다`,
-                            min : {length : 7, message : "한줄설명은 최소 7자 이상이여야 합니다."},
+                            min : {length : 10, message : "한줄설명은 최소 10자 이상이여야 합니다."},
                             max : {length : 30, message : "한줄설명은 최대 30자 이하여야 합니다."}
                         },
                         {name : "start_date",message : `진행기간을 입력해주세요.`},

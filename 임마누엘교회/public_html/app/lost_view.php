@@ -13,7 +13,7 @@ include_once("../jl/JlConfig.php");
 
 
 <?
-$jl->vueLoad('app');
+$jl->vueLoad('app',['swiper']);
 $jl->componentLoad("/bbs/lost");
 $jl->componentLoad("/item");
 ?>

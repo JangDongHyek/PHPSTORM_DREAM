@@ -18,7 +18,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="board in boards">
+                <tr v-if="boards.length > 0" v-for="board in boards">
                     <td>1</td>
                     <td>
                         <div class="video-container">
@@ -35,6 +35,12 @@
                     <td>
                         {{board.wr_datetime.split(' ')[0]}}
                         <button type="button" class="btn btn_mini btn_line" v-if="mb_no == board.wr_1" @click="deleteBoard(board)">삭제</button>
+                    </td>
+                </tr>
+
+                <tr v-else>
+                    <td colspan="20">
+                        작성된 내용이 없습니다.
                     </td>
                 </tr>
                 </tbody>

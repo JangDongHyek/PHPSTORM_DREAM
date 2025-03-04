@@ -1,7 +1,7 @@
 <?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
-        <ul class="project-list" v-if="arrays.length">
+        <ul class="project-list" v-if="arrays.length > 0">
             <li class="project-item" v-for="item in arrays">
                 <ul class="prize-info">
                     <li><span>🏆 예산</span> {{ totalPrize(item).format() }}원</li>
@@ -28,13 +28,21 @@
                 </a>
                 <div class="btn-wrap"><!--의뢰인 버전-->
                     <button type="button" @click="jl.href('./project_form.php?primary='+item.idx)">수정</button>
-                    <button type="button" @click="jl.deleteData(item,{table : 'project'})">삭제</button>
+                    <button type="button" v-if="!item.choice" @click="jl.deleteData(item,{table : 'project'})">삭제</button>
+                    <button type="button" v-else @click="jl.href('./project_view.php?tab=1&primary=' + item.idx)">매칭보기</button>
                     <button type="button" class="blue" @click="modal.status = true; modal.data = item">선정</button>
                 </div>
             </li>
         </ul>
 
-        <div v-else>의뢰한 프로젝트가 없습니다.</div>
+        <div v-else>
+            <div class="nodata">
+                <div class="box text-center">
+                    <img src="<?php echo G5_THEME_IMG_URL ?>/app/icon_nodata.svg">
+                    <p>의뢰한 프로젝트가 없습니다.<p>
+                </div>
+            </div>
+        </div>
 
         <external-bs-modal-new :modal="modal">
             <template v-slot:header>
@@ -120,7 +128,7 @@
                     user_idx : this.mb_no,
 
                     page: 1,
-                    limit: 1,
+                    limit: 10,
                     count: 0,
 
                     extensions : [
@@ -217,6 +225,8 @@
                 })
             },
             getStatus(item,type = "class") {
+                if(!item.status) return '';
+
                 if(item.choice) {
                     return type == "class" ? "v3" : "선정 완료";
                 }else if(this.jl.isRangeDate(item.start_date,item.end_date)) {

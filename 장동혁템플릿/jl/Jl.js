@@ -299,6 +299,15 @@ class Jl {
         return missingDependencies;
     }
 
+    getToday() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // 월 (0부터 시작하므로 +1)
+        const day = String(today.getDate()).padStart(2, '0'); // 날짜
+
+        return `${year}-${month}-${day}`;
+    }
+
     commonFile(files,obj,key,permission) {
         if(Array.isArray(obj[key])) {
             for (let i = 0; i < files.length; i++) {

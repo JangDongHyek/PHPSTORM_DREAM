@@ -34,7 +34,7 @@
                             <td>기간 <span class="txt_color">*</span></td>
                             <td>
                                 <div class="flex ai-c gap5">
-                                    <input type="date" v-model="data.request_date" required max="9999-12-31"> 까지
+                                    <input type="date" v-model="data.request_date" required :min="jl.getToday()" max="9999-12-31"> 까지
                                 </div>
                             </td>
                         </tr>
@@ -133,13 +133,23 @@
                         emergency : "일반",
                         status : "진행"
                     },
+
+                    member : {},
                 };
             },
             async created() {
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
             },
-            mounted() {
+            async mounted() {
+                this.member = await this.jl.getData({table : 'g5_member', mb_no : this.mb_no});
+
+                this.data.belong = this.member.mb_2
+                this.data.parish = this.member.mb_3
+                this.data.name = this.member.mb_name
+                this.data.job = this.member.mb_1
+
+
                 this.$nextTick(() => {
 
                 });
@@ -176,7 +186,8 @@
                         let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
 
                         await this.jl.alert("신청되었습니다.");
-                        //window.location.href = "./prayer";
+                        if(this.pc) window.location.href = "./board.php?bo_table=prayer";
+                        else window.location.href = "./prayer";
                     } catch (e) {
                         await this.jl.alert(e.message)
                     }

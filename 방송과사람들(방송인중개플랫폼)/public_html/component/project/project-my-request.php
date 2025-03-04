@@ -2,7 +2,7 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <div v-if="load">
-            <ul class="project-list" v-if="rows.length">
+            <ul class="project-list" v-if="rows.length > 0">
                 <li class="project-item" v-for="item in rows">
                     <ul class="prize-info">
                         <li><span>🏆 예산</span> {{ totalPrize(item.$project).format() }}원</li>
@@ -30,14 +30,26 @@
                         <button type="button" v-if="!item.cancel && getStatus(item) != '선정 완료'" @click="jl.href(`./project_join.php?primary=${item.idx}&project_idx=${item.$project.idx}`)">지원 보기</button>
                         <button type="button" v-if="!item.cancel && getStatus(item) != '선정 완료'" @click="jl.postData(item,options)">지원 취소</button>
                         <button type="button" v-if="item.cancel" class="gray">지원 취소됨</button><!--취소시 교체 노출-->
-                        <button type="button" v-if="item.prize" class="blue2">의뢰 채팅</button><!--매칭 (거부시 사용불가처리)-->
                         <button type="button" v-if="item.prize">수락/거부</button><!--매칭 (수락 이후 완료하기로)-->
                         <button type="button" v-if="getStatus(item) == '선정 완료'" class="blue" @click="modal.data = item; modal.status = true;">결과 확인</button><!--탈락-->
+                        <template v-if="getStatus(item) == '선정 완료'">
+                            <button type="button" v-if="item.prize" class="blue2">의뢰 채팅</button><!--매칭전후 모두 사용가능 (거부시 사용불가처리)-->
+                        </template>
+                        <template v-else>
+                            <button type="button" v-if="!item.cancel" class="blue2">의뢰 채팅</button><!--매칭전후 모두 사용가능 (거부시 사용불가처리)-->
+                        </template>
                     </div>
                 </li>
             </ul>
 
-            <div v-else>지원한 프로젝트가 없습니다.</div>
+            <div v-else>
+                <div class="nodata">
+                    <div class="box text-center">
+                        <img src="<?php echo G5_THEME_IMG_URL ?>/app/icon_nodata.svg">
+                        <p>지원한 프로젝트가 없습니다.<p>
+                    </div>
+                </div>
+            </div>
 
             <external-bs-modal-new :modal="modal">
                 <template v-slot:header>
@@ -53,7 +65,7 @@
                 <template v-slot:default>
                     <div>
                         <div class="box" v-if="modal.data.prize">
-                            축하합니다! {{modal.data.prize}}에 선정되었습니다. <!--미선정되었습니다. 참여에 감사드립니다.-->
+                            축하합니다! {{modal.data.prize}}에 선정되었습니다.
                         </div>
 
                         <div class="box" v-else>

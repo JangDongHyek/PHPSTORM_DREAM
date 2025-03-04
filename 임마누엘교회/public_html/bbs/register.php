@@ -9,11 +9,8 @@ if ($is_member) {
 // 세션을 지웁니다.
 set_session("ss_mb_reg", "");
 
-$g5['title'] = '회원가입약관';
-include_once('./_head.php');
+$g5['title'] = '회원가입';
 
-$register_action_url = G5_BBS_URL.'/register_form.php';
-include_once($member_skin_path.'/register.skin.php');
+include_once(G5_BBS_PATH.'/register_form.php');
 
-include_once('./_tail.php');
 ?>

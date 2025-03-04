@@ -158,6 +158,26 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                         <button type="button" id="departDel" @click="mb_4.splice(index,1)">삭제</button>
                     </div>
                 </dd>
+                <dd>
+                    <div class="flex ai-c jc-sb">
+                        <label>개인정보 수집·이용동의</label>
+                        <span>
+                            <input type="checkbox" id="agree"><label for="agree">동의</label>
+                        </span>
+                    </div>
+                    <details>
+                        <summary class="btn_sign">보기</summary>
+                        <div style="width: 100%; padding: 10px; background: #f8f8f8"> ❏ 개인정보의 수집·이용 목적<br>
+                            -귀하의 개인정보는 임마누엘교회 홈페이지 및 앱의 원활한 서비스 제공을 위한 목적으로만 사용됩니다.<br><br>
+                            ❏ 수집·이용할 개인정보의 항목<br>
+                            -성명, 생년월일, 휴대전화번호, 주소, 교적사항 등)<br><br>
+
+                            ❏ 개인정보의 보유·이용기간<br>
+                            -귀하의 개인정보는 회원 탈퇴 시까지 보유 및 이용되며, 동의자의 요구가 있을 경우에는 즉시 해당정보를 파기합니다.<br><br>
+
+                            본인은 위와 같은 목적으로 본인의 개인정보를 수집·이용하는 것에 동의합니다.</div>
+                    </details>
+                </dd>
             </dl>
             <dl>
                 <dt>자동등록방지</dt>

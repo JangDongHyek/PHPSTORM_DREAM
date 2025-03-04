@@ -12,8 +12,8 @@
             <p><b class="icon icon_gray">음식섭취</b> {{data.food_intake}}</p>
             <p v-if="admin || mb_no == data.user_idx"><b class="icon icon_gray">특이사항</b> {{data.note}}</p>
             <p>-</p>
-            <button  v-if="admin || mb_no == data.user_idx" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(data,'rental_lecture',{message : '예약 취소시 데이터는 삭제됩니다 삭제하시겠습니까?',href : './rental_lecture'})">예약 취소</button>
-            <button  v-if="admin" class="btn btn_large btn_gray2" type="button" @click="putData()">승인</button>
+            <button  v-if="admin || mb_no == data.user_idx" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(data,{table:'rental_lecture',message : '예약 취소시 데이터는 삭제됩니다 삭제하시겠습니까?',href : './rental_lecture'})">예약 취소</button>
+            <button  v-if="admin" class="btn btn_large btn_color" type="button" @click="putData()">승인</button>
         </div>
     </div>
 </script>
@@ -91,7 +91,7 @@
 
                     this.data.status = true;
 
-                    await this.jl.postData(this.data,'rental_lecture');
+                    await this.jl.postData(this.data, {table : 'rental_lecture'});
                 }
             },
             computed: {

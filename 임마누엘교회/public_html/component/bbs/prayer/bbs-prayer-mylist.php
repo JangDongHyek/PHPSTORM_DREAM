@@ -14,7 +14,7 @@
                 <tbody>
                 <tr v-for="item in prayers">
                     <td>{{item.jl_no}}</td>
-                    <td><p class="cut">기도제목 예시입니다.</p></td>
+                    <td><p class="cut">{{item.content}}</p></td>
                     <td>{{item.insert_date.split(' ')[0]}}-{{item.request_date}}</td>
                     <td>
                         <button type="button" class="btn btn_mini btn_line" @click="$emit('modify',item.idx)">수정</button>

@@ -13,12 +13,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr @click="jl.href('./pray_view.php?idx='+prayer.idx)" v-for="prayer in prayers">
+                <tr @click="jl.href('./pray_view.php?idx='+prayer.idx)" v-if="prayers.length > 0" v-for="prayer in prayers">
                     <td>{{prayer.insert_date.split(' ')[0]}}</td>
                     <td>{{prayer.name}} {{prayer.job}}</td>
-                    <td><p class="cut">{{prayer.content}}</p></td>
+                    <td><p class="cut" style="cursor: pointer">{{prayer.content}}</p></td>
                     <td>{{prayer.emergency}}</td>
                     <td>{{prayer.status}}</td>
+                </tr>
+
+                <tr v-else>
+                    <td colspan="20">
+                        작성된 내용이 없습니다.
+                    </td>
                 </tr>
                 </tbody>
             </table>

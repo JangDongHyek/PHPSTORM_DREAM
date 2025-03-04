@@ -20,7 +20,7 @@
                 </div>
             </div>
             <br>
-            <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,'g5_write_qna',options)">등록하기</button>
+            <button type="button" class="btn btn_color btn-large" @click="jl.postData(data,options)">등록하기</button>
         </div>
     </div>
 </script>
@@ -46,6 +46,7 @@
                     arrays : [],
 
                     options : {
+                        table : 'g5_write_qna',
                         required : [
                             {name : "wr_1",message : `로그인이 필요한 기능입니다.`},
                             {name : "wr_subject",message : `내용은 필수입니다.`},

@@ -2,7 +2,7 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <div class="box_radius box_white">
-            <div class="list">
+            <div class="list" v-if="arrays.length > 0">
                 <ul>
                     <li v-for="board in arrays">
                         <details>
@@ -12,12 +12,14 @@
                                 {{board.wr_content}}
                                 <br>
                                 <button type="button" class="btn btn_mini btn_line" v-if="mb_1 == '관리자'" @click="jl.href('./faq_form?primary='+board.wr_id)">수정</button>
-                                <button type="button" class="btn btn_mini btn_colorline" v-if="mb_1 == '관리자'" @click="jl.deleteData(board,'g5_write_faq')">삭제</button>
+                                <button type="button" class="btn btn_mini btn_colorline" v-if="mb_1 == '관리자'" @click="jl.deleteData(board,{table :'g5_write_faq'})">삭제</button>
                             </div>
                         </details>
                     </li>
                 </ul>
             </div>
+
+            <div v-else>작성된 내용이 없습니다.</div>
 
             <item-paging :paging="filter" @change="filter.page = $event; this.jl.getsData(filter,arrays);"></item-paging>
         </div>
