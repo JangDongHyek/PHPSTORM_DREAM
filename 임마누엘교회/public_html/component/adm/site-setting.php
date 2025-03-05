@@ -48,22 +48,10 @@
                         <input type="date" v-model="data.note_date" max="9999-12-31">
                     </td>
                 </tr>
-                <?/*tr>
-                    <td><b>유튜브</b></td>
-                    <td>
-                        <input type="text" v-model="data.sns_youtube">
-                    </td>
-                </tr>
                 <tr>
-                    <td><b>카카오톡</b></td>
+                    <td><b>블로그</b></td>
                     <td>
-                        <input type="text" v-model="data.sns_kakao">
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>페이스북</b></td>
-                    <td>
-                        <input type="text" v-model="data.sns_facebook">
+                        <input type="text" v-model="data.sns_blog">
                     </td>
                 </tr>
                 <tr>
@@ -73,17 +61,17 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><b>블로그</b></td>
+                    <td><b>유튜브</b></td>
                     <td>
-                        <input type="text" v-model="data.sns_blog">
+                        <input type="text" v-model="data.sns_youtube">
                     </td>
                 </tr>
                 <tr>
-                    <td><b>틱톡</b></td>
+                    <td><b>페이스북</b></td>
                     <td>
-                        <input type="text" v-model="data.sns_tiktok">
+                        <input type="text" v-model="data.sns_facebook">
                     </td>
-                </tr*/?>
+                </tr>
                 </tbody>
             </table>
         </div>

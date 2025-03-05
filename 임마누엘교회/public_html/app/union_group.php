@@ -49,7 +49,7 @@ include_once("./app_head.php");
                     <div class="swiper group-02">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <img src="<?php echo G5_URL ?>/app/img/group/group-2-1.jpg" alt="임마누엘 교회">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-2-1.JPG" alt="임마누엘 교회">
                             </div>
                             <div class="swiper-slide">
                                 <img src="<?php echo G5_URL ?>/app/img/group/group-2-2.jpg" alt="임마누엘 교회">
@@ -72,7 +72,7 @@ include_once("./app_head.php");
                     <div class="swiper group-03">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <img src="<?php echo G5_URL ?>/app/img/group/group-3-1.jpg" alt="임마누엘 교회">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-3-1.JPG" alt="임마누엘 교회">
                             </div>
                             <div class="swiper-slide">
                                 <img src="<?php echo G5_URL ?>/app/img/group/group-3-2.jpg" alt="임마누엘 교회">
@@ -98,18 +98,16 @@ include_once("./app_head.php");
                     <div class="swiper group-04">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="swiper-slide">
-                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-1.JPG" alt="임마누엘 교회">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-2.JPG" alt="임마누엘 교회">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-3.jpg" alt="임마누엘 교회">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="<?php echo G5_URL ?>/app/img/group/group-4-4.jpg" alt="임마누엘 교회">
-                                </div>
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-4-1.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-4-2.JPG" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-4-3.jpg" alt="임마누엘 교회">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="<?php echo G5_URL ?>/app/img/group/group-4-4.jpg" alt="임마누엘 교회">
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -431,6 +429,15 @@ include_once("./app_head.php");
             },
         });
         var swiper = new Swiper(".group-12", {
+            slidesPerView: 1,
+            spaceBetween: 5,
+            autoHeight: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+        var swiper = new Swiper(".group-14", {
             slidesPerView: 1,
             spaceBetween: 5,
             autoHeight: true,

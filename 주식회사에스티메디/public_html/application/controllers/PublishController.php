@@ -34,9 +34,14 @@ class PublishController extends CI_Controller {
     public function indexNoOrder() {
         $member = $this->session->userdata('member');
 
+        $this->load->model("PopupModel");
+        $popupList = $this->PopupModel->getTodayPopup(1);
+
+
         $data = [
             'pid' => 'index2',
             "member" => $member,
+            'popupList' => $popupList, // 팝업
             "jl" => $this->jl
         ];
 
@@ -44,6 +49,9 @@ class PublishController extends CI_Controller {
     }
 
     public function indexNoMember() {
+        $this->load->model("PopupModel");
+        $popupList = $this->PopupModel->getTodayPopup(0);
+
         $model = new JlModel(array("table" => "bs_comparative"));
         $model->orderBy("priority","DESC");
         $items = $model->get();
@@ -51,6 +59,7 @@ class PublishController extends CI_Controller {
         $data = [
             'pid' => 'index2',
             "data" => $items,
+            'popupList' => $popupList, // 팝업
             "jl" => $this->jl
         ];
 

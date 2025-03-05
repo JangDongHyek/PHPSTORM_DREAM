@@ -5,7 +5,7 @@ include_once("../jl/JlConfig.php");
 ?>
 
 <div id="app">
-    <bbs-video-input mb_no="<?=$member['mb_no']?>"></bbs-video-input>
+    <bbs-video-input mb_no="<?=$member['mb_no']?>" admin="<?=$is_admin?>"></bbs-video-input>
 </div>
 
 <?

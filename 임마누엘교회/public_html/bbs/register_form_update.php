@@ -436,6 +436,8 @@ if ($w == '') {
         set_session('ss_mb_id', '');
         alert('회원 정보가 수정 되었습니다.\n\nE-mail 주소가 변경되었으므로 다시 인증하셔야 합니다.', G5_URL);
     } else {
+        if($module == "app") $redirect = G5_URL."/app";
+        else $redirect = G5_URL."/index2.php";
         echo '
         <!doctype html>
         <html lang="ko">
@@ -451,7 +453,7 @@ if ($w == '') {
         </form>
         <script>
         alert("회원 정보가 수정 되었습니다.");
-        document.fregisterupdate.submit();
+        window.location.href = "'.$redirect.'"
         </script>
         </body>
         </html>';

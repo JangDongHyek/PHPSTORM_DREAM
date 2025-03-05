@@ -6,8 +6,7 @@ $g5['title'] = '기도요청';
 include_once('./admin.head.php');
 ?>
 <div id="bo_list">
-
-    <div id="app">
+    <div id="app" class="tbl_head01 tbl_wrap">
         <bbs-prayer-list></bbs-prayer-list>
     </div>
 </div>

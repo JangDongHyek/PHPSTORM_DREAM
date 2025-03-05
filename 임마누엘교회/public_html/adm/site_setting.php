@@ -6,8 +6,10 @@ $g5['title'] = '사이트설정';
 include_once('./admin.head.php');
 ?>
 
-<div id="app">
-    <site-setting></site-setting>
+<div id="bo_list">
+    <div id="app" class="tbl_head01 tbl_wrap">
+        <site-setting></site-setting>
+    </div>
 </div>
 
 <?

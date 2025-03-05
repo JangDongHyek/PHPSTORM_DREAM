@@ -4,17 +4,17 @@ $bo_subject='중요교회소식';
 $list=array (
   0 => 
   array (
-    'wr_id' => '2',
-    'wr_num' => '-2',
+    'wr_id' => '3',
+    'wr_num' => '-3',
     'wr_reply' => '',
-    'wr_parent' => '2',
+    'wr_parent' => '3',
     'wr_is_comment' => '0',
     'wr_comment' => '0',
     'wr_comment_reply' => '',
     'ca_name' => '',
     'wr_option' => 'html1',
-    'wr_subject' => '2025 IMC 신년임원교육',
-    'wr_content' => '<p style="line-height: 2;"><span style="font-family: 나눔바른고딕, NanumBarunGothic; font-size: 11pt;">﻿</span><span style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt;">‣ </span><span style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt;">일시&nbsp;</span><span lang="EN-US" style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt;">:&nbsp;</span><span lang="EN-US" style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt;">5</span><span style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt;">일</span><span lang="EN-US" style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt;">,&nbsp; 12</span><span style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt;">일 오후 </span><span lang="EN-US" style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt;">7:30&nbsp;</span><span lang="EN-US" style="font-size: 11pt; font-family: &quot;Noto Sans CJK KR DemiLight&quot;; letter-spacing: -0.5pt;">·&nbsp;</span><span style="font-size: 11pt; font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt;">예루살렘성전</span>&nbsp;</p><p class="0" style="line-height: 2;"><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;">  </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">‣ </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">대상&nbsp;</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">:&nbsp;</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">IMC </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">전 임원</span></p><p class="0" style="line-height: 2;"><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;">  </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">‣ </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">강사&nbsp;</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">:&nbsp;</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">한상호 목사</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">(5</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">일</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">, </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">주안감리교회 담임</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">)</span></p><p class="0" style="line-height: 2;"><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;"></span><span lang="EN-US" style="letter-spacing: 0.5pt; font-size: 11pt;"></span><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;"></span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 김동현 목사</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">(12</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">일</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">, </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">은평감리교회 담임</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">)</span></p><p class="0" style="line-height: 2;"><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">&nbsp;</span></p><p class="0" style="line-height: 2; word-break: keep-all;"><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;"> </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">※</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">12</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">일</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">(</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">주일</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">) </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">저녁예배는 <span style="color: rgb(196, 30, 30);">임원헌신예배</span>로 드립니다</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -1.2pt; font-size: 11pt; color: rgb(0, 117, 200);">.</span></p><div id="hwpEditorBoardContent" class="hwp_editor_board_content" data-hjsonver="1.0" data-jsonlen="11494"><!--[data-hwpjson]{
+    'wr_subject' => '1·2링커 겨울수련회',
+    'wr_content' => '<p class="0" style="line-height: 2;"><span lang="EN-US" style="mso-fareast-font-family:Noto Sans CJK JP DemiLight;mso-font-width:80%;letter-spacing:-0.5pt;font-size:9.0pt;">  </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">‣ </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">날짜 </span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">: 13</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">일</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">(</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">목</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">)~15</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">일</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">(</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">토</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">) </span></p><p class="0" style="line-height: 2;"><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;">  </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">‣ </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">장소 </span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">: </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">가평 킹덤리조트</span></p><p class="0" style="line-height: 2;"><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;">  </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">‣ </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">주제 </span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">: </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">일리있는 말씀</span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">(</span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">욘 </span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">4:10~11)</span></p><p>&nbsp;</p><div id="hwpEditorBoardContent" class="hwp_editor_board_content" data-hjsonver="1.0" data-jsonlen="7545"><!--[data-hwpjson]{
 "documentPr": {
 "di": "",
 "dp": {
@@ -39,7 +39,7 @@ $list=array (
 "cr": "",
 "su": "",
 "de": "",
-"cd": "2025-01-08T04:40:47.414Z",
+"cd": "2025-02-05T06:57:07.505Z",
 "ke": ""
 }
 },
@@ -115,7 +115,7 @@ $list=array (
 }
 },
 "bf": {
-"01DB618782D2BD9000000007": {
+"01DB779B2CF8F13000000006": {
 "id": 1,
 "td": false,
 "sh": false,
@@ -143,7 +143,7 @@ $list=array (
 "dc": 0,
 "fi": { }
 },
-"01DB618782D2BD9000000008": {
+"01DB779B2CF8F13000000007": {
 "id": 2,
 "td": false,
 "sh": false,
@@ -180,7 +180,7 @@ $list=array (
 }
 },
 "cp": {
-"01DB618782D2BD9000000009": {
+"01DB779B2CF8F13000000008": {
 "id": 0,
 "he": 900,
 "tc": 0,
@@ -188,7 +188,7 @@ $list=array (
 "uf": false,
 "uk": false,
 "sm": 0,
-"bf": "01DB618782D2BD9000000008",
+"bf": "01DB779B2CF8F13000000007",
 "f1": "Noto Sans CJK JP DemiLight",
 "t1": 5,
 "f2": "Noto Sans CJK JP DemiLight",
@@ -249,222 +249,15 @@ $list=array (
 "su": false,
 "sb": false
 },
-"01DB618782D2BD900000000A": {
+"01DB779B2CF8F13000000009": {
 "id": 1,
-"he": 900,
-"tc": 0,
-"sc": 4294967295,
-"uf": false,
-"uk": false,
-"sm": 0,
-"bf": "01DB618782D2BD9000000008",
-"f1": "Noto Sans CJK JP DemiLight",
-"t1": 5,
-"f2": "Noto Sans CJK JP DemiLight",
-"t2": 5,
-"f3": "Noto Sans CJK JP DemiLight",
-"t3": 5,
-"f4": "Noto Sans CJK JP DemiLight",
-"t4": 5,
-"f5": "Noto Sans CJK JP DemiLight",
-"t5": 5,
-"f6": "Noto Sans CJK JP DemiLight",
-"t6": 5,
-"f7": "Noto Sans CJK JP DemiLight",
-"t7": 5,
-"r1": 80,
-"r2": 80,
-"r3": 80,
-"r4": 80,
-"r5": 80,
-"r6": 80,
-"r7": 80,
-"s1": -12,
-"s2": -12,
-"s3": -12,
-"s4": -12,
-"s5": -12,
-"s6": -12,
-"s7": -12,
-"e1": 100,
-"e2": 100,
-"e3": 100,
-"e4": 100,
-"e5": 100,
-"e6": 100,
-"e7": 100,
-"o1": 0,
-"o2": 0,
-"o3": 0,
-"o4": 0,
-"o5": 0,
-"o6": 0,
-"o7": 0,
-"it": false,
-"bo": false,
-"ut": 0,
-"us": 1,
-"uc": 0,
-"st": false,
-"ss": 1,
-"so": 0,
-"ot": 0,
-"ht": 0,
-"hc": 0,
-"hx": 0,
-"hy": 0,
-"em": false,
-"en": false,
-"su": false,
-"sb": false
-},
-"01DB618782D2BD900000000B": {
-"id": 2,
-"he": 900,
-"tc": 0,
-"sc": 4294967295,
-"uf": false,
-"uk": false,
-"sm": 0,
-"bf": "01DB618782D2BD9000000008",
-"f1": "Noto Sans CJK KR DemiLight",
-"t1": 1,
-"f2": "Noto Sans CJK KR DemiLight",
-"t2": 1,
-"f3": "Noto Sans CJK KR DemiLight",
-"t3": 1,
-"f4": "Noto Sans CJK KR DemiLight",
-"t4": 1,
-"f5": "Noto Sans CJK KR DemiLight",
-"t5": 1,
-"f6": "Noto Sans CJK KR DemiLight",
-"t6": 1,
-"f7": "Noto Sans CJK KR DemiLight",
-"t7": 1,
-"r1": 80,
-"r2": 80,
-"r3": 80,
-"r4": 80,
-"r5": 80,
-"r6": 80,
-"r7": 80,
-"s1": -5,
-"s2": -5,
-"s3": -5,
-"s4": -5,
-"s5": -5,
-"s6": -5,
-"s7": -5,
-"e1": 100,
-"e2": 100,
-"e3": 100,
-"e4": 100,
-"e5": 100,
-"e6": 100,
-"e7": 100,
-"o1": 0,
-"o2": 0,
-"o3": 0,
-"o4": 0,
-"o5": 0,
-"o6": 0,
-"o7": 0,
-"it": false,
-"bo": false,
-"ut": 0,
-"us": 1,
-"uc": 0,
-"st": false,
-"ss": 1,
-"so": 0,
-"ot": 0,
-"ht": 0,
-"hc": 0,
-"hx": 0,
-"hy": 0,
-"em": false,
-"en": false,
-"su": false,
-"sb": false
-},
-"01DB618782D2BD900000000C": {
-"id": 3,
-"he": 900,
-"tc": 0,
-"sc": 4294967295,
-"uf": false,
-"uk": false,
-"sm": 0,
-"bf": "01DB618782D2BD9000000008",
-"f1": "Noto Sans CJK JP DemiLight",
-"t1": 5,
-"f2": "Noto Sans CJK JP DemiLight",
-"t2": 5,
-"f3": "Noto Sans CJK JP DemiLight",
-"t3": 5,
-"f4": "Noto Sans CJK JP DemiLight",
-"t4": 5,
-"f5": "Noto Sans CJK JP DemiLight",
-"t5": 5,
-"f6": "Noto Sans CJK JP DemiLight",
-"t6": 5,
-"f7": "Noto Sans CJK JP DemiLight",
-"t7": 5,
-"r1": 80,
-"r2": 80,
-"r3": 80,
-"r4": 80,
-"r5": 80,
-"r6": 80,
-"r7": 80,
-"s1": 5,
-"s2": 5,
-"s3": 5,
-"s4": 5,
-"s5": 5,
-"s6": 5,
-"s7": 5,
-"e1": 100,
-"e2": 100,
-"e3": 100,
-"e4": 100,
-"e5": 100,
-"e6": 100,
-"e7": 100,
-"o1": 0,
-"o2": 0,
-"o3": 0,
-"o4": 0,
-"o5": 0,
-"o6": 0,
-"o7": 0,
-"it": false,
-"bo": false,
-"ut": 0,
-"us": 1,
-"uc": 0,
-"st": false,
-"ss": 1,
-"so": 0,
-"ot": 0,
-"ht": 0,
-"hc": 0,
-"hx": 0,
-"hy": 0,
-"em": false,
-"en": false,
-"su": false,
-"sb": false
-},
-"01DB618782D2BD900000000D": {
-"id": 4,
 "he": 1000,
 "tc": 0,
 "sc": 4294967295,
 "uf": false,
 "uk": false,
 "sm": 0,
-"bf": "01DB618782D2BD9000000008",
+"bf": "01DB779B2CF8F13000000007",
 "f1": "함초롬바탕",
 "t1": 1,
 "f2": "함초롬바탕",
@@ -527,7 +320,7 @@ $list=array (
 }
 },
 "tp": {
-"01DB618782D2BD900000000E": {
+"01DB779B2CF8F1300000000A": {
 "id": 0,
 "al": true,
 "ar": false,
@@ -537,14 +330,14 @@ $list=array (
 "nu": { },
 "bu": { },
 "pp": {
-"01DB618782D2BD900000000F": {
+"01DB779B2CF8F1300000000B": {
 "id": 0,
 "ah": 0,
 "av": 0,
 "ht": 0,
 "hi": "",
 "hl": 0,
-"tp": "01DB618782D2BD900000000E",
+"tp": "01DB779B2CF8F1300000000A",
 "kb": 0,
 "kn": true,
 "ko": false,
@@ -564,8 +357,8 @@ $list=array (
 "mp": 0,
 "mn": 0,
 "lt": 0,
-"lv": 115,
-"bf": "01DB618782D2BD9000000008",
+"lv": 120,
+"bf": "01DB779B2CF8F13000000007",
 "bl": 0,
 "br": 0,
 "bt": 0,
@@ -573,50 +366,14 @@ $list=array (
 "bc": false,
 "bi": false
 },
-"01DB618782D2BD9000000010": {
+"01DB779B2CF8F1300000000C": {
 "id": 1,
-"ah": 1,
-"av": 0,
-"ht": 0,
-"hi": "",
-"hl": 0,
-"tp": "01DB618782D2BD900000000E",
-"kb": 0,
-"kn": false,
-"ko": false,
-"kk": false,
-"kl": false,
-"kp": false,
-"kw": 0,
-"co": 0,
-"fl": false,
-"st": true,
-"sl": false,
-"ae": false,
-"aa": false,
-"mi": 0,
-"ml": 0,
-"mr": 0,
-"mp": 0,
-"mn": 0,
-"lt": 0,
-"lv": 115,
-"bf": "01DB618782D2BD9000000008",
-"bl": 0,
-"br": 0,
-"bt": 0,
-"bb": 0,
-"bc": false,
-"bi": false
-},
-"01DB618782D2BD9000000011": {
-"id": 2,
 "ah": 0,
 "av": 0,
 "ht": 0,
 "hi": "",
 "hl": 0,
-"tp": "01DB618782D2BD900000000E",
+"tp": "01DB779B2CF8F1300000000A",
 "kb": 0,
 "kn": true,
 "ko": false,
@@ -637,7 +394,7 @@ $list=array (
 "mn": 0,
 "lt": 0,
 "lv": 160,
-"bf": "01DB618782D2BD9000000008",
+"bf": "01DB779B2CF8F13000000007",
 "bl": 0,
 "br": 0,
 "bt": 0,
@@ -647,167 +404,96 @@ $list=array (
 }
 },
 "st": {
-"01DB618782D2BD9000000012": {
+"01DB779B2CF8F1300000000D": {
 "id": 0,
 "ty": 0,
 "na": "바탕글",
 "en": "Normal",
-"pp": "01DB618782D2BD9000000011",
-"cp": "01DB618782D2BD900000000D",
-"ns": "01DB618782D2BD9000000012",
+"pp": "01DB779B2CF8F1300000000C",
+"cp": "01DB779B2CF8F13000000009",
+"ns": "01DB779B2CF8F1300000000D",
 "li": 1042,
 "lf": false
 }
 },
 "mp": { },
 "ro": {
-"hp": "01DB618782D2968000000002",
-"01DB618782D2968000000002": {
-"np": "01DB618782D2968000000003",
+"hp": "01DB779B2CF8F13000000002",
+"01DB779B2CF8F13000000002": {
+"np": "01DB779B2CF8F13000000003",
 "id": 0,
-"pp": "01DB618782D2BD900000000F",
-"si": "01DB618782D2BD9000000012",
+"pp": "01DB779B2CF8F1300000000B",
+"si": "01DB779B2CF8F1300000000D",
 "bf": 3,
 "ru": [
 {
-"cp": "01DB618782D2BD9000000009",
+"cp": "01DB779B2CF8F13000000008",
 "ch": [
 {
 "cc": 2,
 "ci": 1936024420,
-"co": "01DB618782D2968000000000"
+"co": "01DB779B2CF8F13000000000"
 }
 ,
 {
 "cc": 2,
 "ci": 1668246628,
-"co": "01DB618782D2968000000001"
+"co": "01DB779B2CF8F13000000001"
 }
 ,
 {
-"t": "‣ 일시:\\u001F5"
-}
-]
-}
-,
-{
-"cp": "01DB618782D2BD900000000A",
-"ch": [
-{
-"t": "일, 12일 오후 7:30"
-}
-]
-}
-,
-{
-"cp": "01DB618782D2BD900000000B",
-"ch": [
-{
-"t": "·"
-}
-]
-}
-,
-{
-"cp": "01DB618782D2BD9000000009",
-"ch": [
-{
-"t": "예루살렘성전"
+"t": "  ‣ 날짜 : 13일(목)~15일(토) "
 }
 ]
 }
 ]
 },
-"01DB618782D2968000000003": {
-"np": "01DB618782D2968000000004",
+"01DB779B2CF8F13000000003": {
+"np": "01DB779B2CF8F13000000004",
 "id": -2147483648,
-"pp": "01DB618782D2BD900000000F",
-"si": "01DB618782D2BD9000000012",
+"pp": "01DB779B2CF8F1300000000B",
+"si": "01DB779B2CF8F1300000000D",
 "bf": 0,
 "ru": [
 {
-"cp": "01DB618782D2BD9000000009",
+"cp": "01DB779B2CF8F13000000008",
 "ch": [
 {
-"t": "  ‣ 대상:\\u001FIMC 전 임원"
+"t": "  ‣ 장소 : 가평 킹덤리조트"
 }
 ]
 }
 ]
 },
-"01DB618782D2968000000004": {
-"np": "01DB618782D2968000000005",
+"01DB779B2CF8F13000000004": {
+"np": "01DB779B2CF8F13000000005",
 "id": -2147483648,
-"pp": "01DB618782D2BD900000000F",
-"si": "01DB618782D2BD9000000012",
+"pp": "01DB779B2CF8F1300000000B",
+"si": "01DB779B2CF8F1300000000D",
 "bf": 0,
 "ru": [
 {
-"cp": "01DB618782D2BD9000000009",
+"cp": "01DB779B2CF8F13000000008",
 "ch": [
 {
-"t": "  ‣ 강사:\\u001F한상호 목사\\u001F(5일, 주안감리교회 담임)"
+"t": "  ‣ 주제 : 일리있는 말씀\\u001F(욘 4:10~11)"
 }
 ]
 }
 ]
 },
-"01DB618782D2968000000005": {
-"np": "01DB618782D2968000000006",
-"id": -2147483648,
-"pp": "01DB618782D2BD900000000F",
-"si": "01DB618782D2BD9000000012",
-"bf": 0,
-"ru": [
-{
-"cp": "01DB618782D2BD9000000009",
-"ch": [
-{
-"t": "    "
-}
-]
-}
-,
-{
-"cp": "01DB618782D2BD900000000C",
-"ch": [
-{
-"t": " "
-}
-]
-}
-,
-{
-"cp": "01DB618782D2BD9000000009",
-"ch": [
-{
-"t": "   \\u001F김동현 목사\\u001F(12일, 은평감리교회 담임)"
-}
-]
-}
-]
-},
-"01DB618782D2968000000006": {
+"01DB779B2CF8F13000000005": {
 "np": "",
 "id": -2147483648,
-"pp": "01DB618782D2BD9000000010",
-"si": "01DB618782D2BD9000000012",
+"pp": "01DB779B2CF8F1300000000B",
+"si": "01DB779B2CF8F1300000000D",
 "bf": 0,
 "ru": [
 {
-"cp": "01DB618782D2BD9000000009",
+"cp": "01DB779B2CF8F13000000008",
 "ch": [
 {
-"t": " "
-}
-]
-}
-,
-{
-"cp": "01DB618782D2BD900000000A",
-"ch": [
-{
-"t": "※12일(주일) 저녁예배는 임원헌신예배로 드립니다."
+"t": "  ‣ 문의 : 문준영 목사 010-4199-0204"
 }
 ]
 }
@@ -816,7 +502,7 @@ $list=array (
 },
 "sl": { },
 "cs": {
-"01DB618782D2968000000000": {
+"01DB779B2CF8F13000000000": {
 "cc": 2,
 "ci": 1936024420,
 "td": 0,
@@ -901,7 +587,7 @@ $list=array (
 "pb": [
 {
 "ty": 0,
-"bf": "01DB618782D2BD9000000007",
+"bf": "01DB779B2CF8F13000000006",
 "tb": true,
 "hi": false,
 "fi": false,
@@ -913,7 +599,7 @@ $list=array (
 },
 {
 "ty": 1,
-"bf": "01DB618782D2BD9000000007",
+"bf": "01DB779B2CF8F13000000006",
 "tb": true,
 "hi": false,
 "fi": false,
@@ -925,7 +611,7 @@ $list=array (
 },
 {
 "ty": 2,
-"bf": "01DB618782D2BD9000000007",
+"bf": "01DB779B2CF8F13000000006",
 "tb": true,
 "hi": false,
 "fi": false,
@@ -939,7 +625,7 @@ $list=array (
 "mp": [ ]
 }
 ,
-"01DB618782D2968000000001": {
+"01DB779B2CF8F13000000001": {
 "cc": 2,
 "ci": 1668246628,
 "ty": 0,
@@ -955,12 +641,12 @@ $list=array (
 },
 "bi": [ ],
 "bidt": { }
-}--></div>',
+}--></div><p>&nbsp;</p><p class="0" style="line-height: 2;"><span lang="EN-US" style="letter-spacing: -0.5pt; font-size: 11pt;">  </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">‣ </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">문의 </span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">: </span><span style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">문준영 목사 </span><span lang="EN-US" style="font-family: &quot;Noto Sans CJK JP DemiLight&quot;; letter-spacing: -0.5pt; font-size: 11pt;">010-4199-0204</span></p>',
     'wr_link1' => '',
     'wr_link2' => '',
     'wr_link1_hit' => '0',
     'wr_link2_hit' => '0',
-    'wr_hit' => '3',
+    'wr_hit' => '14',
     'wr_good' => '0',
     'wr_nogood' => '0',
     'mb_id' => 'admin',
@@ -968,9 +654,9 @@ $list=array (
     'wr_name' => '최고관리자',
     'wr_email' => 'admin@domain.com',
     'wr_homepage' => '',
-    'wr_datetime' => '2025-01-08 13:43:21',
+    'wr_datetime' => '2025-02-05 15:57:46',
     'wr_file' => '0',
-    'wr_last' => '2025-01-08 13:43:21',
+    'wr_last' => '2025-02-05 15:57:46',
     'wr_ip' => '222.107.102.130',
     'wr_facebook_user' => '',
     'wr_twitter_user' => '',
@@ -985,20 +671,20 @@ $list=array (
     'wr_9' => '',
     'wr_10' => '',
     'wr_orderby' => '0',
-    'is_notice' => false,
-    'subject' => '2025 IMC 신년임원교육',
+    'is_notice' => true,
+    'subject' => '1·2링커 겨울수련회',
     'comment_cnt' => '',
-    'datetime' => '2025-01-08',
-    'datetime2' => '01-08',
-    'last' => '2025-01-08',
-    'last2' => '01-08',
+    'datetime' => '2025-02-05',
+    'datetime2' => '02-05',
+    'last' => '2025-02-05',
+    'last2' => '02-05',
     'name' => '<span class="sv_member">최고관리자</span>',
     'reply' => 0,
     'icon_reply' => '',
     'icon_link' => '',
-    'ca_name_href' => 'https://dreamforone.kr:443/~imcchurch/bbs/board.php?bo_table=notice&amp;sca=',
-    'href' => 'https://dreamforone.kr:443/~imcchurch/bbs/board.php?bo_table=notice&amp;wr_id=2',
-    'comment_href' => 'https://dreamforone.kr:443/~imcchurch/bbs/board.php?bo_table=notice&amp;wr_id=2',
+    'ca_name_href' => 'http://dreamforone.kr/~imcchurch/bbs/board.php?bo_table=notice&amp;sca=',
+    'href' => 'http://dreamforone.kr/~imcchurch/bbs/board.php?bo_table=notice&amp;wr_id=3',
+    'comment_href' => 'http://dreamforone.kr/~imcchurch/bbs/board.php?bo_table=notice&amp;wr_id=3',
     'icon_new' => '',
     'icon_hot' => '',
     'icon_secret' => '',
@@ -1009,8 +695,8 @@ $list=array (
     ),
     'link_href' => 
     array (
-      1 => 'https://dreamforone.kr:443/~imcchurch/bbs/link.php?bo_table=notice&amp;wr_id=2&amp;no=1',
-      2 => 'https://dreamforone.kr:443/~imcchurch/bbs/link.php?bo_table=notice&amp;wr_id=2&amp;no=2',
+      1 => 'http://dreamforone.kr/~imcchurch/bbs/link.php?bo_table=notice&amp;wr_id=3&amp;no=1',
+      2 => 'http://dreamforone.kr/~imcchurch/bbs/link.php?bo_table=notice&amp;wr_id=3&amp;no=2',
     ),
     'link_hit' => 
     array (

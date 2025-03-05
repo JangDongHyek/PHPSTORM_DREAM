@@ -31,6 +31,7 @@
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
+                admin: {type: String, default: ""},
                 mb_no: {type: String, default: ""},
                 primary: {type: String, default: ""},
             },
@@ -55,6 +56,11 @@
             async created() {
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
+
+                if(!this.admin) {
+                    await this.jl.alert("권한이 부족합니다.");
+                    window.history.back();
+                }
             },
             mounted() {
                 this.$nextTick(() => {

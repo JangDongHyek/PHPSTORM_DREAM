@@ -22,6 +22,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <input type="hidden" name="cert_type" value="<?php echo $member['mb_certify']; ?>">
     <input type="hidden" name="referer" value="<?=$_SERVER['HTTP_REFERER'];?>">
     <input type="hidden" name="cert_no" value="">
+    <input type="hidden" name="module" value="<?=$_POST['module']?>">
     <input type="hidden" name="mb_4" id="mb_4">
     <?php if (isset($member['mb_sex'])) {  ?><input type="hidden" name="mb_sex" value="<?php echo $member['mb_sex'] ?>"><?php }  ?>
     <?php if (isset($member['mb_nick_date']) && $member['mb_nick_date'] > date("Y-m-d", G5_SERVER_TIME - ($config['cf_nick_modify'] * 86400))) { // 닉네임수정일이 지나지 않았다면  ?>
@@ -78,7 +79,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
             </dl>
             <dl>
                 <dt><label for="reg_mb_tel">전화번호<?php if ($config['cf_req_tel']) { ?><strong class="sound_only">필수</strong><?php } ?></label></dt>
-                <dd><input type="text" name="mb_tel" value="<?php echo get_text($member['mb_tel']) ?>" id="reg_mb_tel" <?php echo $config['cf_req_tel']?"required":""; ?> class="frm_input <?php echo $config['cf_req_tel']?"required":""; ?>" maxlength="20"></dd>
+                <dd><input type="text" oninput="formatPhoneNumber(this)" name="mb_tel" value="<?php echo get_text($member['mb_tel']) ?>" id="reg_mb_tel" <?php echo $config['cf_req_tel']?"required":""; ?> class="frm_input <?php echo $config['cf_req_tel']?"required":""; ?>" maxlength="20"></dd>
             </dl>
 
             <dl>
@@ -197,6 +198,16 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
         Jl_methods.addObject = function() {
             this.mb_4.push({first : "",second : ""});
+        }
+
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/[^0-9]/g, ""); // 숫자만 남기기
+            if (value.length > 3 && value.length <= 7) {
+                value = value.replace(/(\d{3})(\d{1,4})/, "$1-$2");
+            } else if (value.length > 7) {
+                value = value.replace(/(\d{3})(\d{4})(\d{1,4})/, "$1-$2-$3");
+            }
+            input.value = value;
         }
     </script>
     <script>

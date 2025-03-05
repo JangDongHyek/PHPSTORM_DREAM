@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <item-bs-modal :modal="modal2" @close="modal2 = false;" classes="a b">
+        <item-bs-modal :modal="modal2" @close="modal2 = false;" classes="a b helperListModal">
             <template v-slot:header>
                 <h4 class="modal-title" id="helperListModalLabel">지원자 리스트</h4>
                 <button @click="modal2 = false;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

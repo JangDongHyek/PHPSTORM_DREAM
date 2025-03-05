@@ -5,7 +5,7 @@ include_once("../jl/JlConfig.php");
 ?>
 
 <div id="app">
-    <bbs-friend-input mb_no="<?=$member['mb_no']?>"></bbs-friend-input>
+    <bbs-friend-input mb_no="<?=$member['mb_no']?>" primary="<?=$_GET['primary']?>"></bbs-friend-input>
 </div>
 
 <?

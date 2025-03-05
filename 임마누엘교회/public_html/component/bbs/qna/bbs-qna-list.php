@@ -44,7 +44,7 @@
                     <div class="icon icon_big icon_line">{{modal_data.$g5_member.mb_name}} ({{modal_data.$g5_member.mb_2}} {{modal_data.$g5_member.mb_3}}) <b>{{modal_data.wr_datetime.split(' ')[0]}}</b></div>
                     {{modal_data.wr_subject}}
                 </div>
-                <textarea placeholder="답변 작성" v-model="modal_data.wr_content"></textarea>
+                <textarea placeholder="답변 작성" v-model="modal_data.wr_content" :readonly="mb_1 != '관리자'"></textarea>
             </template>
 
 
@@ -61,6 +61,7 @@
             template: "#<?=$componentName?>-template",
             props: {
                 mb_1 : {type: String, default: ""},
+                mb_no : {type: String, default: ""},
                 primary : {type: String, default: ""},
             },
             data: function () {
@@ -116,12 +117,15 @@
             },
             methods: {
                 async viewBoard(board) {
-                    if(this.mb_1 != '관리자') {
-                        await this.jl.alert("관리자만 확인 가능합니다.");
+                    if(this.mb_1 == '관리자' || board.wr_1 == this.mb_no) {
+                        this.modal_data = board;
+                        this.modal = true;
+                        
+                    }else {
+                        await this.jl.alert("관리자 및 작성자만 확인 가능합니다.");
                         return false;
                     }
-                    this.modal_data = board;
-                    this.modal = true;
+                    
                 }
             },
             computed: {

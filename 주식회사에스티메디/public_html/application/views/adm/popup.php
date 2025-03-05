@@ -53,6 +53,18 @@
                 foreach($listData as $list) {
                     $imgPath = UPLOAD_FOLDERS['POPUP'] . $list['file_nm'];
                     $imgSrc = ASSETS_URL.'/'.uploadFileRemoveServerPath($imgPath);
+
+                    switch ($list['display_position']) {
+                        case "0" :
+                            $position = "로그인 전";
+                            break;
+                        case "1" :
+                            $position = "로그인 후";
+                            break;
+                        case "2" :
+                            $position = "로그인 전/후";
+                            break;
+                    }
                 ?>
                 <tr>
                     <td><input type="checkbox" name="checkIdx" value="<?=$list['idx']?>"/></td>
@@ -61,7 +73,7 @@
                     <td><?=$list['title']?></td>
                     <td><?=replaceDateFormat($list['start_date'], 14)?></td>
                     <td><?=replaceDateFormat($list['end_date'], 14)?></td>
-                    <td><?=$list['display_position']=='0'?'<span class="txt_red">로그인 전</span>':'<span class="txt_blue">로그인 후</span>'?></td>
+                    <td><span class="txt_red"><?=$position?></span></td>
                     <td><?=$list['hide_duration_hour']?>시간</td>
                     <td><?=$list['layer_left']?>px</td>
                     <td><?=$list['layer_top']?>px</td>

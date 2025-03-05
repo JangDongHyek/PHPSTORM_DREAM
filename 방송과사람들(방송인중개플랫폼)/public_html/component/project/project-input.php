@@ -228,7 +228,9 @@
                     images : [],
                     upfiles : [],
                     links : [],
-                    status : false
+                    status : false,
+                    choice : false,
+                    complete : false,
                 },
 
                 options : {

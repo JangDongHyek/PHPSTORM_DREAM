@@ -1,6 +1,7 @@
 <?php
 //namespace App\Libraries;
 require_once("Jl.php");
+include_once("../common.php");
 class JlService extends Jl{
     private $POST;
     private $FILES;
@@ -64,6 +65,7 @@ class JlService extends Jl{
         if($method == "distinct") $response = $this->distinct();
         if($method == "captcha_image") $response = $this->captchaImage();
         if($method == "captcha_check") $response = $this->captchaCheck();
+        if($method == "point") $response = $this->point();
 
         $trace_list = array("insert","create","update","put","delete","remove","where_delete","wd");
         if(in_array($method,$trace_list) && $response['trace']) {
@@ -74,6 +76,14 @@ class JlService extends Jl{
             );
             $this->sessionTrace($object);
         }
+
+        return $response;
+    }
+
+    public function point() {
+        insert_point($this->obj['mb_id'],$this->obj['point'],$this->obj['content']);
+
+        $response['success'] = true;
 
         return $response;
     }

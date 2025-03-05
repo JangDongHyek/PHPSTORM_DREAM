@@ -2,6 +2,13 @@
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <div id="mypoint" class="">
+            <div class="box_radius box_line">
+                <p>
+                    <b>👛 포인트 적립 활동 안내</b> <br>
+                    <span class="icon icon_color2">01</span> 결단노트 작성시 100포인트 지급(주 1회)<br>
+                    <span class="icon icon_color2">02</span> 속회보고 작성시 100포인트 지급(속장만 해당)
+                </p>
+            </div>
             <div class="box_radius box_blue">
                 <h6>현재 포인트</h6>
                 <h6 class="txt_blue txt_bold">{{member.mb_point.format()}} <i class="fa-solid fa-circle-p"></i></h6>

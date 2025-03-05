@@ -1,4 +1,8 @@
-<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<?php
+$componentName = str_replace(".php","",basename(__FILE__));
+$pathParts = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+$context = end($pathParts);
+?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <ul class="project-list" v-if="arrays.length > 0">
@@ -16,8 +20,7 @@
                     <div class="project-cont">
                         <div class="project-info">
                             <div class="project-category">
-                                <span class="icon" v-if="!item.status">승인전</span>
-                                <span class="state" :class="getStatus(item)" >{{getStatus(item,'text')}}</span>
+                                <span class="state" :class="common.getClass(item)" >{{common.getStatus(item)}}</span>
                                 {{item.$category.name}} · {{item.$category2.name}}
                                 <button type="button" class="bookmark" @click="postBookmark(item)"><i :class="item.$project_bookmark.length ? 'fa-solid' : 'fa-light'" class="fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                             </div>
@@ -112,6 +115,8 @@
                 load : false,
                 jl: null,
                 component_idx: "",
+                context : "<?=$context?>",
+                common : null,
 
                 data: {},
                 arrays : [],
@@ -173,6 +178,12 @@
         async created() {
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
+            const className = this.context.charAt(0).toUpperCase() + this.context.slice(1) + "Common";
+            console.log(className)
+            if (typeof window[className] !== 'undefined') {
+                console.log(22)
+                this.common = new window[className](this.jl);
+            }
 
             //if(this.primary) this.data = await this.jl.getData(this.filter);
             await this.jl.getsData(this.filter,this.arrays);
@@ -224,17 +235,7 @@
                     ],
                 })
             },
-            getStatus(item,type = "class") {
-                if(!item.status) return '';
 
-                if(item.choice) {
-                    return type == "class" ? "v3" : "선정 완료";
-                }else if(this.jl.isRangeDate(item.start_date,item.end_date)) {
-                    return type == "class" ? "v1" : "진행 중";
-                }else {
-                    return type == "class" ? "v2" : "모집 종료";
-                }
-            },
             getDurationDays(item) {
                 let startDate = item.start_date;
                 let endDate = item.end_date;

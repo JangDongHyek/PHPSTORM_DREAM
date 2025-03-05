@@ -40,6 +40,7 @@ function print_menu2($key, $no)
 }
 ?>
 
+<link href="<?php echo G5_THEME_CSS_URL; ?>/all.min.css" rel="stylesheet" type="text/css">
 <script>
 var tempX = 0;
 var tempY = 0;

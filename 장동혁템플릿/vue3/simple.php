@@ -1,4 +1,8 @@
-<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<?php
+$componentName = str_replace(".php","",basename(__FILE__));
+$pathParts = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+$context = end($pathParts);
+?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
 
@@ -16,6 +20,8 @@
                 load : false,
                 jl: null,
                 component_idx: "",
+                context : "<?=$context?>",
+                common : null,
 
                 row: {},
                 rows : [],
@@ -50,6 +56,10 @@
         async created() {
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
+            const className = this.context.charAt(0).toUpperCase() + this.context.slice(1) + "Common";
+            if (typeof window[className] !== 'undefined') {
+                this.common = new window[className](this.jl);
+            }
         },
         async mounted() {
             if(this.primary) this.row = await this.jl.getData(this.filter);

@@ -22,6 +22,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <form name="fmemberconfirm" action="<?php echo $url ?>" onsubmit="return fmemberconfirm_submit(this);" method="post">
         <input type="hidden" name="mb_id" value="<?php echo $member['mb_id'] ?>">
         <input type="hidden" name="w" value="u">
+        <input type="hidden" name="module" value="<?=$_GET['module']?>">
 
         <fieldset>
             <div>

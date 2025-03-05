@@ -363,7 +363,11 @@ class Jl {
     // Vue 컴포넌트를 로드하는 함수
     function componentLoad($path) {
         if($path[0] != "/") $path = "/".$path;
+        $url = $this->URL.$this->COMPONENT.$path;
         $path = $this->ROOT.$this->COMPONENT.$path;
+
+        if(file_exists($path."/common.js")) echo "<script src='{$url}/common.js'></script>";
+
 
         if(is_file($path)) {
             include_once($path);

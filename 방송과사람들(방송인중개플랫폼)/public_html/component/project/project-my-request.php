@@ -1,13 +1,17 @@
-<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<?php
+$componentName = str_replace(".php","",basename(__FILE__));
+$pathParts = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+$context = end($pathParts);
+?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <div v-if="load">
             <ul class="project-list" v-if="rows.length > 0">
                 <li class="project-item" v-for="item in rows">
                     <ul class="prize-info">
-                        <li><span>🏆 예산</span> {{ totalPrize(item.$project).format() }}원</li>
+                        <li><span>🏆 예산</span> {{ common.totalPrize(item.$project).format() }}원</li>
                         <li><span>📌 지원자</span> {{item.$project.$project_request}}명</li>
-                        <li><span>📅 진행 기간</span> {{getDurationDays(item.$project)}}일</li>
+                        <li><span>📅 진행 기간</span> {{common.getDurationDays(item.$project)}}일</li>
                         <li><span>📆 날짜</span> {{item.$project.start_date.formatDate({type : '.'})}} ~ {{item.$project.end_date.formatDate({type : '.'})}}</li>
                     </ul>
                     <a class="project-link">
@@ -17,7 +21,7 @@
                         <div class="project-cont">
                             <div class="project-info">
                                 <div class="project-category">
-                                    <span class="state v1" :class="getClass(item)">{{ getStatus(item) }}</span>
+                                    <span class="state v1" :class="common.getClass(item.$project,item)">{{ common.getStatus(item.$project,item) }}</span>
                                     {{item.$project.$category.name}} · {{item.$project.$category2.name}}
                                     <button type="button" class="bookmark" @click="postBookmark(item.$project)"><i :class="item.$project.$project_bookmark.length ? 'fa-solid' : 'fa-light'" class="fa-bookmark"></i></button><!--북마크시 fa-solid fa-bookmark-->
                                 </div>
@@ -27,12 +31,12 @@
                         </div>
                     </a>
                     <div class="btn-wrap"><!--전문가 버전-->
-                        <button type="button" v-if="!item.cancel && getStatus(item) != '선정 완료'" @click="jl.href(`./project_join.php?primary=${item.idx}&project_idx=${item.$project.idx}`)">지원 보기</button>
-                        <button type="button" v-if="!item.cancel && getStatus(item) != '선정 완료'" @click="jl.postData(item,options)">지원 취소</button>
+                        <button type="button" v-if="common.getStatus(item.$project,item) == '대기중'" @click="jl.href(`./project_join.php?primary=${item.idx}&project_idx=${item.$project.idx}`)">지원 보기</button>
+                        <button type="button" v-if="common.getStatus(item.$project,item) == '대기중'" @click="jl.postData(item,options)">지원 취소</button>
                         <button type="button" v-if="item.cancel" class="gray">지원 취소됨</button><!--취소시 교체 노출-->
                         <button type="button" v-if="item.prize">수락/거부</button><!--매칭 (수락 이후 완료하기로)-->
-                        <button type="button" v-if="getStatus(item) == '선정 완료'" class="blue" @click="modal.data = item; modal.status = true;">결과 확인</button><!--탈락-->
-                        <template v-if="getStatus(item) == '선정 완료'">
+                        <button type="button" v-if="common.getStatus(item.$project,item) == '마감'" class="blue" @click="modal.data = item; modal.status = true;">결과 확인</button><!--탈락-->
+                        <template v-if="common.getStatus(item.$project,item) == '마감'">
                             <button type="button" v-if="item.prize" class="blue2">의뢰 채팅</button><!--매칭전후 모두 사용가능 (거부시 사용불가처리)-->
                         </template>
                         <template v-else>
@@ -106,6 +110,8 @@
                 load : false,
                 jl: null,
                 component_idx: "",
+                context : "<?=$context?>",
+                common : null,
 
                 row: {},
                 rows : [],
@@ -151,6 +157,10 @@
         async created() {
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
+            const className = this.context.charAt(0).toUpperCase() + this.context.slice(1) + "Common";
+            if (typeof window[className] !== 'undefined') {
+                this.common = new window[className](this.jl);
+            }
         },
         async mounted() {
             //if(this.primary) this.row = await this.jl.getData(this.filter);
@@ -213,53 +223,8 @@
                 window.location.reload();
                 //await this.jl.getsData(this.filter,this.arrays);
             },
-            getClass(item) {
-                if(item.cancel) return "v2";
-                else if(item.$project.choice) return "v3";
-                else return "v1";
-            },
-            getStatus(item) {
-                if(item.cancel) return "지원 취소";
-                else if(item.$project.choice) return "선정 완료";
-                else return "지원 완료";
-            },
-            getDurationDays(item) {
-                let startDate = item.start_date;
-                let endDate = item.end_date;
-                // 날짜 형식 검증 (YYYY-MM-DD)
-                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-                if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
-                    throw new Error('날짜 형식은 YYYY-MM-DD로 입력해주세요.');
-                }
 
-                // Date 객체 생성
-                const start = new Date(startDate);
-                const end = new Date(endDate);
-
-                if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-                    throw new Error('유효하지 않은 날짜입니다.');
-                }
-
-                // 일수 계산 (하루 86400000ms)
-                const diffInMs = end - start;
-                const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-                if (diffInDays < 0) {
-                    throw new Error('시작 날짜가 종료 날짜보다 이후일 수 없습니다.');
-                }
-
-                return diffInDays + 1; // 시작일부터 종료일까지 포함
-            },
-            totalPrize(item) {
-                let total = 0;
-
-                for (const prize of item.prize) {
-                    total += prize.money * prize.people;
-                }
-
-                return total;
-            }
         },
         computed: {
 

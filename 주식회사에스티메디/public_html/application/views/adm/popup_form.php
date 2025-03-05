@@ -24,6 +24,7 @@
                 <select name="position">
                     <option value="0" <?=$viewData['display_position']=="0"?"selected":"";?>>로그인 전</option>
                     <option value="1" <?=$viewData['display_position']=="1"?"selected":"";?>>로그인 후</option>
+                    <option value="2" <?=$viewData['display_position']=="1"?"selected":"";?>>로그인 전/후</option>
                 </select>
             </p><p class="name">시작/종료 일시</p>
             <p class="line date">

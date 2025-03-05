@@ -1,4 +1,8 @@
-<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<?php
+$componentName = str_replace(".php","",basename(__FILE__));
+$pathParts = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+$context = end($pathParts);
+?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
         <div class="inr">
@@ -41,7 +45,14 @@
                 </li>
             </ul>
             
-            <div v-else>의뢰가 없습니다</div>
+            <div v-else>
+                <li class="nodata text-center">
+                    <div class="nodata_wrap">
+                        <div class="area_img"><img :src="`${jl.root}/theme/basic_app/img/app/img_nodata.svg`" width="250"></div>
+                        <br><p>등록된 의뢰가 없습니다.</p>
+                    </div>
+                </li>
+            </div>
         </div>
 
         <item-paging :filter="filter" @change="jl.getsData(filter,rows);"></item-paging>
@@ -83,6 +94,7 @@
                 load : false,
                 jl: null,
                 component_idx: "",
+                context : "<?=$context?>",
 
                 row: {},
                 rows : [],

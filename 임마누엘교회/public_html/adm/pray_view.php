@@ -9,7 +9,7 @@ include_once('./admin.head.php');
 <div id="bo_v" class="bo_view">
     <header>
         <h1 id="bo_v_title">
-            기도요청이 등록이 접수되었습니다.</h1>
+            기도요청이 접수되었습니다.</h1>
     </header>
     <div id="bo_v_top">
         <ul class="bo_v_com">

@@ -146,7 +146,11 @@
                 this.jl = new Jl('<?=$componentName?>');
                 this.component_idx = this.jl.generateUniqueId();
             },
-            mounted() {
+            async mounted() {
+                if(this.primary) this.data = await this.jl.getData({
+                    table : "g5_write_friend",
+                    primary : this.primary,
+                });
                 this.$nextTick(() => {
 
                 });

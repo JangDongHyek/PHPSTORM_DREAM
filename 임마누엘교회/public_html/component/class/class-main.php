@@ -54,7 +54,7 @@
 
         <external-bs-modal :modal="modal2.status" @close="modal2.status = false;" class_1="" class_2="">
             <template v-slot:header>
-                <h4 class="modal-title" id="classNotiModalLabel">속회보고</h4>
+                <h4 class="modal-title" id="classNotiModalLabel">속회소식</h4>
                 <button type="button" class="close" @click="modal2.status = false;"><span aria-hidden="true">&times;</span></button>
             </template>
 

@@ -9,19 +9,19 @@
             <h6>{{board.wr_subject}}</h6><!--제목-->
             <p>{{board.wr_content}}</p><!--내용-->
             <hr>
-            <p class="flex gap10">
+            <p class="flex gap10" v-if="board.wr_8">
                 <b class="icon icon_line w100px">장소</b>{{board.wr_8}}
                 <button type="button" class="btn btn_gray btn_mini male-auto" @click="jl.generateClipboard(board.wr_8)">복사</button>
             </p>
 
             <!--<external-daum-map></external-daum-map>-->
 
-            <p class="flex gap10">
+            <p class="flex gap10" v-if="board.wr_11">
                 <b class="icon icon_line w100px">마음전할곳</b>{{board.wr_11}} {{board.wr_13}} ({{board.wr_12}})
                 <button type="button" class="btn btn_gray btn_mini male-auto" @click="jl.generateClipboard(board.wr_11+' '+board.wr_13)">복사</button>
             </p>
             <div class="flex gap5">
-                <button class="btn btn_large btn_gray" type="button">수정</button>
+                <button v-if="board.wr_1 == mb_no || admin" class="btn btn_large btn_gray" @click="jl.href('./friend_form?primary='+board.wr_id)" type="button">수정</button>
                 <button v-if="board.wr_1 == mb_no || admin" class="btn btn_large btn_gray2" type="button" @click="jl.deleteData(board,{table:'g5_write_friend',href:'./friend'})">삭제</button>
             </div>
         </div>

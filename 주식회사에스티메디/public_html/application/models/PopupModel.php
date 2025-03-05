@@ -83,7 +83,7 @@ class PopupModel extends CI_Model
         $today = date('Y-m-d H:i:s');
         $sql = "SELECT * FROM bs_popup 
             WHERE start_date <= ? AND end_date >= ?
-            AND display_position = ?
+            AND (display_position = ? OR display_position = 2) 
             ORDER BY idx DESC";
         $query = $this->db->query($sql, [$today, $today, $position]);
         return $query->result_array();

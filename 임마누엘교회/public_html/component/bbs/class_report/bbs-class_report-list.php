@@ -113,7 +113,7 @@
 
                         <tr>
                             <td colspan="2" v-if="admin || modal_data.wr_1 == mb_no">
-                                <button  class="btn btn_large btn_gray2" type="button" @click="jl.postData(modal_data,options)">수정</button>
+                                <button  class="btn btn_large btn_gray2" type="button" @click="jl.href('./class_form?primary='+modal_data.wr_id)">수정</button>
                             </td>
                         </tr>
                         </tbody>

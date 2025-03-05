@@ -5,7 +5,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 add_stylesheet('<link rel="stylesheet" href="'.$latest_skin_url.'/style.css">', 0);
 ?>
 
-<!-- <?php echo $bo_subject; ?> 최신글 시작 { -->
+<!-- < ?php echo $bo_subject; ?> 최신글 시작 { -->
 
 
 <?php for ($i = 0; $i < count($list); $i++) { ?>
@@ -16,7 +16,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$latest_skin_url.'/style.css">', 
                 <!-- 글 제목 -->
                 <h4><?php echo $list[$i]['subject']; ?></h4>
                 <!-- 작성 날짜 -->
-                <h6><?php echo date('Y-m-d', strtotime($list[$i]['wr_datetime'])); ?></h6>
+                <h6><?php echo cut_str(strip_tags($list[$i]['wr_content']), 30); ?></h6>
+                <!--h6>< ?php echo date('Y-m-d', strtotime($list[$i]['wr_datetime'])); ?></h6-->
             </div>
             <div class="icon">
                 <i class="fa-solid fa-arrow-right"></i>
@@ -29,4 +30,3 @@ add_stylesheet('<link rel="stylesheet" href="'.$latest_skin_url.'/style.css">', 
     <li>게시물이 없습니다.</li>
     <?php }  ?>
 
-<?php echo $bo_subject; ?>

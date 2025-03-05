@@ -173,7 +173,7 @@
                             }
 
                             await this.jl.alert("완료되었습니다");
-                            window.location.href = "./class"
+                            window.location.href = "./class_list_view?wr_7=" + this.data.wr_7
                         }
                     }catch (e) {
 

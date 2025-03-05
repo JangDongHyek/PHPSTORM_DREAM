@@ -9,7 +9,7 @@ include_once("../jl/JlConfig.php");
             <button type="button" class="btn btn_color btn-large" onclick="location.href='./inquiry_form'">관리자 문의하기</button>
         </div>
 
-        <bbs-qna-list mb_1="<?=$member['mb_1']?>"></bbs-qna-list>
+        <bbs-qna-list mb_1="<?=$member['mb_1']?>" mb_no="<?=$member['mb_no']?>"></bbs-qna-list>
     </div>
 
 
