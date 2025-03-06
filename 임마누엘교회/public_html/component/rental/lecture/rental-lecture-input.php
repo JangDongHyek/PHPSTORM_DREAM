@@ -21,7 +21,7 @@
                     <td>날짜선택 <span class="txt_color">*</span></td>
                     <td>
                         <div class="date-container">
-                            <input type="date" class="date-input" :class="{'filled' : data.use_date_focus}" @focus="data.use_date_focus = true" aria-label="날짜 선택" v-model="data.use_date" />
+                            <input type="date" class="date-input" :class="{'filled' : data.use_date_focus}" @focus="data.use_date_focus = true" aria-label="날짜 선택" v-model="data.use_date" :min="jl.getToday()"/>
                             <label for="date-input" class="date-placeholder-label">{{ data.use_date ? data.use_date : '날짜를 선택해주세요'}}</label>
                         </div>
                     </td>
@@ -118,7 +118,7 @@
                         use_content : "",
                         use_date : "",
                         use_place : "",
-                        use_time : "",
+                        use_time : [],
                         food_intake : "무",
                         note : "",
                         name : "",
@@ -188,21 +188,30 @@
             },
             methods: {
                 selectPlaceTime(place,time) {
+                    if(this.data.use_place != place) this.data.use_time = [];
                     if(this.getClass(place,time) == "disabled") return false;
 
                     this.data.use_place = place;
-                    this.data.use_time = time;
+
+                    if(this.data.use_time.includes(time)) {
+                        this.data.use_time.splice(this.data.use_time.indexOf(time),1)
+                    }else {
+                        this.data.use_time.push(time);
+                    }
                 },
                 getClass(place,time) {
                     if(!this.data.use_date) return 'disabled';
 
-                    const isReserved = this.arrays.some(item =>
-                        item.use_place === place && item.use_time === time
-                    );
+                    let reservedFilter = this.arrays.filter(arr => arr.use_place == place);
 
-                    if (isReserved) return "disabled";
+                    let mergedArray = [];
+                    reservedFilter.forEach(arr => {
+                        mergedArray = mergedArray.concat(arr.use_time);
+                    });
 
-                    if(this.data.use_place == place && this.data.use_time == time) return "selected";
+                    if(mergedArray.includes(time)) return 'disabled';
+
+                    if(this.data.use_place == place && this.data.use_time.includes(time)) return "selected";
                     return "";
                 }
             },
