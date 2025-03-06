@@ -48,6 +48,13 @@
                         <input type="date" v-model="data.note_date" max="9999-12-31">
                     </td>
                 </tr>
+
+                <tr>
+                    <td><b>결단노트</b> 몇번째결단</td>
+                    <td>
+                        <input type="number" v-model="data.note_count">
+                    </td>
+                </tr>
                 <tr>
                     <td><b>블로그</b></td>
                     <td>
@@ -101,6 +108,7 @@
                         note_day : "",
                         note_week : "",
                         note_date : "",
+                        note_count : "",
                         sns_youtube : "",
                         sns_kakao : "",
                         sns_facebook : "",

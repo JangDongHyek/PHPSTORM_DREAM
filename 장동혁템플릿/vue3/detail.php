@@ -89,7 +89,11 @@
 
                     // 이테이블의 user_idx 값으로 user의 테이블에 primary값을 검색해 맞는 데이터 하나만 가져오는 확장형 구문
                     extensions : [
-                        {table : "user", foreign : "user_idx", as : ""}, // as값이있다면 $테이블명이아닌 $as값으로 가져온다
+                        {
+                            table : "user",
+                            foreign : "user_idx",
+                            as : "",// as값이있다면 $테이블명이아닌 $as값으로 가져온다
+                        },
                     ],
 
                     // like테이블에 foreing키에 이테이블의 primary값을 가진 모든데이터를 가져오는 연결형구문
@@ -97,11 +101,11 @@
                         {
                             table : "like" ,
                             foreign : "board_idx",
-                            type : "count",
+                            type : "count", // type(count,data)
                             filter : {
 
                             },
-                        }, // type(count,data)
+                        },
                     ],
 
                     join : {

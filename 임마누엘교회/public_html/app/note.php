@@ -2,6 +2,10 @@
 $pid = "note";
 include_once("./app_head.php");
 include_once("../jl/JlConfig.php");
+
+$model = new JlModel("site_setting");
+
+$d = $model->orderBy("idx","DESC")->get()['data'][0];
 ?>
 <div id="app">
     <div id="note">
@@ -11,8 +15,8 @@ include_once("../jl/JlConfig.php");
             <button type="button" class="btn btn_color btn-large" onclick="location.href='./note_form'">결단노트 작성하기</button>
         </div>
         <div class="box_radius box_white">
-            <h6>남의 험담을 하지 않겠습니다.
-                <span>2024 IMC <b>0</b>번째 결단</span>
+            <h6><?=$d['note_week']?>
+                <span><?=date("Y")?> IMC <b><?=$d['note_count']?></b>번째 결단</span>
             </h6>
 
             <bbs-note-list mb_1="<?=$member['mb_1']?>" mb_no="<?=$member['mb_no']?>"></bbs-note-list>

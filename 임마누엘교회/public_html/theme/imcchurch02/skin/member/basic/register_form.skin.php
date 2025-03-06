@@ -133,18 +133,19 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                         <select class="frm_input" v-model="item.first">
                             <option>선교회</option>
                             <option>부서</option>
+                            <option>직접입력</option>
                             
                         </select>
-                        <select v-if="item.first" class="frm_input" v-model="item.second">
+                        <select v-if="item.first != '직접입력'" class="frm_input" v-model="item.second">
                             <template v-if="item.first == '선교회'">
                                 <option v-for="n in 12" :value="n+'남선교회'">{{n+'남선교회'}}</option>
                                 <option v-for="n in 12" :value="n+'여선교회'">{{n+'여선교회'}}</option>
-                            </template>
-                            <template v-if="item.first == '부서'">
                                 <option>아브라함</option>
                                 <option>모세</option>
                                 <option>사라</option>
                                 <option>마리아</option>
+                            </template>
+                            <template v-if="item.first == '부서'">
                                 <option>1링커</option>
                                 <option>2링커</option>
                                 <option>3링커</option>
@@ -156,6 +157,9 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                                 <option>영아부</option>
                             </template>
                         </select>
+                        <template v-else>
+                            <input type="text" v-model="item.second" class="frm_input"/>
+                        </template>
                         <button type="button" id="departDel" @click="mb_4.splice(index,1)">삭제</button>
                     </div>
                 </dd>

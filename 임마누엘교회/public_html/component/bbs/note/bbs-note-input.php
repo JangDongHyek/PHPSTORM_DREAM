@@ -8,7 +8,7 @@
                     <td>주일 말씀</td>
                     <td>
                         <input type="text" v-model="site_setting.note_day" readonly>
-                        <button type="button" class="btn btn_colorline w100" @click="jl.open(site_setting.main_youtube)">설교영상 보기</button>
+                        <button type="button" class="btn btn_colorline w100" @click="jl.open(video.wr_content)">설교영상 보기</button>
                     </td>
                 </tr>
                 <tr>
@@ -77,6 +77,8 @@
                     },
 
                     site_setting : {},
+
+                    video : {},
                 };
             },
             async created() {
@@ -84,6 +86,7 @@
                 this.component_idx = this.jl.generateUniqueId();
 
                 await this.getSiteSetting();
+                await this.getVideo();
             },
             mounted() {
                 this.$nextTick(() => {
@@ -144,6 +147,19 @@
                         await this.jl.alert(e.message)
                     }
 
+                },
+                async getVideo() {
+                    let filter = {
+                        table: "g5_write_video",
+                        order_by_desc : "wr_id",
+                    }
+
+                    try {
+                        let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
+                        this.video = res.data[0]
+                    } catch (e) {
+                        alert(e.message)
+                    }
                 },
                 async getSiteSetting() {
                     let filter = {

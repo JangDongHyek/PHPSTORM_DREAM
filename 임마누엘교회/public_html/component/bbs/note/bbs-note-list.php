@@ -14,7 +14,7 @@
                 <tbody>
                 <tr v-if="boards.length > 0" v-for="board in boards">
                     <td>{{board.jl_no}}</td>
-                    <td>{{board.$g5_member.mb_name}}</td>
+                    <td><span v-if="board.$g5_member">{{board.$g5_member.mb_name}}</span></td>
                     <td><p class="cut" @click="viewContent(board)">{{board.wr_2 == '공개' ? board.wr_content : '비공개입니다.'}}</p></td>
                     <td><a @click="postLike(board)"><i class="fa-duotone fa-solid fa-hands-clapping"></i> {{board.like_count}}</a></td>
                 </tr>

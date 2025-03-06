@@ -14,6 +14,7 @@ include_once(G5_LIB_PATH.'/visit.lib.php');
 include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 include_once(G5_LIB_PATH.'/submenu.lib.php');
+include_once(G5_PATH."/jl/JlConfig.php");
 ?>
 
 
@@ -476,37 +477,15 @@ if(defined('_INDEX_')) { // index에서만 실행
      </div><!--svisual-->
 
     <!--서브메뉴(쌩코딩)-->
-    <div class="sub-nav">
-        <div class="cinner">
-            <ul class="sub-1ul">
-                <li class="sub-1li home"><a href="/" class="sub-1item" title="홈으로 이동">홈</a></li>
-                <li class="sub-1li" id="nav1">
-                    <a href="javascript:void(0);" class="sub-1item" title="페이지 이동">회사소개</a>
-                    <ul class="sub-2ul">
-                        <li class="sub-2li"><a href="#" class="sub-2item" title="사업분야">사업분야</a></li>
-                        <li class="sub-2li"><a href="#" class="sub-2item" title="사업실적">사업실적</a></li>
-                        <li class="sub-2li"><a href="#" class="sub-2item" title="커뮤니티">커뮤니티</a></li>
-                    </ul>
-                </li>
-                <li class="sub-1li" id="nav2">
-                    <a href="javascript:void(0);" class="sub-1item" title="페이지 이동">인사말</a>
-                    <ul class="sub-2ul">
-                        <li class="sub-2li"><a href="#" class="sub-2item" title="회사소개">회사소개</a></li>
-                        <li class="sub-2li"><a href="#" class="sub-2item" title="찾아오시는길">찾아오시는길</a></li>
-                    </ul>
-                </li>
-                <li class="sub-1li" id="nav3">
-                    <a href="javascript:void(0);" class="sub-1item" title="페이지 이동">dddd</a>
-                    <ul class="sub-2ul">
-                        <li class="sub-2li"><a href="#" class="sub-2item" title="111">111</a></li>
-                        <li class="sub-2li"><a href="#" class="sub-2item" title="222">222</a></li>
-                    </ul>
-                </li>
-            </ul>
+        <div id="subnav">
+            <inc-sub-nav></inc-sub-nav>
         </div>
-    </div><!--//sub-nav-->
 
 
+        <?
+        $jl->vueLoad('subnav');
+        $jl->componentLoad('inc');
+        ?>
 
       
       

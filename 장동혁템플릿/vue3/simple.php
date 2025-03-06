@@ -1,7 +1,7 @@
 <?php
 $componentName = str_replace(".php","",basename(__FILE__));
 $pathParts = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
-$context = end($pathParts);
+$context_name = end($pathParts);
 ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
@@ -20,8 +20,8 @@ $context = end($pathParts);
                 load : false,
                 jl: null,
                 component_idx: "",
-                context : "<?=$context?>",
-                common : null,
+                context_name : "<?=$context_name?>",
+                context : null,
 
                 row: {},
                 rows : [],
@@ -56,9 +56,9 @@ $context = end($pathParts);
         async created() {
             this.jl = new Jl('<?=$componentName?>');
             this.component_idx = this.jl.generateUniqueId();
-            const className = this.context.charAt(0).toUpperCase() + this.context.slice(1) + "Common";
+            const className = this.context_name.charAt(0).toUpperCase() + this.context_name.slice(1) + "Common";
             if (typeof window[className] !== 'undefined') {
-                this.common = new window[className](this.jl);
+                this.context = new window[className](this.jl);
             }
         },
         async mounted() {
