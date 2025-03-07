@@ -6,6 +6,7 @@
 
 // 로그인
 $routes->get("login", "app\PublishController::login");
+//$routes->get("test", "app\PublishController::test");
 $routes->get("/" ,function() {
     return redirect()->to('app/index');
 });
@@ -52,6 +53,8 @@ $routes->group('app', static function ($routes) {
     $routes->get('scheduleWeekly', 'app\PublishController::scheduleWeekly');
     // 작업관리 > 금주작업
     $routes->get('weekTask', 'app\PublishController::weekTask');
+    // 구역관리
+    $routes->get('zone', 'app\PublishController::zone');
     // 기성관리
     $routes->get('payment', 'app\PublishController::payment');
     // 내역관리 > 수량산출서
@@ -59,6 +62,7 @@ $routes->group('app', static function ($routes) {
     // 내역관리 > 내역서
     $routes->get('invoice', 'app\PublishController::invoice');
     // 내역관리 > 단가목록표
+    $routes->get('priceAll', 'app\PublishController::priceAll');
     $routes->get('priceList', 'app\PublishController::priceList');
     // 계정관리
     $routes->get('account', 'app\PublishController::account');

@@ -643,6 +643,7 @@ define('WIDESHOT_SERVER', 'https://apimsg.wideshot.co.kr');
 
 $admin_tel = array("01071790034","01048203758","01048511367","01098577706"); //실제번호 업체
 //$admin_tel = array("01098577706"); //실제번호 업체
+//$admin_tel = array("01048511367","01048203758");
 
 $mb_addr_div_arr = array(
     1=>"서울",

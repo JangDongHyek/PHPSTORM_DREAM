@@ -12,21 +12,33 @@ $context_name = end($pathParts);
                     <li class="sub-1li" id="nav1" v-if="row.$parent.$parent">
                         <a href="javascript:void(0);" class="sub-1item" title="페이지 이동">{{row.$parent.$parent.name}}</a>
                         <ul class="sub-2ul">
-                            <li class="sub-2li" v-for="item in row.$parent.$parent.$category">
-                                <a :href="jl.root + '/' + item.url" class="sub-2item" :title="item.name">{{item.name}}</a>
-                            </li>
+                            <template v-for="item in getCategory(row.$parent.$parent)">
+                                <li class="sub-2li" v-if="row.$parent.$parent.parent_idx == item.parent_idx">
+                                    <a :href="jl.root + '/' + item.url" class="sub-2item" :title="item.name">{{item.name}}</a>
+                                </li>
+                            </template>
                         </ul>
                     </li>
                     <li class="sub-1li" id="nav2" v-if="row.$parent">
                         <a href="javascript:void(0);" class="sub-1item" title="페이지 이동">{{row.$parent.name}}</a>
                         <ul class="sub-2ul">
-                            <li class="sub-2li" v-for="item in row.$parent.$category">
-                                <a :href="jl.root + '/' + item.url" class="sub-2item" :title="item.name">{{item.name}}</a>
-                            </li>
+                            <template v-for="item in getCategory(row.$parent)">
+                                <li class="sub-2li"  v-if="row.$parent.parent_idx == item.parent_idx">
+                                    <a :href="jl.root + '/' + item.url" class="sub-2item" :title="item.name">{{item.name}}</a>
+                                </li>
+                            </template>
                         </ul>
                     </li>
+
                     <li class="sub-1li" id="nav3" v-if="row.primary">
                         <a href="javascript:void(0);" class="sub-1item" title="페이지 이동">{{row.name}}</a>
+                        <ul class="sub-2ul">
+                            <template v-for="item in getCategory(row)">
+                                <li class="sub-2li" v-if="row.parent_idx == item.parent_idx">
+                                    <a :href="jl.root + '/' + item.url" class="sub-2item" :title="item.name">{{item.name}}</a>
+                                </li>
+                            </template>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -109,6 +121,10 @@ $context_name = end($pathParts);
 
                     url : "",
 
+                    first_category : [],
+                    second_category : [],
+                    third_category : [],
+
                 };
             },
             async created() {
@@ -124,7 +140,24 @@ $context_name = end($pathParts);
             },
             async mounted() {
                 if(this.filter.url) this.row = await this.jl.getData(this.filter);
-                //await this.jl.getsData(this.filter,this.rows);
+
+                await this.jl.getsData({
+                    table : "category",
+                    depth : 1,
+                    order_by_asc : "priority"
+                },this.first_category);
+
+                await this.jl.getsData({
+                    table : "category",
+                    depth : 2,
+                    order_by_asc : "priority"
+                },this.second_category);
+
+                await this.jl.getsData({
+                    table : "category",
+                    depth : 3,
+                    order_by_asc : "priority"
+                },this.third_category);
 
                 this.load = true;
 
@@ -136,7 +169,11 @@ $context_name = end($pathParts);
 
             },
             methods: {
-
+                getCategory(item) {
+                    if(item.depth == 1) return this.first_category;
+                    else if(item.depth == 2) return this.second_category;
+                    else if(item.depth == 3) return this.third_category;
+                }
             },
             computed: {
 

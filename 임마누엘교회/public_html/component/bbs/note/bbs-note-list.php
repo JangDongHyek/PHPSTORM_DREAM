@@ -154,11 +154,11 @@
                         table: "g5_write_note",
 
                         extensions : [
-                            {table : "g5_member", foreign : "wr_1"}
+                            {table : "g5_member", foreign : "user_idx"}
                         ],
 
                         join : {
-                            table : "g5_write_note_like", origin : "wr_id", join : "board_idx", type : "LEFT",
+                            table : "g5_write_note_like", origin : "wr_id", join : "board_idx", type : "INNER",
                             source : false, // true 시 join 테이블이 조회 기준이 된다
                             select : [], // 조회 기준이 아닌 테이블의 컬럼을 추가 조회하고싶을때 넣는다
                             //select : "*" // 조회 기준이 아닌 테이블의 모든 컬럼을 가져오고싶을때 사용 속도로 인한 비추천

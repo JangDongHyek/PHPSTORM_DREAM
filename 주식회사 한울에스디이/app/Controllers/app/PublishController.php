@@ -291,7 +291,7 @@ class PublishController extends BaseController
             "projects" => $projects
         ];
 
-        return render('app/overall', $data);
+        return render('app/project/overall', $data);
     }
 
     // 작업관리 > 계획공정표
@@ -306,7 +306,7 @@ class PublishController extends BaseController
             "projects" => $projects
         ];
 
-        return render('app/schedule', $data);
+        return render('app/schedule/schedule', $data);
     }
 
     // 작업관리 > 계획공정표 테스트
@@ -316,7 +316,7 @@ class PublishController extends BaseController
             'pid' => 'schedule',
         ];
 
-        return render('app/schedule_test', $data);
+        return render('app/schedule/schedule_test', $data);
     }
 
     // 작업관리 > 주간공정표
@@ -335,7 +335,7 @@ class PublishController extends BaseController
             "user" => $user
         ];
 
-        return render('app/schedule_weekly', $data);
+        return render('app/schedule/schedule_weekly', $data);
     }
 
     // 작업관리 > 금주작업
@@ -355,8 +355,22 @@ class PublishController extends BaseController
             "user" => $user
         ];
 
-        return render('app/week_task', $data);
+        return render('app/schedule/week_task', $data);
     }
+    public function zone()
+    {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
+        $data = [
+            'pid' => 'zone',
+            "project" => $project,
+            "projects" => $projects,
+        ];
+
+        return render('app/project/zone', $data);
+    }
+
 
     // 기성관리
     public function payment(): string
@@ -371,7 +385,7 @@ class PublishController extends BaseController
             "projects" => $projects
         ];
 
-        return render('app/payment', $data);
+        return render('app/project/payment', $data);
     }
 
     // 내역관리 > 수량산출서
@@ -387,7 +401,7 @@ class PublishController extends BaseController
             "projects" => $projects
         ];
 
-        return render('app/record', $data);
+        return render('app/cost/record', $data);
     }
 
     // 내역관리 > 내역서
@@ -403,10 +417,10 @@ class PublishController extends BaseController
             "projects" => $projects
         ];
 
-        return render('app/invoice', $data);
+        return render('app/cost/invoice', $data);
     }
 
-    // 내역관리 > 단가목록표
+    // 내역관리 > 단가설정
     public function priceList(): string
     {
         $project = session()->get("project");
@@ -419,7 +433,21 @@ class PublishController extends BaseController
             "projects" => $projects
         ];
 
-        return render('app/price_list', $data);
+        return render('app/cost/price_list', $data);
+    }
+    // 내역관리 > 단가목록
+    public function priceAll(): string
+    {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
+        $data = [
+            'pid' => 'price_all',
+            "project" => $project,
+            "projects" => $projects
+        ];
+
+        return render('app/cost/price_all', $data);
     }
 
     // 계정관리
@@ -448,7 +476,7 @@ class PublishController extends BaseController
             "users" => $users
         ];
 
-        return render('app/account', $data);
+        return render('app/project/account', $data);
     }
 
     // 파일함
@@ -464,7 +492,18 @@ class PublishController extends BaseController
             "projects" => $projects
         ];
 
-        return render('app/filebox', $data);
+        return render('app/project/filebox', $data);
+    }
+
+    public function test(): string
+    {
+
+        $data = [
+            'pid' => 'test',
+
+        ];
+
+        return render('test', $data);
     }
 
 }

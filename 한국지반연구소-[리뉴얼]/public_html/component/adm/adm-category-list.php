@@ -5,15 +5,15 @@ $context_name = end($pathParts);
 ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <div v-if="load">
-        <button @click="postData()">추가</button>
+        <button @click="postData(null)">추가</button>
         <ul class="category-list">
             <li class="category-item" v-for="item1 in rows">{{item1.name}}
-                <button class="action-btn add-btn" @click="postData(item1)">추가</button>
+                <button class="action-btn add-btn" @click="postData(item1,2)">추가</button>
                 <button class="action-btn edit-btn" @click="putData(item1)">수정</button>
                 <button class="action-btn delete-btn" @click="jl.deleteData(item1,options)">삭제</button>
                 <ul class="category-sublist" v-if="item1.$category.length > 0">
                     <li class="category-item" v-for="item2 in item1.$category">{{item2.name}}
-                        <button class="action-btn add-btn" @click="postData(item2)">추가</button>
+                        <button class="action-btn add-btn" @click="postData(item2,3)">추가</button>
                         <button class="action-btn edit-btn" @click="putData(item2)">수정</button>
                         <button class="action-btn delete-btn" @click="jl.deleteData(item2,options)">삭제</button>
                         <ul class="category-sublist">
@@ -114,6 +114,7 @@ $context_name = end($pathParts);
 
                     origin_data : {
                         parent_idx : "",
+                        depth : 1,
                         name : "",
                         url : "",
                         priority : 0,
@@ -125,6 +126,7 @@ $context_name = end($pathParts);
                         parent : null,
                         data : {
                             parent_idx : "",
+                            depth : 1,
                             name : "",
                             url : "",
                             priority : 0,
@@ -164,12 +166,13 @@ $context_name = end($pathParts);
                     this.modal.data = this.jl.copyObject(item);
                     this.modal.status = true;
                 },
-                postData(item = null) {
+                postData(item = null,depth) {
                     this.modal.data = this.jl.copyObject(this.origin_data);
                     this.modal.parent = null;
                     if(item) {
                         this.modal.parent = item;
                         this.modal.data.parent_idx = item.idx;
+                        this.modal.data.depth = depth;
                     }else {
 
                     }
