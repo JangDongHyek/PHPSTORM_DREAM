@@ -155,9 +155,9 @@ $colspan = 16;
     <ul class="cate cf cateFlex">
         <li <?=($_REQUEST['car_date_type'] == 3 || $_REQUEST['car_date_type'] == '') ?  'class="active"' : '';?>><a href="<?=G5_BBS_URL?>/my_money.php?car_date_type=3&ma_step=<?= $_REQUEST['ma_step']?>">외부세차 1회</a></li>
         <li <?=($_REQUEST['car_date_type'] == 5) ?  'class="active"' : '';?>><a href="<?=G5_BBS_URL?>/my_money.php?car_date_type=5&ma_step=<?= $_REQUEST['ma_step']?>">실내세차 1회</a></li>
-        <li <?=($_REQUEST['car_date_type'] == 4) ?  'class="active"' : '';?>><a href="<?=G5_BBS_URL?>/my_money.php?car_date_type=4&ma_step=<?= $_REQUEST['ma_step']?>">기업세차</a></li>
-        <li <?=($_REQUEST['car_date_type'] == 1) ?  'class="active"' : '';?>><a href="<?=G5_BBS_URL?>/my_money.php?car_date_type=1&ma_step=<?= $_REQUEST['ma_step']?>">정기세차 맛보기</a></li>
         <li <?=($_REQUEST['car_date_type'] == 2) ?  'class="active"' : '';?>><a href="<?=G5_BBS_URL?>/my_money.php?car_date_type=2&ma_step=<?= $_REQUEST['ma_step']?>">정기세차</a></li>
+        <li <?=($_REQUEST['car_date_type'] == 1) ?  'class="active"' : '';?>><a href="<?=G5_BBS_URL?>/my_money.php?car_date_type=1&ma_step=<?= $_REQUEST['ma_step']?>">정기세차 맛보기</a></li>
+        <li <?=($_REQUEST['car_date_type'] == 4) ?  'class="active"' : '';?>><a href="<?=G5_BBS_URL?>/my_money.php?car_date_type=4&ma_step=<?= $_REQUEST['ma_step']?>">기업세차</a></li>
     </ul>
 
     

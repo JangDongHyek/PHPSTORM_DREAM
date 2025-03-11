@@ -33,6 +33,13 @@ if($rw_idx_check){
     //$sql_where .= " and rw.rw_step = 0 " ;
 }
 
+// 23.04.13 차량번호, 지역필터 추가
+$sfl = $_REQUEST['sfl']; //구분
+$stx = $_REQUEST['stx']; //검색어
+if($stx){
+    $sql_where .= " and ( cw.".$sfl. " LIKE '%".$stx."%' )";
+}
+
 $sql = "select *,cw.cw_idx cw_idx,cw.complete_datetime cw_complete_date from {$g5['car_wash_table']}  cw
 LEFT join new_re_car_wash rw on cw.rw_idx = rw.rw_idx
 where ".$id." = '{$member['mb_id']}' and (cw_step = 2 or (rw_step = 2 and is_turn_yn = 'N' )) and {$sql_where} order by cw.cw_idx desc ";

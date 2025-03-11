@@ -52,6 +52,7 @@ define("JL_EDITOR_HTML","/plugin/editor/smarteditor2/SmartEditor2Skin.html");// 
 2.2 JlService captcha 통신 추가 , font 파일 추가
 2.3 JlService get로직 Extensions,Relations 따로 함수로 뺴서 프로세스화 이걸로 인해 필터 및 데이터가 이상적인 트리형식으로 가능해짐
 2.4 컴포넌트 하위폴더(context)안에 common.js 있으면 불러들이는 context로직 추가
+2.5 model operator 라는 변수명 logical로 변경 및 where()에 operator 매개변수 추가 관련 로직 operator 로직 추가
 */
 
 ?>

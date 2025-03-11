@@ -62,7 +62,13 @@
                     count : 0,
 
                     where : [
-                        {key : "", value : "", operator : ""} // AND,OR,AND NOT
+                        {
+                            key : "",
+                            value : "",
+                            logical : "", // AND,OR,AND NOT
+                            source : "", // 조인시 사용가능
+                            operator : "", // = ,!= >= <=,
+                        }
                     ],
 
                     like : [
@@ -172,7 +178,7 @@
                     exists : [
                         {
                             where : [
-                                {key : "", value : "", operator : ""},
+                                {key : "", value : "", logical : ""},
                             ],
                             message : ""
                         }
@@ -247,7 +253,7 @@
                     exists : [
                         {
                             where : [
-                                {key : "", value : "", operator : ""}
+                                {key : "", value : "", logical : ""}
                             ],
                             message : ""
                         }
@@ -277,7 +283,7 @@
                     table : "order",
 
                     where : [
-                        {key : "", value : "", operator : ""} // AND,OR,AND NOT
+                        {key : "", value : "", logical : ""} // AND,OR,AND NOT
                     ],
 
                     like : [

@@ -205,8 +205,9 @@ class JlModel{
             $arrays = $this->jsonDecode($obj['where']);
             foreach($arrays as $array) {
                 $item = $this->jsonDecode($array);
-                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $logical = (isset($item['logical']) && trim($item['logical']) !== '') ? $item['logical'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
+                $operator = isset($item['operator']) ? $item['operator'] : '';
 
                 if (isset($item['key']) && strpos($item['key'], '.') !== false) {
                     $keyParts = explode('.', $item['key'], 2);
@@ -214,7 +215,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
                 if($item['key'] == 'primary') $item['key'] = $this->primary;
-                if($item['value']) $this->where($item['key'],$item['value'],$operator,$source);
+                if($item['value']) $this->where($item['key'],$item['value'],$logical,$source,$operator);
             }
         }
 
@@ -222,7 +223,7 @@ class JlModel{
             $arrays = $this->jsonDecode($obj['like']);
             foreach($arrays as $array) {
                 $item = $this->jsonDecode($array);
-                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $logical = (isset($item['logical']) && trim($item['logical']) !== '') ? $item['logical'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
                 if (isset($item['key']) && strpos($item['key'], '.') !== false) {
@@ -232,7 +233,7 @@ class JlModel{
                 }
 
                 if($item['key'] == 'primary') $item['key'] = $this->primary;
-                if($item['value']) $this->like($item['key'],$item['value'],$operator,$source);
+                if($item['value']) $this->like($item['key'],$item['value'],$logical,$source);
             }
         }
 
@@ -240,7 +241,7 @@ class JlModel{
             $arrays = $this->jsonDecode($obj['between']);
             foreach($arrays as $array) {
                 $item = $this->jsonDecode($array);
-                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $logical = (isset($item['logical']) && trim($item['logical']) !== '') ? $item['logical'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
                 if (isset($item['key']) && strpos($item['key'], '.') !== false) {
@@ -249,7 +250,7 @@ class JlModel{
                     $item['key'] = $keyParts[1];
                 }
 
-                if($item['start'] && $item['end']) $this->between($item['key'],$item['start'],$item['end'],$operator,$source);
+                if($item['start'] && $item['end']) $this->between($item['key'],$item['start'],$item['end'],$logical,$source);
             }
         }
 
@@ -257,7 +258,7 @@ class JlModel{
             $arrays = $this->jsonDecode($obj['in']);
             foreach($arrays as $array) {
                 $item = $this->jsonDecode($array);
-                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'AND';
+                $logical = (isset($item['logical']) && trim($item['logical']) !== '') ? $item['logical'] : 'AND';
                 $source = isset($item['source']) ? $item['source'] : '';
 
                 if (isset($item['key']) && strpos($item['key'], '.') !== false) {
@@ -268,7 +269,7 @@ class JlModel{
 
                 if($item['key'] == 'primary') $item['key'] = $this->primary;
                 $values = $this->jsonDecode($item['array']);
-                if(count($values)) $this->in($item['key'],$values,$operator,$source);
+                if(count($values)) $this->in($item['key'],$values,$logical,$source);
             }
         }
 
@@ -278,8 +279,10 @@ class JlModel{
 
             foreach($arrays as $array) {
                 $item = $this->jsonDecode($array);
-                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
+                $logical = (isset($item['logical']) && trim($item['logical']) !== '') ? $item['logical'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
+                $operator = isset($item['operator']) ? $item['operator'] : '';
+
 
                 if (isset($item['key']) && strpos($item['key'], '.') !== false) {
                     $keyParts = explode('.', $item['key'], 2);
@@ -288,7 +291,7 @@ class JlModel{
                 }
 
                 if($item['key'] == 'primary') $item['key'] = $this->primary;
-                $this->where($item['key'],$item['value'],$operator,$source);
+                $this->where($item['key'],$item['value'],$logical,$source,$operator);
             }
 
             $this->groupEnd();
@@ -300,7 +303,7 @@ class JlModel{
 
             foreach($arrays as $array) {
                 $item = $this->jsonDecode($array);
-                $operator = (isset($item['operator']) && trim($item['operator']) !== '') ? $item['operator'] : 'OR';
+                $logical = (isset($item['logical']) && trim($item['logical']) !== '') ? $item['logical'] : 'OR';
                 $source = isset($item['source']) ? $item['source'] : '';
 
                 if (isset($item['key']) && strpos($item['key'], '.') !== false) {
@@ -310,7 +313,7 @@ class JlModel{
                 }
 
                 if($item['key'] == 'primary') $item['key'] = $this->primary;
-                $this->like($item['key'],$item['value'],$operator,$source);
+                $this->like($item['key'],$item['value'],$logical,$source);
             }
 
             $this->groupEnd();
@@ -778,11 +781,11 @@ class JlModel{
         $this->group_by_sql_back = " GROUP BY $group_key";
     }
 
-    function groupStart($operator = "AND") {
+    function groupStart($logical = "AND") {
         if($this->group_bool) return false;
 
         $this->group_bool = true;
-        $this->sql .= " {$operator} ( ";
+        $this->sql .= " {$logical} ( ";
 
         return $this;
     }
@@ -797,7 +800,7 @@ class JlModel{
         return $this;
     }
 
-    function between($column,$start,$end,$operator = "AND",$source = "") {
+    function between($column,$start,$end,$logical = "AND",$source = "") {
         if($column == "") $this->jl->error("JlModel between() : 컬럼명을 대입 해주새요.");
         if($start == "") $this->jl->error("JlModel between() : 시작시간을 대입 해주새요.");
         if($end == "") $this->jl->error("JlModel between() : 종료시간을 대입 해주새요.");
@@ -815,9 +818,9 @@ class JlModel{
             if(!in_array($end, $columns)) $this->jl->error("JlModel between() : end 컬럼이 존재하지않습니다.");
             if($this->group_bool) {
                 if(!$this->group_index) $this->group_index = 1;
-                else $this->sql .= " {$operator} ";
+                else $this->sql .= " {$logical} ";
             }else {
-                $this->sql .= " {$operator} ";
+                $this->sql .= " {$logical} ";
             }
 
             $this->sql .= "$column BETWEEN $source.{$start} AND $source.{$end} ";
@@ -828,9 +831,9 @@ class JlModel{
 
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " {$operator} ";
+                    else $this->sql .= " {$logical} ";
                 }else {
-                    $this->sql .= " {$operator} ";
+                    $this->sql .= " {$logical} ";
                 }
 
                 $this->sql .= "$source.{$column} BETWEEN '{$start}' AND '{$end}' ";
@@ -844,7 +847,7 @@ class JlModel{
         return $this;
     }
 
-    function in($first,$second = "",$operator = "AND",$source = "") {
+    function in($first,$second = "",$logical = "AND",$source = "") {
         if($source == "") {
             $columns = $this->schema['columns'];
             $source = $this->table;
@@ -863,9 +866,9 @@ class JlModel{
 
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
+                        else $this->sql .= " $logical ";
                     }else {
-                        $this->sql .= " $operator ";
+                        $this->sql .= " $logical ";
                     }
 
                     $this->sql .= "$source.`{$key}` IN (";
@@ -893,9 +896,9 @@ class JlModel{
             if(in_array($first, $columns) && count($second)){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
+                    else $this->sql .= " $logical ";
                 }else {
-                    $this->sql .= " $operator ";
+                    $this->sql .= " $logical ";
                 }
 
                 $this->sql .= "$source.`{$first}` IN (";
@@ -917,7 +920,7 @@ class JlModel{
         return $this;
     }
 
-    function where($first,$second = "",$operator = "AND",$source = "") {
+    function where($first,$second = "",$logical = "AND",$source = "",$operator = "=") {
         if($source == "") {
             $columns = $this->schema['columns'];
             $source = $this->table;
@@ -937,13 +940,13 @@ class JlModel{
 
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
+                        else $this->sql .= " $logical ";
                     }else {
-                        $this->sql .= " $operator ";
+                        $this->sql .= " $logical ";
                     }
 
-                    if($value == "CURDATE()") $this->sql .= "$source.`{$key}` = {$value}";
-                    else $this->sql .= "$source.`{$key}` = '{$value}'";
+                    if($value == "CURDATE()") $this->sql .= "$source.`{$key}` {$operator} {$value}";
+                    else $this->sql .= "$source.`{$key}` {$operator} '{$value}'";
 
                 }
             }
@@ -957,20 +960,20 @@ class JlModel{
             if(in_array($first, $columns)){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
+                    else $this->sql .= " $logical ";
                 }else {
-                    $this->sql .= " $operator ";
+                    $this->sql .= " $logical ";
                 }
 
-                if($second == "CURDATE()") $this->sql .= "$source.`{$first}` = {$second}";
-                else $this->sql .= "$source.`{$first}` = '{$second}'";
+                if($second == "CURDATE()") $this->sql .= "$source.`{$first}` {$operator} {$second}";
+                else $this->sql .= "$source.`{$first}` {$operator} '{$second}'";
             }
         }
 
         return $this;
     }
 
-    function like($first,$second = "",$operator = "AND", $source = "") {
+    function like($first,$second = "",$logical = "AND", $source = "") {
         if($source == "") {
             $columns = $this->schema['columns'];
             $source = $this->table;
@@ -990,9 +993,9 @@ class JlModel{
 
                     if($this->group_bool) {
                         if(!$this->group_index) $this->group_index = 1;
-                        else $this->sql .= " $operator ";
+                        else $this->sql .= " $logical ";
                     }else {
-                        $this->sql .= " $operator ";
+                        $this->sql .= " $logical ";
                     }
 
                     $this->sql .= "$source.`{$key}` LIKE '%{$value}%'";
@@ -1008,9 +1011,9 @@ class JlModel{
             if(in_array($first, $columns)){
                 if($this->group_bool) {
                     if(!$this->group_index) $this->group_index = 1;
-                    else $this->sql .= " $operator ";
+                    else $this->sql .= " $logical ";
                 }else {
-                    $this->sql .= " $operator ";
+                    $this->sql .= " $logical ";
                 }
 
                 $this->sql .= "$source.`{$first}` LIKE '%{$second}%'";

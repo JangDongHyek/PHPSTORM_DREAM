@@ -109,8 +109,22 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                 "car_img": car_img,
                 "idx": idx
             },
-            success: function(data, textStatus) {
-                location.reload(true);
+            dataType : "json",
+            success: function(res) {
+                if(!res.success) {
+                    swal({
+                        title: "경고창",
+                        text: res.message,
+                        icon: "error",
+                        button: "확인",
+                    }).then(() => {
+                        location.reload(); // 페이지 새로고침
+                    });
+                    return false;
+                }
+
+                window.location.reload();
+
             }
         });
     }

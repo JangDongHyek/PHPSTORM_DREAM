@@ -18,6 +18,7 @@ if ($filter == 3){
     $sql_where .= " and is_payment = 'Y' ";
 }else if ($filter == 5){
     $sql_where = "car_date_type = 5";
+    $sql_where .= " and is_payment = 'Y' ";
 }else if ($filter == 6){
     // 기업세차를 임의로 6
     $sql_where = "";

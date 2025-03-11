@@ -1,4 +1,5 @@
 <?php
+include_once(G5_PATH."/jl/JlConfig.php");
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 //add_stylesheet('<link rel="stylesheet" href="'.G5_MSHOP_SKIN_URL.'/style.css">', 0);
@@ -87,12 +88,42 @@ if (!isset($query_params['timestamp']) || abs($current_time - intval($query_para
     <ul class="filter">
 
     </ul>
+    <?
+    $model = new jlModel("new_car_wash");
+    $model2 = new jlModel("new_company_car_wash");
+
+    $model->where('ma_id',$member['mb_id']);
+    $first = $model->where('car_date_type',3)->where('is_payment','Y')->where('cw_step',1)->count();
+
+    $model->where('ma_id',$member['mb_id'])->where('cw_step',1)->where('car_date_type',2);;
+    $model->groupStart();
+    $model->where("complete_datetime","0000-00-00 00:00:00")->addSql(' OR now() >= date_add(complete_datetime, interval +5 day) ');
+    $model->groupEnd();
+    $second = $model->count();
+
+    $model->where('ma_id',$member['mb_id'])->where('cw_step',1)->where('car_date_type',5);
+    $model->where('is_payment','Y');
+    $third = $model->count();
+
+    $fourth = $model2->where('ma_id',$member['mb_id'])->count();
+
+    $model->join("new_re_car_wash","cw_idx","cw_idx","LEFT");
+    $model->where('ma_id',$member['mb_id'])->where('is_turn_yn',"N","AND","new_re_car_wash");
+    $model->where('car_date_type',"5","AND","","<=");
+    $model->where('rw_idx',"0","AND NOT");
+    $fifth = $model->count();
+
+    //rw_step = 1
+    //is_turn_yn = 'N'
+    //and car_date_type <= 5 and ( cw.rw_idx <> 0 )
+    ?>
+
     <ul class="filter">
-        <li class="<? if ($filter == "3") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=3'?>">외부세차 1회</a></li>
-        <li class="<? if ($filter < 3) echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=1'?>">정기세차</a></li>
-        <li class="<? if ($filter == "5") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=5'?>">실내세차 1회</a></li>
-        <li class="<? if ($filter == "6") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=6'?>">기업세차</a></li>
-        <li class="<? if ($rw_idx_check == "true") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?rw_idx_check=true'?>">재작업</a></li>
+        <li class="<? if ($filter == "3") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=3'?>">외부세차</a><p><?=$first?>건</p></li>
+        <li class="<? if ($filter < 3) echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=1'?>">정기세차</a><p><?=$second?>건</p></li>
+        <li class="<? if ($filter == "5") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=5'?>">실내세차</a><p><?=$third?>건</p></li>
+        <li class="<? if ($filter == "6") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?filter=6'?>">기업세차</a><p>0건</p></li>
+        <li class="<? if ($rw_idx_check == "true") echo "active"; ?>"><a href="<?=G5_BBS_URL.'/my_order.php?rw_idx_check=true'?>">재작업</a><p><?=$fifth?>건</p></li>
     </ul>
     
     <!--내용부분-->

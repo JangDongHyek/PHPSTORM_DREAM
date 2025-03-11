@@ -330,14 +330,32 @@ if ($mode == "car_wash_form"){
 
 }elseif ($mode == 'go_car_del'){
 
-    $sql = "delete from {$g5['car_table']} where gc_idx = '{$_REQUEST["idx"]}'";
-    sql_query($sql);
+    $sql = "select * from {$g5['car_table']} where gc_idx = '{$_REQUEST["idx"]}' ";
+    $result = sql_query($sql);
+    $car = sql_fetch_array($result);
 
-    @unlink(G5_DATA_PATH.'/file/car_photo/'. str_replace(" ", "", $_REQUEST['car_no']).'.jpg');
-    //23.04.14 여기에 car_img 값있으면 그것도삭제해주게 wc
-    @unlink(G5_DATA_PATH.'/file/car_photo/'.$_REQUEST['car_img']);
+    // 차랑번호가 같고 정기차량이고 매니저가 지정되어있고 취소상태가 아닌
+    $sql = "select * from new_car_wash where car_no = '{$car['car_no']}' and  car_date_type = 2 and ma_id != '' and ma_step != 3";
+    $result = sql_query($sql);
 
-    goto_url(G5_BBS_URL.'/my_car.php');
+    $res['message'] = "";
+    $res['success'] = true;
+
+    if (sql_num_rows($result) > 0) {
+        $res['message'] = "매니저가 배정 되어있어 삭제가 불가합니다. 차량정보 삭제를 원하실 경우 관리자에게 문의하시길 바랍니다.";
+        $res['success'] = false;
+    }else {
+        $sql = "delete from {$g5['car_table']} where gc_idx = '{$_REQUEST["idx"]}'";
+        sql_query($sql);
+
+        @unlink(G5_DATA_PATH.'/file/car_photo/'. str_replace(" ", "", $_REQUEST['car_no']).'.jpg');
+        //23.04.14 여기에 car_img 값있으면 그것도삭제해주게 wc
+        @unlink(G5_DATA_PATH.'/file/car_photo/'.$_REQUEST['car_img']);
+
+    }
+
+    echo json_encode($res);
+    die();
 
 
 }elseif ($mode == 'go_car_update'){
@@ -549,6 +567,7 @@ if ($mode == "car_wash_form"){
     // 가변 파일 업로드
     $file_upload_msg = '';
     $upload = array();
+
     for ($i = 0; $i < count($_FILES['bf_file']['name']); $i++) {
         $upload[$i]['file'] = '';
         $upload[$i]['source'] = '';
@@ -628,12 +647,10 @@ if ($mode == "car_wash_form"){
 
     $result = insert_query($g5['review_table'],'re_idx',$_REQUEST);
 
-    $sql = "update {$g5['car_wash_table']} set review_datetime = '" . G5_TIME_YMDHIS . "' where cw_idx = $idx";
-    $result = sql_query($sql);
+    //$sql = "update {$g5['car_wash_table']} set review_datetime = '" . G5_TIME_YMDHIS . "' where cw_idx = $idx";
+    //$result = sql_query($sql);
 
-    goto_url(G5_BBS_URL.'/my_report.php');
-
-
+    return $result;
 }elseif ($mode == "company_car_wash_form"){
 
     $bo_table = 'new_company_car_wash';

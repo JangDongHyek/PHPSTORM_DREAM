@@ -142,7 +142,7 @@
                           &nbsp; </B></TD>
 	                    <TD align=left class="bbs" bgcolor="#fafafa"> 
                           <?=$show_notice_begin?>
-                          <input name=rg_notice type=checkbox id="rg_notice" value='1' <?=$checked_notice?>>공지사항&nbsp;
+                          <input name=rg_notice type=checkbox id="rg_notice" value='1'>공지사항&nbsp;
 						  <?=$show_notice_end?>
 
 						  <?=$show_secret_begin?>

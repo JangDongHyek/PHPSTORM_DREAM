@@ -2,6 +2,12 @@
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 //add_stylesheet('<link rel="stylesheet" href="'.G5_MSHOP_SKIN_URL.'/style.css">', 0);
+
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
+
 ?>
 
 <!-- 완료 취소모달팝업 -->
@@ -39,6 +45,24 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
         <li><a href="<?php echo G5_BBS_URL ?>/my_order.php">진행작업</a></li>
         <li class="active"><a href="<?php echo G5_BBS_URL ?>/my_order_end.php">완료작업</a></li>
     </ul>
+
+
+    <div class="flex justB">
+        <fieldset id="bo_sch">
+            <legend>게시물 검색</legend>
+            <form name="fsearch" method="get">
+                <input type="hidden" name="filter" value="<?=$_GET['filter']?>">
+                <input type="hidden" name="rw_idx_check" value="<?=$_GET['rw_idx_check']?>">
+                <label for="sfl" class="sound_only">검색대상</label>
+                <select name="sfl">
+                    <option value="car_no"<?php echo get_selected($sfl, 'car_no', true); ?>>차량번호</option>
+                    <option value="car_w_addr1"<?php echo get_selected($sfl, 'car_w_addr1'); ?>>지역</option>
+                </select>
+                <input type="text" name="stx" value="<?php echo stripslashes($stx) ?>" placeholder="검색어" required id="stx" class="required frm_input" size="15" maxlength="20">
+                <button type="submit" class="sbtn btn_submit"><i class="far fa-search"></i></button>
+            </form>
+        </fieldset>
+    </div>
 
     <!-- 필터추가 04.22 -->
     <ul class="filter">

@@ -3,7 +3,9 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/public_html/bbs/include/list.inc.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/list.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/skin/board/gallery_box_list3ea/write.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/skin/board/webeditor/list_main.php" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/public_html/bbs/skin/board/webeditor/list_notice.php" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/public_html/bbs/write.php" charset="x-windows-949" />
   </component>
 </project>

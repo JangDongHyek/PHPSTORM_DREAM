@@ -34,134 +34,7 @@ if(defined('_INDEX_')) { // index에서만 실행
             </a>
         </h1><!-- //logo -->
 
-        <div class="gnb_wrap" >
-            <ul>
-                <li>
-                    <a style="cursor:pointer">회사소개</a>
-                    <ul>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=greet01">인사말</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=greet02">회사소개</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=greet03">찾아오시는길</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a style="cursor:pointer">사업분야</a>
-                    <ul>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business01_1">광역지질조사</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business01_1">광역지질조사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business01_2">광물 및 암석 분석</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business02_1">지반조사</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business02_1">시추조사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business02_2">현장시험</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_1">지구물리탐사</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_1">GPR탐사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_2">탄성파탐사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_3">표면파탐사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_4">전기비저항탐사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_5">전기탐사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_6">자력탐사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business03_7">전자탐사</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business04_1">지구물리검층</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business04_1">하향식탄성파탐사/S-PS검층</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business04_2">크로스홀테스트</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business04_3">시추공영상촬영/초음파주사검층</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business04_4">음파검층/밀도검층</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business04_5">시추공자력검층</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business05_1">지반안정성검토</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business05_1">비탈면</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business05_2">저수지/제방</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business05_3">원격영상분석</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business05_4">터널</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business05_5">기초</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business06_1">지하안전점검 및 지하안전평가</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business06_1">지하안전점검</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business06_2">지하안전평가</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business07_1">상시자동화계측</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business07_1">자동화계측장비</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business08_1">환경/재해영향평가</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business08_1">환경영향평가</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business08_2">재해영향평가</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business09_1">지하수</a>
-                            <ul>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business09_1">지하수영향조사</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business09_2">지하수영향평가</a></li>
-                                <li><a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business09_3">지하수모델링</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business10_1">문화재 지반탐사</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=business11_1">토취장/석상(채석) 매장량 및 경제성 평가</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a style="cursor:pointer">사업실적</a>
-                    <ul>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/content.php?co_id=company01">사업실적</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a style="cursor:pointer">커뮤니티</a>
-                    <ul>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=notice">공지사항</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=data">자료실</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=activity">기술자문활동</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo G5_BBS_URL ?>/write.php?bo_table=qna">견적문의</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!-- //gnb_wrap -->
+        <inc-gnb-wrap></inc-gnb-wrap>
 
 
         <div class="hd_right">
@@ -457,7 +330,11 @@ if(defined('_INDEX_')) { // index에서만 실행
 </header><!-- //header -->
 <!-- } 상단 끝 -->
 
+<?
+$jl->vueLoad('header');
+$jl->componentLoad('inc');
 
+?>
 
 <!-- 콘텐츠 시작 { -->
 <div id="wrapper">
@@ -484,7 +361,6 @@ if(defined('_INDEX_')) { // index에서만 실행
 
         <?
         $jl->vueLoad('subnav');
-        $jl->componentLoad('inc');
         ?>
 
       
