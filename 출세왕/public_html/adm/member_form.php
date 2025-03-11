@@ -309,14 +309,16 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                         <select name="go_time2">
                             <option value="">시간선택</option>
                             <?php for($a = 1; $a < 13; $a++){?>
-                                <option value="<?=$a?>"><?=$a?>시</option>
+                            <? $formatted_a = str_pad($a, 2, '0', STR_PAD_LEFT); ?>
+                                <option value="<?=$formatted_a?>시"><?=$formatted_a?>시</option>
                             <?php }?>
                         </select>
                     </td>
                     <th scope="row"><label for="mb_work">주차가능요일<strong class="sound_only">필수</strong></label></th>
                     <td>  <?php
                         $go_day_arr = explode(',',$mb['go_day']);
-                        for($i = 1; $i <= count($yoil); $i++){
+                        $yoil = array("일","월","화","수","목","금","토");
+                        for($i = 0; $i <= count($yoil); $i++){
                             $chk = "";
                             for($a= 0; $a < count($go_day_arr); $a ++){
                                 if ($go_day_arr[$a] == $yoil[$i]){
