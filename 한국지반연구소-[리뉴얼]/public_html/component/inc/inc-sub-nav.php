@@ -75,6 +75,7 @@ $context_name = end($pathParts);
                     filter : {
                         table : "category",
                         url : "",
+                        order_by_asc : "priority",
                         extensions : [
                             {
                                 table : "category",

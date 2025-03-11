@@ -96,6 +96,10 @@ $context_name = end($pathParts);
                                 table : "category" ,
                                 foreign : "parent_idx",
                                 type : "data",
+                                filter : {
+                                    order_by_asc : "priority",
+                                },
+
                                 relations : [
                                     {
                                         table : "category" ,
