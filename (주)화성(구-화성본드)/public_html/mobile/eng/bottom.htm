@@ -1,0 +1,38 @@
+		<footer>
+			<? if($mobile_app != 1) { ?><div class="menu">
+		<dl>
+			<dd><? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?><a href="../../bbs/mb_logout.php?url=../../mobile/eng/">LOGOUT</a><? } else{ //로그아웃 상태일때 ?><a href="../../bbs/mobile_mb_login.php?url=../../mobile/eng/">ADMIN</a><? } ?></dd>
+			<dd><a href="../../mobile/eng/faq.htm">Q&A</a></dd>
+            <dd><a href="../../bbs/mobile_list.php?bbs_id=noticee">NOTICE</a></dd>
+			<dd class="last"><a href="tel:0553891155">INQUIRY</a></dd>
+		</dl>
+</div><?}?>
+			<div class="copy">
+			  <p>Address : Sanmakgongdan buk 2-gil, Yangsan-si, Gyeongsangnam-do l Tel : +82-55-389-1155 l Fax : +82-55-387-2709 l 2nd Plant : 4-1 Gosan-ro 228beonan-gil, Gunpo-si, Gyeonggi-do l Tel : +82-31-392-7100 l Fax : +82-31-398-0181 <br />
+			  </p>
+			  <div class="copyright">COPYRIGHT(C)2015 hwasung co.,ltd.  ALL RIGHTS RESERVED.</div>
+</div>
+		</footer>
+
+
+<div id="btm_menu"><a href="#"><img src="../../mobile/images/top.png"></a></div>
+<script type="text/javascript">
+
+$("#btm_menu").hide();
+ 
+// fade in #back-top
+$(function () {
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            $('#btm_menu').fadeIn();
+        } else {
+            $('#btm_menu').fadeOut();
+        }
+    });
+
+});
+$('#btm_menu').click(function($e){
+$('html, body').animate({scrollTop:0}); return false
+   
+ });
+</script>

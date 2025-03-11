@@ -1,0 +1,47 @@
+<style>
+copy_change {float:left; display:inline; font-style:normal; font-size:12px; color:#828282;}
+</style>
+
+
+<div class="footer_wrap">
+	<div class="footer">
+        <? if($_SESSION['ss_mb_id']){ //로그인 상태일때 ?>
+   <a href="../bbs/mb_logout.php?url=../main/">	
+		<img src="../images/ig_main_bottom_logo.jpg" alt="화성 로고" /><br />
+		<address style="font-family:Namun Gothic,나눔고딕, AppleGotihc,sans-serif; color:#757575;">
+			<p>대표자명 : 최현수<span> | </span>사업자등록번호 : 621-81-07376
+<br>
+본사/공장 : 경남 양산시 산막공단 북2길 26<span> | </span>Tel : 055-389-1155<span> | </span>Fax : 055-387-2709
+<br>
+군포사무소 : 경기도 군포시 고산로 228번안길 4-1 (당동)<span> | </span>Tel : 031-392-7100 ｜ Fax : 031-398-0181</p><br />
+		 <div><img src="../images/login.png" border="0" usemap="#Map" />
+           <map name="Map" id="Map">
+             <area shape="rect" coords="78,0,195,16" href="http://itforone.co.kr/" target="_blank"/>
+             <area shape="rect" coords="3,1,73,20" href="../bbs/mb_logout.php?url=../main/"/>
+           </map>
+		 </div>
+        </address>	       
+		<p style="float:right; font-size:11px; font-weight:600; color:#666666; margin-top:10px;">&copy;2015. hwasung ALL RIGHTS RESERVED.</p>
+       </a>
+       
+       <?}else{ //로그아웃 상태일때?>
+	<a href="../bbs/mb_login.php?url=../main/">
+    <img src="../images/ig_main_bottom_logo.jpg" alt="화성 로고" /><br />
+		<address style="font-family:Namun Gothic,나눔고딕, AppleGotihc,sans-serif; color:#757575;">
+			<p>대표자명 : 최현수<span> | </span>사업자등록번호 : 621-81-07376
+<br>
+본사/공장 : 경남 양산시 산막공단 북2길 26<span> | </span>Tel : 055-389-1155<span> | </span>Fax : 055-387-2709
+<br>
+군포사무소 : 경기도 군포시 고산로 228번안길 4-1 (당동)<span> | </span>Tel : 031-392-7100 ｜ Fax : 031-398-0181</p><br />
+		 <div><img src="../images/logout.png" border="0" usemap="#Map2" />
+           <map name="Map2" id="Map2">
+             <area shape="rect" coords="78,0,185,25" href="http://itforone.co.kr/" target="_blank" />
+             <area shape="rect" coords="-10,-3,74,17" href="../bbs/mb_login.php?url=../main/" />
+           </map>
+	    </div>
+        </address>	       
+		<p style="float:right; font-size:11px; font-weight:600; color:#666666; margin-top:10px;">&copy;2015. hwasung ALL RIGHTS RESERVED.</p>
+    </a>
+    <?}?> 			
+	</div>
+</div>

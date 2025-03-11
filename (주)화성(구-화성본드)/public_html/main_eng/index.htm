@@ -1,0 +1,230 @@
+<html>
+<head>
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>HWA SUNG</title>
+
+<link href="../css_eng/layout.css" rel="stylesheet" type="text/css" />
+<link href="../css_eng/board.css" rel="stylesheet" type="text/css" />
+<link href="../css_eng/style.css" rel="stylesheet" type="text/css" />
+<script src="../js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
+<script src="../js/jquery-migrate-1.2.1.min.js"></script>
+<!--[if lt IE 9]>
+<script src="js/selectivizr-min.js"></script>
+<![endif]-->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.0/TweenMax.min.js"></script>
+<script type="text/javascript" src="../js/function.js"></script>
+<script type="text/javascript" src="../js/menu.js"></script>
+<script type="text/javascript" src="../js/insight.js"></script>
+<script type="text/javascript" src="../js/calendar_beans_v2.0.js"></script>
+<script type="text/javascript" src="../js/function_jquery.js"></script>
+<script type="text/javascript" src="../js/HuskyEZCreator.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../css_eng/main.css" />
+<script type="text/javascript">
+$(window).on("load",function(e){
+	//hu_tabmenu($(".top_lnb"),0);
+
+	// 메인 비쥬얼 바네이
+	var mv_cur = 0;
+	var mv_prev = null;
+	var mv_ea = $(".main_visual .imgs > li").size()-1;
+	var prev_list;
+	var current_list;
+	var tween_prev;
+	var tween_current;
+	$(".main_visual .blinder").css({"display":"none"});
+
+	function blinder_reset(){
+		$(".main_visual .blinder").css({"display":"none"});
+		org_mv_delay = setInterval(org_mv_auto,3000);
+	};
+
+	$(".main_visual .indi_bn .blinder").css({"display":"block"});
+	var org_mv_delay = setInterval(org_mv_auto,3000);
+	var temp_mv_auto;
+
+	var mouseout ;
+	$(".main_visual").hover(function(){		
+		clearInterval(org_mv_delay);
+		clearTimeout(mouseout);
+	},function(){		
+		mouseout  = 	setTimeout(org_mv_auto, 3000);
+	});
+
+	$(".main_visual .indis ul li a").on("click",function(e){
+		if($(this).parent().index() != mv_cur){
+			$(".main_visual .indis .blinder").css({"display":"block"});
+			clearInterval(org_mv_delay);
+			mv_prev = mv_cur;
+			mv_cur = $(this).parent().index();
+			$(".main_visual .indis ul li a img").attr({"src":"../images_eng/ig_main_visual_off.png","alt":"off"});
+			$(this).children("img").attr({"src":"../images_eng/ig_main_visual_on.png","alt":"on"});
+			prev_list = $(".main_visual .imgs > li").eq(mv_prev);
+			current_list = $(".main_visual .imgs > li").eq(mv_cur);
+			tween_prev = TweenMax.fromTo(prev_list,0.8,{"left":"0"},{"left":"-100%","ease":"Expo.easeInOut"});
+			tween_current = TweenMax.fromTo(current_list,0.8,{"left":"100%"},{"left":"0","ease":"Expo.easeInOut","onComplete":blinder_reset});
+		};
+	});
+
+	$(".main_visual .indis ul li a").focusin(function(e){
+		if($(this).parent().index() != mv_cur){
+			$(".main_visual .indis .blinder").css({"display":"block"});
+			clearInterval(org_mv_delay);
+			mv_prev = mv_cur;
+			mv_cur = $(this).parent().index();
+			$(".main_visual .indis ul li a img").attr({"src":"../images_eng/ig_main_visual_off.png","alt":"off"});
+			$(this).children("img").attr({"src":"../images_eng/ig_main_visual_on.png","alt":"on"});
+			prev_list = $(".main_visual .imgs > li").eq(mv_prev);
+			current_list = $(".main_visual .imgs > li").eq(mv_cur);
+			tween_prev = TweenMax.fromTo(prev_list,0.8,{"left":"0"},{"left":"-100%","ease":"Expo.easeInOut"});
+			tween_current = TweenMax.fromTo(current_list,0.8,{"left":"100%"},{"left":"0","ease":"Expo.easeInOut","onComplete":blinder_reset});
+		};
+	});
+
+	function org_mv_auto(){
+		$(".main_visual .indis .blinder").css({"display":"block"});
+		clearInterval(org_mv_delay);
+		mv_prev = mv_cur;
+		mv_cur++;
+		if(mv_cur > mv_ea){
+			mv_cur = 0;
+			mv_prev = mv_ea;
+		};
+		
+		$(".main_visual .indis ul li a img").attr({"src":"../images_eng/ig_main_visual_off.png","alt":"off"});
+		$(".main_visual .indis ul li").eq(mv_cur).find(" > a > img").attr({"src":"../images_eng/ig_main_visual_on.png","alt":"on"});
+		prev_list = $(".main_visual .imgs > li").eq(mv_prev);
+		current_list = $(".main_visual .imgs > li").eq(mv_cur);
+		tween_prev = TweenMax.fromTo(prev_list,0.8,{"left":"0"},{"left":"-100%","ease":"Expo.easeInOut"});
+		tween_current = TweenMax.fromTo(current_list,0.8,{"left":"100%"},{"left":"0","ease":"Expo.easeInOut","onComplete":blinder_reset});
+	};
+});
+</script>
+</head>
+<body>
+	
+
+<link href="../css_eng/board.css" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="../js/function.js"></script>
+<script type="text/javascript">
+  var ns4=document.layers;
+  var ie4=document.all;
+  var ns6=document.getElementById&&!document.all;
+  var zCount = 99999;
+ 
+</script>
+
+
+
+
+	
+
+
+
+
+<div id="com1" style="width:0px; height:0px; position:absolute; left:0px; top:0px; z-index:1"> 
+<script type='text/javascript' src="http://weblog2.insightgroup.co.kr/stat_js.jsp?sitenum=1"></script>
+</div>
+
+
+
+<div id="com2" style="width:0px; height:0px; position:absolute; left:0px; top:0px; z-index:1"> 
+<form name="urlMaintain" id="urlMaintain" action="/member/login.jsp" method="post">
+	<input type="hidden" name="url" id="main_url" value="/index.jsp" />
+	<input type="hidden" name="param" id="main_param" value="" />
+</form>
+</div>
+
+	
+ <? include "../inc_eng/main_menu.htm"; ?>
+<div class="main_wrap">
+   <div class="main_visual">
+     <ul class="imgs">
+       <li class="li_01"><a href="javascript:"></a></li>
+       <li class="li_01"><a href="javascript:"></a></li>
+       <li class="li_01"><a href="javascript:"></a></li>
+       <!--<li class="li_04"><a href="javascript:"></a></li>-->
+     </ul>
+     <div class="indis">
+       <div class="indi_wrap">
+         <ul>
+           <li class="li_01"><a href="javascript:"><img src="../images_eng/ig_main_visual_on.png" alt="on" /></a>
+             <div class="blinder"></div>
+           </li>
+           <li class="li_02"><a href="javascript:"><img src="../images_eng/ig_main_visual_off.png" alt="off" /></a>
+             <div class="blinder"></div>
+           </li>
+           <li class="li_03"><a href="javascript:"><img src="../images_eng/ig_main_visual_off.png" alt="off" /></a>
+             <div class="blinder"></div>
+           </li>
+           <!--<li class="li_04"><a href="javascript:"><img src="../images_eng/ig_main_visual_off.png" alt="off" /></a><div class="blinder"></div></li>-->
+         </ul>
+       </div>
+     </div>
+   </div>
+   <div class="main_banner"> <a href="../main_eng/sub03_1.htm"><img src="../images_eng/ig_main_banner01.png" /></a> <a href="../bbs/list.php?bbs_id=productt02"><img src="../images_eng/ig_main_banner02.png" /></a> <a href="../bbs/list.php?bbs_id=constructionn"><img src="../images_eng/ig_main_banner03.png" /></a> </div>
+   <div class="main_bottom">
+     <div class="main_join"> <a href="../main_eng/sub01_4.htm"> <img src="../images_eng/ig_main_icon01.png" alt="" />
+       <div> <img src="../images_eng/ig_main_icon01_text.png" alt="join us" />
+         <p>directions<span>detail view &gt;</span></p>
+       </div>
+     </a> </div>
+     <div class="main_join02"> <img src="../images_eng/ig_main_icon02.png" alt="" />
+       <div> <img src="../images_eng/ig_main_icon02_text.png" alt="Our client" /> <a href="../main_eng/sub03_1.htm">
+         <p>matters for inquiry<span>detail view &gt;</span></p>
+       </a> </div>
+     </div>
+   </div>
+</div>
+<script>
+	// 즐겨찾기 추가 이벤트_01
+	function addFavorite(title,url){
+		var title = "화성본드"; //현재 보고 있는 페이지의 Title
+		var url = "http://www.naver.com"; //현재 보고 있는 페이지의 Url
+		if(window.sidebar && window.sidebar.addPanel){//firefox
+			window.sidebar.addPanel(title, url,"");
+		}else if(window.opera && window.print){//opera
+			var elem = document.createElement('a'); 
+			elem.setAttribute('href',url); 
+			elem.setAttribute('title',title); 
+			elem.setAttribute('rel','sidebar'); 
+			elem.click();
+		}else if(document.getElementById('bookmark')){//msie
+			window.external.AddFavorite( url, title);
+		}else{
+			alert("해당브라우저는 즐겨찾기 추가기능이 지원되지 않습니다.\n\n수동으로 즐겨찾기에 추가해주세요.");
+			return true;
+		};
+	};
+
+	// 즐겨찾기 추가 이벤트_02
+	function bookmark(){
+		window.external.AddFavorite("http://www.naver.com","화성본드");
+	};
+
+	$(document).ready(function(){
+		$('ul.gnb').hover(function(){
+			$('.header').stop(true, true).animate({height:'230px'},300);
+		  },function(){
+			  $('.header').stop(true, true).animate({height:'81px'},300);
+		  });
+	 });
+</script>
+<? include "../inc_eng/copy.htm"; ?>
+</body>
+
+</html>

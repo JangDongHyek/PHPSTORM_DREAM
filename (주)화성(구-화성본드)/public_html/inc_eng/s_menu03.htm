@@ -1,0 +1,68 @@
+			<!-- S T A R T :: left -->
+			<div id="left">
+	<div class="lnbZone">
+		<div class="lnbTit"><img src="../images_eng/lnb_intro_title3.gif" alt="제품문의" /></div>
+		<ul class="lnb">
+			<li><a href="../main_eng/sub04_1.htm"><img src="../images_eng/lnb2_1Off.png" alt="접착제상식" /></a></li>
+            <li><a href="../main_eng/sub04_3.htm"><img src="../images_eng/lnb4_2Off.png" alt="MANAGEMENT" /></a></li>
+            <li><a href="../main_eng/sub04_4.htm"><img src="../images_eng/lnb4_3Off.png" alt="MSDS" /></a></li>
+			<!--<li><a href="#"><img src="../images_eng/lnb1_2Off.png" alt="회사연혁" /></a></li>
+			<li><a href="#"><img src="../images_eng/lnb1_3Off.png" alt="인증서보기" /></a></li>
+			<li><a href="#"><img src="../images_eng/lnb1_4Off.png" alt="찾아오시는 길" /></a></li>
+			<li><a href="javascript:alert('준비중입니다');"><img src="../images_eng/lnb1_5Off.png" alt="찾아오시는 길" /></a></li>-->
+		</ul>
+	</div>
+</div>
+<!-- //left -->
+<div id="slide1" style="width:185px; height:px; position:absolute; left:0; top:200px; z-index:5"> 
+	<div class="qiuck">
+		<!--<ul class="lnb_banner">
+			<li><a href="/customer/request/index.jsp"><img src="../images_eng/quick_banner_01.gif" alt="견적문의" /></a></li>
+			<li><a href="/intro/map.jsp"><img src="../images_eng/quick_banner_02.gif" alt="오시는길" /></a></li>
+		</ul>-->
+		<p style="position:absolute; right:0; top:200px;"><a href="#top"><img src="../images_eng/quick_btn.gif" alt="" /></a></p>
+	</div>
+</div>
+
+
+<script language="JavaScript" type="text/JavaScript">
+function Refreshslide1()
+{
+	var StartPos = 0; // 슬라이드 메뉴 시작위치
+	var x = 909; // 화면 왼쪽으로 부터 떨어지는 위치
+	var Y = 0; // 페이지 헤더부분의 여백 (화면 위쪽으로 부터 떨어지는 위치)
+	var slideY = 400; // 슬라이드시 브라우저 상단과 띄워지는 거리  ****수정해주세욤****
+	var StopPoint = document.documentElement.scrollHeight - 600; //슬라이드가 멈추는 위치  ****수정해주세욤****
+	//document.body.scrollHeight : 전체스크롤 길이
+	var slideWatch;
+	var slideSpeed = 100; // 슬라이드 속도
+	var slideSpeed2 = 20; //
+
+	var slide1 = document.getElementById("slide1");    
+
+	var stmnStartPoint, stmnEndPoint, stmnRefreshTimer;
+ 
+	stmnStartPoint = parseInt(slide1.style.top, 10);
+	stmnEndPoint = document.documentElement.scrollTop + slideY;
+	if (stmnEndPoint < Y) stmnEndPoint = Y;
+     
+	stmnRefreshTimer = slideSpeed;
+     
+	if ( stmnStartPoint != stmnEndPoint ) {
+			stmnScrollAmount = Math.ceil( Math.abs( stmnEndPoint - stmnStartPoint ) / 15 );
+			slide1.style.top = parseInt(slide1.style.top, 10) + ( ( stmnEndPoint<stmnStartPoint ) ? -stmnScrollAmount : stmnScrollAmount )+"px";
+			if (parseInt(slide1.style.top, 10)>StopPoint) slide1.style.top = StopPoint+"px";
+			stmnRefreshTimer = slideSpeed2;
+     
+	}
+
+	slideWatch = setTimeout("Refreshslide1();", stmnRefreshTimer);
+}
+
+Refreshslide1();
+
+</script> 
+
+
+			<!-- E N D :: left --> 
+		</div>

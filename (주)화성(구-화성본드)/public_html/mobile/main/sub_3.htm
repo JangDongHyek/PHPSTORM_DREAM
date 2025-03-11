@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>Untitled Document</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, width=device-width" />
+		<link rel="stylesheet" type="text/css" href="../../mobile/css/m_style.css" />
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('nav');
+			document.createElement('section');
+			document.createElement('article');
+			document.createElement('footer');
+			
+			function check_submit() {
+ 
+				var query = document.searchForm.searchTerm.value;
+ 
+				if(query != ''){
+					document.searchForm.submit();
+				} else {
+					alert("검색어를 입력하세요");
+					document.searchForm.searchTerm.focus(); 
+					return;
+				}	
+			}			
+		</script>
+</head>
+<body>
+	<? include("top.htm"); ?>
+ 
+		<section id="content">
+        
+            <!--article id="sublist">
+             <div class="subm3">
+		       <dl>
+                <dd><a href="../../bbs/mobile_list.php?bbs_id=with_noticee" class="on">회사소개 </a></dd>
+                <dd><a href="../mobile/s1_2.html">연혁</a></dd>
+                <dd><a href="../mobile/s1_3.html">기술보유현황</a></dd>
+                <dd class="last"><a href="../mobile/s1_4.html">오시는 길</a></dd>
+		      </dl><em></em>
+            </div>
+            </article-->
+            
+			<article id="sublist">
+                  <div class="location" style="text-align:left">(주) 화성본드 &nbsp;> &nbsp;회사소개 &nbsp;> &nbsp;<span class="active">인증서보기</span></div>
+             </article>
+
+<? include "sub_img.htm"; ?>
+
+    
+
+  
+<article id="sublist">
+<div class="title_p" style="text-align:left">인증서보기</div>
+
+<p>1987년 설립된 (주)화성은<span class="blueTxt"> 건축용, 상업용 접착제 및 고분자 가소제, 용착제등을 생산</span>하는 접착제 제조 전문회사입니다.<br />
+<br />
+
+<img src="../images/in_img_1.jpg" width="100%"><br />
+<img src="../images/in_img_2.jpg" width="100%"></p>
+<br />
+ 
+  </article>
+        
+           <article>
+             <? include("bottom.htm"); ?>
+           </article>
+    </section>
+</body>
+</html>

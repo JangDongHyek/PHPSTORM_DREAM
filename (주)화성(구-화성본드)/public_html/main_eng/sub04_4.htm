@@ -1,0 +1,146 @@
+<html>
+<head>
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>HWA SUNG</title>
+
+<link href="../css_eng/layout.css" rel="stylesheet" type="text/css" />
+<link href="../css_eng/board.css" rel="stylesheet" type="text/css" />
+<link href="../css_eng/style.css" rel="stylesheet" type="text/css" />
+<link href="../css_eng/content.css" rel="stylesheet" type="text/css">
+<script src="../js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
+<script src="../js/jquery-migrate-1.2.1.min.js"></script>
+<!--[if lt IE 9]>
+<script src="js/selectivizr-min.js"></script>
+<![endif]-->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.0/TweenMax.min.js"></script>
+<script type="text/javascript" src="../js/function.js"></script>
+<script type="text/javascript" src="../js/menu.js"></script>
+<script type="text/javascript" src="../js/insight.js"></script>
+<script type="text/javascript" src="../js/calendar_beans_v2.0.js"></script>
+<script type="text/javascript" src="../js/function_jquery.js"></script>
+<script type="text/javascript" src="../js/HuskyEZCreator.js"></script>
+<script language="javascript" src="../js/jquery-1.8.3.min.js"></script>
+<script language="javascript" src="../js/common.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../css_eng/main.css" />
+</head>
+
+<body>
+
+ <? include "../inc_eng/main_menu.htm"; ?>
+
+<script>
+	// 즐겨찾기 추가 이벤트_01
+	function addFavorite(title,url){
+		var title = "화성본드"; //현재 보고 있는 페이지의 Title
+		var url = "http://www.naver.com"; //현재 보고 있는 페이지의 Url
+		if(window.sidebar && window.sidebar.addPanel){//firefox
+			window.sidebar.addPanel(title, url,"");
+		}else if(window.opera && window.print){//opera
+			var elem = document.createElement('a'); 
+			elem.setAttribute('href',url); 
+			elem.setAttribute('title',title); 
+			elem.setAttribute('rel','sidebar'); 
+			elem.click();
+		}else if(document.getElementById('bookmark')){//msie
+			window.external.AddFavorite( url, title);
+		}else{
+			alert("해당브라우저는 즐겨찾기 추가기능이 지원되지 않습니다.\n\n수동으로 즐겨찾기에 추가해주세요.");
+			return true;
+		};
+	};
+
+	// 즐겨찾기 추가 이벤트_02
+	function bookmark(){
+		window.external.AddFavorite("http://www.naver.com","화성본드");
+	};
+
+	$(document).ready(function(){
+		$('ul.gnb').hover(function(){
+			$('.header').stop(true, true).animate({height:'230px'},300);
+		  },function(){
+			  $('.header').stop(true, true).animate({height:'81px'},300);
+		  });
+	 });
+</script>
+
+
+
+
+	<div id="visualZone">
+		<div class="visual_03"> </div>
+	</div>
+
+	<div id="container">
+		<div id="content">
+			<div class="con">
+				<div class="location">
+					<div class="local" id="location">
+                    
+						<p><img src="../images_eng/location_home.gif" alt="" class="location_home"/><img src="../images_eng/location_arrow.gif" alt="" class="location_arrow"/><span>REFERENCE<img src="../images_eng/location_arrow.gif" alt="" class="location_arrow"/></span><span class="localPage">MSDS</span></p>
+					</div>
+					<h2 class="title"><img src="../images_eng/intro_title_04_3.gif" alt="MSDS" /></h2>
+				</div>
+				<!-- //location -->
+				<div class="cc"> 
+					<!--내용시작-->
+					<p>
+                     <div class="explanation02" style="font-weight:600; font-size:15px;">※ MSDS 자료가 필요하신 분은 당사로 연락 주십시오.</div>
+                     <!--<div class="content_title05" style="margin-top:15px;">타일 접착제(중보행)</div>
+                     <div class="explanation04" style="font-weight:600;">
+                      - HMO-4<br>
+                      - HW-400<br>
+                      - W-300S<br>
+                      - W-200S<br>
+                      - W-200H<br>
+                      - W-150 
+                     </div>
+                     <div class="content_title05">륨 접착제(경보행)</div>
+                     <div class="explanation04" style="font-weight:600;">
+                      - WR-100<br>
+                      - W-200M
+                     </div>
+                     <div class="content_title05">용착제</div>
+                     <div class="explanation04" style="font-weight:600;">
+                      - 깜쪽이<br>
+                      - 깔끄미UV무광<br>
+                      - EQ깜쪽이
+                     </div>
+                     <div class="content_title05">전도성 접착제</div>
+                     <div class="explanation04" style="font-weight:600;">
+                      - ET-5<br>
+                      - WT-5
+                     </div>
+                     <div class="content_title05">자동차 및 산업용 접착제</div>
+                     <div class="explanation04" style="font-weight:600;">
+                      - HS-708A<br>
+                      - A-300 
+                     </div>
+                     <div class="content_title05">기타 접착제</div>
+                     <div class="explanation04" style="font-weight:600;">
+                      - CT-100<br>
+                      - WAX<br>
+                      - OA타일접착제
+                     </div>-->
+                    </p>
+					<!--//내용시작--> 
+				</div>
+				<!-- //cc --> 
+			</div>
+			<!-- //con --> 
+			
+ <? include "../inc_eng/s_menu03.htm"; ?>
+		<!--//content --> 
+	</div>
+	<!--//container --> 
+	<!-- E N D :: container --> 
+
+</div>
+ <? include "../inc_eng/copy.htm"; ?>
+
+
+</body>
+</html>

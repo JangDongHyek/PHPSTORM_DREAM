@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>Untitled Document</title>
+<head>
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script language='JavaScript' src='/mEmbed.js'></script>
+<script language=JavaScript>function click() {if ((event.button==2) || (event.button==2)) 
+{alert('감사합니다.');}}document.onmousedown=click// --></script>
+
+<SCRIPT language="JavaScript">
+<!--
+<!-- 
+function setCookie( name, value, expiredays ) 
+{ 
+	var todayDate = new Date(); 
+	todayDate.setDate( todayDate.getDate() + expiredays ); 
+	document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";" 
+	} 
+
+function closeWin() 
+{ 
+	if ( document.pop.notice1.checked ) 
+	setCookie( "notice1", "done" , 1);//1은 하루동안 새창을 열지 않게 합니다.
+	window.close(); 
+} 
+// -->
+
+function MM_callJS(jsStr) { //v2.0
+  return eval(jsStr)
+}
+//-->
+</SCRIPT>
+
+</head>
+
+<body topmargin="0" bottommargin="0" rightmargin="0" leftmargin="0">
+<table width="158" border="0" align="center" cellpadding="0" cellspacing="0">
+<form name=pop> 
+  <tr>
+    <td><a href="http://www.hsadhesive.co.kr/bbs/view.php?&bbs_id=productt02&page=&doc_num=3" target="_blank"><img src="pop_img_2.jpg" width="500" height="600" border="0"></a></td>
+  </tr>
+  <tr>
+    <td height="25" align="center" bgcolor="#000000"><input type=checkbox name="notice1" value="">
+      <font color="#FFFFFF">공지창 띄우지 않음</font> <a href="javascript:history.onclick=closeWin()"><strong><font color="#FF0000">[닫기]</font></strong></a></td>
+  </tr>
+   </form> 
+</table>
+</body>
+</html>

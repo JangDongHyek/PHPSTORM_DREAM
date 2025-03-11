@@ -1,0 +1,125 @@
+<html>
+<head>
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>화성본드</title>
+
+<link href="../css/layout.css" rel="stylesheet" type="text/css" />
+<link href="../css/board.css" rel="stylesheet" type="text/css" />
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<link href="../css/content.css" rel="stylesheet" type="text/css">
+<script src="../js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
+<script src="../js/jquery-migrate-1.2.1.min.js"></script>
+<!--[if lt IE 9]>
+<script src="js/selectivizr-min.js"></script>
+<![endif]-->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.0/TweenMax.min.js"></script>
+<script type="text/javascript" src="../js/function.js"></script>
+<script type="text/javascript" src="../js/menu.js"></script>
+<script type="text/javascript" src="../js/insight.js"></script>
+<script type="text/javascript" src="../js/calendar_beans_v2.0.js"></script>
+<script type="text/javascript" src="../js/function_jquery.js"></script>
+<script type="text/javascript" src="../js/HuskyEZCreator.js"></script>
+<script language="javascript" src="../js/jquery-1.8.3.min.js"></script>
+<script language="javascript" src="../js/common.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../css/main.css" />
+</head>
+
+<body>
+
+ <? include "../inc/main_menu.htm"; ?>
+
+<script>
+	// 즐겨찾기 추가 이벤트_01
+	function addFavorite(title,url){
+		var title = "화성본드"; //현재 보고 있는 페이지의 Title
+		var url = "http://www.naver.com"; //현재 보고 있는 페이지의 Url
+		if(window.sidebar && window.sidebar.addPanel){//firefox
+			window.sidebar.addPanel(title, url,"");
+		}else if(window.opera && window.print){//opera
+			var elem = document.createElement('a'); 
+			elem.setAttribute('href',url); 
+			elem.setAttribute('title',title); 
+			elem.setAttribute('rel','sidebar'); 
+			elem.click();
+		}else if(document.getElementById('bookmark')){//msie
+			window.external.AddFavorite( url, title);
+		}else{
+			alert("해당브라우저는 즐겨찾기 추가기능이 지원되지 않습니다.\n\n수동으로 즐겨찾기에 추가해주세요.");
+			return true;
+		};
+	};
+
+	// 즐겨찾기 추가 이벤트_02
+	function bookmark(){
+		window.external.AddFavorite("http://www.naver.com","화성본드");
+	};
+
+	$(document).ready(function(){
+		$('ul.gnb').hover(function(){
+			$('.header').stop(true, true).animate({height:'230px'},300);
+		  },function(){
+			  $('.header').stop(true, true).animate({height:'81px'},300);
+		  });
+	 });
+</script>
+
+
+
+
+	<div id="visualZone">
+		<div class="visual_01"> </div>
+	</div>
+
+	<div id="container">
+		<div id="content">
+			<div class="con">
+				<div class="location">
+					<div class="local" id="location">
+                    
+						<p><img src="../images/location_home.gif" alt="" class="location_home"/><img src="../images/location_arrow.gif" alt="" class="location_arrow"/><span>회사소개<img src="../images/location_arrow.gif" alt="" class="location_arrow"/></span><span class="localPage">찾아오시는 길</span></p>
+					</div>
+					<h2 class="title"><img src="../images/intro_title_01_4.gif" alt="찾아오시는 길" /></h2>
+				</div>
+				<!-- //location -->
+				<div class="cc"> 
+					<!--내용시작-->
+					<p><!-- * Daum 지도 - 지도퍼가기 -->
+<!-- 1. 지도 노드 -->
+<div id="daumRoughmapContainer1447983271391" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+
+<!--
+	2. 설치 스크립트
+	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
+-->
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="http://dmaps.daum.net/map_js_init/roughmapLoader.js"></script>
+
+<!-- 3. 실행 스크립트 -->
+<script charset="UTF-8">
+	new daum.roughmap.Lander({
+		"timestamp" : "1447983271391",
+		"key" : "6tk7",
+		"mapWidth" : "964",
+		"mapHeight" : "464"
+	}).render();
+</script></p>
+					<!--//내용시작--> 
+				</div>
+				<!-- //cc --> 
+			</div>
+			<!-- //con --> 
+			
+ <? include "../inc/s_menu01.htm"; ?>
+		<!--//content --> 
+	</div>
+	<!--//container --> 
+	<!-- E N D :: container --> 
+
+</div>
+ <? include "../inc/copy.htm"; ?>
+
+</body>
+</html>
