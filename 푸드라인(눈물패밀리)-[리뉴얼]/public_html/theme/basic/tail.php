@@ -90,6 +90,7 @@ if (G5_IS_MOBILE) {
                     <li><a><i class="fa-brands fa-instagram"></i></a></li>
                     <li><a><i class="fa-brands fa-youtube"></i></a></li>
                     <li><a><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_kakao.png"></a></li>
+					<li><a><img src="<?php echo G5_THEME_IMG_URL ?>/common/sns_band.png"></a></li>
                 </ul>
 <!--				<ul class="area_cs flex">
                     <div>

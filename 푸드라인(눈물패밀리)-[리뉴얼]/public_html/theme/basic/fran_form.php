@@ -1,4 +1,5 @@
 <?php
+include_once(G5_PATH."/jl/JlConfig.php");
 define('_INDEX_', true);
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
@@ -8,55 +9,9 @@ if (G5_IS_MOBILE) {
 }
 include_once(G5_THEME_PATH.'/head.php');
 ?>
-<style>
-#gnb_1dul > li.gnb_1dli:nth-child(4) a.gnb_1da{ color:#DC000C !important;   transition:all 1s  !important;}
-#gnb_1dul > li.gnb_1dli:nth-child(4) span{ display:block !important;  transition:all 1s  !important; width:100% !important}
-</style>
-<section id="visual">
-    <div class="swiper swiperVisual">
-        <div class="swiper-wrapper">
-            <!--<div class="swiper-slide v1">
-                <div class="imgAreaBg">
-                    <div class="slogan">
-                        <h3>
-                            <p>정직하고 확실하게</p>
-                            <p>배달로 길을 이어주는</p>
-                            <p>푸드<span class="txtRed">라</span>인</p>
-                        </h3>
-                        <a class="btnArrow">바로 문의하기</a>
-                    </div>
-                    <div class="imgMark">
-                        <img src="<?php echo G5_THEME_IMG_URL ?>/main/visual_mark.svg">
-                    </div>
-                </div>
-            </div>-->
-            <div class="swiper-slide introduce_v1">
-            <div class="imgAreaBg">
-                    <div class="slogan">
-                        <h3>
-                            <p>푸드라인은 어떤 경영철학을</p>
-                            <p>가지고<span class="txtRed"> 있는가?</span></p>
-                        </h3>
-                        <a class="btnArrow" href="<?php echo G5_URL ?>/brand_form.php">브랜드사 제휴문의</a>
-                    </div>
-                    <!--<div class="imgMark">
-                        <img src="<?php echo G5_THEME_IMG_URL ?>/main/visual_mark.svg">
-                    </div>-->
-            </div>
-            </div>
-        </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <!--<div class="swiper-pagination"></div>-->
-    </div>
 
-    <!-- Initialize Swiper -->
-
-
-</section>
 
 <div id="idx_wrapper">
-    <section class="idx_service" class="wow fadeInDownBig" data-wow-delay="0.3s">
         <!--<div class="titleArea">
             <span class="wow fadeInDown" data-wow-delay="0.3s">FOOD<span class="txtRed">L</span>INE SERVICE</span>
             <h3>
@@ -64,52 +19,34 @@ include_once(G5_THEME_PATH.'/head.php');
                 <p class="wow fadeInUp" data-wow-delay="0.5s">신뢰와 안심, 그리고 항상 더 나은 서비스</p>
             </h3>
         </div>-->
-        <div class="area_marin">
-                <!--회사소개--> 
-                <div class="area_img wow fadeInRight" data-wow-delay="0.3s"><img src="<?php echo G5_THEME_IMG_URL ?>/main/img_company.jpg"></div>
-                <div class="area_txt wow fadeInLeft" data-wow-delay="0.8s">
-                    <div class="area_txt_wrap">
-                        <h3>프리미엄 배달대행 전문기업<br><span class="check">푸드라인</span></h3>
-                        <p>
-                        푸드라인은 차별화된 기술을 기반으로 고객에게 필요한 맞춤 배송을
-                        제공하는 배달 서비스로 시작했습니다. 우리는 빠르고 안전한 배송과
-                        고객중심의 서비스를 만들기 위해 노력합니다.<br>
-                        이제는 혁신적인 기술력과 선도적인 서비스를 바탕으로
-                        새로운 유통 시장을 열고 로컬 커머스의 뛰어난 경험들을 만들고자 합니다.<br>
-                        감사합니다.
-                        </p>
-                        <div class="cust">
-                           <dl>
-                                <dt>전화상담</dt>
-                                <dd>
-                                    <span class="tel">박주용 상무이사 <p>010-5373-7716</p><br>
-                                        장우영 상무이사 <p>010-4132-1665</p></span>
-                                    <br><span>평일09시~20시 일/공휴일 휴무</span></dd>
-                           </dl>
-                           <dl>
-                                <dt>메일상담</dt>
-                                <dd><span class="tel">foodline99@naver.com</span></dd>
-                           </dl>
-                        </div>
-                        <a class="area_btn" href="<?php echo G5_URL ?>/delivery_list.php">상점제휴 문의 바로가기<i></i></a>
-                    </div>
-                </div>
 
+    <div class="scontents wow fadeInDownBig" data-wow-delay="0.3s">
+
+
+        <div class="scon_left">
+            <div class="sub_title_wr wow fadeInUp animated" style="visibility: visible; animation-name: fadeInUp;">
+                <h2 class="sub_title">대리점 문의</h2>
+                <p class="sub_desc ">1분이면 한번에 끝!</p>
+            </div>
         </div>
+
+        <!--<div id="app">
+            <form3-input></form3-input>
+        </div>-->
+
+        <div id="app">
+            <form-fran-input></form-fran-input>
+        </div>
+
         <!--<div class="line">
             <div class="wow fadeInDownBig" animation-duration="1s" data-wow-delay="0s"></div>
             <div class="wow fadeInRightBig" animation-duration="1s" data-wow-delay="0.5s"></div>
         </div>-->
-    </section>
+    </div>
 
 
-    <section class="imgBgArea" style="background:#f8f8f8">
-        <div class="titleArea">
-            <span class="wow fadeInDown" data-wow-delay="0.3s">FOOD<span class="txtRed">LINE</span> IDENTITY</span>
-            <h3 class="wow fadeInUp" data-wow-delay="0.4s">푸드<span class="txtRed">라</span>인은 체인점 전문 업체<br /> 눈물패밀리가 운영하는 배달대행 업체 입니다.</h3>
-        </div>
-        <div class="imgAreasubBg" style="background-image: url('./theme/basic/img/sub/introduce_bg.jpg')"></div>
-    </section>
+
+    
 
 
     <!--<section class="idx_review">
@@ -274,7 +211,11 @@ include_once(G5_THEME_PATH.'/head.php');
             });
         });
     </script>
-
+<?
+$jl->vueLoad('app');
+$jl->componentLoad("form");
+$jl->componentLoad("item");
+?>
 <?php
 include_once(G5_PATH.'/tail.php');
 ?>

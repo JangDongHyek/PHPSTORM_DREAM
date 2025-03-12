@@ -16,12 +16,12 @@ if(!ipconfig($ip)){
 ################### statistics start ###########################
 $url_gubun = explode("~",$PHP_SELF);
 if($url_gubun[1]!=""){//계정접속
-        $url_gubun_ex = explode("/",$url_gubun[1]);
-        $account = $url_gubun_ex[0];
+    $url_gubun_ex = explode("/",$url_gubun[1]);
+    $account = $url_gubun_ex[0];
 
 }else{//도메인접속
-        $account_ex=explode("/",$_SERVER[DOCUMENT_ROOT]);
-        $account=$account_ex[2];
+    $account_ex=explode("/",$_SERVER[DOCUMENT_ROOT]);
+    $account=$account_ex[2];
 
 }
 include("/home/counter/public_html/counter.php");
@@ -35,12 +35,12 @@ if(!ipconfig($ip)){
 */
 
 if(defined('G5_THEME_PATH')) {
-    require_once(G5_THEME_PATH.'/business.php');
+    require_once(G5_THEME_PATH.'/fran_form.php');
     return;
 }
 
 if (G5_IS_MOBILE) {
-    include_once(G5_MOBILE_PATH.'/business.php');
+    include_once(G5_MOBILE_PATH.'/fran_form.php');
     return;
 }
 
@@ -61,7 +61,7 @@ $result = sql_query($sql);
 for ($i=0; $row=sql_fetch_array($result); $i++) {
     if ($i%2==1) $lt_style = "margin-left:20px";
     else $lt_style = "";
-?>
+    ?>
     <div style="float:left;<?php echo $lt_style ?>">
         <?php
         // 이 함수가 바로 최신글을 추출하는 역할을 합니다.
@@ -70,7 +70,7 @@ for ($i=0; $row=sql_fetch_array($result); $i++) {
         echo latest("basic", $row['bo_table'], 5, 25);
         ?>
     </div>
-<?php
+    <?php
 }
 ?>
 <!-- } 최신글 끝 -->

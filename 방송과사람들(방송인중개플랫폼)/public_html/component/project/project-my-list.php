@@ -30,8 +30,8 @@ $context = end($pathParts);
                     </div>
                 </a>
                 <div class="btn-wrap"><!--의뢰인 버전-->
-                    <button type="button" @click="jl.href('./project_form.php?primary='+item.idx)">수정</button>
-                    <button type="button" v-if="!item.choice" @click="jl.deleteData(item,{table : 'project'})">삭제</button>
+                    <button type="button" v-if="!item.status" @click="jl.href('./project_form.php?primary='+item.idx)">수정</button>
+                    <button type="button" v-if="!item.choice && !item.status" @click="jl.deleteData(item,{table : 'project'})">삭제</button>
                     <button type="button" v-else @click="jl.href('./project_view.php?tab=1&primary=' + item.idx)">매칭보기</button>
                     <button type="button" class="blue" @click="modal.status = true; modal.data = item">선정</button>
                 </div>

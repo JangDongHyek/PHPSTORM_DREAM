@@ -38,7 +38,7 @@ include_once(G5_THEME_PATH.'/head.php');
                             <p>직영 물류 인프라와 IT 역량으로</p>
                             <p>유통물류 <span class="txtRed">디지털</span>화</p>
                         </h3>
-                        <a class="btnArrow">대리점 문의하기</a>
+                        <a class="btnArrow" href="<?php echo G5_URL ?>/fran_form.php">대리점 문의하기</a>
                     </div>
                     <!--<div class="imgMark">
                         <img src="<?php echo G5_THEME_IMG_URL ?>/main/visual_mark.svg">
@@ -62,12 +62,26 @@ include_once(G5_THEME_PATH.'/head.php');
             <span class="wow fadeInDown" data-wow-delay="0.3s">FOOD<span class="txtRed">LINE</span> Distributor</span>
             <h3 class="wow fadeInUp" data-wow-delay="0.4s">푸드<span class="txtRed">라</span>인 각지역 운영중인 회사</h3>
         </div>
-        <div class="contsArea">
+        <div class="contsArea">            
+			<div class="textArea">
+				<!--숫자증감애니메이션-->
+				<div class="counterareabg">
+					 <div>
+						 <span class="title">기사 수</span>
+						 <span class="counter" data-start="0" data-end="9120"><br>0</span>
+						 <span class="title">가입상점 수</span>
+						 <span class="counter" data-start="0" data-end="93384"><br>0</span>
+						 <span class="title">대리점 수</span><br>
+						 <span class="counter" data-start="0" data-end="8402"><br>0</span>
+						 <span class="title">연매출액(2024년)</span>
+						 <span class="counter" data-start="0" data-end="8402"><br>0</span>
+					 </div>
+				</div>
+            </div>
             <div class="imgArea wow fadeInUpBig" data-wow-delay="0.7s">
                 <img src="<?php echo G5_THEME_IMG_URL ?>/sub/map.png">
             </div>
-            <div class="textArea">
-            </div>
+
         </div>
     </section>
 
@@ -244,9 +258,9 @@ include_once(G5_THEME_PATH.'/head.php');
             <div class="swiper-pagination"></div>
         </div>
 
-        <div class="text-center wow fadeInDown" data-wow-delay="0.6s">
+        <!--<div class="text-center wow fadeInDown" data-wow-delay="0.6s">
             <a class="btnRed">후기 더보기 <i class="fa-light fa-plus"></i></a>
-        </div>
+        </div>-->
     </section>
     <section class="idx_overview wow fadeInDown" data-wow-delay="0.3s">
         <div class="inr">

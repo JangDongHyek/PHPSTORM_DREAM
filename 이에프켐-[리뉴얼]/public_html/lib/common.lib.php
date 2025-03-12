@@ -2564,6 +2564,49 @@ function board_notice($bo_notice, $wr_id, $insert=false)
     return implode(",", $notice_array);
 }
 
+// sms 발송 (수신번호, 발신번호, 내용)
+function goSms($reserv_phone, $send_phone, $msg)
+{
+    $conn_db = mysqli_connect("211.51.221.165","emma","wjsghk!@#","emma");
+    $mart_id = "letskt0802"; //계정명
+
+    $number_receive_people=0;
+    $tran_phone1 = $reserv_phone;		//받는 사람 번호
+    $tran_callback1 = $send_phone;		//보내는 사람 번호
+    $send_date = date("YmdHis");
+
+    if(!$tran_callback1){
+        //echo 1;	//alert("전화번호가 잘못되었습니다. 다시 입력해주세요.");
+        exit;
+    }
+
+    $msg1 = $msg;		//"[".$_POST['sms_name'].":".$_POST['sms_tel']."]".$_POST['sms_content']; //내용
+
+    $tran_msg1 = iconv("UTF-8","EUC-KR",$msg1);
+
+    $sms_query = "Insert into emma.em_tran (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1')";
+    $result=mysqli_query($conn_db,$sms_query);
+
+    if(!$result){
+        //echo 2;	//echo mysqli_error();
+        exit;
+    }
+
+    //전체기록남기기
+    $all_query = "Insert into emma.em_all_log (tran_pr,tran_id,tran_phone,tran_callback,tran_status,tran_date,tran_msg,reg_date) values (null,'$mart_id','$tran_phone1','$tran_callback1','1','$send_date','$tran_msg1',curdate())";
+    $result2 = mysqli_query($conn_db,$all_query);
+    if(!$result2){
+        //echo 2;	//echo mysqli_error();
+        exit;
+    }
+
+    $query = "Insert into tbl_sms(f_idno,f_from_phone,f_to_phone,f_comment,f_wdate) values('$mart_id','$tran_callback1','$tran_phone1','$tran_msg1','$send_date')";
+    sql_query($query);
+
+    //echo 0;	//	alert("문의문자가 전송되었습니다.");
+
+}
+
 
 // goo.gl 짧은주소 만들기
 function googl_short_url($longUrl)

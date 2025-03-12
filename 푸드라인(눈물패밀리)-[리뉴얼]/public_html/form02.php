@@ -1,5 +1,7 @@
 <?php
 include_once('./_common.php');
+// 페이지 제목
+$g5['title'] = "기업본사 배달제휴 문의";
 define('_INDEX_', true);
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 

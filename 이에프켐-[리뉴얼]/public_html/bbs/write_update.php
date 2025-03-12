@@ -29,7 +29,7 @@ if ($wr_subject == '') {
 
 $wr_content = '';
 if (isset($_POST['wr_content'])) {
-    $wr_content = substr(trim($_POST['wr_content']),0,65536);
+    $wr_content = trim($_POST['wr_content']);
     $wr_content = preg_replace("#[\\\]+$#", "", $wr_content);
 }
 if ($wr_content == '') {
@@ -274,6 +274,13 @@ if ($w == '' || $w == 'r') {
     sql_query($sql);
 
     $wr_id = sql_insert_id();
+
+    if($bo_table == "qna") {
+        goSms("010-2696-9316","051-758-9305","{$wr_name}님이 제품문의에 글을 등록하셨습니다.");
+        //goSms("010-2475-5170","051-758-9305","{$wr_name}님이 제품문의에 글을 등록하셨습니다.");
+        //goSms("010-4820-3758","051-758-9305","{$wr_name}님이 제품문의에 글을 등록하셨습니다.");
+    }
+
 
     // 부모 아이디에 UPDATE
     sql_query(" update $write_table set wr_parent = '$wr_id' where wr_id = '$wr_id' ");

@@ -186,7 +186,7 @@ include_once(G5_THEME_PATH.'/head.php');
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide">
+                <!--<div class="swiper-slide">
                     <div class="box">
                         <div class="imgArea">
                             <img src="<?php echo G5_THEME_IMG_URL ?>/main/seller_review02.jpg">
@@ -197,7 +197,7 @@ include_once(G5_THEME_PATH.'/head.php');
                             <div>서비스를 이용한 경험은 전반적으로 매우 만족스러웠습니다. 우선 푸드라인 서비스 도입 이전에는 고객들께서 매장 방문 혹은 테이크아웃을 통해 주문을 하셨는데, 이제 라이더 서비스를 통해 배달 옵션을 제공함으로써 고객들에게 더 많은 편의를 제공할 수 있게 되었습니다. 주문량이 이전보다 상당히 늘어나고, 특히 주변 사무실이나 학교 등에서 많은 주문이 들어와 활성화된 모습이 눈에 띕니다.</div>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
             </div>
             <div class="swiper-pagination"></div>
