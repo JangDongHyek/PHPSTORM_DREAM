@@ -1,6 +1,6 @@
 <!--시행사 : 프로젝트 관리-->
     <div class="flex ai-c">
-        <p class="txt_bold txt_darkblue">현재 진행중인 프로젝트 4건</p>
+        <p class="txt-bold txt-darkblue">현재 진행중인 프로젝트 4건</p>
         <!--관리자는 전체 / 직원은 본인 프로젝트만!-->
     </div>
 </div>
@@ -18,12 +18,12 @@
                     <option value="company_name">시공사 명</option>
                 </select>
                 <input type="search" id="search_value" placeholder="검색어 입력" value="" keyEvent.enter="onSearch">
-                <button type="submit" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
+                <button type="submit" class="btn-search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
         <!--관리자만-->
         <?if($user['level'] <= 10) {?>
-        <button type="button" class="btn btn_darkblue" onclick="openModal()">프로젝트 생성</button>
+        <button type="button" class="btn btn-darkblue" onclick="openModal()">프로젝트 생성</button>
         <?}?>
         <!--관리자만-->
     </div>
@@ -67,7 +67,7 @@
                         <td class="text-center">미정</td>
                         <td class="text-center">미정%</td>
                         <?if($user['level'] <= 10) {?>
-                        <td class="text-center"><button class="btn btn_mini btn_black" onclick="openProjectModal('<?=$p['idx']?>')">수정</button></td>
+                        <td class="text-center"><button class="btn btn-mini btn-black" onclick="openProjectModal('<?=$p['idx']?>')">수정</button></td>
                         <?}?>
                     </tr>
                 <?}?>
@@ -150,7 +150,7 @@
                             <option value="user_id">아이디</option>
                         </select>
                         <input type="search" id="search_like_value1" placeholder="아이디 or 이름으로 검색해주세요" keyEvent.enter="getUser"/>
-                        <button type="button" class="btn_search" onclick="getUser()"><i class="fa-regular fa-magnifying-glass"></i></button>
+                        <button type="button" class="btn-search" onclick="getUser()"><i class="fa-regular fa-magnifying-glass"></i></button>
                     </div>
                     <div class="sch_field" id="" style="display: block">
                         <table class="sch_field_tb" id="data-list">
@@ -233,11 +233,11 @@
             datas.forEach(data => {
                 table.innerHTML += `
                     <tr>
-                        <th class="txt_bold">${data.company_person}</th>
+                        <th class="txt-bold">${data.company_person}</th>
                         <td>${data.company_department}</td>
                         <td>${data.company_position}</td>
                         <td>
-                            <button class="btn btn_mini2 btn_line" onclick="selectUser('${data.idx}','${data.company_person}')">선택</button>
+                            <button class="btn btn-mini2 btn-line" onclick="selectUser('${data.idx}','${data.company_person}')">선택</button>
                         </td>
                     </tr>
                 `;

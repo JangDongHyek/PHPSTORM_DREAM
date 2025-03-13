@@ -13,7 +13,7 @@ $context_name = end($pathParts);
     Jl_components.push({name : "<?=$componentName?>",object : {
         template: "#<?=$componentName?>-template",
         props: {
-            primary : {type: String, default: ""},
+            primary : { type: String, default: "" },
         },
         data: function () {
             return {

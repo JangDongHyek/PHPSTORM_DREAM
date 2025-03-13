@@ -2,8 +2,8 @@
 </div>
 
 <section class="">
-    <button type="button" class="btn btn_blue" onclick="updateUser()">정보 변경</button>
-    <div class="box_gray">
+    <button type="button" class="btn btn-blue" onclick="updateUser()">정보 변경</button>
+    <div class="box-gray">
         <div class="form_wrap" id="admin_form">
             <input type="hidden" id="idx" value="<?=$admin['idx']?>">
             <div>

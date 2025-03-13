@@ -637,7 +637,7 @@ class Jl {
     //현재 시간 반환하는 함수
     function getTime($hour = 0, $timezone = 'Asia/Seoul') {
         // 현재 시간 생성 (기본 UTC)
-        $dt = new DateTime('now', new DateTimeZone('UTC'));
+        $dt = new \DateTime('now', new \DateTimeZone('UTC'));
 
         // 시간 추가
         if ($hour !== 0) {
@@ -645,7 +645,7 @@ class Jl {
         }
 
         // 지정된 타임존으로 변경
-        $dt->setTimezone(new DateTimeZone($timezone));
+        $dt->setTimezone(new \DateTimeZone($timezone));
 
         // 포맷된 시간 반환
         return $dt->format('Y-m-d H:i:s');

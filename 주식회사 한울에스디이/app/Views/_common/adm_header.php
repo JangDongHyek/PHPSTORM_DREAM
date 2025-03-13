@@ -34,7 +34,7 @@ $sub_type = $headerData['sub_type'];            //  상단메뉴명 디자인
                     <h3><?= $header_name ?></h3>
                 <?php } else if ($sub_type == 1) { ?>
                     <h2 data-toggle="modal" data-target="#moveModal" class="i_green"><span tooltip="클릭시 프로젝트 이동 가능" flow="up">당진 수청지구 공동1블럭</span>
-                        <?php if($pid == "overall") { ?><span class="icon icon_line">종합 공정 현황</span><?php } ?>
+                        <?php if($pid == "overall") { ?><span class="icon icon-line">종합 공정 현황</span><?php } ?>
                     </h2>
                     <?php if ($lnb_type == 0) { ?>
                         <?php if($pid != "overall") { ?><h3><?= $header_name ?></h3><?php } ?>

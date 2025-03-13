@@ -65,9 +65,9 @@
                         {
                             key : "",
                             value : "",
-                            logical : "", // AND,OR,AND NOT
+                            logical : "", // 기본값 (AND),OR,AND NOT
                             source : "", // 조인시 사용가능
-                            operator : "", // = ,!= >= <=,
+                            operator : "", // 기본값 (=) ,!= >= <=,
                         }
                     ],
 

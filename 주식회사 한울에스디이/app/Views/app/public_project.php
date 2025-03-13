@@ -1,6 +1,6 @@
 <!--시행사 : 회사 공개 프로젝트-->
 <div class="flex ai-c">
-    <p class="txt_bold txt_darkblue">
+    <p class="txt-bold txt-darkblue">
         <span>현재 진행중인 프로젝트 8건</span>
         <span>완료된 프로젝트 25건</span>
     </p>
@@ -21,7 +21,7 @@
                     <option value="">시공사 명</option>
                 </select>
                 <input type="search" name="stx" placeholder="검색어 입력" value="">
-                <button type="submit" class="btn_search"><i class="fa-regular fa-magnifying-glass"></i></button>
+                <button type="submit" class="btn-search"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
         <div class="flex ai-c">

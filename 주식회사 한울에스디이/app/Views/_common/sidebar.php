@@ -29,7 +29,7 @@ $user = $session->get("user");
                 </p>
                 <!--시행사(직원)-->
                 <!--시공사(담당자)
-                <p class="user-zone"><span class="icon icon_grayblue">담당</span> 101동 [24F] A-1</p>
+                <p class="user-zone"><span class="icon icon-grayblue">담당</span> 101동 [24F] A-1</p>
                 시공사(담당자)-->
             </div>
         </div>
@@ -110,7 +110,7 @@ $user = $session->get("user");
                         <a class="flex ai-c jc-sb">
                             <p>개별 프로젝트</p><span class="arrow"></span>
                         </a>
-                        <div class="sidebar-submenu" <?php if($pid == "overall" || $pid == "schedule" || $pid == "schedule_weekly" || $pid == "week_task"  || $pid == "payment"  || $pid == "record" || $pid == "invoice" || $pid == "price_list" || $pid == "account" || $pid == "filebox") { echo "style='display: block'"; }?>>
+                        <div class="sidebar-submenu" <?php if($pid == "zone" || $pid == "overall" || $pid == "schedule" || $pid == "schedule_weekly" || $pid == "week_task"  || $pid == "payment"  || $pid == "record" || $pid == "invoice" || $pid == "price_list" || $pid == "account" || $pid == "filebox") { echo "style='display: block'"; }?>>
                             <ul>
                                 <li <?php if($pid == "overall") { echo "class='active'"; }?>>
                                     <a href="./overall">
@@ -124,6 +124,12 @@ $user = $session->get("user");
                                         <span>작업관리</span>
                                     </a>
                                 </li>
+                                <li <?php if($pid == "zone") { echo "class='active'"; }?>>
+                                    <a href="./zone">
+                                        <i class="fa-duotone fa-grid-horizontal"></i>
+                                        <span>구역관리</span>
+                                    </a>
+                                </li>
                                 <li <?php if($pid == "payment") { echo "class='active'"; }?>>
                                     <a href="./payment">
                                         <i class="fa-light fa-money-check-dollar"></i>
@@ -131,7 +137,7 @@ $user = $session->get("user");
                                     </a>
                                 </li>
                                 <li <?php if($pid == "record" || $pid == "invoice" || $pid == "price_list") { echo "class='active'"; }?>>
-                                    <a href="./record">
+                                    <a href="./priceList">
                                         <i class="fa-light fa-table"></i>
                                         <span>내역관리</span>
                                     </a>

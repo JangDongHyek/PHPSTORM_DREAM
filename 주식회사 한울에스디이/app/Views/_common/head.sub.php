@@ -13,7 +13,7 @@
     <script src="<?=base_url()?>js/lib/swiper-bundle.min.js?<?=JS_VER?>"></script>
     <script src="<?=base_url()?>js/lib/sweetalert2.all.min.js"></script>
     <script src="<?=base_url()?>js/ui.js?<?=JS_VER?>"></script>
-    <!--<script src="/js/common.js?<?=JS_VER?>"></script>-->
+    <script src="<?=base_url()?>js/utils.js?<?=JS_VER?>"></script>
 
     <link rel="icon" />
     <link href="<?=base_url()?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -23,7 +23,6 @@
     <link href="<?=base_url()?>css/sidebar.css?<?=CSS_VER?>" rel="stylesheet" type="text/css"/>
     <link href="<?=base_url()?>css/common.css?<?=CSS_VER?>" rel="stylesheet" type="text/css" />
     <link href="<?=base_url()?>css/layout.css?<?=CSS_VER?>" rel="stylesheet" type="text/css" />
-    <link href="<?=base_url()?>css/style.css?<?=CSS_VER?>" rel="stylesheet" type="text/css" />
     
 </head>
 

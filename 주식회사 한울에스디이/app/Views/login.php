@@ -5,7 +5,7 @@
 ?>
 
 <div class="wrap_bg">
-    <div class="mb_wrap login box_white">
+    <div class="mb_wrap login box-white">
         <div class="logo">
             <h1><img src="<?=base_url()?>/img/common/logo_v.svg" alt="엔알글로벌"/></h1>
         </div>
@@ -15,10 +15,10 @@
                     <input type="text" name="id" id="user_id" placeholder="아이디"/>
                     <label for="">비밀번호</label>
                     <input type="password" name="password" id="user_pw" placeholder="비밀번호" onkeydown="if(event.key == 'Enter')getUser()"/>
-                    <button type="button" class="btn btn_large btn_darkblue" onclick="getUser()">로그인</button>
+                    <button type="button" class="btn btn-large btn-darkblue" onclick="getUser()">로그인</button>
                 </form>
-                <a href="./signUp" class="btn btn_wide btn_gray">서비스 가입</a>
-                <a href="./findPw" class="btn btn_wide btn_line">아이디/비밀번호 찾기</a>
+                <a href="./signUp" class="btn btn-wide btn-gray">서비스 가입</a>
+                <a href="./findPw" class="btn btn-wide btn-line">아이디/비밀번호 찾기</a>
             </div>
         <div class="login_ft">
             <p class="ft_copy">Copyright 2024. NRSYSTEM. All rights reserved.</p>
@@ -46,4 +46,13 @@
             alert(e.message)
         }
     }
+
+    <?php if (session()->getFlashdata('swal_warning')) : ?>
+    Swal.fire({
+        icon: 'warning',
+        title: '알림',
+        text: '<?= session()->getFlashdata('swal_warning') ?>',
+        confirmButtonText: '확인'
+    });
+    <?php endif; ?>
 </script>

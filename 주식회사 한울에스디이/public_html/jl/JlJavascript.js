@@ -13,7 +13,11 @@ Date.prototype.format = function () {
     return `${year}-${month}-${day}`;
 };
 
-// int를 바이트로 변환되서 반환되는 프로토타입
+/**
+ * 숫자(바이트 단위)를 읽기 쉬운 크기 단위로 변환하는 프로토타입
+ * @param {number} decimals - 소수점 자릿수 (기본값: 2)
+ * @returns {string} 읽기 쉬운 크기 단위 (예: "408 KB", "3.5 MB")
+ */
 Number.prototype.formatBytes = function (decimals = 2) {
     if (this === 0) return '0 Bytes';
 
@@ -26,6 +30,33 @@ Number.prototype.formatBytes = function (decimals = 2) {
     const size = parseFloat((this / Math.pow(k, i)).toFixed(dm));
 
     return `${size} ${sizes[i]}`;
+};
+
+String.prototype.formatDate = function(options = { time: false, type: '-', simple: true }) {
+    // 기본 옵션 설정
+    const defaultOptions = { time: false, type: '-', simple: true };
+    const opts = Object.assign({}, defaultOptions, options); // 사용자 옵션 병합
+
+    // 날짜와 시간 분리
+    let [datePart, timePart] = this.split(' ');
+
+    // 날짜를 '-' 기준으로 분리
+    let parts = datePart.split('-');
+
+    // simple 옵션이 true이면 연도를 두 자리로 변환
+    if (opts.simple) {
+        parts[0] = parts[0].slice(2); // "2024" -> "24"
+    }
+
+    // 변환된 날짜 문자열
+    let formattedDate = parts.join(opts.type);
+
+    // time 옵션이 true이면 시간 추가
+    if (opts.time && timePart) {
+        formattedDate += ` ${timePart}`; // 시간 추가
+    }
+
+    return formattedDate;
 };
 
 class JlJavascript {

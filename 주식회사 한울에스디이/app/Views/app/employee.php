@@ -12,10 +12,10 @@
                     <option value="company_person_phone">연락처</option>
                 </select>
                 <input type="search" id="search_value1" placeholder="검색어 입력" value="" keyEvent.enter="onSearch">
-                <button type="submit" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
+                <button type="submit" class="btn-search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
-        <button type="button" class="btn btn_darkblue" onclick="openModal()">직원계정 등록</button>
+        <button type="button" class="btn btn-darkblue" onclick="openModal()">직원계정 등록</button>
     </div>
     <div class="table">
         <table>
@@ -70,7 +70,7 @@
                 <td class="text-center">-</td>
                 <td class="text-center"><?=$level?></td>
                 <td class="text-center"><?=explode(" ",$s['insert_date'])[0]?></td>
-                <td class="text-center"><button class="btn btn_mini btn_black" onclick="getUser('<?=$s['idx']?>')">수정</button></td>
+                <td class="text-center"><button class="btn btn-mini btn-black" onclick="getUser('<?=$s['idx']?>')">수정</button></td>
             </tr>
             <?}?>
             </tbody>

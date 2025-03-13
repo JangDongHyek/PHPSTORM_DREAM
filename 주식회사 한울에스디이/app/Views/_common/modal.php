@@ -87,22 +87,47 @@
                    <ul>
                        <li>
                            <span><input type="checkbox" /><label>230926_TBN충남교통방송청사신축공사_건축내역서_(2).xlsx</label></span>
-                           <button class="btn btn_mini btn_blue">다운로드</button>
+                           <button class="btn btn-mini btn-blue">다운로드</button>
                        </li>
                        <li>
                            <span><input type="checkbox" /><label>계룡-갑천2지구 지하주차장_공정별물량_(1).xlsx</label></span>
-                           <button class="btn btn_mini btn_blue">다운로드</button>
+                           <button class="btn btn-mini btn-blue">다운로드</button>
                        </li>
                        <li>
                            <span><input type="checkbox" /><label>230926_금일 보고서.xlsx</label></span>
-                           <button class="btn btn_mini btn_blue">다운로드</button>
+                           <button class="btn btn-mini btn-blue">다운로드</button>
                        </li>
                    </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>-->
                 <button type="button" class="btn btn-primary">선택 다운로드</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 작업메모 모달 -->
+<div class="modal fade" id="taskMemoModal" tabindex="-1" aria-labelledby="taskMemoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
+                <h5 class="modal-title" id="taskMemoModal">작업 메모</h5>
+            </div>
+            <div class="modal-body">
+                <div class="download_wrap">
+                    <textarea></textarea>
+                    <button class="btn btn-mini btn-line w100">추가</button>
+                   <ul>
+                       <li>
+                           <span>작업 메모</span>
+                           <button class="btn btn-mini btn-white">삭제</button>
+                       </li>
+                   </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">저장</button>
             </div>
         </div>
     </div>
@@ -118,39 +143,38 @@
             </div>
             <div class="modal-body">
                 <div class="form_wrap">
-                    <label for="">동 정보</label>
                     <div class="flex ai-c">
-                        <select>
-                            <option>101동</option>
-                        </select>
-                        <span>~</span>
-                        <select>
-                            <option>101동</option>
-                        </select>
+                        <label for="" class="txt-up">구역 등록</label>&nbsp;&nbsp;
+                        <button class="btn btn-mini btn-black">추가</button>
                     </div>
-                    <label for="">층 정보</label>
-                    <div class="flex ai-c">
-                        <input type="text" name="" id="" placeholder="0"/>&nbsp;<span>층</span>
-                    </div>
-                    <label for="">구역 정보</label>
-                    <div class="flex ai-c">
-                        <select>
-                            <option>A-1</option>
-                        </select>
-                        <span>~</span>
-                        <select>
-                            <option>A-20</option>
-                        </select>
+                    <div class="box box-white">
+                        <div class="flex ai-c gap5">
+                            <label for="">동 정보</label>
+                            <button class="btn btn-mini btn-gray">동일 추가</button>
+                            <button class="btn btn-mini male-auto btn-line">삭제</button>
+                        </div>
+                        <ul>
+                            <li class="flex ai-c">
+                                <input type="text" name="" id="" placeholder="0"/>&nbsp;<span>동</span>
+                            </li>
+                            <li class="flex ai-c">
+                                <input type="text" name="" id="" placeholder="0"/>&nbsp;<span>동</span>
+                            </li>
+                        </ul>
+                        <label for="">층 정보</label>
+                        <div class="flex ai-c gap5">
+                            <input type="text" name="" id="" placeholder="최소"/>&nbsp;<p>층</p> -
+                            <input type="text" name="" id="" placeholder="최대"/>&nbsp;<p>층</p>
+                        </div>
+                        <label for="">구역 개수</label>
+                        <div class="flex ai-c">
+                            <input type="text" name="" id="" placeholder="0"/>
+                        </div>
+                        <p class="txt-gray">＊ 구역 개수 미설정시 층까지만 설정됩니다.</p>
+                        <p class="txt-gray">＊ 구역명은 설정 완료 후 개별 설정 가능합니다.</p>
+                        <p class="txt-gray">＊ 생성시 자동으로 [A~Z 구역] 으로 표기됩니다.</p>
                     </div>
                     <br>
-                    <div class="flex ai-c">
-                        <label for="" class="txt_up">공종명 등록</label>&nbsp;&nbsp;
-                        <button class="btn btn_mini btn_black">추가</button>
-                    </div>
-                    <ul>
-                        <li class="flex ai-c"><input type="text" placeholder="공종명을 입력하세요"> <button class="btn btn_mini btn_gray">삭제</button></li>
-                        <li class="flex ai-c"><input type="text" placeholder="공종명을 입력하세요"> <button class="btn btn_mini btn_gray">삭제</button></li>
-                    </ul>
                 </div>
             </div>
             <div class="modal-footer">

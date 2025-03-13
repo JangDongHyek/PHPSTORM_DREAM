@@ -4,6 +4,7 @@ class Jl {
         this.root = Jl_base_url;
         this.editor = Jl_editor;
         this.dev = Jl_dev;
+        this.jl_alert = Jl_alert;
 
         // 의존성주입 패턴
         if (typeof JlJavascript !== 'undefined') {
@@ -55,6 +56,10 @@ class Jl {
         this.js.JS_INIT(object);
     }
 
+    isMobile() {
+        return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
     ajax(method,obj,url,options = {}) {
         if(!obj) new Error("obj 가 존재하지않습니다.");
         obj['jl_token'] = Jl_token;
@@ -71,16 +76,60 @@ class Jl {
                             reject(new Error(req.message));
                             return false;
                         }
+
+                        if (req.min && object[req.name].length < req.min.length) {
+                            reject(new Error(`${req.min.message}`));
+                            return false;
+                        }
+                        if (req.max && object[req.name].length > req.max.length) {
+                            reject(new Error(`${req.max.message}`));
+                            return false;
+                        }
                     }
 
                     if(typeof object[req.name] === "number") {
 
                     }
+
+                    if (typeof object[req.name] === "boolean") {
+                        if(!object[req.name]) {
+                            reject(new Error(req.message));
+                            return false;
+                        }
+                    }
+
+                    if(Array.isArray(object[req.name])) {
+                        if (req.min && object[req.name].length < req.min.length) {
+                            reject(new Error(`${req.min.message}`));
+                            return false;
+                        }
+                        if (req.max && object[req.name].length > req.max.length) {
+                            reject(new Error(`${req.max.message}`));
+                            return false;
+                        }
+                    }
                 }
+            }
+
+            if("updated" in options) {
+                for (let i = 0; i < options.updated.length; i++) {
+                    let updated = options.updated[i];
+                    object[updated.key] = updated.value;
+                }
+            }
+
+            if("file_use" in options) {
+                object.file_use = options.file_use;
+            }
+
+            if("table" in options) {
+                object.table = options.table;
             }
 
             var objects = {_method : method};
             objects = this.processObject(objects,object);
+
+
 
             //form 으로 데이터가공
             var form = new FormData();
@@ -191,6 +240,10 @@ class Jl {
         document.head.appendChild(linkElement);
     }
 
+    isEmptyObject(obj) {
+        return Object.keys(obj).length === 0 && obj.constructor === Object;
+    }
+
     checkPlugin(plugin) {
         const missingDependencies = [];
 
@@ -223,6 +276,12 @@ class Jl {
                         }
                         break;
 
+                    case "viewer":
+                        if (typeof Viewer === "undefined") {
+                            throw new Error("Viewer is not loaded.");
+                        }
+                        break;
+
                     default:
                         console.warn(`Unknown dependency: ${dep}`);
                         break;
@@ -238,6 +297,15 @@ class Jl {
         }
 
         return missingDependencies;
+    }
+
+    getToday() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // 월 (0부터 시작하므로 +1)
+        const day = String(today.getDate()).padStart(2, '0'); // 날짜
+
+        return `${year}-${month}-${day}`;
     }
 
     commonFile(files,obj,key,permission) {
@@ -264,6 +332,8 @@ class Jl {
                         };
                     })(file); // 클로저 사용
                     reader.readAsDataURL(file);
+                }else {
+                    obj[key] = file;
                 }
             }
 
@@ -290,6 +360,8 @@ class Jl {
                         };
                     })(file); // 클로저 사용
                     reader.readAsDataURL(file);
+                }else {
+                    obj[key] = file;
                 }
 
             } else {
@@ -304,7 +376,7 @@ class Jl {
     }
 
     // vue에서 파일업로드시 지정된 오브젝트 key에 파일 데이터 반환해주는 함수
-    changeFile(event,obj,key,permission = [],component = null) {
+    changeFile(event,obj,key,permission = []) {
         this.commonFile(event.target.files,obj,key,permission)
         this.log(obj[key])
     }
@@ -323,6 +395,44 @@ class Jl {
      */
     isUpperCase(str) {
         return str === str.toUpperCase();
+    }
+
+    isRangeDate(startDate,endDate) {
+        // 날짜 및 시간 형식 검증
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+
+        // 입력 검증
+        if (!dateRegex.test(startDate) && !dateTimeRegex.test(startDate)) {
+            throw new Error('startDate는 "YYYY-MM-DD" 또는 "YYYY-MM-DD HH:MM" 형식이어야 합니다.');
+        }
+        if (!dateRegex.test(endDate) && !dateTimeRegex.test(endDate)) {
+            throw new Error('endDate는 "YYYY-MM-DD" 또는 "YYYY-MM-DD HH:MM" 형식이어야 합니다.');
+        }
+
+        // Date 객체 생성
+        let start, end;
+        if (dateTimeRegex.test(startDate)) {
+            start = new Date(startDate.replace(' ', 'T'));
+        } else {
+            start = new Date(`${startDate}T00:00:00`);
+        }
+
+        if (dateTimeRegex.test(endDate)) {
+            end = new Date(endDate.replace(' ', 'T'));
+        } else {
+            end = new Date(`${endDate}T23:59:59`);
+        }
+
+        const now = new Date();
+
+        // 날짜 유효성 체크
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            throw new Error('유효하지 않은 날짜 또는 시간입니다.');
+        }
+
+        // 현재 시간이 범위 안에 포함되는지 확인
+        return now >= start && now <= end;
     }
 
     // 매개변수를 타입에따라 배열로 바꿔주는 함수
@@ -359,7 +469,7 @@ class Jl {
             if(like) {
                 return arrays.find(obj => obj[key].includes(value));
             }else {
-                return arrays.find(obj => obj[key] === value);
+                return arrays.find(obj => obj[key] == value);
             }
         }
     }
@@ -368,7 +478,7 @@ class Jl {
         if(like) {
             return arrays.filter(obj => obj[key].includes(value));
         }else {
-            return arrays.filter(obj => obj[key] === value);
+            return arrays.filter(obj => obj[key] == value);
         }
     }
 
@@ -383,14 +493,18 @@ class Jl {
                 const value = obj[key];
                 if (value instanceof File) {
                     objs[key] = value;
-                    delete obj[key];
+                    //delete obj[key];
                 }else if(Array.isArray(value)) {
-                    value.forEach(function(item) {
-                        if(item instanceof File) {
-                            objs[key] = value;
-                            delete obj[key];
-                        }
-                    });
+                    const filteredArray = value.filter(item => !(item instanceof File));
+                    if (filteredArray.length !== value.length) {
+                        objs[key] = value; // File이 포함된 원본 배열 유지
+                    }
+                    obj[key] = filteredArray; // File 제거된 배열로 obj 업데이트
+                }else if (typeof value === "boolean") {
+                    // 불린 값을 문자열로 변환
+                    obj[key] = value ? "true" : "false";
+                }else if (typeof value === "object" && value !== null && Object.keys(value).length === 0) {
+                    obj[key] = ""; // 빈 객체 {}를 빈 문자열로 변환
                 }
             }
         }
@@ -530,8 +644,8 @@ class Jl {
         return result;
     }
 
-    //Objects 들중 매개변수에 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
-    getObjectsToKey(array, key) {
+    //Objects안에 매개변수로 넣은 키값에 해당하는 값들을 배열로 반환하는 함수
+    extractObjectsKey(array, key) {
         // 결과 값을 저장할 배열
         const result = [];
 
@@ -552,6 +666,30 @@ class Jl {
         return !/[^0-9]/.test(str);
     }
 
+    generateClipboard(text) {
+        // Clipboard API가 지원되는 경우
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.alert('클립보드에 복사되었습니다');
+            }).catch(err => {
+                this.alert('클립보드 복사 실패 : ', err);
+            });
+        } else {
+            // Clipboard API가 지원되지 않을 때
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                this.alert('클립보드에 복사되었습니다');
+            } catch (err) {
+                this.alert('클립보드 복사 실패 : ', err);
+            }
+            document.body.removeChild(textarea);
+        }
+    }
+
     // 매개변수인 url 값이 정규식에 해당하는 유튜브 링크이면 영상의 키값을 추출하는 함수
     extractYoutube(url) {
         const regex = /(?:https?:\/\/(?:www\.)?(?:youtube\.com\/.*[?&]v=|youtu\.be\/))([^&?]+)/;
@@ -559,29 +697,19 @@ class Jl {
         return match ? match[1] : null; // Video ID가 있으면 반환, 없으면 null 반환
     }
 
-    //숫자 키입력만 허용하고 나머지는 안되게 onkeyup="jl.isNumberKey(event)" @keydown="jl.isNumberKey" 아래 형제함수도 추가해줘야함
-    isNumberKey(event) {
-        const charCode = event.keyCode || event.which;
-        // 숫자 키(0-9), 백스페이스, Delete, 화살표 키만 허용
-        if (
-            (charCode >= 48 && charCode <= 57) || // 상단 숫자 키
-            (charCode >= 96 && charCode <= 105) || // 숫자 키패드
-            charCode === 8 || // 백스페이스
-            charCode === 46 || // Delete
-            (charCode >= 37 && charCode <= 40) // 화살표 키
-        ) {
-            return true; // 입력 허용
+    convertNewlinesToBr(text) {
+        if (typeof text !== "string") {
+            console.warn("Input must be a string.");
+            return text;
         }
-        event.preventDefault(); // 입력 차단
-        return false;
+        return text.replace(/\n/g, "<br>");
     }
 
-
-    // 위에 isNumberKey 함수랑 셋트인녀석 한글은 js에서 막을수가없어서 값에서 제거해줘야함 @input="jl.isNumberKeyInput"
+    // input에 숫자만 입력하게하는 함수 @input="jl.isNumberKeyInput"
     isNumberKeyInput(event, format = false) {
 
         // 키 입력값에서 숫자와 쉼표만 유지
-        let sanitizedValue = event.target.value.replace(/[^0-9,]/g, '');
+        let sanitizedValue = event.target.value.replace(/[^0-9]/g, '');
 
         // 포맷 적용
         if (format) {

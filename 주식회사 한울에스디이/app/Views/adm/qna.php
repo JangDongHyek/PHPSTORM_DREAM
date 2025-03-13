@@ -17,7 +17,7 @@
                     <option value="title">제목</option>
                 </select>
                 <input type="search" id="search_value2" placeholder="검색어 입력" value="" keyEvent.enter="onSearch">
-                <button type="button" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
+                <button type="button" class="btn-search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
     </div>
@@ -48,12 +48,12 @@
                 <td><a href="./qnaView?idx=<?=$d['idx']?>"><?=$d['title']?></a></td>
                 <td class="text-center"><?=$d['USER']['company_person']?>(<?=$d['USER']['user_id']?>)</td>
                 <?if($d['reply_status']) {?>
-                    <td class="text-center"><strong class="icon icon_sky">답변완료</strong></td>
+                    <td class="text-center"><strong class="icon icon-sky">답변완료</strong></td>
                 <?}else{?>
-                    <td class="text-center"><strong class="icon icon_gray">미답변</strong></td>
+                    <td class="text-center"><strong class="icon icon-gray">미답변</strong></td>
                 <?}?>
                 <td class="text-center"><?=explode(" ",$d['insert_date'])[0]?></td>
-                <td class="text-center"><button class="btn btn_mini btn_black" onclick="location.href='qnaView?idx=<?=$d['idx']?>'">상세</button></td>
+                <td class="text-center"><button class="btn btn-mini btn-black" onclick="location.href='qnaView?idx=<?=$d['idx']?>'">상세</button></td>
             </tr>
             <?}?>
 

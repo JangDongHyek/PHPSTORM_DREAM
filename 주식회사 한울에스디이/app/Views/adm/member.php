@@ -1,6 +1,6 @@
 <!--서비스 이용자 관리-->
 <div class="flex ai-c">
-    <p class="txt_bold txt_darkblue">현재 서비스 이용중인 업체 <?=$all_users?>건</p>
+    <p class="txt-bold txt-darkblue">현재 서비스 이용중인 업체 <?=$all_users?>건</p>
 </div>
 </div>
 
@@ -21,13 +21,13 @@
                         <option value="company_owner">대표자명</option>
                     </select>
                     <input type="search" id="search_value2" placeholder="검색어 입력" value="" keyEvent.enter="onSearch">
-                    <button type="button" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
+                    <button type="button" class="btn-search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
                 </div>
             </div>
             <div>
-                <button type="button" class="btn btn_blueline" onclick="putUser('true')">선택 승인</button>
-                <button type="button" class="btn btn_gray" onclick="putUser('')">선택 승인 취소</button>
-                <button type="button" class="btn btn_blue" onclick="location.href='./memberForm'">등록</button>
+                <button type="button" class="btn btn-blueline" onclick="putUser('true')">선택 승인</button>
+                <button type="button" class="btn btn-gray" onclick="putUser('')">선택 승인 취소</button>
+                <button type="button" class="btn btn-blue" onclick="location.href='./memberForm'">등록</button>
             </div>
         </div>
     </div>
@@ -70,12 +70,12 @@
                 <td class="text-center"><?=$data['company_person_phone']?></td>
                 <!--<td class="text-center">2018.06.18 - 2018.09.17 (3개월)</td>-->
                 <?if($data['allow']) {?>
-                <td class="text-center"><strong class="icon icon_gray">승인</strong></td>
+                <td class="text-center"><strong class="icon icon-gray">승인</strong></td>
                 <?}else {?>
-                <td class="text-center"><strong class="icon icon_sky">미승인</strong></td>
+                <td class="text-center"><strong class="icon icon-sky">미승인</strong></td>
                 <?}?>
                 <td class="text-center"><?=explode(' ',$data['insert_date'])[0] ?></td>
-                <td class="text-center"><button class="btn btn_mini btn_black" onclick="location.href='./memberForm?idx=<?=$data['idx']?>'">수정</button></td>
+                <td class="text-center"><button class="btn btn-mini btn-black" onclick="location.href='./memberForm?idx=<?=$data['idx']?>'">수정</button></td>
             </tr>
             <?}?>
 

@@ -1,7 +1,7 @@
 <!--1.2 회원가입-->
 <div class="wrap_bg">
     <div class="mb_wrap signup">
-        <div class="box_white">
+        <div class="box-white">
         <h2>서비스 가입</h2>
         <div class="sign_form">
             <form id="user_form" name="signin" method="post" autocomplete="off">
@@ -10,7 +10,7 @@
                 <input type="hidden" id="parent" value="">
 
                 <h3>사용자 정보</h3>
-                <div class="box_gray grid grid2">
+                <div class="box-gray grid grid2">
                     <dl class="form_wrap">
                         <dt>구분</dt>
                         <dd>
@@ -39,7 +39,7 @@
                         <input type="text" name="contact_number" id="company_person_phone" placeholder="담당자 연락처"/>
                     </dl>
                 </div>
-                <button type="button" class="btn btn_middle btn_darkblue" onclick="postUser()">가입완료</button>
+                <button type="button" class="btn btn-middle btn-darkblue" onclick="postUser()">가입완료</button>
             </form>
         </div>
 

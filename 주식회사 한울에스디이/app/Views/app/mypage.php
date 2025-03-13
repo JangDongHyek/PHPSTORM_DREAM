@@ -2,8 +2,8 @@
 </div>
 <?php if($user) {?>
 <section class="">
-    <button type="button" class="btn btn_blue">수정 완료</button>
-    <div class="box_gray">
+    <button type="button" class="btn btn-blue">수정 완료</button>
+    <div class="box-gray">
         <div class="form_wrap grid grid2">
             <div>
                 <label for="">아이디</label>

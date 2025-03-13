@@ -3,10 +3,10 @@
 
 <section class="from">
     <div>
-        <button type="button" class="btn btn_line" onclick="location.href='./faq'">목록</button>
-        <button type="button" class="btn btn_blue" onclick="postBoard()">등록 완료</button>
+        <button type="button" class="btn btn-line" onclick="location.href='./faq'">목록</button>
+        <button type="button" class="btn btn-blue" onclick="postBoard()">등록 완료</button>
     </div>
-    <div class="box_gray grid grid2" id="board_form">
+    <div class="box-gray grid grid2" id="board_form">
         <input type="hidden" id="code" value="faq">
         <input type="hidden" id="idx" value="">
         <dl class="form_wrap">

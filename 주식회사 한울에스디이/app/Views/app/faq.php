@@ -13,7 +13,7 @@
 
             <div class="search">
                 <input type="search" id="search_value2" placeholder="검색어 입력" value="" keyEvent.enter= "onSearch">
-                <button type="submit" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
+                <button type="submit" class="btn-search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
                 <summary>
                     <div>
                         <div class="flex ai-c">
-                            <p class="p_cate"><span class="txt_blue txt_bold"><?=$d['category']?></span></p>
+                            <p class="p_cate"><span class="txt-blue txt-bold"><?=$d['category']?></span></p>
                             <p class="p_date"><?=explode(' ',$d['insert_date'])[0]?></p>
                         </div>
                         <p class="p_title">Q. <?=$d['title']?></p>

@@ -11,7 +11,7 @@ class JlController extends BaseController
     private $service;
 
     public function __construct() {
-        $this->service = new JlService($_POST,$_FILES);
+        $this->service = new JlService($_POST,$_FILES,$_SESSION);
     }
 
     public function method() {

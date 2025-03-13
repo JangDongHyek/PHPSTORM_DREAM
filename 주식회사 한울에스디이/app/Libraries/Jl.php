@@ -13,6 +13,7 @@ class Jl {
     public $EDITOR_HTML;
     public $ENV;
     public $COMPONENT;
+    public $ALERT;
 
 
     protected $PHP;                         // JlFile 에서 사용
@@ -31,13 +32,14 @@ class Jl {
         if(!defined("JL_CHECK")) $this->error("Define 파일이 로드가 안됐습니다.");
         if(!defined("JL_SESSION_TABLE_COLUMNS")) $this->error("Jl_session 테이블 컬럼 값이 존재하지 않습니다.");
         array_push($this->DEV_IP,"121.140.204.65"); // 드림포원 내부 IP
-        array_push($this->DEV_IP,"59.19.201.109"); // 아이티포원 내부 IP
+        array_push($this->DEV_IP,"112.160.220.208"); // 아이티포원 내부 IP
 
         $this->root_dir = JL_ROOT_DIR;
         $this->JS = JL_JS;
         $this->EDITOR_JS = JL_EDITOR_JS;
         $this->EDITOR_HTML = JL_EDITOR_HTML;
         $this->COMPONENT = JL_COMPONENT;
+        $this->ALERT = JL_ALERT;
         $this->ENV = $this->getEnv();
         $this->RESOURCE = $this->getJlPath()."/jl_resource";
 
@@ -67,6 +69,50 @@ class Jl {
         echo $this->jsonEncode($er);
         die();
         //throw new \Exception($msg);
+    }
+
+    function curlRequest($url, $method = 'GET', $options = array()) {
+        $ch = curl_init();
+
+        // 옵션 기본값 설정
+        $data = isset($options['data']) ? $options['data'] : null;
+        $timeout = isset($options['timeout']) ? $options['timeout'] : 10;
+        $http_build = isset($options['http_build']) ? $options['http_build'] : false;
+        $content_type = isset($options['content_type']) ? $options['content_type'] : 'Content-Type: application/json';
+        $accept = isset($options['accept']) ? $options['accept'] : 'Accept: application/json';
+
+        // Content-Type 헤더 설정
+        $headers = array($content_type,$accept);
+        if($options['authorization']) array_push($headers,$options['authorization']);
+
+        // 요청 메서드 설정
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
+
+        // 데이터 설정
+        if ($data !== null) {
+            $postData = $http_build ? http_build_query($data) : json_encode($data);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        }
+
+        // URL 설정
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        // 요청 실행
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+
+        curl_close($ch);
+
+        if($httpCode != "200") {
+            $this->error("curl 통신 실패($httpCode) : \nerror : $error\nreponse : $response");
+        }
+
+        return json_decode($response,true);
     }
 
     //
@@ -130,6 +176,14 @@ class Jl {
         return $value;
     }
 
+    function extractYoutube($url) {
+        $regex = '/(?:https?:\\/\\/(?:www\\.)?(?:youtube\\.com\\/.*[?&]v=|youtu\\.be\\/))([^&?]+)/';
+        if (preg_match($regex, $url, $matches)) {
+            return $matches[1]; // Video ID가 있으면 반환
+        }
+        return null; // Video ID가 없으면 null 반환
+    }
+
     //상황에 필요한 로직들을 넣은 Jsondecode 함수
     function jsonDecode($origin_json,$encode = true) {
         $str_json = str_replace('\\n', '###NEWLINE###', $origin_json); // textarea 값 그대로 저장하기위한 변경
@@ -186,6 +240,7 @@ class Jl {
             echo "const Jl_editor = '{$this->EDITOR_HTML}';";
             echo "const Jl_editor_js = '{$this->EDITOR_JS}';";
             echo "const Jl_token = '{$token['content']}';";
+            echo "const Jl_alert = '{$this->ALERT}';";
             //Vue 데이터 연동을 위한 변수
             echo "let Jl_data = {};";
             echo "let Jl_methods = {};";
@@ -194,6 +249,7 @@ class Jl {
             //Vue3 데이터 연동을 위한 변수
             echo "let Jl_vue = [];";
             echo "let Jl_components = [];";
+
             echo "</script>";
             echo "<script src='{$this->URL}{$this->JS}/Jl.js'></script>";
             if(file_exists($this->ROOT.$this->JS."/JlJavascript.js")) echo "<script src='{$this->URL}{$this->JS}/JlJavascript.js'></script>";
@@ -211,10 +267,13 @@ class Jl {
 
     }
 
+    // php가져온 encode된 제이슨 데이터를 js에서 echo 강제주입할떄 쓰는 함수
+    function jsParseJson($jsonString,$default = "") {
+        return htmlspecialchars_decode($jsonString ? $jsonString : $default, ENT_QUOTES);
+    }
+
     function pluginLoad($plugin = array()) {
-        $plugins = array();
-        if (is_string($plugin)) array_push($plugins,$plugin);
-        else $plugins = $plugin;
+        $plugins = $this->convertToArray($plugin);
 
         if(in_array('drag',$plugins)) {
             if(!in_array("drag",self::$PLUGINS)) {
@@ -249,9 +308,25 @@ class Jl {
 
         if(in_array('bootstrap',$plugins)) {
             if(!in_array("bootstrap",self::$PLUGINS)) {
-                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-o3pO8HUlU1KpMy2X8CCatUcsDD3T4PAtdU1sK3c4R33zE0M7nb9xr5+eTMVRGz+g" crossorigin="anonymous">';
-                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-v06KyMCIhVXp1qWiMHLKP8o+AKZCL+a59W8KJrC6V+5jMEjOemLEdZomKsm9FmQz" crossorigin="anonymous"></script>';
+                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>';
+                echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
                 array_push(self::$PLUGINS,"bootstrap");
+            }
+        }
+
+        if(in_array('viewer',$plugins)) {
+            if(!in_array("viewer",self::$PLUGINS)) {
+                echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.css">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/viewerjs@latest/dist/viewer.min.js"></script>';
+                array_push(self::$PLUGINS,"viewer");
+            }
+        }
+
+        if(in_array('swiper',$plugins)) {
+            if(!in_array("swiper",self::$PLUGINS)) {
+                //echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">';
+                echo '<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>';
+                array_push(self::$PLUGINS,"swiper");
             }
         }
     }
@@ -264,7 +339,7 @@ class Jl {
             $this->jsLoad($plugins);
             if($this->DEV) {
                 if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>';
-                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>';
+                else echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>';
             }
             else {
                 if(VUE_VERSION == 3) echo '<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>';
@@ -288,7 +363,11 @@ class Jl {
     // Vue 컴포넌트를 로드하는 함수
     function componentLoad($path) {
         if($path[0] != "/") $path = "/".$path;
+        $url = $this->URL.$this->COMPONENT.$path;
         $path = $this->ROOT.$this->COMPONENT.$path;
+
+        if(file_exists($path."/common.js")) echo "<script src='{$url}/common.js'></script>";
+
 
         if(is_file($path)) {
             include_once($path);
@@ -444,6 +523,30 @@ class Jl {
         return substr(sprintf('%o', $permissions & 0777), -4); // 4자리 8진수 문자열 반환
     }
 
+    function formatPhoneNumber($phone) {
+        // 숫자만 남기기 (+, -, 공백 등 제거)
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+
+        // +82 국가 코드 처리
+        if (preg_match('/^82(10|1[1-9])/', $phone)) {
+            $phone = '0' . substr($phone, 2); // 8210XXXXYYYY -> 010XXXXYYYY
+        }
+
+        // 010-XXXX-XXXX 형식으로 변환 (010, 011, 016, 017, 018, 019 지원)
+        if (preg_match('/^(01[016789])(\d{4})(\d{4})$/', $phone, $matches)) {
+            return $matches[1] . '-' . $matches[2] . '-' . $matches[3];
+        }
+
+        return $phone; // 변환되지 않는 경우 원본 유지
+    }
+
+
+    function encrypt($data) {
+        if(JL_ENCRYPT == "mb_5") return md5($data);
+
+        return '';
+    }
+
     function getDir($dir_name, $dirs = false, $root_path = true)
     {
         $dir = $dir_name;
@@ -532,17 +635,20 @@ class Jl {
     }
 
     //현재 시간 반환하는 함수
-    function getTime($hour = 0) {
-        // 현재 시간 가져오기
-        $currentTime = time();
+    function getTime($hour = 0, $timezone = 'Asia/Seoul') {
+        // 현재 시간 생성 (기본 UTC)
+        $dt = new \DateTime('now', new \DateTimeZone('UTC'));
 
         // 시간 추가
         if ($hour !== 0) {
-            $currentTime += $hour * 3600; // 1시간 = 3600초
+            $dt->modify("+{$hour} hours");
         }
 
+        // 지정된 타임존으로 변경
+        $dt->setTimezone(new \DateTimeZone($timezone));
+
         // 포맷된 시간 반환
-        return date('Y-m-d H:i:s', $currentTime);
+        return $dt->format('Y-m-d H:i:s');
     }
 
     //현재 개발환경을 알아내는 함수
@@ -654,6 +760,7 @@ class Jl {
             "content" => $this->jsonEncode($content),
             "method" => $object['method'],
             "response" => $this->jsonEncode($object['response']),
+            "sessions" => $this->jsonEncode($object['sessions']),
             "user_agent" => $agent['user_agent'],
             "browser" => $agent['browser'],
             "browser_version" => $agent['browser_version'],
@@ -664,14 +771,46 @@ class Jl {
         ));
     }
 
+    function setSession($name,$data) {
+        if($this->ENV == "php") {
+            $_SESSION[$name] = $data;
+        }
+    }
+
+    function getSession($name) {
+        if($this->ENV == "php") return $_SESSION[$name];
+    }
+
+    function goURL($url)
+    {
+        // &amp; 를 & 로 변경
+        $url = str_replace("&amp;", "&", $url);
+
+        // 헤더가 전송되지 않았다면 HTTP 리다이렉트
+        if (!headers_sent()) {
+            header("Location: $url");
+            exit;
+        }
+
+        // 헤더가 이미 전송된 경우 JavaScript & meta refresh 사용
+        echo '<script>';
+        echo 'window.location.href = "'.$url.'";';
+        echo '</script>';
+
+        echo '<noscript>';
+        echo '<meta http-equiv="refresh" content="0;url='.$url.'" />';
+        echo '</noscript>';
+        exit;
+    }
+
     function INIT() {
         // 개발 허용 IP 확인
         if(in_array($this->getClientIP(),$this->DEV_IP)) $this->DEV = true;
 
         // Jl 폴더 권한 확인
         if(!is_dir($this->getJlPath())) $this->error("Jl INIT() : jl 폴더가 없습니다.");
-        if($this->getDirPermission($this->RESOURCE) != "777") {
-            if(!chmod($this->RESOURCE, 0777)) {
+        if($this->getDirPermission($this->getJlPath()) != "777") {
+            if(!chmod($this->getJlPath(), 0777)) {
                 $this->error("Jl INIT() : jl 폴더의 권한이 777이 아닙니다.");
             }
         }
@@ -681,6 +820,18 @@ class Jl {
         if(!is_dir($dir)) {
             mkdir($dir, 0777);
             chmod($dir, 0777);
+        }
+
+        //세션 공유 로직 시작
+        if(session_id() == "") { // 세션이 시작이 안됐다면
+            if(JL_SESSION_PATH) {
+                if(is_dir($this->ROOT.JL_SESSION_PATH)) { // 해당 폴더가있다면 세션 공유를 위해
+                    ini_set("session.save_path", $this->ROOT.JL_SESSION_PATH); // 그누보드 세션 경로 적용
+                    session_start();
+                }else {
+                    $this->error("JlApi : SESSION_PATH 를 사용하지만 폴더가 존재하지않습니다.");
+                }
+            }
         }
 
         // 세션 테이블 생성 및 모델 인스턴스 생성

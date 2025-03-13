@@ -357,6 +357,19 @@ class PublishController extends BaseController
 
         return render('app/schedule/week_task', $data);
     }
+    public function taskForm()
+    {
+        $project = session()->get("project");
+        $projects = session()->get("projects");
+
+        $data = [
+            'pid' => 'task_form',
+            "project" => $project,
+            "projects" => $projects,
+        ];
+
+        return render('app/schedule/task_form', $data);
+    }
     public function zone()
     {
         $project = session()->get("project");

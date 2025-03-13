@@ -1,16 +1,16 @@
 <!--서비스 이용자 관리-->
 <!--메인 : 대시보드-->
 <div class="flex ai-c">
-    <p class="txt_bold txt_darkblue">현재 서비스 이용중인 업체 <?=$all_users?>건</p>
+    <p class="txt-bold txt-darkblue">현재 서비스 이용중인 업체 <?=$all_users?>건</p>
 </div>
 </div>
 
 <section class="from">
     <div>
-        <button type="button" class="btn btn_line" onclick="location.href='./member'">목록</button>
-        <button type="button" class="btn btn_blue" onclick="putUser()">등록 완료</button>
+        <button type="button" class="btn btn-line" onclick="location.href='./member'">목록</button>
+        <button type="button" class="btn btn-blue" onclick="putUser()">등록 완료</button>
     </div>
-    <div class="box_gray grid grid2" id="user_form">
+    <div class="box-gray grid grid2" id="user_form">
         <input type="hidden" id="idx">
         <input type="hidden" id="level" value="5">
         <dl class="form_wrap">

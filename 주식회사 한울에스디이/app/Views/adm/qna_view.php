@@ -4,13 +4,13 @@
 <section class="board_view">
 
     <div class="area_top">
-        <span class="btn_wrap">
-        <button type="button" class="btn btn_whiteline" onclick="history.back()">목록</button>
-            <!--<button class="btn btn_black" onclick="location.href='./cs.form.php'">답변</button>
-        <button class="btn btn_blue2" onclick="location.href='./ad.form.php'">수정</button>-->
+        <span class="btn-wrap">
+        <button type="button" class="btn btn-whiteline" onclick="history.back()">목록</button>
+            <!--<button class="btn btn-black" onclick="location.href='./cs.form.php'">답변</button>
+        <button class="btn btn-blue2" onclick="location.href='./ad.form.php'">수정</button>-->
         </span>
     </div>
-    <div class="box_gray">
+    <div class="box-gray">
         <div class="title">
             <strong><?=$board['title']?></strong>
             <div class="info">
@@ -39,9 +39,9 @@
                 ?>
                 <dl>
                     <dt><i class="fa-light fa-arrow-turn-down-right"></i> 작성자 <strong><?=$name?></strong> 답변일 <strong><?=$r['insert_date']?></strong>
-                        <!--<a class="btn btn_mini btn_gray">수정</a>-->
+                        <!--<a class="btn btn-mini btn-gray">수정</a>-->
                         <?if($user['idx'] == $r['user_idx']) {?>
-                            <a class="btn btn_mini btn_gray" onclick="deleteReply('<?=$r['idx']?>')">삭제</a>
+                            <a class="btn btn-mini btn-gray" onclick="deleteReply('<?=$r['idx']?>')">삭제</a>
                         <?}?>
                     </dt>
                     <dd><?=nl2br(htmlspecialchars($r['content']))?></dd>
@@ -49,7 +49,7 @@
             <?}?>
             <!--<div class="answer_write">
                 <textarea placeholder="답변을 등록해 주세요"></textarea>
-                <a class="btn btn_blueline2">답변등록</a>
+                <a class="btn btn-blueline2">답변등록</a>
             </div>-->
         </div>
 
@@ -70,7 +70,7 @@
             <div class="editor">
                 <textarea id="content" placeholder="답변내용을 작성해주세요" required="답변내용을 작성해주세요"></textarea>
             </div>
-            <button type="button" class="btn btn_blue" onclick="postReply()">등록하기</button>
+            <button type="button" class="btn btn-blue" onclick="postReply()">등록하기</button>
         </div>
 
 

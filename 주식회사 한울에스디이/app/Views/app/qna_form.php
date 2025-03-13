@@ -3,10 +3,10 @@
 
 <section class="from">
     <div>
-        <button type="button" class="btn btn_line" onclick="location.href='./qna'">목록</button>
-        <button type="button" class="btn btn_blue" onclick="postBoard()">등록 완료</button>
+        <button type="button" class="btn btn-line" onclick="location.href='./qna'">목록</button>
+        <button type="button" class="btn btn-blue" onclick="postBoard()">등록 완료</button>
     </div>
-    <div class="box_gray" id="board_form">
+    <div class="box-gray" id="board_form">
         <input type="hidden" id="code" value="qna">
         <div class="form">
             <input type="text" name="title" id='title' placeholder="제목을 작성해주세요" required="제목을 작성해주세요" value="">
@@ -20,7 +20,7 @@
                     <div id="preview"></div>
                     <input type="file" id="upfile" multiple style="display: none">
                     <label for="upfile">
-                        <a class="btn btn_black btn_mini">파일첨부</a>
+                        <a class="btn btn-black btn-mini">파일첨부</a>
                         <span>파일을 선택하세요..</span>
                     </label>
                 </dd>

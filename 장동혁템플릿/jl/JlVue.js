@@ -77,7 +77,7 @@ class JlVue {
 
     async postData(data,options = {}) {
         let method = data.primary ? 'update' : 'insert';
-
+        let url = "/jl/JlApi.php";
         try {
             if(!options.table) throw new Error("테이블값이 존재하지않습니다.");
 
@@ -91,7 +91,10 @@ class JlVue {
                 }
             }
 
-            let res = await this.jl.ajax(method, data, "/jl/JlApi.php",options);
+            if(options.url) url = options.url;
+            if(options.method) method = options.method;
+
+            let res = await this.jl.ajax(method, data, url,options);
 
             if(options.return) return res
 
@@ -130,6 +133,8 @@ class JlVue {
         try {
             if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
 
+            if(options.search) filter.page = 1;
+
             let res = await this.jl.ajax("get", filter, "/jl/JlApi.php");
 
             if(options.callback) {
@@ -153,7 +158,7 @@ class JlVue {
 
         try {
             if(!options.table) throw new Error("테이블값이 존재하지않습니다.");
-            let res = await this.jl.ajax("delete",data,"/jl/JlApi.php",options);
+            let res = await this.jl.ajax("remove",data,"/jl/JlApi.php",options);
 
             if(options.return) return res
 

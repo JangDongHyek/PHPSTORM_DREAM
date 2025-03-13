@@ -9,6 +9,7 @@ $routes->group('api', static function ($routes) {
     $routes->post('board_reply', 'api\BoardReplyController::method');
     $routes->post('project_base', 'api\ProjectBaseController::method');
     $routes->post('project_schedule', 'api\ProjectScheduleController::method');
+    $routes->post('project_price', 'api\ProjectPriceController::method');
     $routes->post('jl', 'api\JlController::method');
 
 });

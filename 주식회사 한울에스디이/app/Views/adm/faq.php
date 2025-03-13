@@ -13,11 +13,11 @@
 
             <div class="search">
                 <input type="search" id="search_value2" placeholder="검색어 입력" value="" keyEvent.enter= "onSearch">
-                <button type="submit" class="btn_search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
+                <button type="submit" class="btn-search" onclick="onSearch()"><i class="fa-regular fa-magnifying-glass"></i></button>
             </div>
         </div>
         <div>
-            <button type="button" class="btn btn_blue" onclick="location.href='./faqForm'">등록</button>
+            <button type="button" class="btn btn-blue" onclick="location.href='./faqForm'">등록</button>
         </div>
     </div>
     
@@ -27,11 +27,11 @@
             <summary>
                 <div>
                     <div class="flex ai-c">
-                        <p class="p_cate"><span class="txt_blue txt_bold"><?=$d['category']?></span></p>
+                        <p class="p_cate"><span class="txt-blue txt-bold"><?=$d['category']?></span></p>
                         <p class="p_date"><?=explode(' ',$d['insert_date'])[0]?></p>
-                        <div class="btn_wrap">
-                            <a class="btn btn_mini btn_line" href="faqForm?idx=<?=$d['idx']?>">수정</a>
-                            <a class="btn btn_mini btn_line" onclick="deleteUser('<?=$d['idx']?>')">삭제</a>
+                        <div class="btn-wrap">
+                            <a class="btn btn-mini btn-line" href="faqForm?idx=<?=$d['idx']?>">수정</a>
+                            <a class="btn btn-mini btn-line" onclick="deleteUser('<?=$d['idx']?>')">삭제</a>
                         </div>
                     </div>
                     <p class="p_title">Q. <?=$d['title']?></p>
