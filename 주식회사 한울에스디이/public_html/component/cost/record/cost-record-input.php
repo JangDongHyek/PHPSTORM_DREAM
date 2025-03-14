@@ -8,7 +8,7 @@ $context_name = end($pathParts);
         <external-bs-modal :modal="modal">
             <template v-slot:header>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa-light fa-close"></i></button>
-                <h5 class="modal-title" id="unitOptionModalLabel">옵션 단가 등록</h5>
+                <h5 class="modal-title" id="groupPriceModalLabel">수량단가 등록</h5>
             </template>
 
             <!-- body -->
@@ -17,39 +17,28 @@ $context_name = end($pathParts);
                     <div class="flex ai-c jc-sb">
                         <label for="" class="txt-up">카테고리 선택</label>&nbsp;&nbsp;
                     </div>
-                    <select>
+                    <select v-model="row.category">
                         <option>콘크리트</option>
                         <option>거푸집</option>
                         <option>철근</option>
                     </select>
                     <div class="box box-gray">
-                        <label for="">옵션 품명</label>
+                        <label for="">품명</label>
                         <div class="flex ai-c">
-                            <input type="text" v-model="row.name" placeholder="옵션 품명"/>
-                        </div>
-                        <label for="">규격</label>
-                        <div class="flex ai-c">
-                            <input type="text" v-model="row.standard" placeholder="규격"/>
+                            <input type="text" v-model="row.name" placeholder="수량 품명"/>
                         </div>
                     </div>
                     <div class="box box-white">
-                        <label for="">계산</label><button class="btn btn-mini btn-gray" @click="addContent();">추가</button>
-                        <div class="flex gap5" v-for="content,index in row.contents">
-                            <select class="wfit" v-model="content.operator">
-                                <option>기본값</option>
-                                <option>+</option>
-                                <option>-</option>
-                            </select>
-                            <select class="wfit" v-model="content.surcharge">
-                                <option>미할증</option>
-                                <option>할증</option>
-                            </select>
+                        <label for="">연관</label><button class="btn btn-mini btn-gray" @click="pushContents()">추가</button>
+                        <div class="flex gap5 ai-c" v-for="content,index in contents">
                             <select v-model="content.price_idx">
-                                <template v-for="item in rows">
-                                    <option :value="item.idx">{{item.name}} [{{item.standard}}]</option>
+                                <template v-for="price in prices">
+                                    <option :value="price.idx">{{price.name}} [{{price.standard}}]</option>
                                 </template>
                             </select>
-                            <button class="btn btn-line" @click="row.contents.splice(index,1)">삭제</button>
+                            <input type="number" class="w150px" v-model="content.surcharge" placeholder="할증(미입력시 0)">
+                            <span>%</span>
+                            <button class="btn btn-line" @click="deleteContent(content,index)">삭제</button>
                         </div>
                     </div>
                     <br>
@@ -58,7 +47,7 @@ $context_name = end($pathParts);
 
 
             <template v-slot:footer>
-                <button type="button" class="btn btn-primary" @click="jl.postData(row,options)">등록 완료</button>
+                <button type="button" class="btn btn-primary" @click="postData()">등록 완료</button>
             </template>
         </external-bs-modal>
     </div>
@@ -83,34 +72,31 @@ $context_name = end($pathParts);
                     row: {
                         project_idx : this.project_idx,
                         category : "콘크리트",
-                        types : "옵션",
                         name : "",
-                        standard : "",
-                        material : "0",
-                        labour : "0",
-                        expense : "0",
-                        contents : [],
                     },
+                    contents : [],
 
                     rows : [],
 
                     options : {
-                        table : "project_price",
+                        table : "",
                         file_use : false,
                         required : [
-                            {name : "name",message : `품명은 필수입니다.`},
-                            {name : "standard",message : `규격은 필수입니다.`},
+                            {name : "",message : ``},
                         ],
                         href : "",
                     },
 
                     filter : {
-                        table : "project_price",
-                        primary : this.modal.primary,
+                        table : "",
+                        primary : this.primary,
                         page: 1,
                         limit: 1,
                         count: 0,
                     },
+
+                    prices : [],
+
                 };
             },
             async created() {
@@ -125,8 +111,7 @@ $context_name = end($pathParts);
                 await this.jl.getsData({
                     table : "project_price",
                     project_idx : this.project_idx,
-                    types : '단가'
-                },this.rows);
+                },this.prices);
 
                 this.load = true;
 
@@ -138,11 +123,48 @@ $context_name = end($pathParts);
 
             },
             methods: {
-                addContent() {
-                    this.row.contents.push({
-                        operator : "",
-                        surcharge : "",
-                        price_idx : "",
+                async postData() {
+                    let record = await this.jl.postData(this.row,{
+                        table : "project_record",
+                        required : [
+                            {name : "name",message : `품명을 입력해주세요.`},
+                        ],
+                        return : true,
+                    })
+
+                    for (const content of this.contents) {
+                        content.record_idx = record.primary;
+                        this.jl.postData(content,{
+                            table : "project_record_items",
+                            return : true,
+                        })
+                    }
+
+                await this.jl.alert("완료되었습니다.");
+                window.location.reload();
+                },
+                async deleteContent(content,index) {
+                    if(content.idx) {
+                        await this.jl.deleteData(content,{
+                            table : "project_record_items",
+                            message : "해당 데이터는 완료를 누르지 않아도 삭제됩니다 삭제하시겠습니까?",
+                            callback : async (res) => {
+                                this.contents.splice(index,1);
+                            }
+                        });
+
+
+                    }else {
+                        this.contents.splice(index,1);
+                    }
+
+
+                },
+                pushContents() {
+                    this.contents.push({
+                       record_idx : "",
+                       price_idx : "",
+                       surcharge : 0,
                     });
                 }
             },
@@ -154,25 +176,26 @@ $context_name = end($pathParts);
                     if(value) {
                         if(this.modal.primary) {
                             this.row = await this.jl.getData({
-                                table : 'project_price',
-                                primary : this.modal.primary
+                                table : "project_record",
+                                primary : this.modal.primary,
                             });
+
+                            await this.jl.getsData({
+                                table : "project_record_items",
+                                record_idx : this.modal.primary
+                            },this.contents);
                         }
                         this.modal.load = true;
                     }else {
                         this.modal.load = false;
                         this.modal.data = {};
+
                         this.row =  {
                             project_idx : this.project_idx,
-                            category : "콘크리트",
-                            types : "옵션",
-                            name : "",
-                            standard : "",
-                            material : "",
-                            labour : "",
-                            expense : "",
-                            contents : [],
+                                category : "콘크리트",
+                                name : "",
                         };
+                        this.contents = [];
                     }
                 }
             }

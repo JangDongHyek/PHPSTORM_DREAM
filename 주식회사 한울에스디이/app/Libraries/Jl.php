@@ -823,16 +823,19 @@ class Jl {
         }
 
         //세션 공유 로직 시작
-        if(session_id() == "") { // 세션이 시작이 안됐다면
-            if(JL_SESSION_PATH) {
-                if(is_dir($this->ROOT.JL_SESSION_PATH)) { // 해당 폴더가있다면 세션 공유를 위해
-                    ini_set("session.save_path", $this->ROOT.JL_SESSION_PATH); // 그누보드 세션 경로 적용
-                    session_start();
-                }else {
-                    $this->error("JlApi : SESSION_PATH 를 사용하지만 폴더가 존재하지않습니다.");
+        if($this->ENV == 'php') {
+            if(session_id() == "") { // 세션이 시작이 안됐다면
+                if(JL_SESSION_PATH) {
+                    if(is_dir($this->ROOT.JL_SESSION_PATH)) { // 해당 폴더가있다면 세션 공유를 위해
+                        ini_set("session.save_path", $this->ROOT.JL_SESSION_PATH); // 그누보드 세션 경로 적용
+                        session_start();
+                    }else {
+                        $this->error("JlApi : SESSION_PATH 를 사용하지만 폴더가 존재하지않습니다.");
+                    }
                 }
             }
         }
+
 
         // 세션 테이블 생성 및 모델 인스턴스 생성
         $jl_session_table_columns = $this->jsonDecode(JL_SESSION_TABLE_COLUMNS);

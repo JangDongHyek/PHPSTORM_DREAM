@@ -222,7 +222,7 @@ if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') {   //https 통신일때
 
     // 21.06.02 https->http로 보내기 - 수정문의(/qna) 메뉴에서 HTTPS에서 iframe src=HTTP 호출 시 에러 때문 (HTTPS에서 HTTP 호출 허용하지 않음)
     if(strpos($_SERVER['REQUEST_URI'], '/qna') !== false) {
-        header('Location: ' . G5_HTTP_DOMAIN.'/qna/list.php');
+        header('Location: ' . 'http://' .$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     }
 
 } else {  //http 통신일때 daum 주소 js

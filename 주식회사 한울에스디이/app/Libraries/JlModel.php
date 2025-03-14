@@ -629,7 +629,7 @@ class JlModel{
 
         $this->reset();
 
-        return $this;
+        return array("sql" => $sql,"primary" => $param[$this->primary]);
     }
 
     /*

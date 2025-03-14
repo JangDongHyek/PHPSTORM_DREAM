@@ -126,6 +126,10 @@ class Jl {
                 object.table = options.table;
             }
 
+            if("relations" in options) {
+                object.relations = options.relations;
+            }
+
             var objects = {_method : method};
             objects = this.processObject(objects,object);
 
@@ -149,6 +153,7 @@ class Jl {
             // 통신부분
             var xhr = new XMLHttpRequest();
             xhr.open('POST', Jl_base_url + url, true);
+            xhr.withCredentials = true; // ✅ 세션 쿠키 유지
             xhr.responseType = "download" in options ? 'blob' : "json";
 
             let res = null

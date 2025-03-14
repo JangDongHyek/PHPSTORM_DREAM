@@ -115,7 +115,7 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
         <tbody>
 				<tr>
 					<th colspan="2" align="center" class="top">
-						<div class="lef"><input type="radio" name="wr_1" value="견적/샘플요청" <? echo $write[wr_1]=="견적/샘플요청"||$w==""?" checked":"";?>>견적/샘플요청 <span class="en">Quotation/Sample</span></div>
+						<div class="lef"><input type="radio" name="wr_1" value="Quotation/Sample" <? echo $write[wr_1]=="Quotation/Sample"||$w==""?" checked":"";?>>Quotation/Sample <!--<span class="en">Quotation/Sample</span>--></div>
 						<? /*
 						<div class="lef"><input type="radio" name="wr_1" value="제품/기술문의" <? echo $write[wr_1]=="제품/기술문의"?" checked":"";?>>제품/기술문의 <span class="en">Product/Technical Inquiry</span></div>
 						<div class="lef"><input type="radio" name="wr_1" value="파트너쉽 문의" <? echo $write[wr_1]=="파트너쉽 문의"?" checked":"";?>>파트너쉽 문의 <span class="en">Partnership Inquiry</span></div>
@@ -123,15 +123,15 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 					</th>
 				</tr>
         <tr>
-            <th scope="row"><label for="wr_name">이름 <span class="en">Company Name</span><strong class="sound_only">필수</strong></label></th>
-            <td><input type="text" oninput="validateInput(this)" name="wr_name" value="<?php echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
+            <th scope="row"><label for="wr_name">Company Name <!--<span class="en">Company Name</span>--><strong class="sound_only">필수</strong></label></th>
+            <td><input type="text" name="wr_name" value="<?php echo $name ?>" id="wr_name" required class="frm_input required" size="10" maxlength="20"></td>
         </tr>
 				<tr>
-            <th scope="row"><label for="wr_2">휴대폰번호 <span class="en">Tel</span></label></th>
-            <td><input type="text" oninput="validateNumber(this)" name="wr_2" value="<?php echo $write[wr_2] ?>" id="wr_2" class="frm_input"></td>
+            <th scope="row"><label for="wr_2">Tel <!--<span class="en">Tel</span>--></label></th>
+            <td><input type="text" name="wr_2" value="<?php echo $write[wr_2] ?>" id="wr_2" class="frm_input"></td>
         </tr>
 				<tr>
-            <th scope="row"><label for="wr_email">이메일 <span class="en">E-mail</span></label></th>
+            <th scope="row"><label for="wr_email">E-mail <!--<span class="en">E-mail</span>--></label></th>
             <td><input type="email" name="wr_email" value="<?php echo $email ?>" id="wr_email" class="frm_input email"></td>
         </tr>
       
@@ -139,13 +139,13 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 				<tbody id="product-form" style="display:<? echo $w==""||$write[wr_1]=="견적/샘플요청"?"":"none";?>">
 				
 				<tr>
-            <th scope="row"><label for="wr_5">제품 <span class="en">Product</span></label></th>
+            <th scope="row"><label for="wr_5">Product <!--<span class="en">Product</span>--></label></th>
             <td>
                 <input type="text" name="wr_5" value="<?php echo $_GET['wr_1'] ?>" id="wr_5" class="frm_input">
-            </td>
+						</td>
         </tr>
 				<tr>
-            <th scope="row"><label for="wr_4">수량 <span class="en">Quantity</span></label></th>
+            <th scope="row"><label for="wr_4">Quantity <!--<span class="en">Quantity</span>--></label></th>
             <td><input type="number" name="wr_4" value="<?php echo $write[wr_4] ?>" id="wr_4" class="frm_input"></td>
         </tr>
 				<!--<tr>
@@ -160,7 +160,7 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 						</td>
         </tr>-->
         <tr>
-            <th scope="row"><label for="wr_7">기타 <span class="en">Etc.</span></label></th>
+            <th scope="row"><label for="wr_7">Etc. <!--<span class="en">Etc.</span>--></label></th>
             <td><input type="text" name="wr_7" value="<?php echo $write[wr_7] ?>" id="wr_7" class="frm_input"></td>
         </tr>
 				</tbody>
@@ -169,7 +169,7 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 
         
         <tr>
-            <th scope="row"><label for="wr_content">내용 <span class="en">Content</span><strong class="sound_only">필수</strong></label></th>
+            <th scope="row"><label for="wr_content">Content <!--<span class="en">Content</span>--><strong class="sound_only">필수</strong></label></th>
             <td class="wr_content">
                 <?php if($write_min || $write_max) { ?>
                 <!-- 최소/최대 글자 수 사용 시 -->
@@ -187,7 +187,7 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 
         <?php if ($is_guest) { //자동등록방지  ?>
         <tr>
-            <th scope="row">자동등록방지</th>
+            <th scope="row">Prevent autoenrollment</th>
             <td>
                 <?php echo $captcha_html ?>
             </td>
@@ -206,10 +206,10 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
     </div>
 
     <div class="btn_confirm">
-        <input type="submit" value="Submit 작성완료" id="btn_submit" accesskey="s" class="btn_submit">
-        <a href="javascript:;" onclick="history.back();" class="btn_cancel">Cancel 취소</a>
+        <input type="submit" value="Submit" id="btn_submit" accesskey="s" class="btn_submit">
+        <a href="javascript:;" onclick="history.back();" class="btn_cancel">Cancel</a>
 				<? if($is_admin){?>
-				<input type="button" onclick="location.href='./board.php?bo_table=<?=$bo_table?>'" class="btn_submit" style="color:#fff" value="List 목록보기">
+				<input type="button" onclick="location.href='./board.php?bo_table=<?=$bo_table?>'" class="btn_submit" style="color:#fff" value="List">
 				<? }?>
     </div>
 	<!-- NAVER SCRIPT -->
@@ -222,19 +222,6 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
     </form>
 
     <script>
-        function validateInput(input) {
-            input.value = input.value.replace(/[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]/g, ''); // 영문, 한글(초성/중성 포함) 외 삭제
-        }
-
-        function validateNumber(input) {
-            input.value = input.value.replace(/[^0-9]/g, ''); // 숫자(0-9) 외 삭제
-        }
-
-        function isValidEmail(email) {
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return emailPattern.test(email);
-        }
-
     <?php if($write_min || $write_max) { ?>
     // 글자수 제한
     var char_min = parseInt(<?php echo $write_min; ?>); // 최소
@@ -300,13 +287,6 @@ $wr_6Array=array("FOB","CIF","EXW","CFR","기타");
 					f.wr_2.focus();
 					return false;
 				}
-
-				if(!isValidEmail(f.wr_email.value)) {
-				    alert("이메일 형식이 맞지않습니다");
-				    return false;
-                }
-
-
 
 				if($("#product-form").css("display")!="none"){
 					if(f.wr_4.value==""){

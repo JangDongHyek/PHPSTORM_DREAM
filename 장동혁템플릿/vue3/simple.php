@@ -46,6 +46,7 @@ $context_name = end($pathParts);
                 modal : {
                     status : false,
                     load : false,
+                    primary : "",
                     data : {},
                     class_1 : "",
                     class_2 : "",

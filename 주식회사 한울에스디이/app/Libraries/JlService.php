@@ -131,7 +131,7 @@ class JlService extends Jl{
             }
 
             if (isset($info['extensions'])) {
-                foreach ($data["$".$info['table']] as $index =>$data) {
+                foreach ($data["$".$info['table']] as $index => $datare) {
                     $re_extensions = $this->jsonDecode($info['extensions']);
                     $this->processExtensions($data["$".$info['table']][$index], $re_extensions);
                 }
@@ -254,17 +254,26 @@ class JlService extends Jl{
     }
 
     public function delete() {
+        $relations = isset($this->obj['relations']) ? $this->jsonDecode($this->obj['relations']) : array();
+
         $this->model->setFilter($this->obj);
         $getData = $this->model->where($this->obj)->get()['data'][0];
 
         if($this->file_use) {
-
             foreach ($this->file_columns as $column) {
                 $this->jl_file->deleteDirGate($getData[$column]);
             }
         }
 
         $data = $this->model->delete($this->obj);
+
+        foreach ($relations as $info) {
+            $info = $this->jsonDecode($info);
+            $relationsModel = new JlModel(array("table" => $info['table']));
+            $relationsModel->where($info['foreign'],$data['primary']);
+            $relationsModel->whereDelete();
+        }
+
 
         $response['data'] = $getData;
         $response['success'] = true;

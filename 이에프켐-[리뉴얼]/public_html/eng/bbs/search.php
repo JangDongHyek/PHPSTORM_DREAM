@@ -95,6 +95,14 @@ if ($stx) {
                     else
                         $str .= "INSTR({$field[$k]}, '{$search_str}')";
                     break;
+
+                case 'wr_2' :
+                    $str .= "INSTR({$field[$k]}, '{$search_str}')";
+                    break;
+
+                case 'wr_4' :
+                    $str .= "INSTR({$field[$k]}, '{$search_str}')";
+                    break;
                 default :
                     $str .= "1=0"; // 항상 거짓
                     break;
@@ -117,6 +125,10 @@ if ($stx) {
     $total_count = 0;
     for ($i=0; $i<count($g5_search['tables']); $i++) {
         $tmp_write_table   = $g5['write_prefix'] . $g5_search['tables'][$i];
+
+        if (strpos($tmp_write_table, '_eng') === false) {
+            continue;
+        }
 
         $sql = " select wr_id from {$tmp_write_table} where {$sql_search} ";
         $result = sql_query($sql, false);

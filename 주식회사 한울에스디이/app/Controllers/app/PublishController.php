@@ -377,6 +377,7 @@ class PublishController extends BaseController
 
         $data = [
             'pid' => 'zone',
+            "jl" => $this->jl,
             "project" => $project,
             "projects" => $projects,
         ];

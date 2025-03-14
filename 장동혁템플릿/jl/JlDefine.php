@@ -1,7 +1,7 @@
 <?php
 // Define 파일이 제대로 Load 됐는지 확인용
 define("JL_CHECK",true);
-define("JL_Version",2.3);
+define("JL_Version",2.5);
 
 /******************************필수******************************************/
 define("JL_ROOT_DIR","public_html");// 최상단 폴더의 이름
@@ -55,4 +55,12 @@ define("JL_EDITOR_HTML","/plugin/editor/smarteditor2/SmartEditor2Skin.html");// 
 2.5 model operator 라는 변수명 logical로 변경 및 where()에 operator 매개변수 추가 관련 로직 operator 로직 추가
 */
 
+
+
+/*
+주의사항
+테이블 컬럼명 사용금지 리스트
+file_use
+relations
+ */
 ?>

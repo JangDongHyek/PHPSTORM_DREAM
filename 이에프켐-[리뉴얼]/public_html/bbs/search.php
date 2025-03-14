@@ -125,6 +125,9 @@ if ($stx) {
     $total_count = 0;
     for ($i=0; $i<count($g5_search['tables']); $i++) {
         $tmp_write_table   = $g5['write_prefix'] . $g5_search['tables'][$i];
+        if (strpos($tmp_write_table, '_eng') !== false) {
+            continue;
+        }
 
         $sql = " select wr_id from {$tmp_write_table} where {$sql_search} ";
         $result = sql_query($sql, false);
@@ -143,7 +146,7 @@ if ($stx) {
             $sch_all = "";
             if ($onetable == $g5_search['tables'][$i]) $sch_class = "class=sch_on";
             else $sch_all = "class=sch_on";
-            $str_board_list .= '<li><a href="'.$_SERVER['SCRIPT_NAME'].'?'.$search_query.'&amp;gr_id='.$gr_id.'&amp;onetable='.$g5_search['tables'][$i].'" '.$sch_class.'><strong>'.((G5_IS_MOBILE && $row2['bo_mobile_subject']) ? $row2['bo_mobile_subject'] : $row2['bo_subject']).'</strong><span class="cnt_cmt">'.$row['cnt'].'</span></a></li>';
+            $str_board_list .= '<li><a href="'.$_SERVER['SCRIPT_NAME'].'?'.$search_query.'&amp;gr_id='.$gr_id.'&amp;onetable='.$g5_search['tables'][$i].'" '.$sch_class.'><strong>'.((G5_IS_MOBILE && $row2['bo_mobile_subject']) ? $row2['bo_mobile_subject'] : $row2['bo_subject']).' <span class="cnt_cmt">( '.$row['cnt'].' )</span></strong></a></li>';
         }
     }
 

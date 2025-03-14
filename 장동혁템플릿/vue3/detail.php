@@ -155,6 +155,7 @@
                     updated : [
                         {key : "", value : ``},
                     ],
+
                     confirm : {
                         message : '',
                         callback : async () => { // false 시 실행되는 callback
@@ -168,6 +169,15 @@
                     },
                     //callback : this.callbackMethod // callback을 많이 사용한다면 해당방식으로 가능
 
+                    //delete 시 사용 하는 키
+                    file_columns : ["exam1","exma2"], // 파일값이 저장된 컬럼
+                    relations : [
+                        {
+                            table : "like" ,
+                            foreign : "board_idx",
+
+                        },
+                    ],
                 }
 
 
