@@ -14,11 +14,7 @@ $context_name = end($pathParts);
             <!-- body -->
             <template v-slot:default>
                 <div class="form_wrap">
-                    <div class="flex ai-c">
-                        <label for="" class="txt-up">구역 등록</label>&nbsp;&nbsp;
-                        <button class="btn btn-mini btn-black">추가</button>
-                    </div>
-                    <div class="box box-white">
+                    <div>
                         <div class="flex ai-c gap5">
                             <label for="">동 정보</label>
                             <button class="btn btn-mini btn-gray" @click="pushBlocks()">동일 추가</button>
@@ -30,14 +26,20 @@ $context_name = end($pathParts);
                                 <button class="btn btn-mini male-auto btn-line" @click="deleteBlocks(block,index)">삭제</button>
                             </li>
                         </ul>
-                        <label for="">층 정보</label>
-                        <div class="flex ai-c gap5">
-                            <input type="text" name="" id="" placeholder="최소"/>&nbsp;<p>층</p> -
-                            <input type="text" name="" id="" placeholder="최대"/>&nbsp;<p>층</p>
+                    </div>
+                    <div class="box-gray text-center">
+                        공통 설정
+                    </div>
+                    <div class="box box-white">
+                        <label for="">층 갯수 <button class="btn btn-mini btn-gray" @click="pushFloors()">추가</button></label>
+                        <div class="flex ai-c gap5" v-for="floor,index in floors">
+                            <input type="text" v-model="floor.name" placeholder="0"/>&nbsp;
+                            <p>층</p>
+                            <button class="btn btn-mini male-auto btn-line" @click="deleteFloors(floor,index)">삭제</button>
                         </div>
                         <label for="">구역 개수</label>
                         <div class="flex ai-c">
-                            <input type="text" name="" id="" placeholder="0"/>
+                            <input type="text" v-model="areas" placeholder="0"/>
                         </div>
                         <p class="txt-gray">＊ 구역 개수 미설정시 층까지만 설정됩니다.</p>
                         <p class="txt-gray">＊ 구역명은 설정 완료 후 개별 설정 가능합니다.</p>
@@ -49,7 +51,7 @@ $context_name = end($pathParts);
 
 
             <template v-slot:footer>
-                <button type="button" class="btn btn-primary">등록 완료</button>
+                <button type="button" class="btn btn-primary" @click="postData()">등록 완료</button>
             </template>
         </external-bs-modal>
     </div>
@@ -75,6 +77,8 @@ $context_name = end($pathParts);
                     rows : [],
 
                     blocks : [],
+                    floors : [],
+                    areas : 0,
 
                     options : {
                         table : "",
@@ -92,6 +96,8 @@ $context_name = end($pathParts);
                         limit: 1,
                         count: 0,
                     },
+
+                    alphabet : [],
                 };
             },
             async created() {
@@ -101,6 +107,8 @@ $context_name = end($pathParts);
                 if (typeof window[className] !== 'undefined') {
                     this.context = new window[className](this.jl);
                 }
+
+                this.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
             },
             async mounted() {
                 //await this.jl.getsData(this.filter,this.rows);
@@ -114,6 +122,50 @@ $context_name = end($pathParts);
 
             },
             methods: {
+                async postData() {
+                    for (const block of this.blocks) {
+                        let block_res = await this.jl.postData(block,{
+                            table : "project_block",
+                            return : true,
+                        });
+
+                        for (const floor of this.floors) {
+                            floor['block_idx'] = block_res['primary'];
+                            let floor_res = await this.jl.postData(floor,{
+                                table : "project_floor",
+                                return : true,
+                            });
+
+                            if(this.areas > 0) {
+                                for (let i = 0; i < this.areas; i++) {
+                                    let area = {
+                                        project_idx : this.project_idx,
+                                        block_idx : block_res['primary'],
+                                        floor_idx : floor_res['primary'],
+                                        name : this.alphabet[i]
+                                    };
+
+                                    await this.jl.postData(area,{
+                                        table : "project_area",
+                                        return : true,
+                                    });
+                                }
+                            }
+
+                        }
+                    }
+
+                    await this.jl.alert("완료 되었습니다.");
+
+                    window.location.reload();
+                },
+                deleteFloors(floor,index) {
+                    if(floor.idx) {
+
+                    }else {
+                        this.floors.splice(index,1);
+                    }
+                },
                 deleteBlocks(block,index) {
                     if(block.idx) {
 
@@ -121,8 +173,15 @@ $context_name = end($pathParts);
                         this.blocks.splice(index,1);
                     }
                 },
+                pushFloors() {
+                    this.floors.push({
+                        project_idx : this.project_idx,
+                        name : "",
+                    });
+                },
                 pushBlocks() {
                     this.blocks.push({
+                        project_idx : this.project_idx,
                         name : "",
                     });
                 }
@@ -141,6 +200,10 @@ $context_name = end($pathParts);
                     }else {
                         this.modal.load = false;
                         this.modal.data = {};
+
+                        this.blocks = [];
+                        this.floors = [];
+                        this.areas = 0;
                     }
                 }
             }

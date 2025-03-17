@@ -121,19 +121,21 @@ class JlService extends Jl{
 
             $join_data = ($info['type'] == 'count') ? $joinModel->count() : $joinModel->get()['data'];
 
-            $data["$".$info['table']] = $join_data;
+            $key = $info['as'] ? "$".$info['as'] : "$".$info['table'];
+
+            $data[$key] = $join_data;
 
             if(isset($info['relations'])) {
                 $re_relations = $this->jsonDecode($info['relations']);
-                foreach ($data["$".$info['table']] as $index =>$re_data) {
-                    $this->processRelations($data["$".$info['table']][$index], $re_relations);
+                foreach ($data[$key] as $index =>$re_data) {
+                    $this->processRelations($data[$key][$index], $re_relations);
                 }
             }
 
             if (isset($info['extensions'])) {
-                foreach ($data["$".$info['table']] as $index => $datare) {
+                foreach ($data[$key] as $index => $datare) {
                     $re_extensions = $this->jsonDecode($info['extensions']);
-                    $this->processExtensions($data["$".$info['table']][$index], $re_extensions);
+                    $this->processExtensions($data[$key][$index], $re_extensions);
                 }
             }
 

@@ -108,6 +108,7 @@
                             table : "like" ,
                             foreign : "board_idx",
                             type : "count", // type(count,data)
+                            as : "",
                             filter : {
 
                             },
