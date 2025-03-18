@@ -13,5 +13,6 @@ if(!$project) return false;
 <?
 $jl->vueLoad('app');
 $jl->componentLoad('zone');
+$jl->componentLoad('/zone/part');
 $jl->componentLoad('external');
 ?>

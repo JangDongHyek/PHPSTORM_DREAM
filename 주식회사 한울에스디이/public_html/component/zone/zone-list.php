@@ -8,15 +8,18 @@ $context_name = end($pathParts);
         <div class="zone">
             <div class="flex ai-c jc-sb">
                 <button class="btn btn-small btn-blue" @click="modal.primary = '' ; modal.status = true;">구역 추가</button>
-                <button class="btn btn-small btn-darkblue male-auto">저장</button>
+                <button class="btn btn-small btn-darkblue male-auto" @click="putData();">저장</button>
             </div>
             <div class="flex">
                 <div class="left">
                     <div class="sticky">
-                        <button type="button" class="btn btn-gray w100" data-toggle="modal" data-target="#sectionModal">구역 추가</button>
+                        <button type="button" class="btn btn-gray w100" @click="modal.primary = '' ; modal.status = true;">구역 추가</button>
                         <ul>
-                            <li class="active"><a href="#build1"><i class="fa-duotone fa-grid-horizontal"></i>&nbsp;101동 <button class="btn btn-mini btn-line" data-toggle="modal" data-target="#sectionModal">설정</button></a> </li>
-                            <li class=""><a href="#build2"><i class="fa-duotone fa-grid-horizontal"></i>&nbsp;102동 <button class="btn btn-mini btn-line" data-toggle="modal" data-target="#sectionModal">설정</button></a></li>
+                            <li v-for="block in all_blocks" :class="{ active : filter.in[0].array.includes(block.idx)}">
+                                <a @click="checkFilter(block)">
+                                    <i class="fa-duotone fa-grid-horizontal"></i> {{block.name}}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -29,154 +32,83 @@ $context_name = end($pathParts);
                             <th>구역</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr id="build1">
-                            <td rowspan="3">
-                                <input type="text" value="101동" class="txt-blue" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">층 추가</button>
-                                <button class="btn btn-mini btn-line">삭제</button>
-                                <div>
-                                    <button class="btn btn-mini btn-gray" disabled><i class="fa-solid fa-up"></i></button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                                </div>
-                            </td>
-                            <td rowspan="2"><input type="text" value="1층" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">구역 추가</button> <button class="btn btn-mini btn-line">삭제</button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                            </td>
-                            <td>
-                                <div class="flex gap5"><input type="text" value="A 구역" placeholder="구역명">
-                                    <button class="btn btn-mini btn-line">삭제</button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="flex gap5"><input type="text" value="B 구역" placeholder="구역명">
-                                    <button class="btn btn-mini btn-line">삭제</button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td rowspan="1"><input type="text" value="2층" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">구역 추가</button> <button class="btn btn-mini btn-line">삭제</button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                            </td>
-                            <td>
-                                <div class="flex gap5"><input type="text" value="A 구역" placeholder="구역명">
-                                    <button class="btn btn-mini btn-line">삭제</button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                        <tbody>
-                        <tr id="build2">
-                            <td rowspan="2">
-                                <input type="text" value="102동" class="txt-blue" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">층 추가</button>
-                                <button class="btn btn-mini btn-line">삭제</button>
-                                <div>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                                </div>
-                            </td>
-                            <td><input type="text" value="1층" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">구역 추가</button> <button class="btn btn-mini btn-line">삭제</button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                            </td>
-                            <td>구역 없음</td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" value="2층" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">구역 추가</button> <button class="btn btn-mini btn-line">삭제</button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                            </td>
-                            <td>구역 없음</td>
-                        </tr>
-                        </tbody>
-                        <tbody>
-                        <tr id="build3">
-                            <td rowspan="5">
-                                <input type="text" value="103동" class="txt-blue" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">층 추가</button>
-                                <button class="btn btn-mini btn-line">삭제</button>
-                                <div>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                                </div>
-                            </td>
-                            <td><input type="text" value="1층" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">구역 추가</button> <button class="btn btn-mini btn-line">삭제</button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                            </td>
-                            <td>구역 없음</td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" value="2층" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">구역 추가</button> <button class="btn btn-mini btn-line">삭제</button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                <button class="btn btn-mini btn-gray"><i class="fa-solid fa-down"></i></button>
-                            </td>
-                            <td>구역 없음</td>
-                        </tr>
-                        </tbody>
-                        <tbody>
-                        <tr id="build4">
-                            <td rowspan="5">
-                                <input type="text" value="104동" class="txt-blue" placeholder="층 정보">
-                                <button class="btn btn-mini btn-blueline">층 추가</button>
-                                <button class="btn btn-mini btn-line">삭제</button>
-                                <div>
-                                    <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                    <button class="btn btn-mini btn-gray" disabled><i class="fa-solid fa-down"></i></button>
-                                </div>
-                            </td>
-                            <td colspan="2">층 없음</td>
-                        </tr>
-                        </tbody>
 
+                        <tbody v-for="block,block_index in rows">
+                        <!-- 층이없다면 -->
+                        <template v-if="block.$floors.length == 0">
+                            <tr>
+                                <zone-part-block :rows="rows" :block="block" @update="updateData();"></zone-part-block>
+                                <td colspan="2">층 없음</td>
+                            </tr>
+                        </template>
 
-                        <tbody v-for="block,index in rows">
-                            <tr :id="'build' + index">
-                                <td :rowspan="getRowspan(block)">
-                                    <input type="text" value="104동" class="txt-blue" placeholder="층 정보">
-                                    <button class="btn btn-mini btn-blueline">층 추가</button>
-                                    <button class="btn btn-mini btn-line">삭제</button>
-                                    <div>
-                                        <button class="btn btn-mini btn-gray"><i class="fa-solid fa-up"></i></button>
-                                        <button class="btn btn-mini btn-gray" disabled><i class="fa-solid fa-down"></i></button>
-                                    </div>
-                                </td>
+                        <!-- 층이 있다면 -->
+                        <template v-if="block.$floors.length > 0">
+                            <template v-for="floor,floor_index in block.$floors">
 
-                                <!-- 층없을떄 -->
-                                <template v-if="block.$floors.length == 0">
-                                    <td  colspan="2">층 없음</td>
-                                </template>
+                                <!-- 0번째 층이라면 -->
+                                <template v-if="floor_index == 0">
+                                    <!-- 구역이 없다면 -->
+                                    <template v-if="floor.$areas.length == 0">
+                                        <tr>
+                                            <!-- 동에대한 정보  -->
+                                            <zone-part-block :rows="rows" :block="block" @update="updateData();"></zone-part-block>
 
-                                <!-- 층있을떄 -->
-                                <template v-else>
+                                            <zone-part-floor :rows="rows" :floor="floor" @update="updateData();"></zone-part-floor>
 
-                                    <template>
-
+                                            <td>구역 없음</td>
+                                        </tr>
                                     </template>
 
-                                    <template
+                                    <!-- 구역이 있다면 -->
+                                    <template v-if="floor.$areas.length > 0">
+                                        <tr>
+                                            <!-- 동에대한 정보  -->
+                                            <zone-part-block :rows="rows" :block="block" @update="updateData();"></zone-part-block>
 
+                                            <zone-part-floor :rows="rows" :floor="floor" @update="updateData();"></zone-part-floor>
+
+                                            <zone-part-area :rows="rows" :area="floor.$areas[0]" @update="updateData();"></zone-part-area>
+                                        </tr>
+
+                                        <!-- 구역 tr 생성 -->
+                                        <template v-for="area,area_index in floor.$areas">
+                                            <tr v-if="area_index != 0">
+                                                <zone-part-area v-if="area_index != 0" :rows="rows" :area="area" @update="updateData();"></zone-part-area>
+                                            </tr>
+                                        </template>
+                                    </template>
                                 </template>
 
-                            </tr>
+                                <!-- 0번째 층이 아니라면 -->
+                                <template v-if="floor_index != 0">
+                                    <tr>
+                                        <zone-part-floor :rows="rows" :floor="floor" @update="updateData();"></zone-part-floor>
+
+                                        <!-- 구역이없다면 -->
+                                        <template v-if="floor.$areas.length == 0">
+                                            <td>구역 없음</td>
+                                        </template>
+
+                                        <!-- 구역이있다면 -->
+                                        <template v-if="floor.$areas.length > 0">
+                                            <zone-part-area :rows="rows" :area="floor.$areas[0]" @update="updateData();"></zone-part-area>
+                                        </template>
+                                    </tr>
+
+                                    <!-- 구역 tr 생성 -->
+                                    <template v-for="area,area_index in floor.$areas">
+                                        <tr v-if="area_index != 0">
+                                            <zone-part-area :rows="rows" :area="area" @update="updateData();"></zone-part-area>
+                                        </tr>
+                                    </template>
+                                </template>
+                            </template>
+                        </template>
+
+
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -203,6 +135,7 @@ $context_name = end($pathParts);
 
                     row: {},
                     rows : [],
+                    all_blocks : [],
 
                     options : {
                         table : "",
@@ -217,12 +150,22 @@ $context_name = end($pathParts);
                         table : "project_block",
                         project_idx : this.project_idx,
 
+                        in : [
+                            {key : "idx", array : [] }
+                        ],
+
                         relations : [
                             {
                                 table : "project_floor" ,
                                 foreign : "block_idx",
                                 type : "data", // type(count,data)
                                 as : "floors",
+                                filter : {
+                                    order_by : [
+                                        {column : "priority" , type : "DESC"},
+                                        {column : "idx" , type : "ASC"},
+                                    ],
+                                },
 
                                 relations : [
                                     {
@@ -230,10 +173,21 @@ $context_name = end($pathParts);
                                         foreign : "floor_idx",
                                         type : "data", // type(count,data)
                                         as : "areas",
+                                        filter : {
+                                            order_by : [
+                                                {column : "priority" , type : "DESC"},
+                                                {column : "idx" , type : "ASC"},
+                                            ],
+                                        },
                                     },
                                 ],
 
                             },
+                        ],
+
+                        order_by : [
+                            {column : "priority" , type : "DESC"},
+                            {column : "idx" , type : "ASC"},
                         ],
                     },
 
@@ -259,6 +213,14 @@ $context_name = end($pathParts);
             async mounted() {
                 //if(this.primary) this.row = await this.jl.getData(this.filter);
                 await this.jl.getsData(this.filter,this.rows);
+                await this.jl.getsData({
+                    table : "project_block",
+                    project_idx : this.project_idx,
+                    order_by : [
+                        {column : "priority" , type : "DESC"},
+                        {column : "idx" , type : "ASC"},
+                    ],
+                },this.all_blocks);
 
                 this.load = true;
 
@@ -270,8 +232,77 @@ $context_name = end($pathParts);
 
             },
             methods: {
-                getRowspan(block) {
-                    if(block.$floors.length == 0) return 5;
+                async updateData() {
+                    await this.jl.getsData(this.filter,this.rows);
+                    await this.jl.getsData({
+                        table : "project_block",
+                        project_idx : this.project_idx,
+                        order_by : [
+                            {column : "priority" , type : "DESC"},
+                            {column : "idx" , type : "ASC"},
+                        ],
+                    },this.all_blocks);
+
+                },
+                checkData() {
+                    for (const block of this.rows) {
+                        if(block.status == 'update') {
+                            return true;
+                        }
+
+                        for (const floor of block.$floors) {
+                            if(floor.status == 'update') {
+                                return true;
+                            }
+
+                            for (const area of floor.$areas) {
+                                if(area.status == 'update') {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+
+                    return false;
+                },
+                async putData() {
+                    if(!this.checkData()) {
+                        await this.jl.alert("수정된 데이터가 없습니다.");
+                        return false;
+                    }
+                    for (const block of this.rows) {
+                        if(block.status == 'update') {
+                            await this.jl.postData(block,{table : "project_block",return : true});
+                        }
+
+                        for (const floor of block.$floors) {
+                            if(floor.status == 'update') {
+                                await this.jl.postData(floor,{table : "project_floor",return :  true});
+                            }
+
+                            for (const area of floor.$areas) {
+                                if(area.status == 'update') {
+                                    await this.jl.postData(area,{table : "project_area",return : true});
+                                }
+                            }
+                        }
+                    }
+
+                    await this.jl.alert("완료되었습니다.");
+                    window.location.reload();
+                },
+                async checkFilter(block) {
+                    let array = this.filter.in[0].array;
+
+                    let index = array.indexOf(block.idx);
+
+                    if(index !== -1) {
+                        array.splice(index,1)
+                    }else {
+                        array.push(block.idx);
+                    }
+
+                    await this.jl.getsData(this.filter,this.rows);
                 }
             },
             computed: {

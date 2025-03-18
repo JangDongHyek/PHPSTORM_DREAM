@@ -12,10 +12,10 @@
                         <option value="company_person_phone">연락처</option>
                     </select>
                     <input type="search" v-model="filter.like_value" placeholder="검색어 입력" value="" @keyup.enter="filter.page = 1; getData();">
-                    <button type="submit" class="btn_search" @click="filter.page = 1; getData();"><i class="fa-regular fa-magnifying-glass"></i></button>
+                    <button type="submit" class="btn-search" @click="filter.page = 1; getData();"><i class="fa-regular fa-magnifying-glass"></i></button>
                 </div>
             </div>
-            <button type="button" class="btn btn_darkblue" @click="modal = true">계정 등록</button>
+            <button type="button" class="btn btn-darkblue" @click="modal = true">계정 등록</button>
         </div>
         <div class="table">
             <table>
@@ -53,7 +53,7 @@
                     <td class="text-center">개발예정</td>
                     <td class="text-center">{{item.notes}}</td>
                     <td class="text-center">{{item.insert_date.split(' ')[0]}}</td>
-                    <td class="text-center"><button class="btn btn_mini btn_black" @click="primary = item.idx; modal = true;">수정</button></td>
+                    <td class="text-center"><button class="btn btn-mini btn-black" @click="primary = item.idx; modal = true;">수정</button></td>
                 </tr>
                 </tbody>
             </table>

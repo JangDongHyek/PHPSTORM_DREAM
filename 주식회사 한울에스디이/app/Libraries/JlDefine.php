@@ -16,7 +16,7 @@ define("JL_DATABASE","hanwool");
 
 
 define("VUE_VERSION",3); //Vue version 2 or 3 3이 최신이다.
-define("JL_ALERT","origin"); // alert을 뭐로쓸지 origin,swal
+define("JL_ALERT","swal"); // alert을 뭐로쓸지 origin,swal
 define("JL_ENCRYPT","mb_5");//jl을 통해 사용하는 암호화타입 md5,
 
 define("JL_FONT",'GowunBatang-Bold.ttf'); // 캡차에 사용하는 폰트

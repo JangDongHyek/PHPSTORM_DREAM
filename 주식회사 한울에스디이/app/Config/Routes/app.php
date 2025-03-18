@@ -6,7 +6,7 @@
 
 // 로그인
 $routes->get("login", "app\PublishController::login");
-//$routes->get("test", "app\PublishController::test");
+$routes->get("test", "app\PublishController::test");
 $routes->get("/" ,function() {
     return redirect()->to('app/index');
 });
@@ -53,6 +53,7 @@ $routes->group('app', static function ($routes) {
     $routes->get('scheduleWeekly', 'app\PublishController::scheduleWeekly');
     // 작업관리 > 금주작업
     $routes->get('weekTask', 'app\PublishController::weekTask');
+    $routes->get('taskForm', 'app\PublishController::taskForm');
     // 구역관리
     $routes->get('zone', 'app\PublishController::zone');
     // 기성관리

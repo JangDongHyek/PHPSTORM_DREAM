@@ -15,7 +15,8 @@ class JlPlugin {
                 break;
             }
             case "swal" : {
-                await this.swalAlert(message,options);
+                //await this.swalAlert(message,options);
+                await this.swalToast(message,options);
                 break;
             }
         }

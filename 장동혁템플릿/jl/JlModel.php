@@ -178,6 +178,7 @@ class JlModel{
 
     function setFilter($obj) {
         if($obj['primary']) $this->where($this->primary,$obj['primary']);
+
         if($obj['order_by_desc']) {
             if($this->jl->isJson($obj['order_by_desc'])) {
                 $orders = $this->jsonDecode($obj['order_by_desc']);
@@ -197,6 +198,16 @@ class JlModel{
                 }
             }else {
                 $this->orderBy($obj['order_by_asc'],"ASC");
+            }
+        }
+
+        if($obj['order_by']) {
+            if($this->jl->isJson($obj['order_by'])) {
+                $orders = $this->jsonDecode($obj['order_by']);
+                foreach ($orders as $order) {
+                    $order = $this->jsonDecode($order);
+                    $this->orderBy($order['column'], $order['type']);
+                }
             }
         }
 
@@ -379,6 +390,12 @@ class JlModel{
             if($column == $this->primary && $value == '') continue; // 10.2부터 int에 빈값이 허용안되기때문에 빈값일경우 패스
 
             // 컬럼의 데이터타입이 datetime 인데 널값이 허용이면 넘기고 아니면 기본값을 넣어서 쿼리작성
+            if($info['DATA_TYPE'] == "int") {
+                if($value == '') {
+                    if($info['IS_NULLABLE'] == "NO") $value = '0';
+                    else continue;
+                }
+            }
             if($info['DATA_TYPE'] == "datetime") {
                 if($value == '') {
                     if($info['IS_NULLABLE'] == "NO") $value = '0000-00-00 00:00:00';
@@ -581,6 +598,7 @@ class JlModel{
 
                 if($value == "now()") $update_sql .= "`{$key}`={$value}";
                 else if($column['DATA_TYPE'] == 'int' && $value == 'incr') $update_sql = "`{$key}`={$key}+1";
+                else if($column['DATA_TYPE'] == 'int' && $value == 'decr') $update_sql = "`{$key}`={$key}-1";
                 else $update_sql .= "`{$key}`='{$value}'";
             }
         }

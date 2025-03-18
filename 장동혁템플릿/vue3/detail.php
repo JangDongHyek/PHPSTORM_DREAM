@@ -132,8 +132,9 @@
 
                     add_query : " and idx = 'exam' ",
 
-                    order_by_desc : ["idx"],
-                    order_by_asc : ["idx"],
+                    order_by : [
+                        {column : "idx" , type : "DESC"},
+                    ],
                 },
 
                 options : {
@@ -176,7 +177,6 @@
                         {
                             table : "like" ,
                             foreign : "board_idx",
-
                         },
                     ],
                 }
@@ -185,7 +185,7 @@
                 data : {
                     table : "",
 
-                    hits : "incr", // 인트타입의 컬럼인데 incr 이란 단어가 들어가면 해당컬럼 +1 로 쿼리가 대체된다
+                    hits : "incr", // [incr,decr] 인트타입의 컬럼인데 incr 이란 단어가 들어가면 해당컬럼 +1 로 쿼리가 대체된다
 
                     // 해당하는 조건에 걸리는 데이터가 있으면 error(message)를 반환
                     // 객체 하나당 묶음이라 여러개의 조건도 가능 아이디 확인, 닉네임 확인 이렇게하고싶으면 객체 두개필요

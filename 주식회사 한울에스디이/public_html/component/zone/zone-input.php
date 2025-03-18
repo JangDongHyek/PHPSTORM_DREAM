@@ -193,7 +193,7 @@ $context_name = end($pathParts);
                 async "modal.status"(value,old_value) {
                     if(value) {
                         if(this.modal.primary) {
-
+                            this.row = await this.jl.getData(this.filter);
                         }
 
                         this.modal.load = true;
