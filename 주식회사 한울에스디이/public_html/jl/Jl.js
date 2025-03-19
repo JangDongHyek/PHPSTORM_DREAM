@@ -161,15 +161,54 @@ class Jl {
 
             xhr.onload = function () {
                 res = xhr.response;
+                let contentType = xhr.getResponseHeader("Content-Type");
+
                 if (xhr.status === 200) {
                     if("download" in options && options.download) {
-                        var link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(res);
-                        link.download = options.download;  // 다운로드할 파일 이름 설정
-                        link.click();
+                        if (contentType.includes("application/json")) {
 
-                        // 메모리 해제를 위해 URL 객체를 폐기
-                        window.URL.revokeObjectURL(link.href);
+                            console.log(res);
+                            // ✅ JSON 응답이므로 실패 처리
+                            let reader = new FileReader();
+                            reader.onload = function () {
+                                try {
+                                    let jsonResponse = JSON.parse(reader.result);
+                                    console.log(jsonResponse)
+                                    if (!jsonResponse.success) {
+                                        console.log(1)
+                                        reject(new Error(1));
+                                        let message = jsonResponse.message + "\n";
+
+                                        if (Jl_dev) {
+                                            if (jsonResponse.file_0) {
+                                                message += `${jsonResponse.file_0} : ${jsonResponse.line_0} Line\n`;
+                                            }
+                                            if (jsonResponse.file_1) {
+                                                message += `${jsonResponse.file_1} : ${jsonResponse.line_1} Line\n`;
+                                            }
+                                            if (jsonResponse.file_2) {
+                                                message += `${jsonResponse.file_2} : ${jsonResponse.line_2} Line\n`;
+                                            }
+                                        }
+
+                                        reject(new Error(message));
+                                    }
+                                } catch (e) {
+                                    reject(new Error("JSON 파싱 오류: " + e.message));
+                                }
+                            };
+                            reader.readAsText(res); // Blob을 문자열로 변환 후 JSON 파싱
+                        }else {
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(res);
+                            link.download = options.download;  // 다운로드할 파일 이름 설정
+                            link.click();
+
+                            // 메모리 해제를 위해 URL 객체를 폐기
+                            window.URL.revokeObjectURL(link.href);
+                        }
+
+
                     }else {
                         if (!res.success) {
                             let message = res.message + "\n";

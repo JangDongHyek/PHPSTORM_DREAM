@@ -1,212 +1,216 @@
-<?php $componentName = str_replace(".php","",basename(__FILE__)); ?>
+<?php
+$componentName = str_replace(".php","",basename(__FILE__));
+$pathParts = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+$context_name = end($pathParts);
+?>
 <script type="text/x-template" id="<?=$componentName?>-template">
-    <section class="schedule_task">
-        <div class="task_header colgroup">
-            <div class="border">공종명 및 상세</div>
-            <div class="border">담당자</div>
-            <div class="border">상태</div>
-            <div class="border">시작예정일</div>
-            <div class="border">마감예정일</div>
-            <div class="border">시작일</div>
-            <div class="border">마감일</div>
-        </div>
-
-        <template v-for="category_a,index in category_a">
-            <div class="section_title" @click="category_a.visible = !category_a.visible">
-                <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !category_a.visible}"></i> {{category_a.category_a}}
+    <div v-if="load">
+        <section class="schedule_task">
+            <div class="task_header colgroup">
+                <div class="border">작업 구역</div>
+                <div class="border">담당자</div>
+                <div class="border">상태</div>
+                <div class="border">시작예정일</div>
+                <div class="border">마감예정일</div>
+                <div class="border">예상소요</div>
+                <div class="border">시작일</div>
+                <div class="border">마감일</div>
             </div>
-            <!-- group_a 반복 -->
-            <div class="section_content" v-show="category_a.visible" v-for="group_a,index2 in category_a.group_a">
-                <div class="task_content_dl">
-                    <div class="zone_title c1" @click="group_a.visible = !group_a.visible">
-                        <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_a.visible}"></i> {{group_a.group_a}}
-                    </div>
-                    <dl class="dropdown_dl">
-                        <!-- group_b 반복 -->
-                        <div class="section_content" v-show="group_a.visible" v-for="group_b,index3 in group_a.group_b">
-                            <div class="task_content_dl">
-                                <div class="zone_title c2" @click="group_b.visible = !group_b.visible">
-                                    <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_b.visible}"></i> {{group_b.group_b}}
-                                </div>
-                                <dl class="dropdown_dl">
 
-                                    <!-- group_c 반복 -->
-                                    <div class="section_content" v-show="group_b.visible" v-for="group_c,index4 in group_b.group_c">
-                                        <div class="task_content_dl">
-                                            <div class="zone_title c3" @click="group_c.visible = !group_c.visible">
-                                                
-                                                <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !group_c.visible}"></i> {{group_c.group_c}}
-                                            </div>
-                                            <dl class="dropdown_dl">
+            <div class="section_title zone_title">
+                <i class="fa-solid fa-caret-down"></i> 101동
+            </div>
 
-                                                <!-- category_b 반복 -->
-                                                <div class="section_content" v-show="group_c.visible" v-for="category_b,index5 in group_c.category_b">
-                                                    <div class="task_content_dl" >
-                                                        <div class="zone_title c4" @click="category_b.visible = !category_b.visible">
-                                                            <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !category_b.visible}"></i> {{category_b.category_b}}
-                                                        </div>
-                                                        <dl class="dropdown_dl">
+            <div class="section_content">
+                <div class="zone_title c1" >
+                    <i class="fa-solid fa-caret-down"></i> 1층
+                </div>
 
-                                                            <!-- data 반복 -->
-                                                            <div class="section_content" v-show="category_b.visible">
-                                                                <div class="task_content_dl">
-                                                                    <!--<div class="zone_title"></div>-->
-                                                                    <dl class="dropdown_dl">
-
-                                                                        <dd class="colgroup"  v-for="item,index4 in category_b.data">
-                                                                            <div class="border task_item">  {{item.content}}</div>
-                                                                            <div class="border flex ai-c jc-c">
-                                                                                <template v-if="item.user_idx">
-                                                                                    <button class="btn_none" @click="manager_modal = true; manager_idx = item.idx">{{item.$user.company_person}}</button>
-                                                                                </template>
-
-                                                                                <template v-else>
-                                                                                    <button class="btn btn_mini btn_black" @click="manager_modal = true; manager_idx = item.idx">지정</button>
-                                                                                </template>
-
-                                                                            </div>
-                                                                            <div class="border">
-                                                                                <select class="statusSelect" :class="getClass(item)" v-model="item.status" @change="updateData(item)">
-                                                                                    <option value="">예정</option>
-                                                                                    <option value="진행">진행</option>
-                                                                                    <option value="완료">완료</option>
-                                                                                    <option value="보류">보류</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_start_date" @change="updateData(item)"/></div>
-                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.schedule_end_date" @change="updateData(item)"/></div>
-                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.start_date" @change="updateData(item)"/></div>
-                                                                            <div class="border"><input type="date" class="datePicker" v-model="item.end_date"/></div>
-                                                                        </dd>
-
-                                                                    </dl>
-                                                                </div>
-                                                            </div>
-
-                                                        </dl>
-                                                    </div>
-                                                </div>
-
-                                            </dl>
-                                        </div>
-                                    </div>
-
-                                </dl>
+                <div class="section_content">
+                    <div class="task_content_dl">
+                        <div class="colgroup task_item">
+                            <div class="border">A구역</div>
+                            <div class="border"><input type="text" placeholder="담당자"/></div>
+                            <div class="border">
+                                <select class="statusSelect red">
+                                    <option value="예정" >예정</option>
+                                    <option value="진행">진행</option>
+                                    <option value="조기">조기</option>
+                                    <option value="완료">완료</option>
+                                    <option value="초과" selected>초과</option>
+                                </select>
                             </div>
+                            <div class="border"><input type="date" value="2025-03-01" /></div>
+                            <div class="border"><input type="date" value="2025-03-10" /></div>
+                            <div class="border"><input type="number" value="5"/></div>
+                            <div class="border"><input type="date" value="2025-03-01" /></div>
+                            <div class="border"><input type="date" value="2025-03-15" /></div>
                         </div>
+                    </div>
+                </div>
 
-                    </dl>
+                <div class="section_content">
+                    <div class="task_content_dl">
+                        <div class="colgroup task_item">
+                            <div class="border">B구역</div>
+                            <div class="border"><input type="text" placeholder="담당자"/></div>
+                            <div class="border">
+                                <select class="statusSelect blue">
+                                    <option value="예정" >예정</option>
+                                    <option value="진행">진행</option>
+                                    <option value="조기">조기</option>
+                                    <option value="완료" selected>완료</option>
+                                    <option value="초과">초과</option>
+                                </select>
+                            </div>
+                            <div class="border"><input type="date" value="2025-03-11" /></div>
+                            <div class="border"><input type="date" value="2025-03-20" /></div>
+                            <div class="border"><input type="number" value="5"/></div>
+                            <div class="border"><input type="date" value="2025-03-11"/></div>
+                            <div class="border"><input type="date" value="2025-03-20"/></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </template>
+            <div class="section_content">
+                <div class="zone_title c1" >
+                    <i class="fa-solid fa-caret-down"></i> 2층
+                </div>
 
-        <schedule-manager :modal="manager_modal" :project="project" @designate="designate" @close="manager_modal = false;"></schedule-manager>
-    </section>
+                <div class="section_content">
+                    <div class="task_content_dl">
+                        <div class="colgroup task_item">
+                            <div class="border">A구역</div>
+                            <div class="border"><input type="text" placeholder="담당자"/></div>
+                            <div class="border">
+                                <select class="statusSelect green">
+                                    <option value="예정">예정</option>
+                                    <option value="진행">진행</option>
+                                    <option value="조기" selected>조기</option>
+                                    <option value="완료">완료</option>
+                                    <option value="초과">초과</option>
+                                </select>
+                            </div>
+                            <div class="border"><input type="date" value="2025-03-21" /></div>
+                            <div class="border"><input type="date" value="2025-04-10" /></div>
+                            <div class="border"><input type="number" value="5"/></div>
+                            <div class="border"><input type="date" value="2025-03-21"/></div>
+                            <div class="border"><input type="date" value="2025-04-07"/></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section_content">
+                    <div class="task_content_dl">
+                        <div class="colgroup task_item">
+                            <div class="border">B구역</div>
+                            <div class="border"><input type="text" placeholder="담당자"/></div>
+                            <div class="border">
+                                <select class="statusSelect">
+                                    <option value="예정" selected>예정</option>
+                                    <option value="진행">진행</option>
+                                    <option value="조기">조기</option>
+                                    <option value="완료">완료</option>
+                                    <option value="초과">초과</option>
+                                </select>
+                            </div>
+                            <div class="border"><input type="date" value="2025-04-11" /></div>
+                            <div class="border"><input type="date" value="2025-04-24" /></div>
+                            <div class="border"><input type="number" value="5"/></div>
+                            <div class="border"><input type="date" /></div>
+                            <div class="border"><input type="date" /></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 </script>
 
 <script>
     Jl_components.push({name : "<?=$componentName?>",object : {
-        template: "#<?=$componentName?>-template",
-        props: {
-            project : { type : Object, default : {} },
-            schedule : { type : Array, default : [] },
-        },
-        data: function(){
-            return {
-                jl : null,
-                component_idx : "",
-                filter : {
-                    page : 1,
-                    limit : 1,
-                    count : 0,
-                    order_by_desc : "insert_date",
-                },
+            template: "#<?=$componentName?>-template",
+            props: {
+                primary : { type: String, default: "" },
+            },
+            data: function () {
+                return {
+                    load : false,
+                    jl: null,
+                    component_idx: "",
+                    context_name : "<?=$context_name?>",
+                    context : null,
 
-                data : [],
-                modal : false,
+                    row: {},
+                    rows : [],
 
-                category_a : [],
-                groups : [],
+                    options : {
+                        table : "",
+                        file_use : false,
+                        required : [
+                            {name : "",message : ``},
+                        ],
+                        href : "",
+                    },
 
-                visibleContents : [],
-                visibleContents2 : [],
-                visibleContents3 : [],
-                visibleContents4 : [],
+                    filter : {
+                        table : "",
+                        primary : this.primary,
+                        page: 1,
+                        limit: 1,
+                        count: 0,
+                    },
 
+                    modal : {
+                        status : false,
+                        load : false,
+                        primary : "",
+                        data : {},
+                        class_1 : "",
+                        class_2 : "",
+                    },
 
-                manager_modal : false,
-                manager_idx : "",
-            };
-        },
-        created: function(){
-            this.jl = new Jl('<?=$componentName?>');
-            this.component_idx = this.jl.generateUniqueId();
-
-            this.getCategoryA();
-        },
-        mounted: function(){
-            this.$nextTick(() => {
-
-            });
-        },
-        methods: {
-            async updateData(data) {
-                try {
-                    let res = await this.jl.ajax("update",data,"/api/project_schedule");
-                    this.$emit('updateSchedule');
-
-                }catch (e) {
-                    alert(e.message)
+                };
+            },
+            async created() {
+                this.jl = new Jl('<?=$componentName?>');
+                this.component_idx = this.jl.generateUniqueId();
+                const className = this.context_name.charAt(0).toUpperCase() + this.context_name.slice(1) + "Common";
+                if (typeof window[className] !== 'undefined') {
+                    this.context = new window[className](this.jl);
                 }
             },
-            designate(user) {
-                let data = {
-                    idx : this.manager_idx,
-                    user_idx : user.idx
-                }
+            async mounted() {
+                if(this.primary) this.row = await this.jl.getData(this.filter);
+                //await this.jl.getsData(this.filter,this.rows);
 
-                this.updateData(data);
-                this.manager_modal = false;
+                this.load = true;
+
+                this.$nextTick(() => {
+
+                });
             },
-            getClass(item) {
-                if(item.status == '') return 'gray'
-                if(item.status == '진행') return 'green'
-                if(item.status == '완료') return 'blue'
-                if(item.status == '보류') return 'black'
+            updated() {
+
             },
-            async getCategoryA() {
-                try {
-                    let filter = {
-                        project_idx : this.project.idx,
-                        column : "category_a",
-                        order_by_asc: "category_a",
+            methods: {
+
+            },
+            computed: {
+
+            },
+            watch: {
+                async "modal.status"(value,old_value) {
+                    if(value) {
+                        this.modal.load = true;
+                    }else {
+                        this.modal.load = false;
+                        this.modal.data = {};
                     }
-                    let res = await this.jl.ajax("group_category",filter,"/api/project_schedule");
-                    //
-                    //for (let i = 0; i < categoriesA.length; i++) {
-                    //    categoriesA[i]['groupA'] = await this.getGroupA(categoriesA[i])
-                    //}
-                    //
-                    //console.log(categoriesA);
-                    //
-                    this.category_a = res.data
-                }catch (e) {
-                    alert(e.message)
                 }
-            },
-            changePage(page) {
-                this.filter.page = page;
+            }
+        }});
 
-                this.getData();
-            },
-        },
-        computed: {
-
-        },
-        watch : {
-
-        }
-    }});
 </script>
 
 <style>

@@ -75,6 +75,23 @@ class JlVue {
         window.open(url);
     }
 
+    async apiDownload(filter = {},options = {}) {
+        let url = "/jl/JlApi.php";
+
+        try {
+            if(!filter.table) throw new Error("테이블값이 존재하지않습니다.");
+            if(!options.method) throw new Error("메소드값이 존재하지않습니다.");
+            if(!options.download) throw new Error("다운로드 명이 없습니다.");
+
+            if(options.url) url = options.url;
+
+            await this.jl.ajax(options.method,filter,url,options);
+        }catch (e) {
+            console.log(2);
+            await this.jl.plugin.alert(e.message)
+        }
+    }
+
     async postData(data,options = {}) {
         let method = data.primary ? 'update' : 'insert';
         let url = "/jl/JlApi.php";

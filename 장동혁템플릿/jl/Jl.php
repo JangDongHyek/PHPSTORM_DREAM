@@ -66,6 +66,7 @@ class Jl {
             }
         }
 
+        header('Content-Type: application/json');
         echo $this->jsonEncode($er);
         die();
         //throw new \Exception($msg);

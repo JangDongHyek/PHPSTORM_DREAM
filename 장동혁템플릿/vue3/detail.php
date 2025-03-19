@@ -240,6 +240,19 @@
 
         },
         methods: {
+            async apiDownload() {
+                let filter = {
+                    table : "",
+                };
+
+                let options = {
+                    method : "",
+                    download : "",
+                    url : "",
+                };
+
+                await this.jl.apiDownload(filter,options);
+            },
             async callbackMethod(res) {
 
             },

@@ -5,11 +5,12 @@ $context_name = end($pathParts);
 ?>
 <script type="text/x-template" id="<?=$componentName?>-template">
     <td>
-        <div class="flex gap5"><input type="text" v-model="area.name" @change="area.status = 'update'" placeholder="구역명">
+        <div class="flex gap5 ai-c">
+            <input type="text" class="w200px" v-model="area.name" @change="area.status = 'update'" placeholder="구역명">
             <button class="btn btn-mini btn-line" @click="deleteArea(area)">삭제</button>
             <button class="btn btn-mini btn-gray" @click="putArea(area,'incr')"><i class="fa-solid fa-up"></i></button>
             <button class="btn btn-mini btn-gray" @click="putArea(area,'decr')" :disabled="area.priority <= 0"><i class="fa-solid fa-down"></i></button>
-            <span>우선순위 : {{area.priority}}</span>
+            <span>우선순위 <b>{{area.priority}}</b></span>
         </div>
     </td>
 </script>
