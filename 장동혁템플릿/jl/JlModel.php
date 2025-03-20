@@ -533,6 +533,13 @@ class JlModel{
             while($row = mysqli_fetch_assoc($result)){
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+
+                if (isset($_param['add_object']) && is_array($_param['add_object'])) {
+                    foreach ($_param['add_object'] as $add_object) {
+                        $row[$add_object['name']] = $add_object['value'];
+                    }
+                }
+
                 $row['primary'] = $row[$this->primary];
                 foreach ($row as $key => $value) {
                     if($this->primary == $key) continue;
@@ -554,6 +561,13 @@ class JlModel{
             while($row = mysql_fetch_assoc($result)){
                 $row["jl_no"] = ($page -1) * $limit + $index;
                 $row["jl_no_reverse"] = $object['count'] - $index + 1 - (($page -1) * $limit);
+
+                if (isset($_param['add_object']) && is_array($_param['add_object'])) {
+                    foreach ($_param['add_object'] as $add_object) {
+                        $row[$add_object['name']] = $add_object['value'];
+                    }
+                }
+
                 $row['primary'] = $row[$this->primary];
                 foreach ($row as $key => $value) {
                     if($this->primary == $key) continue;
@@ -679,37 +693,93 @@ class JlModel{
         count(Boolean)(false) : 카운트 쿼리로 인식해 *말고 프라이마리 키값만 조회 false : *
         distinct(Boolean)(false) : true distinct 사용함
         column(String || Array)(null) : distinct 사용할때 쓰는 필드 추가된 컬럼만큼 distinct 해서 반환
+        min(Array)(null) : 최소값을 구하고 싶은 컬럼 정보 배열. 형태: [{ column: "컬럼명", as: "별칭" }]
+        max(Array)(null) : 최대값을 구하고 싶은 컬럼 정보 배열. 형태: [{ column: "컬럼명", as: "별칭" }]
      */
     function getSql($_param = array()) {
-        $source = $_param['source'] ? $_param['source'] : $this->table;
+        $source = isset($_param['source']) ? $_param['source'] : $this->table;
         $other = $source == $this->table ? $this->join_table : $this->table;
-        $scope = $_param['count'] ? $source == $this->table ? $this->primary : $this->join_primary : "*";
+
+        // 기본 스코프 설정 (항상 일반 데이터도 포함)
+        $scope = isset($_param['count']) && $_param['count'] ? ($source == $this->table ? $this->primary : $this->join_primary) : "*";
+
+        // MIN, MAX 함수를 스코프에 추가
+        $aggregates = "";
+        $havingConditions = [];
+
+        // min 파라미터 처리
+        if (isset($_param['min']) && is_array($_param['min'])) {
+            foreach ($_param['min'] as $item) {
+                if (!isset($item['column']) || !is_string($item['column'])) continue;
+
+                $column = $item['column'];
+
+                // 테이블명 포함되어 있지 않으면 source 테이블명 추가
+                if (strpos($column, '.') === false) {
+                    $column = "$source.$column";
+                }
+
+                // as 값이 있으면 사용, 없으면 기본 별칭 생성
+                $as = isset($item['as']) && is_string($item['as']) ? $item['as'] : "min_" . str_replace('.', '_', $item['column']);
+
+                // aggregates에 이미 내용이 있으면 콤마 추가
+                if ($aggregates != "") $aggregates .= ", ";
+
+                $aggregates .= "MIN($column) AS `$as`";
+                $havingConditions[] = "$as IS NOT NULL";
+            }
+        }
+
+        // max 파라미터 처리
+        if (isset($_param['max']) && is_array($_param['max'])) {
+            foreach ($_param['max'] as $item) {
+                if (!isset($item['column']) || !is_string($item['column'])) continue;
+
+                $column = $item['column'];
+
+                // 테이블명 포함되어 있지 않으면 source 테이블명 추가
+                if (strpos($column, '.') === false) {
+                    $column = "$source.$column";
+                }
+
+                // as 값이 있으면 사용, 없으면 기본 별칭 생성
+                $as = isset($item['as']) && is_string($item['as']) ? $item['as'] : "max_" . str_replace('.', '_', $item['column']);
+
+                // aggregates에 이미 내용이 있으면 콤마 추가
+                if ($aggregates != "") $aggregates .= ", ";
+
+                $aggregates .= "MAX($column) AS `$as`";
+                $havingConditions[] = "$as IS NOT NULL";
+            }
+        }
 
         $distinct = "";
         $select = "";
 
-        if($_param['distinct']) {
-            if (is_string($_param['column'])) {
-                $scope = $_param['column'];
-            }
+        if(isset($_param['distinct']) && $_param['distinct']) {
+            if (isset($_param['column'])) {
+                if (is_string($_param['column'])) {
+                    $scope = $_param['column'];
+                }
 
-            if (is_array($_param['column'])) {
-                $scope = "";
-                foreach($_param['column'] as $d) {
-                    if($scope != "") $scope .= ", ".$source.".";
-                    $scope .= $d;
+                if (is_array($_param['column'])) {
+                    $scope = "";
+                    foreach($_param['column'] as $d) {
+                        if($scope != "") $scope .= ", ".$source.".";
+                        $scope .= $d;
+                    }
                 }
             }
             $distinct = "distinct";
         }
 
-        if($_param['select']) {
+        if(isset($_param['select']) && $_param['select']) {
             if($_param['select'] == "*") {
                 $columns = $source == $this->table ? $this->schema['join_columns'] : $this->schema['columns'];
                 foreach($columns as $column) {
                     $select .= ", {$other}.{$column} AS {$other}_{$column}";
                 }
-            }else {
+            } else {
                 if(is_string($_param['select'])) $select .= ", ".$_param['select'];
                 if(is_array($_param['select'])) {
                     foreach($_param['select'] as $d) {
@@ -719,10 +789,22 @@ class JlModel{
             }
         }
 
-        $sql = "SELECT $distinct $source.$scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
+        // $aggregates가 있으면 기본 스코프와 함께 추가
+        if ($aggregates != "") {
+            $select .= ", " . $aggregates;
+        }
+
+        $sql = "SELECT $distinct $scope $select $this->group_by_sql_front FROM {$this->table} as $this->table $this->join_sql WHERE 1";
         $sql .= $this->sql;
-        $sql .= $this->group_by_sql_back ? $this->group_by_sql_back : "";
-        $sql .= $this->sql_order_by ? " ORDER BY $this->sql_order_by" : " ORDER BY $this->primary DESC";
+        $sql .= isset($this->group_by_sql_back) && $this->group_by_sql_back ? $this->group_by_sql_back : "";
+        // HAVING 조건 추가 (MIN 또는 MAX가 있을 때만)
+        if (!empty($havingConditions)) {
+            $sql .= " HAVING " . implode(" AND ", $havingConditions);
+        }
+        $sql .= isset($this->sql_order_by) && $this->sql_order_by ? " ORDER BY $this->sql_order_by" : " ORDER BY $this->primary DESC";
+
+
+
         return $sql;
     }
 

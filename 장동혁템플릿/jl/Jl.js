@@ -163,6 +163,29 @@ class Jl {
                 res = xhr.response;
                 if (xhr.status === 200) {
                     if("download" in options && options.download) {
+                        const contentType = xhr.getResponseHeader('content-type');
+
+                        if (contentType && contentType.indexOf('application/json') !== -1) {
+                            // It's JSON error, not a file
+                            const reader = new FileReader();
+                            reader.onload = function() {
+                                try {
+                                    const jsonResponse = JSON.parse(reader.result);
+                                    if (!jsonResponse.success) {
+                                        throw new Error(jsonResponse.message);
+                                    }
+                                    resolve(jsonResponse);
+                                } catch (error) {
+                                    reject(error); // This will propagate to apiDownload's catch
+                                }
+                            };
+                            reader.onerror = function() {
+                                reject(new Error("xhr 파일 변환 실패"));
+                            };
+                            reader.readAsText(xhr.response);
+                            return; // Stop further processing
+                        }
+
                         var link = document.createElement('a');
                         link.href = window.URL.createObjectURL(res);
                         link.download = options.download;  // 다운로드할 파일 이름 설정

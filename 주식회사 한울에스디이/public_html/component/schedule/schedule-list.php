@@ -17,112 +17,40 @@ $context_name = end($pathParts);
                 <div class="border">마감일</div>
             </div>
 
-            <div class="section_title zone_title">
-                <i class="fa-solid fa-caret-down"></i> 101동
-            </div>
-
-            <div class="section_content">
-                <div class="zone_title c1" >
-                    <i class="fa-solid fa-caret-down"></i> 1층
+            <template v-for="block in blocks">
+                <div class="section_title zone_title" @click="block.expanded = !block.expanded">
+                    <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !block.expanded}"></i> {{block.name}}
                 </div>
 
-                <div class="section_content">
-                    <div class="task_content_dl">
-                        <div class="colgroup task_item">
-                            <div class="border">A구역</div>
-                            <div class="border"><input type="text" placeholder="담당자"/></div>
-                            <div class="border">
-                                <select class="statusSelect red">
-                                    <option value="예정" >예정</option>
-                                    <option value="진행">진행</option>
-                                    <option value="조기">조기</option>
-                                    <option value="완료">완료</option>
-                                    <option value="초과" selected>초과</option>
-                                </select>
+                <div class="section_content" v-for="floor in block.$floors" v-if="block.expanded">
+                    <div class="zone_title c1" @click="floor.expanded = !floor.expanded">
+                        <i class="fa-solid fa-caret-down" :class="{'fa-caret-right' : !floor.expanded}"></i> {{floor.name}}
+                    </div>
+
+                    <div class="section_content" v-for="area in floor.$areas" v-if="floor.expanded">
+                        <div class="task_content_dl">
+                            <div class="colgroup task_item">
+                                <div class="border">{{area.name}}</div>
+                                <div class="border"><input type="text" placeholder="담당자"/></div>
+                                <div class="border">
+                                    <select class="statusSelect red">
+                                        <option value="예정" >예정</option>
+                                        <option value="진행">진행</option>
+                                        <option value="조기">조기</option>
+                                        <option value="완료">완료</option>
+                                        <option value="초과" selected>초과</option>
+                                    </select>
+                                </div>
+                                <div class="border"><input type="date" :value="area.$schedule[0].start_date" /></div>
+                                <div class="border"><input type="date" :value="area.$schedule[0].end_date" /></div>
+                                <div class="border"><input type="number" :value="area.$schedule[0].work_days"/></div>
+                                <div class="border"><input type="date" value="2025-03-01" /></div>
+                                <div class="border"><input type="date" value="2025-03-15" /></div>
                             </div>
-                            <div class="border"><input type="date" value="2025-03-01" /></div>
-                            <div class="border"><input type="date" value="2025-03-10" /></div>
-                            <div class="border"><input type="number" value="5"/></div>
-                            <div class="border"><input type="date" value="2025-03-01" /></div>
-                            <div class="border"><input type="date" value="2025-03-15" /></div>
                         </div>
                     </div>
                 </div>
-
-                <div class="section_content">
-                    <div class="task_content_dl">
-                        <div class="colgroup task_item">
-                            <div class="border">B구역</div>
-                            <div class="border"><input type="text" placeholder="담당자"/></div>
-                            <div class="border">
-                                <select class="statusSelect blue">
-                                    <option value="예정" >예정</option>
-                                    <option value="진행">진행</option>
-                                    <option value="조기">조기</option>
-                                    <option value="완료" selected>완료</option>
-                                    <option value="초과">초과</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="date" value="2025-03-11" /></div>
-                            <div class="border"><input type="date" value="2025-03-20" /></div>
-                            <div class="border"><input type="number" value="5"/></div>
-                            <div class="border"><input type="date" value="2025-03-11"/></div>
-                            <div class="border"><input type="date" value="2025-03-20"/></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="section_content">
-                <div class="zone_title c1" >
-                    <i class="fa-solid fa-caret-down"></i> 2층
-                </div>
-
-                <div class="section_content">
-                    <div class="task_content_dl">
-                        <div class="colgroup task_item">
-                            <div class="border">A구역</div>
-                            <div class="border"><input type="text" placeholder="담당자"/></div>
-                            <div class="border">
-                                <select class="statusSelect green">
-                                    <option value="예정">예정</option>
-                                    <option value="진행">진행</option>
-                                    <option value="조기" selected>조기</option>
-                                    <option value="완료">완료</option>
-                                    <option value="초과">초과</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="date" value="2025-03-21" /></div>
-                            <div class="border"><input type="date" value="2025-04-10" /></div>
-                            <div class="border"><input type="number" value="5"/></div>
-                            <div class="border"><input type="date" value="2025-03-21"/></div>
-                            <div class="border"><input type="date" value="2025-04-07"/></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section_content">
-                    <div class="task_content_dl">
-                        <div class="colgroup task_item">
-                            <div class="border">B구역</div>
-                            <div class="border"><input type="text" placeholder="담당자"/></div>
-                            <div class="border">
-                                <select class="statusSelect">
-                                    <option value="예정" selected>예정</option>
-                                    <option value="진행">진행</option>
-                                    <option value="조기">조기</option>
-                                    <option value="완료">완료</option>
-                                    <option value="초과">초과</option>
-                                </select>
-                            </div>
-                            <div class="border"><input type="date" value="2025-04-11" /></div>
-                            <div class="border"><input type="date" value="2025-04-24" /></div>
-                            <div class="border"><input type="number" value="5"/></div>
-                            <div class="border"><input type="date" /></div>
-                            <div class="border"><input type="date" /></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </template>
         </section>
     </div>
 </script>
@@ -131,6 +59,7 @@ $context_name = end($pathParts);
     Jl_components.push({name : "<?=$componentName?>",object : {
             template: "#<?=$componentName?>-template",
             props: {
+                blocks : { type: Array, default: [] },
                 primary : { type: String, default: "" },
             },
             data: function () {

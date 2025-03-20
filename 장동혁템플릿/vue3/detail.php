@@ -115,6 +115,27 @@
                         },
                     ],
 
+                    get_info : {
+                        min : [
+                            {
+                                column : "",
+                                as : "",
+                            }
+                        ],
+                        max : [
+                            {
+                                column : "",
+                                as : "",
+                            }
+                        ],
+
+                        add_object : [
+                            {name : "",value : ""},
+                        ]
+                    },
+
+
+
                     join : {
                         table : "user", origin : "user_idx", join : "idx",type : "", // LEFT, INNER
                         source : false, // true 시 join 테이블이 조회 기준이 된다
@@ -129,6 +150,8 @@
                             },
                         ],
                     },
+
+
 
                     add_query : " and idx = 'exam' ",
 

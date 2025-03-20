@@ -117,9 +117,15 @@ class JlService extends Jl{
                 $joinModel->where($info_filter);
             }
 
+            $getInfo = array();
+            if(isset($info['get_info'])) {
+                $relations_getInfo = $this->jsonDecode($info['get_info'],false);
+                $getInfo = array_merge($getInfo,$relations_getInfo);
+            }
+
             $joinModel->where($info['foreign'], $data[$this->model->primary]);
 
-            $join_data = ($info['type'] == 'count') ? $joinModel->count() : $joinModel->get()['data'];
+            $join_data = ($info['type'] == 'count') ? $joinModel->count() : $joinModel->get($getInfo)['data'];
 
             $key = $info['as'] ? "$".$info['as'] : "$".$info['table'];
 
@@ -147,8 +153,6 @@ class JlService extends Jl{
     public function get() {
         $join = isset($this->obj['join']) ? $this->jsonDecode($this->obj['join']) : null;
         $extensions = isset($this->obj['extensions']) ? $this->jsonDecode($this->obj['extensions']) : array();
-
-
         $relations = isset($this->obj['relations']) ? $this->jsonDecode($this->obj['relations']) : array();
 
         $getInfo = array(
@@ -156,6 +160,12 @@ class JlService extends Jl{
             "limit" => $this->obj['limit'],
             "sql" => true // true 시 쿼리문이 반환된다
         );
+
+        if($this->obj['get_info']) {
+            $info = $this->jsonDecode($this->obj['get_info'],false);
+            $getInfo = array_merge($getInfo,$info);
+        }
+
 
         if ($join) {
             $this->model->join($join['table'], $join['origin'], $join['join'], $join['type']);

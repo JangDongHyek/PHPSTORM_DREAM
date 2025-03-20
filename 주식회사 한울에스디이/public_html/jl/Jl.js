@@ -161,54 +161,38 @@ class Jl {
 
             xhr.onload = function () {
                 res = xhr.response;
-                let contentType = xhr.getResponseHeader("Content-Type");
-
                 if (xhr.status === 200) {
                     if("download" in options && options.download) {
-                        if (contentType.includes("application/json")) {
+                        const contentType = xhr.getResponseHeader('content-type');
 
-                            console.log(res);
-                            // ✅ JSON 응답이므로 실패 처리
-                            let reader = new FileReader();
-                            reader.onload = function () {
+                        if (contentType && contentType.indexOf('application/json') !== -1) {
+                            // It's JSON error, not a file
+                            const reader = new FileReader();
+                            reader.onload = function() {
                                 try {
-                                    let jsonResponse = JSON.parse(reader.result);
-                                    console.log(jsonResponse)
+                                    const jsonResponse = JSON.parse(reader.result);
                                     if (!jsonResponse.success) {
-                                        console.log(1)
-                                        reject(new Error(1));
-                                        let message = jsonResponse.message + "\n";
-
-                                        if (Jl_dev) {
-                                            if (jsonResponse.file_0) {
-                                                message += `${jsonResponse.file_0} : ${jsonResponse.line_0} Line\n`;
-                                            }
-                                            if (jsonResponse.file_1) {
-                                                message += `${jsonResponse.file_1} : ${jsonResponse.line_1} Line\n`;
-                                            }
-                                            if (jsonResponse.file_2) {
-                                                message += `${jsonResponse.file_2} : ${jsonResponse.line_2} Line\n`;
-                                            }
-                                        }
-
-                                        reject(new Error(message));
+                                        throw new Error(jsonResponse.message);
                                     }
-                                } catch (e) {
-                                    reject(new Error("JSON 파싱 오류: " + e.message));
+                                    resolve(jsonResponse);
+                                } catch (error) {
+                                    reject(error); // This will propagate to apiDownload's catch
                                 }
                             };
-                            reader.readAsText(res); // Blob을 문자열로 변환 후 JSON 파싱
-                        }else {
-                            var link = document.createElement('a');
-                            link.href = window.URL.createObjectURL(res);
-                            link.download = options.download;  // 다운로드할 파일 이름 설정
-                            link.click();
-
-                            // 메모리 해제를 위해 URL 객체를 폐기
-                            window.URL.revokeObjectURL(link.href);
+                            reader.onerror = function() {
+                                reject(new Error("xhr 파일 변환 실패"));
+                            };
+                            reader.readAsText(xhr.response);
+                            return; // Stop further processing
                         }
 
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(res);
+                        link.download = options.download;  // 다운로드할 파일 이름 설정
+                        link.click();
 
+                        // 메모리 해제를 위해 URL 객체를 폐기
+                        window.URL.revokeObjectURL(link.href);
                     }else {
                         if (!res.success) {
                             let message = res.message + "\n";

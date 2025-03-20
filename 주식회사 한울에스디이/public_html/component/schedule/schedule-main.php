@@ -11,8 +11,8 @@ $context_name = end($pathParts);
                     <input type="search" name="stx" placeholder="검색어 입력" value=""><button type="submit" class="btn-search"><i class="fa-regular fa-magnifying-glass"></i></button>
                 </div>
                 <div class="btn-wrap">
-                    <button class="btn btn-small btn-gray" onclick="expandAll()">전체 펼치기</button>
-                    <button class="btn btn-small btn-gray" onclick="collapseAll()">전체 접기</button>
+                    <button class="btn btn-small btn-gray" @click="changeExpanded('true')">전체 펼치기</button>
+                    <button class="btn btn-small btn-gray" @click="changeExpanded('false')">전체 접기</button>
                     <button class="btn btn-small btn-darkblue" @click="modal.status = true;"><img :src="jl.root + 'img/common/excel_blue.svg'"> 가져오기</button>
                     <button class="btn btn-small btn-line"  @click="downExcel()"><img :src="jl.root + 'img/common/excel_green.svg'"> 내보내기</button>
                 </div>
@@ -23,13 +23,17 @@ $context_name = end($pathParts);
                 <button class="view-btn btn" :class="{active : tab == 'week'}"  @click="tab = 'week'">주별</button>
             </div>
 
-            <div class="grid grid2">
-                <schedule-list></schedule-list>
+            <div class="grid grid2" v-if="schedules.length > 0">
+                <schedule-list :blocks="blocks"></schedule-list>
 
                 <section class="calendar">
-                    <schedule-calendar-day v-if="tab == 'day'"></schedule-calendar-day>
-                    <schedule-calendar-week v-if="tab == 'week'"></schedule-calendar-week>
+                    <schedule-calendar-day v-if="tab == 'day'" :blocks="blocks" :start_date="project_start_date" :end_date="project_end_date"></schedule-calendar-day>
+                    <schedule-calendar-week v-if="tab == 'week'" :blocks="blocks" :start_date="project_start_date" :end_date="project_end_date"></schedule-calendar-week>
                 </section>
+            </div>
+
+            <div class="grid grid2" v-else>
+                스케쥴 데이터가 없습니다.
             </div>
         </div>
 
@@ -54,6 +58,8 @@ $context_name = end($pathParts);
 
                     row: {},
                     rows : [],
+                    schedules : [],
+                    blocks : [],
 
                     tab : "day",
 
@@ -67,11 +73,153 @@ $context_name = end($pathParts);
                     },
 
                     filter : {
-                        table : "",
-                        primary : this.primary,
-                        page: 1,
-                        limit: 1,
-                        count: 0,
+                        table : "project_block",
+                        project_idx : this.project_idx,
+
+                        order_by : [
+                            {column : "priority" , type : "DESC"},
+                            {column : "idx" , type : "ASC"},
+                        ],
+
+                        get_info : {
+                            add_object : [
+                                {name : "expanded", value : "true"},
+                            ]
+                        },
+
+                        relations : [
+                            {
+                                table : "project_floor" ,
+                                foreign : "block_idx",
+                                type : "data", // type(count,data)
+                                as : "floors",
+                                filter : {
+                                    order_by : [
+                                        {column : "priority" , type : "DESC"},
+                                        {column : "idx" , type : "ASC"},
+                                    ],
+                                },
+                                get_info : {
+                                    add_object : [
+                                        {name : "expanded", value : "true"},
+                                    ]
+                                },
+
+                                relations : [
+                                    {
+                                        table : "project_area" ,
+                                        foreign : "floor_idx",
+                                        type : "data", // type(count,data)
+                                        as : "areas",
+
+                                        filter : {
+                                            order_by : [
+                                                {column : "priority" , type : "DESC"},
+                                                {column : "idx" , type : "ASC"},
+                                            ],
+                                        },
+                                        get_info : {
+                                            add_object : [
+                                                {name : "expanded", value : "true"},
+                                            ]
+                                        },
+
+                                        relations : [
+                                            // 작업 데이터 구하는
+                                            {
+                                                table : "project_schedule" ,
+                                                foreign : "area_idx",
+                                                type : "data", // type(count,data)
+                                                as : "schedule",
+                                            },
+
+                                            // 작업 기간 구하는
+                                            {
+                                                table : "project_schedule" ,
+                                                foreign : "area_idx",
+                                                type : "data", // type(count,data)
+                                                as : "minmax",
+                                                get_info : {
+                                                    min : [
+                                                        {
+                                                            column : "start_date",
+                                                            as : "min_date",
+                                                        }
+                                                    ],
+                                                    max : [
+                                                        {
+                                                            column : "end_date",
+                                                            as : "max_date",
+                                                        }
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+
+                                    // 작업 데이터 구하는
+                                    {
+                                        table : "project_schedule" ,
+                                        foreign : "floor_idx",
+                                        type : "data", // type(count,data)
+                                        as : "schedule",
+                                    },
+
+                                    // 작업 기간 구하는
+                                    {
+                                        table : "project_schedule" ,
+                                        foreign : "floor_idx",
+                                        type : "data", // type(count,data)
+                                        as : "minmax",
+                                        get_info : {
+                                            min : [
+                                                {
+                                                    column : "start_date",
+                                                    as : "min_date",
+                                                }
+                                            ],
+                                            max : [
+                                                {
+                                                    column : "end_date",
+                                                    as : "max_date",
+                                                }
+                                            ],
+                                        },
+                                    },
+                                ],
+                            },
+
+                            // 작업 데이터 구하는
+                            {
+                                table : "project_schedule" ,
+                                foreign : "block_idx",
+                                type : "data", // type(count,data)
+                                as : "schedule",
+                            },
+
+                            // 작업 기간 구하는
+                            {
+                                table : "project_schedule" ,
+                                foreign : "block_idx",
+                                type : "data", // type(count,data)
+                                as : "minmax",
+                                get_info : {
+                                    min : [
+                                        {
+                                            column : "start_date",
+                                            as : "min_date",
+                                        }
+                                    ],
+                                    max : [
+                                        {
+                                            column : "end_date",
+                                            as : "max_date",
+                                        }
+                                    ],
+                                },
+                            },
+
+                        ],
                     },
 
                     modal : {
@@ -82,6 +230,9 @@ $context_name = end($pathParts);
                         class_1 : "",
                         class_2 : "",
                     },
+
+                    project_start_date : "",
+                    project_end_date : "",
 
                 };
             },
@@ -94,8 +245,30 @@ $context_name = end($pathParts);
                 }
             },
             async mounted() {
-                if(this.primary) this.row = await this.jl.getData(this.filter);
-                //await this.jl.getsData(this.filter,this.rows);
+                await this.jl.getsData(this.filter,this.blocks);
+                await this.jl.getsData({
+                    table : "project_schedule",
+                    project_idx : this.project_idx,
+                    get_info : {
+                        min : [
+                            {
+                                column : "start_date",
+                                as : "min_start_date",
+                            }
+                        ],
+                        max : [
+                            {
+                                column : "end_date",
+                                as : "max_end_date",
+                            }
+                        ],
+                    },
+                },this.schedules);
+
+                if(this.schedules.length > 0) {
+                    this.project_start_date = this.schedules[0]['min_start_date'];
+                    this.project_end_date = this.schedules[0]['max_end_date'];
+                }
 
                 this.load = true;
 
@@ -107,6 +280,13 @@ $context_name = end($pathParts);
 
             },
             methods: {
+                async changeExpanded(bool) {
+                    this.filter.get_info.add_object[0].value = bool;
+                    this.filter.relations[0].get_info.add_object[0].value = bool;
+                    this.filter.relations[0].relations[0].get_info.add_object[0].value = bool;
+
+                    await this.jl.getsData(this.filter,this.blocks);
+                },
                 async downExcel() {
                     let filter = {
                         table : "project_block",
