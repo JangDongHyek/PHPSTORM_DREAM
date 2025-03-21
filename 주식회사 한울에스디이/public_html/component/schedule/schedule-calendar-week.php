@@ -16,7 +16,7 @@ $context_name = end($pathParts);
                 <div class="schedule-row">
                     <template v-for="month in getMonthsBetween(start_date,end_date)">
                         <template v-for="week in getTotalWeeksOfMonth(month)">
-                            <div class="week" :class="{'today' : (month+'-'+week) == getWeekOfMonth(jl.getToday())}" style="width: 80px;">{{week}}주차</div>
+                            <div class="week" :class="{'today' : getWeekStartDate(month,week) == getWeekStartDate(jl.getToday())}" style="width: 80px;">{{week}}주차</div>
                         </template>
                     </template>
                 </div>
@@ -25,18 +25,18 @@ $context_name = end($pathParts);
                 <template v-for="block in blocks">
                     <div class="schedule-row">
                         <template v-for="month in getMonthsBetween(start_date,end_date)">
-                            <template v-for="week in getTotalWeeksOfMonth(month)">
-                                <div class="week" :class="{'today' : (month+'-'+week) == getWeekOfMonth(jl.getToday())}" style="width: 80px;">
+                            <template v-for="week,block_idx in getTotalWeeksOfMonth(month)">
+                                <div class="week" :class="{'today' : getWeekStartDate(month,week) == getWeekStartDate(jl.getToday())}" style="width: 80px;">
 
                                     <!-- 기간에 일치했을때 -->
-                                    <template v-if="isWeekBetween(month+'-'+week,block.$minmax[0].min_date,block.$minmax[0].max_date)">
+                                    <template v-if="isWeekBetween(month,week,block.$minmax[0].min_date,block.$minmax[0].max_date)">
                                         <!-- 기간의 첫째날만 -->
-                                        <template v-if="getWeekOfMonth(month+'-'+week) == getWeekOfMonth(block.$minmax[0].min_date)">
-                                            1
+                                        <template v-if="firstCheck(month,week,block,'block',block_idx)">
+                                            <div class="task zone-title" :style="{ width : (80 * getWeekDifference(block.$minmax[0].min_date,block.$minmax[0].max_date)) + 'px' }" >{{block.name}}</div>
                                         </template>
                                     </template>
                                     <!-- 해당기간이아닐때 -->
-                                    <template v-if="!isWeekBetween(month+'-'+week,block.$minmax[0].min_date,block.$minmax[0].max_date)">
+                                    <template v-if="!isWeekBetween(month,week,block.$minmax[0].min_date,block.$minmax[0].max_date)">
                                         <div class="week"  style="width: 80px;"></div>
                                     </template>
                                 </div>
@@ -44,6 +44,56 @@ $context_name = end($pathParts);
                             </template>
                         </template>
                     </div>
+
+                    <!-- 층에대한 반복-->
+                    <template v-for="floor in block.$floors">
+                        <div class="schedule-row">
+                            <template v-for="month in getMonthsBetween(start_date,end_date)">
+                                <template v-for="week,floor_idx in getTotalWeeksOfMonth(month)">
+                                    <div class="week" :class="{'today' : getWeekStartDate(month,week) == getWeekStartDate(jl.getToday())}" style="width: 80px;">
+
+                                        <!-- 기간에 일치했을때 -->
+                                        <template v-if="isWeekBetween(month,week,floor.$minmax[0].min_date,floor.$minmax[0].max_date)">
+                                            <!-- 기간의 첫째날만 -->
+                                            <template v-if="firstCheck(month,week,floor,'floor',floor_idx)">
+                                                <div class="task zone-title" :style="{ width : (80 * getWeekDifference(floor.$minmax[0].min_date,floor.$minmax[0].max_date)) + 'px' }" >{{floor.name}}</div>
+                                            </template>
+                                        </template>
+                                        <!-- 해당기간이아닐때 -->
+                                        <template v-if="!isWeekBetween(month,week,floor.$minmax[0].min_date,block.$minmax[0].max_date)">
+                                            <div class="week"  style="width: 80px;"></div>
+                                        </template>
+                                    </div>
+
+                                </template>
+                            </template>
+                        </div>
+
+                        <!-- 구역반복 -->
+                        <template v-for="area in floor.$areas">
+                            <div class="schedule-row">
+                                <template v-for="month in getMonthsBetween(start_date,end_date)">
+                                    <template v-for="week,area_idx in getTotalWeeksOfMonth(month)">
+                                        <div class="week" :class="{'today' : getWeekStartDate(month,week) == getWeekStartDate(jl.getToday())}" style="width: 80px;">
+
+                                            <!-- 기간에 일치했을때 -->
+                                            <template v-if="isWeekBetween(month,week,area.$minmax[0].min_date,area.$minmax[0].max_date)">
+                                                <!-- 기간의 첫째날만 -->
+                                                <template v-if="firstCheck(month,week,area,'area',area_idx)">
+                                                    <div class="task red" :style="{ width : (80 * getWeekDifference(area.$minmax[0].min_date,area.$minmax[0].max_date)) + 'px' }" >{{area.name}}</div>
+                                                </template>
+                                            </template>
+                                            <!-- 해당기간이아닐때 -->
+                                            <template v-if="!isWeekBetween(month,week,area.$minmax[0].min_date,block.$minmax[0].max_date)">
+                                                <div class="week"  style="width: 80px;"></div>
+                                            </template>
+                                        </div>
+
+                                    </template>
+                                </template>
+                            </div>
+                        </template>
+                    </template>
 
                 </template>
 
@@ -98,6 +148,11 @@ $context_name = end($pathParts);
                         class_2 : "",
                     },
 
+                    check_blocks : [],
+                    check_floors : [],
+                    check_areas : [],
+                    checks : [],
+
                 };
             },
             async created() {
@@ -107,6 +162,7 @@ $context_name = end($pathParts);
                 if (typeof window[className] !== 'undefined') {
                     this.context = new window[className](this.jl);
                 }
+
             },
             async mounted() {
                 if(this.primary) this.row = await this.jl.getData(this.filter);
@@ -122,66 +178,89 @@ $context_name = end($pathParts);
 
             },
             methods: {
-                getWeekDifference(date1, date2) {
-                    let week1 = this.getWeekOfMonth(date1);
-                    let week2 = this.getWeekOfMonth(date2);
+                firstCheck(month, week, data, type, index) {
+                    let arr = this.checks;
+                    if(this.getWeekStartDate(month, week) == this.getWeekStartDate(data.$minmax[0].min_date)) {
+                        const key = `${type}_${data.$minmax[0].min_date}`;
 
-                    // 같은 연도, 같은 월이면 주차 차이만 반환
-                    if (week1.year === week2.year && week1.month === week2.month) {
-                        console.log(week2.week - week1.week);
-                        return week2.week - week1.week;
-                    }
-
-                    let totalWeeks = 0;
-
-                    // 첫 번째 날짜의 해당 월 마지막 주차 계산
-                    let totalWeeksInMonth1 = this.getTotalWeeksOfMonth(`${week1.year}-${String(week1.month).padStart(2, '0')}`);
-                    totalWeeks += (totalWeeksInMonth1 - week1.week); // 남은 주차 수 추가
-
-                    // 중간 월 계산
-                    let currentYear = week1.year;
-                    let currentMonth = week1.month + 1;
-                    while (currentYear < week2.year || (currentYear === week2.year && currentMonth < week2.month)) {
-                        totalWeeks += this.getTotalWeeksOfMonth(`${currentYear}-${String(currentMonth).padStart(2, '0')}`);
-
-                        // 다음 달로 이동
-                        if (currentMonth === 12) {
-                            currentMonth = 1;
-                            currentYear++;
-                        } else {
-                            currentMonth++;
+                        let obj = {
+                            idx : key,
+                            month : month,
+                            week : week,
                         }
+
+                        let exists = arr.find(item => item.idx == key);
+
+                        if (exists) {
+                            if(exists.month == month && exists.week == week) {
+                                console.log(key,month,week)
+                                return true;
+                            }
+                        }else {
+                            arr.push(obj);
+                        }
+
                     }
 
-                    // 두 번째 날짜가 속한 월의 주차 추가
-                    totalWeeks += week2.week;
+                    return false;
+                },
+                getWeekDifference(startDate, endDate) {
+                    // 시작, 끝 날짜의 주 시작 일요일을 찾기
+                    let startWeekStart = new Date(this.getWeekStartDate(startDate));
+                    let endWeekStart = new Date(this.getWeekStartDate(endDate));
 
-                    console.log(totalWeeks);
-                    return totalWeeks;
+                    // 밀리초 단위 차이를 주 단위로 변환
+                    let diffTime = endWeekStart - startWeekStart;
+                    let diffWeeks = Math.round(diffTime / (1000 * 60 * 60 * 24 * 7));
+                    return diffWeeks + 1;
                 },
 
-                isWeekBetween(targetDate, startDate, endDate) {
-                    let targetWeek = this.getWeekOfMonth(targetDate);
-                    let startWeek = this.getWeekOfMonth(startDate);
-                    let endWeek = this.getWeekOfMonth(endDate);
+                isWeekBetween(targetMonth,week, startDate, endDate) {
+                    let targetWeek = this.getWeekStartDate(targetMonth,week);
+                    let startWeek = this.getWeekStartDate(startDate);
+                    let endWeek = this.getWeekStartDate(endDate);
 
                     return targetWeek >= startWeek && targetWeek <= endWeek;
                 },
 
-                getWeekOfMonth(dateString) {
-                    let date = new Date(dateString);
+                getWeekStartDate(dateInput, weekNum = null) {
+                    let date;
+
+                    if (weekNum !== null) {
+                        // 주차 기반 계산: 해당 월의 1일 기준으로 시작
+                        let [year, month] = dateInput.split('-').map(Number);
+                        date = new Date(year, month - 1, 1); // 해당 월 1일
+
+                        let firstDayOfMonth = date.getDay(); // 요일 (0=일)
+                        let offsetToSunday = -firstDayOfMonth; // 그 주 일요일까지 이동 (음수 가능)
+
+                        // 첫 번째 주의 일요일 구하기
+                        let firstSunday = new Date(year, month - 1, 1 + offsetToSunday);
+
+                        // N주차면 (N-1)주 더한 날짜
+                        firstSunday.setDate(firstSunday.getDate() + (weekNum - 1) * 7);
+
+                        date = firstSunday;
+                    } else {
+                        // 단일 날짜 입력 처리
+                        if (typeof dateInput === 'string') {
+                            date = new Date(dateInput);
+                        } else {
+                            return null; // 잘못된 입력
+                        }
+
+                        let day = date.getDay(); // 0 = 일
+                        date.setDate(date.getDate() - day); // 일요일로 이동
+                    }
+
                     let year = date.getFullYear();
-                    let month = date.getMonth();
-                    let firstDay = new Date(year, month, 1).getDay(); // 해당 달 1일의 요일 (0 = 일요일)
-                    let dayOfMonth = date.getDate();
+                    let month = String(date.getMonth() + 1).padStart(2, '0');
+                    let day = String(date.getDate()).padStart(2, '0');
 
-                    // Windows 기준 (일요일 시작) 주차 계산
-                    let weekNumber = Math.ceil((dayOfMonth + firstDay) / 7);
-
-                    // "YYYY-MM" 형식으로 반환
-                    return `${year}-${String(month + 1).padStart(2, '0')}-${weekNumber}`;
+                    return `${year}-${month}-${day}`;
                 },
 
+                //해당 월이 몇주차까지있는지
                 getTotalWeeksOfMonth(yyyyMm) {
                     let [year, month] = yyyyMm.split('-').map(Number);
                     let firstDay = new Date(year, month - 1, 1).getDay(); // 월 1일의 요일 (0=일요일)
@@ -191,6 +270,7 @@ $context_name = end($pathParts);
                     return Math.ceil((lastDate + firstDay) / 7);
                 },
 
+                //시작일부터 종료일의 월을 배열로 가져오는
                 getMonthsBetween(startDate, endDate) {
                     let months = new Set();
                     let start = new Date(startDate);
